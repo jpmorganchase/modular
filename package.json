@@ -3,10 +3,20 @@
   "workspaces": [
     "packages/*"
   ],
+  "scripts": {
+    "lint": "eslint --cache --fix --ext .js,.ts,.tsx --max-warnings 0 ."
+  },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^3.0.0",
+    "@typescript-eslint/parser": "^3.0.0",
+    "eslint": "^7.0.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-react": "^7.20.0",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.4",
     "prettier": "2.0.5",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "typescript": "~3.9.3"
   },
   "husky": {
@@ -15,6 +25,7 @@
     }
   },
   "lint-staged": {
+    "*.{js,ts,tsx}": "eslint --cache --fix --ext .js,.ts,.tsx --max-warnings 0",
     "*.{js,json,ts,tsx,css,md,mdx}": "prettier --write"
   }
 }

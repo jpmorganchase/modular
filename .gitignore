@@ -8,6 +8,7 @@
 
 # Misc
 .DS_Store
+.eslintcache
 
 # Editors
 .idea
