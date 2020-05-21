@@ -6,7 +6,8 @@
   "devDependencies": {
     "husky": "^4.2.5",
     "lint-staged": "^10.2.4",
-    "prettier": "2.0.5"
+    "prettier": "2.0.5",
+    "typescript": "~3.9.3"
   },
   "husky": {
     "hooks": {
