@@ -25,6 +25,7 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: ['react', 'react-hooks'],
+  reportUnusedDisableDirectives: true,
   rules: {},
   settings: {
     react: {
@@ -33,7 +34,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['*.ts?(x)'],
+      files: ['*.{ts,tsx}'],
       extends: [
         'plugin:@typescript-eslint/recommended',
         'plugin:@typescript-eslint/recommended-requiring-type-checking',
@@ -49,6 +50,16 @@ module.exports = {
         tsconfigRootDir: __dirname,
       },
       plugins: ['@typescript-eslint'],
+    },
+    {
+      files: ['**/__tests__/**/*.{ts,tsx}', '**/*.test.{ts,tsx}'],
+      extends: [
+        'plugin:jest/recommended',
+        'plugin:jest/style',
+        'plugin:jest-dom/recommended',
+        'plugin:testing-library/react',
+      ],
+      plugins: ['jest', 'jest-dom', 'testing-library'],
     },
   ],
 };
