@@ -25,6 +25,7 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: ['react', 'react-hooks'],
+  reportUnusedDisableDirectives: true,
   rules: {},
   settings: {
     react: {
