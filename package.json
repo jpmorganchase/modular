@@ -4,6 +4,7 @@
     "packages/*"
   ],
   "scripts": {
+    "prettier": "prettier --write .",
     "lint": "eslint --cache --fix --ext .js,.ts,.tsx --max-warnings 0 .",
     "test": "jest"
   },
