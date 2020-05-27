@@ -24,6 +24,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: yarn
+      - run: yarn --cwd examples/app-host install
       - run: npx prettier --check .
       - run: npx tsc
       - run: yarn lint
