@@ -1,6 +1,6 @@
 {
   "name": "esm-dependency-checker",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "main": "build/index.js",
   "bin": {
     "esm-dependency-checker": "build/cli.js"

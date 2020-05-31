@@ -54,6 +54,68 @@ type EnhancedPackageJson = PackageJson & {
   packagePath: string;
 };
 
+async function install(dependencies: Dependencies, cwd: string) {
+  // The installation logic is based on https://github.com/ds300/patch-package/blob/2696a0f/src/makePatch.ts#L114-L135
+  const packageJsonPath = path.join(cwd, 'package.json');
+  await fs.writeFile(
+    packageJsonPath,
+    JSON.stringify(
+      {
+        dependencies,
+      },
+      null,
+      2,
+    ),
+  );
+
+  console.info(chalk.grey('•'), `Installing dependencies with Yarn:`);
+  console.info(dependencies);
+  try {
+    // Try first without ignoring scripts in case they are required
+    // this works in 99.99% of cases
+    await execa('yarnpkg', ['install', '--ignore-engines'], {
+      cwd,
+    });
+  } catch (e) {
+    // Try again while ignoring scripts in case the script depends on
+    // an implicit context which we haven't reproduced
+    await execa(
+      'yarnpkg',
+      ['install', '--ignore-engines', '--ignore-scripts'],
+      {
+        cwd,
+      },
+    );
+  }
+}
+
+async function getLockfile(dependencies: Dependencies, cwd: string) {
+  await install(dependencies, cwd);
+  const yarnLockPath = path.join(cwd, 'yarn.lock');
+  const rawLockfile = await fs.readFile(yarnLockPath, 'utf8');
+  const lockfile = parseLockfile(rawLockfile, yarnLockPath)
+    .object as LockfileObject;
+  return lockfile;
+}
+
+function getLockManifestByNameAndRange(lockfile: LockfileObject) {
+  const lockManifestByNameAndRange = new Map<Name, Map<Range, LockManifest>>();
+  Object.keys(lockfile).forEach((key) => {
+    const { name, range } = normalizePattern(key);
+
+    let lockManifest = multiKeyStore.get(
+      lockManifestByNameAndRange,
+      name,
+      range,
+    );
+    if (!lockManifest) {
+      lockManifest = lockfile[key];
+      multiKeyStore.set(lockManifestByNameAndRange, name, range, lockManifest);
+    }
+  });
+  return lockManifestByNameAndRange;
+}
+
 async function getPackageJsonByNameAndVersion(cwd: string) {
   const dependencyPackageJsons = await globby(
     ['**/node_modules/@*/*/package.json', '**/node_modules/*/package.json'],
@@ -246,70 +308,9 @@ export async function checkESMDependencies(
   dependencies: Dependencies,
 ): Promise<Result[]> {
   const tmpRepo = dirSync({ unsafeCleanup: true });
-  const tmpRepoPackageJsonPath = path.join(tmpRepo.name, 'package.json');
-  const tmpRepoYarnLockPath = path.join(tmpRepo.name, 'yarn.lock');
-
-  // The installation logic is based on https://github.com/ds300/patch-package/blob/2696a0f/src/makePatch.ts#L114-L135
   try {
-    await fs.writeFile(
-      tmpRepoPackageJsonPath,
-      JSON.stringify(
-        {
-          dependencies,
-        },
-        null,
-        2,
-      ),
-    );
-
-    console.info(chalk.grey('•'), `Installing dependencies with Yarn:`);
-    console.info(dependencies);
-    try {
-      // Try first without ignoring scripts in case they are required
-      // this works in 99.99% of cases
-      await execa('yarnpkg', ['install', '--ignore-engines'], {
-        cwd: tmpRepo.name,
-      });
-    } catch (e) {
-      // Try again while ignoring scripts in case the script depends on
-      // an implicit context which we haven't reproduced
-      await execa(
-        'yarnpkg',
-        ['install', '--ignore-engines', '--ignore-scripts'],
-        {
-          cwd: tmpRepo.name,
-        },
-      );
-    }
-
-    const rawLockfile = await fs.readFile(tmpRepoYarnLockPath, 'utf8');
-    const lockfile = parseLockfile(rawLockfile, tmpRepoYarnLockPath)
-      .object as LockfileObject;
-
-    const lockManifestByNameAndRange = new Map<
-      Name,
-      Map<Range, LockManifest>
-    >();
-
-    Object.keys(lockfile).forEach((key) => {
-      const { name, range } = normalizePattern(key);
-
-      let lockManifest = multiKeyStore.get(
-        lockManifestByNameAndRange,
-        name,
-        range,
-      );
-      if (!lockManifest) {
-        lockManifest = lockfile[key];
-        multiKeyStore.set(
-          lockManifestByNameAndRange,
-          name,
-          range,
-          lockManifest,
-        );
-      }
-    });
-
+    const lockfile = await getLockfile(dependencies, tmpRepo.name);
+    const lockManifestByNameAndRange = getLockManifestByNameAndRange(lockfile);
     const packageJsonByNameAndVersion = await getPackageJsonByNameAndVersion(
       tmpRepo.name,
     );
