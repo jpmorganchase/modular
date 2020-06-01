@@ -7,6 +7,7 @@
 const restrictedGlobals = require('confusing-browser-globals');
 
 const ERROR = 'error';
+const WARN = 'warn';
 const OFF = 'off';
 
 module.exports = {
@@ -46,11 +47,11 @@ module.exports = {
     'no-restricted-globals': [ERROR, ...restrictedGlobals],
 
     // https://github.com/benmosher/eslint-plugin-import/tree/master/docs/rules
-    'import/first': 'error',
-    'import/no-amd': 'error',
-    'import/no-anonymous-default-export': 'warn',
-    'import/no-extraneous-dependencies': 'error',
-    'import/no-webpack-loader-syntax': 'error',
+    'import/first': ERROR,
+    'import/no-amd': ERROR,
+    'import/no-anonymous-default-export': WARN,
+    'import/no-extraneous-dependencies': ERROR,
+    'import/no-webpack-loader-syntax': ERROR,
   },
   settings: {
     react: {
