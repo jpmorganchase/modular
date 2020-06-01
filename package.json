@@ -3,6 +3,9 @@
   "workspaces": [
     "packages/*"
   ],
+  "engines": {
+    "node": ">=10"
+  },
   "scripts": {
     "prettier": "prettier --write .",
     "lint": "eslint --cache --fix --ext .js,.ts,.tsx --max-warnings 0 .",

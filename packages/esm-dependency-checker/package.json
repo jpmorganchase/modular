@@ -1,0 +1,34 @@
+{
+  "name": "esm-dependency-checker",
+  "version": "0.0.0",
+  "main": "build/index.js",
+  "bin": {
+    "esm-dependency-checker": "build/cli.js"
+  },
+  "license": "Apache-2.0",
+  "scripts": {
+    "clean": "rimraf build",
+    "prebuild": "yarn clean",
+    "build": "babel --root-mode upward src --out-dir build --extensions .ts"
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "dependencies": {
+    "@babel/core": "^7.10.1",
+    "@yarnpkg/lockfile": "^1.1.0",
+    "chalk": "^4.0.0",
+    "execa": "^4.0.2",
+    "globby": "^11.0.0",
+    "meow": "^7.0.1",
+    "semver": "^7.3.2",
+    "tmp": "^0.2.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.10.1",
+    "@types/node": "*",
+    "@types/tmp": "^0.2.0",
+    "@types/yarnpkg__lockfile": "^1.1.3",
+    "rimraf": "^3.0.2"
+  }
+}
