@@ -283,12 +283,11 @@ function isTypesPackage({ name }: PackageJson) {
   return parts.length > 1 && parts[0] === '@types';
 }
 
-async function getResults(
+async function* getResults(
   dependencies: Dependencies,
   lockManifestByNameAndRange: Map<Name, Map<Range, LockManifest>>,
   packageJsonByNameAndVersion: Map<Name, Map<Version, EnhancedPackageJson>>,
 ) {
-  const result: Result[] = [];
   const seen = new Set<string>();
   const queue = getResolvedPackages(
     dependencies,
@@ -309,7 +308,7 @@ async function getResults(
     }
     seen.add(identifier);
 
-    result.push(await makeResult(resolvedPackage));
+    yield await makeResult(resolvedPackage);
 
     queue.push(
       ...getResolvedPackages(
@@ -319,8 +318,6 @@ async function getResults(
       ),
     );
   }
-
-  return result;
 }
 
 export async function checkESMDependencies(
@@ -335,11 +332,15 @@ export async function checkESMDependencies(
       tmpRepo.name,
     );
 
-    return await getResults(
+    const results: Result[] = [];
+    for await (const result of getResults(
       dependencies,
       lockManifestByNameAndRange,
       packageJsonByNameAndVersion,
-    );
+    )) {
+      results.push(result);
+    }
+    return results;
   } finally {
     tmpRepo.removeCallback();
   }
