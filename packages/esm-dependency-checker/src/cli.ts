@@ -72,5 +72,5 @@ void (async () => {
 
   const dependenciesWithExclusions = excludeKnownDevDependencies(dependencies);
 
-  printResults(await checkESMDependencies(dependenciesWithExclusions));
+  printResults(await checkESMDependencies(dependenciesWithExclusions, { cwd }));
 })();
