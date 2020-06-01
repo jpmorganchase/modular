@@ -245,7 +245,9 @@ async function isESM(packageJson: EnhancedPackageJson): Promise<IsESM> {
 
   if (typeof filename === 'string') {
     try {
-      const modulePath = path.resolve(packageJson.packagePath, filename);
+      const modulePath = require.resolve(
+        path.resolve(packageJson.packagePath, filename),
+      );
       const moduleString = await fs.readFile(modulePath, 'utf8');
 
       isESModule = hasESMImportOrExport(moduleString);
