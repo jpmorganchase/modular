@@ -1,3 +1,13 @@
+// The ESLint browser environment defines all browser globals as valid,
+// even though most people don't know some of them exist (e.g. `name` or `status`).
+// This is dangerous as it hides accidentally undefined variables.
+// We blacklist the globals that we deem potentially confusing.
+// To use them, explicitly reference them, e.g. `window.name` or `window.status`.
+// See https://github.com/facebook/create-react-app/blob/3c2f2d4/packages/eslint-config-react-app/index.js#L19-L24
+const restrictedGlobals = require('confusing-browser-globals');
+
+const ERROR = 'error';
+
 module.exports = {
   root: true,
   env: {
@@ -26,7 +36,13 @@ module.exports = {
   },
   plugins: ['react', 'react-hooks'],
   reportUnusedDisableDirectives: true,
-  rules: {},
+
+  // NOTE: When adding rules here, you need to make sure they are compatible with
+  // `typescript-eslint`, as some rules such as `no-array-constructor` aren't compatible.
+  rules: {
+    // http://eslint.org/docs/rules/
+    'no-restricted-globals': [ERROR, ...restrictedGlobals],
+  },
   settings: {
     react: {
       version: 'detect',
