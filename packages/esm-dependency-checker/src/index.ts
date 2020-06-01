@@ -287,6 +287,7 @@ async function* getResults(
   dependencies: Dependencies,
   lockManifestByNameAndRange: Map<Name, Map<Range, LockManifest>>,
   packageJsonByNameAndVersion: Map<Name, Map<Version, EnhancedPackageJson>>,
+  shouldSkipPackage: (packageJson: PackageJson) => boolean,
 ) {
   const seen = new Set<string>();
   const queue = getResolvedPackages(
@@ -298,7 +299,7 @@ async function* getResults(
   while (queue.length) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const resolvedPackage = queue.shift()!;
-    if (isTypesPackage(resolvedPackage)) {
+    if (shouldSkipPackage(resolvedPackage)) {
       continue;
     }
 
@@ -322,7 +323,13 @@ async function* getResults(
 
 export async function checkESMDependencies(
   dependencies: Dependencies,
-  { cwd = process.cwd() }: { cwd?: string } = {},
+  {
+    cwd = process.cwd(),
+    shouldSkipPackage = isTypesPackage,
+  }: {
+    cwd?: string;
+    shouldSkipPackage?: (packageJson: PackageJson) => boolean;
+  } = {},
 ): Promise<Result[]> {
   const tmpRepo = dirSync({ unsafeCleanup: true });
   try {
@@ -337,6 +344,7 @@ export async function checkESMDependencies(
       dependencies,
       lockManifestByNameAndRange,
       packageJsonByNameAndVersion,
+      shouldSkipPackage,
     )) {
       results.push(result);
     }
