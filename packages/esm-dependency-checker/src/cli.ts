@@ -57,10 +57,10 @@ function printResults(results: Result[]) {
   });
 
   console.info(`${esmPackages.length}/${results.length} ESM packages:`);
-  console.info(esmPackages);
+  console.info(esmPackages.join('\n'));
 
   console.info(`${nonESMPackages.length}/${results.length} non-ESM packages:`);
-  console.info(nonESMPackages);
+  console.info(nonESMPackages.join('\n'));
 }
 
 void (async () => {
@@ -72,5 +72,5 @@ void (async () => {
 
   const dependenciesWithExclusions = excludeKnownDevDependencies(dependencies);
 
-  printResults(await checkESMDependencies(dependenciesWithExclusions));
+  printResults(await checkESMDependencies(dependenciesWithExclusions, { cwd }));
 })();

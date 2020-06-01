@@ -54,9 +54,26 @@ type EnhancedPackageJson = PackageJson & {
   packagePath: string;
 };
 
-async function install(dependencies: Dependencies, cwd: string) {
-  // The installation logic is based on https://github.com/ds300/patch-package/blob/2696a0f/src/makePatch.ts#L114-L135
-  const packageJsonPath = path.join(cwd, 'package.json');
+async function install(
+  dependencies: Dependencies,
+  cwd: string,
+  tmpDir: string,
+) {
+  // The installation logic is based on https://github.com/ds300/patch-package/blob/2696a0f/src/makePatch.ts#L105-L135
+
+  // Copy .npmrc/.yarnrc in case packages are hosted in private registry
+  for (const rcFile of ['.npmrc', '.yarnrc']) {
+    const rcPath = path.join(cwd, rcFile);
+    try {
+      await fs.copyFile(rcPath, path.join(tmpDir, rcFile));
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+        throw error;
+      }
+    }
+  }
+
+  const packageJsonPath = path.join(tmpDir, 'package.json');
   await fs.writeFile(
     packageJsonPath,
     JSON.stringify(
@@ -73,25 +90,25 @@ async function install(dependencies: Dependencies, cwd: string) {
   try {
     // Try first without ignoring scripts in case they are required
     // this works in 99.99% of cases
-    await execa('yarnpkg', ['install', '--ignore-engines'], {
-      cwd,
-    });
+    await execa('yarnpkg', ['install', '--ignore-engines'], { cwd: tmpDir });
   } catch (e) {
     // Try again while ignoring scripts in case the script depends on
     // an implicit context which we haven't reproduced
     await execa(
       'yarnpkg',
       ['install', '--ignore-engines', '--ignore-scripts'],
-      {
-        cwd,
-      },
+      { cwd: tmpDir },
     );
   }
 }
 
-async function getLockfile(dependencies: Dependencies, cwd: string) {
-  await install(dependencies, cwd);
-  const yarnLockPath = path.join(cwd, 'yarn.lock');
+async function getLockfile(
+  dependencies: Dependencies,
+  cwd: string,
+  tmpDir: string,
+) {
+  await install(dependencies, cwd, tmpDir);
+  const yarnLockPath = path.join(tmpDir, 'yarn.lock');
   const rawLockfile = await fs.readFile(yarnLockPath, 'utf8');
   const lockfile = parseLockfile(rawLockfile, yarnLockPath)
     .object as LockfileObject;
@@ -116,10 +133,10 @@ function getLockManifestByNameAndRange(lockfile: LockfileObject) {
   return lockManifestByNameAndRange;
 }
 
-async function getPackageJsonByNameAndVersion(cwd: string) {
+async function getPackageJsonByNameAndVersion(tmpDir: string) {
   const dependencyPackageJsons = await globby(
     ['**/node_modules/@*/*/package.json', '**/node_modules/*/package.json'],
-    { absolute: true, cwd },
+    { absolute: true, cwd: tmpDir },
   );
 
   return (
@@ -228,7 +245,9 @@ async function isESM(packageJson: EnhancedPackageJson): Promise<IsESM> {
 
   if (typeof filename === 'string') {
     try {
-      const modulePath = path.resolve(packageJson.packagePath, filename);
+      const modulePath = require.resolve(
+        path.resolve(packageJson.packagePath, filename),
+      );
       const moduleString = await fs.readFile(modulePath, 'utf8');
 
       isESModule = hasESMImportOrExport(moduleString);
@@ -306,10 +325,11 @@ async function getResults(
 
 export async function checkESMDependencies(
   dependencies: Dependencies,
+  { cwd = process.cwd() }: { cwd?: string } = {},
 ): Promise<Result[]> {
   const tmpRepo = dirSync({ unsafeCleanup: true });
   try {
-    const lockfile = await getLockfile(dependencies, tmpRepo.name);
+    const lockfile = await getLockfile(dependencies, cwd, tmpRepo.name);
     const lockManifestByNameAndRange = getLockManifestByNameAndRange(lockfile);
     const packageJsonByNameAndVersion = await getPackageJsonByNameAndVersion(
       tmpRepo.name,
