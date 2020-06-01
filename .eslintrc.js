@@ -7,6 +7,7 @@
 const restrictedGlobals = require('confusing-browser-globals');
 
 const ERROR = 'error';
+const OFF = 'off';
 
 module.exports = {
   root: true,
@@ -17,6 +18,7 @@ module.exports = {
   },
   extends: [
     'eslint:recommended',
+    'plugin:import/recommended',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
     'prettier',
@@ -34,7 +36,7 @@ module.exports = {
     ecmaVersion: 2020,
     sourceType: 'module',
   },
-  plugins: ['react', 'react-hooks'],
+  plugins: ['import', 'react', 'react-hooks'],
   reportUnusedDisableDirectives: true,
 
   // NOTE: When adding rules here, you need to make sure they are compatible with
@@ -42,6 +44,13 @@ module.exports = {
   rules: {
     // http://eslint.org/docs/rules/
     'no-restricted-globals': [ERROR, ...restrictedGlobals],
+
+    // https://github.com/benmosher/eslint-plugin-import/tree/master/docs/rules
+    'import/first': 'error',
+    'import/no-amd': 'error',
+    'import/no-anonymous-default-export': 'warn',
+    'import/no-extraneous-dependencies': 'error',
+    'import/no-webpack-loader-syntax': 'error',
   },
   settings: {
     react: {
@@ -54,6 +63,7 @@ module.exports = {
       extends: [
         'plugin:@typescript-eslint/recommended',
         'plugin:@typescript-eslint/recommended-requiring-type-checking',
+        'plugin:import/typescript',
         'prettier/@typescript-eslint',
       ],
       parserOptions: {
@@ -66,6 +76,10 @@ module.exports = {
         tsconfigRootDir: __dirname,
       },
       plugins: ['@typescript-eslint'],
+      rules: {
+        // TypeScript compilation already ensures that default imports exist in the referenced module
+        'import/default': OFF,
+      },
     },
     {
       files: ['**/__tests__/**/*.{ts,tsx}', '**/*.test.{ts,tsx}'],
