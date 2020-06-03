@@ -283,7 +283,7 @@ function isTypesPackage({ name }: PackageJson) {
   return parts.length > 1 && parts[0] === '@types';
 }
 
-async function* getResults(
+function* traversePackages(
   dependencies: Dependencies,
   lockManifestByNameAndRange: Map<Name, Map<Range, LockManifest>>,
   packageJsonByNameAndVersion: Map<Name, Map<Version, EnhancedPackageJson>>,
@@ -309,7 +309,7 @@ async function* getResults(
     }
     seen.add(identifier);
 
-    yield await makeResult(resolvedPackage);
+    yield resolvedPackage;
 
     queue.push(
       ...getResolvedPackages(
@@ -321,7 +321,7 @@ async function* getResults(
   }
 }
 
-export async function checkESMDependencies(
+export async function* checkESMDependencies(
   dependencies: Dependencies,
   {
     cwd = process.cwd(),
@@ -330,7 +330,7 @@ export async function checkESMDependencies(
     cwd?: string;
     shouldSkipPackage?: (packageJson: PackageJson) => boolean;
   } = {},
-): Promise<Result[]> {
+): AsyncGenerator<Result> {
   const tmpRepo = dirSync({ unsafeCleanup: true });
   try {
     const lockfile = await getLockfile(dependencies, cwd, tmpRepo.name);
@@ -339,16 +339,14 @@ export async function checkESMDependencies(
       tmpRepo.name,
     );
 
-    const results: Result[] = [];
-    for await (const result of getResults(
+    for (const pkg of traversePackages(
       dependencies,
       lockManifestByNameAndRange,
       packageJsonByNameAndVersion,
       shouldSkipPackage,
     )) {
-      results.push(result);
+      yield makeResult(pkg);
     }
-    return results;
   } finally {
     tmpRepo.removeCallback();
   }
