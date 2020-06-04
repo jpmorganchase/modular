@@ -283,12 +283,12 @@ function isTypesPackage({ name }: PackageJson) {
   return parts.length > 1 && parts[0] === '@types';
 }
 
-async function getResults(
+function* traversePackages(
   dependencies: Dependencies,
   lockManifestByNameAndRange: Map<Name, Map<Range, LockManifest>>,
   packageJsonByNameAndVersion: Map<Name, Map<Version, EnhancedPackageJson>>,
+  shouldSkipPackage: (packageJson: PackageJson) => boolean,
 ) {
-  const result: Result[] = [];
   const seen = new Set<string>();
   const queue = getResolvedPackages(
     dependencies,
@@ -299,7 +299,7 @@ async function getResults(
   while (queue.length) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const resolvedPackage = queue.shift()!;
-    if (isTypesPackage(resolvedPackage)) {
+    if (shouldSkipPackage(resolvedPackage)) {
       continue;
     }
 
@@ -309,7 +309,7 @@ async function getResults(
     }
     seen.add(identifier);
 
-    result.push(await makeResult(resolvedPackage));
+    yield resolvedPackage;
 
     queue.push(
       ...getResolvedPackages(
@@ -319,14 +319,18 @@ async function getResults(
       ),
     );
   }
-
-  return result;
 }
 
-export async function checkESMDependencies(
+export async function* checkESMDependencies(
   dependencies: Dependencies,
-  { cwd = process.cwd() }: { cwd?: string } = {},
-): Promise<Result[]> {
+  {
+    cwd = process.cwd(),
+    shouldSkipPackage = isTypesPackage,
+  }: {
+    cwd?: string;
+    shouldSkipPackage?: (packageJson: PackageJson) => boolean;
+  } = {},
+): AsyncGenerator<Result> {
   const tmpRepo = dirSync({ unsafeCleanup: true });
   try {
     const lockfile = await getLockfile(dependencies, cwd, tmpRepo.name);
@@ -335,11 +339,14 @@ export async function checkESMDependencies(
       tmpRepo.name,
     );
 
-    return await getResults(
+    for (const pkg of traversePackages(
       dependencies,
       lockManifestByNameAndRange,
       packageJsonByNameAndVersion,
-    );
+      shouldSkipPackage,
+    )) {
+      yield makeResult(pkg);
+    }
   } finally {
     tmpRepo.removeCallback();
   }

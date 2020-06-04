@@ -43,23 +43,25 @@ function excludeKnownDevDependencies(dependencies: Dependencies) {
   return dependenciesWithExclusions;
 }
 
-function printResults(results: Result[]) {
+async function printResults(results: AsyncGenerator<Result>) {
   const esmPackages: string[] = [];
   const nonESMPackages: string[] = [];
+  let numberOfResults = 0;
 
-  results.forEach((result) => {
+  for await (const result of results) {
     const nameAndVersion = `${result.name}@${result.version}`;
     if (result.isESM) {
       esmPackages.push(nameAndVersion);
     } else {
       nonESMPackages.push(`${nameAndVersion}: ${result.reason as string}`);
     }
-  });
+    numberOfResults++;
+  }
 
-  console.info(`${esmPackages.length}/${results.length} ESM packages:`);
+  console.info(`${esmPackages.length}/${numberOfResults} ESM packages:`);
   console.info(esmPackages.join('\n'));
 
-  console.info(`${nonESMPackages.length}/${results.length} non-ESM packages:`);
+  console.info(`${nonESMPackages.length}/${numberOfResults} non-ESM packages:`);
   console.info(nonESMPackages.join('\n'));
 }
 
@@ -72,5 +74,5 @@ void (async () => {
 
   const dependenciesWithExclusions = excludeKnownDevDependencies(dependencies);
 
-  printResults(await checkESMDependencies(dependenciesWithExclusions, { cwd }));
+  await printResults(checkESMDependencies(dependenciesWithExclusions, { cwd }));
 })();
