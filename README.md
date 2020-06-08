@@ -1,4 +1,4 @@
-## modular
+# modular
 
 `modular` allows you to write and deploy applications, written as JavaScript
 modules, across multiple repositories.
