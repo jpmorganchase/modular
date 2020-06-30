@@ -1,8 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # Dependencies
-/node_modules
-/packages/*/node_modules/
+node_modules
 
 # Build output
 /packages/*/build/

@@ -83,7 +83,7 @@ module.exports = {
       },
     },
     {
-      files: ['**/__tests__/**/*.{ts,tsx}', '**/*.test.{ts,tsx}'],
+      files: ['**/__tests__/**/*.{ts,tsx,js,jsx}', '**/*.test.{ts,tsx,js,jsx}'],
       extends: [
         'plugin:jest/recommended',
         'plugin:jest/style',

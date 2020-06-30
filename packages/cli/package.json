@@ -1,0 +1,14 @@
+{
+  "name": "cli",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@craco/craco": "^5.6.4",
+    "meow": "^7.0.1",
+    "shelljs": "^0.8.4"
+  },
+  "bin": {
+    "modular": "cli.js"
+  }
+}
