@@ -1,5 +1,8 @@
+'use strict';
+
 const path = require('path');
 const { getLoader, loaderByName } = require('@craco/craco');
+
 const absolutePath = path.resolve('../widgets');
 
 module.exports = {
@@ -18,15 +21,16 @@ module.exports = {
           : [match.loader.include];
         match.loader.include = include.concat(absolutePath);
       }
+
       return webpackConfig;
     },
   },
   jest: {
     configure: {
-      roots: ['<rootDir>/src', '<rootDir>/../widgets/'],
+      roots: ['<rootDir>/../app', '<rootDir>/../widgets/'],
       testMatch: [
-        '<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}',
-        '<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}',
+        '<rootDir>/../app/**/__tests__/**/*.{js,jsx,ts,tsx}',
+        '<rootDir>/../app/**/*.{spec,test}.{js,jsx,ts,tsx}',
         '<rootDir>/../widgets/**/__tests__/**/*.{js,jsx,ts,tsx}',
         '<rootDir>/../widgets/**/*.{spec,test}.{js,jsx,ts,tsx}',
       ],
