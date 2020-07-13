@@ -1,6 +1,7 @@
 # modular
 
-`modular` allows you to develop and deploy applications, written as JavaScript modules, across multiple repositories.
+`modular` allows you to develop and deploy applications, written as JavaScript
+modules, across multiple repositories.
 
 It consists of a few parts:
 

@@ -1,0 +1,32 @@
+{
+  "name": "modular",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "bin": {
+    "modular": "build/cli.js"
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "clean": "rimraf build",
+    "prebuild": "yarn clean",
+    "build": "babel --root-mode upward src --out-dir build --extensions .ts --ignore *.test.ts"
+  },
+  "dependencies": {
+    "@craco/craco": "^5.6.4",
+    "chalk": "^4.1.0",
+    "execa": "^4.0.2",
+    "find-up": "^4.1.0",
+    "fs-extra": "^9.0.1",
+    "meow": "^7.0.1",
+    "pascal-case": "^3.1.1",
+    "resolve-as-bin": "^2.1.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^5.0.2",
+    "@types/find-up": "^4.0.0",
+    "@types/node": "*",
+    "rimraf": "^3.0.2"
+  }
+}
