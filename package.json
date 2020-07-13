@@ -9,7 +9,8 @@
   "scripts": {
     "prettier": "prettier --write .",
     "lint": "eslint --cache --fix --ext .js,.ts,.tsx --max-warnings 0 .",
-    "test": "jest"
+    "test": "jest",
+    "build": "yarn workspace create-modular-react-app build && yarn workspace modular-scripts build && yarn workspace esm-dependency-checker build"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",

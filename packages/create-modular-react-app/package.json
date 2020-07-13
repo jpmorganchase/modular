@@ -1,0 +1,26 @@
+{
+  "name": "create-modular-react-app",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "bin": {
+    "create-modular-react-app": "build/cli.js"
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "clean": "rimraf build",
+    "prebuild": "yarn clean",
+    "build": "babel --root-mode upward src --out-dir build --extensions .ts --ignore *.test.ts"
+  },
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "execa": "^4.0.2",
+    "fs-extra": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^5.0.2",
+    "@types/node": "*",
+    "rimraf": "^3.0.2"
+  }
+}
