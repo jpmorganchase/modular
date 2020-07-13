@@ -6,9 +6,12 @@ import findUp from 'find-up';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import chalk from 'chalk';
-import { pascalCase as toPascalCase } from 'pascal-case';
+import {
+  pascalCase as toPascalCase,
+  paramCase as toParamCase,
+} from 'change-case';
 import resolveAsBin from 'resolve-as-bin';
-import generate from './generateComponentImports';
+import generateComponentImports from './generateComponentImports';
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
@@ -186,7 +189,10 @@ function app(name: string) {
 function widget(name: string) {
   const modularRoot = getModularRoot();
 
-  const newWidgetPath = path.join(modularRoot, 'widgets', name);
+  const newWidgetPackageName = toParamCase(name);
+  const newWidgetComponentName = toPascalCase(name);
+
+  const newWidgetPath = path.join(modularRoot, 'widgets', newWidgetPackageName);
   const templatePath = path.join(__dirname, '..', 'template');
 
   // create a new widget source folder
@@ -210,7 +216,8 @@ function widget(name: string) {
       filePath,
       fs
         .readFileSync(filePath, 'utf8')
-        .replace(/Component\$\$/g, toPascalCase(name)),
+        .replace(/PackageName\$\$/g, newWidgetPackageName)
+        .replace(/ComponentName\$\$/g, newWidgetComponentName),
     );
   }
 
@@ -226,7 +233,7 @@ function widget(name: string) {
 function map(modularRoot = getModularRoot()) {
   fs.writeFileSync(
     path.join(modularRoot, 'app/src/widgets.js'),
-    generate(path.join(modularRoot, 'widgets')),
+    generateComponentImports(path.join(modularRoot, 'widgets')),
   );
 }
 
