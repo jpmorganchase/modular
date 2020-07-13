@@ -1,5 +1,5 @@
 import React from 'react';
 
-export default function Component$$() {
-  return <div>This is Component$$</div>;
+export default function ComponentName$$() {
+  return <div>This is ComponentName$$</div>;
 }
