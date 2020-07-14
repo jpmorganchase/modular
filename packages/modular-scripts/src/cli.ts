@@ -43,7 +43,7 @@ function execSync(
 
 function isYarnInstalled(): boolean {
   try {
-    execa.sync('yarn', ['-v']);
+    execa.sync('yarnpkg', ['-v']);
     return true;
   } catch (err) {
     return false;
@@ -118,9 +118,9 @@ function addWidget(name: string) {
     );
   }
 
-  execSync('yarn', [], { cwd: newWidgetPath });
+  execSync('yarnpkg', [], { cwd: newWidgetPath });
 
-  execSync('yarn', ['prettier'], {
+  execSync('yarnpkg', ['prettier'], {
     cwd: modularRoot,
   });
 }
