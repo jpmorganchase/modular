@@ -32,7 +32,7 @@ function execSync(
 
 function isYarnInstalled(): boolean {
   try {
-    execa.sync('yarn', ['-v']);
+    execa.sync('yarnpkg', ['-v']);
     return true;
   } catch (err) {
     return false;
@@ -70,7 +70,7 @@ function createModularApp() {
   // Create a new CRA app, modify config for workspaces
   fs.mkdirpSync(newModularRoot);
 
-  execSync('yarn', ['init', '-y'], {
+  execSync('yarnpkg', ['init', '-y'], {
     cwd: newModularRoot,
   });
 
@@ -98,7 +98,7 @@ function createModularApp() {
   });
 
   execSync(
-    'yarn',
+    'yarnpkg',
     [
       'add',
       '-W',
@@ -116,7 +116,7 @@ function createModularApp() {
     path.join(widgetsPath, 'README.md'),
   );
 
-  execSync('yarn', ['create', 'react-app', 'app'], {
+  execSync('yarnpkg', ['create', 'react-app', 'app'], {
     cwd: newModularRoot,
   });
   fs.removeSync(path.join(appPath, '.gitignore'));
@@ -139,7 +139,7 @@ function createModularApp() {
     path.join(templatePath, 'app/widgets.js'),
     path.join(appPath, 'src/widgets.js'),
   );
-  execSync('yarn', ['add', 'codegen.macro'], { cwd: appPath });
+  execSync('yarnpkg', ['add', 'codegen.macro'], { cwd: appPath });
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const appPackageJson = fs.readJsonSync(appPackageJsonPath);
@@ -149,7 +149,7 @@ function createModularApp() {
   /* eslint-enable @typescript-eslint/no-unsafe-member-access */
   fs.writeJsonSync(appPackageJsonPath, appPackageJson);
 
-  execSync('yarn', ['prettier'], {
+  execSync('yarnpkg', ['prettier'], {
     cwd: newModularRoot,
   });
   execSync('git', ['init'], {
