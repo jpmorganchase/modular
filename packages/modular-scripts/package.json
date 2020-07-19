@@ -1,6 +1,6 @@
 {
   "name": "modular-scripts",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "Apache-2.0",
   "main": "./build/index.js",
   "bin": {
@@ -12,7 +12,7 @@
   "scripts": {
     "clean": "rimraf build",
     "prebuild": "yarn clean",
-    "build": "babel --root-mode upward src --out-dir build --extensions .ts --ignore *.test.ts"
+    "build": "babel --root-mode upward src --out-dir build --extensions .ts --ignore 'src/**/*.test.ts'"
   },
   "dependencies": {
     "@craco/craco": "^5.6.4",
@@ -22,12 +22,14 @@
     "execa": "^4.0.2",
     "find-up": "^4.1.0",
     "fs-extra": "^9.0.1",
-    "meow": "^7.0.1",
-    "resolve-as-bin": "^2.1.0"
+    "modular-template-widget-typescript": "^0.0.1",
+    "react-scripts": "^3.4.1",
+    "resolve-as-bin": "^2.1.0",
+    "yargs": "^15.4.1"
   },
   "devDependencies": {
-    "@types/fs-extra": "^5.0.2",
     "@types/find-up": "^4.0.0",
+    "@types/fs-extra": "^5.0.2",
     "@types/node": "*",
     "rimraf": "^3.0.2"
   }

@@ -66,6 +66,7 @@ async function printResults(results: AsyncGenerator<Result>) {
 }
 
 void (async () => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const pkgJson = require(path.join(cwd, 'package.json')) as PackageJson;
   const dependencies = {
     ...pkgJson.dependencies,

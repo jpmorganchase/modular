@@ -1,0 +1,2 @@
+# Empty because `create-react-app` expects this to be here,
+# but we do not our app folder to contain its own `.gitignore`.

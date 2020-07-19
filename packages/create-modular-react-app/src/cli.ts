@@ -4,6 +4,9 @@ import execa from 'execa';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import chalk from 'chalk';
+import { argv } from 'yargs';
+
+import { JSONSchemaForNPMPackageJsonFiles } from '@schemastore/package';
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
@@ -47,16 +50,16 @@ function createModularApp() {
     process.exit(1);
   }
 
-  const index = process.argv.findIndex((arg) =>
-    arg.endsWith('modular-react-app'),
-  );
-  const [name] = index !== -1 ? process.argv.slice(index + 1) : [undefined];
+  const [name] = argv._;
   if (!name) {
     console.error(
       'Please pass a name into `yarn create modular-react-app [name]`.',
     );
     process.exit(1);
   }
+
+  const defaultTemplate = 'cra-template-modular-typescript';
+  const template = (argv.template || defaultTemplate) as string;
 
   const newModularRoot = path.join(process.cwd(), name);
   const widgetsPath = path.join(newModularRoot, 'widgets');
@@ -83,7 +86,7 @@ function createModularApp() {
       start: 'modular start',
       build: 'modular build',
       test: 'modular test',
-      lint: 'eslint .',
+      lint: 'eslint . --ext .js,.ts,.tsx',
       prettier: 'prettier --write .',
     },
     eslintConfig: {
@@ -116,37 +119,36 @@ function createModularApp() {
     path.join(widgetsPath, 'README.md'),
   );
 
-  execSync('yarnpkg', ['create', 'react-app', 'app'], {
+  execSync('yarnpkg', ['create', 'react-app', 'app', '--template', template], {
     cwd: newModularRoot,
   });
   fs.removeSync(path.join(appPath, '.gitignore'));
   fs.removeSync(path.join(appPath, '.git'));
   fs.removeSync(path.join(appPath, 'yarn.lock'));
+  fs.removeSync(path.join(appPath, 'README.md'));
 
   fs.copySync(
     path.join(templatePath, 'gitignore'),
     path.join(newModularRoot, '.gitignore'),
   );
-
-  // TODO: Rather than manually copying files across and installing dependencies this should use a `--template`
-  // that includes `store.js` and `widgets.js`, doesn't contain a service worker and installs the correct dependencies.
-  // See: https://github.com/facebook/create-react-app/tree/master/packages/cra-template
-  fs.copySync(
-    path.join(templatePath, 'app/store.js'),
-    path.join(appPath, 'src/store.js'),
+  fs.symlinkSync(
+    path.join(newModularRoot, '.gitignore'),
+    path.join(newModularRoot, '.eslintignore'),
   );
   fs.copySync(
-    path.join(templatePath, 'app/widgets.js'),
-    path.join(appPath, 'src/widgets.js'),
+    path.join(templatePath, 'tsconfig.json'),
+    path.join(newModularRoot, 'tsconfig.json'),
   );
-  execSync('yarnpkg', ['add', 'codegen.macro'], { cwd: appPath });
+  fs.copySync(
+    path.join(templatePath, 'README.md'),
+    path.join(newModularRoot, 'README.md'),
+  );
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const appPackageJson = fs.readJsonSync(appPackageJsonPath);
-  /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+  const appPackageJson = fs.readJsonSync(
+    appPackageJsonPath,
+  ) as JSONSchemaForNPMPackageJsonFiles;
   delete appPackageJson['scripts'];
   delete appPackageJson['eslintConfig'];
-  /* eslint-enable @typescript-eslint/no-unsafe-member-access */
   fs.writeJsonSync(appPackageJsonPath, appPackageJson);
 
   execSync('yarnpkg', ['prettier'], {

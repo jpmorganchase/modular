@@ -1,0 +1,28 @@
+{
+  "name": "modular-template-widget-typescript",
+  "version": "0.0.1",
+  "keywords": [
+    "react",
+    "modular-scripts",
+    "widget",
+    "template",
+    "typescript"
+  ],
+  "description": "The base TypeScript template for creating a new widget.",
+  "main": "package.json",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jpmorganchase/modular.git",
+    "directory": "packages/modular-template-widget-typescript"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=8.10"
+  },
+  "bugs": {
+    "url": "https://github.com/jpmorganchase/modular/issues"
+  },
+  "files": [
+    "template"
+  ]
+}
