@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import meow from 'meow';
+import { argv } from 'yargs';
 import execa from 'execa';
 import * as fs from 'fs-extra';
 import * as path from 'path';
@@ -51,16 +51,15 @@ function isYarnInstalled(): boolean {
 }
 
 function run() {
-  const cli = meow({
-    description: 'Dashboards for a new generation',
-    help: `
+  const help = `
+  Dashboards for a new generation
+
   Usage:
     $ modular add <widget-name>
     $ modular start
     $ modular build
     $ modular test
-`,
-  });
+`;
 
   if (isYarnInstalled() === false) {
     console.error(
@@ -69,10 +68,13 @@ function run() {
     process.exit(1);
   }
 
-  const command = cli.input[0];
+  const command = argv._[0];
   switch (command) {
     case 'add':
-      return addWidget(cli.input[1]);
+      return addWidget(
+        argv._[1],
+        (argv.template || 'modular-template-widget-typescript') as string,
+      );
     case 'test':
       return test(process.argv.slice(3));
     case 'start':
@@ -80,19 +82,22 @@ function run() {
     case 'build':
       return build();
     default:
-      console.log(cli.help);
+      console.log(help);
       process.exit(1);
   }
 }
 
-function addWidget(name: string) {
+function addWidget(name: string, template: string) {
   const modularRoot = getModularRoot();
 
   const newWidgetPackageName = toParamCase(name);
   const newWidgetComponentName = toPascalCase(name);
 
   const newWidgetPath = path.join(modularRoot, 'widgets', newWidgetPackageName);
-  const templatePath = path.join(__dirname, '..', 'template');
+  const widgetTemplatePath = path.join(
+    path.dirname(require.resolve(`${template}/package.json`)),
+    'template',
+  );
 
   // create a new widget source folder
   if (fs.existsSync(newWidgetPath)) {
@@ -101,7 +106,7 @@ function addWidget(name: string) {
   }
 
   fs.mkdirpSync(newWidgetPath);
-  fs.copySync(path.join(templatePath, 'widgets/starter'), newWidgetPath);
+  fs.copySync(widgetTemplatePath, newWidgetPath);
 
   const widgetRootFilePaths = fs
     .readdirSync(newWidgetPath, { withFileTypes: true })
@@ -113,8 +118,8 @@ function addWidget(name: string) {
       widgetFilePath,
       fs
         .readFileSync(widgetFilePath, 'utf8')
-        .replace(/PackageName\$\$/g, newWidgetPackageName)
-        .replace(/ComponentName\$\$/g, newWidgetComponentName),
+        .replace(/PackageName__/g, newWidgetPackageName)
+        .replace(/ComponentName__/g, newWidgetComponentName),
     );
   }
 

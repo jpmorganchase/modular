@@ -1,0 +1,14 @@
+{
+  "name": "PackageName__",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.0",
+    "@types/react-dom": "^16.9.0"
+  }
+}

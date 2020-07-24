@@ -83,6 +83,18 @@ module.exports = {
       },
     },
     {
+      // Disable rules within templates that are fired erroneously.
+      files: [
+        'packages/cra-template-modular-typescript/**/*.{ts,tsx}',
+        'packages/modular-template-widget-typescript/**/*.{ts,tsx}',
+      ],
+      rules: {
+        '@typescript-eslint/no-unsafe-assignment': OFF,
+        '@typescript-eslint/no-unsafe-call': OFF,
+        'import/no-extraneous-dependencies': OFF,
+      },
+    },
+    {
       files: ['**/__tests__/**/*.{ts,tsx,js,jsx}', '**/*.test.{ts,tsx,js,jsx}'],
       extends: [
         'plugin:jest/recommended',
