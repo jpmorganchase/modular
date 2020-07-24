@@ -59,7 +59,7 @@ function createModularApp() {
   }
 
   const defaultTemplate = 'cra-template-modular-typescript';
-  const template = (argv.template || defaultTemplate) as string;
+  const template = (argv.template ?? defaultTemplate) as string;
 
   const newModularRoot = path.join(process.cwd(), name);
   const widgetsPath = path.join(newModularRoot, 'widgets');
