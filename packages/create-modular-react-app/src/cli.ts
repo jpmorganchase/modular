@@ -62,8 +62,9 @@ function createModularApp() {
   const template = (argv.template ?? defaultTemplate) as string;
 
   const newModularRoot = path.join(process.cwd(), name);
-  const widgetsPath = path.join(newModularRoot, 'widgets');
   const appPath = path.join(newModularRoot, 'app');
+  const widgetsPath = path.join(newModularRoot, 'widgets');
+  const sharedPath = path.join(newModularRoot, 'shared');
 
   const projectPackageJsonPath = path.join(newModularRoot, 'package.json');
   const appPackageJsonPath = path.join(appPath, 'package.json');
@@ -80,7 +81,7 @@ function createModularApp() {
   fs.writeJsonSync(projectPackageJsonPath, {
     ...fs.readJsonSync(projectPackageJsonPath),
     private: true,
-    workspaces: ['app', 'widgets/*'],
+    workspaces: ['app', 'widgets/*', 'shared'],
     modular: {},
     scripts: {
       start: 'modular start',
@@ -117,6 +118,12 @@ function createModularApp() {
   fs.copySync(
     path.join(templatePath, 'widgets/README.md'),
     path.join(widgetsPath, 'README.md'),
+  );
+
+  fs.mkdirpSync(sharedPath);
+  fs.copySync(
+    path.join(templatePath, 'shared/README.md'),
+    path.join(sharedPath, 'README.md'),
   );
 
   execSync('yarnpkg', ['create', 'react-app', 'app', '--template', template], {

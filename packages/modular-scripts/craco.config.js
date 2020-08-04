@@ -3,7 +3,8 @@
 const path = require('path');
 const { getLoader, loaderByName } = require('@craco/craco');
 
-const absolutePath = path.resolve('../widgets');
+const absoluteWidgetsPath = path.resolve('../widgets');
+const absoluteSharedPath = path.resolve('../shared');
 
 module.exports = {
   webpack: {
@@ -19,7 +20,9 @@ module.exports = {
         const include = Array.isArray(match.loader.include)
           ? match.loader.include
           : [match.loader.include];
-        match.loader.include = include.concat(absolutePath);
+        match.loader.include = include
+          .concat(absoluteWidgetsPath)
+          .concat(absoluteSharedPath);
       }
 
       return webpackConfig;
@@ -27,12 +30,18 @@ module.exports = {
   },
   jest: {
     configure: {
-      roots: ['<rootDir>/../app', '<rootDir>/../widgets/'],
+      roots: [
+        '<rootDir>/../app',
+        '<rootDir>/../widgets/',
+        '<rootDir>/../shared/',
+      ],
       testMatch: [
         '<rootDir>/../app/**/__tests__/**/*.{js,jsx,ts,tsx}',
         '<rootDir>/../app/**/*.{spec,test}.{js,jsx,ts,tsx}',
         '<rootDir>/../widgets/**/__tests__/**/*.{js,jsx,ts,tsx}',
         '<rootDir>/../widgets/**/*.{spec,test}.{js,jsx,ts,tsx}',
+        '<rootDir>/../shared/**/__tests__/**/*.{js,jsx,ts,tsx}',
+        '<rootDir>/../shared/**/*.{spec,test}.{js,jsx,ts,tsx}',
       ],
     },
   },
