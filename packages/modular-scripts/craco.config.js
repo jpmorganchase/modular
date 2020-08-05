@@ -20,7 +20,7 @@ module.exports = {
         const include = Array.isArray(match.loader.include)
           ? match.loader.include
           : [match.loader.include];
-        match.loader.include = include
+        match.loader.include = [...include, absoluteWidgetsPath, absoluteSharedPath];
           .concat(absoluteWidgetsPath)
           .concat(absoluteSharedPath);
       }
