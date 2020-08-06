@@ -73,7 +73,11 @@ function run() {
     case 'add':
       return addWidget(
         argv._[1],
-        (argv.template || 'modular-template-widget-typescript') as string,
+        'modular-template-widget-typescript',
+        //(argv.template || 'modular-template-widget-typescript') as string,
+        // https://github.com/jpmorganchase/modular/issues/37
+        // Holding off on using custom templates until we have
+        // actual usecases.
       );
     case 'test':
       return test(process.argv.slice(3));
