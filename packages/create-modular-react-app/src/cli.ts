@@ -59,7 +59,11 @@ function createModularApp() {
   }
 
   const defaultTemplate = 'cra-template-modular-typescript';
-  const template = (argv.template ?? defaultTemplate) as string;
+  // const template = (argv.template ?? defaultTemplate) as string;
+  // https://github.com/jpmorganchase/modular/issues/37
+  // Holding off on using custom templates until we have
+  // actual usecases.
+  const template = defaultTemplate;
 
   const newModularRoot = path.join(process.cwd(), name);
   const appPath = path.join(newModularRoot, 'app');
