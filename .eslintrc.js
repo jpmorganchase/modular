@@ -95,7 +95,7 @@ module.exports = {
       },
     },
     {
-      files: ['**/__tests__/**/*.{ts,tsx,js,jsx}', '**/*.test.{ts,tsx,js,jsx}'],
+      files: ['**/__tests__/**/*.{ts,tsx,js}', '**/*.test.{ts,tsx,js}'],
       extends: [
         'plugin:jest/recommended',
         'plugin:jest/style',
