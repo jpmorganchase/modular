@@ -43,12 +43,12 @@ scratch.
   [typescript](https://www.typescriptlang.org/)
 - new top level components can be added `modular add <widget-name>`; these top
   level components can either be imported directly, or rendered lazily via a
-  dynamically generated widget map as `app/widgets`. Learn more about widgets in
-  [the next section](#widgets)
+  dynamically generated widget map as `app/widgets`.
 
 ## widgets
 
-[ todo: about widgets; we might rename this ]
+Widgets are primary, top-level components in modular. We discuss them in detail
+in [this explainer](/docs/widgets.md).
 
 ## commands
 

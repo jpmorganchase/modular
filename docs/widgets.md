@@ -3,12 +3,15 @@
 User Interfaces are made of components. When you sketch a wireframe on a
 whiteboard or graphics tool of choice, the rough rectangles define the visual
 and semantic boundaries of these components. They correspond to some equivalent
-in your UI framework (e.g - In React, these are defined as classes that extend
-from React.Component, or regular functions that return JSX. In Flutter, these
-are classes that extend from different types of Widgets. In Jetpack, these are
-called Composable Functions.). These are a neat unit of encapsulating state,
-behaviour and presentation. They also _compose_ with each other to provide
-higher abstraction of UI, eventually forming the application itself.
+in your UI framework (e.g - In
+[React](https://reactjs.org/docs/components-and-props.html), these are defined
+as classes that extend from React.Component, or regular functions that return
+JSX. In [Flutter](https://flutter.dev/docs/development/ui/widgets), these are
+classes that extend from different types of Widgets. In
+[Jetpack Compose](https://developer.android.com/jetpack#foundation-components),
+these are called Composable Functions). These are a neat unit of encapsulating
+state, behaviour and presentation. They also _compose_ with each other to
+provide higher abstraction of UI, eventually forming the application itself.
 
 Every application has a (loosely-defined) concept of 'primary' components. These
 are 'top-level' components that are considered special, and most important when
@@ -58,7 +61,7 @@ becomes key to being able to iterate features safely, quickly, and reliably.
 
 `modular` suggests 3 strategies for managing the growth of these components.
 
-strategy 0: Try to keep the codebase as small as possible, for as long as
+**Strategy 0**: Try to keep the codebase as small as possible, for as long as
 possible.
 
 The best kind of scale is no scale at all. As such, it would introduce
@@ -73,7 +76,7 @@ has better returns. If you do need a javascript framework, try to keep it in one
 file. Split into multiple files only when it's painful. Only when you've
 exhausted these basic scaling options, should you move on to the next option...
 
-strategy 1: Move development of the widget to a
+**Strategy 1**: Move development of the widget to a
 [workspace](https://classic.yarnpkg.com/en/docs/workspaces/).
 
 If keeping each primary component in a sub-folder is causing growing pains in
@@ -196,8 +199,8 @@ components are defined and built in separate repositories, or some bespoke
 component registry/loading system. We present a couple of strategies to
 interface with those widgets:
 
-strategy 2: Wrap with a React component that establishes an interface between
-your application and the component's expectations.
+**Strategy 2**: Wrap with a React component that establishes an interface
+between your application and the component's expectations.
 
 The idea here is to write a component that takes props that define how to load
 and interface with a fully decoupled component. For example, you may have a
@@ -248,7 +251,7 @@ legacy widgets, and which can't be transitioned to using the primary system
 (i.e. strategy 1). Do not use it for new widgets, you'll still face all the
 problems prevalent with a multi-repository system.
 
-strategy 3: Perhaps there's a widget (let's call it `X`) that exists in a
+**Strategy 3**: Perhaps there's a widget (let's call it `X`) that exists in a
 separate repository, but the team's owners/developers are willing to _gradually_
 transition to adopting strategy 1. (if they can transition quickly, then they
 should simply copy their source over immediately and call it a day.) The
