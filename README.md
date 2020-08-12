@@ -1,3 +1,6 @@
+_DISCLAIMER: THIS PROJECT IS EXPERIMENTAL. ITS BEHAVIOR, AND THE BEHAVIOR OF
+COMMANDS, WILL LIKELY CHANGE IN THE FUTURE._
+
 # modular
 
 `modular` is a collection of tools and guidance to enable UI development at
