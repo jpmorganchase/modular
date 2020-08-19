@@ -64,7 +64,7 @@ async function stopLocalRegistry() {
   });
 }
 
-async function setup() {
+async function setupLocalRegistry(tmpDir: tmp.DirResult) {
   const gitStatus = (
     await execa('git', ['status', '--porcelain'])
   ).stdout.trim();
@@ -77,8 +77,6 @@ async function setup() {
       ${gitStatus}
     `);
   }
-
-  const tmpDir = tmp.dirSync({ unsafeCleanup: true });
 
   await fs.copyFile(
     path.join(__dirname, 'verdaccio.yaml'),
@@ -123,20 +121,6 @@ async function setup() {
     );
   }
   await execa('git', ['reset', '--hard', 'HEAD'], { stdio: 'inherit' });
-
-  return tmpDir;
-}
-
-async function cleanup(tmpDir?: tmp.DirResult) {
-  await stopLocalRegistry();
-  if (tmpDir) {
-    tmpDir.removeCallback();
-  } else {
-    throw new Error(
-      'The temporary directory variable was not defined, so it could not be removed. ' +
-        'This probably means that `setup` threw an error and never resolved.',
-    );
-  }
 }
 
 async function getBrowser() {
@@ -239,12 +223,13 @@ function tree(rootPath: string) {
 
 let tmpDirectory: tmp.DirResult;
 beforeAll(async () => {
-  tmpDirectory = await setup();
-
+  tmpDirectory = tmp.dirSync({ unsafeCleanup: true });
+  await setupLocalRegistry(tmpDirectory);
   process.chdir(tmpDirectory.name);
 });
 afterAll(async () => {
-  await cleanup(tmpDirectory);
+  await stopLocalRegistry();
+  tmpDirectory.removeCallback();
 });
 
 describe('when `yarn create modular-react-app [repo-name]` is executed', () => {
