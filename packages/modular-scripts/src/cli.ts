@@ -128,10 +128,6 @@ function addWidget(name: string, template: string) {
   }
 
   execSync('yarnpkg', [], { cwd: newWidgetPath });
-
-  execSync('yarnpkg', ['prettier'], {
-    cwd: modularRoot,
-  });
 }
 
 function test(args: string[]) {
