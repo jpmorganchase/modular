@@ -18,7 +18,7 @@
     "@babel/parser": "^7.10.2",
     "@babel/traverse": "^7.10.1",
     "@yarnpkg/lockfile": "^1.1.0",
-    "chalk": "^4.0.0",
+    "chalk": "^4.1.0",
     "execa": "^4.0.2",
     "globby": "^11.0.0",
     "meow": "^7.0.1",
