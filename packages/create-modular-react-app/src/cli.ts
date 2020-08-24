@@ -107,14 +107,7 @@ function createModularApp() {
 
   execSync(
     'yarnpkg',
-    [
-      'add',
-      '-W',
-      '--dev',
-      'prettier',
-      'modular-scripts',
-      'eslint-config-modular-app',
-    ],
+    ['add', '-W', 'prettier', 'modular-scripts', 'eslint-config-modular-app'],
     { cwd: newModularRoot },
   );
 
