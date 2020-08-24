@@ -1,0 +1,434 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`when \`yarn create modular-react-app [repo-name]\` is executed sets up the repo with the directory structure 1`] = `
+Object {
+  "children": Array [
+    Object {
+      "extension": "",
+      "name": ".eslintignore",
+      "path": "test-repo/.eslintignore",
+      "type": "file",
+    },
+    Object {
+      "extension": ".md",
+      "name": "README.md",
+      "path": "test-repo/README.md",
+      "type": "file",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "extension": ".json",
+          "name": "package-lock.json",
+          "path": "test-repo/app/package-lock.json",
+          "type": "file",
+        },
+        Object {
+          "extension": ".json",
+          "name": "package.json",
+          "path": "test-repo/app/package.json",
+          "type": "file",
+        },
+        Object {
+          "children": Array [
+            Object {
+              "extension": ".ico",
+              "name": "favicon.ico",
+              "path": "test-repo/app/public/favicon.ico",
+              "type": "file",
+            },
+            Object {
+              "extension": ".html",
+              "name": "index.html",
+              "path": "test-repo/app/public/index.html",
+              "type": "file",
+            },
+            Object {
+              "extension": ".png",
+              "name": "logo192.png",
+              "path": "test-repo/app/public/logo192.png",
+              "type": "file",
+            },
+            Object {
+              "extension": ".png",
+              "name": "logo512.png",
+              "path": "test-repo/app/public/logo512.png",
+              "type": "file",
+            },
+            Object {
+              "extension": ".json",
+              "name": "manifest.json",
+              "path": "test-repo/app/public/manifest.json",
+              "type": "file",
+            },
+            Object {
+              "extension": ".txt",
+              "name": "robots.txt",
+              "path": "test-repo/app/public/robots.txt",
+              "type": "file",
+            },
+          ],
+          "name": "public",
+          "path": "test-repo/app/public",
+          "type": "directory",
+        },
+        Object {
+          "children": Array [
+            Object {
+              "extension": ".css",
+              "name": "App.css",
+              "path": "test-repo/app/src/App.css",
+              "type": "file",
+            },
+            Object {
+              "extension": ".tsx",
+              "name": "App.test.tsx",
+              "path": "test-repo/app/src/App.test.tsx",
+              "type": "file",
+            },
+            Object {
+              "extension": ".tsx",
+              "name": "App.tsx",
+              "path": "test-repo/app/src/App.tsx",
+              "type": "file",
+            },
+            Object {
+              "extension": ".css",
+              "name": "index.css",
+              "path": "test-repo/app/src/index.css",
+              "type": "file",
+            },
+            Object {
+              "extension": ".tsx",
+              "name": "index.tsx",
+              "path": "test-repo/app/src/index.tsx",
+              "type": "file",
+            },
+            Object {
+              "extension": ".svg",
+              "name": "logo.svg",
+              "path": "test-repo/app/src/logo.svg",
+              "type": "file",
+            },
+            Object {
+              "extension": ".ts",
+              "name": "react-app-env.d.ts",
+              "path": "test-repo/app/src/react-app-env.d.ts",
+              "type": "file",
+            },
+            Object {
+              "extension": ".ts",
+              "name": "setupTests.ts",
+              "path": "test-repo/app/src/setupTests.ts",
+              "type": "file",
+            },
+            Object {
+              "extension": ".ts",
+              "name": "store.ts",
+              "path": "test-repo/app/src/store.ts",
+              "type": "file",
+            },
+            Object {
+              "extension": ".ts",
+              "name": "widgets.ts",
+              "path": "test-repo/app/src/widgets.ts",
+              "type": "file",
+            },
+          ],
+          "name": "src",
+          "path": "test-repo/app/src",
+          "type": "directory",
+        },
+        Object {
+          "extension": ".json",
+          "name": "tsconfig.json",
+          "path": "test-repo/app/tsconfig.json",
+          "type": "file",
+        },
+      ],
+      "name": "app",
+      "path": "test-repo/app",
+      "type": "directory",
+    },
+    Object {
+      "extension": ".json",
+      "name": "package.json",
+      "path": "test-repo/package.json",
+      "type": "file",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "extension": ".md",
+          "name": "README.md",
+          "path": "test-repo/shared/README.md",
+          "type": "file",
+        },
+      ],
+      "name": "shared",
+      "path": "test-repo/shared",
+      "type": "directory",
+    },
+    Object {
+      "extension": ".json",
+      "name": "tsconfig.json",
+      "path": "test-repo/tsconfig.json",
+      "type": "file",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "extension": ".md",
+          "name": "README.md",
+          "path": "test-repo/widgets/README.md",
+          "type": "file",
+        },
+      ],
+      "name": "widgets",
+      "path": "test-repo/widgets",
+      "type": "directory",
+    },
+    Object {
+      "extension": ".lock",
+      "name": "yarn.lock",
+      "path": "test-repo/yarn.lock",
+      "type": "file",
+    },
+  ],
+  "name": "test-repo",
+  "path": "test-repo",
+  "type": "directory",
+}
+`;
+
+exports[`when \`yarn create modular-react-app [repo-name]\` is executed when \`yarn modular add [widget-name]\` is executed creates a widget with the directory structure 1`] = `
+Object {
+  "children": Array [
+    Object {
+      "extension": "",
+      "name": ".eslintignore",
+      "path": "test-repo/.eslintignore",
+      "type": "file",
+    },
+    Object {
+      "extension": ".md",
+      "name": "README.md",
+      "path": "test-repo/README.md",
+      "type": "file",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "extension": ".json",
+          "name": "package-lock.json",
+          "path": "test-repo/app/package-lock.json",
+          "type": "file",
+        },
+        Object {
+          "extension": ".json",
+          "name": "package.json",
+          "path": "test-repo/app/package.json",
+          "type": "file",
+        },
+        Object {
+          "children": Array [
+            Object {
+              "extension": ".ico",
+              "name": "favicon.ico",
+              "path": "test-repo/app/public/favicon.ico",
+              "type": "file",
+            },
+            Object {
+              "extension": ".html",
+              "name": "index.html",
+              "path": "test-repo/app/public/index.html",
+              "type": "file",
+            },
+            Object {
+              "extension": ".png",
+              "name": "logo192.png",
+              "path": "test-repo/app/public/logo192.png",
+              "type": "file",
+            },
+            Object {
+              "extension": ".png",
+              "name": "logo512.png",
+              "path": "test-repo/app/public/logo512.png",
+              "type": "file",
+            },
+            Object {
+              "extension": ".json",
+              "name": "manifest.json",
+              "path": "test-repo/app/public/manifest.json",
+              "type": "file",
+            },
+            Object {
+              "extension": ".txt",
+              "name": "robots.txt",
+              "path": "test-repo/app/public/robots.txt",
+              "type": "file",
+            },
+          ],
+          "name": "public",
+          "path": "test-repo/app/public",
+          "type": "directory",
+        },
+        Object {
+          "children": Array [
+            Object {
+              "extension": ".css",
+              "name": "App.css",
+              "path": "test-repo/app/src/App.css",
+              "type": "file",
+            },
+            Object {
+              "extension": ".tsx",
+              "name": "App.test.tsx",
+              "path": "test-repo/app/src/App.test.tsx",
+              "type": "file",
+            },
+            Object {
+              "extension": ".tsx",
+              "name": "App.tsx",
+              "path": "test-repo/app/src/App.tsx",
+              "type": "file",
+            },
+            Object {
+              "extension": ".css",
+              "name": "index.css",
+              "path": "test-repo/app/src/index.css",
+              "type": "file",
+            },
+            Object {
+              "extension": ".tsx",
+              "name": "index.tsx",
+              "path": "test-repo/app/src/index.tsx",
+              "type": "file",
+            },
+            Object {
+              "extension": ".svg",
+              "name": "logo.svg",
+              "path": "test-repo/app/src/logo.svg",
+              "type": "file",
+            },
+            Object {
+              "extension": ".ts",
+              "name": "react-app-env.d.ts",
+              "path": "test-repo/app/src/react-app-env.d.ts",
+              "type": "file",
+            },
+            Object {
+              "extension": ".ts",
+              "name": "setupTests.ts",
+              "path": "test-repo/app/src/setupTests.ts",
+              "type": "file",
+            },
+            Object {
+              "extension": ".ts",
+              "name": "store.ts",
+              "path": "test-repo/app/src/store.ts",
+              "type": "file",
+            },
+            Object {
+              "extension": ".ts",
+              "name": "widgets.ts",
+              "path": "test-repo/app/src/widgets.ts",
+              "type": "file",
+            },
+          ],
+          "name": "src",
+          "path": "test-repo/app/src",
+          "type": "directory",
+        },
+        Object {
+          "extension": ".json",
+          "name": "tsconfig.json",
+          "path": "test-repo/app/tsconfig.json",
+          "type": "file",
+        },
+      ],
+      "name": "app",
+      "path": "test-repo/app",
+      "type": "directory",
+    },
+    Object {
+      "extension": ".json",
+      "name": "package.json",
+      "path": "test-repo/package.json",
+      "type": "file",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "extension": ".md",
+          "name": "README.md",
+          "path": "test-repo/shared/README.md",
+          "type": "file",
+        },
+      ],
+      "name": "shared",
+      "path": "test-repo/shared",
+      "type": "directory",
+    },
+    Object {
+      "extension": ".json",
+      "name": "tsconfig.json",
+      "path": "test-repo/tsconfig.json",
+      "type": "file",
+    },
+    Object {
+      "children": Array [
+        Object {
+          "extension": ".md",
+          "name": "README.md",
+          "path": "test-repo/widgets/README.md",
+          "type": "file",
+        },
+        Object {
+          "children": Array [
+            Object {
+              "extension": ".md",
+              "name": "README.md",
+              "path": "test-repo/widgets/widget-one/README.md",
+              "type": "file",
+            },
+            Object {
+              "extension": ".tsx",
+              "name": "index.test.tsx",
+              "path": "test-repo/widgets/widget-one/index.test.tsx",
+              "type": "file",
+            },
+            Object {
+              "extension": ".tsx",
+              "name": "index.tsx",
+              "path": "test-repo/widgets/widget-one/index.tsx",
+              "type": "file",
+            },
+            Object {
+              "extension": ".json",
+              "name": "package.json",
+              "path": "test-repo/widgets/widget-one/package.json",
+              "type": "file",
+            },
+          ],
+          "name": "widget-one",
+          "path": "test-repo/widgets/widget-one",
+          "type": "directory",
+        },
+      ],
+      "name": "widgets",
+      "path": "test-repo/widgets",
+      "type": "directory",
+    },
+    Object {
+      "extension": ".lock",
+      "name": "yarn.lock",
+      "path": "test-repo/yarn.lock",
+      "type": "file",
+    },
+  ],
+  "name": "test-repo",
+  "path": "test-repo",
+  "type": "directory",
+}
+`;
