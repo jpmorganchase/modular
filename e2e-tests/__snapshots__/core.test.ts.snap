@@ -82,15 +82,22 @@ Object {
             },
             Object {
               "extension": ".tsx",
-              "name": "App.test.tsx",
-              "path": "test-repo/app/src/App.test.tsx",
-              "type": "file",
-            },
-            Object {
-              "extension": ".tsx",
               "name": "App.tsx",
               "path": "test-repo/app/src/App.tsx",
               "type": "file",
+            },
+            Object {
+              "children": Array [
+                Object {
+                  "extension": ".tsx",
+                  "name": "App.test.tsx",
+                  "path": "test-repo/app/src/__tests__/App.test.tsx",
+                  "type": "file",
+                },
+              ],
+              "name": "__tests__",
+              "path": "test-repo/app/src/__tests__",
+              "type": "directory",
             },
             Object {
               "extension": ".css",
@@ -120,12 +127,6 @@ Object {
               "extension": ".ts",
               "name": "setupTests.ts",
               "path": "test-repo/app/src/setupTests.ts",
-              "type": "file",
-            },
-            Object {
-              "extension": ".ts",
-              "name": "store.ts",
-              "path": "test-repo/app/src/store.ts",
               "type": "file",
             },
             Object {
@@ -283,15 +284,22 @@ Object {
             },
             Object {
               "extension": ".tsx",
-              "name": "App.test.tsx",
-              "path": "test-repo/app/src/App.test.tsx",
-              "type": "file",
-            },
-            Object {
-              "extension": ".tsx",
               "name": "App.tsx",
               "path": "test-repo/app/src/App.tsx",
               "type": "file",
+            },
+            Object {
+              "children": Array [
+                Object {
+                  "extension": ".tsx",
+                  "name": "App.test.tsx",
+                  "path": "test-repo/app/src/__tests__/App.test.tsx",
+                  "type": "file",
+                },
+              ],
+              "name": "__tests__",
+              "path": "test-repo/app/src/__tests__",
+              "type": "directory",
             },
             Object {
               "extension": ".css",
@@ -321,12 +329,6 @@ Object {
               "extension": ".ts",
               "name": "setupTests.ts",
               "path": "test-repo/app/src/setupTests.ts",
-              "type": "file",
-            },
-            Object {
-              "extension": ".ts",
-              "name": "store.ts",
-              "path": "test-repo/app/src/store.ts",
               "type": "file",
             },
             Object {
@@ -387,16 +389,29 @@ Object {
         Object {
           "children": Array [
             Object {
+              "extension": "",
+              "name": ".DS_Store",
+              "path": "test-repo/widgets/widget-one/.DS_Store",
+              "type": "file",
+            },
+            Object {
               "extension": ".md",
               "name": "README.md",
               "path": "test-repo/widgets/widget-one/README.md",
               "type": "file",
             },
             Object {
-              "extension": ".tsx",
-              "name": "index.test.tsx",
-              "path": "test-repo/widgets/widget-one/index.test.tsx",
-              "type": "file",
+              "children": Array [
+                Object {
+                  "extension": ".tsx",
+                  "name": "index.test.tsx",
+                  "path": "test-repo/widgets/widget-one/__tests__/index.test.tsx",
+                  "type": "file",
+                },
+              ],
+              "name": "__tests__",
+              "path": "test-repo/widgets/widget-one/__tests__",
+              "type": "directory",
             },
             Object {
               "extension": ".tsx",
@@ -409,6 +424,19 @@ Object {
               "name": "package.json",
               "path": "test-repo/widgets/widget-one/package.json",
               "type": "file",
+            },
+            Object {
+              "children": Array [
+                Object {
+                  "children": Array [],
+                  "name": "__tests__",
+                  "path": "test-repo/widgets/widget-one/src/__tests__",
+                  "type": "directory",
+                },
+              ],
+              "name": "src",
+              "path": "test-repo/widgets/widget-one/src",
+              "type": "directory",
             },
           ],
           "name": "widget-one",

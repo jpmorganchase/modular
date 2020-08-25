@@ -265,75 +265,75 @@ describe('when `yarn create modular-react-app [repo-name]` is executed', () => {
   it('sets up the repo with the contents', async () => {
     expect(await fs.readJson(path.join(repoDirectory, 'package.json')))
       .toMatchInlineSnapshot(`
-        Object {
-          "devDependencies": Object {
-            "eslint-config-modular-app": "^0.0.1",
-            "modular-scripts": "^0.0.2",
-            "prettier": "^2.0.5",
-          },
-          "eslintConfig": Object {
-            "extends": "modular-app",
-          },
-          "license": "MIT",
-          "main": "index.js",
-          "modular": Object {},
-          "name": "test-repo",
-          "prettier": Object {
-            "printWidth": 80,
-            "proseWrap": "always",
-            "singleQuote": true,
-            "trailingComma": "all",
-          },
-          "private": true,
-          "scripts": Object {
-            "build": "modular build",
-            "lint": "eslint . --ext .js,.ts,.tsx",
-            "prettier": "prettier --write .",
-            "start": "modular start",
-            "test": "modular test",
-          },
-          "version": "1.0.0",
-          "workspaces": Array [
-            "app",
-            "widgets/*",
-            "shared",
-          ],
-        }
-      `);
+      Object {
+        "dependencies": Object {
+          "eslint-config-modular-app": "^0.0.1",
+          "modular-scripts": "^0.0.2",
+          "prettier": "^2.1.0",
+        },
+        "eslintConfig": Object {
+          "extends": "modular-app",
+        },
+        "license": "MIT",
+        "main": "index.js",
+        "modular": Object {},
+        "name": "test-repo",
+        "prettier": Object {
+          "printWidth": 80,
+          "proseWrap": "always",
+          "singleQuote": true,
+          "trailingComma": "all",
+        },
+        "private": true,
+        "scripts": Object {
+          "build": "modular build",
+          "lint": "eslint . --ext .js,.ts,.tsx",
+          "prettier": "prettier --write .",
+          "start": "modular start",
+          "test": "modular test",
+        },
+        "version": "1.0.0",
+        "workspaces": Array [
+          "app",
+          "widgets/*",
+          "shared",
+        ],
+      }
+    `);
     expect(await fs.readJson(path.join(repoDirectory, 'app', 'package.json')))
       .toMatchInlineSnapshot(`
-        Object {
-          "browserslist": Object {
-            "development": Array [
-              "last 1 chrome version",
-              "last 1 firefox version",
-              "last 1 safari version",
-            ],
-            "production": Array [
-              ">0.2%",
-              "not dead",
-              "not op_mini all",
-            ],
-          },
-          "dependencies": Object {
-            "@testing-library/jest-dom": "^4.2.4",
-            "@testing-library/react": "^9.5.0",
-            "@testing-library/user-event": "^7.2.1",
-            "@types/codegen.macro": "^3.0.0",
-            "@types/jest": "^24.9.1",
-            "@types/node": "^12.12.54",
-            "@types/react": "^16.9.46",
-            "@types/react-dom": "^16.9.8",
-            "codegen.macro": "^4.0.0",
-            "react": "^16.13.1",
-            "react-dom": "^16.13.1",
-            "react-scripts": "3.4.3",
-          },
-          "name": "app",
-          "private": true,
-          "version": "0.1.0",
-        }
-      `);
+      Object {
+        "browserslist": Object {
+          "development": Array [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version",
+          ],
+          "production": Array [
+            ">0.2%",
+            "not dead",
+            "not op_mini all",
+          ],
+        },
+        "dependencies": Object {
+          "@testing-library/jest-dom": "^4.2.4",
+          "@testing-library/react": "^9.5.0",
+          "@testing-library/user-event": "^7.2.1",
+          "@types/codegen.macro": "^3.0.0",
+          "@types/jest": "^24.9.1",
+          "@types/node": "^12.12.54",
+          "@types/react": "^16.9.47",
+          "@types/react-dom": "^16.9.8",
+          "codegen.macro": "^4.0.0",
+          "react": "^16.13.1",
+          "react-dom": "^16.13.1",
+          "react-scripts": "3.4.3",
+        },
+        "name": "app",
+        "private": true,
+        "version": "0.1.0",
+      }
+    `);
   });
 
   it('can start the app and see the lack of widgets', async () => {
