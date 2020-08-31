@@ -88,10 +88,10 @@ async function setupLocalRegistry(tmpDir: tmp.DirResult) {
   // Build and publish packages to the local registry.
   for (const packageName of [
     'cra-template-modular-typescript',
-    'create-modular-react-app',
+    'modular-template-package-typescript',
     'eslint-config-modular-app',
     'modular-scripts',
-    'modular-template-widget-typescript',
+    'create-modular-react-app',
   ]) {
     try {
       await execa('yarn', ['workspace', packageName, 'build']);
@@ -254,7 +254,7 @@ describe('when `yarn create modular-react-app [repo-name]` is executed', () => {
     // We need to ensure that the starting `App.tsx` will render widgets.
     await fs.copyFile(
       path.join(__dirname, 'TestApp.test-tsx'),
-      path.join(repoDirectory, 'app', 'src', 'App.tsx'),
+      path.join(repoDirectory, 'packages', 'app', 'src', 'App.tsx'),
     );
   });
 
@@ -385,7 +385,7 @@ describe('when `yarn create modular-react-app [repo-name]` is executed', () => {
     it('creates a widget with the contents', async () => {
       expect(
         await fs.readJson(
-          path.join(repoDirectory, 'widgets', 'widget-one', 'package.json'),
+          path.join(repoDirectory, 'packages', 'widget-one', 'package.json'),
         ),
       ).toMatchInlineSnapshot(`
           Object {
@@ -405,7 +405,7 @@ describe('when `yarn create modular-react-app [repo-name]` is executed', () => {
         `);
       expect(
         await fs.readFile(
-          path.join(repoDirectory, 'widgets', 'widget-one', 'index.tsx'),
+          path.join(repoDirectory, 'packages', 'widget-one', 'index.tsx'),
           'utf8',
         ),
       ).toMatchInlineSnapshot(`

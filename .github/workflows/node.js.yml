@@ -93,10 +93,10 @@ jobs:
       - name: Install dependencies
         run: yarn
         env:
-          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: "true"
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
       - name: Run E2E tests
         uses: ianwalter/puppeteer-container@v4.0.0
         with:
           args: yarn e2e --forceExit
         env:
-          CI: "true"
+          CI: 'true'

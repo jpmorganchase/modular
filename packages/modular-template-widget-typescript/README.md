@@ -1,1 +1,0 @@
-# modular-template-widget-typescript

@@ -20,6 +20,10 @@ export function generateWidgetMap(widgetsDirectoryPath: string): string {
           path.join(widgetsDirectoryPath, dir.name, 'package.json'),
         ) as PackageJson,
     )
+    // only chose the ones explicitly marked as widgets
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment,
+    // @ts-ignore
+    .filter((packageJson) => packageJson.widget === true)
     // Remove widgets which are marked as private (and therefore are not published yet.)
     .filter((packageJson) => packageJson.private !== true)
     // Get package names.
