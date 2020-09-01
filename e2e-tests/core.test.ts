@@ -333,8 +333,11 @@ describe('when `yarn create modular-react-app [repo-name]` is executed', () => {
         ],
       }
     `);
-    expect(await fs.readJson(path.join(repoDirectory, 'app', 'package.json')))
-      .toMatchInlineSnapshot(`
+    expect(
+      await fs.readJson(
+        path.join(repoDirectory, 'packages', 'app', 'package.json'),
+      ),
+    ).toMatchInlineSnapshot(`
       Object {
         "browserslist": Object {
           "development": Array [

@@ -112,8 +112,8 @@ function addPackage(name: string, template: string) {
 
   const packageRootFilePaths = fs
     .readdirSync(newPackagePath, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory() === false)
-    .map((file) => path.join(newPackagePath, file.name));
+    .filter((entry: fs.Dirent) => entry.isDirectory() === false)
+    .map((file: fs.Dirent) => path.join(newPackagePath, file.name));
 
   for (const packageFilePath of packageRootFilePaths) {
     fs.writeFileSync(
@@ -132,7 +132,7 @@ function test(args: string[]) {
   const modularRoot = getModularRoot();
 
   return execSync(cracoBin, ['test', '--config', cracoConfig, ...args], {
-    cwd: path.join(modularRoot, 'app'),
+    cwd: path.join(modularRoot, 'packages', 'app'),
     log: false,
   });
 }
@@ -141,7 +141,7 @@ function start() {
   const modularRoot = getModularRoot();
 
   execSync(cracoBin, ['start', '--config', cracoConfig], {
-    cwd: path.join(modularRoot, 'app'),
+    cwd: path.join(modularRoot, 'packages', 'app'),
     log: false,
   });
 }
@@ -150,7 +150,7 @@ function build() {
   const modularRoot = getModularRoot();
 
   execSync(cracoBin, ['build', '--config', cracoConfig], {
-    cwd: path.join(modularRoot, 'app'),
+    cwd: path.join(modularRoot, 'packages', 'app'),
     log: false,
   });
 }
