@@ -139,6 +139,8 @@ interface DevServer {
   cancel: () => void;
 }
 
+const START_APP_TIMEOUT = 60 * 1000;
+
 async function startApp(appPath: string): Promise<DevServer> {
   // We `cancel` every dev server at the end of each test, but
   // for some reason the port is still in use at the beginning
@@ -176,17 +178,48 @@ async function startApp(appPath: string): Promise<DevServer> {
       );
     }
 
+    if (!devServer.stderr) {
+      return reject(
+        new Error(
+          'The dev server could not produce any output on /dev/stderr.',
+        ),
+      );
+    }
+
+    const startAppTimeout = setTimeout(() => {
+      reject(
+        new Error(
+          `The app at ${appPath} never started within the configured ${START_APP_TIMEOUT}ms timeout period.`,
+        ),
+      );
+    }, START_APP_TIMEOUT);
+
     devServer.stdout.on('data', (data: Buffer) => {
-      if (/Something is already running on port (\d+)./.test(data.toString())) {
-        return reject(new Error(data.toString()));
+      const output = data.toString();
+      if (/Something is already running on port (\d+)./.test(output)) {
+        clearTimeout(startAppTimeout);
+        return reject(new Error(output));
       }
-      if (/Compiled successfully!/.test(data.toString())) {
+      if (/Compiled successfully!/.test(output)) {
+        clearTimeout(startAppTimeout);
         return resolve();
       }
     });
 
+    devServer.stderr.on('data', (data: Buffer) => {
+      const output = data.toString();
+
+      console.error(output);
+
+      clearTimeout(startAppTimeout);
+      return reject(new Error(output));
+    });
+
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     devServer.on('error', (err: Error) => {
+      console.error(err);
+
+      clearTimeout(startAppTimeout);
       reject(err);
     });
   });
