@@ -4,6 +4,9 @@ import * as path from 'path';
 interface PackageJson {
   name: string;
   private?: boolean;
+  modular?: {
+    type: 'widget' | 'app' | 'root';
+  };
 }
 
 // Given a directory of widgets, generate a map like:
@@ -21,9 +24,7 @@ export function generateWidgetMap(widgetsDirectoryPath: string): string {
         ) as PackageJson,
     )
     // only chose the ones explicitly marked as widgets
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment,
-    // @ts-ignore
-    .filter((packageJson) => packageJson.widget === true)
+    .filter((packageJson) => packageJson.modular?.type === 'widget')
     // Remove widgets which are marked as private (and therefore are not published yet.)
     .filter((packageJson) => packageJson.private !== true)
     // Get package names.

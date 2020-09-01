@@ -7,9 +7,6 @@ const absolutePackagesPath = path.resolve('../../packages');
 
 module.exports = {
   webpack: {
-    // todo: entry should read from cli args
-    // todo: entry could have multiple entries (https://webpack.js.org/concepts/entry-points/)
-
     configure(webpackConfig) {
       const { isFound, match } = getLoader(
         webpackConfig,

@@ -88,10 +88,10 @@ async function setupLocalRegistry(tmpDir: tmp.DirResult) {
   // Build and publish packages to the local registry.
   for (const packageName of [
     'cra-template-modular-typescript',
-    'modular-template-package-typescript',
+    'create-modular-react-app',
     'eslint-config-modular-app',
     'modular-scripts',
-    'create-modular-react-app',
+    'modular-template-package-typescript',
   ]) {
     try {
       await execa('yarn', ['workspace', packageName, 'build']);
@@ -309,7 +309,9 @@ describe('when `yarn create modular-react-app [repo-name]` is executed', () => {
         },
         "license": "MIT",
         "main": "index.js",
-        "modular": Object {},
+        "modular": Object {
+          "type": "root",
+        },
         "name": "test-repo",
         "prettier": Object {
           "printWidth": 80,
@@ -355,13 +357,16 @@ describe('when `yarn create modular-react-app [repo-name]` is executed', () => {
           "@testing-library/user-event": "^7.2.1",
           "@types/codegen.macro": "^3.0.0",
           "@types/jest": "^24.9.1",
-          "@types/node": "^12.12.54",
+          "@types/node": "^12.12.55",
           "@types/react": "^16.9.49",
           "@types/react-dom": "^16.9.8",
           "codegen.macro": "^4.0.0",
           "react": "^16.13.1",
           "react-dom": "^16.13.1",
           "react-scripts": "3.4.3",
+        },
+        "modular": Object {
+          "type": "app",
         },
         "name": "app",
         "private": true,
@@ -433,9 +438,11 @@ describe('when `yarn create modular-react-app [repo-name]` is executed', () => {
           },
           "license": "UNLICENSED",
           "main": "index.js",
+          "modular": Object {
+            "type": "widget",
+          },
           "name": "widget-one",
           "version": "1.0.0",
-          "widget": true,
         }
       `);
       expect(

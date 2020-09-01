@@ -44,22 +44,22 @@ scratch.
 - The default [template](https://create-react-app.dev/docs/custom-templates/)
   assumes that code will be written with
   [typescript](https://www.typescriptlang.org/)
-- new top level components can be added `modular add <widget-name>`; these top
-  level components can either be imported directly, or rendered lazily via a
-  dynamically generated widget map as `app/widgets`.
+- new packages can be added with `modular add <package-name>`
+- packages marked with `widget: true` are available in a dynamically generated
+  widget map as `app/widgets`.
 
 ## widgets
 
-Widgets are primary, top-level components in modular. We discuss them in detail
-in [this explainer](/docs/widgets.md).
+Widgets are primary, top-level components in modular, marked with `widget: true`
+in their `package.json`. We discuss them in detail in
+[this explainer](/docs/widgets.md).
 
 ## commands
 
 `yarn create modular-react-app <name>`: create a new repository and scaffold it
 with create-react-app.
 
-`modular add <widget-name>`: adds a new top level component (aka 'widget') under
-`widgets/<name>`.
+`modular add <package-name>`: adds a new package under `packages/<name>`.
 
 `modular start` / `modular build` / `modular test`: These run
 [`react-scripts start`](https://create-react-app.dev/docs/getting-started#npm-start-or-yarn-start)

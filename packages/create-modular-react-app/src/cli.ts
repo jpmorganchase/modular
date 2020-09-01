@@ -87,7 +87,9 @@ function createModularApp() {
     ...fs.readJsonSync(projectPackageJsonPath),
     private: true,
     workspaces: ['packages/*'],
-    modular: {},
+    modular: {
+      type: 'root',
+    },
     scripts: {
       start: 'modular start',
       build: 'modular build',
@@ -159,11 +161,9 @@ function createModularApp() {
   delete appPackageJson['scripts'];
   delete appPackageJson['eslintConfig'];
   appPackageJson.private = true;
-  fs.writeJsonSync(appPackageJsonPath, appPackageJson);
+  appPackageJson.modular = { type: 'app' };
+  fs.writeJsonSync(appPackageJsonPath, appPackageJson, { spaces: 2 });
 
-  execSync('yarnpkg', ['prettier'], {
-    cwd: newModularRoot,
-  });
   execSync('git', ['init'], {
     cwd: newModularRoot,
   });
