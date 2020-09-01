@@ -302,7 +302,7 @@ describe('when `yarn create modular-react-app [repo-name]` is executed', () => {
         "dependencies": Object {
           "eslint-config-modular-app": "^0.0.1",
           "modular-scripts": "^0.0.2",
-          "prettier": "^2.1.0",
+          "prettier": "^2.1.1",
         },
         "eslintConfig": Object {
           "extends": "modular-app",
@@ -327,9 +327,7 @@ describe('when `yarn create modular-react-app [repo-name]` is executed', () => {
         },
         "version": "1.0.0",
         "workspaces": Array [
-          "app",
-          "widgets/*",
-          "shared",
+          "packages/*",
         ],
       }
     `);
@@ -358,7 +356,7 @@ describe('when `yarn create modular-react-app [repo-name]` is executed', () => {
           "@types/codegen.macro": "^3.0.0",
           "@types/jest": "^24.9.1",
           "@types/node": "^12.12.54",
-          "@types/react": "^16.9.47",
+          "@types/react": "^16.9.49",
           "@types/react-dom": "^16.9.8",
           "codegen.macro": "^4.0.0",
           "react": "^16.13.1",
@@ -424,21 +422,22 @@ describe('when `yarn create modular-react-app [repo-name]` is executed', () => {
           path.join(repoDirectory, 'packages', 'widget-one', 'package.json'),
         ),
       ).toMatchInlineSnapshot(`
-          Object {
-            "dependencies": Object {
-              "react": "^16.13.1",
-              "react-dom": "^16.13.1",
-            },
-            "devDependencies": Object {
-              "@types/react": "^16.9.0",
-              "@types/react-dom": "^16.9.0",
-            },
-            "license": "UNLICENSED",
-            "main": "index.js",
-            "name": "widget-one",
-            "version": "1.0.0",
-          }
-        `);
+        Object {
+          "dependencies": Object {
+            "react": "^16.13.1",
+            "react-dom": "^16.13.1",
+          },
+          "devDependencies": Object {
+            "@types/react": "^16.9.0",
+            "@types/react-dom": "^16.9.0",
+          },
+          "license": "UNLICENSED",
+          "main": "index.js",
+          "name": "widget-one",
+          "version": "1.0.0",
+          "widget": true,
+        }
+      `);
       expect(
         await fs.readFile(
           path.join(repoDirectory, 'packages', 'widget-one', 'index.tsx'),
