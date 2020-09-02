@@ -1,0 +1,1 @@
+# modular-template-package-typescript

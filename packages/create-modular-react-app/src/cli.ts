@@ -66,9 +66,10 @@ function createModularApp() {
   const template = defaultTemplate;
 
   const newModularRoot = path.join(process.cwd(), name);
-  const appPath = path.join(newModularRoot, 'app');
-  const widgetsPath = path.join(newModularRoot, 'widgets');
-  const sharedPath = path.join(newModularRoot, 'shared');
+
+  const packagesPath = path.join(newModularRoot, 'packages');
+  const appPath = path.join(packagesPath, 'app');
+  const sharedPackagePath = path.join(packagesPath, 'shared');
 
   const projectPackageJsonPath = path.join(newModularRoot, 'package.json');
   const appPackageJsonPath = path.join(appPath, 'package.json');
@@ -85,8 +86,10 @@ function createModularApp() {
   fs.writeJsonSync(projectPackageJsonPath, {
     ...fs.readJsonSync(projectPackageJsonPath),
     private: true,
-    workspaces: ['app', 'widgets/*', 'shared'],
-    modular: {},
+    workspaces: ['packages/*'],
+    modular: {
+      type: 'root',
+    },
     scripts: {
       start: 'modular start',
       build: 'modular build',
@@ -111,20 +114,24 @@ function createModularApp() {
     { cwd: newModularRoot },
   );
 
-  fs.mkdirpSync(widgetsPath);
+  fs.mkdirpSync(packagesPath);
   fs.copySync(
-    path.join(templatePath, 'widgets/README.md'),
-    path.join(widgetsPath, 'README.md'),
+    path.join(templatePath, 'packages/README.md'),
+    path.join(packagesPath, 'README.md'),
   );
 
-  fs.mkdirpSync(sharedPath);
+  fs.mkdirpSync(sharedPackagePath);
   fs.copySync(
     path.join(templatePath, 'shared/README.md'),
-    path.join(sharedPath, 'README.md'),
+    path.join(sharedPackagePath, 'README.md'),
   );
 
+  execSync('yarnpkg', ['init', '-yp'], {
+    cwd: sharedPackagePath,
+  });
+
   execSync('yarnpkg', ['create', 'react-app', 'app', '--template', template], {
-    cwd: newModularRoot,
+    cwd: packagesPath,
   });
   fs.removeSync(path.join(appPath, '.gitignore'));
   fs.removeSync(path.join(appPath, '.git'));
@@ -135,7 +142,7 @@ function createModularApp() {
     path.join(templatePath, 'gitignore'),
     path.join(newModularRoot, '.gitignore'),
   );
-  fs.symlinkSync(
+  fs.copySync(
     path.join(newModularRoot, '.gitignore'),
     path.join(newModularRoot, '.eslintignore'),
   );
@@ -153,11 +160,10 @@ function createModularApp() {
   ) as JSONSchemaForNPMPackageJsonFiles;
   delete appPackageJson['scripts'];
   delete appPackageJson['eslintConfig'];
-  fs.writeJsonSync(appPackageJsonPath, appPackageJson);
+  appPackageJson.private = true;
+  appPackageJson.modular = { type: 'app' };
+  fs.writeJsonSync(appPackageJsonPath, appPackageJson, { spaces: 2 });
 
-  execSync('yarnpkg', ['prettier'], {
-    cwd: newModularRoot,
-  });
   execSync('git', ['init'], {
     cwd: newModularRoot,
   });
@@ -175,16 +181,12 @@ try {
 }
 
 // TODOS
-// - make sure react/react-dom have the same versions across the repo
+// make sure _any_ dependency has the same versions across the repo
 // fix stdio coloring
 // verify IDE integration
-// how do you write tests for this???
 // sparse checkout helpers
 // auto assign reviewers???
 // SOON
-// - show an actual example working, with an app registry and everything
-// - try to use module federation? will need to fork react-scripts and/or webpack
-
 // unanswered questions
 //   - global store/data flow?
 //   - drilldown pattern

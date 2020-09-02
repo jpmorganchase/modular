@@ -52,10 +52,8 @@ function isYarnInstalled(): boolean {
 
 function run() {
   const help = `
-  Dashboards for a new generation
-
   Usage:
-    $ modular add <widget-name>
+    $ modular add <package-name>
     $ modular start
     $ modular build
     $ modular test
@@ -71,10 +69,10 @@ function run() {
   const command = argv._[0];
   switch (command) {
     case 'add':
-      return addWidget(
+      return addPackage(
         argv._[1],
-        'modular-template-widget-typescript',
-        //(argv.template || 'modular-template-widget-typescript') as string,
+        'modular-template-package-typescript',
+        //(argv.template || 'modular-template-package-typescript') as string,
         // https://github.com/jpmorganchase/modular/issues/37
         // Holding off on using custom templates until we have
         // actual usecases.
@@ -91,50 +89,50 @@ function run() {
   }
 }
 
-function addWidget(name: string, template: string) {
+function addPackage(name: string, template: string) {
   const modularRoot = getModularRoot();
 
-  const newWidgetPackageName = toParamCase(name);
-  const newWidgetComponentName = toPascalCase(name);
+  const newPackageName = toParamCase(name);
+  const newComponentName = toPascalCase(name);
 
-  const newWidgetPath = path.join(modularRoot, 'widgets', newWidgetPackageName);
-  const widgetTemplatePath = path.join(
+  const newPackagePath = path.join(modularRoot, 'packages', newPackageName);
+  const packageTemplatePath = path.join(
     path.dirname(require.resolve(`${template}/package.json`)),
     'template',
   );
 
-  // create a new widget source folder
-  if (fs.existsSync(newWidgetPath)) {
-    console.error(`The widget named ${name} already exists!`);
+  // create a new package source folder
+  if (fs.existsSync(newPackagePath)) {
+    console.error(`The package named ${name} already exists!`);
     process.exit(1);
   }
 
-  fs.mkdirpSync(newWidgetPath);
-  fs.copySync(widgetTemplatePath, newWidgetPath);
+  fs.mkdirpSync(newPackagePath);
+  fs.copySync(packageTemplatePath, newPackagePath);
 
-  const widgetRootFilePaths = fs
-    .readdirSync(newWidgetPath, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory() === false)
-    .map((file) => path.join(newWidgetPath, file.name));
+  const packageRootFilePaths = fs
+    .readdirSync(newPackagePath, { withFileTypes: true })
+    .filter((entry: fs.Dirent) => entry.isDirectory() === false)
+    .map((file: fs.Dirent) => path.join(newPackagePath, file.name));
 
-  for (const widgetFilePath of widgetRootFilePaths) {
+  for (const packageFilePath of packageRootFilePaths) {
     fs.writeFileSync(
-      widgetFilePath,
+      packageFilePath,
       fs
-        .readFileSync(widgetFilePath, 'utf8')
-        .replace(/PackageName__/g, newWidgetPackageName)
-        .replace(/ComponentName__/g, newWidgetComponentName),
+        .readFileSync(packageFilePath, 'utf8')
+        .replace(/PackageName__/g, newPackageName)
+        .replace(/ComponentName__/g, newComponentName),
     );
   }
 
-  execSync('yarnpkg', [], { cwd: newWidgetPath });
+  execSync('yarnpkg', [], { cwd: newPackagePath });
 }
 
 function test(args: string[]) {
   const modularRoot = getModularRoot();
 
   return execSync(cracoBin, ['test', '--config', cracoConfig, ...args], {
-    cwd: path.join(modularRoot, 'app'),
+    cwd: path.join(modularRoot, 'packages', 'app'),
     log: false,
   });
 }
@@ -143,7 +141,7 @@ function start() {
   const modularRoot = getModularRoot();
 
   execSync(cracoBin, ['start', '--config', cracoConfig], {
-    cwd: path.join(modularRoot, 'app'),
+    cwd: path.join(modularRoot, 'packages', 'app'),
     log: false,
   });
 }
@@ -152,7 +150,7 @@ function build() {
   const modularRoot = getModularRoot();
 
   execSync(cracoBin, ['build', '--config', cracoConfig], {
-    cwd: path.join(modularRoot, 'app'),
+    cwd: path.join(modularRoot, 'packages', 'app'),
     log: false,
   });
 }

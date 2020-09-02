@@ -18,7 +18,7 @@ function getWidgetMap(): WidgetMap {
   const { getModularRoot, generateWidgetMap } = require('modular-scripts');
 
   const widgetMap = generateWidgetMap(
-    path.join(getModularRoot(), 'widgets')
+    path.join(getModularRoot(), 'packages')
   );
   
   module.exports = 'const widgetMap = ' + widgetMap + ';';

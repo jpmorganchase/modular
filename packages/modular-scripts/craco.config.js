@@ -3,13 +3,10 @@
 const path = require('path');
 const { getLoader, loaderByName } = require('@craco/craco');
 
-const absoluteWidgetsPath = path.resolve('../widgets');
-const absoluteSharedPath = path.resolve('../shared');
+const absolutePackagesPath = path.resolve('../../packages');
 
 module.exports = {
   webpack: {
-    alias: {},
-    plugins: [],
     configure(webpackConfig) {
       const { isFound, match } = getLoader(
         webpackConfig,
@@ -20,11 +17,7 @@ module.exports = {
         const include = Array.isArray(match.loader.include)
           ? match.loader.include
           : [match.loader.include];
-        match.loader.include = [
-          ...include,
-          absoluteWidgetsPath,
-          absoluteSharedPath,
-        ];
+        match.loader.include = [...include, absolutePackagesPath];
       }
 
       return webpackConfig;
@@ -32,18 +25,10 @@ module.exports = {
   },
   jest: {
     configure: {
-      roots: [
-        '<rootDir>/../app',
-        '<rootDir>/../widgets/',
-        '<rootDir>/../shared/',
-      ],
+      roots: ['<rootDir>/../../packages/'],
       testMatch: [
-        '<rootDir>/../app/**/__tests__/**/*.{js,ts,tsx}',
-        '<rootDir>/../app/**/*.{spec,test}.{js,ts,tsx}',
-        '<rootDir>/../widgets/**/__tests__/**/*.{js,ts,tsx}',
-        '<rootDir>/../widgets/**/*.{spec,test}.{js,ts,tsx}',
-        '<rootDir>/../shared/**/__tests__/**/*.{js,ts,tsx}',
-        '<rootDir>/../shared/**/*.{spec,test}.{js,ts,tsx}',
+        '<rootDir>/../../packages/**/__tests__/**/*.{js,ts,tsx}',
+        '<rootDir>/../../packages/**/*.{spec,test}.{js,ts,tsx}',
       ],
     },
   },

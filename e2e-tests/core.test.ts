@@ -91,7 +91,7 @@ async function setupLocalRegistry(tmpDir: tmp.DirResult) {
     'create-modular-react-app',
     'eslint-config-modular-app',
     'modular-scripts',
-    'modular-template-widget-typescript',
+    'modular-template-package-typescript',
   ]) {
     try {
       await execa('yarn', ['workspace', packageName, 'build']);
@@ -139,6 +139,8 @@ interface DevServer {
   cancel: () => void;
 }
 
+const START_APP_TIMEOUT = 60 * 1000;
+
 async function startApp(appPath: string): Promise<DevServer> {
   // We `cancel` every dev server at the end of each test, but
   // for some reason the port is still in use at the beginning
@@ -176,17 +178,48 @@ async function startApp(appPath: string): Promise<DevServer> {
       );
     }
 
+    if (!devServer.stderr) {
+      return reject(
+        new Error(
+          'The dev server could not produce any output on /dev/stderr.',
+        ),
+      );
+    }
+
+    const startAppTimeout = setTimeout(() => {
+      reject(
+        new Error(
+          `The app at ${appPath} never started within the configured ${START_APP_TIMEOUT}ms timeout period.`,
+        ),
+      );
+    }, START_APP_TIMEOUT);
+
     devServer.stdout.on('data', (data: Buffer) => {
-      if (/Something is already running on port (\d+)./.test(data.toString())) {
-        return reject(new Error(data.toString()));
+      const output = data.toString();
+      if (/Something is already running on port (\d+)./.test(output)) {
+        clearTimeout(startAppTimeout);
+        return reject(new Error(output));
       }
-      if (/Compiled successfully!/.test(data.toString())) {
+      if (/Compiled successfully!/.test(output)) {
+        clearTimeout(startAppTimeout);
         return resolve();
       }
     });
 
+    devServer.stderr.on('data', (data: Buffer) => {
+      const output = data.toString();
+
+      console.error(output);
+
+      clearTimeout(startAppTimeout);
+      return reject(new Error(output));
+    });
+
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     devServer.on('error', (err: Error) => {
+      console.error(err);
+
+      clearTimeout(startAppTimeout);
       reject(err);
     });
   });
@@ -254,7 +287,7 @@ describe('when `yarn create modular-react-app [repo-name]` is executed', () => {
     // We need to ensure that the starting `App.tsx` will render widgets.
     await fs.copyFile(
       path.join(__dirname, 'TestApp.test-tsx'),
-      path.join(repoDirectory, 'app', 'src', 'App.tsx'),
+      path.join(repoDirectory, 'packages', 'app', 'src', 'App.tsx'),
     );
   });
 
@@ -269,14 +302,16 @@ describe('when `yarn create modular-react-app [repo-name]` is executed', () => {
         "dependencies": Object {
           "eslint-config-modular-app": "^0.0.1",
           "modular-scripts": "^0.0.2",
-          "prettier": "^2.1.0",
+          "prettier": "^2.1.1",
         },
         "eslintConfig": Object {
           "extends": "modular-app",
         },
         "license": "MIT",
         "main": "index.js",
-        "modular": Object {},
+        "modular": Object {
+          "type": "root",
+        },
         "name": "test-repo",
         "prettier": Object {
           "printWidth": 80,
@@ -294,14 +329,15 @@ describe('when `yarn create modular-react-app [repo-name]` is executed', () => {
         },
         "version": "1.0.0",
         "workspaces": Array [
-          "app",
-          "widgets/*",
-          "shared",
+          "packages/*",
         ],
       }
     `);
-    expect(await fs.readJson(path.join(repoDirectory, 'app', 'package.json')))
-      .toMatchInlineSnapshot(`
+    expect(
+      await fs.readJson(
+        path.join(repoDirectory, 'packages', 'app', 'package.json'),
+      ),
+    ).toMatchInlineSnapshot(`
       Object {
         "browserslist": Object {
           "development": Array [
@@ -321,13 +357,16 @@ describe('when `yarn create modular-react-app [repo-name]` is executed', () => {
           "@testing-library/user-event": "^7.2.1",
           "@types/codegen.macro": "^3.0.0",
           "@types/jest": "^24.9.1",
-          "@types/node": "^12.12.54",
-          "@types/react": "^16.9.47",
+          "@types/node": "^12.12.55",
+          "@types/react": "^16.9.49",
           "@types/react-dom": "^16.9.8",
           "codegen.macro": "^4.0.0",
           "react": "^16.13.1",
           "react-dom": "^16.13.1",
           "react-scripts": "3.4.3",
+        },
+        "modular": Object {
+          "type": "app",
         },
         "name": "app",
         "private": true,
@@ -385,27 +424,30 @@ describe('when `yarn create modular-react-app [repo-name]` is executed', () => {
     it('creates a widget with the contents', async () => {
       expect(
         await fs.readJson(
-          path.join(repoDirectory, 'widgets', 'widget-one', 'package.json'),
+          path.join(repoDirectory, 'packages', 'widget-one', 'package.json'),
         ),
       ).toMatchInlineSnapshot(`
-          Object {
-            "dependencies": Object {
-              "react": "^16.13.1",
-              "react-dom": "^16.13.1",
-            },
-            "devDependencies": Object {
-              "@types/react": "^16.9.0",
-              "@types/react-dom": "^16.9.0",
-            },
-            "license": "UNLICENSED",
-            "main": "index.js",
-            "name": "widget-one",
-            "version": "1.0.0",
-          }
-        `);
+        Object {
+          "dependencies": Object {
+            "react": "^16.13.1",
+            "react-dom": "^16.13.1",
+          },
+          "devDependencies": Object {
+            "@types/react": "^16.9.0",
+            "@types/react-dom": "^16.9.0",
+          },
+          "license": "UNLICENSED",
+          "main": "index.js",
+          "modular": Object {
+            "type": "widget",
+          },
+          "name": "widget-one",
+          "version": "1.0.0",
+        }
+      `);
       expect(
         await fs.readFile(
-          path.join(repoDirectory, 'widgets', 'widget-one', 'index.tsx'),
+          path.join(repoDirectory, 'packages', 'widget-one', 'index.tsx'),
           'utf8',
         ),
       ).toMatchInlineSnapshot(`

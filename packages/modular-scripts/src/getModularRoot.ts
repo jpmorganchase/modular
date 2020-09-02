@@ -3,11 +3,7 @@ import * as fs from 'fs-extra';
 import findUp from 'find-up';
 
 function isModularRoot(packageJson: { modular?: Record<string, unknown> }) {
-  return (
-    typeof packageJson === 'object' &&
-    packageJson.modular !== null &&
-    typeof packageJson.modular === 'object'
-  );
+  return packageJson?.modular?.type === 'root';
 }
 
 function findUpModularRoot() {
