@@ -90,14 +90,7 @@ function run() {
   const command = argv._[0];
   switch (command) {
     case 'add':
-      return addPackage(
-        argv._[1],
-        'modular-template-package-typescript',
-        //(argv.template || 'modular-template-package-typescript') as string,
-        // https://github.com/jpmorganchase/modular/issues/37
-        // Holding off on using custom templates until we have
-        // actual usecases.
-      );
+      return addPackage(argv._[1], 'widget');
     case 'test':
       return test(process.argv.slice(3));
     case 'start':
@@ -117,10 +110,7 @@ function addPackage(name: string, template: string) {
   const newComponentName = toPascalCase(name);
 
   const newPackagePath = path.join(modularRoot, 'packages', newPackageName);
-  const packageTemplatePath = path.join(
-    path.dirname(require.resolve(`${template}/package.json`)),
-    'template',
-  );
+  const packageTemplatePath = path.join(__dirname, '../templates', template);
 
   // create a new package source folder
   if (fs.existsSync(newPackagePath)) {
@@ -142,6 +132,7 @@ function addPackage(name: string, template: string) {
       fs
         .readFileSync(packageFilePath, 'utf8')
         .replace(/PackageName__/g, newPackageName)
+        .replace(/WidgetName__/g, newPackageName)
         .replace(/ComponentName__/g, newComponentName),
     );
   }

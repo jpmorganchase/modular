@@ -6,10 +6,10 @@ import tmp from 'tmp';
 import waitOn from 'wait-on';
 import directoryTree from 'directory-tree';
 import puppeteer from 'puppeteer';
+import rimraf from 'rimraf';
 import {
   getDocument,
   getQueriesForElement,
-  waitFor,
   queries,
 } from 'pptr-testing-library';
 import detect from 'detect-port-alt';
@@ -55,14 +55,12 @@ async function startLocalRegistry(configPath: string): Promise<void> {
   );
 }
 
-async function stopLocalRegistry() {
-  await fkill('verdaccio', {
-    force: true,
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    silent: true,
-  });
-}
+const packages = [
+  'cra-template-modular-typescript',
+  'create-modular-react-app',
+  'eslint-config-modular-app',
+  'modular-scripts',
+];
 
 async function setupLocalRegistry(tmpDir: tmp.DirResult) {
   const gitStatus = (
@@ -86,13 +84,7 @@ async function setupLocalRegistry(tmpDir: tmp.DirResult) {
   await startLocalRegistry(path.join(tmpDir.name, 'verdaccio.yaml'));
 
   // Build and publish packages to the local registry.
-  for (const packageName of [
-    'cra-template-modular-typescript',
-    'create-modular-react-app',
-    'eslint-config-modular-app',
-    'modular-scripts',
-    'modular-template-package-typescript',
-  ]) {
+  for (const packageName of packages) {
     try {
       await execa('yarn', ['workspace', packageName, 'build']);
     } catch (error) {
@@ -121,6 +113,19 @@ async function setupLocalRegistry(tmpDir: tmp.DirResult) {
     );
   }
   await execa('git', ['reset', '--hard', 'HEAD'], { stdio: 'inherit' });
+}
+
+async function stopLocalRegistry() {
+  await fkill('verdaccio', {
+    force: true,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    silent: true,
+  });
+
+  for (const packageName of packages) {
+    rimraf.sync(path.join('packages', packageName, 'build'));
+  }
 }
 
 async function getBrowser() {
@@ -386,12 +391,11 @@ describe('when `yarn create modular-react-app [repo-name]` is executed', () => {
       await page.goto(devServer.url, {});
 
       // eslint-disable-next-line @typescript-eslint/unbound-method
-      const { getByTestId } = getQueriesForElement(await getDocument(page));
-
-      await waitFor(
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        () => getByTestId('widgets'),
+      const { getByTestId, findByTestId } = getQueriesForElement(
+        await getDocument(page),
       );
+
+      await findByTestId('widgets');
 
       // eslint-disable-next-line testing-library/no-await-sync-query
       expect(await getNodeText(await getByTestId('widgets'))).toBe(
@@ -437,7 +441,7 @@ describe('when `yarn create modular-react-app [repo-name]` is executed', () => {
             "@types/react-dom": "^16.9.0",
           },
           "license": "UNLICENSED",
-          "main": "index.js",
+          "main": "index.tsx",
           "modular": Object {
             "type": "widget",
           },
@@ -471,7 +475,7 @@ describe('when `yarn create modular-react-app [repo-name]` is executed', () => {
         await page.goto(devServer.url);
 
         // eslint-disable-next-line @typescript-eslint/unbound-method
-        const { getByTestId, getByText } = getQueriesForElement(
+        const { getByTestId, getByText, findByText } = getQueriesForElement(
           await getDocument(page),
         );
 
@@ -480,10 +484,7 @@ describe('when `yarn create modular-react-app [repo-name]` is executed', () => {
           'No widgets found...',
         );
 
-        await waitFor(
-          // eslint-disable-next-line @typescript-eslint/no-misused-promises
-          () => getByText('This is WidgetOne'),
-        );
+        await findByText('This is WidgetOne');
 
         // eslint-disable-next-line testing-library/no-await-sync-query
         expect(await getByText('This is WidgetOne')).toBeTruthy();

@@ -1,7 +1,7 @@
 {
-  "name": "PackageName__",
+  "name": "WidgetName__",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.tsx",
   "license": "UNLICENSED",
   "dependencies": {
     "react": "^16.13.1",
