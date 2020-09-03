@@ -58,22 +58,9 @@ function createModularApp() {
     process.exit(1);
   }
 
-  const defaultTemplate = 'cra-template-modular-typescript';
-  // const template = (argv.template ?? defaultTemplate) as string;
-  // https://github.com/jpmorganchase/modular/issues/37
-  // Holding off on using custom templates until we have
-  // actual usecases.
-  const template = defaultTemplate;
-
   const newModularRoot = path.join(process.cwd(), name);
-
   const packagesPath = path.join(newModularRoot, 'packages');
-  const appPath = path.join(packagesPath, 'app');
-  const sharedPackagePath = path.join(packagesPath, 'shared');
-
   const projectPackageJsonPath = path.join(newModularRoot, 'package.json');
-  const appPackageJsonPath = path.join(appPath, 'package.json');
-
   const templatePath = path.join(__dirname, '..', 'template');
 
   // Create a new CRA app, modify config for workspaces
@@ -91,8 +78,8 @@ function createModularApp() {
       type: 'root',
     },
     scripts: {
-      start: 'modular start packages/app',
-      build: 'modular build packages/app',
+      start: 'modular start app',
+      build: 'modular build app',
       test: 'modular test',
       lint: 'eslint . --ext .js,.ts,.tsx',
       prettier: 'prettier --write .',
@@ -120,24 +107,6 @@ function createModularApp() {
     path.join(packagesPath, 'README.md'),
   );
 
-  fs.mkdirpSync(sharedPackagePath);
-  fs.copySync(
-    path.join(templatePath, 'shared/README.md'),
-    path.join(sharedPackagePath, 'README.md'),
-  );
-
-  execSync('yarnpkg', ['init', '-yp'], {
-    cwd: sharedPackagePath,
-  });
-
-  execSync('yarnpkg', ['create', 'react-app', 'app', '--template', template], {
-    cwd: packagesPath,
-  });
-  fs.removeSync(path.join(appPath, '.gitignore'));
-  fs.removeSync(path.join(appPath, '.git'));
-  fs.removeSync(path.join(appPath, 'yarn.lock'));
-  fs.removeSync(path.join(appPath, 'README.md'));
-
   fs.copySync(
     path.join(templatePath, 'gitignore'),
     path.join(newModularRoot, '.gitignore'),
@@ -154,6 +123,39 @@ function createModularApp() {
     path.join(templatePath, 'README.md'),
     path.join(newModularRoot, 'README.md'),
   );
+
+  const sharedPackagePath = path.join(packagesPath, 'shared');
+  fs.mkdirpSync(sharedPackagePath);
+  fs.copySync(
+    path.join(templatePath, 'shared/README.md'),
+    path.join(sharedPackagePath, 'README.md'),
+  );
+
+  execSync('yarnpkg', ['init', '-yp'], {
+    cwd: sharedPackagePath,
+  });
+
+  // keep this in sync with addApp() in modular-scripts/src/cli.ts#addApp()
+  const appPath = path.join(packagesPath, 'app');
+  const appPackageJsonPath = path.join(appPath, 'package.json');
+  const defaultTemplate = 'cra-template-modular-typescript';
+  // const appTemplate = (argv.template ?? defaultTemplate) as string;
+  // https://github.com/jpmorganchase/modular/issues/37
+  // Holding off on using custom templates until we have
+  // actual usecases.
+  const appTemplate = defaultTemplate;
+
+  execSync(
+    'yarnpkg',
+    ['create', 'react-app', 'app', '--template', appTemplate],
+    {
+      cwd: packagesPath,
+    },
+  );
+  fs.removeSync(path.join(appPath, '.gitignore'));
+  fs.removeSync(path.join(appPath, '.git'));
+  fs.removeSync(path.join(appPath, 'yarn.lock'));
+  fs.removeSync(path.join(appPath, 'README.md'));
 
   const appPackageJson = fs.readJsonSync(
     appPackageJsonPath,
@@ -194,4 +196,3 @@ try {
 //   etc etc
 
 // desktop / RN / custom renderers
-// er, angular?

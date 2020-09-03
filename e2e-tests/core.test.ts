@@ -326,10 +326,10 @@ describe('creatng a new project', () => {
         },
         "private": true,
         "scripts": Object {
-          "build": "modular build packages/app",
+          "build": "modular build app",
           "lint": "eslint . --ext .js,.ts,.tsx",
           "prettier": "prettier --write .",
-          "start": "modular start packages/app",
+          "start": "modular start app",
           "test": "modular test",
         },
         "version": "1.0.0",
@@ -411,7 +411,7 @@ describe('creatng a new project', () => {
     }
   });
 
-  describe('adding widgets and packages', () => {
+  describe('adding widgets, packages, apps', () => {
     beforeAll(async () => {
       await execa(
         'yarn',
@@ -430,11 +430,16 @@ describe('creatng a new project', () => {
           stdio: 'inherit',
         },
       );
+
+      await execa('yarn', ['modular', 'add', 'app-one', '--template=app'], {
+        cwd: repoDirectory,
+        stdio: 'inherit',
+      });
     });
 
     // todo - this should be replaces with a file tree + hashes
     // https://github.com/jpmorganchase/modular/issues/52
-    it('creates a widget and package', async () => {
+    it('creates a widget, a package, and an app', async () => {
       expect(tree(repoDirectory)).toMatchSnapshot();
 
       expect(
@@ -483,6 +488,47 @@ describe('creatng a new project', () => {
           return a + b;
         }
         "
+      `);
+
+      expect(
+        await fs.readJson(
+          path.join(repoDirectory, 'packages', 'app-one', 'package.json'),
+        ),
+      ).toMatchInlineSnapshot(`
+        Object {
+          "browserslist": Object {
+            "development": Array [
+              "last 1 chrome version",
+              "last 1 firefox version",
+              "last 1 safari version",
+            ],
+            "production": Array [
+              ">0.2%",
+              "not dead",
+              "not op_mini all",
+            ],
+          },
+          "dependencies": Object {
+            "@testing-library/jest-dom": "^4.2.4",
+            "@testing-library/react": "^9.3.2",
+            "@testing-library/user-event": "^7.1.2",
+            "@types/codegen.macro": "^3.0.0",
+            "@types/jest": "^24.0.0",
+            "@types/node": "^12.0.0",
+            "@types/react": "^16.9.0",
+            "@types/react-dom": "^16.9.0",
+            "codegen.macro": "^4.0.0",
+            "react": "^16.13.1",
+            "react-dom": "^16.13.1",
+            "react-scripts": "3.4.3",
+          },
+          "modular": Object {
+            "type": "app",
+          },
+          "name": "app-one",
+          "private": true,
+          "version": "0.1.0",
+        }
       `);
     });
 

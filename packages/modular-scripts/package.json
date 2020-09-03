@@ -32,6 +32,7 @@
     "@types/find-up": "^4.0.0",
     "@types/fs-extra": "^5.0.2",
     "@types/node": "*",
-    "@types/inquirer": "^7.3.1"
+    "@types/inquirer": "^7.3.1",
+    "@schemastore/package": "^0.0.6"
   }
 }

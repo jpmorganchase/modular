@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`creatng a new project adding widgets and packages creates a widget and package 1`] = `
+exports[`creatng a new project adding widgets, packages, apps creates a widget, a package, and an app 1`] = `
 Object {
   "children": Array [
     Object {
@@ -163,6 +163,135 @@ Object {
           ],
           "name": "app",
           "path": "test-repo/packages/app",
+          "type": "directory",
+        },
+        Object {
+          "children": Array [
+            Object {
+              "extension": ".json",
+              "name": "package.json",
+              "path": "test-repo/packages/app-one/package.json",
+              "type": "file",
+            },
+            Object {
+              "children": Array [
+                Object {
+                  "extension": ".ico",
+                  "name": "favicon.ico",
+                  "path": "test-repo/packages/app-one/public/favicon.ico",
+                  "type": "file",
+                },
+                Object {
+                  "extension": ".html",
+                  "name": "index.html",
+                  "path": "test-repo/packages/app-one/public/index.html",
+                  "type": "file",
+                },
+                Object {
+                  "extension": ".png",
+                  "name": "logo192.png",
+                  "path": "test-repo/packages/app-one/public/logo192.png",
+                  "type": "file",
+                },
+                Object {
+                  "extension": ".png",
+                  "name": "logo512.png",
+                  "path": "test-repo/packages/app-one/public/logo512.png",
+                  "type": "file",
+                },
+                Object {
+                  "extension": ".json",
+                  "name": "manifest.json",
+                  "path": "test-repo/packages/app-one/public/manifest.json",
+                  "type": "file",
+                },
+                Object {
+                  "extension": ".txt",
+                  "name": "robots.txt",
+                  "path": "test-repo/packages/app-one/public/robots.txt",
+                  "type": "file",
+                },
+              ],
+              "name": "public",
+              "path": "test-repo/packages/app-one/public",
+              "type": "directory",
+            },
+            Object {
+              "children": Array [
+                Object {
+                  "extension": ".css",
+                  "name": "App.css",
+                  "path": "test-repo/packages/app-one/src/App.css",
+                  "type": "file",
+                },
+                Object {
+                  "extension": ".tsx",
+                  "name": "App.test.tsx",
+                  "path": "test-repo/packages/app-one/src/App.test.tsx",
+                  "type": "file",
+                },
+                Object {
+                  "extension": ".tsx",
+                  "name": "App.tsx",
+                  "path": "test-repo/packages/app-one/src/App.tsx",
+                  "type": "file",
+                },
+                Object {
+                  "extension": ".css",
+                  "name": "index.css",
+                  "path": "test-repo/packages/app-one/src/index.css",
+                  "type": "file",
+                },
+                Object {
+                  "extension": ".tsx",
+                  "name": "index.tsx",
+                  "path": "test-repo/packages/app-one/src/index.tsx",
+                  "type": "file",
+                },
+                Object {
+                  "extension": ".svg",
+                  "name": "logo.svg",
+                  "path": "test-repo/packages/app-one/src/logo.svg",
+                  "type": "file",
+                },
+                Object {
+                  "extension": ".ts",
+                  "name": "react-app-env.d.ts",
+                  "path": "test-repo/packages/app-one/src/react-app-env.d.ts",
+                  "type": "file",
+                },
+                Object {
+                  "extension": ".ts",
+                  "name": "setupTests.ts",
+                  "path": "test-repo/packages/app-one/src/setupTests.ts",
+                  "type": "file",
+                },
+                Object {
+                  "extension": ".ts",
+                  "name": "store.ts",
+                  "path": "test-repo/packages/app-one/src/store.ts",
+                  "type": "file",
+                },
+                Object {
+                  "extension": ".ts",
+                  "name": "widgets.ts",
+                  "path": "test-repo/packages/app-one/src/widgets.ts",
+                  "type": "file",
+                },
+              ],
+              "name": "src",
+              "path": "test-repo/packages/app-one/src",
+              "type": "directory",
+            },
+            Object {
+              "extension": ".json",
+              "name": "tsconfig.json",
+              "path": "test-repo/packages/app-one/tsconfig.json",
+              "type": "file",
+            },
+          ],
+          "name": "app-one",
+          "path": "test-repo/packages/app-one",
           "type": "directory",
         },
         Object {

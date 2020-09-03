@@ -11,6 +11,7 @@ import {
 } from 'change-case';
 import inquirer from 'inquirer';
 import resolveAsBin from 'resolve-as-bin';
+import { JSONSchemaForNPMPackageJsonFiles } from '@schemastore/package';
 
 import { getModularRoot } from './getModularRoot';
 
@@ -51,23 +52,21 @@ function isYarnInstalled(): boolean {
   }
 }
 
-type packageType = 'app' | 'widget' | 'root'; // | 'package', the default
+type PackageType = 'app' | 'widget' | 'root'; // | 'package', the default
 
 export interface PackageJson {
   name: string;
   private?: boolean;
   modular?: {
-    type: packageType;
+    type: PackageType;
   };
 }
 
-function isModularType(dir: string, type: packageType) {
+function isModularType(dir: string, type: PackageType) {
   const packageJsonPath = path.join(dir, 'package.json');
   if (fs.existsSync(packageJsonPath)) {
-    const json = JSON.parse(
-      fs.readFileSync(packageJsonPath, 'utf8'),
-    ) as PackageJson;
-    return json.modular?.type === type;
+    const packageJson = fs.readJsonSync(packageJsonPath) as PackageJson;
+    return packageJson.modular?.type === type;
   }
   return false;
 }
@@ -121,7 +120,7 @@ async function addPackage(name: string, templateArg: string | void) {
     ])) as { template: string }).template;
 
   if (template === 'app') {
-    console.error('not implemented');
+    addApp(name);
     return;
   }
 
@@ -161,6 +160,46 @@ async function addPackage(name: string, templateArg: string | void) {
   execSync('yarnpkg', [], { cwd: newPackagePath });
 }
 
+// keep this in sync with create-modular-react-app/src/cli.ts
+function addApp(name: string) {
+  const root = getModularRoot();
+  const packagesPath = path.join(root, 'packages');
+  const appPath = path.join(packagesPath, name);
+  const appPackageJsonPath = path.join(appPath, 'package.json');
+  const defaultTemplate = 'cra-template-modular-typescript';
+  // const appTemplate = (argv.template ?? defaultTemplate) as string;
+  // https://github.com/jpmorganchase/modular/issues/37
+  // Holding off on using custom templates until we have
+  // actual usecases.
+  const appTemplate = defaultTemplate;
+
+  if (fs.existsSync(appPath)) {
+    console.error(`The package named ${name} already exists!`);
+    process.exit(1);
+  }
+
+  execSync(
+    'yarnpkg',
+    ['create', 'react-app', name, '--template', appTemplate],
+    {
+      cwd: packagesPath,
+    },
+  );
+  fs.removeSync(path.join(appPath, '.gitignore'));
+  fs.removeSync(path.join(appPath, '.git'));
+  fs.removeSync(path.join(appPath, 'yarn.lock'));
+  fs.removeSync(path.join(appPath, 'README.md'));
+
+  const appPackageJson = fs.readJsonSync(
+    appPackageJsonPath,
+  ) as JSONSchemaForNPMPackageJsonFiles;
+  delete appPackageJson['scripts'];
+  delete appPackageJson['eslintConfig'];
+  appPackageJson.private = true;
+  appPackageJson.modular = { type: 'app' };
+  fs.writeJsonSync(appPackageJsonPath, appPackageJson, { spaces: 2 });
+}
+
 function test(args: string[]) {
   const modularRoot = getModularRoot();
 
@@ -173,12 +212,12 @@ function test(args: string[]) {
 function start(appPath: string) {
   const modularRoot = getModularRoot();
 
-  if (!isModularType(path.join(modularRoot, appPath), 'app')) {
+  if (!isModularType(path.join(modularRoot, 'packages', appPath), 'app')) {
     throw new Error(`The package at ${appPath} is not a valid modular app.`);
   }
 
   execSync(cracoBin, ['start', '--config', cracoConfig], {
-    cwd: path.join(modularRoot, appPath),
+    cwd: path.join(modularRoot, 'packages', appPath),
     log: false,
   });
 }
@@ -186,12 +225,12 @@ function start(appPath: string) {
 function build(appPath: string) {
   const modularRoot = getModularRoot();
 
-  if (!isModularType(path.join(modularRoot, appPath), 'app')) {
+  if (!isModularType(path.join(modularRoot, 'packages', appPath), 'app')) {
     throw new Error(`The package at ${appPath} is not a valid modular app.`);
   }
 
   execSync(cracoBin, ['build', '--config', cracoConfig], {
-    cwd: path.join(modularRoot, appPath),
+    cwd: path.join(modularRoot, 'packages', appPath),
     log: false,
   });
 }
