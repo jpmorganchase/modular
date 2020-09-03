@@ -1,6 +1,8 @@
 _DISCLAIMER: THIS PROJECT IS EXPERIMENTAL. ITS BEHAVIOR, AND THE BEHAVIOR OF
 COMMANDS, WILL LIKELY CHANGE IN THE FUTURE._
 
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?)](https://github.com/jpmorganchase/modular/blob/master/CONTRIBUTING.md)
+
 # modular
 
 `modular` is a collection of tools and guidance to enable UI development at
