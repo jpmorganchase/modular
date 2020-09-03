@@ -50,6 +50,27 @@ function isYarnInstalled(): boolean {
   }
 }
 
+type packageType = 'app' | 'widget' | 'root'; // | 'package', the default
+
+export interface PackageJson {
+  name: string;
+  private?: boolean;
+  modular?: {
+    type: packageType;
+  };
+}
+
+function isModularType(dir: string, type: packageType) {
+  const packageJsonPath = path.join(dir, 'package.json');
+  if (fs.existsSync(packageJsonPath)) {
+    const json = JSON.parse(
+      fs.readFileSync(packageJsonPath, 'utf8'),
+    ) as PackageJson;
+    return json.modular?.type === type;
+  }
+  return false;
+}
+
 function run() {
   const help = `
   Usage:
@@ -80,9 +101,9 @@ function run() {
     case 'test':
       return test(process.argv.slice(3));
     case 'start':
-      return start();
+      return start(argv._[1]);
     case 'build':
-      return build();
+      return build(argv._[1]);
     default:
       console.log(help);
       process.exit(1);
@@ -137,20 +158,28 @@ function test(args: string[]) {
   });
 }
 
-function start() {
+function start(appPath: string) {
   const modularRoot = getModularRoot();
 
+  if (!isModularType(path.join(modularRoot, appPath), 'app')) {
+    throw new Error(`The package at ${appPath} is not a valid modular app.`);
+  }
+
   execSync(cracoBin, ['start', '--config', cracoConfig], {
-    cwd: path.join(modularRoot, 'packages', 'app'),
+    cwd: path.join(modularRoot, appPath),
     log: false,
   });
 }
 
-function build() {
+function build(appPath: string) {
   const modularRoot = getModularRoot();
 
+  if (!isModularType(path.join(modularRoot, appPath), 'app')) {
+    throw new Error(`The package at ${appPath} is not a valid modular app.`);
+  }
+
   execSync(cracoBin, ['build', '--config', cracoConfig], {
-    cwd: path.join(modularRoot, 'packages', 'app'),
+    cwd: path.join(modularRoot, appPath),
     log: false,
   });
 }
@@ -160,24 +189,3 @@ try {
 } catch (err) {
   console.error(err);
 }
-
-// TODOS
-// - remove craco, meow, etc
-// - make sure react/react-dom have the same versions across the repo
-// fix stdio coloring
-// verify IDE integration
-// how do you write tests for this???
-// sparse checkout helpers
-// auto assign reviewers???
-// SOON
-// - show an actual example working, with an app registry and everything
-// - try to use module federation? will need to fork react-scripts and/or webpack
-
-// unanswered questions
-//   - global store/data flow?
-//   - drilldown pattern
-//   - filters
-//   etc etc
-
-// desktop / RN / custom renderers
-// er, angular?

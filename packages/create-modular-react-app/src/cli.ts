@@ -91,8 +91,8 @@ function createModularApp() {
       type: 'root',
     },
     scripts: {
-      start: 'modular start',
-      build: 'modular build',
+      start: 'modular start packages/app',
+      build: 'modular build packages/app',
       test: 'modular test',
       lint: 'eslint . --ext .js,.ts,.tsx',
       prettier: 'prettier --write .',

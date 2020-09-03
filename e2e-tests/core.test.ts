@@ -321,10 +321,10 @@ describe('when `yarn create modular-react-app [repo-name]` is executed', () => {
         },
         "private": true,
         "scripts": Object {
-          "build": "modular build",
+          "build": "modular build packages/app",
           "lint": "eslint . --ext .js,.ts,.tsx",
           "prettier": "prettier --write .",
-          "start": "modular start",
+          "start": "modular start packages/app",
           "test": "modular test",
         },
         "version": "1.0.0",
