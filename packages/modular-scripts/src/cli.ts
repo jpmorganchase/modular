@@ -9,6 +9,7 @@ import {
   pascalCase as toPascalCase,
   paramCase as toParamCase,
 } from 'change-case';
+import inquirer from 'inquirer';
 import resolveAsBin from 'resolve-as-bin';
 
 import { getModularRoot } from './getModularRoot';
@@ -90,7 +91,7 @@ function run() {
   const command = argv._[0];
   switch (command) {
     case 'add':
-      return addPackage(argv._[1], 'widget');
+      return addPackage(argv._[1], argv.template as string | void);
     case 'test':
       return test(process.argv.slice(3));
     case 'start':
@@ -103,7 +104,27 @@ function run() {
   }
 }
 
-function addPackage(name: string, template: string) {
+async function addPackage(name: string, templateArg: string | void) {
+  const template =
+    templateArg ||
+    ((await inquirer.prompt([
+      {
+        name: 'template',
+        type: 'list',
+        message: 'What kind of package would you like to add?',
+        choices: [
+          { name: 'A normal package', value: 'package' },
+          { name: 'A React Component', value: 'widget' },
+          { name: 'A new application', value: 'app' },
+        ],
+      },
+    ])) as { template: string }).template;
+
+  if (template === 'app') {
+    console.error('not implemented');
+    return;
+  }
+
   const modularRoot = getModularRoot();
 
   const newPackageName = toParamCase(name);

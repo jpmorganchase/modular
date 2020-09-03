@@ -124,7 +124,7 @@ async function stopLocalRegistry() {
   });
 
   for (const packageName of packages) {
-    rimraf.sync(path.join('packages', packageName, 'build'));
+    rimraf.sync(path.join(__dirname, '../packages', packageName, 'build'));
   }
 }
 
@@ -270,7 +270,7 @@ afterAll(async () => {
   tmpDirectory.removeCallback();
 });
 
-describe('when `yarn create modular-react-app [repo-name]` is executed', () => {
+describe('creatng a new project', () => {
   const repoName = 'test-repo';
   const repoDirectory = path.join('.', repoName);
 
@@ -411,21 +411,32 @@ describe('when `yarn create modular-react-app [repo-name]` is executed', () => {
     }
   });
 
-  describe('when `yarn modular add [widget-name]` is executed', () => {
+  describe('adding widgets and packages', () => {
     beforeAll(async () => {
-      const widgetName = 'widget-one';
+      await execa(
+        'yarn',
+        ['modular', 'add', 'widget-one', '--template=widget'],
+        {
+          cwd: repoDirectory,
+          stdio: 'inherit',
+        },
+      );
 
-      await execa('yarn', ['modular', 'add', widgetName], {
-        cwd: repoDirectory,
-        stdio: 'inherit',
-      });
+      await execa(
+        'yarn',
+        ['modular', 'add', 'package-one', '--template=package'],
+        {
+          cwd: repoDirectory,
+          stdio: 'inherit',
+        },
+      );
     });
 
-    it('creates a widget with the directory structure', () => {
+    // todo - this should be replaces with a file tree + hashes
+    // https://github.com/jpmorganchase/modular/issues/52
+    it('creates a widget and package', async () => {
       expect(tree(repoDirectory)).toMatchSnapshot();
-    });
 
-    it('creates a widget with the contents', async () => {
       expect(
         await fs.readJson(
           path.join(repoDirectory, 'packages', 'widget-one', 'package.json'),
@@ -449,22 +460,33 @@ describe('when `yarn create modular-react-app [repo-name]` is executed', () => {
           "version": "1.0.0",
         }
       `);
+
+      expect(
+        await fs.readJson(
+          path.join(repoDirectory, 'packages', 'package-one', 'package.json'),
+        ),
+      ).toMatchInlineSnapshot(`
+        Object {
+          "license": "UNLICENSED",
+          "main": "index.ts",
+          "name": "package-one",
+          "version": "1.0.0",
+        }
+      `);
       expect(
         await fs.readFile(
-          path.join(repoDirectory, 'packages', 'widget-one', 'index.tsx'),
+          path.join(repoDirectory, 'packages', 'package-one', 'index.ts'),
           'utf8',
         ),
       ).toMatchInlineSnapshot(`
-        "import * as React from 'react';
-
-        export default function WidgetOne(): JSX.Element {
-          return <div>This is WidgetOne</div>;
+        "export default function add(a: number, b: number): number {
+          return a + b;
         }
         "
       `);
     });
 
-    it('can start the app and show widget-one', async () => {
+    it('can start the app and render widget-one', async () => {
       let browser: puppeteer.Browser | undefined;
       let devServer: DevServer | undefined;
       try {

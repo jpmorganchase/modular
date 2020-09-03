@@ -24,12 +24,14 @@
     "fs-extra": "^9.0.1",
     "react-scripts": "^3.4.1",
     "resolve-as-bin": "^2.1.0",
-    "yargs": "^15.4.1"
+    "yargs": "^15.4.1",
+    "rimraf": "^3.0.2",
+    "inquirer": "^7.3.3"
   },
   "devDependencies": {
     "@types/find-up": "^4.0.0",
     "@types/fs-extra": "^5.0.2",
     "@types/node": "*",
-    "rimraf": "^3.0.2"
+    "@types/inquirer": "^7.3.1"
   }
 }
