@@ -33,7 +33,6 @@ jobs:
             v2-${{ runner.os }}-yarn-
 
       - run: yarn
-      - run: yarn --cwd examples/app-host install
       - run: npx prettier --check .
       - run: npx tsc
       - run: yarn lint
@@ -63,9 +62,6 @@ jobs:
             v2-${{ runner.os }}-yarn-
       - run: yarn
       - run: yarn test
-      - name: Install examples dependencies
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn --cwd examples/app-host install
   test_e2e:
     runs-on: ubuntu-latest
 

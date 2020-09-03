@@ -6,7 +6,6 @@ module.exports = {
   coverageDirectory: 'coverage',
   testPathIgnorePatterns: [
     '.*/template/.*',
-    '<rootDir>/examples/',
     '<rootDir>/e2e-tests/',
     '/node_modules/',
   ],

@@ -14,13 +14,15 @@
     "test": "jest",
     "e2e": "jest -c jest-e2e.config.js --runInBand",
     "e2e:docker": "./e2e-tests/run-tests-in-docker.sh",
-    "build": "yarn workspace create-modular-react-app build && yarn workspace modular-scripts build && yarn workspace esm-dependency-checker build"
+    "build": "yarn workspace create-modular-react-app build && yarn workspace modular-scripts build && yarn workspace esm-dependency-checker build",
+    "release": "yarn build && changeset publish"
   },
-  "dependencies": {
+  "devDependencies": {
     "@babel/core": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
     "@babel/preset-react": "^7.9.4",
     "@babel/preset-typescript": "^7.9.0",
+    "@changesets/cli": "^2.10.2",
     "@testing-library/dom": "^7.22.2",
     "@testing-library/jest-dom": "^5.8.0",
     "@testing-library/react": "^10.0.4",
