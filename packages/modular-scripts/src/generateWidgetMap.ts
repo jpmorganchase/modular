@@ -1,13 +1,7 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 
-interface PackageJson {
-  name: string;
-  private?: boolean;
-  modular?: {
-    type: 'widget' | 'app' | 'root';
-  };
-}
+import type { PackageJson } from './cli';
 
 // Given a directory of widgets, generate a map like:
 // { 'package-name': lazy(() => import('package-name')) }

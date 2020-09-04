@@ -9,7 +9,9 @@ import {
   pascalCase as toPascalCase,
   paramCase as toParamCase,
 } from 'change-case';
+import inquirer from 'inquirer';
 import resolveAsBin from 'resolve-as-bin';
+import { JSONSchemaForNPMPackageJsonFiles } from '@schemastore/package';
 
 import { getModularRoot } from './getModularRoot';
 
@@ -50,6 +52,25 @@ function isYarnInstalled(): boolean {
   }
 }
 
+type PackageType = 'app' | 'widget' | 'root'; // | 'package', the default
+
+export interface PackageJson {
+  name: string;
+  private?: boolean;
+  modular?: {
+    type: PackageType;
+  };
+}
+
+function isModularType(dir: string, type: PackageType) {
+  const packageJsonPath = path.join(dir, 'package.json');
+  if (fs.existsSync(packageJsonPath)) {
+    const packageJson = fs.readJsonSync(packageJsonPath) as PackageJson;
+    return packageJson.modular?.type === type;
+  }
+  return false;
+}
+
 function run() {
   const help = `
   Usage:
@@ -69,37 +90,47 @@ function run() {
   const command = argv._[0];
   switch (command) {
     case 'add':
-      return addPackage(
-        argv._[1],
-        'modular-template-package-typescript',
-        //(argv.template || 'modular-template-package-typescript') as string,
-        // https://github.com/jpmorganchase/modular/issues/37
-        // Holding off on using custom templates until we have
-        // actual usecases.
-      );
+      return addPackage(argv._[1], argv.template as string | void);
     case 'test':
       return test(process.argv.slice(3));
     case 'start':
-      return start();
+      return start(argv._[1]);
     case 'build':
-      return build();
+      return build(argv._[1]);
     default:
       console.log(help);
       process.exit(1);
   }
 }
 
-function addPackage(name: string, template: string) {
+async function addPackage(name: string, templateArg: string | void) {
+  const template =
+    templateArg ||
+    ((await inquirer.prompt([
+      {
+        name: 'template',
+        type: 'list',
+        message: `What kind of package is ${name}?`,
+        choices: [
+          { name: 'A plain package', value: 'package' },
+          { name: 'A React widget', value: 'widget' },
+          { name: 'A standalone application', value: 'app' },
+        ],
+      },
+    ])) as { template: string }).template;
+
+  if (template === 'app') {
+    addApp(name);
+    return;
+  }
+
   const modularRoot = getModularRoot();
 
   const newPackageName = toParamCase(name);
   const newComponentName = toPascalCase(name);
 
   const newPackagePath = path.join(modularRoot, 'packages', newPackageName);
-  const packageTemplatePath = path.join(
-    path.dirname(require.resolve(`${template}/package.json`)),
-    'template',
-  );
+  const packageTemplatePath = path.join(__dirname, '../templates', template);
 
   // create a new package source folder
   if (fs.existsSync(newPackagePath)) {
@@ -121,11 +152,52 @@ function addPackage(name: string, template: string) {
       fs
         .readFileSync(packageFilePath, 'utf8')
         .replace(/PackageName__/g, newPackageName)
+        .replace(/WidgetName__/g, newPackageName)
         .replace(/ComponentName__/g, newComponentName),
     );
   }
 
   execSync('yarnpkg', [], { cwd: newPackagePath });
+}
+
+// keep this in sync with create-modular-react-app/src/cli.ts
+function addApp(name: string) {
+  const root = getModularRoot();
+  const packagesPath = path.join(root, 'packages');
+  const appPath = path.join(packagesPath, name);
+  const appPackageJsonPath = path.join(appPath, 'package.json');
+  const defaultTemplate = 'cra-template-modular-typescript';
+  // const appTemplate = (argv.template ?? defaultTemplate) as string;
+  // https://github.com/jpmorganchase/modular/issues/37
+  // Holding off on using custom templates until we have
+  // actual usecases.
+  const appTemplate = defaultTemplate;
+
+  if (fs.existsSync(appPath)) {
+    console.error(`The package named ${name} already exists!`);
+    process.exit(1);
+  }
+
+  execSync(
+    'yarnpkg',
+    ['create', 'react-app', name, '--template', appTemplate],
+    {
+      cwd: packagesPath,
+    },
+  );
+  fs.removeSync(path.join(appPath, '.gitignore'));
+  fs.removeSync(path.join(appPath, '.git'));
+  fs.removeSync(path.join(appPath, 'yarn.lock'));
+  fs.removeSync(path.join(appPath, 'README.md'));
+
+  const appPackageJson = fs.readJsonSync(
+    appPackageJsonPath,
+  ) as JSONSchemaForNPMPackageJsonFiles;
+  delete appPackageJson['scripts'];
+  delete appPackageJson['eslintConfig'];
+  appPackageJson.private = true;
+  appPackageJson.modular = { type: 'app' };
+  fs.writeJsonSync(appPackageJsonPath, appPackageJson, { spaces: 2 });
 }
 
 function test(args: string[]) {
@@ -137,20 +209,28 @@ function test(args: string[]) {
   });
 }
 
-function start() {
+function start(appPath: string) {
   const modularRoot = getModularRoot();
 
+  if (!isModularType(path.join(modularRoot, 'packages', appPath), 'app')) {
+    throw new Error(`The package at ${appPath} is not a valid modular app.`);
+  }
+
   execSync(cracoBin, ['start', '--config', cracoConfig], {
-    cwd: path.join(modularRoot, 'packages', 'app'),
+    cwd: path.join(modularRoot, 'packages', appPath),
     log: false,
   });
 }
 
-function build() {
+function build(appPath: string) {
   const modularRoot = getModularRoot();
 
+  if (!isModularType(path.join(modularRoot, 'packages', appPath), 'app')) {
+    throw new Error(`The package at ${appPath} is not a valid modular app.`);
+  }
+
   execSync(cracoBin, ['build', '--config', cracoConfig], {
-    cwd: path.join(modularRoot, 'packages', 'app'),
+    cwd: path.join(modularRoot, 'packages', appPath),
     log: false,
   });
 }
@@ -160,24 +240,3 @@ try {
 } catch (err) {
   console.error(err);
 }
-
-// TODOS
-// - remove craco, meow, etc
-// - make sure react/react-dom have the same versions across the repo
-// fix stdio coloring
-// verify IDE integration
-// how do you write tests for this???
-// sparse checkout helpers
-// auto assign reviewers???
-// SOON
-// - show an actual example working, with an app registry and everything
-// - try to use module federation? will need to fork react-scripts and/or webpack
-
-// unanswered questions
-//   - global store/data flow?
-//   - drilldown pattern
-//   - filters
-//   etc etc
-
-// desktop / RN / custom renderers
-// er, angular?

@@ -16,6 +16,8 @@
     "pptr-testing-library": "^0.6.3",
     "tmp": "^0.2.1",
     "verdaccio": "^4.8.1",
-    "wait-on": "^5.2.0"
+    "wait-on": "^5.2.0",
+    "rimraf": "^3.0.2",
+    "@types/rimraf": "^3.0.0"
   }
 }
