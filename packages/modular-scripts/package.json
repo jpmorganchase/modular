@@ -12,7 +12,7 @@
   "scripts": {
     "clean": "rimraf build",
     "prebuild": "yarn clean",
-    "build": "babel --root-mode upward src --out-dir build --extensions .ts,.tsx --ignore 'src/**/*.test.ts,src/**/*.test.tsx'"
+    "build": "babel --root-mode upward src --out-dir build --extensions .ts --ignore 'src/**/*.test.ts'"
   },
   "dependencies": {
     "@craco/craco": "^5.6.4",

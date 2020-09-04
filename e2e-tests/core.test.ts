@@ -270,7 +270,7 @@ afterAll(async () => {
   tmpDirectory.removeCallback();
 });
 
-describe('creatng a new project', () => {
+describe('creating a new project', () => {
   const repoName = 'test-repo';
   const repoDirectory = path.join('.', repoName);
 
@@ -464,6 +464,20 @@ describe('creatng a new project', () => {
           "name": "widget-one",
           "version": "1.0.0",
         }
+      `);
+
+      expect(
+        await fs.readFile(
+          path.join(repoDirectory, 'packages', 'widget-one', 'index.tsx'),
+          'utf8',
+        ),
+      ).toMatchInlineSnapshot(`
+        "import * as React from 'react';
+
+        export default function WidgetOne(): JSX.Element {
+          return <div>This is WidgetOne</div>;
+        }
+        "
       `);
 
       expect(

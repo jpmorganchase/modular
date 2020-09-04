@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`creatng a new project adding widgets, packages, apps creates a widget, a package, and an app 1`] = `
+exports[`creating a new project adding widgets, packages, apps creates a widget, a package, and an app 1`] = `
 Object {
   "children": Array [
     Object {
@@ -413,7 +413,7 @@ Object {
 }
 `;
 
-exports[`creatng a new project sets up the repo with the directory structure 1`] = `
+exports[`creating a new project sets up the repo with the directory structure 1`] = `
 Object {
   "children": Array [
     Object {

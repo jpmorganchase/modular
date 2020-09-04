@@ -110,11 +110,11 @@ async function addPackage(name: string, templateArg: string | void) {
       {
         name: 'template',
         type: 'list',
-        message: 'What kind of package would you like to add?',
+        message: `What kind of package is ${name}?`,
         choices: [
-          { name: 'A normal package', value: 'package' },
-          { name: 'A React Component', value: 'widget' },
-          { name: 'A new application', value: 'app' },
+          { name: 'A plain package', value: 'package' },
+          { name: 'A React widget', value: 'widget' },
+          { name: 'A standalone application', value: 'app' },
         ],
       },
     ])) as { template: string }).template;
