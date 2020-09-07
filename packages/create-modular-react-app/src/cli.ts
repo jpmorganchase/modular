@@ -107,12 +107,10 @@ function createModularApp() {
     path.join(packagesPath, 'README.md'),
   );
 
-  if (argv.git !== false) {
-    fs.copySync(
-      path.join(templatePath, 'gitignore'),
-      path.join(newModularRoot, '.gitignore'),
-    );
-  }
+  fs.copySync(
+    path.join(templatePath, 'gitignore'),
+    path.join(newModularRoot, '.gitignore'),
+  );
 
   fs.copySync(
     path.join(templatePath, 'gitignore'),
