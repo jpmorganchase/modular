@@ -670,7 +670,7 @@ describe('creating a new project without a backing repo', () => {
     const folderDirectory = path.join('.', folderName);
     await execa(
       'yarn',
-      ['create', 'modular-react-app', folderName, '--no-git'],
+      ['create', 'modular-react-app', folderName, '--no-repo'],
       {
         cwd: tmpDirectory.name,
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
