@@ -107,12 +107,15 @@ function createModularApp() {
     path.join(packagesPath, 'README.md'),
   );
 
+  if (argv.git !== false) {
+    fs.copySync(
+      path.join(templatePath, 'gitignore'),
+      path.join(newModularRoot, '.gitignore'),
+    );
+  }
+
   fs.copySync(
     path.join(templatePath, 'gitignore'),
-    path.join(newModularRoot, '.gitignore'),
-  );
-  fs.copySync(
-    path.join(newModularRoot, '.gitignore'),
     path.join(newModularRoot, '.eslintignore'),
   );
   fs.copySync(
@@ -166,14 +169,21 @@ function createModularApp() {
   appPackageJson.modular = { type: 'app' };
   fs.writeJsonSync(appPackageJsonPath, appPackageJson, { spaces: 2 });
 
-  execSync('git', ['init'], {
-    cwd: newModularRoot,
-  });
+  if (argv.git !== false) {
+    execSync('git', ['init'], {
+      cwd: newModularRoot,
+    });
 
-  execSync('git', ['add', '.'], {
-    cwd: newModularRoot,
-  });
-  execSync('git', ['commit', '-m', 'Initial commit'], { cwd: newModularRoot });
+    execSync('git', ['add', '.'], {
+      cwd: newModularRoot,
+    });
+
+    if (argv.commit !== false) {
+      execSync('git', ['commit', '-m', 'Initial commit'], {
+        cwd: newModularRoot,
+      });
+    }
+  }
 }
 
 try {

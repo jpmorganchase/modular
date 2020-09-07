@@ -663,3 +663,25 @@ describe('creating a new project', () => {
     });
   });
 });
+
+describe('creating a new project without a backing repo', () => {
+  it('sets up a project folder without any git metadata', async () => {
+    const folderName = 'test-folder';
+    const folderDirectory = path.join('.', folderName);
+    await execa(
+      'yarn',
+      ['create', 'modular-react-app', folderName, '--no-git'],
+      {
+        cwd: tmpDirectory.name,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        env: {
+          YARN_REGISTRY: LOCAL_VERDACCIO_REGISTRY,
+          npm_config_registry: LOCAL_VERDACCIO_REGISTRY,
+        },
+        stdio: 'inherit',
+      },
+    );
+    expect(fs.existsSync(path.join(folderDirectory, '.git'))).toEqual(false);
+  });
+});
