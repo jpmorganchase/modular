@@ -167,7 +167,7 @@ function createModularApp() {
   appPackageJson.modular = { type: 'app' };
   fs.writeJsonSync(appPackageJsonPath, appPackageJson, { spaces: 2 });
 
-  if (argv.git !== false) {
+  if (argv.repo !== false) {
     execSync('git', ['init'], {
       cwd: newModularRoot,
     });
