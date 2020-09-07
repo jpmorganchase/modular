@@ -13,7 +13,7 @@ test('it can serialise a folder', () => {
     ├─ CHANGELOG.md #o6ryd3
     ├─ package.json #6ju15s
     ├─ src
-    │  └─ cli.ts #1kfvnxg
+    │  └─ cli.ts #fcjvqq
     └─ template
        ├─ README.md #1nksyzj
        ├─ gitignore #3wv9rw
