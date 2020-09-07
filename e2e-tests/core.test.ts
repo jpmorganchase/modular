@@ -4,9 +4,10 @@ import execa from 'execa';
 import fkill from 'fkill';
 import tmp from 'tmp';
 import waitOn from 'wait-on';
-import directoryTree from 'directory-tree';
 import puppeteer from 'puppeteer';
 import rimraf from 'rimraf';
+import tree from './tree';
+
 import {
   getDocument,
   getQueriesForElement,
@@ -241,24 +242,6 @@ async function startApp(appPath: string): Promise<DevServer> {
   };
 }
 
-function tree(rootPath: string) {
-  function dropSizeAttributes(
-    obj: directoryTree.DirectoryTree,
-  ): directoryTree.DirectoryTree {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return JSON.parse(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      JSON.stringify(obj, (k, v) => (k === 'size' ? undefined : v)),
-    );
-  }
-
-  return dropSizeAttributes(
-    directoryTree(rootPath, {
-      exclude: [/\.git/, /node_modules/],
-    }),
-  );
-}
-
 let tmpDirectory: tmp.DirResult;
 beforeAll(async () => {
   tmpDirectory = tmp.dirSync({ unsafeCleanup: true });
@@ -297,7 +280,40 @@ describe('creating a new project', () => {
   });
 
   it('sets up the repo with the directory structure', () => {
-    expect(tree(repoDirectory)).toMatchSnapshot();
+    expect(tree(repoDirectory)).toMatchInlineSnapshot(`
+      "test-repo
+      ├─ .eslintignore #3wv9rw
+      ├─ .gitignore #3wv9rw
+      ├─ README.md #1nksyzj
+      ├─ package.json #wyn8bh
+      ├─ packages
+      │  ├─ README.md #14bthrh
+      │  ├─ app
+      │  │  ├─ package.json #1tprre5
+      │  │  ├─ public
+      │  │  │  ├─ favicon.ico #5z38jq
+      │  │  │  ├─ index.html #1wohq3p
+      │  │  │  ├─ logo192.png #y3vsw8
+      │  │  │  ├─ logo512.png #n8nzep
+      │  │  │  ├─ manifest.json #19gah8o
+      │  │  │  └─ robots.txt #1sjb8b3
+      │  │  ├─ src
+      │  │  │  ├─ App.css #1o0zosm
+      │  │  │  ├─ App.tsx #v7fthy
+      │  │  │  ├─ __tests__
+      │  │  │  │  └─ App.test.tsx #lrjomi
+      │  │  │  ├─ index.css #o7sk21
+      │  │  │  ├─ index.tsx #zdn6mw
+      │  │  │  ├─ logo.svg #1okqmlj
+      │  │  │  ├─ react-app-env.d.ts #1dm2mq6
+      │  │  │  ├─ setupTests.ts #bnjknz
+      │  │  │  └─ widgets.ts #1sczkh0
+      │  │  └─ tsconfig.json #6rw46b
+      │  └─ shared
+      │     ├─ README.md #1aqc5yw
+      │     └─ package.json #1ju9dfx
+      └─ tsconfig.json #1y19cv2"
+    `);
   });
 
   it('sets up the repo with the contents', async () => {
@@ -305,8 +321,8 @@ describe('creating a new project', () => {
       .toMatchInlineSnapshot(`
       Object {
         "dependencies": Object {
-          "eslint-config-modular-app": "^0.0.1",
-          "modular-scripts": "^0.0.2",
+          "eslint-config-modular-app": "^0.1.2",
+          "modular-scripts": "^0.1.2",
           "prettier": "^2.1.1",
         },
         "eslintConfig": Object {
@@ -440,7 +456,73 @@ describe('creating a new project', () => {
     // todo - this should be replaces with a file tree + hashes
     // https://github.com/jpmorganchase/modular/issues/52
     it('creates a widget, a package, and an app', async () => {
-      expect(tree(repoDirectory)).toMatchSnapshot();
+      expect(tree(repoDirectory)).toMatchInlineSnapshot(`
+        "test-repo
+        ├─ .eslintignore #3wv9rw
+        ├─ .gitignore #3wv9rw
+        ├─ README.md #1nksyzj
+        ├─ package.json #wyn8bh
+        ├─ packages
+        │  ├─ README.md #14bthrh
+        │  ├─ app
+        │  │  ├─ package.json #1tprre5
+        │  │  ├─ public
+        │  │  │  ├─ favicon.ico #5z38jq
+        │  │  │  ├─ index.html #1wohq3p
+        │  │  │  ├─ logo192.png #y3vsw8
+        │  │  │  ├─ logo512.png #n8nzep
+        │  │  │  ├─ manifest.json #19gah8o
+        │  │  │  └─ robots.txt #1sjb8b3
+        │  │  ├─ src
+        │  │  │  ├─ App.css #1o0zosm
+        │  │  │  ├─ App.tsx #v7fthy
+        │  │  │  ├─ __tests__
+        │  │  │  │  └─ App.test.tsx #lrjomi
+        │  │  │  ├─ index.css #o7sk21
+        │  │  │  ├─ index.tsx #zdn6mw
+        │  │  │  ├─ logo.svg #1okqmlj
+        │  │  │  ├─ react-app-env.d.ts #1dm2mq6
+        │  │  │  ├─ setupTests.ts #bnjknz
+        │  │  │  └─ widgets.ts #1sczkh0
+        │  │  └─ tsconfig.json #6rw46b
+        │  ├─ app-one
+        │  │  ├─ package.json #rm01uu
+        │  │  ├─ public
+        │  │  │  ├─ favicon.ico #5z38jq
+        │  │  │  ├─ index.html #1wohq3p
+        │  │  │  ├─ logo192.png #y3vsw8
+        │  │  │  ├─ logo512.png #n8nzep
+        │  │  │  ├─ manifest.json #19gah8o
+        │  │  │  └─ robots.txt #1sjb8b3
+        │  │  ├─ src
+        │  │  │  ├─ App.css #1o0zosm
+        │  │  │  ├─ App.tsx #c80ven
+        │  │  │  ├─ __tests__
+        │  │  │  │  └─ App.test.tsx #lrjomi
+        │  │  │  ├─ index.css #o7sk21
+        │  │  │  ├─ index.tsx #zdn6mw
+        │  │  │  ├─ logo.svg #1okqmlj
+        │  │  │  ├─ react-app-env.d.ts #1dm2mq6
+        │  │  │  ├─ setupTests.ts #bnjknz
+        │  │  │  └─ widgets.ts #1sczkh0
+        │  │  └─ tsconfig.json #6rw46b
+        │  ├─ package-one
+        │  │  ├─ README.md #1jv3l2q
+        │  │  ├─ __tests__
+        │  │  │  └─ index.test.ts #1qvvmz7
+        │  │  ├─ index.ts #1woe74n
+        │  │  └─ package.json #1q8fi46
+        │  ├─ shared
+        │  │  ├─ README.md #1aqc5yw
+        │  │  └─ package.json #1ju9dfx
+        │  └─ widget-one
+        │     ├─ README.md #11adaka
+        │     ├─ __tests__
+        │     │  └─ index.test.tsx #14vgq12
+        │     ├─ index.tsx #r5ib8s
+        │     └─ package.json #1l93uzm
+        └─ tsconfig.json #1y19cv2"
+      `);
 
       expect(
         await fs.readJson(
