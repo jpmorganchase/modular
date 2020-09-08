@@ -176,11 +176,9 @@ function createModularApp() {
       cwd: newModularRoot,
     });
 
-    if (argv.commit !== false) {
-      execSync('git', ['commit', '-m', 'Initial commit'], {
-        cwd: newModularRoot,
-      });
-    }
+    execSync('git', ['commit', '-m', 'Initial commit'], {
+      cwd: newModularRoot,
+    });
   }
 }
 
