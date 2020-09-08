@@ -14,7 +14,7 @@
     "test": "jest",
     "e2e": "jest -c jest-e2e.config.js --runInBand",
     "e2e:docker": "./e2e-tests/run-tests-in-docker.sh",
-    "build": "yarn workspace create-modular-react-app build && yarn workspace modular-scripts build && yarn workspace esm-dependency-checker build",
+    "build": "yarn workspace create-modular-react-app build && yarn workspace modular-scripts build",
     "release": "yarn build && changeset publish"
   },
   "dependencies": {
