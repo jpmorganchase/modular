@@ -289,7 +289,7 @@ describe('creating a new project', () => {
       ├─ packages
       │  ├─ README.md #14bthrh
       │  ├─ app
-      │  │  ├─ package.json #1tprre5
+      │  │  ├─ package.json #lyku5t
       │  │  ├─ public
       │  │  │  ├─ favicon.ico #5z38jq
       │  │  │  ├─ index.html #1wohq3p
@@ -378,7 +378,7 @@ describe('creating a new project', () => {
           "@testing-library/user-event": "^7.2.1",
           "@types/codegen.macro": "^3.0.0",
           "@types/jest": "^24.9.1",
-          "@types/node": "^12.12.55",
+          "@types/node": "^12.12.56",
           "@types/react": "^16.9.49",
           "@types/react-dom": "^16.9.8",
           "codegen.macro": "^4.0.0",
@@ -465,7 +465,7 @@ describe('creating a new project', () => {
         ├─ packages
         │  ├─ README.md #14bthrh
         │  ├─ app
-        │  │  ├─ package.json #1tprre5
+        │  │  ├─ package.json #lyku5t
         │  │  ├─ public
         │  │  │  ├─ favicon.ico #5z38jq
         │  │  │  ├─ index.html #1wohq3p
