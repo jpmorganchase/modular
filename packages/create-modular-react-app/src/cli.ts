@@ -134,7 +134,7 @@ function createModularApp() {
     cwd: sharedPackagePath,
   });
 
-  execSync('yarnpkg', ['modular', 'add', 'app', '--template=app'], {
+  execSync('yarnpkg', ['modular', 'add', 'app', '--unstable-type=app'], {
     cwd: newModularRoot,
   });
 

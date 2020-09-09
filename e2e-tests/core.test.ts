@@ -431,7 +431,7 @@ describe('creating a new project', () => {
     beforeAll(async () => {
       await execa(
         'yarn',
-        ['modular', 'add', 'widget-one', '--template=widget'],
+        ['modular', 'add', 'widget-one', '--unstable-type=widget'],
         {
           cwd: repoDirectory,
           stdio: 'inherit',
@@ -440,17 +440,21 @@ describe('creating a new project', () => {
 
       await execa(
         'yarn',
-        ['modular', 'add', 'package-one', '--template=package'],
+        ['modular', 'add', 'package-one', '--unstable-type=package'],
         {
           cwd: repoDirectory,
           stdio: 'inherit',
         },
       );
 
-      await execa('yarn', ['modular', 'add', 'app-one', '--template=app'], {
-        cwd: repoDirectory,
-        stdio: 'inherit',
-      });
+      await execa(
+        'yarn',
+        ['modular', 'add', 'app-one', '--unstable-type=app'],
+        {
+          cwd: repoDirectory,
+          stdio: 'inherit',
+        },
+      );
     });
 
     // todo - this should be replaces with a file tree + hashes

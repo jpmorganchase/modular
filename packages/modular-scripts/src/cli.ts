@@ -90,7 +90,7 @@ function run() {
   const command = argv._[0];
   switch (command) {
     case 'add':
-      return addPackage(argv._[1], argv.template as string | void);
+      return addPackage(argv._[1], argv.unstableType as string | void);
     case 'test':
       return test(process.argv.slice(3));
     case 'start':
@@ -103,12 +103,12 @@ function run() {
   }
 }
 
-async function addPackage(name: string, templateArg: string | void) {
-  const template =
-    templateArg ||
+async function addPackage(name: string, typeArg: string | void) {
+  const type =
+    typeArg ||
     ((await inquirer.prompt([
       {
-        name: 'template',
+        name: 'type',
         type: 'list',
         message: `What kind of package is ${name}?`,
         choices: [
@@ -117,9 +117,9 @@ async function addPackage(name: string, templateArg: string | void) {
           { name: 'A standalone application', value: 'app' },
         ],
       },
-    ])) as { template: string }).template;
+    ])) as { type: string }).type;
 
-  if (template === 'app') {
+  if (type === 'app') {
     addApp(name);
     return;
   }
@@ -130,7 +130,7 @@ async function addPackage(name: string, templateArg: string | void) {
   const newComponentName = toPascalCase(name);
 
   const newPackagePath = path.join(modularRoot, 'packages', newPackageName);
-  const packageTemplatePath = path.join(__dirname, '../templates', template);
+  const packageTypePath = path.join(__dirname, '../types', type);
 
   // create a new package source folder
   if (fs.existsSync(newPackagePath)) {
@@ -139,7 +139,7 @@ async function addPackage(name: string, templateArg: string | void) {
   }
 
   fs.mkdirpSync(newPackagePath);
-  fs.copySync(packageTemplatePath, newPackagePath);
+  fs.copySync(packageTypePath, newPackagePath);
 
   const packageRootFilePaths = fs
     .readdirSync(newPackagePath, { withFileTypes: true })
