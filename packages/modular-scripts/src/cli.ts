@@ -160,7 +160,6 @@ async function addPackage(name: string, templateArg: string | void) {
   execSync('yarnpkg', [], { cwd: newPackagePath });
 }
 
-// keep this in sync with create-modular-react-app/src/cli.ts
 function addApp(name: string) {
   const root = getModularRoot();
   const packagesPath = path.join(root, 'packages');

@@ -6,8 +6,6 @@ import * as path from 'path';
 import chalk from 'chalk';
 import { argv } from 'yargs';
 
-import { JSONSchemaForNPMPackageJsonFiles } from '@schemastore/package';
-
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
 // terminate the Node.js process with a non-zero exit code.
@@ -136,36 +134,9 @@ function createModularApp() {
     cwd: sharedPackagePath,
   });
 
-  // keep this in sync with addApp() in modular-scripts/src/cli.ts#addApp()
-  const appPath = path.join(packagesPath, 'app');
-  const appPackageJsonPath = path.join(appPath, 'package.json');
-  const defaultTemplate = 'cra-template-modular-typescript';
-  // const appTemplate = (argv.template ?? defaultTemplate) as string;
-  // https://github.com/jpmorganchase/modular/issues/37
-  // Holding off on using custom templates until we have
-  // actual usecases.
-  const appTemplate = defaultTemplate;
-
-  execSync(
-    'yarnpkg',
-    ['create', 'react-app', 'app', '--template', appTemplate],
-    {
-      cwd: packagesPath,
-    },
-  );
-  fs.removeSync(path.join(appPath, '.gitignore'));
-  fs.removeSync(path.join(appPath, '.git'));
-  fs.removeSync(path.join(appPath, 'yarn.lock'));
-  fs.removeSync(path.join(appPath, 'README.md'));
-
-  const appPackageJson = fs.readJsonSync(
-    appPackageJsonPath,
-  ) as JSONSchemaForNPMPackageJsonFiles;
-  delete appPackageJson['scripts'];
-  delete appPackageJson['eslintConfig'];
-  appPackageJson.private = true;
-  appPackageJson.modular = { type: 'app' };
-  fs.writeJsonSync(appPackageJsonPath, appPackageJson, { spaces: 2 });
+  execSync('yarnpkg', ['modular', 'add', 'app', '--template=app'], {
+    cwd: newModularRoot,
+  });
 
   if (argv.repo !== false) {
     execSync('git', ['init'], {
