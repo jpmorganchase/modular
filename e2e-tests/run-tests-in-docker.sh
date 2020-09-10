@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+unset jest_args;
+for a; do
+    if [[ $a != "--interactive" ]]; then
+        jest_args+=("$a");
+    fi;
+done;
+
 function print_help {
   echo "Usage: ${0} [OPTIONS]"
   echo ""
@@ -33,4 +40,4 @@ docker run \
   --workdir /var/modular \
   $([[ ${interactive} == 'true' ]] && echo '--interactive') \
   ianwalter/puppeteer:v4.0.0 \
-  bash -c "git config --global user.email 'test@example.com' && git config --global user.name 'Test' && yarn e2e --detectOpenHandles --forceExit"
+  bash -c "git config --global user.email 'test@example.com' && git config --global user.name 'Test' && yarn e2e --detectOpenHandles --forceExit ${jest_args}"
