@@ -18,6 +18,7 @@
     "release": "yarn build && changeset publish"
   },
   "dependencies": {
+    "@babel/cli": "^7.10.1",
     "@babel/core": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
     "@babel/preset-react": "^7.9.4",
