@@ -1,5 +1,11 @@
 # modular-scripts
 
+## 0.1.2
+
+### Patch Changes
+
+- f494252: removes code duplication for creating an app.
+
 ## 0.1.1
 
 ### Patch Changes

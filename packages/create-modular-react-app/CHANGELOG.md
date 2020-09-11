@@ -1,5 +1,11 @@
 # create-modular-react-app
 
+## 0.2.1
+
+### Patch Changes
+
+- f494252: removes code duplication for creating an app.
+
 ## 0.2.0
 
 ### Minor Changes
