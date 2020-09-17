@@ -285,11 +285,11 @@ describe('creating a new project', () => {
       ├─ .eslintignore #3wv9rw
       ├─ .gitignore #3wv9rw
       ├─ README.md #1nksyzj
-      ├─ package.json #wyn8bh
+      ├─ package.json #3h17sm
       ├─ packages
       │  ├─ README.md #14bthrh
       │  ├─ app
-      │  │  ├─ package.json #lyku5t
+      │  │  ├─ package.json #uq1ktd
       │  │  ├─ public
       │  │  │  ├─ favicon.ico #5z38jq
       │  │  │  ├─ index.html #1wohq3p
@@ -322,8 +322,8 @@ describe('creating a new project', () => {
       Object {
         "dependencies": Object {
           "eslint-config-modular-app": "^0.1.2",
-          "modular-scripts": "^0.1.2",
-          "prettier": "^2.1.1",
+          "modular-scripts": "^0.1.3",
+          "prettier": "^2.1.2",
         },
         "eslintConfig": Object {
           "extends": "modular-app",
@@ -378,7 +378,7 @@ describe('creating a new project', () => {
           "@testing-library/user-event": "^7.2.1",
           "@types/codegen.macro": "^3.0.0",
           "@types/jest": "^24.9.1",
-          "@types/node": "^12.12.56",
+          "@types/node": "^12.12.62",
           "@types/react": "^16.9.49",
           "@types/react-dom": "^16.9.8",
           "codegen.macro": "^4.0.0",
@@ -465,11 +465,11 @@ describe('creating a new project', () => {
         ├─ .eslintignore #3wv9rw
         ├─ .gitignore #3wv9rw
         ├─ README.md #1nksyzj
-        ├─ package.json #wyn8bh
+        ├─ package.json #3h17sm
         ├─ packages
         │  ├─ README.md #14bthrh
         │  ├─ app
-        │  │  ├─ package.json #lyku5t
+        │  │  ├─ package.json #uq1ktd
         │  │  ├─ public
         │  │  │  ├─ favicon.ico #5z38jq
         │  │  │  ├─ index.html #1wohq3p

@@ -2,8 +2,12 @@
 
 const path = require('path');
 const { getLoader, loaderByName } = require('@craco/craco');
+const globby = require('globby');
 
-const absolutePackagesPath = path.resolve('../../packages');
+const { getModularRoot } = require('.');
+
+const modularRoot = getModularRoot();
+const absolutePackagesPath = path.resolve(modularRoot, 'packages');
 
 module.exports = {
   webpack: {
@@ -24,12 +28,22 @@ module.exports = {
     },
   },
   jest: {
-    configure: {
-      roots: ['<rootDir>/../../packages/'],
-      testMatch: [
-        '<rootDir>/../../packages/**/__tests__/**/*.{js,ts,tsx}',
-        '<rootDir>/../../packages/**/*.{spec,test}.{js,ts,tsx}',
-      ],
+    configure(jestConfig) {
+      return {
+        ...jestConfig,
+        rootDir: absolutePackagesPath,
+        roots: ['<rootDir>'],
+        testMatch: [
+          '<rootDir>/*/src/**/__tests__/**/*.{js,ts,tsx}',
+          '<rootDir>/*/src/**/*.{spec,test}.{js,ts,tsx}',
+        ],
+        coverageDirectory: path.resolve(modularRoot, 'coverage'),
+        collectCoverageFrom: ['<rootDir>/*/src/**/*.{js,ts,tsx}', '!**/*.d.ts'],
+        setupFilesAfterEnv: globby.sync(
+          [`${absolutePackagesPath}/**/src/setupTests.{js,ts}`],
+          { cwd: process.cwd() },
+        ),
+      };
     },
   },
 };

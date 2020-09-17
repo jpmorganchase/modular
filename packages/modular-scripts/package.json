@@ -22,6 +22,7 @@
     "execa": "^4.0.2",
     "find-up": "^4.1.0",
     "fs-extra": "^9.0.1",
+    "globby": "^11.0.1",
     "react-scripts": "^3.4.1",
     "resolve-as-bin": "^2.1.0",
     "yargs": "^15.4.1",
