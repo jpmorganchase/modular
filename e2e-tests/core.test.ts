@@ -282,10 +282,10 @@ describe('creating a new project', () => {
   it('sets up the repo with the directory structure', () => {
     expect(tree(repoDirectory)).toMatchInlineSnapshot(`
       "test-repo
-      ├─ .eslintignore #3wv9rw
-      ├─ .gitignore #3wv9rw
+      ├─ .eslintignore #1ugsijf
+      ├─ .gitignore #1ugsijf
       ├─ README.md #1nksyzj
-      ├─ package.json #3h17sm
+      ├─ package.json #1a8xxo
       ├─ packages
       │  ├─ README.md #14bthrh
       │  ├─ app
@@ -322,7 +322,7 @@ describe('creating a new project', () => {
       Object {
         "dependencies": Object {
           "eslint-config-modular-app": "^0.1.2",
-          "modular-scripts": "^0.1.3",
+          "modular-scripts": "^0.1.4",
           "prettier": "^2.1.2",
         },
         "eslintConfig": Object {
@@ -462,10 +462,10 @@ describe('creating a new project', () => {
     it('creates a widget, a package, and an app', async () => {
       expect(tree(repoDirectory)).toMatchInlineSnapshot(`
         "test-repo
-        ├─ .eslintignore #3wv9rw
-        ├─ .gitignore #3wv9rw
+        ├─ .eslintignore #1ugsijf
+        ├─ .gitignore #1ugsijf
         ├─ README.md #1nksyzj
-        ├─ package.json #3h17sm
+        ├─ package.json #1a8xxo
         ├─ packages
         │  ├─ README.md #14bthrh
         │  ├─ app

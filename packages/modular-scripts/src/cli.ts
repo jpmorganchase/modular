@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { argv } from 'yargs';
+import mri from 'mri';
 import execa from 'execa';
 import * as fs from 'fs-extra';
 import * as path from 'path';
@@ -87,11 +87,13 @@ function run() {
     process.exit(1);
   }
 
+  const argv = mri(process.argv.slice(2));
+
   const command = argv._[0];
   try {
     switch (command) {
       case 'add':
-        return addPackage(argv._[1], argv.unstableType as string | void);
+        return addPackage(argv._[1], argv['unstable-type'] as string | void);
       case 'test':
         return test(process.argv.slice(3));
       case 'start':
