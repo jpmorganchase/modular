@@ -88,18 +88,31 @@ function run() {
   }
 
   const command = argv._[0];
-  switch (command) {
-    case 'add':
-      return addPackage(argv._[1], argv.unstableType as string | void);
-    case 'test':
-      return test(process.argv.slice(3));
-    case 'start':
-      return start(argv._[1]);
-    case 'build':
-      return build(argv._[1]);
-    default:
-      console.log(help);
-      process.exit(1);
+  try {
+    switch (command) {
+      case 'add':
+        return addPackage(argv._[1], argv.unstableType as string | void);
+      case 'test':
+        return test(process.argv.slice(3));
+      case 'start':
+        return start(argv._[1]);
+      case 'build':
+        return build(argv._[1]);
+      default:
+        console.log(help);
+        process.exit(1);
+    }
+  } catch (err) {
+    /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+    // When there is an `execa` Error with an `.exitCode` the
+    // error message will already have been printed out by the
+    // process so we only need to bail with the exit code.
+    if (err.exitCode !== undefined) {
+      process.exit(err.exitCode);
+    }
+    /* eslint-enable @typescript-eslint/no-unsafe-member-access */
+
+    throw err;
   }
 }
 
