@@ -1,5 +1,16 @@
 # modular-scripts
 
+## 0.1.4
+
+### Patch Changes
+
+- 3616010: Do not print `execa` stack traces when processes error.
+
+  Ensure that the `build/` directory does not get added into a Git repository.
+
+  Let the underlying commands handle any `--help` argument instead of
+  `modular`'s own argument parser.
+
 ## 0.1.3
 
 ### Patch Changes
