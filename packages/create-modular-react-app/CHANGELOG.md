@@ -1,5 +1,16 @@
 # create-modular-react-app
 
+## 0.2.2
+
+### Patch Changes
+
+- 3616010: Do not print `execa` stack traces when processes error.
+
+  Ensure that the `build/` directory does not get added into a Git repository.
+
+  Let the underlying commands handle any `--help` argument instead of
+  `modular`'s own argument parser.
+
 ## 0.2.1
 
 ### Patch Changes
