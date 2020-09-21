@@ -17,11 +17,12 @@
     "chalk": "^4.1.0",
     "execa": "^4.0.2",
     "fs-extra": "^9.0.1",
-    "yargs": "^15.4.1"
+    "mri": "^1.1.6"
   },
   "devDependencies": {
     "@schemastore/package": "^0.0.6",
     "@types/fs-extra": "^5.0.2",
+    "@types/mri": "^1.1.0",
     "@types/node": "*",
     "rimraf": "^3.0.2"
   }

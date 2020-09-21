@@ -4,7 +4,7 @@ import execa from 'execa';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import chalk from 'chalk';
-import { argv } from 'yargs';
+import mri from 'mri';
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
@@ -47,6 +47,8 @@ function createModularApp() {
     );
     process.exit(1);
   }
+
+  const argv = mri(process.argv.slice(2));
 
   const [name] = argv._;
   if (!name) {

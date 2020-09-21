@@ -11,12 +11,12 @@ test('it can serialise a folder', () => {
     "create-modular-react-app
     ├─ .npmignore #1rstiru
     ├─ CHANGELOG.md #1k5lnr5
-    ├─ package.json #1l7jkzs
+    ├─ package.json #qef6lj
     ├─ src
-    │  └─ cli.ts #78me31
+    │  └─ cli.ts #cd0fl6
     └─ template
        ├─ README.md #1nksyzj
-       ├─ gitignore #3wv9rw
+       ├─ gitignore #1ugsijf
        ├─ packages
        │  └─ README.md #14bthrh
        ├─ shared
