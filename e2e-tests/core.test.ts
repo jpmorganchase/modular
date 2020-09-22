@@ -28,7 +28,7 @@ const LOCAL_VERDACCIO_REGISTRY = 'http://localhost:4873';
 
 async function startLocalRegistry(configPath: string): Promise<void> {
   await execa.command(
-    `yarn verdaccio -l ${LOCAL_VERDACCIO_REGISTRY} -c ${configPath} &`,
+    `yarnpkg verdaccio -l ${LOCAL_VERDACCIO_REGISTRY} -c ${configPath} &`,
     {
       shell: true,
       stdio: 'inherit',
@@ -40,7 +40,7 @@ async function startLocalRegistry(configPath: string): Promise<void> {
   });
 
   await execa(
-    'yarn',
+    'yarnpkg',
     [
       'npm-cli-login',
       '-u',
@@ -87,7 +87,7 @@ async function setupLocalRegistry(tmpDir: tmp.DirResult) {
   // Build and publish packages to the local registry.
   for (const packageName of packages) {
     try {
-      await execa('yarn', ['workspace', packageName, 'build']);
+      await execa('yarnpkg', ['workspace', packageName, 'build']);
     } catch (error) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       if (error.stderr && error.stderr.includes('Command "build" not found.')) {
@@ -99,7 +99,7 @@ async function setupLocalRegistry(tmpDir: tmp.DirResult) {
       }
     }
     await execa(
-      'yarn',
+      'yarnpkg',
       [
         'workspace',
         packageName,
@@ -166,7 +166,7 @@ async function startApp(appPath: string): Promise<DevServer> {
   // See: https://github.com/jpmorganchase/modular/pull/45/files#r473007124
   const port = await detect(3000);
 
-  const devServer = execa('yarn', ['start'], {
+  const devServer = execa('yarnpkg', ['start'], {
     cwd: appPath,
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -192,7 +192,18 @@ async function startApp(appPath: string): Promise<DevServer> {
       );
     }
 
+    // If the Promise has completed we need to bail out of any further handlers that
+    // are executed, because otherwise we can end up trying to log after tests are done.
+    // We use a 'completed' variable to do this -- in an ideal world we'd cleanup
+    // the listeners.
+    //
+    // See: https://github.com/jpmorganchase/modular/pull/107#discussion_r493791918
+    let completed = false;
+
     const startAppTimeout = setTimeout(() => {
+      if (completed) return;
+
+      completed = true;
       reject(
         new Error(
           `The app at ${appPath} never started within the configured ${START_APP_TIMEOUT}ms timeout period.`,
@@ -201,31 +212,45 @@ async function startApp(appPath: string): Promise<DevServer> {
     }, START_APP_TIMEOUT);
 
     devServer.stdout.on('data', (data: Buffer) => {
+      if (completed) return;
+
       const output = data.toString();
       if (/Something is already running on port (\d+)./.test(output)) {
         clearTimeout(startAppTimeout);
+
+        completed = true;
         return reject(new Error(output));
       }
       if (/Compiled successfully!/.test(output)) {
         clearTimeout(startAppTimeout);
+
+        completed = true;
         return resolve();
       }
     });
 
     devServer.stderr.on('data', (data: Buffer) => {
+      if (completed) return;
+
       const output = data.toString();
 
       console.error(output);
 
       clearTimeout(startAppTimeout);
+
+      completed = true;
       return reject(new Error(output));
     });
 
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     devServer.on('error', (err: Error) => {
+      if (completed) return;
+
       console.error(err);
 
       clearTimeout(startAppTimeout);
+
+      completed = true;
       reject(err);
     });
   });
@@ -240,6 +265,36 @@ async function startApp(appPath: string): Promise<DevServer> {
       return devServer.cancel();
     },
   };
+}
+
+// We want to omit any information that makes our snapshots
+// fragile and therefore censor package versions using `?`.
+async function readCensoredPackageJson(
+  packageJsonPath: string,
+): Promise<unknown> {
+  /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return */
+  function censorVersions(packageJson: any): any {
+    for (const dependencyTypeProperty of [
+      'dependencies',
+      'devDependencies',
+      'peerDependencies',
+      'optionalDependencies',
+    ]) {
+      if (packageJson[dependencyTypeProperty]) {
+        // This replaces the version numbers of packages with `?`.
+        packageJson[dependencyTypeProperty] = Object.fromEntries(
+          Object.entries(
+            packageJson[dependencyTypeProperty],
+          ).map(([packageName]) => [packageName, '?']),
+        );
+      }
+    }
+
+    return packageJson;
+  }
+
+  return censorVersions(await fs.readJson(packageJsonPath));
+  /* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return */
 }
 
 let tmpDirectory: tmp.DirResult;
@@ -258,7 +313,7 @@ describe('creating a new project', () => {
   const repoDirectory = path.join('.', repoName);
 
   beforeAll(async () => {
-    await execa('yarn', ['create', 'modular-react-app', repoName], {
+    await execa('yarnpkg', ['create', 'modular-react-app', repoName], {
       cwd: tmpDirectory.name,
       // `npm_config_registry` is the only working way I could find
       // to change the registry of the `yarn create [starter-app]` command.
@@ -285,11 +340,13 @@ describe('creating a new project', () => {
       ├─ .eslintignore #1ugsijf
       ├─ .gitignore #1ugsijf
       ├─ README.md #1nksyzj
-      ├─ package.json #1a8xxo
+      ├─ modular
+      │  └─ setupTests.ts #bnjknz
+      ├─ package.json #bdm9qb
       ├─ packages
       │  ├─ README.md #14bthrh
       │  ├─ app
-      │  │  ├─ package.json #uq1ktd
+      │  │  ├─ package.json #b5ezfg
       │  │  ├─ public
       │  │  │  ├─ favicon.ico #5z38jq
       │  │  │  ├─ index.html #1wohq3p
@@ -306,7 +363,6 @@ describe('creating a new project', () => {
       │  │  │  ├─ index.tsx #zdn6mw
       │  │  │  ├─ logo.svg #1okqmlj
       │  │  │  ├─ react-app-env.d.ts #1dm2mq6
-      │  │  │  ├─ setupTests.ts #bnjknz
       │  │  │  └─ widgets.ts #1sczkh0
       │  │  └─ tsconfig.json #6rw46b
       │  └─ shared
@@ -317,13 +373,19 @@ describe('creating a new project', () => {
   });
 
   it('sets up the repo with the contents', async () => {
-    expect(await fs.readJson(path.join(repoDirectory, 'package.json')))
-      .toMatchInlineSnapshot(`
+    expect(
+      await readCensoredPackageJson(path.join(repoDirectory, 'package.json')),
+    ).toMatchInlineSnapshot(`
       Object {
         "dependencies": Object {
-          "eslint-config-modular-app": "^0.1.2",
-          "modular-scripts": "^0.1.4",
-          "prettier": "^2.1.2",
+          "@testing-library/jest-dom": "?",
+          "@testing-library/react": "?",
+          "@testing-library/user-event": "?",
+          "@types/jest": "?",
+          "@types/node": "?",
+          "eslint-config-modular-app": "?",
+          "modular-scripts": "?",
+          "prettier": "?",
         },
         "eslintConfig": Object {
           "extends": "modular-app",
@@ -355,7 +417,7 @@ describe('creating a new project', () => {
       }
     `);
     expect(
-      await fs.readJson(
+      await readCensoredPackageJson(
         path.join(repoDirectory, 'packages', 'app', 'package.json'),
       ),
     ).toMatchInlineSnapshot(`
@@ -373,18 +435,12 @@ describe('creating a new project', () => {
           ],
         },
         "dependencies": Object {
-          "@testing-library/jest-dom": "^4.2.4",
-          "@testing-library/react": "^9.5.0",
-          "@testing-library/user-event": "^7.2.1",
-          "@types/codegen.macro": "^3.0.0",
-          "@types/jest": "^24.9.1",
-          "@types/node": "^12.12.62",
-          "@types/react": "^16.9.49",
-          "@types/react-dom": "^16.9.8",
-          "codegen.macro": "^4.0.0",
-          "react": "^16.13.1",
-          "react-dom": "^16.13.1",
-          "react-scripts": "3.4.3",
+          "@types/codegen.macro": "?",
+          "@types/react": "?",
+          "@types/react-dom": "?",
+          "codegen.macro": "?",
+          "react": "?",
+          "react-dom": "?",
         },
         "modular": Object {
           "type": "app",
@@ -427,10 +483,40 @@ describe('creating a new project', () => {
     }
   });
 
+  it('can execute tests', async () => {
+    // We want to omit any information that makes our snapshots
+    // fragile and therefore censor times using `?`.
+    function censorVariableTimes(str: string | undefined) {
+      if (!str) {
+        return undefined;
+      }
+
+      // This replaces the times (e.g. 3.4s or 6788ms) with `?`.
+      return str.replace(/[\d.]+(m?s)/g, '?$1');
+    }
+
+    const output = await execa('yarnpkg', ['test'], {
+      cwd: repoDirectory,
+      all: true,
+    });
+
+    expect(censorVariableTimes(output.all)).toMatchInlineSnapshot(`
+      "$ modular test
+      PASS src/__tests__/App.test.tsx
+        ✓ renders learn react link (?ms)
+
+      Test Suites: 1 passed, 1 total
+      Tests:       1 passed, 1 total
+      Snapshots:   0 total
+      Time:        ?s
+      Ran all test suites."
+    `);
+  });
+
   describe('adding widgets, packages, apps', () => {
     beforeAll(async () => {
       await execa(
-        'yarn',
+        'yarnpkg',
         ['modular', 'add', 'widget-one', '--unstable-type=widget'],
         {
           cwd: repoDirectory,
@@ -439,7 +525,7 @@ describe('creating a new project', () => {
       );
 
       await execa(
-        'yarn',
+        'yarnpkg',
         ['modular', 'add', 'package-one', '--unstable-type=package'],
         {
           cwd: repoDirectory,
@@ -448,28 +534,38 @@ describe('creating a new project', () => {
       );
 
       await execa(
-        'yarn',
+        'yarnpkg',
         ['modular', 'add', 'app-one', '--unstable-type=app'],
         {
           cwd: repoDirectory,
           stdio: 'inherit',
+          // `npm_config_registry` is the only working way I could find
+          // to change the registry of the `yarn create [starter-app]` command.
+          // `YARN_REGISTRY` worked via the shell only.
+          //
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          env: {
+            YARN_REGISTRY: LOCAL_VERDACCIO_REGISTRY,
+            npm_config_registry: LOCAL_VERDACCIO_REGISTRY,
+          },
         },
       );
     });
 
-    // todo - this should be replaces with a file tree + hashes
-    // https://github.com/jpmorganchase/modular/issues/52
     it('creates a widget, a package, and an app', async () => {
       expect(tree(repoDirectory)).toMatchInlineSnapshot(`
         "test-repo
         ├─ .eslintignore #1ugsijf
         ├─ .gitignore #1ugsijf
         ├─ README.md #1nksyzj
-        ├─ package.json #1a8xxo
+        ├─ modular
+        │  └─ setupTests.ts #bnjknz
+        ├─ package.json #bdm9qb
         ├─ packages
         │  ├─ README.md #14bthrh
         │  ├─ app
-        │  │  ├─ package.json #uq1ktd
+        │  │  ├─ package.json #b5ezfg
         │  │  ├─ public
         │  │  │  ├─ favicon.ico #5z38jq
         │  │  │  ├─ index.html #1wohq3p
@@ -486,11 +582,10 @@ describe('creating a new project', () => {
         │  │  │  ├─ index.tsx #zdn6mw
         │  │  │  ├─ logo.svg #1okqmlj
         │  │  │  ├─ react-app-env.d.ts #1dm2mq6
-        │  │  │  ├─ setupTests.ts #bnjknz
         │  │  │  └─ widgets.ts #1sczkh0
         │  │  └─ tsconfig.json #6rw46b
         │  ├─ app-one
-        │  │  ├─ package.json #rm01uu
+        │  │  ├─ package.json #126foy0
         │  │  ├─ public
         │  │  │  ├─ favicon.ico #5z38jq
         │  │  │  ├─ index.html #1wohq3p
@@ -507,7 +602,6 @@ describe('creating a new project', () => {
         │  │  │  ├─ index.tsx #zdn6mw
         │  │  │  ├─ logo.svg #1okqmlj
         │  │  │  ├─ react-app-env.d.ts #1dm2mq6
-        │  │  │  ├─ setupTests.ts #bnjknz
         │  │  │  └─ widgets.ts #1sczkh0
         │  │  └─ tsconfig.json #6rw46b
         │  ├─ package-one
@@ -529,18 +623,18 @@ describe('creating a new project', () => {
       `);
 
       expect(
-        await fs.readJson(
+        await readCensoredPackageJson(
           path.join(repoDirectory, 'packages', 'widget-one', 'package.json'),
         ),
       ).toMatchInlineSnapshot(`
         Object {
           "dependencies": Object {
-            "react": "^16.13.1",
-            "react-dom": "^16.13.1",
+            "react": "?",
+            "react-dom": "?",
           },
           "devDependencies": Object {
-            "@types/react": "^16.9.0",
-            "@types/react-dom": "^16.9.0",
+            "@types/react": "?",
+            "@types/react-dom": "?",
           },
           "license": "UNLICENSED",
           "main": "index.tsx",
@@ -567,7 +661,7 @@ describe('creating a new project', () => {
       `);
 
       expect(
-        await fs.readJson(
+        await readCensoredPackageJson(
           path.join(repoDirectory, 'packages', 'package-one', 'package.json'),
         ),
       ).toMatchInlineSnapshot(`
@@ -591,7 +685,7 @@ describe('creating a new project', () => {
       `);
 
       expect(
-        await fs.readJson(
+        await readCensoredPackageJson(
           path.join(repoDirectory, 'packages', 'app-one', 'package.json'),
         ),
       ).toMatchInlineSnapshot(`
@@ -609,18 +703,12 @@ describe('creating a new project', () => {
             ],
           },
           "dependencies": Object {
-            "@testing-library/jest-dom": "^4.2.4",
-            "@testing-library/react": "^9.3.2",
-            "@testing-library/user-event": "^7.1.2",
-            "@types/codegen.macro": "^3.0.0",
-            "@types/jest": "^24.0.0",
-            "@types/node": "^12.0.0",
-            "@types/react": "^16.9.0",
-            "@types/react-dom": "^16.9.0",
-            "codegen.macro": "^4.0.0",
-            "react": "^16.13.1",
-            "react-dom": "^16.13.1",
-            "react-scripts": "3.4.3",
+            "@types/codegen.macro": "?",
+            "@types/react": "?",
+            "@types/react-dom": "?",
+            "codegen.macro": "?",
+            "react": "?",
+            "react-dom": "?",
           },
           "modular": Object {
             "type": "app",
@@ -673,7 +761,7 @@ describe('creating a new project without a backing repo', () => {
     const folderName = 'test-folder';
     const folderDirectory = path.join('.', folderName);
     await execa(
-      'yarn',
+      'yarnpkg',
       ['create', 'modular-react-app', folderName, '--no-repo'],
       {
         cwd: tmpDirectory.name,
