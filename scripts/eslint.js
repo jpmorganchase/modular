@@ -1,5 +1,11 @@
 // Based on similar script in React
 // https://github.com/facebook/react/blob/6d375f3/scripts/eslint/index.js
+//
+// The main difference is React uses the Node.js API of ESLint,
+// whereas this script uses the ESLint CLI to ensure CLI flags are respected
+// and to avoid issues such as https://github.com/facebook/react/pull/19040:
+//
+// > Ideally all the eslint options should be passable.
 
 'use strict';
 
