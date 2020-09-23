@@ -26,7 +26,7 @@ function runESLintOnFilePatterns(filePatterns, onlyChanged) {
   }
   const finalFilePatterns = onlyChanged
     ? intersect(changedFiles, filePatterns)
-    : '.';
+    : ['.'];
 
   const result = execa.sync(
     'eslint',
