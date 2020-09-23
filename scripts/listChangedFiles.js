@@ -16,7 +16,9 @@ function exec(command, args) {
   return execFileSync(command, args, options);
 }
 
-const execGitCmd = (args) => exec('git', args).trim().toString().split('\n');
+function execGitCmd(args) {
+  return exec('git', args).trim().toString().split('\n');
+}
 
 function listChangedFiles() {
   const mergeBase = execGitCmd(['merge-base', 'HEAD', 'master']);
