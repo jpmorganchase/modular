@@ -60,6 +60,7 @@ function createModularApp() {
 
   const newModularRoot = path.join(process.cwd(), name);
   const packagesPath = path.join(newModularRoot, 'packages');
+  const modularGlobalConfigsPath = path.join(newModularRoot, 'modular');
   const projectPackageJsonPath = path.join(newModularRoot, 'package.json');
   const templatePath = path.join(__dirname, '..', 'template');
 
@@ -97,7 +98,18 @@ function createModularApp() {
 
   execSync(
     'yarnpkg',
-    ['add', '-W', 'prettier', 'modular-scripts', 'eslint-config-modular-app'],
+    [
+      'add',
+      '-W',
+      '@testing-library/jest-dom',
+      '@testing-library/react',
+      '@testing-library/user-event',
+      '@types/node',
+      '@types/jest',
+      'prettier',
+      'modular-scripts',
+      'eslint-config-modular-app',
+    ],
     { cwd: newModularRoot },
   );
 
@@ -105,6 +117,12 @@ function createModularApp() {
   fs.copySync(
     path.join(templatePath, 'packages/README.md'),
     path.join(packagesPath, 'README.md'),
+  );
+
+  fs.mkdirpSync(modularGlobalConfigsPath);
+  fs.copySync(
+    path.join(templatePath, 'modular/setupTests.ts'),
+    path.join(modularGlobalConfigsPath, 'setupTests.ts'),
   );
 
   fs.copySync(

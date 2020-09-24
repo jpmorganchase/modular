@@ -176,8 +176,8 @@ async function addPackage(name: string, typeArg: string | void) {
 }
 
 function addApp(name: string) {
-  const root = getModularRoot();
-  const packagesPath = path.join(root, 'packages');
+  const modularRoot = getModularRoot();
+  const packagesPath = path.join(modularRoot, 'packages');
   const appPath = path.join(packagesPath, name);
   const appPackageJsonPath = path.join(appPath, 'package.json');
   const defaultTemplate = 'cra-template-modular-typescript';
@@ -207,10 +207,15 @@ function addApp(name: string) {
   const appPackageJson = fs.readJsonSync(
     appPackageJsonPath,
   ) as JSONSchemaForNPMPackageJsonFiles;
-  delete appPackageJson['scripts'];
-  delete appPackageJson['eslintConfig'];
+
+  delete appPackageJson.scripts;
+  delete appPackageJson.eslintConfig;
+  if (appPackageJson.dependencies !== undefined) {
+    delete appPackageJson.dependencies['react-scripts'];
+  }
   appPackageJson.private = true;
   appPackageJson.modular = { type: 'app' };
+
   fs.writeJsonSync(appPackageJsonPath, appPackageJson, { spaces: 2 });
 }
 
