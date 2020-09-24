@@ -1,5 +1,12 @@
 # cra-template-modular-typescript
 
+## 0.2.0
+
+### Minor Changes
+
+- ca44022: Place `setupTests` into the root of a modular project:
+  `modular/setupTests.ts`
+
 ## 0.1.1
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # create-modular-react-app
 
+## 0.3.0
+
+### Minor Changes
+
+- ca44022: Place `setupTests` into the root of a modular project:
+  `modular/setupTests.ts`
+
 ## 0.2.2
 
 ### Patch Changes
