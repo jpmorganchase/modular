@@ -62,3 +62,37 @@ jobs:
             v2-${{ runner.os }}-yarn-
       - run: yarn
       - run: yarn test
+  test_e2e:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Get Yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Cache Yarn
+        uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: v2-${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            v2-${{ runner.os }}-yarn-
+      - name: Install dependencies
+        run: yarn
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
+      - name: Run E2E tests
+        uses: ianwalter/puppeteer-container@v4.0.0
+        with:
+          args: yarn e2e --forceExit
+        env:
+          CI: 'true'
