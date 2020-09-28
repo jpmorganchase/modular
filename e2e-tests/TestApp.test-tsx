@@ -1,12 +1,12 @@
-// We need to ensure that the `app/src/App.tsx` used by `yarn start` renders widgets
-// in order that we can test that an application can render widgets.
-// Therefore, this is a copy of `App.tsx` which renders all of the widgets.
+// We need to ensure that the `app/src/App.tsx` used by `yarn start` renders views
+// in order that we can test that an application can render views.
+// Therefore, this is a copy of `App.tsx` which renders all of the views.
 // I've changed the extension, because I don't want it to be picked up by TypeScript or ESLint.
 import * as React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-import widgets from './widgets';
+import views from './views';
 
 function App(): JSX.Element {
   return (
@@ -25,13 +25,13 @@ function App(): JSX.Element {
           Learn React
         </a>
       </header>
-      <div data-testid="widgets">
+      <div data-testid="views">
         <React.Suspense fallback={null}>
-          {Object.keys(widgets).length > 0
-            ? Object.entries(widgets).map(([widgetName, Widget]) => (
-                <Widget key={widgetName} />
+          {Object.keys(views).length > 0
+            ? Object.entries(views).map(([viewName, View]) => (
+                <View key={viewName} />
               ))
-            : 'No widgets found...'}
+            : 'No views found...'}
         </React.Suspense>
       </div>
     </div>

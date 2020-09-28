@@ -2,37 +2,37 @@
 import { LazyExoticComponent, ComponentType } from 'react';
 import codegen from 'codegen.macro';
 
-interface WidgetMap<T = unknown> {
+interface ViewMap<T = unknown> {
   [packageName: string]: LazyExoticComponent<ComponentType<T>>;
 }
 
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-function getWidgetMap(): WidgetMap {
+function getViewMap(): ViewMap {
   // We inlined a require into a function since otherwise Webpack was optimizing out the unused import.
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-var-requires
   const { lazy } = require('react');
 
-  // This defines the `widgetMap`.
+  // This defines the `viewMap`.
   codegen`
   const path = require('path');
-  const { getModularRoot, generateWidgetMap } = require('modular-scripts');
+  const { getModularRoot, generateViewMap } = require('modular-scripts');
 
-  const widgetMap = generateWidgetMap(
+  const viewMap = generateViewMap(
     path.join(getModularRoot(), 'packages')
   );
   
-  module.exports = 'const widgetMap = ' + widgetMap + ';';
+  module.exports = 'const viewMap = ' + viewMap + ';';
   `;
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment,
   // @ts-ignore
-  return widgetMap;
+  return viewMap;
 }
 /* eslint-enable @typescript-eslint/no-unsafe-return */
 
-// Given a directory of widgets, generate and export a widget map, like:
+// Given a directory of views, generate and export a views map, like:
 //
 // export default {
 //   'package-name': lazy(() => import('package-name'))
 // }
-export default getWidgetMap();
+export default getViewMap();

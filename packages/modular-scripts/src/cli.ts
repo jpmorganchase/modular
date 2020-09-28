@@ -52,7 +52,7 @@ function isYarnInstalled(): boolean {
   }
 }
 
-type PackageType = 'app' | 'widget' | 'root'; // | 'package', the default
+type PackageType = 'app' | 'view' | 'root'; // | 'package', the default
 
 export interface PackageJson {
   name: string;
@@ -128,7 +128,7 @@ async function addPackage(name: string, typeArg: string | void) {
         message: `What kind of package is ${name}?`,
         choices: [
           { name: 'A plain package', value: 'package' },
-          { name: 'A React widget', value: 'widget' },
+          { name: 'A view within an application', value: 'view' },
           { name: 'A standalone application', value: 'app' },
         ],
       },
@@ -167,7 +167,7 @@ async function addPackage(name: string, typeArg: string | void) {
       fs
         .readFileSync(packageFilePath, 'utf8')
         .replace(/PackageName__/g, newPackageName)
-        .replace(/WidgetName__/g, newPackageName)
+        .replace(/ViewName__/g, newPackageName)
         .replace(/ComponentName__/g, newComponentName),
     );
   }

@@ -3,23 +3,23 @@ import * as path from 'path';
 
 import type { PackageJson } from './cli';
 
-// Given a directory of widgets, generate a map like:
+// Given a directory of views, generate a map like:
 // { 'package-name': lazy(() => import('package-name')) }
-export function generateWidgetMap(widgetsDirectoryPath: string): string {
+export function generateViewMap(viewsDirectoryPath: string): string {
   const packageNames = fs
-    .readdirSync(widgetsDirectoryPath, { withFileTypes: true })
-    // Get individual widget directories.
+    .readdirSync(viewsDirectoryPath, { withFileTypes: true })
+    // Get individual view directories.
     .filter((entry) => entry.isDirectory())
-    // Get widget `package.json`s.
+    // Get view `package.json`s.
     .map(
       (dir) =>
         fs.readJSONSync(
-          path.join(widgetsDirectoryPath, dir.name, 'package.json'),
+          path.join(viewsDirectoryPath, dir.name, 'package.json'),
         ) as PackageJson,
     )
-    // only chose the ones explicitly marked as widgets
-    .filter((packageJson) => packageJson.modular?.type === 'widget')
-    // Remove widgets which are marked as private (and therefore are not published yet.)
+    // only chose the ones explicitly marked as views
+    .filter((packageJson) => packageJson.modular?.type === 'view')
+    // Remove views which are marked as private (and therefore are not published yet.)
     .filter((packageJson) => packageJson.private !== true)
     // Get package names.
     .map((packageJson) => packageJson.name);
