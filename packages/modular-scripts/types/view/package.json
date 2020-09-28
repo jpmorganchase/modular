@@ -1,5 +1,5 @@
 {
-  "name": "WidgetName__",
+  "name": "ViewName__",
   "version": "1.0.0",
   "main": "index.tsx",
   "license": "UNLICENSED",
@@ -8,7 +8,7 @@
     "react-dom": "^16.13.1"
   },
   "modular": {
-    "type": "widget"
+    "type": "view"
   },
   "devDependencies": {
     "@types/react": "^16.9.0",

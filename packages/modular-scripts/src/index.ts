@@ -1,2 +1,2 @@
 export * from './getModularRoot';
-export * from './generateWidgetMap';
+export * from './generateViewMap';

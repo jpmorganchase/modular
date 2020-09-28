@@ -330,7 +330,7 @@ describe('creating a new project', () => {
       },
       stdio: 'inherit',
     });
-    // We need to ensure that the starting `App.tsx` will render widgets.
+    // We need to ensure that the starting `App.tsx` will render views.
     await fs.copyFile(
       path.join(__dirname, 'TestApp.test-tsx'),
       path.join(repoDirectory, 'packages', 'app', 'src', 'App.tsx'),
@@ -359,14 +359,14 @@ describe('creating a new project', () => {
       │  │  │  └─ robots.txt #1sjb8b3
       │  │  ├─ src
       │  │  │  ├─ App.css #1o0zosm
-      │  │  │  ├─ App.tsx #v7fthy
+      │  │  │  ├─ App.tsx #qq1kms
       │  │  │  ├─ __tests__
       │  │  │  │  └─ App.test.tsx #lrjomi
       │  │  │  ├─ index.css #o7sk21
       │  │  │  ├─ index.tsx #zdn6mw
       │  │  │  ├─ logo.svg #1okqmlj
       │  │  │  ├─ react-app-env.d.ts #1dm2mq6
-      │  │  │  └─ widgets.ts #1sczkh0
+      │  │  │  └─ views.ts #1ymbpx7
       │  │  └─ tsconfig.json #6rw46b
       │  └─ shared
       │     ├─ README.md #1aqc5yw
@@ -458,7 +458,7 @@ describe('creating a new project', () => {
     `);
   });
 
-  it('can start the app and see the lack of widgets', async () => {
+  it('can start the app and see the lack of views', async () => {
     let browser: puppeteer.Browser | undefined;
     let devServer: DevServer | undefined;
     try {
@@ -473,11 +473,11 @@ describe('creating a new project', () => {
         await getDocument(page),
       );
 
-      await findByTestId('widgets');
+      await findByTestId('views');
 
       // eslint-disable-next-line testing-library/no-await-sync-query
-      expect(await getNodeText(await getByTestId('widgets'))).toBe(
-        'No widgets found...',
+      expect(await getNodeText(await getByTestId('views'))).toBe(
+        'No views found...',
       );
     } finally {
       if (browser) {
@@ -525,11 +525,11 @@ describe('creating a new project', () => {
     `);
   });
 
-  describe('adding widgets, packages, apps', () => {
+  describe('adding views, packages, apps', () => {
     beforeAll(async () => {
       await execa(
         'yarnpkg',
-        ['modular', 'add', 'widget-one', '--unstable-type=widget'],
+        ['modular', 'add', 'view-one', '--unstable-type=view'],
         {
           cwd: repoDirectory,
           stdio: 'inherit',
@@ -565,7 +565,7 @@ describe('creating a new project', () => {
       );
     });
 
-    it('creates a widget, a package, and an app', async () => {
+    it('creates a view, a package, and an app', async () => {
       expect(tree(repoDirectory)).toMatchInlineSnapshot(`
         "test-repo
         ├─ .eslintignore #1ugsijf
@@ -587,14 +587,14 @@ describe('creating a new project', () => {
         │  │  │  └─ robots.txt #1sjb8b3
         │  │  ├─ src
         │  │  │  ├─ App.css #1o0zosm
-        │  │  │  ├─ App.tsx #v7fthy
+        │  │  │  ├─ App.tsx #qq1kms
         │  │  │  ├─ __tests__
         │  │  │  │  └─ App.test.tsx #lrjomi
         │  │  │  ├─ index.css #o7sk21
         │  │  │  ├─ index.tsx #zdn6mw
         │  │  │  ├─ logo.svg #1okqmlj
         │  │  │  ├─ react-app-env.d.ts #1dm2mq6
-        │  │  │  └─ widgets.ts #1sczkh0
+        │  │  │  └─ views.ts #1ymbpx7
         │  │  └─ tsconfig.json #6rw46b
         │  ├─ app-one
         │  │  ├─ package.json
@@ -614,7 +614,7 @@ describe('creating a new project', () => {
         │  │  │  ├─ index.tsx #zdn6mw
         │  │  │  ├─ logo.svg #1okqmlj
         │  │  │  ├─ react-app-env.d.ts #1dm2mq6
-        │  │  │  └─ widgets.ts #1sczkh0
+        │  │  │  └─ views.ts #1ymbpx7
         │  │  └─ tsconfig.json #6rw46b
         │  ├─ package-one
         │  │  ├─ README.md #1jv3l2q
@@ -625,11 +625,11 @@ describe('creating a new project', () => {
         │  ├─ shared
         │  │  ├─ README.md #1aqc5yw
         │  │  └─ package.json
-        │  └─ widget-one
+        │  └─ view-one
         │     ├─ README.md #11adaka
         │     ├─ __tests__
         │     │  └─ index.test.tsx #14vgq12
-        │     ├─ index.tsx #r5ib8s
+        │     ├─ index.tsx #12im3o8
         │     └─ package.json
         ├─ tsconfig.json #1y19cv2
         └─ yarn.lock"
@@ -637,7 +637,7 @@ describe('creating a new project', () => {
 
       expect(
         await readCensoredPackageJson(
-          path.join(repoDirectory, 'packages', 'widget-one', 'package.json'),
+          path.join(repoDirectory, 'packages', 'view-one', 'package.json'),
         ),
       ).toMatchInlineSnapshot(`
         Object {
@@ -653,23 +653,23 @@ describe('creating a new project', () => {
           "license": "UNLICENSED",
           "main": "index.tsx",
           "modular": Object {
-            "type": "widget",
+            "type": "view",
           },
-          "name": "widget-one",
+          "name": "view-one",
           "version": "1.0.0",
         }
       `);
 
       expect(
         await fs.readFile(
-          path.join(repoDirectory, 'packages', 'widget-one', 'index.tsx'),
+          path.join(repoDirectory, 'packages', 'view-one', 'index.tsx'),
           'utf8',
         ),
       ).toMatchInlineSnapshot(`
         "import * as React from 'react';
 
-        export default function WidgetOne(): JSX.Element {
-          return <div>This is WidgetOne</div>;
+        export default function ViewOne(): JSX.Element {
+          return <div>This is ViewOne</div>;
         }
         "
       `);
@@ -736,7 +736,7 @@ describe('creating a new project', () => {
       `);
     });
 
-    it('can start the app and render widget-one', async () => {
+    it('can start the app and render view-one', async () => {
       let browser: puppeteer.Browser | undefined;
       let devServer: DevServer | undefined;
       try {
@@ -752,14 +752,14 @@ describe('creating a new project', () => {
         );
 
         // eslint-disable-next-line testing-library/no-await-sync-query
-        expect(await getNodeText(await getByTestId('widgets'))).not.toBe(
-          'No widgets found...',
+        expect(await getNodeText(await getByTestId('views'))).not.toBe(
+          'No views found...',
         );
 
-        await findByText('This is WidgetOne');
+        await findByText('This is ViewOne');
 
         // eslint-disable-next-line testing-library/no-await-sync-query
-        expect(await getByText('This is WidgetOne')).toBeTruthy();
+        expect(await getByText('This is ViewOne')).toBeTruthy();
       } finally {
         if (browser) {
           await browser.close();

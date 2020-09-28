@@ -1,6 +1,6 @@
-import { generateWidgetMap, getModularRoot } from './index';
+import { generateViewMap, getModularRoot } from './index';
 
 test('exports public API', () => {
-  expect(typeof generateWidgetMap).toBe('function');
+  expect(typeof generateViewMap).toBe('function');
   expect(typeof getModularRoot).toBe('function');
 });
