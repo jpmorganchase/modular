@@ -47,13 +47,10 @@ scratch.
   assumes that code will be written with
   [typescript](https://www.typescriptlang.org/)
 - new packages can be added with `modular add <package-name>`
-- packages marked with `view: true` are available in a dynamically generated
-  view map as `app/views`.
 
 ## views
 
-Views are primary, top-level components in modular, marked with `view: true` in
-their `package.json`. We discuss them in detail in
+Views are primary, top-level components in modular. We discuss them in detail in
 [this explainer](/docs/views.md).
 
 ## commands
