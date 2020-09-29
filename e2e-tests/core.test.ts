@@ -268,12 +268,15 @@ async function startApp(appPath: string): Promise<DevServer> {
 }
 
 // We want to omit any information that makes our snapshots
-// fragile and therefore censor package versions using `?`.
+// fragile and therefore censor the author and package versions
+// using `?`.
 async function readCensoredPackageJson(
   packageJsonPath: string,
 ): Promise<unknown> {
   /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return */
-  function censorVersions(packageJson: any): any {
+  function censorDiffering(packageJson: any): any {
+    packageJson.author = '?';
+
     for (const dependencyTypeProperty of [
       'dependencies',
       'devDependencies',
@@ -293,7 +296,7 @@ async function readCensoredPackageJson(
     return packageJson;
   }
 
-  return censorVersions(await fs.readJson(packageJsonPath));
+  return censorDiffering(await fs.readJson(packageJsonPath));
   /* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return */
 }
 
@@ -342,11 +345,11 @@ describe('creating a new project', () => {
       ├─ README.md #1nksyzj
       ├─ modular
       │  └─ setupTests.ts #bnjknz
-      ├─ package.json #bdm9qb
+      ├─ package.json
       ├─ packages
       │  ├─ README.md #14bthrh
       │  ├─ app
-      │  │  ├─ package.json #b5ezfg
+      │  │  ├─ package.json
       │  │  ├─ public
       │  │  │  ├─ favicon.ico #5z38jq
       │  │  │  ├─ index.html #1wohq3p
@@ -367,8 +370,9 @@ describe('creating a new project', () => {
       │  │  └─ tsconfig.json #6rw46b
       │  └─ shared
       │     ├─ README.md #1aqc5yw
-      │     └─ package.json #1ju9dfx
-      └─ tsconfig.json #1y19cv2"
+      │     └─ package.json
+      ├─ tsconfig.json #1y19cv2
+      └─ yarn.lock"
     `);
   });
 
@@ -377,6 +381,7 @@ describe('creating a new project', () => {
       await readCensoredPackageJson(path.join(repoDirectory, 'package.json')),
     ).toMatchInlineSnapshot(`
       Object {
+        "author": "?",
         "dependencies": Object {
           "@testing-library/jest-dom": "?",
           "@testing-library/react": "?",
@@ -422,6 +427,7 @@ describe('creating a new project', () => {
       ),
     ).toMatchInlineSnapshot(`
       Object {
+        "author": "?",
         "browserslist": Object {
           "development": Array [
             "last 1 chrome version",
@@ -498,6 +504,12 @@ describe('creating a new project', () => {
     const output = await execa('yarnpkg', ['test'], {
       cwd: repoDirectory,
       all: true,
+      reject: false,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      env: {
+        CI: 'true',
+      },
     });
 
     expect(censorVariableTimes(output.all)).toMatchInlineSnapshot(`
@@ -561,11 +573,11 @@ describe('creating a new project', () => {
         ├─ README.md #1nksyzj
         ├─ modular
         │  └─ setupTests.ts #bnjknz
-        ├─ package.json #bdm9qb
+        ├─ package.json
         ├─ packages
         │  ├─ README.md #14bthrh
         │  ├─ app
-        │  │  ├─ package.json #b5ezfg
+        │  │  ├─ package.json
         │  │  ├─ public
         │  │  │  ├─ favicon.ico #5z38jq
         │  │  │  ├─ index.html #1wohq3p
@@ -585,7 +597,7 @@ describe('creating a new project', () => {
         │  │  │  └─ widgets.ts #1sczkh0
         │  │  └─ tsconfig.json #6rw46b
         │  ├─ app-one
-        │  │  ├─ package.json #126foy0
+        │  │  ├─ package.json
         │  │  ├─ public
         │  │  │  ├─ favicon.ico #5z38jq
         │  │  │  ├─ index.html #1wohq3p
@@ -609,17 +621,18 @@ describe('creating a new project', () => {
         │  │  ├─ __tests__
         │  │  │  └─ index.test.ts #1qvvmz7
         │  │  ├─ index.ts #1woe74n
-        │  │  └─ package.json #1q8fi46
+        │  │  └─ package.json
         │  ├─ shared
         │  │  ├─ README.md #1aqc5yw
-        │  │  └─ package.json #1ju9dfx
+        │  │  └─ package.json
         │  └─ widget-one
         │     ├─ README.md #11adaka
         │     ├─ __tests__
         │     │  └─ index.test.tsx #14vgq12
         │     ├─ index.tsx #r5ib8s
-        │     └─ package.json #1l93uzm
-        └─ tsconfig.json #1y19cv2"
+        │     └─ package.json
+        ├─ tsconfig.json #1y19cv2
+        └─ yarn.lock"
       `);
 
       expect(
@@ -628,6 +641,7 @@ describe('creating a new project', () => {
         ),
       ).toMatchInlineSnapshot(`
         Object {
+          "author": "?",
           "dependencies": Object {
             "react": "?",
             "react-dom": "?",
@@ -666,6 +680,7 @@ describe('creating a new project', () => {
         ),
       ).toMatchInlineSnapshot(`
         Object {
+          "author": "?",
           "license": "UNLICENSED",
           "main": "index.ts",
           "name": "package-one",
@@ -690,6 +705,7 @@ describe('creating a new project', () => {
         ),
       ).toMatchInlineSnapshot(`
         Object {
+          "author": "?",
           "browserslist": Object {
             "development": Array [
               "last 1 chrome version",
