@@ -67,6 +67,15 @@ function createModularApp() {
   // Create a new CRA app, modify config for workspaces
   fs.mkdirpSync(newModularRoot);
 
+  // CRA bails from creating a Git repository if it's run within one.
+  //
+  // See: https://github.com/facebook/create-react-app/blob/47e9e2c7a07bfe60b52011cf71de5ca33bdeb6e3/packages/react-scripts/scripts/init.js#L48-L50
+  if (argv.repo !== false) {
+    execSync('git', ['init'], {
+      cwd: newModularRoot,
+    });
+  }
+
   execSync('yarnpkg', ['init', '-y'], {
     cwd: newModularRoot,
   });
@@ -159,10 +168,6 @@ function createModularApp() {
   });
 
   if (argv.repo !== false) {
-    execSync('git', ['init'], {
-      cwd: newModularRoot,
-    });
-
     execSync('git', ['add', '.'], {
       cwd: newModularRoot,
     });

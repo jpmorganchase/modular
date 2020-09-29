@@ -201,7 +201,15 @@ function addApp(name: string) {
   );
   fs.removeSync(path.join(appPath, '.gitignore'));
   fs.removeSync(path.join(appPath, '.git'));
+  // Technically a `yarn.lock` file isn't created because
+  // the dependencies are installed into Modular's root
+  // `yarn.lock` file, and therefore during the installation
+  // of the template `npm` is used instead and a `package-lock.json`
+  // file is created.
+  //
+  // See: https://github.com/facebook/create-react-app/blob/2da5517689b7510ff8d8b0148ce372782cb285d7/packages/react-scripts/scripts/init.js#L92
   fs.removeSync(path.join(appPath, 'yarn.lock'));
+  fs.removeSync(path.join(appPath, 'package-lock.json'));
   fs.removeSync(path.join(appPath, 'README.md'));
 
   const appPackageJson = fs.readJsonSync(

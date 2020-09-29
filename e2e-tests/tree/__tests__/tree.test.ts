@@ -10,10 +10,10 @@ test('it can serialise a folder', () => {
   ).toMatchInlineSnapshot(`
     "create-modular-react-app
     ├─ .npmignore #1rstiru
-    ├─ CHANGELOG.md #s6ww27
-    ├─ package.json #seryje
+    ├─ CHANGELOG.md #1qszd4f
+    ├─ package.json
     ├─ src
-    │  └─ cli.ts #xcjz18
+    │  └─ cli.ts #bzyndq
     └─ template
        ├─ README.md #1nksyzj
        ├─ gitignore #1ugsijf
