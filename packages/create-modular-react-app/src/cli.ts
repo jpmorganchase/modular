@@ -152,17 +152,6 @@ function createModularApp() {
     path.join(newModularRoot, 'README.md'),
   );
 
-  const sharedPackagePath = path.join(packagesPath, 'shared');
-  fs.mkdirpSync(sharedPackagePath);
-  fs.copySync(
-    path.join(templatePath, 'shared/README.md'),
-    path.join(sharedPackagePath, 'README.md'),
-  );
-
-  execSync('yarnpkg', ['init', '-yp'], {
-    cwd: sharedPackagePath,
-  });
-
   execSync('yarnpkg', ['modular', 'add', 'app', '--unstable-type=app'], {
     cwd: newModularRoot,
   });
