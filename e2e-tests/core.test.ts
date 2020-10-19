@@ -348,29 +348,26 @@ describe('creating a new project', () => {
       ├─ package.json
       ├─ packages
       │  ├─ README.md #14bthrh
-      │  ├─ app
-      │  │  ├─ package.json
-      │  │  ├─ public
-      │  │  │  ├─ favicon.ico #5z38jq
-      │  │  │  ├─ index.html #1wohq3p
-      │  │  │  ├─ logo192.png #y3vsw8
-      │  │  │  ├─ logo512.png #n8nzep
-      │  │  │  ├─ manifest.json #19gah8o
-      │  │  │  └─ robots.txt #1sjb8b3
-      │  │  ├─ src
-      │  │  │  ├─ App.css #1o0zosm
-      │  │  │  ├─ App.tsx #qq1kms
-      │  │  │  ├─ __tests__
-      │  │  │  │  └─ App.test.tsx #lrjomi
-      │  │  │  ├─ index.css #o7sk21
-      │  │  │  ├─ index.tsx #zdn6mw
-      │  │  │  ├─ logo.svg #1okqmlj
-      │  │  │  ├─ react-app-env.d.ts #1dm2mq6
-      │  │  │  └─ views.ts #1ymbpx7
-      │  │  └─ tsconfig.json #6rw46b
-      │  └─ shared
-      │     ├─ README.md #1aqc5yw
-      │     └─ package.json
+      │  └─ app
+      │     ├─ package.json
+      │     ├─ public
+      │     │  ├─ favicon.ico #5z38jq
+      │     │  ├─ index.html #1wohq3p
+      │     │  ├─ logo192.png #y3vsw8
+      │     │  ├─ logo512.png #n8nzep
+      │     │  ├─ manifest.json #19gah8o
+      │     │  └─ robots.txt #1sjb8b3
+      │     ├─ src
+      │     │  ├─ App.css #1o0zosm
+      │     │  ├─ App.tsx #qq1kms
+      │     │  ├─ __tests__
+      │     │  │  └─ App.test.tsx #lrjomi
+      │     │  ├─ index.css #o7sk21
+      │     │  ├─ index.tsx #zdn6mw
+      │     │  ├─ logo.svg #1okqmlj
+      │     │  ├─ react-app-env.d.ts #1dm2mq6
+      │     │  └─ views.ts #1ymbpx7
+      │     └─ tsconfig.json #6rw46b
       ├─ tsconfig.json #1y19cv2
       └─ yarn.lock"
     `);
@@ -621,9 +618,6 @@ describe('creating a new project', () => {
         │  │  ├─ __tests__
         │  │  │  └─ index.test.ts #1qvvmz7
         │  │  ├─ index.ts #1woe74n
-        │  │  └─ package.json
-        │  ├─ shared
-        │  │  ├─ README.md #1aqc5yw
         │  │  └─ package.json
         │  └─ view-one
         │     ├─ README.md #11adaka
