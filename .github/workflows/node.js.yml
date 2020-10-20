@@ -28,9 +28,9 @@ jobs:
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: v2-${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: v3-${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            v2-${{ runner.os }}-yarn-
+            v3-${{ runner.os }}-yarn-
 
       - run: yarn
       - run: npx prettier --check .
@@ -57,9 +57,9 @@ jobs:
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: v2-${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: v3-${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            v2-${{ runner.os }}-yarn-
+            v3-${{ runner.os }}-yarn-
       - run: yarn
       - run: yarn test
   test_e2e:
@@ -83,9 +83,9 @@ jobs:
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: v2-${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: v3-${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            v2-${{ runner.os }}-yarn-
+            v3-${{ runner.os }}-yarn-
       - name: Install dependencies
         run: yarn
         env:
