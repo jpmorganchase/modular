@@ -62,19 +62,27 @@ export interface PackageJson {
   };
 }
 
-function isModularType(dir: string, type: PackageType) {
+function getModularType(dir: string) {
   const packageJsonPath = path.join(dir, 'package.json');
   if (fs.existsSync(packageJsonPath)) {
     const packageJson = fs.readJsonSync(packageJsonPath) as PackageJson;
-    return packageJson.modular?.type === type;
+    return packageJson.modular?.type;
   }
-  return false;
+}
+
+function isModularType(dir: string, type: PackageType) {
+  return getModularType(dir) === type;
+}
+
+function isModularPackage(dir: string) {
+  return getModularType(dir) !== undefined;
 }
 
 function run() {
   const help = `
   Usage:
     $ modular add <package-name>
+    $ modular list --filter=package|view|app
     $ modular start
     $ modular build
     $ modular test
@@ -94,6 +102,8 @@ function run() {
     switch (command) {
       case 'add':
         return addPackage(argv._[1], argv['unstable-type'] as string | void);
+      case 'list':
+        return listPackages(argv.filter);
       case 'test':
         return test(process.argv.slice(3));
       case 'start':
@@ -116,6 +126,22 @@ function run() {
 
     throw err;
   }
+}
+
+function listPackages(typeArg: string | void) {
+  const modularRoot = getModularRoot();
+  const isCorrectType: (dir: string) => boolean = typeArg
+    ? (dir: string) => isModularType(dir, typeArg as PackageType)
+    : isModularPackage;
+
+  const packages = fs
+    .readdirSync(path.join(modularRoot, 'packages'))
+    .filter((dir) =>
+      fs.lstatSync(path.join(modularRoot, 'packages', dir)).isDirectory(),
+    )
+    .filter((dir) => isCorrectType(path.join(modularRoot, 'packages', dir)));
+
+  console.log(packages.join('\n'));
 }
 
 async function addPackage(name: string, typeArg: string | void) {
