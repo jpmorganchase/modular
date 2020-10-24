@@ -128,18 +128,34 @@ function run() {
   }
 }
 
+interface WorkspaceMeta {
+  location: string;
+  workspaceDependencies: string[];
+  mismatchedWorkspaceDependencies: string[];
+}
+
 function listPackages(typeArg: string | void) {
   const modularRoot = getModularRoot();
-  const isCorrectType: (dir: string) => boolean = typeArg
-    ? (dir: string) => isModularType(dir, typeArg as PackageType)
-    : isModularPackage;
 
-  const packages = fs
-    .readdirSync(path.join(modularRoot, 'packages'))
-    .filter((dir) =>
-      fs.lstatSync(path.join(modularRoot, 'packages', dir)).isDirectory(),
-    )
-    .filter((dir) => isCorrectType(path.join(modularRoot, 'packages', dir)));
+  const { stdout } = execa.sync('yarnpkg', ['workspaces', 'info'], {
+    cwd: modularRoot,
+  });
+  const workspaceInfo: Record<string, WorkspaceMeta> = JSON.parse(
+    stdout,
+  ) as Record<string, WorkspaceMeta>;
+
+  const packages = Object.values(workspaceInfo)
+    .filter((workspaceMeta: WorkspaceMeta) => {
+      const location = path.join(modularRoot, workspaceMeta.location);
+      if (typeArg) {
+        return isModularType(location, typeArg as PackageType);
+      } else {
+        return isModularPackage(location);
+      }
+    })
+    .map((workspaceMeta: WorkspaceMeta) => {
+      return path.basename(workspaceMeta.location);
+    });
 
   console.log(packages.join('\n'));
 }
