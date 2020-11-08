@@ -495,7 +495,7 @@ describe('creating a new project', () => {
       }
 
       // This replaces the times (e.g. 3.4s or 6788ms) with `?`.
-      return str.replace(/[\d.]+(m?s)/g, '?$1');
+      return str.replace(/[\d.]+(\s*m?s)/g, '?$1');
     }
 
     const output = await execa('yarnpkg', ['test'], {
@@ -512,12 +512,12 @@ describe('creating a new project', () => {
     expect(censorVariableTimes(output.all)).toMatchInlineSnapshot(`
       "$ modular test
       PASS src/__tests__/App.test.tsx
-        ✓ renders learn react link (?ms)
+        ✓ renders learn react link (? ms)
 
       Test Suites: 1 passed, 1 total
       Tests:       1 passed, 1 total
       Snapshots:   0 total
-      Time:        ?s
+      Time:        ? s
       Ran all test suites."
     `);
   });
@@ -592,7 +592,7 @@ describe('creating a new project', () => {
         │  │  │  ├─ logo.svg #1okqmlj
         │  │  │  ├─ react-app-env.d.ts #1dm2mq6
         │  │  │  └─ views.ts #1ymbpx7
-        │  │  └─ tsconfig.json #6rw46b
+        │  │  └─ tsconfig.json #zmmwo5
         │  ├─ app-one
         │  │  ├─ package.json
         │  │  ├─ public
