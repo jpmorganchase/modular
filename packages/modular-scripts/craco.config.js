@@ -4,9 +4,13 @@ const path = require('path');
 const { getLoader, loaderByName } = require('@craco/craco');
 const globby = require('globby');
 
-const { getModularRoot } = require('.');
-
-const modularRoot = getModularRoot();
+if (!process.env.MODULAR_ROOT) {
+  throw new Error(
+    // this should never be visible to a user, only us when we're developing
+    'MODULAR_ROOT not found in environment, did you forget to pass it when calling cracoBin in cli.ts?',
+  );
+}
+const modularRoot = process.env.MODULAR_ROOT;
 const absolutePackagesPath = path.resolve(modularRoot, 'packages');
 const absoluteModularGlobalConfigsPath = path.resolve(modularRoot, 'modular');
 
@@ -78,10 +82,7 @@ module.exports = {
         ...jestConfig,
         rootDir: absolutePackagesPath,
         roots: ['<rootDir>'],
-        testMatch: [
-          '<rootDir>/*/src/**/__tests__/**/*.{js,ts,tsx}',
-          '<rootDir>/*/src/**/*.{spec,test}.{js,ts,tsx}',
-        ],
+        testMatch: ['<rootDir>/*/src/**/*.{spec,test}.{js,ts,tsx}'],
         coverageDirectory: path.resolve(modularRoot, 'coverage'),
         collectCoverageFrom: ['<rootDir>/*/src/**/*.{js,ts,tsx}', '!**/*.d.ts'],
         setupFilesAfterEnv: globby.sync(

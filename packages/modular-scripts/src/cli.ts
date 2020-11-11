@@ -13,7 +13,7 @@ import inquirer from 'inquirer';
 import resolveAsBin from 'resolve-as-bin';
 import { JSONSchemaForNPMPackageJsonFiles } from '@schemastore/package';
 
-import { getModularRoot } from './getModularRoot';
+import getModularRoot from './getModularRoot';
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
@@ -180,12 +180,8 @@ function addApp(name: string) {
   const packagesPath = path.join(modularRoot, 'packages');
   const appPath = path.join(packagesPath, name);
   const appPackageJsonPath = path.join(appPath, 'package.json');
-  const defaultTemplate = 'cra-template-modular-typescript';
-  // const appTemplate = (argv.template ?? defaultTemplate) as string;
-  // https://github.com/jpmorganchase/modular/issues/37
-  // Holding off on using custom templates until we have
-  // actual usecases.
-  const appTemplate = defaultTemplate;
+  const appTemplate =
+    'file:' + path.join(__dirname, '../cra-template-modular-typescript');
 
   if (fs.existsSync(appPath)) {
     console.error(`The package named ${name} already exists!`);
@@ -230,9 +226,29 @@ function addApp(name: string) {
 function test(args: string[]) {
   const modularRoot = getModularRoot();
 
+  const appDirent = fs
+    .readdirSync(path.join(modularRoot, 'packages'), {
+      withFileTypes: true,
+    })
+    .find(
+      (p) =>
+        p.isDirectory() &&
+        isModularType(path.join(modularRoot, 'packages', p.name), 'app'),
+    );
+  if (!appDirent) {
+    // TODO: this is a ridiculous requirement and we should fix it
+    throw new Error(
+      'modular cannot run tests without at least one app. Add an app and try again.',
+    );
+  }
+
   return execSync(cracoBin, ['test', '--config', cracoConfig, ...args], {
-    cwd: path.join(modularRoot, 'packages', 'app'),
+    cwd: path.join(modularRoot, 'packages', appDirent.name),
     log: false,
+    // @ts-ignore
+    env: {
+      MODULAR_ROOT: modularRoot,
+    },
   });
 }
 
@@ -246,6 +262,10 @@ function start(appPath: string) {
   execSync(cracoBin, ['start', '--config', cracoConfig], {
     cwd: path.join(modularRoot, 'packages', appPath),
     log: false,
+    // @ts-ignore
+    env: {
+      MODULAR_ROOT: modularRoot,
+    },
   });
 }
 
@@ -259,6 +279,10 @@ function build(appPath: string) {
   execSync(cracoBin, ['build', '--config', cracoConfig], {
     cwd: path.join(modularRoot, 'packages', appPath),
     log: false,
+    // @ts-ignore
+    env: {
+      MODULAR_ROOT: modularRoot,
+    },
   });
 }
 

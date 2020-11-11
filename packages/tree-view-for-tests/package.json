@@ -1,0 +1,12 @@
+{
+  "name": "tree-view-for-tests",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "author": "Sunil Pai",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@emotion/hash": "^0.8.0",
+    "ascii-tree": "^0.3.0"
+  }
+}

@@ -5,7 +5,7 @@ const pkgJson = require('./package.json');
 const supportedNodeVersion = semver.minVersion(pkgJson.engines.node).version;
 
 module.exports = (api) => {
-  const env = api.env();
+  api.cache(true);
 
   return {
     presets: [
@@ -13,7 +13,7 @@ module.exports = (api) => {
         '@babel/preset-env',
         {
           targets: {
-            node: env === 'test' ? 'current' : supportedNodeVersion,
+            node: supportedNodeVersion,
           },
         },
       ],

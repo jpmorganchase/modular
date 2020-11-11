@@ -3,6 +3,11 @@
 # Dependencies
 node_modules
 
+packages/sample-app
+packages/sample-view
+packages/sample-package
+
+
 # Build output
 /packages/*/build/
 

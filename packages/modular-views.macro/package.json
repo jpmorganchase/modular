@@ -1,0 +1,13 @@
+{
+  "name": "modular-views.macro",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Sunil Pai",
+  "license": "MIT",
+  "dependencies": {
+    "babel-plugin-macros": "^2.8.0",
+    "find-up": "^5.0.0",
+    "fs-extra": "^9.0.1"
+  },
+  "devDependencies": {}
+}

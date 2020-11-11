@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "resolveJsonModule": true
+  },
+  "include": ["src"]
+}

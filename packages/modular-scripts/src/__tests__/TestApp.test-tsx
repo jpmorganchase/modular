@@ -6,8 +6,6 @@ import * as React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-import views from './views';
-
 function App(): JSX.Element {
   return (
     <div className="App">
@@ -25,14 +23,8 @@ function App(): JSX.Element {
           Learn React
         </a>
       </header>
-      <div data-testid="views">
-        <React.Suspense fallback={null}>
-          {Object.keys(views).length > 0
-            ? Object.entries(views).map(([viewName, View]) => (
-                <View key={viewName} />
-              ))
-            : 'No views found...'}
-        </React.Suspense>
+      <div data-testid="test-this">
+        this is a modular app
       </div>
     </div>
   );

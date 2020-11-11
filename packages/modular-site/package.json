@@ -1,0 +1,26 @@
+{
+  "name": "modular-site",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@types/react": "^16.9.0",
+    "@types/react-dom": "^16.9.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "modular": {
+    "type": "app"
+  }
+}
