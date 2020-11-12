@@ -50,7 +50,9 @@ module.exports = {
     'import/first': ERROR,
     'import/no-amd': ERROR,
     'import/no-anonymous-default-export': WARN,
-    'import/no-extraneous-dependencies': ERROR,
+    // disabling this because it doesn't consider local yarn workspaces
+    // or root dependencies as legitimate, and we use it extensively.
+    // 'import/no-extraneous-dependencies': ERROR,
     'import/no-webpack-loader-syntax': ERROR,
   },
   settings: {
@@ -80,6 +82,7 @@ module.exports = {
       rules: {
         // TypeScript compilation already ensures that default imports exist in the referenced module
         'import/default': OFF,
+        '@typescript-eslint/ban-ts-comment': OFF,
       },
     },
     {

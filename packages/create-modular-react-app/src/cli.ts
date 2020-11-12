@@ -4,7 +4,6 @@ import execa from 'execa';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import chalk from 'chalk';
-import mri from 'mri';
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
@@ -40,15 +39,16 @@ function isYarnInstalled(): boolean {
   }
 }
 
-function createModularApp() {
+export default function createModularApp(argv: {
+  _: readonly string[];
+  repo?: boolean;
+}): void {
   if (isYarnInstalled() === false) {
     console.error(
       'Please install `yarn` before attempting to run `create-modular-react-app`.',
     );
     process.exit(1);
   }
-
-  const argv = mri(process.argv.slice(2));
 
   const [name] = argv._;
   if (!name) {
@@ -58,7 +58,8 @@ function createModularApp() {
     process.exit(1);
   }
 
-  const newModularRoot = path.join(process.cwd(), name);
+  const newModularRoot =
+    name[0] === '/' ? /* absolute */ name : path.join(process.cwd(), name);
   const packagesPath = path.join(newModularRoot, 'packages');
   const modularGlobalConfigsPath = path.join(newModularRoot, 'modular');
   const projectPackageJsonPath = path.join(newModularRoot, 'package.json');
@@ -161,29 +162,11 @@ function createModularApp() {
       cwd: newModularRoot,
     });
 
-    execSync('git', ['commit', '-m', 'Initial commit'], {
-      cwd: newModularRoot,
-    });
+    // don't try to commit in CI
+    if (!process.env.CI) {
+      execSync('git', ['commit', '-m', 'Initial commit'], {
+        cwd: newModularRoot,
+      });
+    }
   }
 }
-
-try {
-  void createModularApp();
-} catch (err) {
-  console.error(err);
-}
-
-// TODOS
-// make sure _any_ dependency has the same versions across the repo
-// fix stdio coloring
-// verify IDE integration
-// sparse checkout helpers
-// auto assign reviewers???
-// SOON
-// unanswered questions
-//   - global store/data flow?
-//   - drilldown pattern
-//   - filters
-//   etc etc
-
-// desktop / RN / custom renderers

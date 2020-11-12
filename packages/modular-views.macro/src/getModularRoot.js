@@ -1,14 +1,14 @@
-// keep this in sync with modular-views.macro/src/getModularRoot
-import * as path from 'path';
-import * as fs from 'fs-extra';
-import findUp from 'find-up';
+// keep this in sync with modular-scripts/src/getModularRoot
+const path = require('path');
+const fs = require('fs-extra');
+const findUp = require('find-up');
 
-function isModularRoot(packageJson: { modular?: Record<string, unknown> }) {
+function isModularRoot(packageJson) {
   return packageJson?.modular?.type === 'root';
 }
 
 function findUpModularRoot() {
-  return findUp.sync((directory: string) => {
+  return findUp.sync((directory) => {
     const packageJsonPath = path.join(directory, 'package.json');
     if (
       findUp.sync.exists(packageJsonPath) &&
@@ -20,7 +20,7 @@ function findUpModularRoot() {
   });
 }
 
-export default function getModularRoot(): string {
+module.exports = function getModularRoot() {
   try {
     const modularRoot = findUpModularRoot();
     if (modularRoot === undefined) {
@@ -33,4 +33,4 @@ export default function getModularRoot(): string {
     console.error(err);
     return process.exit(1);
   }
-}
+};
