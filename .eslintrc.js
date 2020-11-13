@@ -87,10 +87,7 @@ module.exports = {
     },
     {
       // Disable rules within templates that are fired erroneously.
-      files: [
-        'packages/cra-template-modular-typescript/**/*.{ts,tsx}',
-        'packages/create-modular-react-app/template/**/*.{ts,tsx}',
-      ],
+      files: ['packages/create-modular-react-app/template/**/*.{ts,tsx}'],
       rules: {
         '@typescript-eslint/no-unsafe-assignment': OFF,
         '@typescript-eslint/no-unsafe-call': OFF,

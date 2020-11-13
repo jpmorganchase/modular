@@ -1,5 +1,4 @@
 ---
-'cra-template-modular-typescript': minor
 'modular-scripts': minor
 ---
 
