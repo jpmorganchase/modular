@@ -1,13 +1,17 @@
 {
   "name": "modular-views.macro",
   "version": "1.0.0",
-  "main": "index.js",
-  "author": "Sunil Pai",
-  "license": "MIT",
+  "main": "build/index.macro.js",
+  "typings": "types.d.ts",
+  "license": "Apache-2.0",
   "dependencies": {
     "babel-plugin-macros": "^2.8.0",
     "find-up": "^5.0.0",
     "fs-extra": "^9.0.1"
   },
-  "devDependencies": {}
+  "scripts": {
+    "clean": "rimraf build",
+    "prebuild": "yarn clean",
+    "build": "babel --root-mode upward src --out-dir build --ignore src/__tests__"
+  }
 }
