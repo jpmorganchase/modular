@@ -1,5 +1,19 @@
 # create-modular-react-app
 
+## 0.4.0
+
+### Minor Changes
+
+- 1b34e70: refactor the repository to become a modular project itself.
+
+### Patch Changes
+
+- e2df965: Remove `package-lock.json` file created by adding a new app.
+
+  Initialise a Git repository before `create-react-app` does.
+
+- f51a10a: Do not create a shared package by default in new projects
+
 ## 0.3.0
 
 ### Minor Changes

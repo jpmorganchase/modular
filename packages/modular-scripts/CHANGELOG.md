@@ -1,5 +1,19 @@
 # modular-scripts
 
+## 0.3.0
+
+### Minor Changes
+
+- 1b34e70: Update craco and create-react-app
+- 952f314: Rename widgets to views.
+- 1b34e70: refactor the repository to become a modular project itself.
+
+### Patch Changes
+
+- e2df965: Remove `package-lock.json` file created by adding a new app.
+
+  Initialise a Git repository before `create-react-app` does.
+
 ## 0.2.0
 
 ### Minor Changes
