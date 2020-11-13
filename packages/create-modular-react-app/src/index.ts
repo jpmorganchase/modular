@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import createModularApp from './cli';
 import mri from 'mri';
 

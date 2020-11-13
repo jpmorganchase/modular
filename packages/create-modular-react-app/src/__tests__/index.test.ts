@@ -84,8 +84,7 @@ describe('create-modular-react-app', () => {
       │     │  ├─ index.css #o7sk21
       │     │  ├─ index.tsx #zdn6mw
       │     │  ├─ logo.svg #1okqmlj
-      │     │  ├─ react-app-env.d.ts #1dm2mq6
-      │     │  └─ widgets.ts #1sczkh0
+      │     │  └─ react-app-env.d.ts #1dm2mq6
       │     └─ tsconfig.json #6rw46b
       ├─ tsconfig.json #1y19cv2
       └─ yarn.lock"
@@ -154,10 +153,8 @@ describe('create-modular-react-app', () => {
           ],
         },
         "dependencies": Object {
-          "@types/codegen.macro": "?",
           "@types/react": "?",
           "@types/react-dom": "?",
-          "codegen.macro": "?",
           "react": "?",
           "react-dom": "?",
         },
