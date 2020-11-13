@@ -1,5 +1,11 @@
 # create-modular-react-app
 
+## 0.4.1
+
+### Patch Changes
+
+- 4d8d69b: Fix the broken release, and update snapshot tests.
+
 ## 0.4.0
 
 ### Minor Changes

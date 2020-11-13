@@ -1,5 +1,11 @@
 # modular-scripts
 
+## 0.3.1
+
+### Patch Changes
+
+- 4d8d69b: Fix the broken release, and update snapshot tests.
+
 ## 0.3.0
 
 ### Minor Changes
