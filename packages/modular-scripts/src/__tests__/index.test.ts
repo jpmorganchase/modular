@@ -241,10 +241,11 @@ describe('modular-scripts', () => {
     expect(tree(path.join(packagesPath, 'sample-view'))).toMatchInlineSnapshot(`
       "sample-view
       ├─ README.md #11adaka
-      ├─ __tests__
-      │  └─ index.test.tsx #14vgq12
-      ├─ index.tsx #fxrie0
-      └─ package.json"
+      ├─ package.json
+      └─ src
+         ├─ __tests__
+         │  └─ index.test.tsx #14vgq12
+         └─ index.tsx #ypvyod"
     `);
   });
 
@@ -256,29 +257,20 @@ describe('modular-scripts', () => {
       .toMatchInlineSnapshot(`
       "sample-package
       ├─ README.md #1jv3l2q
-      ├─ __tests__
-      │  └─ index.test.ts #1qvvmz7
-      ├─ index.ts #1woe74n
-      └─ package.json"
+      ├─ package.json
+      └─ src
+         ├─ __tests__
+         │  └─ index.test.ts #1qvvmz7
+         └─ index.ts #1woe74n"
     `);
   });
 
-  // eslint-disable-next-line
-  it.skip('can execute tests', async () => {
-    // TODO: This isn't right, see https://github.com/jpmorganchase/modular/issues/130
-    // skipping till we figure it out
-
-    // We want to omit any information that makes our snapshots
-    // fragile and therefore censor times using `?`.
-    function censorVariableTimes(str: string | undefined) {
-      if (!str) {
-        return undefined;
-      }
-
-      // This replaces the times (e.g. 3.4s or 6788ms) with `?`.
-      return str.replace(/[\d.]+(\s*m?s)/g, '?$1');
+  it('can execute tests', async () => {
+    // skipping this because it leaves hanging tasks in CI
+    // probably related to https://github.com/jpmorganchase/modular/issues/54
+    if (process.env.CI) {
+      return;
     }
-
     const output = await modular('test sample-app sample-package sample-view', {
       all: true,
       reject: false,
@@ -287,19 +279,22 @@ describe('modular-scripts', () => {
       },
     });
 
-    // I think this is wrong, it's not running tests
-    // in sample-package and sample-view
-    expect(censorVariableTimes(output.all)).toMatchInlineSnapshot(`
-      "$ ts-node packages/modular-scripts/src/cli.ts test sample-app sample-package sample-view
-      PASS ../sample-app/src/__tests__/App.test.tsx
-        ✓ renders learn react link (? ms)
+    // TODO: Passing CI=true *should* remove all the coloring stuff,
+    // it's weird that it doesn't. To workaround it, I've manually
+    // removed those tokens from the string for the snapshot test.
+    // Open to suggestions/fixes.
 
-      Test Suites: 1 passed, 1 total
-      Tests:       1 passed, 1 total
-      Snapshots:   0 total
-      Time:        ? s, estimated ? s
-      Ran all test suites matching /sample-app|sample-package|sample-view/i."
-    `);
-    // run this last so we're sure it runs all tests
+    // eslint-disable-next-line no-control-regex
+    const cleanedOutput = output.all?.replace(/|\[\d+./gm, '');
+
+    expect(cleanedOutput).toContain(
+      'PASS  ../sample-app/src/__tests__/App.test.tsx',
+    );
+    expect(cleanedOutput).toContain(
+      'PASS  ../sample-view/src/__tests__/index.test.tsx',
+    );
+    expect(cleanedOutput).toContain(
+      'PASS  ../sample-package/src/__tests__/index.test.ts',
+    );
   });
 });
