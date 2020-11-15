@@ -9,7 +9,7 @@ test('it can serialise a folder', () => {
     .toMatchInlineSnapshot(`
     "create-modular-react-app
     ├─ .npmignore #1rstiru
-    ├─ CHANGELOG.md #1o6jxmo
+    ├─ CHANGELOG.md
     ├─ README.md #r0jsfd
     ├─ package.json
     ├─ src

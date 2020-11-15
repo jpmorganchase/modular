@@ -2,8 +2,7 @@
   "name": "tree-view-for-tests",
   "version": "1.0.0",
   "main": "src/index.ts",
-  "author": "Sunil Pai",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "private": true,
   "dependencies": {
     "@emotion/hash": "^0.8.0",

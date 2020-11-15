@@ -14,8 +14,9 @@ const defaultHashIgnores = [
   // of some packages when making a repository
   'yarn.lock',
   'package-lock.json',
-  // adding package.json files since versions within these get bumped
+  // adding package.json/CHANGELOG.md files since they change on releases
   'package.json',
+  'CHANGELOG.md',
 ];
 
 function tree(
