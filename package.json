@@ -13,7 +13,7 @@
     "linc": "node ./scripts/linc.js --cache --fix --ext .js,.ts,.tsx --max-warnings 0",
     "modular": "ts-node packages/modular-scripts/src/cli.ts",
     "test": "yarn modular test",
-    "build": "yarn workspace create-modular-react-app build && yarn workspace modular-scripts build",
+    "build": "yarn workspace create-modular-react-app build && yarn workspace modular-scripts build && yarn workspace modular-views.macro build",
     "release": "yarn build && changeset publish"
   },
   "dependencies": {

@@ -3,9 +3,14 @@
 # Dependencies
 node_modules
 
+# created by tests in modular-scripts
 packages/sample-app
 packages/sample-view
 packages/sample-package
+
+# created by tests in modular-views.macro
+packages/view-1
+packages/view-2
 
 
 # Build output

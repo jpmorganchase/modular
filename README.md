@@ -89,7 +89,8 @@ This type identifies the root of the project.
 
 This type identifies modules that export a single React component as their
 default export. Modular makes these modules available via a dynamically
-generated view map at `app/views`.
+generated view map with `modular-views.macro`. Read more about views in
+[this explainer](/docs/views.md).
 
 ##### `"app"`
 
