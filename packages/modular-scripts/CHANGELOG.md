@@ -1,5 +1,11 @@
 # modular-scripts
 
+## 0.3.2
+
+### Patch Changes
+
+- 2dc901e: Generate views and packages correctly so that tests can run properly.
+
 ## 0.3.1
 
 ### Patch Changes
