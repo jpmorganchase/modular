@@ -1,7 +1,7 @@
 {
   "name": "ViewName__",
   "version": "1.0.0",
-  "main": "index.tsx",
+  "main": "src/index.tsx",
   "license": "UNLICENSED",
   "dependencies": {
     "react": "^16.13.1",
