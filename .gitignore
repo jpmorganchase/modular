@@ -18,6 +18,7 @@ packages/view-2
 
 # Testing
 /coverage
+/target
 
 # Misc
 .DS_Store

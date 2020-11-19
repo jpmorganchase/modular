@@ -80,6 +80,15 @@ module.exports = {
 
       return {
         ...jestConfig,
+        reporters: [
+          'default',
+          [
+            'jest-junit',
+            {
+              outputDirectory: path.resolve(modularRoot, 'target'),
+            },
+          ],
+        ],
         rootDir: absolutePackagesPath,
         roots: ['<rootDir>'],
         testMatch: ['<rootDir>/*/src/**/*.{spec,test}.{js,ts,tsx}'],
