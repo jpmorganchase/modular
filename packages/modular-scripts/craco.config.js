@@ -2,7 +2,7 @@
 
 const path = require('path');
 const { getLoader, loaderByName } = require('@craco/craco');
-const globby = require('globby');
+const glob = require('glob');
 
 if (!process.env.MODULAR_ROOT) {
   throw new Error(
@@ -64,8 +64,8 @@ module.exports = {
   },
   jest: {
     configure(jestConfig) {
-      const perPackageSetupTests = globby.sync(
-        [`${absolutePackagesPath}/*/src/setupTests.{js,ts,tsx}`],
+      const perPackageSetupTests = glob.sync(
+        `${absolutePackagesPath}/*/src/setupTests.{js,ts,tsx}`,
         { cwd: process.cwd() },
       );
       if (perPackageSetupTests.length) {
@@ -85,8 +85,8 @@ module.exports = {
         testMatch: ['<rootDir>/*/src/**/*.{spec,test}.{js,ts,tsx}'],
         coverageDirectory: path.resolve(modularRoot, 'coverage'),
         collectCoverageFrom: ['<rootDir>/*/src/**/*.{js,ts,tsx}', '!**/*.d.ts'],
-        setupFilesAfterEnv: globby.sync(
-          [`${absoluteModularGlobalConfigsPath}/setupTests.{js,ts,tsx}`],
+        setupFilesAfterEnv: glob.sync(
+          `${absoluteModularGlobalConfigsPath}/setupTests.{js,ts,tsx}`,
           {
             cwd: process.cwd(),
           },

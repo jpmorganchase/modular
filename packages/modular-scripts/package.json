@@ -21,7 +21,7 @@
     "execa": "^4.0.3",
     "find-up": "^5.0.0",
     "fs-extra": "^9.0.1",
-    "globby": "^11.0.1",
+    "glob": "^7.1.6",
     "inquirer": "^7.3.3",
     "mri": "^1.1.6",
     "react-scripts": "^4.0.0",
