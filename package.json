@@ -64,5 +64,8 @@
   "lint-staged": {
     "*.{js,ts,tsx}": "eslint --cache --fix --ext .js,.ts,.tsx --max-warnings 0",
     "*.{js,json,ts,tsx,css,md,mdx}": "prettier --write"
+  },
+  "resolutions": {
+    "rollup": "^2.33.3"
   }
 }

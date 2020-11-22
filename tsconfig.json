@@ -10,7 +10,7 @@
     "jsx": "react-jsx" /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */,
     "noEmit": true /* Do not emit outputs. */,
     "isolatedModules": true /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */,
-
+    "downlevelIteration": true,
     /* Strict Type-Checking Options */
     "strict": true /* Enable all strict type-checking options. */,
 
@@ -20,6 +20,7 @@
 
     /* Advanced Options */
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */,
-    "sourceMap": true
+    "sourceMap": true,
+    "incremental": true
   }
 }
