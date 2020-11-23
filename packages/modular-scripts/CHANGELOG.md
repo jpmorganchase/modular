@@ -1,5 +1,12 @@
 # modular-scripts
 
+## 0.3.4
+
+### Patch Changes
+
+- e2cbc71: Update to CRA 4.0.1, and use prompts instead of inquirer in
+  modular-scripts.
+
 ## 0.3.3
 
 ### Patch Changes
