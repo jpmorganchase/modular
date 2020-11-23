@@ -1,5 +1,11 @@
 # modular-scripts
 
+## 0.3.3
+
+### Patch Changes
+
+- 96f095f: Replaced globby with glob, fixed windows issues
+
 ## 0.3.2
 
 ### Patch Changes
