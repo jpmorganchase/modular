@@ -9,7 +9,7 @@ import {
   pascalCase as toPascalCase,
   paramCase as toParamCase,
 } from 'change-case';
-import inquirer from 'inquirer';
+import prompts from 'prompts';
 import resolveAsBin from 'resolve-as-bin';
 import { JSONSchemaForNPMPackageJsonFiles } from '@schemastore/package';
 
@@ -121,16 +121,17 @@ function run() {
 async function addPackage(name: string, typeArg: string | void) {
   const type =
     typeArg ||
-    ((await inquirer.prompt([
+    ((await prompts([
       {
         name: 'type',
-        type: 'list',
-        message: `What kind of package is ${name}?`,
+        type: 'select',
+        message: `What kind of package is ${name}? Huh?`,
         choices: [
-          { name: 'A plain package', value: 'package' },
-          { name: 'A view within an application', value: 'view' },
-          { name: 'A standalone application', value: 'app' },
+          { title: 'A plain package', value: 'package' },
+          { title: 'A view within an application', value: 'view' },
+          { title: 'A standalone application', value: 'app' },
         ],
+        initial: 0,
       },
     ])) as { type: string }).type;
 
