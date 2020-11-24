@@ -86,7 +86,7 @@ module.exports = {
         coverageDirectory: path.resolve(modularRoot, 'coverage'),
         collectCoverageFrom: ['<rootDir>/*/src/**/*.{js,ts,tsx}', '!**/*.d.ts'],
         setupFiles: jestConfig.setupFiles.concat([
-          require.resolve('./jest-setupFiles.js'),
+          path.join(__dirname, './jest-setupFiles.js'),
         ]),
         setupFilesAfterEnv: glob.sync(
           `${absoluteModularGlobalConfigsPath}/setupTests.{js,ts,tsx}`,

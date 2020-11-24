@@ -303,7 +303,6 @@ function test(args: string[]) {
   return execSync(jestBin, argv, {
     cwd: modularRoot,
     log: false,
-    cleanup: true,
     // @ts-ignore
     env: {
       BABEL_ENV: 'test',
