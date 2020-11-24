@@ -42,6 +42,7 @@ function getBrowser() {
 function modular(str: string, opts: Record<string, unknown> = {}) {
   return execa('yarnpkg', ['modular', ...str.split(' ')], {
     cwd: modularRoot,
+    cleanup: true,
     ...opts,
   });
 }
@@ -151,7 +152,7 @@ afterAll(() => {
   rimraf.sync(path.join(packagesPath, 'sample-view'));
   rimraf.sync(path.join(packagesPath, 'sample-package'));
   // run yarn so yarn.lock gets reset
-  return execa('yarnpkg', [], {
+  return execa.sync('yarnpkg', [], {
     cwd: modularRoot,
   });
 });
@@ -268,16 +269,16 @@ describe('modular-scripts', () => {
   it('can execute tests', async () => {
     // skipping this because it leaves hanging tasks in CI
     // probably related to https://github.com/jpmorganchase/modular/issues/54
-    if (process.env.CI) {
-      return;
-    }
-    const output = await modular('test sample-app sample-package sample-view', {
-      all: true,
-      reject: false,
-      env: {
-        CI: 'true',
+    const output = await modular(
+      'test sample-app sample-package sample-view --watchAll=false',
+      {
+        all: true,
+        reject: false,
+        env: {
+          CI: 'true',
+        },
       },
-    });
+    );
 
     // TODO: Passing CI=true *should* remove all the coloring stuff,
     // it's weird that it doesn't. To workaround it, I've manually
@@ -288,13 +289,13 @@ describe('modular-scripts', () => {
     const cleanedOutput = output.all?.replace(/|\[\d+./gm, '');
 
     expect(cleanedOutput).toContain(
-      'PASS  ../sample-app/src/__tests__/App.test.tsx',
+      'PASS packages/sample-app/src/__tests__/App.test.tsx',
     );
     expect(cleanedOutput).toContain(
-      'PASS  ../sample-view/src/__tests__/index.test.tsx',
+      'PASS packages/sample-view/src/__tests__/index.test.tsx',
     );
     expect(cleanedOutput).toContain(
-      'PASS  ../sample-package/src/__tests__/index.test.ts',
+      'PASS packages/sample-package/src/__tests__/index.test.ts',
     );
   });
 });
