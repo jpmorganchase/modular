@@ -1,5 +1,11 @@
 # modular-scripts
 
+## 0.3.5
+
+### Patch Changes
+
+- 6bf06ed: Run jest manually, instead of using react-scripts to do so.
+
 ## 0.3.4
 
 ### Patch Changes
