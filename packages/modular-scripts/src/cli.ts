@@ -5,6 +5,7 @@ import execa from 'execa';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import chalk from 'chalk';
+import resolve from 'resolve';
 import {
   pascalCase as toPascalCase,
   paramCase as toParamCase,
@@ -229,7 +230,7 @@ function addApp(name: string) {
 function test(args: string[]) {
   const modularRoot = getModularRoot();
 
-  const argv = mri(process.argv.slice(3))._.concat([
+  let argv = mri(process.argv.slice(3))._.concat([
     '--config',
     path.join(__dirname, '..', 'jest-config.js'),
   ]);
@@ -239,6 +240,65 @@ function test(args: string[]) {
     // https://github.com/facebook/create-react-app/issues/5210
     argv.push('--watchAll');
   }
+
+  // via https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/scripts/test.js
+
+  // This is a very dirty workaround for https://github.com/facebook/jest/issues/5913.
+  // We're trying to resolve the environment ourselves because Jest does it incorrectly.
+  // TODO: remove this as soon as it's fixed in Jest.
+
+  function resolveJestDefaultEnvironment(name: string) {
+    const jestDir = path.dirname(
+      resolve.sync('jest', {
+        basedir: __dirname,
+      }),
+    );
+    const jestCLIDir = path.dirname(
+      resolve.sync('jest-cli', {
+        basedir: jestDir,
+      }),
+    );
+    const jestConfigDir = path.dirname(
+      resolve.sync('jest-config', {
+        basedir: jestCLIDir,
+      }),
+    );
+    return resolve.sync(name, {
+      basedir: jestConfigDir,
+    });
+  }
+  const cleanArgv = [];
+  let env = 'jsdom';
+  let next;
+  do {
+    next = argv.shift();
+    if (next === '--env') {
+      env = argv.shift() as string;
+    } else if (next?.indexOf('--env=') === 0) {
+      env = next.substring('--env='.length);
+    } else {
+      cleanArgv.push(next);
+    }
+  } while (argv.length > 0);
+  // @ts-ignore
+  argv = cleanArgv;
+  let resolvedEnv;
+  try {
+    resolvedEnv = resolveJestDefaultEnvironment(`jest-environment-${env}`);
+  } catch (e) {
+    // ignore
+  }
+  if (!resolvedEnv) {
+    try {
+      resolvedEnv = resolveJestDefaultEnvironment(env);
+    } catch (e) {
+      // ignore
+    }
+  }
+  const testEnvironment = resolvedEnv || env;
+  argv.push('--env', testEnvironment || '');
+
+  // ends the section copied from CRA
 
   return execSync(jestBin, argv, {
     cwd: modularRoot,
