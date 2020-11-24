@@ -24,6 +24,7 @@ process.on('unhandledRejection', (err) => {
 });
 
 const cracoBin = resolveAsBin('craco');
+const jestBin = resolveAsBin('jest');
 const cracoConfig = path.join(__dirname, '..', 'craco.config.js');
 
 function execSync(
@@ -227,27 +228,22 @@ function addApp(name: string) {
 function test(args: string[]) {
   const modularRoot = getModularRoot();
 
-  const appDirent = fs
-    .readdirSync(path.join(modularRoot, 'packages'), {
-      withFileTypes: true,
-    })
-    .find(
-      (p) =>
-        p.isDirectory() &&
-        isModularType(path.join(modularRoot, 'packages', p.name), 'app'),
-    );
-  if (!appDirent) {
-    // TODO: this is a ridiculous requirement and we should fix it
-    throw new Error(
-      'modular cannot run tests without at least one app. Add an app and try again.',
-    );
+  const argv = ['--config', path.join(__dirname, '..', 'jest-config.js')];
+
+  // Watch unless on CI or explicitly running all tests
+  if (!process.env.CI && args.indexOf('--watchAll=false') === -1) {
+    // https://github.com/facebook/create-react-app/issues/5210
+    argv.push('--watchAll');
   }
 
-  return execSync(cracoBin, ['test', '--config', cracoConfig, ...args], {
-    cwd: path.join(modularRoot, 'packages', appDirent.name),
+  return execSync(jestBin, argv, {
+    cwd: modularRoot,
     log: false,
     // @ts-ignore
     env: {
+      BABEL_ENV: 'test',
+      NODE_ENV: 'test',
+      PUBLIC_URL: '',
       MODULAR_ROOT: modularRoot,
     },
   });
