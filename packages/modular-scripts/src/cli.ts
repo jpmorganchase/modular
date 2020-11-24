@@ -40,6 +40,7 @@ function execSync(
     stdin: process.stdin,
     stderr: process.stderr,
     stdout: process.stdout,
+    cleanup: true,
     ...opts,
   });
 }
@@ -228,7 +229,10 @@ function addApp(name: string) {
 function test(args: string[]) {
   const modularRoot = getModularRoot();
 
-  const argv = ['--config', path.join(__dirname, '..', 'jest-config.js')];
+  const argv = mri(process.argv.slice(3))._.concat([
+    '--config',
+    path.join(__dirname, '..', 'jest-config.js'),
+  ]);
 
   // Watch unless on CI or explicitly running all tests
   if (!process.env.CI && args.indexOf('--watchAll=false') === -1) {
@@ -239,6 +243,7 @@ function test(args: string[]) {
   return execSync(jestBin, argv, {
     cwd: modularRoot,
     log: false,
+    cleanup: true,
     // @ts-ignore
     env: {
       BABEL_ENV: 'test',
