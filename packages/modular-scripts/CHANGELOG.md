@@ -1,5 +1,17 @@
 # modular-scripts
 
+## 0.4.0
+
+### Minor Changes
+
+- 4174608: Install react/react-dom at the root of the generated repository. Fix
+  placeholder replacement for generated packages. Pass options to test runner
+  correctly.
+
+### Patch Changes
+
+- fa01449: Remove "Huh?" from question when making a new package.
+
 ## 0.3.5
 
 ### Patch Changes

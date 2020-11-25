@@ -1,5 +1,13 @@
 # create-modular-react-app
 
+## 0.5.0
+
+### Minor Changes
+
+- 4174608: Install react/react-dom at the root of the generated repository. Fix
+  placeholder replacement for generated packages. Pass options to test runner
+  correctly.
+
 ## 0.4.1
 
 ### Patch Changes
