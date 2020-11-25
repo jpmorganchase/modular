@@ -100,9 +100,13 @@ describe('create-modular-react-app', () => {
           "@testing-library/user-event": "?",
           "@types/jest": "?",
           "@types/node": "?",
+          "@types/react": "?",
+          "@types/react-dom": "?",
           "eslint-config-modular-app": "?",
           "modular-scripts": "?",
           "prettier": "?",
+          "react": "?",
+          "react-dom": "?",
         },
         "eslintConfig": Object {
           "extends": "modular-app",

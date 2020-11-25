@@ -3,12 +3,7 @@
   "version": "0.1.0",
   "license": "Apache-2.0",
   "private": true,
-  "dependencies": {
-    "@types/react": "^16.9.0",
-    "@types/react-dom": "^16.9.0",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1"
-  },
+  "dependencies": {},
   "browserslist": {
     "production": [
       ">0.2%",
