@@ -128,7 +128,7 @@ async function addPackage(name: string, typeArg: string | void) {
       {
         name: 'type',
         type: 'select',
-        message: `What kind of package is ${name}? Huh?`,
+        message: `What kind of package is ${name}?`,
         choices: [
           { title: 'A plain package', value: 'package' },
           { title: 'A view within an application', value: 'view' },
