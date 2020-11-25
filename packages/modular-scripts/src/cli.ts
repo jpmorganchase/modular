@@ -74,6 +74,22 @@ function isModularType(dir: string, type: PackageType) {
   return false;
 }
 
+// recursively get all files in a folder
+function getAllFiles(dirPath: string, arrayOfFiles: string[] = []) {
+  const files = fs.readdirSync(dirPath);
+
+  files.forEach(function (file) {
+    const pathToCheck = path.join(dirPath, file);
+    if (fs.statSync(pathToCheck).isDirectory()) {
+      arrayOfFiles = getAllFiles(pathToCheck, arrayOfFiles);
+    } else {
+      arrayOfFiles.push(pathToCheck);
+    }
+  });
+
+  return arrayOfFiles;
+}
+
 function run() {
   const help = `
   Usage:
@@ -160,12 +176,9 @@ async function addPackage(name: string, typeArg: string | void) {
   fs.mkdirpSync(newPackagePath);
   fs.copySync(packageTypePath, newPackagePath);
 
-  const packageRootFilePaths = fs
-    .readdirSync(newPackagePath, { withFileTypes: true })
-    .filter((entry: fs.Dirent) => entry.isDirectory() === false)
-    .map((file: fs.Dirent) => path.join(newPackagePath, file.name));
+  const packageFilePaths = getAllFiles(newPackagePath);
 
-  for (const packageFilePath of packageRootFilePaths) {
+  for (const packageFilePath of packageFilePaths) {
     fs.writeFileSync(
       packageFilePath,
       fs
@@ -220,6 +233,8 @@ function addApp(name: string) {
   delete appPackageJson.eslintConfig;
   if (appPackageJson.dependencies !== undefined) {
     delete appPackageJson.dependencies['react-scripts'];
+    delete appPackageJson.dependencies['react'];
+    delete appPackageJson.dependencies['react-dom'];
   }
   appPackageJson.private = true;
   appPackageJson.modular = { type: 'app' };

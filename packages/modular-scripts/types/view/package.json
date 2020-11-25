@@ -3,15 +3,7 @@
   "version": "1.0.0",
   "main": "src/index.tsx",
   "license": "UNLICENSED",
-  "dependencies": {
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1"
-  },
   "modular": {
     "type": "view"
-  },
-  "devDependencies": {
-    "@types/react": "^16.9.0",
-    "@types/react-dom": "^16.9.0"
   }
 }
