@@ -245,10 +245,9 @@ function addApp(name: string) {
 function test(args: string[]) {
   const modularRoot = getModularRoot();
 
-  let argv = mri(process.argv.slice(3))._.concat([
-    '--config',
-    path.join(__dirname, '..', 'jest-config.js'),
-  ]);
+  let argv = process.argv
+    .slice(3)
+    .concat(['--config', path.join(__dirname, '..', 'jest-config.js')]);
 
   // Watch unless on CI or explicitly running all tests
   if (!process.env.CI && args.indexOf('--watchAll=false') === -1) {

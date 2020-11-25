@@ -245,8 +245,8 @@ describe('modular-scripts', () => {
       ├─ package.json
       └─ src
          ├─ __tests__
-         │  └─ index.test.tsx #14vgq12
-         └─ index.tsx #ypvyod"
+         │  └─ index.test.tsx #slarlz
+         └─ index.tsx #fxrie0"
     `);
   });
 
