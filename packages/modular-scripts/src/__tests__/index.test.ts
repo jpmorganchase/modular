@@ -105,7 +105,7 @@ async function startApp(appPath: string): Promise<DevServer> {
         clearTimeout(startAppTimeout);
 
         completed = true;
-        return resolve();
+        return resolve(true);
       }
     });
 
