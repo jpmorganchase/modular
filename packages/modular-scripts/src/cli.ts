@@ -12,7 +12,6 @@ import {
 } from 'change-case';
 import prompts from 'prompts';
 import resolveAsBin from 'resolve-as-bin';
-import { JSONSchemaForNPMPackageJsonFiles } from '@schemastore/package';
 
 import getModularRoot from './getModularRoot';
 
@@ -154,11 +153,6 @@ async function addPackage(name: string, typeArg: string | void) {
       },
     ])) as { type: string }).type;
 
-  if (type === 'app') {
-    addApp(name);
-    return;
-  }
-
   const modularRoot = getModularRoot();
 
   const newPackageName = toParamCase(name);
@@ -184,62 +178,11 @@ async function addPackage(name: string, typeArg: string | void) {
       fs
         .readFileSync(packageFilePath, 'utf8')
         .replace(/PackageName__/g, newPackageName)
-        .replace(/ViewName__/g, newPackageName)
         .replace(/ComponentName__/g, newComponentName),
     );
   }
 
   execSync('yarnpkg', [], { cwd: newPackagePath });
-}
-
-function addApp(name: string) {
-  const modularRoot = getModularRoot();
-  const packagesPath = path.join(modularRoot, 'packages');
-  const appPath = path.join(packagesPath, name);
-  const appPackageJsonPath = path.join(appPath, 'package.json');
-  const appTemplate =
-    'file:' + path.join(__dirname, '../cra-template-modular-typescript');
-
-  if (fs.existsSync(appPath)) {
-    console.error(`The package named ${name} already exists!`);
-    process.exit(1);
-  }
-
-  execSync(
-    'yarnpkg',
-    ['create', 'react-app', name, '--template', appTemplate],
-    {
-      cwd: packagesPath,
-    },
-  );
-  fs.removeSync(path.join(appPath, '.gitignore'));
-  fs.removeSync(path.join(appPath, '.git'));
-  // Technically a `yarn.lock` file isn't created because
-  // the dependencies are installed into Modular's root
-  // `yarn.lock` file, and therefore during the installation
-  // of the template `npm` is used instead and a `package-lock.json`
-  // file is created.
-  //
-  // See: https://github.com/facebook/create-react-app/blob/2da5517689b7510ff8d8b0148ce372782cb285d7/packages/react-scripts/scripts/init.js#L92
-  fs.removeSync(path.join(appPath, 'yarn.lock'));
-  fs.removeSync(path.join(appPath, 'package-lock.json'));
-  fs.removeSync(path.join(appPath, 'README.md'));
-
-  const appPackageJson = fs.readJsonSync(
-    appPackageJsonPath,
-  ) as JSONSchemaForNPMPackageJsonFiles;
-
-  delete appPackageJson.scripts;
-  delete appPackageJson.eslintConfig;
-  if (appPackageJson.dependencies !== undefined) {
-    delete appPackageJson.dependencies['react-scripts'];
-    delete appPackageJson.dependencies['react'];
-    delete appPackageJson.dependencies['react-dom'];
-  }
-  appPackageJson.private = true;
-  appPackageJson.modular = { type: 'app' };
-
-  fs.writeJsonSync(appPackageJsonPath, appPackageJson, { spaces: 2 });
 }
 
 function test(args: string[]) {

@@ -40,7 +40,9 @@ function isYarnInstalled(): boolean {
 export default function createModularApp(argv: {
   _: readonly string[];
   repo?: boolean;
+  'prefer-offline'?: boolean;
 }): void {
+  const preferOfflineArg = argv['prefer-offline'] ? ['--prefer-offline'] : [];
   if (isYarnInstalled() === false) {
     console.error(
       'Please install `yarn` before attempting to run `create-modular-react-app`.',
@@ -121,6 +123,7 @@ export default function createModularApp(argv: {
       'prettier',
       'modular-scripts',
       'eslint-config-modular-app',
+      ...preferOfflineArg,
     ],
     { cwd: newModularRoot },
   );
@@ -155,9 +158,13 @@ export default function createModularApp(argv: {
     path.join(newModularRoot, 'README.md'),
   );
 
-  execSync('yarnpkg', ['modular', 'add', 'app', '--unstable-type=app'], {
-    cwd: newModularRoot,
-  });
+  execSync(
+    'yarnpkg',
+    ['modular', 'add', 'app', '--unstable-type=app', ...preferOfflineArg],
+    {
+      cwd: newModularRoot,
+    },
+  );
 
   if (argv.repo !== false) {
     execSync('git', ['add', '.'], {
