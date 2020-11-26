@@ -107,6 +107,7 @@ describe('create-modular-react-app', () => {
           "prettier": "?",
           "react": "?",
           "react-dom": "?",
+          "typescript": "?",
         },
         "eslintConfig": Object {
           "extends": "modular-app",

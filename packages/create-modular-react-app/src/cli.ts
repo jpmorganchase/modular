@@ -123,6 +123,7 @@ export default function createModularApp(argv: {
       'prettier',
       'modular-scripts',
       'eslint-config-modular-app',
+      'typescript@~4.1.2',
       ...preferOfflineArg,
     ],
     { cwd: newModularRoot },
