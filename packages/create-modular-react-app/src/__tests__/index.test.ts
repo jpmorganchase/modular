@@ -156,12 +156,7 @@ describe('create-modular-react-app', () => {
             "not op_mini all",
           ],
         },
-        "dependencies": Object {
-          "@types/react": "?",
-          "@types/react-dom": "?",
-          "react": "?",
-          "react-dom": "?",
-        },
+        "dependencies": Object {},
         "modular": Object {
           "type": "app",
         },
