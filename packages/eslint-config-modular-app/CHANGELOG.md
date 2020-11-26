@@ -1,5 +1,12 @@
 # eslint-config-modular-app
 
+## 0.3.0
+
+### Minor Changes
+
+- 04623e9: Fix dependencies in eslint-config-modular-app, initialise new
+  projects with typescript
+
 ## 0.2.0
 
 ### Minor Changes
