@@ -1,5 +1,12 @@
 # create-modular-react-app
 
+## 0.6.0
+
+### Minor Changes
+
+- ef680c2: Bypass create-react-app when creating a new application. Accept
+  --prefer-offline for fast installs.
+
 ## 0.5.0
 
 ### Minor Changes
