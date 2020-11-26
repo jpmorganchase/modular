@@ -1,5 +1,11 @@
 # modular-scripts
 
+## 0.5.1
+
+### Patch Changes
+
+- 674e1cb: Fix /src not being generated on new apps
+
 ## 0.5.0
 
 ### Minor Changes
