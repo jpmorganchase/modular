@@ -1,5 +1,12 @@
 # create-modular-react-app
 
+## 0.7.0
+
+### Minor Changes
+
+- 04623e9: Fix dependencies in eslint-config-modular-app, initialise new
+  projects with typescript
+
 ## 0.6.0
 
 ### Minor Changes
