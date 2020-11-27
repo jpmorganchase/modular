@@ -137,10 +137,11 @@ regular javascript/React semantics instead of inventing something bespoke. This
 is the power of colocating code in the same repository and scaling
 infrastructure and tooling around it.
 
-NB: It could be that someone has done a sparse checkout of the repository and
-not included all the views in their local instance; no problem, the map excludes
-those views from the map, and when rendered you can use a generic placeholder
-component.
+NB: It could be that someone has done a
+[sparse checkout](https://gist.github.com/threepointone/d62b4d92a1e92df5f2f4d2d91a0582cd)
+of the repository and not included all the views in their local instance; no
+problem, the map excludes those views from the map, and when rendered you can
+use a generic placeholder component.
 
 There are some cons to this system, and it's important to note that we're
 trading one set of problems for these. However, these problems are a better set
@@ -190,8 +191,9 @@ aren't unique problems, and can be solved incrementally.
   - using a configuration service / key management service for holding and
     managing private/public keys used by the system
 
-- Fighting conway's law (There's a whole spiel here about fighting company org
-  structures that we'll write about some day)
+- Fighting [Conway's law](https://en.wikipedia.org/wiki/Conway%27s_law) (There's
+  a whole spiel here about fighting company org structures that we'll write
+  about some day)
 
 We DO NOT recommend pulling your view into a another repository. There are
 serious costs associated with this (TODO, critical: enumerate all the problems
