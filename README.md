@@ -1,15 +1,13 @@
-# Modular
-
 _DISCLAIMER: THIS PROJECT IS EXPERIMENTAL. ITS BEHAVIOR, AND THE BEHAVIOR OF
 COMMANDS, WILL LIKELY CHANGE IN THE FUTURE._
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?)](https://github.com/jpmorganchase/modular/blob/master/CONTRIBUTING.md)
 
-Modular is a collection of tools and guidance to enable UI development at scale.
-It is derived from work at JP Morgan to enable development in a single
+`modular` is a collection of tools and guidance to enable UI development at
+scale. It is derived from work at JP Morgan to enable development in a single
 repository by many teams.
 
-It contains a `modular` CLI to scaffold and develop a new application from
+It provides a `modular` CLI to scaffold and develop a new application from
 scratch, as well as commands to add and manage further modules.
 
 It is implemented on top of [`create-react-app`](https://create-react-app.dev/)
@@ -26,13 +24,21 @@ in [TypeScript](https://www.typescriptlang.org/).
 
 #### `yarn modular add <module-name>`
 
-During the development of a project, we might wish to extend our application by
-adding sub-applications. In modular these are called [Views](/docs/views.md) and
-can be added using this command.
+Adds a new package by creating a new workspace under `packages/`. Packages can
+currently be one of 3 types:
 
-Views are primary, top-level components in modular. In addition to the ability
-to add new views, we can also use this command to add regular packages and
-standalone applications.
+- A standalone application. This corresponds to a single `create-react-app`
+  project in a workspace. Inside this workspace, you can import packages from
+  other workspaces freely, and features like jsx and typechecking work out of
+  the box.
+
+- A View, which is a package that exports a React component by default. Views
+  are primary, top-level components in `modular`. Read more about Views in
+  [this explainer](/docs/views.md).
+
+- A typical javascript package. You can use this to create any other kind of
+  utility, tool, or whatever your needs require you to do. As an example, you
+  could build a node.js server inside one of these.
 
 #### `yarn modular start <app-name>`
 
@@ -43,7 +49,7 @@ against the selected app.
 #### `yarn modular test`
 
 Runs [`react-scripts test`](https://create-react-app.dev/docs/running-tests)
-against the entire Modular project.
+against the entire `modular` project.
 
 #### `yarn modular build <app-name>`
 
@@ -88,8 +94,8 @@ This type identifies the root of the project.
 ##### `"view"`
 
 This type identifies modules that export a single React component as their
-default export. Modular makes these modules available via a dynamically
-generated view map with `modular-views.macro`. Read more about views in
+default export. `modular` makes these modules available via a dynamically
+generated view map with `modular-views.macro`. Read more about Views in
 [this explainer](/docs/views.md).
 
 ##### `"app"`
@@ -99,4 +105,5 @@ This type identifies a standalone application that can be started or built.
 ##### `"package"`
 
 This type identifies a regular package (e.g. a library that can be used by other
-`"view"` or `"app"` modules).
+`"view"` or `"app"` modules). s a regular package (e.g. a library that can be
+used by other `"view"` or `"app"` modules).
