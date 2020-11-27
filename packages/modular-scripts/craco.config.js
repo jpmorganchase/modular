@@ -15,36 +15,19 @@ const absolutePackagesPath = path.resolve(modularRoot, 'packages');
 const absoluteModularGlobalConfigsPath = path.resolve(modularRoot, 'modular');
 
 module.exports = {
-  // disabling eslint until https://github.com/gsoft-inc/craco/issues/205 is resolved
-  eslint: {
-    enable: false,
-  },
   plugins: [
     {
       plugin: {
-        overrideCracoConfig: ({ cracoConfig }) => {
-          if (typeof cracoConfig.eslint.enable !== 'undefined') {
-            cracoConfig.disableEslint = !cracoConfig.eslint.enable;
-          }
-          delete cracoConfig.eslint;
-          return cracoConfig;
-        },
-        overrideWebpackConfig: ({ webpackConfig, cracoConfig }) => {
-          if (
-            typeof cracoConfig.disableEslint !== 'undefined' &&
-            cracoConfig.disableEslint === true
-          ) {
-            webpackConfig.plugins = webpackConfig.plugins.filter(
-              (instance) => instance.constructor.name !== 'ESLintWebpackPlugin',
-            );
-          }
+        overrideWebpackConfig: ({ webpackConfig }) => {
+          const plugin = webpackConfig.plugins.find(
+            (plugin) => plugin.constructor.name === 'ESLintWebpackPlugin',
+          );
+          plugin.options.emitWarning = true;
           return webpackConfig;
         },
       },
     },
   ],
-  // end disable eslint config
-
   webpack: {
     configure(webpackConfig) {
       const { isFound, match } = getLoader(
