@@ -6,7 +6,7 @@
     "create-modular-react-app": "build/index.js"
   },
   "engines": {
-    "node": ">=10"
+    "node": ">=12"
   },
   "scripts": {
     "clean": "rimraf build",
