@@ -56,11 +56,15 @@ const viewsMap = `({
 })`;
 
 function views({ references, babel }) {
+  if (!references.default || references.default.length === 0) {
+    return;
+  }
+
   references.default[0].hub.file.path.node.body.unshift(
     babel.template.ast(`const __views__map__ = ${viewsMap};`),
   );
 
-  if (references.default.length > 0 && packageNames.length > 0) {
+  if (packageNames.length > 0) {
     references.default[0].hub.file.path.node.body.unshift(
       babel.template.ast("import {lazy as __lazy__} from 'react';"),
     );
