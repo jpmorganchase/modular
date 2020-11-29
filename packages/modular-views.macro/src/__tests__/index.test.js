@@ -37,7 +37,8 @@ afterAll(async () => {
 it('outputs a plain object when no views are available', async () => {
   const output = await transform();
   expect(output.all).toMatchInlineSnapshot(`
-    "console.log({});
+    "const __views__map__ = {};
+    console.log(__views__map__);
     "
   `);
 });
@@ -49,10 +50,11 @@ it('outputs a mapping of names to lazy components when views are available', asy
   const output = await transform();
   expect(output.all).toMatchInlineSnapshot(`
     "import { lazy as __lazy__ } from 'react';
-    console.log({
+    const __views__map__ = {
       'view-1': __lazy__(() => import('view-1')),
       'view-2': __lazy__(() => import('view-2'))
-    });
+    };
+    console.log(__views__map__);
     "
   `);
 });

@@ -56,20 +56,19 @@ const viewsMap = `({
 })`;
 
 function views({ references, babel }) {
-  if (references.default.length > 1) {
-    throw new Error(
-      'Do not use modular-views.macro more than once in a module, it will bloat your bundle size.',
-    );
-    // TODO: would be nice if we could restrict it to only one usage per _program_.
-  }
-
-  references.default.forEach((ref) => ref.replaceWithSourceString(viewsMap));
+  references.default[0].hub.file.path.node.body.unshift(
+    babel.template.ast(`const __views__map__ = ${viewsMap};`),
+  );
 
   if (references.default.length > 0 && packageNames.length > 0) {
     references.default[0].hub.file.path.node.body.unshift(
       babel.template.ast("import {lazy as __lazy__} from 'react';"),
     );
   }
+
+  references.default.forEach((ref) =>
+    ref.replaceWithSourceString(`__views__map__`),
+  );
 }
 
 module.exports = createMacro(views);
