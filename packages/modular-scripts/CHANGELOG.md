@@ -1,5 +1,12 @@
 # modular-scripts
 
+## 0.5.2
+
+### Patch Changes
+
+- c9c11df: Update node engine requirements to >=12
+- e65e681: Enable in-browser lint experience, fix type requirements.
+
 ## 0.5.1
 
 ### Patch Changes

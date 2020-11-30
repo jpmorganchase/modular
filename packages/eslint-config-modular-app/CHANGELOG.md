@@ -1,5 +1,11 @@
 # eslint-config-modular-app
 
+## 0.3.1
+
+### Patch Changes
+
+- e65e681: Enable in-browser lint experience, fix type requirements.
+
 ## 0.3.0
 
 ### Minor Changes

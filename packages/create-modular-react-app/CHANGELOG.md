@@ -1,5 +1,12 @@
 # create-modular-react-app
 
+## 0.7.1
+
+### Patch Changes
+
+- c9c11df: Update node engine requirements to >=12
+- e65e681: Enable in-browser lint experience, fix type requirements.
+
 ## 0.7.0
 
 ### Minor Changes
