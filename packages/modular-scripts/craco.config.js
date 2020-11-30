@@ -15,7 +15,10 @@ const absolutePackagesPath = path.resolve(modularRoot, 'packages');
 const absoluteModularGlobalConfigsPath = path.resolve(modularRoot, 'modular');
 
 module.exports = {
-  // disabling eslint until https://github.com/gsoft-inc/craco/issues/205 is resolved
+  // It only appears like we're disabling eslint here, but that's to work around the
+  // error generated when using this with crav4+. Note that the webpack eslint plugin
+  // is enabled manually in overrideWebpackConfig.
+  // ref: https://github.com/gsoft-inc/craco/issues/205
   eslint: {
     enable: false,
   },
@@ -29,22 +32,16 @@ module.exports = {
           delete cracoConfig.eslint;
           return cracoConfig;
         },
-        overrideWebpackConfig: ({ webpackConfig, cracoConfig }) => {
-          if (
-            typeof cracoConfig.disableEslint !== 'undefined' &&
-            cracoConfig.disableEslint === true
-          ) {
-            webpackConfig.plugins = webpackConfig.plugins.filter(
-              (instance) => instance.constructor.name !== 'ESLintWebpackPlugin',
-            );
-          }
+        overrideWebpackConfig: ({ webpackConfig }) => {
+          const plugin = webpackConfig.plugins.find(
+            (plugin) => plugin.constructor.name === 'ESLintWebpackPlugin',
+          );
+          plugin.options.emitWarning = true;
           return webpackConfig;
         },
       },
     },
   ],
-  // end disable eslint config
-
   webpack: {
     configure(webpackConfig) {
       const { isFound, match } = getLoader(
