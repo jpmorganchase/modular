@@ -1,0 +1,21 @@
+{
+  "configurations": [
+    {
+      "name": "Debug Test",
+      "type": "node",
+      "request": "launch",
+      "args": ["${relativeFile}"],
+      "runtimeArgs": [
+        "--nolazy",
+        "-r",
+        "ts-node/register",
+        "packages/modular-scripts/src/cli.ts",
+        "test",
+        "--watchAll=false"
+      ],
+      "sourceMaps": true,
+      "cwd": "${workspaceRoot}",
+      "protocol": "inspector"
+    }
+  ]
+}

@@ -59,7 +59,9 @@ export default function createModularApp(argv: {
   }
 
   const newModularRoot =
-    name[0] === '/' ? /* absolute */ name : path.join(process.cwd(), name);
+    name[0] === '/' || name.includes(':\\')
+      ? /* absolute */ name
+      : path.join(process.cwd(), name);
   const packagesPath = path.join(newModularRoot, 'packages');
   const modularGlobalConfigsPath = path.join(newModularRoot, 'modular');
   const projectPackageJsonPath = path.join(newModularRoot, 'package.json');
