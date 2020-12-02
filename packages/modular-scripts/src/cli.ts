@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
 import mri from 'mri';
-import execa from 'execa';
+import spawn from 'cross-spawn';
 import * as fs from 'fs-extra';
 import * as path from 'path';
+import * as child_process from 'child_process';
 import chalk from 'chalk';
 import resolve from 'resolve';
 import {
@@ -30,24 +31,21 @@ const cracoConfig = path.join(__dirname, '..', 'craco.config.js');
 function execSync(
   file: string,
   args: string[],
-  options: { log?: boolean } & execa.SyncOptions = { log: true },
+  options: { log?: boolean } & child_process.SpawnOptions = { log: true },
 ) {
   const { log, ...opts } = options;
   if (log) {
     console.log(chalk.grey(`$ ${file} ${args.join(' ')}`));
   }
-  return execa.sync(file, args, {
-    stdin: process.stdin,
-    stderr: process.stderr,
-    stdout: process.stdout,
-    cleanup: true,
+  return spawn.sync(file, args, {
+    stdio: [process.stdin, process.stdout, process.stderr],
     ...opts,
   });
 }
 
 function isYarnInstalled(): boolean {
   try {
-    execa.sync('yarnpkg', ['-v']);
+    spawn.sync('yarnpkg', ['-v']);
     return true;
   } catch (err) {
     return false;

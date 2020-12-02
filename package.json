@@ -42,6 +42,7 @@
     "eslint-plugin-react-hooks": "^4.0.8",
     "eslint-plugin-testing-library": "^3.9.2",
     "execa": "^4.0.3",
+    "cross-spawn": "7.0.3",
     "husky": "^4.2.5",
     "is-ci": "^2.0.0",
     "lint-staged": "^10.2.6",
