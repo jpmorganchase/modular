@@ -42,7 +42,6 @@ function tree(
     const children = fs.readdirSync(_path);
     const dirArr = _path.split(/[/|\\]/);
     const dir = dirArr[dirArr.length - 1];
-    // todo - should these be sorted?
     // todo - handle symlinks, etc
     return `${times('#', level)}${dir}\n${children
       .sort()
