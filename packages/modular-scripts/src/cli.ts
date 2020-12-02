@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 
 import mri from 'mri';
-import spawn from 'cross-spawn';
+import execa from 'execa';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import * as child_process from 'child_process';
 import chalk from 'chalk';
 import resolve from 'resolve';
 import {
@@ -31,21 +30,24 @@ const cracoConfig = path.join(__dirname, '..', 'craco.config.js');
 function execSync(
   file: string,
   args: string[],
-  options: { log?: boolean } & child_process.SpawnOptions = { log: true },
+  options: { log?: boolean } & execa.SyncOptions = { log: true },
 ) {
   const { log, ...opts } = options;
   if (log) {
     console.log(chalk.grey(`$ ${file} ${args.join(' ')}`));
   }
-  return spawn.sync(file, args, {
-    stdio: [process.stdin, process.stdout, process.stderr],
+  return execa.sync(file, args, {
+    stdin: process.stdin,
+    stderr: process.stderr,
+    stdout: process.stdout,
+    cleanup: true,
     ...opts,
   });
 }
 
 function isYarnInstalled(): boolean {
   try {
-    spawn.sync('yarnpkg', ['-v']);
+    execa.sync('yarnpkg', ['-v']);
     return true;
   } catch (err) {
     return false;
@@ -194,6 +196,11 @@ function test(args: string[]) {
   if (!process.env.CI && args.indexOf('--watchAll=false') === -1) {
     // https://github.com/facebook/create-react-app/issues/5210
     argv.push('--watchAll');
+  }
+
+  // Run sequentially unless on CI or explicitly running all tests
+  if (!process.env.CI && args.indexOf('--runInBand=false') === -1) {
+    argv.push('--runInBand');
   }
 
   // via https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/scripts/test.js
