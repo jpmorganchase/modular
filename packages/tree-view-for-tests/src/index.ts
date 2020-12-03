@@ -29,12 +29,11 @@ function tree(
 ): string {
   const stat = fs.statSync(_path);
   if (stat.isDirectory()) {
-    const children = fs.readdirSync(_path);
+    const children = fs.readdirSync(_path).sort();
     const dirArr = _path.split(/[/|\\]/);
     const dir = dirArr[dirArr.length - 1];
     // todo - handle symlinks, etc
     return `${times('#', level)}${dir}\n${children
-      .sort()
       .filter((child: string) => !options.ignores.includes(child))
       .map((child: string) => tree(path.join(_path, child), level + 1, options))
       .join('\n')}`;
