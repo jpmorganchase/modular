@@ -12,7 +12,7 @@
     "lint": "node ./scripts/lint.js --cache --ext .js,.ts,.tsx --max-warnings 0",
     "linc": "node ./scripts/linc.js --cache --fix --ext .js,.ts,.tsx --max-warnings 0",
     "modular": "ts-node packages/modular-scripts/src/cli.ts",
-    "test": "yarn modular test",
+    "test": "yarn modular test --watchAll=false --runInBand",
     "build": "yarn workspace create-modular-react-app build && yarn workspace modular-scripts build && yarn workspace modular-views.macro build",
     "release": "yarn build && changeset publish",
     "start": "yarn modular start modular-site"

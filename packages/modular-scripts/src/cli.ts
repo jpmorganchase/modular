@@ -198,11 +198,6 @@ function test(args: string[]) {
     argv.push('--watchAll');
   }
 
-  // Run sequentially unless on CI or explicitly running all tests
-  if (!process.env.CI && args.indexOf('--runInBand=false') === -1) {
-    argv.push('--runInBand');
-  }
-
   // via https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/scripts/test.js
 
   // This is a very dirty workaround for https://github.com/facebook/jest/issues/5913.
