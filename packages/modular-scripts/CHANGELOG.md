@@ -1,5 +1,12 @@
 # modular-scripts
 
+## 0.5.3
+
+### Patch Changes
+
+- 9fca53e: Switched yarn configuration such that the root directory is the
+  modular root
+
 ## 0.5.2
 
 ### Patch Changes
