@@ -77,9 +77,12 @@ module.exports = {
 
       return {
         ...jestConfig,
-        rootDir: absolutePackagesPath,
+        rootDir: modularRoot,
         roots: ['<rootDir>'],
-        testMatch: ['<rootDir>/*/src/**/*.{spec,test}.{js,ts,tsx}'],
+        testMatch: [
+          '<rootDir>/modular/**/*.{spec,test}.{js,ts,tsx}',
+          '<rootDir>/packages/*/src/**/*.{spec,test}.{js,ts,tsx}',
+        ],
         coverageDirectory: path.resolve(modularRoot, 'coverage'),
         collectCoverageFrom: ['<rootDir>/*/src/**/*.{js,ts,tsx}', '!**/*.d.ts'],
         setupFiles: jestConfig.setupFiles.concat([
