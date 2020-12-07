@@ -191,8 +191,7 @@ describe('modular-scripts', () => {
     `);
   });
 
-  // eslint-disable-next-line
-  it.skip('can start an app', async () => {
+  it('can start an app', async () => {
     if (process.env.CI) {
       // don't run this on CI
       // TODO: must fix this
