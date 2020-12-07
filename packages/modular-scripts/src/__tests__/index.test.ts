@@ -48,9 +48,6 @@ function modular(str: string, opts: Record<string, unknown> = {}) {
 }
 
 async function startApp(appPath: string): Promise<DevServer> {
-  // See: https://github.com/jpmorganchase/modular/issues/54
-  // See: https://github.com/jpmorganchase/modular/pull/45/files#r473007124
-
   const devServer = modular(`start ${appPath}`, {
     cleanup: true,
   });
@@ -191,15 +188,7 @@ describe('modular-scripts', () => {
     `);
   });
 
-  // eslint-disable-next-line
-  it.skip('can start an app', async () => {
-    if (process.env.CI) {
-      // don't run this on CI
-      // TODO: must fix this
-      // See: https://github.com/jpmorganchase/modular/issues/54
-      // See: https://github.com/jpmorganchase/modular/pull/45/files#r473007124
-      return;
-    }
+  it('can start an app', async () => {
     let browser: puppeteer.Browser | undefined;
     let devServer: DevServer | undefined;
     try {
