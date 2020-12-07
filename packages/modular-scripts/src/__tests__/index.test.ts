@@ -172,10 +172,10 @@ describe('modular-scripts', () => {
       "sample-app
       ├─ package.json
       ├─ public
-      │  ├─ favicon.ico #5z38jq
+      │  ├─ favicon.ico #6pu3rg
       │  ├─ index.html #1wohq3p
-      │  ├─ logo192.png #y3vsw8
-      │  ├─ logo512.png #n8nzep
+      │  ├─ logo192.png #1nez7vk
+      │  ├─ logo512.png #1hwqvcc
       │  ├─ manifest.json #19gah8o
       │  └─ robots.txt #1sjb8b3
       ├─ src
@@ -266,10 +266,7 @@ describe('modular-scripts', () => {
     `);
   });
 
-  // skipping because it generates different whitespace
-  // when compared locally, sigh.
-  // eslint-disable-next-line
-  it.skip('can execute tests', async () => {
+  it('can execute tests', async () => {
     const output = await modular(
       'test sample-app sample-package sample-view --watchAll=false',
       {

@@ -29,10 +29,9 @@ function tree(
 ): string {
   const stat = fs.statSync(_path);
   if (stat.isDirectory()) {
-    const children = fs.readdirSync(_path);
-    const dirArr = _path.split('/');
+    const children = fs.readdirSync(_path).sort();
+    const dirArr = _path.split(/[/|\\]/);
     const dir = dirArr[dirArr.length - 1];
-    // todo - should these be sorted?
     // todo - handle symlinks, etc
     return `${times('#', level)}${dir}\n${children
       .filter((child: string) => !options.ignores.includes(child))
@@ -43,7 +42,7 @@ function tree(
       `${times('#', level)}${path.basename(_path)}`,
       options.hashIgnores.includes(path.basename(_path))
         ? undefined
-        : `#${hash(fs.readFileSync(_path, 'utf8'))}`,
+        : `#${hash(fs.readFileSync(_path, 'utf8').replace(/\r/gm, ''))}`,
     ]
       .filter(Boolean)
       .join(' ');
