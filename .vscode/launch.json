@@ -11,7 +11,8 @@
         "ts-node/register",
         "packages/modular-scripts/src/cli.ts",
         "test",
-        "--watchAll=false"
+        "--watchAll=false",
+        "--runInBand"
       ],
       "sourceMaps": true,
       "cwd": "${workspaceRoot}",

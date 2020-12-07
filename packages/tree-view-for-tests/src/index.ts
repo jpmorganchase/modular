@@ -42,7 +42,7 @@ function tree(
       `${times('#', level)}${path.basename(_path)}`,
       options.hashIgnores.includes(path.basename(_path))
         ? undefined
-        : `#${hash(fs.readFileSync(_path, 'utf8').split('\r').join(''))}`,
+        : `#${hash(fs.readFileSync(_path, 'utf8').replace(/\r/gm, ''))}`,
     ]
       .filter(Boolean)
       .join(' ');

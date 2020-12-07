@@ -266,10 +266,7 @@ describe('modular-scripts', () => {
     `);
   });
 
-  // skipping because it generates different whitespace
-  // when compared locally, sigh.
-  // eslint-disable-next-line
-  it.skip('can execute tests', async () => {
+  it('can execute tests', async () => {
     const output = await modular(
       'test sample-app sample-package sample-view --watchAll=false',
       {
