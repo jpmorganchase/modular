@@ -92,6 +92,7 @@ function getAllFiles(dirPath: string, arrayOfFiles: string[] = []) {
 function run() {
   const help = `
   Usage:
+    $ modular check
     $ modular add <package-name>
     $ modular start
     $ modular build
@@ -118,6 +119,8 @@ function run() {
         return start(argv._[1]);
       case 'build':
         return build(argv._[1]);
+      case 'check':
+        return check();
       default:
         console.log(help);
         process.exit(1);
@@ -304,7 +307,20 @@ function build(appPath: string) {
   });
 }
 
+type VerifyPackageTree = () => void;
+
+function check() {
+  const verifyPackageTree = require('react-scripts/scripts/utils/verifyPackageTree') as VerifyPackageTree; // eslint-disable-line @typescript-eslint/no-var-requires
+  verifyPackageTree();
+  // Unlike CRA, let's NOT verify typescript config when running tests.
+  console.log(chalk.greenBright(`All Good!`));
+}
+
 try {
+  if (process.env.SKIP_PREFLIGHT_CHECK !== 'true') {
+    check();
+  }
+
   void run();
 } catch (err) {
   console.error(err);
