@@ -82,9 +82,16 @@ module.exports = {
         testMatch: ['<rootDir>/*/src/**/*.{spec,test}.{js,ts,tsx}'],
         coverageDirectory: path.resolve(modularRoot, 'coverage'),
         collectCoverageFrom: ['<rootDir>/*/src/**/*.{js,ts,tsx}', '!**/*.d.ts'],
-        setupFiles: jestConfig.setupFiles.concat([
-          path.join(__dirname, './jest-setupFiles.js'),
-        ]),
+        setupFiles: jestConfig.setupFiles
+          .concat([path.join(__dirname, './jest-setupFiles.js')])
+          .concat(
+            glob.sync(
+              `${absoluteModularGlobalConfigsPath}/setupEnvironment.{js,ts,tsx}`,
+              {
+                cwd: process.cwd(),
+              },
+            ),
+          ),
         setupFilesAfterEnv: glob.sync(
           `${absoluteModularGlobalConfigsPath}/setupTests.{js,ts,tsx}`,
           {
