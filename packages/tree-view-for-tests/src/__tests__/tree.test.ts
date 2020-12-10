@@ -22,7 +22,7 @@ test('it can serialise a folder', () => {
        ├─ README.md #1nksyzj
        ├─ gitignore #1ugsijf
        ├─ modular
-       │  ├─ setupEnvironment.ts #ed2g45
+       │  ├─ setupEnvironment.ts #m0s4vb
        │  └─ setupTests.ts #bnjknz
        ├─ packages
        │  └─ README.md #14bthrh
