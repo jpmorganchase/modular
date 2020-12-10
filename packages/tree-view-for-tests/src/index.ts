@@ -7,7 +7,7 @@ function times(str: string, length: number) {
   return Array.from({ length }, () => str).join('');
 }
 
-const defaultIgnores = ['node_modules', '.git', '.DS_Store'];
+const defaultIgnores = ['node_modules', '.git', '.DS_Store', 'build'];
 const defaultHashIgnores = [
   // adding lockfiles here because it can be different
   // on different runs; since we install the latest versions
