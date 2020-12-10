@@ -12,9 +12,6 @@ test('it can serialise a folder', () => {
     ├─ .npmignore #1rstiru
     ├─ CHANGELOG.md
     ├─ README.md #r0jsfd
-    ├─ build
-    │  ├─ cli.js #1vv3mmj
-    │  └─ index.js #1961z17
     ├─ package.json
     ├─ src
     │  ├─ __tests__
