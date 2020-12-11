@@ -1,5 +1,13 @@
 # modular-scripts
 
+## 0.5.3
+
+### Patch Changes
+
+- 5e0b42e: Fix issue where verifyPackages would be called on all jest workers
+  and exit without logging
+- cb2208a: Expose ability to add setupFiles to jest when running tests
+
 ## 0.5.2
 
 ### Patch Changes
