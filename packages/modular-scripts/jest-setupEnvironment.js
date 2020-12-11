@@ -7,9 +7,4 @@
 
 require('react-scripts/config/env');
 
-const verifyPackageTree = require('react-scripts/scripts/utils/verifyPackageTree');
-if (process.env.SKIP_PREFLIGHT_CHECK !== 'true') {
-  verifyPackageTree();
-}
-
 // Unlike CRA, let's NOT verify typescript config when running tests.

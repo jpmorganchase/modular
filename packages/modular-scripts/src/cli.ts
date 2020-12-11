@@ -92,6 +92,7 @@ function getAllFiles(dirPath: string, arrayOfFiles: string[] = []) {
 function run() {
   const help = `
   Usage:
+
     $ modular add <package-name>
     $ modular start
     $ modular build
@@ -185,7 +186,14 @@ async function addPackage(name: string, typeArg: string | void) {
   execSync('yarnpkg', [], { cwd: newPackagePath });
 }
 
+type VerifyPackageTree = () => void;
+
 function test(args: string[]) {
+  if (process.env.SKIP_PREFLIGHT_CHECK !== 'true') {
+    const verifyPackageTree = require('react-scripts/scripts/utils/verifyPackageTree') as VerifyPackageTree; // eslint-disable-line @typescript-eslint/no-var-requires
+    verifyPackageTree();
+  }
+
   const modularRoot = getModularRoot();
 
   let argv = process.argv
