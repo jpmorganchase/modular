@@ -15,6 +15,12 @@
   },
   "dependencies": {
     "@craco/craco": "^5.8.0",
+    "@storybook/addon-actions": "^6.1.10",
+    "@storybook/addon-essentials": "^6.1.1",
+    "@storybook/addon-links": "^6.1.10",
+    "@storybook/node-logger": "^6.1.10",
+    "@storybook/preset-create-react-app": "^1.5.2",
+    "@storybook/react": "^6.1.1",
     "chalk": "^4.1.0",
     "change-case": "^4.1.1",
     "codegen.macro": "^4.0.0",
@@ -39,5 +45,8 @@
     "@types/rimraf": "^3.0.0",
     "pptr-testing-library": "^0.6.4",
     "puppeteer": "^5.4.1"
+  },
+  "resolutions": {
+    "babel-loader": "8.1.0"
   }
 }

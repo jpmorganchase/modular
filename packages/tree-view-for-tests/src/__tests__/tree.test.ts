@@ -20,7 +20,7 @@ test('it can serialise a folder', () => {
     │  └─ index.ts #un0l9d
     └─ template
        ├─ README.md #1nksyzj
-       ├─ gitignore #1ugsijf
+       ├─ gitignore #139khmb
        ├─ modular
        │  ├─ setupEnvironment.ts #m0s4vb
        │  └─ setupTests.ts #bnjknz

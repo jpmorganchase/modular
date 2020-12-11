@@ -8,6 +8,9 @@ node_modules
 # testing
 /coverage
 
+# storybook
+/storybook-static
+
 # production
 /packages/*/build
 

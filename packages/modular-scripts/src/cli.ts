@@ -96,6 +96,7 @@ function run() {
     $ modular add <package-name>
     $ modular start
     $ modular build
+    $ modular storybook
     $ modular test
 `;
 
@@ -119,6 +120,8 @@ function run() {
         return start(argv._[1]);
       case 'build':
         return build(argv._[1]);
+      case 'storybook':
+        return storybook(process.argv.slice(3));
       default:
         console.log(help);
         process.exit(1);
@@ -287,6 +290,29 @@ function start(appPath: string) {
 
   execSync(cracoBin, ['start', '--config', cracoConfig], {
     cwd: path.join(modularRoot, 'packages', appPath),
+    log: false,
+    // @ts-ignore
+    env: {
+      MODULAR_ROOT: modularRoot,
+    },
+  });
+}
+
+function storybook(argv: string[]) {
+  const modularRoot = getModularRoot();
+
+  let bin: string;
+  let args: string[] = ["-c", path.join(__dirname, "storybook")];
+  if (argv[0] == "--build") {
+    bin = resolveAsBin('build-storybook');
+    args = args.concat(argv.slice(1)); // remove --build
+  } else {
+    bin = resolveAsBin('start-storybook');
+    args = args.concat(argv);
+  }
+
+  execSync(bin, args, {
+    cwd: modularRoot,
     log: false,
     // @ts-ignore
     env: {
