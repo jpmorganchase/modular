@@ -112,13 +112,19 @@ async function run() {
   try {
     switch (command) {
       case 'add':
-        return addPackage(argv._[1], argv['unstable-type'] as string | void);
+        return addPackage(
+          argv._[1],
+          argv['unstable-type'] as string | undefined,
+        );
       case 'test':
         return test(process.argv.slice(3));
       case 'start':
         return start(argv._[1]);
       case 'build':
-        return build(argv._[1]);
+        return build(
+          argv._[1],
+          argv['preserve-modules'] as boolean | undefined,
+        );
       default:
         console.log(help);
         process.exit(1);
@@ -295,10 +301,12 @@ function start(appPath: string) {
   });
 }
 
-async function build(directoryName: string) {
+async function build(directoryName: string, preserveModules?: boolean) {
   const modularRoot = getModularRoot();
 
   if (isModularType(path.join(modularRoot, 'packages', directoryName), 'app')) {
+    // create-react-app doesn't support plain module outputs yet,
+    // so --preserve-modules has no effect here
     execSync(cracoBin, ['build', '--config', cracoConfig], {
       cwd: path.join(modularRoot, 'packages', directoryName),
       log: false,
@@ -308,8 +316,8 @@ async function build(directoryName: string) {
       },
     });
   } else {
-    // it's a view/package, run
-    await buildPackage(directoryName);
+    // it's a view/package, run a library build
+    await buildPackage(directoryName, preserveModules);
   }
 }
 

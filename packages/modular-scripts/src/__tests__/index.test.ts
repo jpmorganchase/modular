@@ -148,6 +148,7 @@ afterAll(() => {
   rimraf.sync(path.join(packagesPath, 'sample-app'));
   rimraf.sync(path.join(packagesPath, 'sample-view'));
   rimraf.sync(path.join(packagesPath, 'sample-package'));
+  rimraf.sync(path.join(modularRoot, 'dist'));
   // run yarn so yarn.lock gets reset
   return execa.sync('yarnpkg', [], {
     cwd: modularRoot,
@@ -284,5 +285,47 @@ describe('modular-scripts', () => {
     expect(cleanedOutput).toContain(
       'PASS packages/sample-package/src/__tests__/index.test.ts',
     );
+  });
+
+  it('can build libraries', async () => {
+    // cleanup anything built previously
+    rimraf.sync(path.join(modularRoot, 'dist'));
+
+    // build a view
+    await modular('build sample-view', { stdio: 'inherit' });
+    // build a package too, but preserve modules
+    await modular('build sample-package --preserve-modules', {
+      stdio: 'inherit',
+    });
+
+    expect(tree(path.join(modularRoot, 'dist'))).toMatchInlineSnapshot(`
+      "dist
+      ├─ sample-package
+      │  ├─ README.md #1jv3l2q
+      │  ├─ dist
+      │  │  ├─ cjs
+      │  │  │  └─ src
+      │  │  │     ├─ index.js #rq9uxe
+      │  │  │     └─ index.js.map #95g4ej
+      │  │  ├─ es
+      │  │  │  └─ src
+      │  │  │     ├─ index.js #1gjntzw
+      │  │  │     └─ index.js.map #1861m7m
+      │  │  └─ types
+      │  │     └─ src
+      │  │        └─ index.d.ts #f68aj
+      │  └─ package.json
+      └─ sample-view
+         ├─ README.md #11adaka
+         ├─ dist
+         │  ├─ sample-view.cjs.js #fmbogr
+         │  ├─ sample-view.cjs.js.map #4xu206
+         │  ├─ sample-view.es.js #10hnw4k
+         │  ├─ sample-view.es.js.map #jqhhy5
+         │  └─ types
+         │     └─ src
+         │        └─ index.d.ts #1vloh7q
+         └─ package.json"
+    `);
   });
 });
