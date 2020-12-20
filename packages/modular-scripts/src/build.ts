@@ -306,7 +306,6 @@ async function makeBundle(
   const outputOptions = {
     freeze: false,
     sourcemap: true, // TODO: read this off env
-    globals: { react: 'React', 'react-native': 'ReactNative' }, // why?
   };
 
   // we're going to use bundle.write() to actually generate the

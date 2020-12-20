@@ -48,7 +48,9 @@
     "@types/puppeteer": "^5.4.0",
     "@types/rimraf": "^3.0.0",
     "@types/tar": "^4.0.4",
-    "pptr-testing-library": "^0.6.4",
+    "pptr-testing-library": "^0.6.4"
+  },
+  "optionalDependencies": {
     "puppeteer": "^5.4.1"
   }
 }
