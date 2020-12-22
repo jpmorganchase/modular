@@ -1,5 +1,8 @@
 'use strict';
 
+// If you need to modify this, talk to us! Maybe your change
+// is good enough for everybody, or we have alternate workarounds.
+
 const path = require('path');
 const { getLoader, loaderByName } = require('@craco/craco');
 const glob = require('glob');
