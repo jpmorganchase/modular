@@ -15,10 +15,14 @@ test('it can serialise a folder', () => {
     ├─ package.json
     ├─ src
     │  ├─ __tests__
-    │  │  └─ index.test.ts #vp1gkc
-    │  ├─ cli.ts #9pkwel
+    │  │  └─ index.test.ts #1aq0qbk
+    │  ├─ cli.ts #17tb5ia
     │  └─ index.ts #un0l9d
     └─ template
+       ├─ .editorconfig #1p4gvuw
+       ├─ .vscode
+       │  ├─ extensions.json #6p4679
+       │  └─ settings.json #xncm1d
        ├─ README.md #1nksyzj
        ├─ gitignore #1ugsijf
        ├─ modular

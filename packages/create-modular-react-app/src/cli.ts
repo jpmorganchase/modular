@@ -62,8 +62,6 @@ export default function createModularApp(argv: {
     name[0] === '/' || name.includes(':\\')
       ? /* absolute */ name
       : path.join(process.cwd(), name);
-  const packagesPath = path.join(newModularRoot, 'packages');
-  const modularGlobalConfigsPath = path.join(newModularRoot, 'modular');
   const projectPackageJsonPath = path.join(newModularRoot, 'package.json');
   const templatePath = path.join(__dirname, '..', 'template');
 
@@ -131,34 +129,12 @@ export default function createModularApp(argv: {
     { cwd: newModularRoot },
   );
 
-  fs.mkdirpSync(packagesPath);
-  fs.copySync(
-    path.join(templatePath, 'packages/README.md'),
-    path.join(packagesPath, 'README.md'),
-  );
+  fs.copySync(templatePath, newModularRoot);
 
-  fs.mkdirpSync(modularGlobalConfigsPath);
-  fs.copySync(
-    path.join(templatePath, 'modular/setupTests.ts'),
-    path.join(modularGlobalConfigsPath, 'setupTests.ts'),
-  );
-
-  fs.copySync(
-    path.join(templatePath, 'gitignore'),
+  // rename gitgnore to .gitgnore so it actually works
+  fs.moveSync(
+    path.join(newModularRoot, 'gitignore'),
     path.join(newModularRoot, '.gitignore'),
-  );
-
-  fs.copySync(
-    path.join(templatePath, 'gitignore'),
-    path.join(newModularRoot, '.eslintignore'),
-  );
-  fs.copySync(
-    path.join(templatePath, 'tsconfig.json'),
-    path.join(newModularRoot, 'tsconfig.json'),
-  );
-  fs.copySync(
-    path.join(templatePath, 'README.md'),
-    path.join(newModularRoot, 'README.md'),
   );
 
   execSync(
