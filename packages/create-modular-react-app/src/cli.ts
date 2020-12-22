@@ -137,6 +137,12 @@ export default function createModularApp(argv: {
     path.join(newModularRoot, '.gitignore'),
   );
 
+  // make an eslintignore file from gitignore
+  fs.copySync(
+    path.join(newModularRoot, '.gitignore'),
+    path.join(newModularRoot, '.eslintignore'),
+  );
+
   execSync(
     'yarnpkg',
     ['modular', 'add', 'app', '--unstable-type=app', ...preferOfflineArg],
