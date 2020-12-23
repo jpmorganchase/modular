@@ -68,7 +68,7 @@ function reportTSDiagnostics(
   });
 }
 
-const extensions = ['.js', '.jsx', '.ts', '.tsx'];
+const extensions = ['.ts', '.tsx', '.js', '.jsx'];
 const outputDirectory = 'dist';
 const typescriptConfigFilename = 'tsconfig.json';
 const packagesRoot = 'packages';
