@@ -1,5 +1,6 @@
-import fetch, { RequestInit } from 'node-fetch';
-import HttpsProxyAgent = require("https-proxy-agent")
+import fetch, { RequestInit, Response } from 'node-fetch';
+import { HttpProxyAgent } from 'http-proxy-agent';
+import HttpsProxyAgent from 'https-proxy-agent';
 
 const getAgent = () => {
   if (process.env.HTTP_PROXY || process.env.HTTPS_PROXY) {
@@ -11,11 +12,14 @@ const proxyAgent = (parsedUrl: URL) => {
   if (protocol === 'https') {
     return new HttpsProxyAgent(process.env.HTTPS_PROXY as string);
   } else {
-    return new HttpsProxyAgent(process.env.HTTP_PROXY as string);
+    return new HttpProxyAgent(process.env.HTTP_PROXY as string);
   }
 };
 
-async function modularFetch(url: string, init?: RequestInit) {
+async function modularFetch(
+  url: string,
+  init?: RequestInit,
+): Promise<Response> {
   return fetch(url, {
     ...init,
     agent: getAgent(),
