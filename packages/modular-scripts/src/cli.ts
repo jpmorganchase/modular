@@ -12,7 +12,6 @@ import {
 } from 'change-case';
 import prompts from 'prompts';
 import resolveAsBin from 'resolve-as-bin';
-import buildPackage from './build';
 import getModularRoot from './getModularRoot';
 
 // Makes the script crash on unhandled rejections instead of silently
@@ -337,7 +336,10 @@ async function build(directoryName: string, preserveModules?: boolean) {
     await fs.move(`packages/${directoryName}/build`, `dist/${directoryName}`);
   } else {
     // it's a view/package, run a library build
-    await buildPackage(directoryName, preserveModules);
+    const { build } = await import('./build');
+    // ^ we do a dynamic import here to defer the module's initial side effects
+    // till when it's actually needed (i.e. now)
+    await build(directoryName, preserveModules);
   }
 }
 

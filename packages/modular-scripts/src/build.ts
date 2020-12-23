@@ -542,7 +542,7 @@ function makeTypings(directoryName: string) {
   }
 }
 
-export default async function buildPackage(
+export async function build(
   directoryName: string,
   preserveModules = false,
 ): Promise<void> {
