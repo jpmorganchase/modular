@@ -12,7 +12,6 @@ import {
 } from 'change-case';
 import prompts from 'prompts';
 import resolveAsBin from 'resolve-as-bin';
-
 import getModularRoot from './getModularRoot';
 
 // Makes the script crash on unhandled rejections instead of silently
@@ -93,7 +92,7 @@ function getAllFiles(dirPath: string, arrayOfFiles: string[] = []) {
   return arrayOfFiles;
 }
 
-function run() {
+async function run() {
   const help = `
   Usage:
 
@@ -116,13 +115,19 @@ function run() {
   try {
     switch (command) {
       case 'add':
-        return addPackage(argv._[1], argv['unstable-type'] as string | void);
+        return addPackage(
+          argv._[1],
+          argv['unstable-type'] as string | undefined,
+        );
       case 'test':
         return test(process.argv.slice(3));
       case 'start':
         return start(argv._[1]);
       case 'build':
-        return build(argv._[1]);
+        return buildParallel(
+          argv._[1].split(','),
+          argv['preserve-modules'] as boolean | undefined,
+        );
       default:
         console.log(help);
         process.exit(1);
@@ -299,25 +304,47 @@ function start(appPath: string) {
   });
 }
 
-function build(appPath: string) {
+// run builds in parallel
+async function buildParallel(
+  directoryNames: string[],
+  preserveModules?: boolean,
+) {
+  const result = await Promise.allSettled(
+    directoryNames.map((name) => build(name, preserveModules)),
+  );
+  const error = result.find((result) => result.status === 'rejected');
+  if (error) throw error;
+}
+
+async function build(directoryName: string, preserveModules?: boolean) {
   const modularRoot = getModularRoot();
 
-  if (!isModularType(path.join(modularRoot, 'packages', appPath), 'app')) {
-    throw new Error(`The package at ${appPath} is not a valid modular app.`);
+  if (isModularType(path.join(modularRoot, 'packages', directoryName), 'app')) {
+    // create-react-app doesn't support plain module outputs yet,
+    // so --preserve-modules has no effect here
+    await fs.remove(`dist/${directoryName}`);
+    // TODO: this shouldn't be sync
+    execSync(cracoBin, ['build', '--config', cracoConfig], {
+      cwd: path.join(modularRoot, 'packages', directoryName),
+      log: false,
+      // @ts-ignore
+      env: {
+        MODULAR_ROOT: modularRoot,
+      },
+    });
+
+    await fs.move(`packages/${directoryName}/build`, `dist/${directoryName}`);
+  } else {
+    // it's a view/package, run a library build
+    const { build } = await import('./build');
+    // ^ we do a dynamic import here to defer the module's initial side effects
+    // till when it's actually needed (i.e. now)
+    await build(directoryName, preserveModules);
   }
-
-  execSync(cracoBin, ['build', '--config', cracoConfig], {
-    cwd: path.join(modularRoot, 'packages', appPath),
-    log: false,
-    // @ts-ignore
-    env: {
-      MODULAR_ROOT: modularRoot,
-    },
-  });
 }
 
-try {
-  void run();
-} catch (err) {
+void run().catch((err) => {
+  // todo - cleanup on errors
   console.error(err);
-}
+  process.exit(1);
+});

@@ -30,3 +30,9 @@ packages/view-2
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+/dist
+
+# Used by typescript for incremental builds 
+.tsbuildinfo
+*.tsbuildinfo

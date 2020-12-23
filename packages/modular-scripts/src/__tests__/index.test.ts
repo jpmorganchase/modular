@@ -1,6 +1,5 @@
 import execa from 'execa';
 import rimraf from 'rimraf';
-import puppeteer from 'puppeteer';
 import tree from 'tree-view-for-tests';
 import path from 'path';
 import fs from 'fs-extra';
@@ -27,17 +26,6 @@ const { getNodeText } = queries;
 jest.setTimeout(10 * 60 * 1000);
 
 const packagesPath = path.join(getModularRoot(), 'packages');
-
-function getBrowser() {
-  return puppeteer.launch(
-    process.env.CI
-      ? {
-          headless: true,
-          args: ['--no-sandbox', '--disable-setuid-sandbox'],
-        }
-      : {},
-  );
-}
 
 function modular(str: string, opts: Record<string, unknown> = {}) {
   return execa('yarnpkg', ['modular', ...str.split(' ')], {
@@ -148,6 +136,7 @@ afterAll(() => {
   rimraf.sync(path.join(packagesPath, 'sample-app'));
   rimraf.sync(path.join(packagesPath, 'sample-view'));
   rimraf.sync(path.join(packagesPath, 'sample-package'));
+  rimraf.sync(path.join(modularRoot, 'dist'));
   // run yarn so yarn.lock gets reset
   return execa.sync('yarnpkg', [], {
     cwd: modularRoot,
@@ -189,11 +178,29 @@ describe('modular-scripts', () => {
   });
 
   it('can start an app', async () => {
-    // this leaves habing processes on local environments
-    // so we're disabling it for now. Still runs on CI though.
+    // Ok, so. Sunil's decided to get the new M1 MacBook Air. Some software doesn't run on it
+    // well yet. Particularly the puppeteer npm package failes to install and run
+    // (see https://github.com/puppeteer/puppeteer/issues/, issues #6634 and #6641,
+    // possible fix in pull #6495)
+
+    // Because of this, he's marked puppeteer in optionalDependencies, so it's failure to install
+    // doesn't block everything else. Further, because this particular test is already flaky,
+    // it's disabled when running locally. However, because it fails to install, it causes
+    // typescript and eslint failures. Hence the need to disable those errors for now.
+
+    // It's Sunil's responsibility to fix this when better, so shout at him if he doesn't.
+
+    /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
+
+    // This seems to be leaving hanging processes locally,
+    // so marking this test as a no-op for now. Sigh.
     if (!process.env.CI) {
       return;
     }
+
+    const puppeteer = require('puppeteer');
+
+    // @ts-expect-error FIXME
     let browser: puppeteer.Browser | undefined;
     let devServer: DevServer | undefined;
     try {
@@ -202,7 +209,14 @@ describe('modular-scripts', () => {
         path.join(packagesPath, 'sample-app', 'src', 'App.tsx'),
       );
 
-      browser = await getBrowser();
+      browser = await puppeteer.launch(
+        process.env.CI
+          ? {
+              headless: true,
+              args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            }
+          : {},
+      );
       devServer = await startApp('sample-app');
 
       const page = await browser.newPage();
@@ -229,6 +243,8 @@ describe('modular-scripts', () => {
         devServer.kill();
       }
     }
+
+    /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
   });
 
   it('can add a view', async () => {
@@ -289,5 +305,47 @@ describe('modular-scripts', () => {
     expect(cleanedOutput).toContain(
       'PASS packages/sample-package/src/__tests__/index.test.ts',
     );
+  });
+
+  it('can build libraries', async () => {
+    // cleanup anything built previously
+    rimraf.sync(path.join(modularRoot, 'dist'));
+
+    // build a view
+    await modular('build sample-view', { stdio: 'inherit' });
+    // build a package too, but preserve modules
+    await modular('build sample-package --preserve-modules', {
+      stdio: 'inherit',
+    });
+
+    expect(tree(path.join(modularRoot, 'dist'))).toMatchInlineSnapshot(`
+      "dist
+      ├─ sample-package
+      │  ├─ README.md #1jv3l2q
+      │  ├─ dist
+      │  │  ├─ cjs
+      │  │  │  └─ src
+      │  │  │     ├─ index.js #rq9uxe
+      │  │  │     └─ index.js.map #95g4ej
+      │  │  ├─ es
+      │  │  │  └─ src
+      │  │  │     ├─ index.js #1gjntzw
+      │  │  │     └─ index.js.map #1861m7m
+      │  │  └─ types
+      │  │     └─ src
+      │  │        └─ index.d.ts #f68aj
+      │  └─ package.json
+      └─ sample-view
+         ├─ README.md #11adaka
+         ├─ dist
+         │  ├─ sample-view.cjs.js #fmbogr
+         │  ├─ sample-view.cjs.js.map #4xu206
+         │  ├─ sample-view.es.js #10hnw4k
+         │  ├─ sample-view.es.js.map #jqhhy5
+         │  └─ types
+         │     └─ src
+         │        └─ index.d.ts #1vloh7q
+         └─ package.json"
+    `);
   });
 });
