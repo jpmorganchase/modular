@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { JSONSchemaForNPMPackageJsonFiles as PackageJson, Dependency } from '@schemastore/package';
 import mri from 'mri';
 import execa from 'execa';
 import * as fs from 'fs-extra';
@@ -12,6 +13,8 @@ import {
 } from 'change-case';
 import prompts from 'prompts';
 import resolveAsBin from 'resolve-as-bin';
+
+import fetch from './fetch';
 import getModularRoot from './getModularRoot';
 
 // Makes the script crash on unhandled rejections instead of silently
@@ -59,9 +62,7 @@ function isYarnInstalled(): boolean {
 
 type PackageType = 'app' | 'view' | 'root'; // | 'package', the default
 
-export interface PackageJson {
-  name: string;
-  private?: boolean;
+export type ModularPackageJson = PackageJson & {
   modular?: {
     type: PackageType;
   };
@@ -70,7 +71,7 @@ export interface PackageJson {
 function isModularType(dir: string, type: PackageType) {
   const packageJsonPath = path.join(dir, 'package.json');
   if (fs.existsSync(packageJsonPath)) {
-    const packageJson = fs.readJsonSync(packageJsonPath) as PackageJson;
+    const packageJson = fs.readJsonSync(packageJsonPath) as ModularPackageJson;
     return packageJson.modular?.type === type;
   }
   return false;
@@ -102,12 +103,7 @@ async function run() {
     $ modular test
 `;
 
-  if (isYarnInstalled() === false) {
-    console.error(
-      'Please install `yarn` before attempting to run `modular-scripts`.',
-    );
-    process.exit(1);
-  }
+  await preflight();
 
   const argv = mri(process.argv.slice(2));
 
@@ -340,6 +336,44 @@ async function build(directoryName: string, preserveModules?: boolean) {
     // ^ we do a dynamic import here to defer the module's initial side effects
     // till when it's actually needed (i.e. now)
     await build(directoryName, preserveModules);
+  }
+}
+
+interface NPMRegistryListing {
+  "dist-tags": Record<string, string>;
+}
+
+async function preflight() {
+  if (process.env.SKIP_PREFLIGHT_CHECK !== 'true') {
+    const { stdout: registry } = await execa('yarnpkg', ['config', 'get', 'registry']);
+
+    const url = String(new URL("/modular-scripts", registry));
+
+    const res = await fetch(url);
+    const modualarScriptsRegistry: NPMRegistryListing = await res.json();
+    const newVersion = modualarScriptsRegistry["dist-tags"]["latest"];
+
+    const { version }: ModularPackageJson = fs.readJSONSync(path.join(__dirname, "..", "package.json"));
+    if (newVersion != version) {
+      const { dependencies }: ModularPackageJson = fs.readJSONSync(path.join(getModularRoot(), "package.json"));
+
+      const update  = await prompts({
+        type: 'confirm',
+        name: 'value',
+        message: `Modular is out of date - would you like to update from ${version} to ${newVersion}`,
+        initial: true
+      });
+
+      if (update.value) {
+        await execa('yarnpkg', ['upgrade', 'modular-scripts']);
+      }
+    }
+  }
+
+  if (isYarnInstalled() === false) {
+    throw new Error(
+      'Please install `yarn` before attempting to run `modular-scripts`.',
+    );
   }
 }
 
