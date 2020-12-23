@@ -24,6 +24,15 @@ import * as ts from 'typescript';
 import * as fse from 'fs-extra';
 
 import builtinModules from 'builtin-modules';
+import getModularRoot from './getModularRoot';
+
+const modularRoot = getModularRoot();
+
+if (process.cwd() !== modularRoot) {
+  throw new Error(
+    'This command can only be run from the root of a modular project',
+  );
+}
 
 type Console = {
   log: typeof console.log;
