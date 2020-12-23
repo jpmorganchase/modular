@@ -1,5 +1,11 @@
 # create-modular-react-app
 
+## 0.7.2
+
+### Patch Changes
+
+- 8fcd4ee: recommended extensions for vscode, and an .editorconfig (#199)
+
 ## 0.7.1
 
 ### Patch Changes
