@@ -189,6 +189,11 @@ describe('modular-scripts', () => {
   });
 
   it('can start an app', async () => {
+    // this leaves habing processes on local environments
+    // so we're disabling it for now. Still runs on CI though.
+    if (!process.env.CI) {
+      return;
+    }
     let browser: puppeteer.Browser | undefined;
     let devServer: DevServer | undefined;
     try {
