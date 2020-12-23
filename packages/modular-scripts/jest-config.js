@@ -4,6 +4,6 @@
 // coverage reports correctly across workspaces, etc.
 
 const { createJestConfig } = require('@craco/craco');
-const cracoConfig = require('./craco.config.js');
+const cracoConfig = require('./DO_NOT_IMPORT_THIS_OR_YOU_WILL_BE_FIRED_craco.config.js');
 const jestConfig = createJestConfig(cracoConfig);
 module.exports = jestConfig;
