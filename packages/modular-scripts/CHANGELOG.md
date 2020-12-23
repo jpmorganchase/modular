@@ -1,5 +1,15 @@
 # modular-scripts
 
+## 0.6.0
+
+### Minor Changes
+
+- 33649d2: modular build `<library>`
+
+### Patch Changes
+
+- af3e1c6: Put a scary warning in the craco config file name
+
 ## 0.5.3
 
 ### Patch Changes
