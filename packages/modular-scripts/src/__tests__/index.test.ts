@@ -199,6 +199,7 @@ describe('modular-scripts', () => {
     }
 
     const puppeteer = require('puppeteer');
+    
     // @ts-expect-error FIXME
     let browser: puppeteer.Browser | undefined;
     let devServer: DevServer | undefined;

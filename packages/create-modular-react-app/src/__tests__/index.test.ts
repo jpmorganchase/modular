@@ -59,10 +59,15 @@ describe('create-modular-react-app', () => {
     createModularApp({ _: [destination] });
     expect(tree(destination)).toMatchInlineSnapshot(`
       "test-repo
+      ├─ .editorconfig #1p4gvuw
       ├─ .eslintignore #1ugsijf
       ├─ .gitignore #1ugsijf
+      ├─ .vscode
+      │  ├─ extensions.json #1i4584r
+      │  └─ settings.json #xncm1d
       ├─ README.md #1nksyzj
       ├─ modular
+      │  ├─ setupEnvironment.ts #m0s4vb
       │  └─ setupTests.ts #bnjknz
       ├─ package.json
       ├─ packages
