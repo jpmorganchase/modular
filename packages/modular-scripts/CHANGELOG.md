@@ -1,5 +1,11 @@
 # modular-scripts
 
+## 0.6.1
+
+### Patch Changes
+
+- 99ee3b9: Update craco to v6
+
 ## 0.6.0
 
 ### Minor Changes
