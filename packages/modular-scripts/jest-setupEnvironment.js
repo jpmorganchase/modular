@@ -4,5 +4,6 @@
 // coverage reports correctly across workspaces, etc.
 
 // https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/scripts/test.js
+'use strict';
 
 require('react-scripts/config/env');

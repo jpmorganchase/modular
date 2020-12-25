@@ -10,7 +10,9 @@
   "scripts": {
     "prettier": "prettier --write .",
     "lint": "node ./scripts/lint.js --cache --ext .js,.ts,.tsx --max-warnings 0",
-    "linc": "node ./scripts/linc.js --cache --fix --ext .js,.ts,.tsx --max-warnings 0",
+    "linc": "node ./scripts/linc.js --cache --ext .js,.ts,.tsx --max-warnings 0",
+    "lint:fix": "yarn lint --fix",
+    "linc:fix": "yarn linc --fix",
     "modular": "ts-node packages/modular-scripts/src/cli.ts",
     "test": "yarn modular test --watchAll=false --runInBand",
     "build": "yarn workspace create-modular-react-app build && yarn workspace modular-scripts build && yarn workspace modular-views.macro build",
@@ -31,18 +33,7 @@
     "@types/jest": "^25.2.3",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
-    "@typescript-eslint/eslint-plugin": "^4.0.0",
-    "@typescript-eslint/parser": "^4.0.0",
-    "babel-eslint": "^10.1.0",
-    "confusing-browser-globals": "^1.0.9",
     "eslint": "^7.1.0",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-import": "^2.22.0",
-    "eslint-plugin-jest": "^24.0.0",
-    "eslint-plugin-jest-dom": "^2.1.0",
-    "eslint-plugin-react": "^7.20.3",
-    "eslint-plugin-react-hooks": "^4.0.8",
-    "eslint-plugin-testing-library": "^3.9.2",
     "execa": "^4.0.3",
     "husky": "^4.2.5",
     "is-ci": "^2.0.0",
@@ -57,14 +48,14 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-push": "lint-staged"
     }
   },
   "modular": {
     "type": "root"
   },
   "lint-staged": {
-    "*.{js,ts,tsx}": "eslint --cache --fix --ext .js,.ts,.tsx --max-warnings 0",
+    "*.{js,ts,tsx}": "eslint --cache --ext .js,.ts,.tsx --max-warnings 0",
     "*.{js,json,ts,tsx,css,md,mdx}": "prettier --write"
   },
   "resolutions": {
