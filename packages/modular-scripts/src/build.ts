@@ -2,6 +2,9 @@
 // could be happening simultaneously across packages, so
 // try be 'thread-safe'. No state outside of functions
 
+// shorthand for building every workspace, if you're ever debugging this flow
+// rm -rf dist && yarn modular build `ls -m1 packages | sed -e 'H;${x;s/\n/,/g;s/^,//;p;};d'`
+
 import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import { JSONSchemaForTheTypeScriptCompilerSConfigurationFile as TSConfig } from '@schemastore/tsconfig';
 
@@ -160,6 +163,9 @@ const typescriptConfig: TSConfig = {};
       '**/*.spec.tsx',
       '**/*.test.tsx',
       '__tests__',
+      '**/dist-cjs',
+      '**/dist-es',
+      '**/dist-types',
       // TS defaults below
       'node_modules',
       'bower_components',
@@ -250,6 +256,7 @@ async function makeBundle(
     input: path.join(packagesRoot, directoryName, packageJson.main),
     external: (id) => {
       // via tsdx
+      // TODO: this should probably be included into deps instead
       if (id === 'babel-plugin-transform-async-to-promises/helpers') {
         // we want to inline these helpers
         return false;
@@ -275,10 +282,7 @@ async function makeBundle(
           '@babel/preset-react',
           [
             '@babel/preset-env',
-            {
-              // targets: { esmodules: true }, // Use the targets that you was already using
-              // bugfixes: true, // will be default in Babel 8
-            },
+            // TODO: why doesn't this read `targets` from package.json?
           ],
         ],
         plugins: ['@babel/plugin-proposal-class-properties'],
@@ -327,11 +331,16 @@ async function makeBundle(
   // "local" workspaces/packages that were imported, i.e - packages/*
   const localImports: { [name: string]: string } = {};
 
+  // this is used to collect local filenames being referenced
+  // to prevent errors where facades are imported as dependencies
+  // and are collected in missingDependencies
+  const localFileNames = new Set<string>();
+
   // imports that aren't defined in package.json or root package.json
   // Now, this will also mark dependencies that were transient/nested,
   // but I think that's the right choice; a dependency might remove it,
   // even in a patch, and it'll break your code and you wouldn't know why.
-  const missingDependencies: string[] = [];
+  const missingDependencies: Set<string> = new Set();
 
   for (const chunkOrAsset of output) {
     if (chunkOrAsset.type === 'asset') {
@@ -386,7 +395,10 @@ async function makeBundle(
               // TODO: if it's in root's dev dependencies, should throw a
               // different kind of error
               if (!builtinModules.includes(importedPackage)) {
-                missingDependencies.push(importedPackage);
+                // save filename to remove from missingDeps later
+                // if they exist there
+                localFileNames.add(chunkOrAsset.fileName);
+                missingDependencies.add(importedPackage);
               }
             }
           }
@@ -400,9 +412,16 @@ async function makeBundle(
     console.log(localImports);
   }
 
-  if (missingDependencies.length > 0) {
+  // remove local filenames from missingDependencies
+  const missingDependenciesWithoutLocalFileNames = [
+    ...missingDependencies,
+  ].filter((dep) => !localFileNames.has(dep));
+
+  if (missingDependenciesWithoutLocalFileNames.length > 0) {
     throw new Error(
-      `Missing dependencies: ${missingDependencies.join(', ')};`, // TODO: lineNo, filename
+      `Missing dependencies: ${missingDependenciesWithoutLocalFileNames.join(
+        ', ',
+      )};`, // TODO: lineNo, filename
     );
   }
 
@@ -414,19 +433,13 @@ async function makeBundle(
     ...(preserveModules
       ? {
           preserveModules: true,
-          dir: path.join(
-            packagesRoot,
-            directoryName,
-            outputDirectory,
-            'cjs',
-            path.dirname(packageJson.main),
-          ),
+          dir: path.join(packagesRoot, directoryName, `${outputDirectory}-cjs`),
         }
       : {
           file: path.join(
             packagesRoot,
             directoryName,
-            outputDirectory,
+            `${outputDirectory}-cjs`,
             directoryName + '.cjs.js',
           ),
         }),
@@ -439,19 +452,13 @@ async function makeBundle(
     ...(preserveModules
       ? {
           preserveModules: true,
-          dir: path.join(
-            packagesRoot,
-            directoryName,
-            outputDirectory,
-            'es',
-            path.dirname(packageJson.main),
-          ),
+          dir: path.join(packagesRoot, directoryName, `${outputDirectory}-es`),
         }
       : {
           file: path.join(
             packagesRoot,
             directoryName,
-            outputDirectory,
+            `${outputDirectory}-es`,
             directoryName + '.es.js',
           ),
         }),
@@ -465,28 +472,35 @@ async function makeBundle(
     // TODO: what of 'bin' fields?
     main: preserveModules
       ? path.join(
-          outputDirectory,
-          'cjs',
-          packageJson.main.replace(/\.tsx?$/, '.js'),
+          `${outputDirectory}-cjs`,
+          packageJson.main
+            .replace(/\.tsx?$/, '.js')
+            .replace(path.dirname(packageJson.main) + '/', ''),
         )
-      : `${outputDirectory}/${directoryName + '.cjs.js'}`,
+      : `${outputDirectory}-cjs/${directoryName + '.cjs.js'}`,
     module: preserveModules
       ? path.join(
-          outputDirectory,
-          'es',
-          packageJson.main.replace(/\.tsx?$/, '.js'),
+          `${outputDirectory}-es`,
+          packageJson.main
+            .replace(/\.tsx?$/, '.js')
+            .replace(path.dirname(packageJson.main) + '/', ''),
         )
-      : `${outputDirectory}/${directoryName + '.es.js'}`,
+      : `${outputDirectory}-es/${directoryName + '.es.js'}`,
     typings: path.join(
-      outputDirectory,
-      'types',
+      `${outputDirectory}-types`,
       packageJson.main.replace(/\.tsx?$/, '.d.ts'),
     ),
     dependencies: {
       ...packageJson.dependencies,
       ...localImports,
     },
-    files: distinct([...(packageJson.files || []), '/dist']),
+    files: distinct([
+      ...(packageJson.files || []),
+      '/dist-cjs',
+      '/dist-es',
+      '/dist-types',
+      'README.md',
+    ]),
   };
 
   console.log(`built ${directoryName}`);
@@ -510,7 +524,7 @@ function makeTypings(directoryName: string) {
   tsconfig.include = [`${packagesRoot}/${directoryName}`];
   tsconfig.compilerOptions = {
     ...tsconfig.compilerOptions,
-    declarationDir: `${packagesRoot}/${directoryName}/${outputDirectory}/types`,
+    declarationDir: `${packagesRoot}/${directoryName}/${outputDirectory}-types`,
     rootDir: `${packagesRoot}/${directoryName}`,
   };
 
@@ -559,8 +573,16 @@ export async function build(
   // ensure the root build folder is ready
   await fse.mkdirp(outputDirectory);
 
-  // delete any existing build folder, if at all
-  await prom(rimraf)(path.join(packagesRoot, directoryName, outputDirectory));
+  // delete any existing local build folders
+  await prom(rimraf)(
+    path.join(packagesRoot, directoryName, `${outputDirectory}-cjs`),
+  );
+  await prom(rimraf)(
+    path.join(packagesRoot, directoryName, `${outputDirectory}-es`),
+  );
+  await prom(rimraf)(
+    path.join(packagesRoot, directoryName, `${outputDirectory}-types`),
+  );
 
   // generate the js files
   const didBundle = await makeBundle(directoryName, preserveModules);
@@ -608,6 +630,7 @@ export async function build(
 
   // cool. now unpack the tgz's contents in the root dist
   await fse.mkdirp(path.join(outputDirectory, directoryName));
+
   await extract({
     file: path.join(outputDirectory, directoryName + '.tgz'),
     strip: 1,
@@ -617,11 +640,38 @@ export async function build(
   // (if you're curious why we unpack it here, it's because
   // we observed problems with publishing tgz files directly to npm.)
 
-  // delete the local dist folder
-  await prom(rimraf)(path.join(packagesRoot, directoryName, outputDirectory));
+  // delete the local dist folders
+  await prom(rimraf)(
+    path.join(packagesRoot, directoryName, `${outputDirectory}-cjs`),
+  );
+  await prom(rimraf)(
+    path.join(packagesRoot, directoryName, `${outputDirectory}-es`),
+  );
+  await prom(rimraf)(
+    path.join(packagesRoot, directoryName, `${outputDirectory}-types`),
+  );
 
   // then delete the tgz
   await fse.remove(path.join(outputDirectory, directoryName + '.tgz'));
   /// and... that's it
   console.log('finished');
 }
+
+/* TODO:
+
+- build command
+  - rm -rf dist && yarn modular build create-modular-react-app,modular-scripts --preserve-modules && yarn workspace modular-views.macro build
+- cleanup local dist folders on errors 
+- read preset-env targets from package.json
+  - also, if something _does_ need regenerator, how do we add it as a dep?
+- package.json should be able to specify build arguments. Specifically:
+  - preserveModules: boolean
+  - preserveEntrySignatures:  "strict" | "allow-extension" | "exports-only" | false
+- should we disallow using __dirname/__filename in libraries?
+- how do we deal with bin fields? maybe inside a standalone bin file, 
+  we can read package.json's main field?? That could be clever. 
+- rewrite modular-views.macro with typescript 
+- how does this work with changesets?
+- some kind of build info would be helpful? eg: https://unpkg.com/browse/react@17.0.1/build-info.json
+- can we run tests on our built versions? to verify we haven't broken anything.
+*/
