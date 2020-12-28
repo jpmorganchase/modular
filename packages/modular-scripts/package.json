@@ -1,6 +1,6 @@
 {
   "name": "modular-scripts",
-  "version": "0.5.3",
+  "version": "0.6.1",
   "license": "Apache-2.0",
   "bin": {
     "modular": "build/cli.js"
@@ -17,7 +17,7 @@
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.12.1",
     "@babel/preset-env": "^7.12.10",
-    "@craco/craco": "^5.8.0",
+    "@craco/craco": "^6.0.0",
     "@rollup/plugin-babel": "^5.2.1",
     "@rollup/plugin-commonjs": "^16.0.0",
     "@rollup/plugin-json": "^4.1.0",
