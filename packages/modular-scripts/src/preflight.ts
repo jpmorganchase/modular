@@ -1,57 +1,48 @@
 import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
+import chalk from 'chalk';
 import execa from 'execa';
 import * as fs from 'fs-extra';
 import path from 'path';
-import prompts from 'prompts';
+import updateNotifier from 'update-notifier';
 
-import fetch from './fetch';
-
-function isYarnInstalled(): boolean {
+async function isYarnInstalled(): Promise<boolean> {
   try {
-    execa.sync('yarnpkg', ['-v']);
+    await execa('yarnpkg', ['-v']);
     return true;
   } catch (err) {
     return false;
   }
 }
 
-interface NPMRegistryListing {
-  'dist-tags': Record<string, string>;
-}
-
 async function preflight(): Promise<void> {
   if (process.env.SKIP_PREFLIGHT_CHECK !== 'true') {
-    const { stdout: registry } = await execa('yarnpkg', [
-      'config',
-      'get',
-      'registry',
-    ]);
-
-    const url = String(new URL('/modular-scripts', registry));
-
-    const res = await fetch(url);
-    const modularScriptsRegistry = (await res.json()) as NPMRegistryListing;
-    const newVersion = modularScriptsRegistry['dist-tags']['latest'];
-
-    const { version: v } = fs.readJSONSync(
+    const { name, version } = fs.readJSONSync(
       path.join(__dirname, '..', 'package.json'),
     ) as PackageJson;
-    const version = v as string;
-    if (newVersion != version) {
-      const update = await prompts({
-        type: 'confirm',
-        name: 'value',
-        message: `Your version of modular is ${version} . Would you like to update to ${newVersion}?`,
-        initial: true,
-      });
 
-      if (update.value) {
-        await execa('yarnpkg', ['upgrade', 'modular-scripts']);
-      }
+    const message =
+      'Modular is out of date - you can update from ' +
+      chalk.dim('{currentVersion}') +
+      chalk.reset(' → ') +
+      chalk.green('{latestVersion}') +
+      ' \nRun yarn add modular-scripts@{latestVersion} to update';
+
+    const notifier = updateNotifier({
+      pkg: { name: name as string, version: version as string },
+      shouldNotifyInNpmScript: true,
+      updateCheckInterval: 0,
+    });
+
+    if (notifier.update) {
+      notifier.notify({
+        message,
+        defer: false,
+        isGlobal: false,
+      });
     }
   }
 
-  if (isYarnInstalled() === false) {
+  if ((await isYarnInstalled()) === false) {
     throw new Error(
       'Please install `yarn` before attempting to run `modular-scripts`.',
     );
