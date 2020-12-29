@@ -67,6 +67,6 @@
   },
   "resolutions": {
     "rollup": "^2.33.3",
-    "update-notifier/boxen": "^5.0.0"
+    "**/update-notifier/boxen": "^5.0.0"
   }
 }
