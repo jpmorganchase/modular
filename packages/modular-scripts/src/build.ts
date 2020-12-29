@@ -148,6 +148,10 @@ const typescriptConfig: TSConfig = {};
     throw new Error('Failed to load Typescript configuration');
   }
 
+  // Casting to a variable so that configObject.exclude is set to the correct typing
+  // Since configObject is a index type all values are "any" implicitly.
+  const exclude: string[] = (configObject.exclude as string[]) || [];
+
   Object.assign(typescriptConfig, configObject, {
     // TODO: should probably include the original exclude in this
     exclude: distinct([
@@ -165,9 +169,7 @@ const typescriptConfig: TSConfig = {};
       'bower_components',
       'jspm_packages',
       'tmp',
-      // Unclear why this is resolving as "any"
-      // eslint-disable-next-line
-      ...(configObject.exclude || []),
+      ...exclude,
     ]),
   });
 
