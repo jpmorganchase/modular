@@ -9,6 +9,7 @@
     "node": ">=12"
   },
   "scripts": {
+    "modular": "ts-node src/cli.ts",
     "clean": "rimraf build",
     "prebuild": "yarn clean",
     "build": "babel --root-mode upward src --out-dir build --extensions .ts --ignore 'src/**/*.test.ts'"
@@ -20,6 +21,8 @@
     "@rollup/plugin-babel": "^5.2.1",
     "@rollup/plugin-commonjs": "^16.0.0",
     "@rollup/plugin-json": "^4.1.0",
+    "@types/is-ci": "^2.0.0",
+    "@types/update-notifier": "^5.0.0",
     "builtin-modules": "^3.1.0",
     "chalk": "^4.1.0",
     "change-case": "^4.1.1",
@@ -28,6 +31,7 @@
     "find-up": "^5.0.0",
     "fs-extra": "^9.0.1",
     "glob": "^7.1.6",
+    "is-ci": "^2.0.0",
     "mri": "^1.1.6",
     "prompts": "^2.4.0",
     "react-scripts": "^4.0.1",
@@ -35,7 +39,7 @@
     "rimraf": "^3.0.2",
     "rollup": "^2.33.3",
     "rollup-plugin-postcss": "^3.1.8",
-    "tar": "^6.0.5"
+    "update-notifier": "^5.0.1"
   },
   "devDependencies": {
     "@schemastore/package": "^0.0.6",

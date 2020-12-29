@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import mri from 'mri';
 import execa from 'execa';
 import * as fs from 'fs-extra';
@@ -12,7 +13,9 @@ import {
 } from 'change-case';
 import prompts from 'prompts';
 import resolveAsBin from 'resolve-as-bin';
+
 import getModularRoot from './getModularRoot';
+import preflightCheck from './preflightCheck';
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
@@ -48,29 +51,18 @@ function execSync(
   });
 }
 
-function isYarnInstalled(): boolean {
-  try {
-    execa.sync('yarnpkg', ['-v']);
-    return true;
-  } catch (err) {
-    return false;
-  }
-}
-
 type PackageType = 'app' | 'view' | 'root'; // | 'package', the default
 
-export interface PackageJson {
-  name: string;
-  private?: boolean;
+type ModularPackageJson = PackageJson & {
   modular?: {
     type: PackageType;
   };
-}
+};
 
 function isModularType(dir: string, type: PackageType) {
   const packageJsonPath = path.join(dir, 'package.json');
   if (fs.existsSync(packageJsonPath)) {
-    const packageJson = fs.readJsonSync(packageJsonPath) as PackageJson;
+    const packageJson = fs.readJsonSync(packageJsonPath) as ModularPackageJson;
     return packageJson.modular?.type === type;
   }
   return false;
@@ -102,12 +94,7 @@ async function run() {
     $ modular test
 `;
 
-  if (isYarnInstalled() === false) {
-    console.error(
-      'Please install `yarn` before attempting to run `modular-scripts`.',
-    );
-    process.exit(1);
-  }
+  await preflightCheck();
 
   const argv = mri(process.argv.slice(2));
 
