@@ -15,7 +15,7 @@ import prompts from 'prompts';
 import resolveAsBin from 'resolve-as-bin';
 
 import getModularRoot from './getModularRoot';
-import preflight from './preflight';
+import preflightCheck from './preflightCheck';
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
@@ -94,7 +94,7 @@ async function run() {
     $ modular test
 `;
 
-  await preflight();
+  await preflightCheck();
 
   const argv = mri(process.argv.slice(2));
 

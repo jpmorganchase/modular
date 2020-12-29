@@ -2,6 +2,7 @@ import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/pa
 import chalk from 'chalk';
 import execa from 'execa';
 import * as fs from 'fs-extra';
+import isCI from 'is-ci';
 import path from 'path';
 import updateNotifier from 'update-notifier';
 
@@ -14,14 +15,14 @@ async function isYarnInstalled(): Promise<boolean> {
   }
 }
 
-async function preflight(): Promise<void> {
-  if (process.env.SKIP_PREFLIGHT_CHECK !== 'true') {
+async function preflightCheck(): Promise<void> {
+  if (process.env.SKIP_PREFLIGHT_CHECK !== 'true' || isCI) {
     const { name, version } = fs.readJSONSync(
       path.join(__dirname, '..', 'package.json'),
     ) as PackageJson;
 
     const message =
-      'Modular is out of date - you can update from ' +
+      'modular is out of date - you can update from ' +
       chalk.dim('{currentVersion}') +
       chalk.reset(' → ') +
       chalk.green('{latestVersion}') +
@@ -49,4 +50,4 @@ async function preflight(): Promise<void> {
   }
 }
 
-export default preflight;
+export default preflightCheck;
