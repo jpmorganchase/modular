@@ -1,0 +1,16 @@
+{
+  "name": "eslint-plugin-modular-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "UNLICENSED",
+  "scripts": {
+    "clean": "rimraf build",
+    "prebuild": "yarn clean",
+    "build": "babel --root-mode upward src --out-dir build --extensions .ts --ignore 'src/**/*.test.ts'"
+  },
+  "dependencies": {
+    "@schemastore/package": "^0.0.6",
+    "@types/eslint": "^7.2.6",
+    "@types/estree": "^0.0.45"
+  }
+}

@@ -78,11 +78,12 @@ module.exports = {
         // TODO: https://github.com/jpmorganchase/modular/issues/9
         tsconfigRootDir: __dirname,
       },
-      plugins: ['@typescript-eslint'],
+      plugins: ['@typescript-eslint', 'modular-app'],
       rules: {
         // TypeScript compilation already ensures that default imports exist in the referenced module
         'import/default': OFF,
         '@typescript-eslint/ban-ts-comment': OFF,
+        'modular-app/no-private-imports': ERROR,
       },
     },
     {
