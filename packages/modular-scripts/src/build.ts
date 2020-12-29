@@ -148,6 +148,8 @@ const typescriptConfig: TSConfig = {};
     throw new Error('Failed to load Typescript configuration');
   }
 
+  const exclude: string[] = (configObject.exclude as string[]) || [];
+
   Object.assign(typescriptConfig, configObject, {
     // TODO: should probably include the original exclude in this
     exclude: distinct([
@@ -165,9 +167,7 @@ const typescriptConfig: TSConfig = {};
       'bower_components',
       'jspm_packages',
       'tmp',
-      // Unclear why this is resolving as "any"
-      // eslint-disable-next-line
-      ...(configObject.exclude || []),
+      ...exclude,
     ]),
   });
 
