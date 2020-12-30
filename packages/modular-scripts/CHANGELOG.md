@@ -1,5 +1,11 @@
 # modular-scripts
 
+## 0.6.3
+
+### Patch Changes
+
+- 74780c4: Fix broken build from #207
+
 ## 0.6.2
 
 ### Patch Changes
