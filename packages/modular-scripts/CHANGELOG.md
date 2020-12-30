@@ -1,5 +1,12 @@
 # modular-scripts
 
+## 0.6.2
+
+### Patch Changes
+
+- 11912bb: Use update-notifier to point out upgrades when possible (in #203)
+- 4e285e6: minor enhancements/fixes to `modular build <package>`
+
 ## 0.6.1
 
 ### Patch Changes
