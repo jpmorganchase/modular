@@ -62,5 +62,9 @@
   "peerDependencies": {
     "typescript": "^4.1.2"
   },
-  "files": ["*.js"]
+  "files": [
+    "build",
+    "types",
+    "*.js"
+  ]
 }
