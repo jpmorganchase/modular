@@ -22,5 +22,6 @@
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */,
     "sourceMap": true,
     "incremental": true
-  }
+  },
+  "include": ["modular", "packages/*/src"]
 }

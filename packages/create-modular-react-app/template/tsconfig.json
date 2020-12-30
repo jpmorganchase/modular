@@ -15,5 +15,5 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["packages"]
+  "include": ["modular", "packages/*/src"]
 }

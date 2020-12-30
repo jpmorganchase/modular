@@ -30,6 +30,6 @@ test('it can serialise a folder', () => {
        │  └─ setupTests.ts #bnjknz
        ├─ packages
        │  └─ README.md #14bthrh
-       └─ tsconfig.json #e5344q"
+       └─ tsconfig.json #sm7bga"
   `);
 });
