@@ -15,6 +15,7 @@ packages/view-2
 
 # Build output
 /packages/*/build/
+/packages/*/dist/
 
 # Testing
 /coverage

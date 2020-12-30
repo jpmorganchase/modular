@@ -318,33 +318,80 @@ describe('modular-scripts', () => {
       stdio: 'inherit',
     });
 
+    expect(
+      await fs.readJson(
+        path.join(modularRoot, 'dist', 'sample-package', 'package.json'),
+      ),
+    ).toMatchInlineSnapshot(`
+      Object {
+        "dependencies": Object {},
+        "files": Array [
+          "/dist-cjs",
+          "/dist-es",
+          "/dist-types",
+          "README.md",
+        ],
+        "license": "UNLICENSED",
+        "main": "dist-cjs/index.js",
+        "module": "dist-es/index.js",
+        "name": "sample-package",
+        "typings": "dist-types/src/index.d.ts",
+        "version": "1.0.0",
+      }
+    `);
+
+    expect(
+      await fs.readJson(
+        path.join(modularRoot, 'dist', 'sample-view', 'package.json'),
+      ),
+    ).toMatchInlineSnapshot(`
+      Object {
+        "dependencies": Object {
+          "react": "^17.0.1",
+        },
+        "files": Array [
+          "/dist-cjs",
+          "/dist-es",
+          "/dist-types",
+          "README.md",
+        ],
+        "license": "UNLICENSED",
+        "main": "dist-cjs/sample-view.cjs.js",
+        "modular": Object {
+          "type": "view",
+        },
+        "module": "dist-es/sample-view.es.js",
+        "name": "sample-view",
+        "typings": "dist-types/src/index.d.ts",
+        "version": "1.0.0",
+      }
+    `);
+
     expect(tree(path.join(modularRoot, 'dist'))).toMatchInlineSnapshot(`
       "dist
       ├─ sample-package
       │  ├─ README.md #1jv3l2q
-      │  ├─ dist
-      │  │  ├─ cjs
-      │  │  │  └─ src
-      │  │  │     ├─ index.js #rq9uxe
-      │  │  │     └─ index.js.map #95g4ej
-      │  │  ├─ es
-      │  │  │  └─ src
-      │  │  │     ├─ index.js #1gjntzw
-      │  │  │     └─ index.js.map #1861m7m
-      │  │  └─ types
-      │  │     └─ src
-      │  │        └─ index.d.ts #f68aj
+      │  ├─ dist-cjs
+      │  │  ├─ index.js #rq9uxe
+      │  │  └─ index.js.map #ys8x0i
+      │  ├─ dist-es
+      │  │  ├─ index.js #1gjntzw
+      │  │  └─ index.js.map #b17359
+      │  ├─ dist-types
+      │  │  └─ src
+      │  │     └─ index.d.ts #f68aj
       │  └─ package.json
       └─ sample-view
          ├─ README.md #11adaka
-         ├─ dist
+         ├─ dist-cjs
          │  ├─ sample-view.cjs.js #fmbogr
-         │  ├─ sample-view.cjs.js.map #4xu206
+         │  └─ sample-view.cjs.js.map #4xu206
+         ├─ dist-es
          │  ├─ sample-view.es.js #10hnw4k
-         │  ├─ sample-view.es.js.map #jqhhy5
-         │  └─ types
-         │     └─ src
-         │        └─ index.d.ts #1vloh7q
+         │  └─ sample-view.es.js.map #jqhhy5
+         ├─ dist-types
+         │  └─ src
+         │     └─ index.d.ts #1vloh7q
          └─ package.json"
     `);
   });

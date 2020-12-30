@@ -6,5 +6,3 @@
 // https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/scripts/test.js
 
 require('react-scripts/config/env');
-
-// Unlike CRA, let's NOT verify typescript config when running tests.
