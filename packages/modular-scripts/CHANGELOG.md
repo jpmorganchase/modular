@@ -1,5 +1,12 @@
 # modular-scripts
 
+## 0.7.0
+
+### Minor Changes
+
+- 6c5e925: When building libs, don't throw an error on submodule import for
+  non-js files
+
 ## 0.6.3
 
 ### Patch Changes
