@@ -362,10 +362,19 @@ async function makeBundle(
             : // non-scoped
               importedPath[0];
 
-        if (importedPackage !== imported) {
+        if (
+          importedPackage !== imported &&
+          packageNames.includes(importedPackage) &&
+          // it's fine if it's anything but a js file
+          extensions.includes(path.extname(imported))
+        ) {
           // TODO: revisit this if and when we have support for multiple entrypoints
           // TODO: add a line number and file name here
-          throw new Error(`cannot import a submodule from ${importedPackage}`);
+          console.error(
+            `cannot import a submodule ${imported} from ${importedPackage}`,
+          );
+          // TODO: This could probably be an error, but
+          // let's revisit it when we have a better story.
         }
 
         if (packageJsons[importedPackage]) {
