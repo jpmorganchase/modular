@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@schemastore/package": "^0.0.6",
+    "@types/confusing-browser-globals": "^1.0.0",
     "@types/eslint": "^7.2.6",
-    "@types/estree": "^0.0.45"
+    "@types/estree": "^0.0.45",
+    "confusing-browser-globals": "^1.0.10"
   }
 }

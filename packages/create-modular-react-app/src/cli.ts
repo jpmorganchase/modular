@@ -96,7 +96,7 @@ export default function createModularApp(argv: {
       prettier: 'prettier --write .',
     },
     eslintConfig: {
-      extends: 'modular-app',
+      extends: 'plugin:modular-app/recommended',
     },
     prettier: {
       singleQuote: true,
@@ -122,7 +122,7 @@ export default function createModularApp(argv: {
       'react-dom',
       'prettier',
       'modular-scripts',
-      'eslint-config-modular-app',
+      'eslint-plugin-modular-app',
       'typescript@^4.1.2',
       ...preferOfflineArg,
     ],
