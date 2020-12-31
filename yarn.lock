@@ -1960,7 +1960,14 @@
   resolved "https://registry.yarnpkg.com/@types/aria-query/-/aria-query-4.2.0.tgz#14264692a9d6e2fa4db3df5e56e94b5e25647ac0"
   integrity sha512-iIgQNzCm0v7QMhhe4Jjn9uRh+I6GoPmt03CbEtwx3ao8/EfoQcmgtqH4vQ5Db/lxiIGaWDv6nwvunuh0RyX0+A==
 
-"@types/babel__core@^7.0.0", "@types/babel__core@^7.1.7":
+"@types/babel-plugin-macros@^2.8.4":
+  version "2.8.4"
+  resolved "https://registry.yarnpkg.com/@types/babel-plugin-macros/-/babel-plugin-macros-2.8.4.tgz#5e0a11093e1902faf23e803f1cf880364e943505"
+  integrity sha512-Fi2GPlNuqaw6oIa3kQSyJx7NiUw9X1XU9af28L4nu+klsDLJyBYoIRIshQW/BQ7/N4R0vPcfyZEZLrVYRoVsfg==
+  dependencies:
+    "@types/babel__core" "*"
+
+"@types/babel__core@*", "@types/babel__core@^7.0.0", "@types/babel__core@^7.1.7":
   version "7.1.12"
   resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.1.12.tgz#4d8e9e51eb265552a7e4f1ff2219ab6133bdfb2d"
   integrity sha512-wMTHiiTiBAAPebqaPiPDLFA4LYPKr6Ph0Xq/6rq1Ur3v66HXyG+clfR9CNETkD7MQS8ZHvpQOtA53DLws5WAEQ==
