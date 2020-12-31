@@ -91,7 +91,7 @@ describe('create-modular-react-app', () => {
       │     │  ├─ logo.svg #1okqmlj
       │     │  └─ react-app-env.d.ts #1dm2mq6
       │     └─ tsconfig.json #6rw46b
-      ├─ tsconfig.json #e5344q
+      ├─ tsconfig.json #7rtj5f
       └─ yarn.lock"
     `);
     expect(

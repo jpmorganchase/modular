@@ -179,6 +179,8 @@ const typescriptConfig: TSConfig = {};
     ]),
   });
 
+  typescriptConfig.compilerOptions = typescriptConfig.compilerOptions || {};
+
   Object.assign(typescriptConfig.compilerOptions, {
     declarationDir: outputDirectory,
     noEmit: false,
