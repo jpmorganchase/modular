@@ -111,7 +111,7 @@ async function run() {
       case 'start':
         return start(argv._[1]);
       case 'build':
-        return buildParallel(
+        return buildSequential(
           argv._[1].split(','),
           argv['preserve-modules'] as boolean | undefined,
         );
@@ -291,8 +291,8 @@ function start(appPath: string) {
   });
 }
 
-// run builds in parallel
-async function buildParallel(
+// run builds sequentially
+async function buildSequential(
   directoryNames: string[],
   preserveModules?: boolean,
 ) {
