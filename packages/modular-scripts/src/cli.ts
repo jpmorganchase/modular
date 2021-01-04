@@ -297,14 +297,14 @@ async function buildParallel(
   preserveModules?: boolean,
 ) {
   console.log('building packages:', directoryNames.join(', '));
-  const result = await Promise.allSettled(
-    directoryNames.map((name) => build(name, preserveModules)),
-  );
-  const error = result.find((result) => result.status === 'rejected');
 
-  if (error?.status === 'rejected') {
-    console.error(`building ${directoryNames[result.indexOf(error)]} failed`);
-    throw error.reason;
+  for (let i = 0; i < directoryNames.length; i++) {
+    try {
+      await build(directoryNames[i], preserveModules);
+    } catch (err) {
+      console.error(`building ${directoryNames[i]} failed`);
+      throw err;
+    }
   }
 }
 
