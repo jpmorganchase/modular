@@ -1,6 +1,6 @@
 {
   "name": "modular-scripts",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "license": "Apache-2.0",
   "bin": {
     "modular": "build/cli.js"
@@ -23,6 +23,7 @@
     "@rollup/plugin-json": "^4.1.0",
     "@types/is-ci": "^2.0.0",
     "@types/update-notifier": "^5.0.0",
+    "@rollup/plugin-node-resolve": "^11.0.1",
     "builtin-modules": "^3.1.0",
     "chalk": "^4.1.0",
     "change-case": "^4.1.1",
@@ -35,6 +36,7 @@
     "mri": "^1.1.6",
     "prompts": "^2.4.0",
     "react-scripts": "^4.0.1",
+    "resolve": "^1.19.0",
     "resolve-as-bin": "^2.1.0",
     "rimraf": "^3.0.2",
     "rollup": "^2.33.3",
@@ -56,5 +58,13 @@
   },
   "optionalDependencies": {
     "puppeteer": "^5.4.1"
-  }
+  },
+  "peerDependencies": {
+    "typescript": "^4.1.2"
+  },
+  "files": [
+    "build",
+    "types",
+    "*.js"
+  ]
 }

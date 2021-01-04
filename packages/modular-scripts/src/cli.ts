@@ -111,7 +111,7 @@ async function run() {
       case 'start':
         return start(argv._[1]);
       case 'build':
-        return buildParallel(
+        return buildSequential(
           argv._[1].split(','),
           argv['preserve-modules'] as boolean | undefined,
         );
@@ -291,16 +291,21 @@ function start(appPath: string) {
   });
 }
 
-// run builds in parallel
-async function buildParallel(
+// run builds sequentially
+async function buildSequential(
   directoryNames: string[],
   preserveModules?: boolean,
 ) {
-  const result = await Promise.allSettled(
-    directoryNames.map((name) => build(name, preserveModules)),
-  );
-  const error = result.find((result) => result.status === 'rejected');
-  if (error) throw error;
+  console.log('building packages:', directoryNames.join(', '));
+
+  for (let i = 0; i < directoryNames.length; i++) {
+    try {
+      await build(directoryNames[i], preserveModules);
+    } catch (err) {
+      console.error(`building ${directoryNames[i]} failed`);
+      throw err;
+    }
+  }
 }
 
 async function build(directoryName: string, preserveModules?: boolean) {

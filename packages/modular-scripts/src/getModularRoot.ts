@@ -1,4 +1,3 @@
-// keep this in sync with modular-views.macro/src/getModularRoot
 import * as path from 'path';
 import * as fs from 'fs-extra';
 import findUp from 'find-up';

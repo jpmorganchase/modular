@@ -1,5 +1,25 @@
 # modular-scripts
 
+## 0.7.0
+
+### Minor Changes
+
+- 6c5e925: When building libs, don't throw an error on submodule import for
+  non-js files
+
+## 0.6.3
+
+### Patch Changes
+
+- 74780c4: Fix broken build from #207
+
+## 0.6.2
+
+### Patch Changes
+
+- 11912bb: Use update-notifier to point out upgrades when possible (in #203)
+- 4e285e6: minor enhancements/fixes to `modular build <package>`
+
 ## 0.6.1
 
 ### Patch Changes
