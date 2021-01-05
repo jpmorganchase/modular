@@ -1,5 +1,17 @@
 # modular-scripts
 
+## 0.8.0
+
+### Minor Changes
+
+- 4466eb6: Use a common tsconfig that we can update whenever
+
+### Patch Changes
+
+- 72637d7: Do sequential builds instead of parallel\
+- c5c15eb: Fix an issue where generated files from libraries would interfere
+  with typescript definition generation
+
 ## 0.7.0
 
 ### Minor Changes

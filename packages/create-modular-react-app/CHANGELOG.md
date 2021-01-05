@@ -1,5 +1,15 @@
 # create-modular-react-app
 
+## 0.8.0
+
+### Minor Changes
+
+- 4466eb6: Use a common tsconfig that we can update whenever
+
+### Patch Changes
+
+- 6e49be1: Ignore new build folders in local workspaces
+
 ## 0.7.2
 
 ### Patch Changes
