@@ -1,3 +1,9 @@
 {
-  "extends": "modular-scripts/tsconfig.json"
+  "extends": "modular-scripts/tsconfig.json",
+  "include": [
+    "modular",
+    "packages/*/src",
+    "packages/modular-scripts/types/",
+    "packages/create-modular-react-app/template/"
+  ]
 }
