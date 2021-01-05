@@ -534,7 +534,10 @@ function makeTypings(directoryName: string) {
   };
 
   // then add our custom stuff
-  tsconfig.include = [`${packagesRoot}/${directoryName}`];
+
+  // Only include src files from the package to prevent already built
+  // files from interferring with the compile
+  tsconfig.include = [`${packagesRoot}/${directoryName}/src`];
   tsconfig.compilerOptions = {
     ...tsconfig.compilerOptions,
     declarationDir: `${packagesRoot}/${directoryName}/${outputDirectory}-types`,
