@@ -1,5 +1,11 @@
 # modular-scripts
 
+## 0.8.1
+
+### Patch Changes
+
+- 4cb46cc: Add tsconfig for publishing
+
 ## 0.8.0
 
 ### Minor Changes
