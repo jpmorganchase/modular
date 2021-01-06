@@ -65,6 +65,7 @@
   "files": [
     "build",
     "types",
+    "tsconfig.json",
     "*.js"
   ]
 }
