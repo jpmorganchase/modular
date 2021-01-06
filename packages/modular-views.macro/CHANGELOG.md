@@ -1,5 +1,11 @@
 # modular-views.macro
 
+## 1.2.0
+
+### Minor Changes
+
+- 0412940: Migrate codebase to TypeScript with internal typings
+
 ## 1.1.1
 
 ### Patch Changes
