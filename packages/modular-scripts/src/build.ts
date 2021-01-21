@@ -199,59 +199,51 @@ async function makeBundle(
   const packageJson = packageJsonsByDirectoryName[directoryName];
 
   if (!packageJson) {
-    console.error(
+    throw new Error(
       `no package.json in ${packagesRoot}/${directoryName}, bailing...`,
     );
-    return false;
   }
   if (packageJson.private === true) {
-    console.error(
+    throw new Error(
       `${packagesRoot}/${directoryName} is marked private, bailing...`,
     );
-    return false;
   }
   if (!packageJson.main) {
-    console.error(
+    throw new Error(
       `package.json at ${packagesRoot}/${directoryName} does not have a "main" field, bailing...`,
     );
-    return false;
   }
 
   if (
     !fse.existsSync(path.join(packagesRoot, directoryName, packageJson.main))
   ) {
-    console.error(
+    throw new Error(
       `package.json at ${packagesRoot}/${directoryName} does not have a "main" field that points to an existing source file, bailing...`,
     );
-    return false;
   }
 
   if (!packageJson.name) {
-    console.error(
+    throw new Error(
       `package.json at ${packagesRoot}/${directoryName} does not have a valid "name", bailing...`,
     );
-    return false;
   }
 
   if (!packageJson.version) {
-    console.error(
+    throw new Error(
       `package.json at ${packagesRoot}/${directoryName} does not have a valid "version", bailing...`,
     );
-    return false;
   }
 
   if (packageJson.module) {
-    console.error(
+    throw new Error(
       `package.json at ${packagesRoot}/${directoryName} shouldn't have a "module" field, bailing...`,
     );
-    return false;
   }
 
   if (packageJson.typings) {
-    console.error(
+    throw new Error(
       `package.json at ${packagesRoot}/${directoryName} shouldn't have a "typings" field, bailing...`,
     );
-    return false;
   }
 
   console.log(`building ${packageJson.name} at packages/${directoryName}...`);
@@ -677,16 +669,16 @@ export async function build(
 
 - build command
   - rm -rf dist && yarn modular build create-modular-react-app,modular-scripts --preserve-modules && yarn workspace modular-views.macro build
-- cleanup local dist folders on errors 
+- cleanup local dist folders on errors
 - read preset-env targets from package.json
   - also, if something _does_ need regenerator, how do we add it as a dep?
 - package.json should be able to specify build arguments. Specifically:
   - preserveModules: boolean
   - preserveEntrySignatures:  "strict" | "allow-extension" | "exports-only" | false
 - should we disallow using __dirname/__filename in libraries?
-- how do we deal with bin fields? maybe inside a standalone bin file, 
-  we can read package.json's main field?? That could be clever. 
-- rewrite modular-views.macro with typescript 
+- how do we deal with bin fields? maybe inside a standalone bin file,
+  we can read package.json's main field?? That could be clever.
+- rewrite modular-views.macro with typescript
 - how does this work with changesets?
 - some kind of build info would be helpful? eg: https://unpkg.com/browse/react@17.0.1/build-info.json
 - can we run tests on our built versions? to verify we haven't broken anything.
