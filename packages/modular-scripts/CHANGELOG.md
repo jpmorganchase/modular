@@ -1,5 +1,11 @@
 # modular-scripts
 
+## 0.9.0
+
+### Minor Changes
+
+- 8de0a31: Include @finos/perspective-webpack-plugin by default.
+
 ## 0.8.1
 
 ### Patch Changes
