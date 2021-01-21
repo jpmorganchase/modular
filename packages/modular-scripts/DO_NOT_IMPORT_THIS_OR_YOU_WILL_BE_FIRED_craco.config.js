@@ -32,6 +32,24 @@ module.exports = {
         match.loader.include = [...include, absolutePackagesPath];
       }
 
+      // perspective (https://perspective.finos.org/) is so useful
+      // and widely used for us (JPM) that it makes sense to install
+      // their webpack plugin by default. In the future, if
+      // perspective provides a build that works by default, or if
+      // there's any other workaround, we could remove this.
+      // Of note; this doesn't include perspective itself in your app.
+
+      try {
+        // test whether `@finos/perspective` has been installed.
+        // This is needed because the plugin imports from `@finos/perspective`
+        // and would crash if imported when `@finos/perspective` isn't installed
+        require.resolve('@finos/perspective');
+        const PerspectivePlugin = require('@finos/perspective-webpack-plugin');
+        webpackConfig.plugins.push(new PerspectivePlugin());
+      } catch (err) {
+        /* silently fail */
+      }
+
       return webpackConfig;
     },
   },
