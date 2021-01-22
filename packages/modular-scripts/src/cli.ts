@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import mri from 'mri';
 import execa from 'execa';
 import * as fs from 'fs-extra';
@@ -16,6 +15,7 @@ import resolveAsBin from 'resolve-as-bin';
 
 import getModularRoot from './getModularRoot';
 import preflightCheck from './preflightCheck';
+import isModularType from './isModularType';
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
@@ -49,23 +49,6 @@ function execSync(
     cleanup: true,
     ...opts,
   });
-}
-
-type PackageType = 'app' | 'view' | 'root'; // | 'package', the default
-
-type ModularPackageJson = PackageJson & {
-  modular?: {
-    type: PackageType;
-  };
-};
-
-function isModularType(dir: string, type: PackageType) {
-  const packageJsonPath = path.join(dir, 'package.json');
-  if (fs.existsSync(packageJsonPath)) {
-    const packageJson = fs.readJsonSync(packageJsonPath) as ModularPackageJson;
-    return packageJson.modular?.type === type;
-  }
-  return false;
 }
 
 // recursively get all files in a folder
