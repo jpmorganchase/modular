@@ -261,7 +261,21 @@ function test(args: string[]) {
 
   // ends the section copied from CRA
 
-  return execSync(jestBin, argv, {
+  let testBin = jestBin,
+    testArgs = argv;
+
+  if (argv.includes('--inspect-brk')) {
+    // If we're trying to attach to a debugger, we need to run node
+    // instead. This moves around the command line arguments for so.
+    testBin = 'node';
+    testArgs = [
+      '--inspect-brk',
+      jestBin,
+      ...testArgs.filter((x) => x !== '--inspect-brk'),
+    ];
+  }
+
+  return execSync(testBin, testArgs, {
     cwd: modularRoot,
     log: false,
     // @ts-ignore
