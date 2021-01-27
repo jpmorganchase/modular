@@ -1,5 +1,12 @@
 # modular-scripts
 
+## 0.9.1
+
+### Patch Changes
+
+- a79b8da: Bring back support for --inspect-brk, for testing with a debugger.
+- f193cfd: Bail `modular build` for libraries when there is a setup issue.
+
 ## 0.9.0
 
 ### Minor Changes
