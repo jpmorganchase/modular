@@ -1,5 +1,11 @@
 # modular-scripts
 
+## 0.9.3
+
+### Patch Changes
+
+- d8aee46: Use yarn --silent where possible
+
 ## 0.9.2
 
 ### Patch Changes

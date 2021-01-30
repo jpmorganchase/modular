@@ -1,5 +1,12 @@
 # create-modular-react-app
 
+## 0.8.2
+
+### Patch Changes
+
+- d8aee46: Use yarn --silent where possible
+- 6a249ea: Avoid some console spam by installing dependencies correctly.
+
 ## 0.8.1
 
 ### Patch Changes
