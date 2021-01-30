@@ -101,6 +101,7 @@ describe('create-modular-react-app', () => {
       Object {
         "author": "?",
         "dependencies": Object {
+          "@testing-library/dom": "?",
           "@testing-library/jest-dom": "?",
           "@testing-library/react": "?",
           "@testing-library/user-event": "?",
@@ -108,6 +109,7 @@ describe('create-modular-react-app', () => {
           "@types/node": "?",
           "@types/react": "?",
           "@types/react-dom": "?",
+          "eslint": "?",
           "eslint-config-modular-app": "?",
           "modular-scripts": "?",
           "prettier": "?",

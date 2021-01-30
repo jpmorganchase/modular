@@ -111,6 +111,7 @@ export default function createModularApp(argv: {
     [
       'add',
       '-W',
+      '@testing-library/dom',
       '@testing-library/jest-dom',
       '@testing-library/react',
       '@testing-library/user-event',
@@ -122,6 +123,7 @@ export default function createModularApp(argv: {
       'react-dom',
       'prettier',
       'modular-scripts',
+      'eslint',
       'eslint-config-modular-app',
       'typescript@^4.1.2',
       ...preferOfflineArg,
