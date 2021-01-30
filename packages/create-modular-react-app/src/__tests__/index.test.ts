@@ -64,6 +64,7 @@ describe('create-modular-react-app', () => {
       ├─ .gitignore #1tm0llc
       ├─ .vscode
       │  ├─ extensions.json #1i4584r
+      │  ├─ launch.json #15fzacl
       │  └─ settings.json #xncm1d
       ├─ README.md #1nksyzj
       ├─ modular
