@@ -1,5 +1,12 @@
 # modular-views.macro
 
+## 1.2.1
+
+### Patch Changes
+
+- 7c14fdb: Fix the macro's type generation, and avoid some console spam when
+  installing.
+
 ## 1.2.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # create-modular-react-app
 
+## 0.8.1
+
+### Patch Changes
+
+- beb619c: Adds a debug test launch config for vscode
+
 ## 0.8.0
 
 ### Minor Changes
