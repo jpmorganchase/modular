@@ -617,6 +617,7 @@ export async function build(
       // TODO: verify this works on windows
       [
         'pack',
+        '--silent',
         '--filename',
         path.join(`../../${outputDirectory}`, directoryName + '.tgz'),
       ],
