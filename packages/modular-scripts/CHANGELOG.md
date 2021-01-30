@@ -1,5 +1,12 @@
 # modular-scripts
 
+## 0.9.2
+
+### Patch Changes
+
+- 7c14fdb: Fix the macro's type generation, and avoid some console spam when
+  installing.
+
 ## 0.9.1
 
 ### Patch Changes
