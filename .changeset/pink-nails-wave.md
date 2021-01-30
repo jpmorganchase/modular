@@ -1,5 +1,5 @@
 ---
-'create-modular-react-app': minor
+'create-modular-react-app': patch
 ---
 
 Adds a debug test launch config for vscode
