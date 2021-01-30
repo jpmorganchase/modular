@@ -2,7 +2,7 @@
   "name": "modular-views.macro",
   "version": "1.2.0",
   "main": "build/index.macro.js",
-  "typings": "types/index.macro.d.ts",
+  "typings": "build/index.macro.d.ts",
   "license": "Apache-2.0",
   "dependencies": {
     "@types/babel-plugin-macros": "^2.8.4",
@@ -15,6 +15,6 @@
     "prebuild": "yarn clean",
     "build": "yarn build:lib && yarn build:types",
     "build:lib": "babel --root-mode upward src --out-dir build --extensions .ts --ignore 'src/**/*.test.ts'",
-    "build:types": "tsc --emitDeclarationOnly --outDir dist-types"
+    "build:types": "tsc --emitDeclarationOnly --declarationDir build"
   }
 }
