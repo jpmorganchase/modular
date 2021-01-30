@@ -111,6 +111,7 @@ export default function createModularApp(argv: {
     [
       'add',
       '-W',
+      '--silent',
       '@testing-library/dom',
       '@testing-library/jest-dom',
       '@testing-library/react',
@@ -147,7 +148,14 @@ export default function createModularApp(argv: {
 
   execSync(
     'yarnpkg',
-    ['modular', 'add', 'app', '--unstable-type=app', ...preferOfflineArg],
+    [
+      'modular',
+      'add',
+      'app',
+      '--unstable-type=app',
+      '--silent',
+      ...preferOfflineArg,
+    ],
     {
       cwd: newModularRoot,
     },
