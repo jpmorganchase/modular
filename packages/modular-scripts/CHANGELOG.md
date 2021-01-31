@@ -1,5 +1,12 @@
 # modular-scripts
 
+## 0.9.4
+
+### Patch Changes
+
+- a2df764: Don't install the perspective plugin (but still use it if it's
+  available)
+
 ## 0.9.3
 
 ### Patch Changes
