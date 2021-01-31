@@ -31,7 +31,6 @@ async function preflightCheck(): Promise<void> {
     const notifier = updateNotifier({
       pkg: { name: name as string, version: version as string },
       shouldNotifyInNpmScript: true,
-      updateCheckInterval: 0,
     });
 
     if (notifier.update) {
