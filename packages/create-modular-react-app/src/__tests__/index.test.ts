@@ -93,7 +93,7 @@ describe('create-modular-react-app', () => {
       │     │  ├─ logo.svg #1okqmlj
       │     │  └─ react-app-env.d.ts #1dm2mq6
       │     └─ tsconfig.json #6rw46b
-      ├─ tsconfig.json #xubky9
+      ├─ tsconfig.json #1h72lkd
       └─ yarn.lock"
     `);
     expect(
@@ -143,7 +143,7 @@ describe('create-modular-react-app', () => {
         },
         "version": "1.0.0",
         "workspaces": Array [
-          "packages/*",
+          "packages/**",
         ],
       }
     `);

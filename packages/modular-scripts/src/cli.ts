@@ -25,6 +25,9 @@ process.on('unhandledRejection', (err) => {
   throw err;
 });
 
+const packagesRoot = 'packages';
+const outputDirectory = 'dist';
+
 const cracoBin = resolveAsBin('craco');
 const jestBin = resolveAsBin('jest');
 const cracoConfig = path.join(
@@ -105,6 +108,7 @@ async function run() {
         return addPackage(
           argv._[1],
           argv['unstable-type'] as string | undefined,
+          argv['unstable-name'] as string | undefined,
         );
       case 'test':
         return test(process.argv.slice(3));
@@ -133,14 +137,24 @@ async function run() {
   }
 }
 
-async function addPackage(name: string, typeArg: string | void) {
-  const type =
-    typeArg ||
+async function addPackage(
+  destination: string,
+  typeArg: string | void,
+  nameArg: string | void,
+) {
+  const { type, name } =
+    (typeArg && nameArg ? { type: typeArg, name: nameArg } : null) ||
     ((await prompts([
+      {
+        name: 'name',
+        type: 'text',
+        message: `What would you like to name this package?`,
+        initial: toParamCase(destination),
+      },
       {
         name: 'type',
         type: 'select',
-        message: `What kind of package is ${name}?`,
+        message: `What kind of package is this?`,
         choices: [
           { title: 'A plain package', value: 'package' },
           { title: 'A view within an application', value: 'view' },
@@ -148,19 +162,17 @@ async function addPackage(name: string, typeArg: string | void) {
         ],
         initial: 0,
       },
-    ])) as { type: string }).type;
+    ])) as { type: string; name: string });
 
   const modularRoot = getModularRoot();
-
-  const newPackageName = toParamCase(name);
   const newComponentName = toPascalCase(name);
 
-  const newPackagePath = path.join(modularRoot, 'packages', newPackageName);
+  const newPackagePath = path.join(modularRoot, packagesRoot, destination);
   const packageTypePath = path.join(__dirname, '../types', type);
 
   // create a new package source folder
   if (fs.existsSync(newPackagePath)) {
-    console.error(`The package named ${name} already exists!`);
+    console.error(`A package already exists at ${destination}!`);
     process.exit(1);
   }
 
@@ -174,12 +186,31 @@ async function addPackage(name: string, typeArg: string | void) {
       packageFilePath,
       fs
         .readFileSync(packageFilePath, 'utf8')
-        .replace(/PackageName__/g, newPackageName)
+        .replace(/PackageName__/g, name)
         .replace(/ComponentName__/g, newComponentName),
+    );
+    if (path.basename(packageFilePath) === 'packagejson') {
+      // we've named package.json as packagejson in these templates
+      fs.moveSync(
+        packageFilePath,
+        packageFilePath.replace('packagejson', 'package.json'),
+      );
+    }
+  }
+
+  if (type === 'app') {
+    // add a tsconfig, because CRA expects it
+    await fs.writeJSON(
+      path.join(newPackagePath, 'tsconfig.json'),
+      {
+        extends: path.relative(newPackagePath, modularRoot) + '/tsconfig.json',
+      },
+      { spaces: 2 },
     );
   }
 
   execSync('yarnpkg', [], { cwd: newPackagePath });
+  execSync('yarnpkg', [], { cwd: modularRoot });
 }
 
 type VerifyPackageTree = () => void;
@@ -291,12 +322,12 @@ function test(args: string[]) {
 function start(appPath: string) {
   const modularRoot = getModularRoot();
 
-  if (!isModularType(path.join(modularRoot, 'packages', appPath), 'app')) {
+  if (!isModularType(path.join(modularRoot, packagesRoot, appPath), 'app')) {
     throw new Error(`The package at ${appPath} is not a valid modular app.`);
   }
 
   execSync(cracoBin, ['start', '--config', cracoConfig], {
-    cwd: path.join(modularRoot, 'packages', appPath),
+    cwd: path.join(modularRoot, packagesRoot, appPath),
     log: false,
     // @ts-ignore
     env: {
@@ -307,31 +338,31 @@ function start(appPath: string) {
 
 // run builds sequentially
 async function buildSequential(
-  directoryNames: string[],
+  packagePaths: string[],
   preserveModules?: boolean,
 ) {
-  console.log('building packages:', directoryNames.join(', '));
+  console.log('building packages at:', packagePaths.join(', '));
 
-  for (let i = 0; i < directoryNames.length; i++) {
+  for (let i = 0; i < packagePaths.length; i++) {
     try {
-      await build(directoryNames[i], preserveModules);
+      await build(packagePaths[i], preserveModules);
     } catch (err) {
-      console.error(`building ${directoryNames[i]} failed`);
+      console.error(`building ${packagePaths[i]} failed`);
       throw err;
     }
   }
 }
 
-async function build(directoryName: string, preserveModules?: boolean) {
+async function build(packagePath: string, preserveModules?: boolean) {
   const modularRoot = getModularRoot();
 
-  if (isModularType(path.join(modularRoot, 'packages', directoryName), 'app')) {
+  if (isModularType(path.join(modularRoot, packagesRoot, packagePath), 'app')) {
     // create-react-app doesn't support plain module outputs yet,
     // so --preserve-modules has no effect here
-    await fs.remove(`dist/${directoryName}`);
+    await fs.remove(path.join(outputDirectory, packagePath));
     // TODO: this shouldn't be sync
     execSync(cracoBin, ['build', '--config', cracoConfig], {
-      cwd: path.join(modularRoot, 'packages', directoryName),
+      cwd: path.join(modularRoot, packagesRoot, packagePath),
       log: false,
       // @ts-ignore
       env: {
@@ -339,13 +370,16 @@ async function build(directoryName: string, preserveModules?: boolean) {
       },
     });
 
-    await fs.move(`packages/${directoryName}/build`, `dist/${directoryName}`);
+    await fs.move(
+      path.join(packagesRoot, packagePath, 'build'),
+      path.join(outputDirectory, packagePath),
+    );
   } else {
     // it's a view/package, run a library build
     const { build } = await import('./build');
     // ^ we do a dynamic import here to defer the module's initial side effects
     // till when it's actually needed (i.e. now)
-    await build(directoryName, preserveModules);
+    await build(packagePath, preserveModules);
   }
 }
 
