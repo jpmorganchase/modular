@@ -136,6 +136,7 @@ afterAll(() => {
   rimraf.sync(path.join(packagesPath, 'sample-app'));
   rimraf.sync(path.join(packagesPath, 'sample-view'));
   rimraf.sync(path.join(packagesPath, 'sample-package'));
+  rimraf.sync(path.join(packagesPath, 'nested/sample-nested-package'));
   rimraf.sync(path.join(modularRoot, 'dist'));
   // run yarn so yarn.lock gets reset
   return execa.sync('yarnpkg', [], {
@@ -145,7 +146,10 @@ afterAll(() => {
 
 describe('modular-scripts', () => {
   it('can add an app', async () => {
-    await modular('add sample-app --unstable-type=app', { stdio: 'inherit' });
+    await modular(
+      'add sample-app --unstable-type=app --unstable-name=sample-app',
+      { stdio: 'inherit' },
+    );
 
     // Let's replace the App module with something of our own
     // with a test specific element we can introspect
@@ -248,7 +252,10 @@ describe('modular-scripts', () => {
   });
 
   it('can add a view', async () => {
-    await modular('add sample-view --unstable-type=view', { stdio: 'inherit' });
+    await modular(
+      'add sample-view --unstable-type=view --unstable-name=sample-view',
+      { stdio: 'inherit' },
+    );
     expect(tree(path.join(packagesPath, 'sample-view'))).toMatchInlineSnapshot(`
       "sample-view
       ├─ README.md #11adaka
@@ -261,9 +268,12 @@ describe('modular-scripts', () => {
   });
 
   it('can add a package', async () => {
-    await modular('add sample-package --unstable-type=package', {
-      stdio: 'inherit',
-    });
+    await modular(
+      'add sample-package --unstable-type=package --unstable-name=sample-package',
+      {
+        stdio: 'inherit',
+      },
+    );
     expect(tree(path.join(packagesPath, 'sample-package')))
       .toMatchInlineSnapshot(`
       "sample-package
@@ -276,9 +286,28 @@ describe('modular-scripts', () => {
     `);
   });
 
+  it('can add a nested package', async () => {
+    await modular(
+      'add nested/sample-nested-package --unstable-type=package --unstable-name=@nested/sample-package',
+      {
+        stdio: 'inherit',
+      },
+    );
+    expect(tree(path.join(packagesPath, 'nested/sample-nested-package')))
+      .toMatchInlineSnapshot(`
+      "sample-nested-package
+      ├─ README.md #1jv3l2q
+      ├─ package.json
+      └─ src
+         ├─ __tests__
+         │  └─ index.test.ts #1qvvmz7
+         └─ index.ts #1woe74n"
+    `);
+  });
+
   it('can execute tests', async () => {
     const output = await modular(
-      'test sample-app sample-package sample-view --watchAll=false',
+      'test sample-app sample-package sample-view sample-nested-package --watchAll=false',
       {
         all: true,
         reject: false,
@@ -305,6 +334,9 @@ describe('modular-scripts', () => {
     expect(cleanedOutput).toContain(
       'PASS packages/sample-package/src/__tests__/index.test.ts',
     );
+    expect(cleanedOutput).toContain(
+      'PASS packages/nested/sample-nested-package/src/__tests__/index.test.ts',
+    );
   });
 
   it('can build libraries', async () => {
@@ -315,6 +347,10 @@ describe('modular-scripts', () => {
     await modular('build sample-view', { stdio: 'inherit' });
     // build a package too, but preserve modules
     await modular('build sample-package --preserve-modules', {
+      stdio: 'inherit',
+    });
+    // build the nested package
+    await modular('build nested/sample-nested-package', {
       stdio: 'inherit',
     });
 
@@ -367,8 +403,48 @@ describe('modular-scripts', () => {
       }
     `);
 
+    expect(
+      await fs.readJson(
+        path.join(
+          modularRoot,
+          'dist',
+          'nested/sample-nested-package',
+          'package.json',
+        ),
+      ),
+    ).toMatchInlineSnapshot(`
+      Object {
+        "dependencies": Object {},
+        "files": Array [
+          "/dist-cjs",
+          "/dist-es",
+          "/dist-types",
+          "README.md",
+        ],
+        "license": "UNLICENSED",
+        "main": "dist-cjs/nested-sample-package.cjs.js",
+        "module": "dist-es/nested-sample-package.es.js",
+        "name": "@nested/sample-package",
+        "typings": "dist-types/src/index.d.ts",
+        "version": "1.0.0",
+      }
+    `);
+
     expect(tree(path.join(modularRoot, 'dist'))).toMatchInlineSnapshot(`
       "dist
+      ├─ nested
+      │  └─ sample-nested-package
+      │     ├─ README.md #1jv3l2q
+      │     ├─ dist-cjs
+      │     │  ├─ nested-sample-package.cjs.js #kv2xzp
+      │     │  └─ nested-sample-package.cjs.js.map #j26x67
+      │     ├─ dist-es
+      │     │  ├─ nested-sample-package.es.js #40jnpo
+      │     │  └─ nested-sample-package.es.js.map #11g8lh9
+      │     ├─ dist-types
+      │     │  └─ src
+      │     │     └─ index.d.ts #f68aj
+      │     └─ package.json
       ├─ sample-package
       │  ├─ README.md #1jv3l2q
       │  ├─ dist-cjs

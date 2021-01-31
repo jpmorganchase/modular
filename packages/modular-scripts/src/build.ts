@@ -16,6 +16,7 @@ import * as path from 'path';
 import { extract } from 'tar';
 
 import execa from 'execa';
+import { paramCase as toParamCase } from 'change-case';
 
 import postcss from 'rollup-plugin-postcss';
 import json from '@rollup/plugin-json';
@@ -28,6 +29,7 @@ import * as fse from 'fs-extra';
 
 import builtinModules from 'builtin-modules';
 import getModularRoot from './getModularRoot';
+import { getAllWorkspaces } from './workspaces';
 
 const modularRoot = getModularRoot();
 
@@ -61,7 +63,7 @@ function getConsole(directoryName: string): Console {
 // from https://github.com/Microsoft/TypeScript/issues/6387
 // a helper to output a readable message from a ts diagnostics object
 function reportTSDiagnostics(
-  directoryName: string,
+  packagePath: string,
   diagnostics: ts.Diagnostic[],
 ): void {
   diagnostics.forEach((diagnostic) => {
@@ -85,12 +87,6 @@ const outputDirectory = 'dist';
 const typescriptConfigFilename = 'tsconfig.json';
 const packagesRoot = 'packages';
 
-// list of all directories under packages
-const packageDirectoryNames = fse
-  .readdirSync(packagesRoot, { withFileTypes: true })
-  .filter((directoryEntry) => directoryEntry.isDirectory())
-  .map((directory) => directory.name);
-
 // dependencies defined at the root
 const rootPackageJsonDependencies =
   (fse.readJSONSync('package.json') as PackageJson).dependencies || {};
@@ -98,29 +94,25 @@ const rootPackageJsonDependencies =
 // a map of all package.json contents, indexed by package name
 const packageJsons: { [key: string]: PackageJson } = {};
 // a map of all package.json contents, indexed by directory name
-const packageJsonsByDirectoryName: {
+const packageJsonsByPackagePath: {
   [key: string]: PackageJson;
 } = {};
 // an array of all the package names
 const packageNames: string[] = [];
 
 // let's populate the above three
-for (let i = 0; i < packageDirectoryNames.length; i++) {
-  const pathToPackageJson = path.join(
-    packagesRoot,
-    packageDirectoryNames[i],
-    'package.json',
-  );
-  if (fse.existsSync(pathToPackageJson)) {
-    const packageJson = fse.readJsonSync(pathToPackageJson) as PackageJson;
-    if (!packageJson.name) {
-      continue;
-    }
-    packageJsons[packageJson.name] = packageJson;
-    packageJsonsByDirectoryName[packageDirectoryNames[i]] = packageJson;
-    packageNames.push(packageJson.name);
-  }
+for (const [name, { location }] of Object.entries(getAllWorkspaces())) {
+  const pathToPackageJson = path.join(location, 'package.json');
+  const packageJson = fse.readJsonSync(pathToPackageJson) as PackageJson;
+
+  packageJsons[name] = packageJson;
+  packageJsonsByPackagePath[
+    location.replace(new RegExp('^packages\\/'), '')
+  ] = packageJson;
+  packageNames.push(name);
 }
+
+// TODO: the above should probably be lazily evaluated.
 
 // TODO: do a quick check to make sure workspaces aren't
 // explicitly included in dependencies
@@ -150,11 +142,6 @@ const typescriptConfig: TSConfig = {};
     reportTSDiagnostics(':root', [result.error as ts.Diagnostic]);
     throw new Error('Failed to load Typescript configuration');
   }
-
-  // Casting to a variable so that configObject.exclude is set to the correct typing
-  // Since configObject is a index type all values are "any" implicitly.
-  const exclude: string[] = (configObject.exclude as string[]) || [];
-
   Object.assign(typescriptConfig, configObject, {
     // TODO: should probably include the original exclude in this
     exclude: distinct([
@@ -175,7 +162,9 @@ const typescriptConfig: TSConfig = {};
       'bower_components',
       'jspm_packages',
       'tmp',
-      ...exclude,
+      // Casting so that configObject.exclude is set to the correct typing
+      // Since configObject is a index type all values are "any" implicitly.
+      ...((configObject.exclude as string[]) || []),
     ]),
   });
 
@@ -191,65 +180,62 @@ const typescriptConfig: TSConfig = {};
 }
 
 async function makeBundle(
-  directoryName: string,
+  packagePath: string,
   preserveModules: boolean,
 ): Promise<boolean> {
-  const console = getConsole(directoryName);
+  const console = getConsole(packagePath);
 
-  const packageJson = packageJsonsByDirectoryName[directoryName];
+  const packageJson = packageJsonsByPackagePath[packagePath];
 
   if (!packageJson) {
     throw new Error(
-      `no package.json in ${packagesRoot}/${directoryName}, bailing...`,
+      `no package.json in ${packagesRoot}/${packagePath}, bailing...`,
     );
   }
   if (packageJson.private === true) {
     throw new Error(
-      `${packagesRoot}/${directoryName} is marked private, bailing...`,
+      `${packagesRoot}/${packagePath} is marked private, bailing...`,
     );
   }
   if (!packageJson.main) {
     throw new Error(
-      `package.json at ${packagesRoot}/${directoryName} does not have a "main" field, bailing...`,
+      `package.json at ${packagesRoot}/${packagePath} does not have a "main" field, bailing...`,
     );
   }
 
-  if (
-    !fse.existsSync(path.join(packagesRoot, directoryName, packageJson.main))
-  ) {
+  if (!fse.existsSync(path.join(packagesRoot, packagePath, packageJson.main))) {
     throw new Error(
-      `package.json at ${packagesRoot}/${directoryName} does not have a "main" field that points to an existing source file, bailing...`,
+      `package.json at ${packagesRoot}/${packagePath} does not have a "main" field that points to an existing source file, bailing...`,
     );
   }
 
   if (!packageJson.name) {
     throw new Error(
-      `package.json at ${packagesRoot}/${directoryName} does not have a valid "name", bailing...`,
+      `package.json at ${packagesRoot}/${packagePath} does not have a valid "name", bailing...`,
     );
   }
 
   if (!packageJson.version) {
     throw new Error(
-      `package.json at ${packagesRoot}/${directoryName} does not have a valid "version", bailing...`,
+      `package.json at ${packagesRoot}/${packagePath} does not have a valid "version", bailing...`,
     );
   }
 
   if (packageJson.module) {
     throw new Error(
-      `package.json at ${packagesRoot}/${directoryName} shouldn't have a "module" field, bailing...`,
+      `package.json at ${packagesRoot}/${packagePath} shouldn't have a "module" field, bailing...`,
     );
   }
 
   if (packageJson.typings) {
     throw new Error(
-      `package.json at ${packagesRoot}/${directoryName} shouldn't have a "typings" field, bailing...`,
+      `package.json at ${packagesRoot}/${packagePath} shouldn't have a "typings" field, bailing...`,
     );
   }
-
-  console.log(`building ${packageJson.name} at packages/${directoryName}...`);
+  console.log(`building ${packageJson.name} at packages/${packagePath}...`);
 
   const bundle = await rollup.rollup({
-    input: path.join(packagesRoot, directoryName, packageJson.main),
+    input: path.join(packagesRoot, packagePath, packageJson.main),
     external: (id) => {
       // via tsdx
       // TODO: this should probably be included into deps instead
@@ -438,14 +424,14 @@ async function makeBundle(
     ...(preserveModules
       ? {
           preserveModules: true,
-          dir: path.join(packagesRoot, directoryName, `${outputDirectory}-cjs`),
+          dir: path.join(packagesRoot, packagePath, `${outputDirectory}-cjs`),
         }
       : {
           file: path.join(
             packagesRoot,
-            directoryName,
+            packagePath,
             `${outputDirectory}-cjs`,
-            directoryName + '.cjs.js',
+            toParamCase(packageJson.name) + '.cjs.js',
           ),
         }),
     format: 'cjs',
@@ -457,14 +443,14 @@ async function makeBundle(
     ...(preserveModules
       ? {
           preserveModules: true,
-          dir: path.join(packagesRoot, directoryName, `${outputDirectory}-es`),
+          dir: path.join(packagesRoot, packagePath, `${outputDirectory}-es`),
         }
       : {
           file: path.join(
             packagesRoot,
-            directoryName,
+            packagePath,
             `${outputDirectory}-es`,
-            directoryName + '.es.js',
+            toParamCase(packageJson.name) + '.es.js',
           ),
         }),
     format: 'es',
@@ -472,7 +458,7 @@ async function makeBundle(
   });
 
   // store the public facing package.json that we'll write to disk later
-  publicPackageJsons[directoryName] = {
+  publicPackageJsons[packageJson.name] = {
     ...packageJson,
     // TODO: what of 'bin' fields?
     main: preserveModules
@@ -482,7 +468,7 @@ async function makeBundle(
             .replace(/\.tsx?$/, '.js')
             .replace(path.dirname(packageJson.main) + '/', ''),
         )
-      : `${outputDirectory}-cjs/${directoryName + '.cjs.js'}`,
+      : `${outputDirectory}-cjs/${toParamCase(packageJson.name) + '.cjs.js'}`,
     module: preserveModules
       ? path.join(
           `${outputDirectory}-es`,
@@ -490,7 +476,7 @@ async function makeBundle(
             .replace(/\.tsx?$/, '.js')
             .replace(path.dirname(packageJson.main) + '/', ''),
         )
-      : `${outputDirectory}-es/${directoryName + '.es.js'}`,
+      : `${outputDirectory}-es/${toParamCase(packageJson.name) + '.es.js'}`,
     typings: path.join(
       `${outputDirectory}-types`,
       packageJson.main.replace(/\.tsx?$/, '.d.ts'),
@@ -508,14 +494,15 @@ async function makeBundle(
     ]),
   };
 
-  console.log(`built ${directoryName}`);
+  console.log(`built ${packageJson.name} at ${packagePath}`);
   return true;
 }
 
-function makeTypings(directoryName: string) {
-  const console = getConsole(directoryName);
+function makeTypings(packagePath: string) {
+  const console = getConsole(packagePath);
+  const packageJson = packageJsonsByPackagePath[packagePath];
 
-  console.log('generating .d.ts files for', directoryName);
+  console.log('generating .d.ts files for', packageJson.name);
 
   // make a shallow copy of the configuration
   const tsconfig: TSConfig = {
@@ -529,11 +516,11 @@ function makeTypings(directoryName: string) {
 
   // Only include src files from the package to prevent already built
   // files from interferring with the compile
-  tsconfig.include = [`${packagesRoot}/${directoryName}/src`];
+  tsconfig.include = [`${packagesRoot}/${packagePath}/src`];
   tsconfig.compilerOptions = {
     ...tsconfig.compilerOptions,
-    declarationDir: `${packagesRoot}/${directoryName}/${outputDirectory}-types`,
-    rootDir: `${packagesRoot}/${directoryName}`,
+    declarationDir: `${packagesRoot}/${packagePath}/${outputDirectory}-types`,
+    rootDir: `${packagesRoot}/${packagePath}`,
   };
 
   // Extract config information
@@ -544,7 +531,7 @@ function makeTypings(directoryName: string) {
   );
 
   if (configParseResult.errors.length > 0) {
-    reportTSDiagnostics(directoryName, configParseResult.errors);
+    reportTSDiagnostics(packagePath, configParseResult.errors);
     throw new Error('Could not parse Typescript configuration');
   }
 
@@ -568,47 +555,49 @@ function makeTypings(directoryName: string) {
     .getPreEmitDiagnostics(program)
     .concat(emitResult.diagnostics);
   if (diagnostics.length > 0) {
-    reportTSDiagnostics(directoryName, diagnostics);
+    reportTSDiagnostics(packagePath, diagnostics);
     throw new Error('Could not generate .d.ts files');
   }
 }
 
 export async function build(
-  directoryName: string,
+  packagePath: string,
   preserveModules = false,
 ): Promise<void> {
-  const console = getConsole(directoryName);
+  const console = getConsole(packagePath);
   // ensure the root build folder is ready
   await fse.mkdirp(outputDirectory);
 
   // delete any existing local build folders
   await prom(rimraf)(
-    path.join(packagesRoot, directoryName, `${outputDirectory}-cjs`),
+    path.join(packagesRoot, packagePath, `${outputDirectory}-cjs`),
   );
   await prom(rimraf)(
-    path.join(packagesRoot, directoryName, `${outputDirectory}-es`),
+    path.join(packagesRoot, packagePath, `${outputDirectory}-es`),
   );
   await prom(rimraf)(
-    path.join(packagesRoot, directoryName, `${outputDirectory}-types`),
+    path.join(packagesRoot, packagePath, `${outputDirectory}-types`),
   );
 
   // generate the js files
-  const didBundle = await makeBundle(directoryName, preserveModules);
+  const didBundle = await makeBundle(packagePath, preserveModules);
   if (!didBundle) {
     return;
   }
   // then the .d.ts files
-  makeTypings(directoryName);
+  makeTypings(packagePath);
 
   const originalPkgJsonContent = (await fse.readJson(
-    path.join(packagesRoot, directoryName, 'package.json'),
+    path.join(packagesRoot, packagePath, 'package.json'),
   )) as PackageJson;
+
+  const packageName = originalPkgJsonContent.name as string;
 
   // switch in the special package.json
   try {
     await fse.writeJson(
-      path.join(packagesRoot, directoryName, 'package.json'),
-      publicPackageJsons[directoryName],
+      path.join(packagesRoot, packagePath, 'package.json'),
+      publicPackageJsons[packageName],
       { spaces: 2 },
     );
 
@@ -619,10 +608,14 @@ export async function build(
         'pack',
         '--silent',
         '--filename',
-        path.join(`../../${outputDirectory}`, directoryName + '.tgz'),
+        path.join(
+          modularRoot,
+          outputDirectory,
+          toParamCase(packageName) + '.tgz',
+        ),
       ],
       {
-        cwd: packagesRoot + '/' + directoryName,
+        cwd: packagesRoot + '/' + packagePath,
         stdin: process.stdin,
         stderr: process.stderr,
         stdout: process.stdout,
@@ -631,19 +624,19 @@ export async function build(
   } finally {
     // now revert package.json
     await fse.writeJson(
-      path.join(packagesRoot, directoryName, 'package.json'),
+      path.join(packagesRoot, packagePath, 'package.json'),
       originalPkgJsonContent,
       { spaces: 2 },
     );
   }
 
   // cool. now unpack the tgz's contents in the root dist
-  await fse.mkdirp(path.join(outputDirectory, directoryName));
+  await fse.mkdirp(path.join(outputDirectory, packagePath));
 
   await extract({
-    file: path.join(outputDirectory, directoryName + '.tgz'),
+    file: path.join(outputDirectory, toParamCase(packageName) + '.tgz'),
     strip: 1,
-    C: path.join(outputDirectory, directoryName),
+    C: path.join(outputDirectory, packagePath),
   });
 
   // (if you're curious why we unpack it here, it's because
@@ -651,17 +644,20 @@ export async function build(
 
   // delete the local dist folders
   await prom(rimraf)(
-    path.join(packagesRoot, directoryName, `${outputDirectory}-cjs`),
+    path.join(packagesRoot, packagePath, `${outputDirectory}-cjs`),
   );
   await prom(rimraf)(
-    path.join(packagesRoot, directoryName, `${outputDirectory}-es`),
+    path.join(packagesRoot, packagePath, `${outputDirectory}-es`),
   );
   await prom(rimraf)(
-    path.join(packagesRoot, directoryName, `${outputDirectory}-types`),
+    path.join(packagesRoot, packagePath, `${outputDirectory}-types`),
   );
 
   // then delete the tgz
-  await fse.remove(path.join(outputDirectory, directoryName + '.tgz'));
+
+  await fse.remove(
+    path.join(modularRoot, outputDirectory, toParamCase(packageName) + '.tgz'),
+  );
   /// and... that's it
   console.log('finished');
 }

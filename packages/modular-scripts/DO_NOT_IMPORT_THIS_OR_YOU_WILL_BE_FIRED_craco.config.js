@@ -55,27 +55,16 @@ module.exports = {
   },
   jest: {
     configure(jestConfig) {
-      const perPackageSetupTests = glob.sync(
-        `${absolutePackagesPath}/*/src/setupTests.{js,ts,tsx}`,
-        { cwd: process.cwd() },
-      );
-      if (perPackageSetupTests.length) {
-        console.warn(
-          "A setupTests file was found within an app's `src/` directory:",
-          perPackageSetupTests.join(', '),
-        );
-        console.warn(
-          'Modular projects should store all test setup at the root of the project (e.g. `modular/setupTests.{js,ts,tsx}`).',
-        );
-      }
-
       return {
         ...jestConfig,
         rootDir: absolutePackagesPath,
         roots: ['<rootDir>'],
-        testMatch: ['<rootDir>/*/src/**/*.{spec,test}.{js,ts,tsx}'],
+        testMatch: ['<rootDir>/**/src/**/*.{spec,test}.{js,ts,tsx}'],
         coverageDirectory: path.resolve(modularRoot, 'coverage'),
-        collectCoverageFrom: ['<rootDir>/*/src/**/*.{js,ts,tsx}', '!**/*.d.ts'],
+        collectCoverageFrom: [
+          '<rootDir>/**/src/**/*.{js,ts,tsx}',
+          '!**/*.d.ts',
+        ],
         setupFiles: jestConfig.setupFiles
           .concat([path.join(__dirname, './jest-setupEnvironment.js')])
           .concat(

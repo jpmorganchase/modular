@@ -15,8 +15,8 @@ test('it can serialise a folder', () => {
     ├─ package.json
     ├─ src
     │  ├─ __tests__
-    │  │  └─ index.test.ts #9ej560
-    │  ├─ cli.ts #16bp7u1
+    │  │  └─ index.test.ts #1w35b9i
+    │  ├─ cli.ts #12qu7t3
     │  └─ index.ts #un0l9d
     └─ template
        ├─ .editorconfig #1p4gvuw
@@ -33,6 +33,6 @@ test('it can serialise a folder', () => {
        │  └─ setupTests.ts #bnjknz
        ├─ packages
        │  └─ README.md #14bthrh
-       └─ tsconfig.json #xubky9"
+       └─ tsconfig.json #1h72lkd"
   `);
 });
