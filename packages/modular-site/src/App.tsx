@@ -47,7 +47,6 @@ export default function App(): JSX.Element {
 
   // You can also the use the stringified config values as attributes
   return (
-    //eslint-disable-next-line react/react-in-jsx-scope
     <perspective-viewer
       ref={viewer} /*row-pivots='["State"]'*/
     ></perspective-viewer>
