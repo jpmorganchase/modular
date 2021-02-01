@@ -1,5 +1,12 @@
 # modular-scripts
 
+## 0.9.5
+
+### Patch Changes
+
+- 84ef2db: Enhance eslint-config-modular-app, add .prettierignore and
+  .eslintignore files in templates
+
 ## 0.9.4
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # modular-views.macro
 
+## 1.2.2
+
+### Patch Changes
+
+- 84ef2db: Enhance eslint-config-modular-app, add .prettierignore and
+  .eslintignore files in templates
+
 ## 1.2.1
 
 ### Patch Changes
