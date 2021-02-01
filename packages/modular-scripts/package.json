@@ -58,9 +58,6 @@
     "pptr-testing-library": "^0.6.4",
     "typescript": "^4.1.2"
   },
-  "optionalDependencies": {
-    "puppeteer": "^5.4.1"
-  },
   "peerDependencies": {
     "typescript": "^4.1.2"
   },
