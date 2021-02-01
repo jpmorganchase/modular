@@ -1,5 +1,12 @@
 # create-modular-react-app
 
+## 0.8.3
+
+### Patch Changes
+
+- 84ef2db: Enhance eslint-config-modular-app, add .prettierignore and
+  .eslintignore files in templates
+
 ## 0.8.2
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # eslint-config-modular-app
 
+## 0.4.0
+
+### Minor Changes
+
+- 84ef2db: Enhance eslint-config-modular-app, add .prettierignore and
+  .eslintignore files in templates
+
 ## 0.3.1
 
 ### Patch Changes

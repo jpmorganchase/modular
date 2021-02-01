@@ -1,6 +1,6 @@
 {
   "name": "modular-views.macro",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "main": "build/index.macro.js",
   "typings": "build/index.macro.d.ts",
   "license": "Apache-2.0",
