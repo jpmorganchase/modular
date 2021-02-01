@@ -1,5 +1,12 @@
 # modular-scripts
 
+## 0.9.6
+
+### Patch Changes
+
+- 84f2a3b: Don't install puppeteer as a dependency
+- bb278f7: Update rollup to 2.38.3
+
 ## 0.9.5
 
 ### Patch Changes
