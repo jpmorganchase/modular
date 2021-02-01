@@ -1,7 +1,7 @@
 ---
-'create-modular-react-app': minor
+'create-modular-react-app': patch
 'eslint-config-modular-app': minor
-'modular-scripts': minor
+'modular-scripts': patch
 'modular-views.macro': patch
 ---
 

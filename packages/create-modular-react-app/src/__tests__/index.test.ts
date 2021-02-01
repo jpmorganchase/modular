@@ -60,7 +60,7 @@ describe('create-modular-react-app', () => {
     expect(tree(destination)).toMatchInlineSnapshot(`
       "test-repo
       ├─ .editorconfig #1p4gvuw
-      ├─ .eslintignore #1tm0llc
+      ├─ .eslintignore #1x09skm
       ├─ .gitignore #1tm0llc
       ├─ .prettierignore #1ivaop6
       ├─ .vscode
