@@ -61,7 +61,7 @@ describe('create-modular-react-app', () => {
       "test-repo
       ├─ .editorconfig #1p4gvuw
       ├─ .eslintignore #1ot2bpo
-      ├─ .gitignore #21yvq5
+      ├─ .gitignore #175wbq
       ├─ .prettierignore #10uqwgj
       ├─ .vscode
       │  ├─ extensions.json #1i4584r
