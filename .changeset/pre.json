@@ -1,0 +1,15 @@
+{
+  "mode": "pre",
+  "tag": "next",
+  "initialVersions": {
+    "create-modular-react-app": "0.8.3",
+    "eslint-config-modular-app": "0.4.0",
+    "modular-scripts": "0.9.6",
+    "modular-site": "0.1.0",
+    "modular-views.macro": "1.2.2",
+    "tree-view-for-tests": "1.0.0"
+  },
+  "changesets": [
+    "chilly-stingrays-hunt"
+  ]
+}
