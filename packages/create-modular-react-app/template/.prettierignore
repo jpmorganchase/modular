@@ -1,4 +1,2 @@
 /dist
-/packages/*/dist
-/packages/*/build
-/packages/*/public
+/packages/**/public

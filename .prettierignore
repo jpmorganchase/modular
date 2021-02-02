@@ -1,3 +1,4 @@
 /dist
-packages/*/dist
-packages/modular-site/public
+packages/**/dist
+packages/**/build
+packages/**/public

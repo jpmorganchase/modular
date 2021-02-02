@@ -1,1 +1,37 @@
-.gitignore
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# Dependencies
+node_modules
+
+# created by tests in modular-scripts
+packages/sample-app
+packages/sample-view
+packages/sample-package
+
+# created by tests in modular-views.macro
+packages/view-1
+packages/view-2
+
+# Build output
+/packages/**/build/
+
+# Testing
+/coverage
+
+# Misc
+.DS_Store
+.eslintcache
+
+# Editors
+.idea
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+/dist
+
+# Used by typescript for incremental builds 
+.tsbuildinfo
+*.tsbuildinfo
