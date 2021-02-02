@@ -15,9 +15,6 @@ packages/view-2
 
 # Build output
 /packages/*/build/
-/packages/*/dist-cjs/
-/packages/*/dist-es/
-/packages/*/dist-types/
 
 # Testing
 /coverage
