@@ -1,5 +1,11 @@
 # modular-scripts
 
+## 0.9.7-next.0
+
+### Patch Changes
+
+- f035528: Allow arbitrary directory structures for packages
+
 ## 0.9.6
 
 ### Patch Changes
