@@ -1,5 +1,11 @@
 # create-modular-react-app
 
+## 0.8.4
+
+### Patch Changes
+
+- f035528: Allow arbitrary directory structures for packages
+
 ## 0.8.4-next.0
 
 ### Patch Changes
