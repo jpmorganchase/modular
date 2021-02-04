@@ -1,6 +1,6 @@
 {
   "name": "modular-scripts",
-  "version": "0.9.8-next.0",
+  "version": "0.9.8",
   "license": "Apache-2.0",
   "bin": {
     "modular": "build/cli.js"
