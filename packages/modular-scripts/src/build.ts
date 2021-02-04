@@ -272,8 +272,8 @@ async function makeBundle(
         include: [`${packagesRoot}/**/*`],
         exclude: 'node_modules/**',
       }),
-      postcss({ extract: false, modules: true }),
-      // TODO: add sass, css modules, dotenv
+      postcss({ extract: false }),
+      // TODO: add sass, dotenv
       json(),
       {
         // via tsdx
