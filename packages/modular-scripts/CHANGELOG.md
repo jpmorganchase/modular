@@ -1,5 +1,11 @@
 # modular-scripts
 
+## 0.9.10
+
+### Patch Changes
+
+- 84c7b2a: Don't convert all css files to css modules
+
 ## 0.9.9
 
 ### Patch Changes
