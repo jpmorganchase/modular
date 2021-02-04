@@ -1,5 +1,12 @@
 # create-modular-react-app
 
+## 0.8.6
+
+### Patch Changes
+
+- 52e4c3d: Better \*ignore files in new projects.
+- 308847e: Bumping versions for actually landing/releasing
+
 ## 0.8.5
 
 ### Patch Changes

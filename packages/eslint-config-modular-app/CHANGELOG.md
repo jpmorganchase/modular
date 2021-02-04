@@ -1,5 +1,11 @@
 # eslint-config-modular-app
 
+## 0.4.2
+
+### Patch Changes
+
+- 308847e: Bumping versions for actually landing/releasing
+
 ## 0.4.1
 
 ### Patch Changes
