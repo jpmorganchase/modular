@@ -1,5 +1,12 @@
 # modular-scripts
 
+## 0.9.9
+
+### Patch Changes
+
+- 1e94448: Install fewer dependencies
+- 308847e: Bumping versions for actually landing/releasing
+
 ## 0.9.8
 
 ### Patch Changes

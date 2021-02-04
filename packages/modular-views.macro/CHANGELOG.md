@@ -1,5 +1,11 @@
 # modular-views.macro
 
+## 1.2.5
+
+### Patch Changes
+
+- 308847e: Bumping versions for actually landing/releasing
+
 ## 1.2.4
 
 ### Patch Changes
