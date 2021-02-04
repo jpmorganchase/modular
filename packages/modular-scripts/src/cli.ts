@@ -71,6 +71,15 @@ function isModularType(dir: string, type: PackageType) {
   return false;
 }
 
+function isModularPackage(dir: string) {
+  const packageJsonPath = path.join(dir, 'package.json');
+  if (fs.existsSync(packageJsonPath)) {
+    const packageJson = fs.readJsonSync(packageJsonPath) as ModularPackageJson;
+    return !!packageJson.modular?.type;
+  }
+  return false;
+}
+
 // recursively get all files in a folder
 function getAllFiles(dirPath: string, arrayOfFiles: string[] = []) {
   const files = fs.readdirSync(dirPath);
@@ -95,6 +104,8 @@ async function run() {
     $ modular start
     $ modular build
     $ modular test
+    $ modular init-e2e
+    $ modular run-e2e
 `;
 
   await preflightCheck();
@@ -119,6 +130,10 @@ async function run() {
           argv._[1].split(','),
           argv['preserve-modules'] as boolean | undefined,
         );
+      case 'init-e2e':
+        return initE2E(argv._[1]);
+      case 'run-e2e':
+          return runE2E(argv._[1]);
       default:
         console.log(help);
         process.exit(1);
@@ -350,6 +365,81 @@ async function buildSequential(
       console.error(`building ${packagePaths[i]} failed`);
       throw err;
     }
+  }
+}
+
+// currently assumes cypress/e2e tests are not set up at all.
+async function initE2E(someArgs: any) {
+
+  // TODO: possibly detect and alter/generate global build yml files to set up cypress.
+
+  // TODO: check for user overrides and if the project is package or app.
+
+  // TODO: if no override, detect what kind if package is package or app.
+
+  // TODO: check if cypress is already set up
+
+  if(isModularType('./', 'root')) {
+    console.log(chalk.red('The "init-e2e" command can only be run inside a folder a modular type of "package", "view" or "app".'))
+  } else if(isModularType('./', 'view')) {
+    // TODO: e2e setup for views
+    console.warn('E2E setup not implemented for views');
+  } else if(isModularType('./', 'app')) {
+    await execa.command('yarn add -D cypress', {
+      stderr: process.stderr,
+      stdout: process.stdout
+    });
+
+    await execa.command('./node_modules/.bin/cypress open', {
+      stderr: process.stderr,
+      stdout: process.stdout
+    });
+
+  } else {  // assume we are in a package since it is the default.
+    // TODO: detect if there is JSX in which we integrate storybook
+    console.warn('E2E setup not implemented for packages');
+  }
+}
+
+function getE2EEnabledPackagePaths() {
+  const files = fs.readdirSync(packagesRoot)
+  const packagePaths = [];
+  for (const file of files) {
+    const packagePath = path.join(packagesRoot, file);
+    const stat = fs.lstatSync(packagePath);
+  
+    if(stat.isDirectory() && isModularPackage(packagePath)) {
+      const packageJson = fs.readJsonSync(path.join(packagePath, 'package.json')) as ModularPackageJson;
+      if(packageJson.devDependencies?.cypress) {
+        packagePaths.push(packagePath);
+      }
+    }
+  }
+  return packagePaths;
+}
+
+async function runE2E(someArgs: any) {
+  // if run in root it will run every packages e2e that has e2e set up.
+  if(isModularType('./', 'root')) {
+    const e2eEnabledPackagePaths = getE2EEnabledPackagePaths();
+    for(const packagePath of e2eEnabledPackagePaths) {
+      await execa.command('./node_modules/.bin/cypress run', {
+        stderr: process.stderr,
+        stdout: process.stdout,
+        cwd: packagePath
+      });
+
+      // TODO: collect all coverage and merge
+    }
+  } else if(isModularType('./', 'view')) {
+    console.warn('E2E setup not implemented for views');
+  } else if(isModularType('./', 'app')) {
+    await execa.command('./node_modules/.bin/cypress run', {
+      stderr: process.stderr,
+      stdout: process.stdout
+    });
+  } else {
+    console.warn('E2E setup not implemented for packages');
   }
 }
 
