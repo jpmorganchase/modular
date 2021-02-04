@@ -1,5 +1,17 @@
 # eslint-config-modular-app
 
+## 0.4.1
+
+### Patch Changes
+
+- ecb9880: Bumping versions to overcome a bad prelease publish.
+
+## 0.4.1-next.0
+
+### Patch Changes
+
+- ecb9880: Bumping versions to overcome a bad prelease publish.
+
 ## 0.4.0
 
 ### Minor Changes

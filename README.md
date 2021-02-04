@@ -17,15 +17,17 @@ and [Yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces/).
 
 #### `yarn create modular-react-app <project-name>`
 
-Bootstraps a new project, configured to use workspaces.
+Bootstraps a new project, configured to use
+[Yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces/).
 
-This also creates a workspace named 'app' containing a fresh application written
-in [TypeScript](https://www.typescriptlang.org/).
+This also creates a workspace named 'app' containing a fresh
+[`create-react-app`](https://create-react-app.dev/) application written in
+[TypeScript](https://www.typescriptlang.org/).
 
-#### `yarn modular add <module-name>`
+#### `yarn modular add <path/to/package>`
 
-Adds a new package by creating a new workspace under `packages/`. Packages can
-currently be one of 3 types:
+Adds a new package by creating a new workspace at `packages/path/to/package`.
+Packages can currently be one of 3 types:
 
 - A standalone application. This corresponds to a single `create-react-app`
   project in a workspace. Inside this workspace, you can import packages from
@@ -40,7 +42,7 @@ currently be one of 3 types:
   utility, tool, or whatever your needs require you to do. As an example, you
   could build a node.js server inside one of these.
 
-#### `yarn modular start <app-name>`
+#### `yarn modular start <path/to/package>`
 
 Runs
 [`react-scripts start`](https://create-react-app.dev/docs/getting-started#npm-start-or-yarn-start)
@@ -48,26 +50,24 @@ against the selected app.
 
 #### `yarn modular test`
 
-Runs [`react-scripts test`](https://create-react-app.dev/docs/running-tests)
-against the entire `modular` project.
+Runs [`jest`](https://jestjs.io/) against the entire `modular` project.
 
-#### `yarn modular build <app-name>`
+#### `yarn modular build <path/to/package>`
 
 Runs [`react-scripts build`](https://create-react-app.dev/docs/production-build)
 against the selected app.
 
 ## Config
 
+#### `modular/setupEnvironment.ts`
+
+This contains the setup for tests corresponding to
+[`jest.config.js#setupFiles`](https://jestjs.io/docs/en/configuration#setupfiles-array).
+
 #### `modular/setupTests.ts`
 
-This contains the setup for tests (e.g.
-[`jest.config.js#setupFilesAfterEnv`](https://jestjs.io/docs/en/configuration#setupfilesafterenv-array)).
-
-Unlike `create-react-app` which stores the setup for tests in an individual
-application's
-[`src/setupTests.ts`](https://create-react-app.dev/docs/running-tests/#srcsetuptestsjs)
-we place it at the root of the project within `modular/setupTests.ts` where it
-applies to the whole project.
+This contains the setup for tests corresponding to
+[`jest.config.js#setupFilesAfterEnv`](https://jestjs.io/docs/en/configuration#setupfilesafterenv-array).
 
 #### `package.json#modular`
 

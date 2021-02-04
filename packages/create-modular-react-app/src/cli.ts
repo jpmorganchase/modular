@@ -84,7 +84,7 @@ export default function createModularApp(argv: {
   fs.writeJsonSync(projectPackageJsonPath, {
     ...fs.readJsonSync(projectPackageJsonPath),
     private: true,
-    workspaces: ['packages/*'],
+    workspaces: ['packages/**'],
     modular: {
       type: 'root',
     },
@@ -147,6 +147,7 @@ export default function createModularApp(argv: {
       'add',
       'app',
       '--unstable-type=app',
+      '--unstable-name=app',
       '--silent',
       ...preferOfflineArg,
     ],

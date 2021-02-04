@@ -1,5 +1,29 @@
 # create-modular-react-app
 
+## 0.8.5
+
+### Patch Changes
+
+- ecb9880: Bumping versions to overcome a bad prelease publish.
+
+## 0.8.5-next.0
+
+### Patch Changes
+
+- ecb9880: Bumping versions to overcome a bad prelease publish.
+
+## 0.8.4
+
+### Patch Changes
+
+- f035528: Allow arbitrary directory structures for packages
+
+## 0.8.4-next.0
+
+### Patch Changes
+
+- f035528: Allow arbitrary directory structures for packages
+
 ## 0.8.3
 
 ### Patch Changes

@@ -1,5 +1,29 @@
 # modular-views.macro
 
+## 1.2.4
+
+### Patch Changes
+
+- ecb9880: Bumping versions to overcome a bad prelease publish.
+
+## 1.2.4-next.0
+
+### Patch Changes
+
+- ecb9880: Bumping versions to overcome a bad prelease publish.
+
+## 1.2.3
+
+### Patch Changes
+
+- f035528: Allow arbitrary directory structures for packages
+
+## 1.2.3-next.0
+
+### Patch Changes
+
+- f035528: Allow arbitrary directory structures for packages
+
 ## 1.2.2
 
 ### Patch Changes

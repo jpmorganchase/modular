@@ -7,6 +7,7 @@ import { ImportDeclaration, Program, Statement } from '@babel/types';
 import { default as _template } from '@babel/template';
 import { createMacro, MacroHandler } from 'babel-plugin-macros';
 import { LazyExoticComponent, ComponentType } from 'react';
+import execa from 'execa';
 
 type PackageType = 'app' | 'view' | 'root'; // | 'package', the default
 
@@ -31,29 +32,31 @@ if (!modularRoot) {
   throw new Error('This macro can only be used inside a modular project.');
 }
 
-const viewsDirectoryPath = path.join(path.dirname(modularRoot), 'packages');
-
 const packageNames = [];
-for (const entry of fs.readdirSync(viewsDirectoryPath, {
-  withFileTypes: true,
-})) {
-  if (entry.isDirectory()) {
-    const pkgJsonPath = path.join(
-      viewsDirectoryPath,
-      entry.name,
-      'package.json',
-    );
-    if (fs.existsSync(pkgJsonPath)) {
-      const pkgJson = fs.readJSONSync(pkgJsonPath) as ModularPackageJson;
-      if (
-        pkgJson &&
-        pkgJson.private !== true &&
-        pkgJson.modular &&
-        pkgJson.modular.type === 'view'
-      ) {
-        packageNames.push(entry.name);
-      }
-    }
+
+const modularRootDir = path.dirname(modularRoot);
+const output = execa.sync('yarnpkg', ['workspaces', 'info'], {
+  all: true,
+  reject: false,
+  cwd: modularRootDir,
+  cleanup: true,
+});
+
+const workspaces: Array<[string, { location: string }]> = Object.entries(
+  JSON.parse(output.stdout),
+);
+
+for (const [name, { location }] of workspaces) {
+  const pkgJson = fs.readJSONSync(
+    path.join(modularRootDir, location, 'package.json'),
+  ) as ModularPackageJson;
+  if (
+    pkgJson &&
+    pkgJson.private !== true &&
+    pkgJson.modular &&
+    pkgJson.modular.type === 'view'
+  ) {
+    packageNames.push(name);
   }
 }
 
