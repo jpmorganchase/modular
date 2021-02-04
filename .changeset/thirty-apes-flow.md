@@ -2,6 +2,7 @@
 'create-modular-react-app': patch
 'modular-scripts': patch
 'modular-views.macro': patch
+'eslint-config-modular-app': patch
 ---
 
-Allow arbitrary directory structures for packages
+Bumping versions to overcome a bad prelease publish.
