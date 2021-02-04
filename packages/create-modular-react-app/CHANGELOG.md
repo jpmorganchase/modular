@@ -1,5 +1,11 @@
 # create-modular-react-app
 
+## 0.8.5-next.0
+
+### Patch Changes
+
+- ecb9880: Bumping versions to overcome a bad prelease publish.
+
 ## 0.8.4
 
 ### Patch Changes
