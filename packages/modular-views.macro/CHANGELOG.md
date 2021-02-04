@@ -1,5 +1,11 @@
 # modular-views.macro
 
+## 1.2.4-next.0
+
+### Patch Changes
+
+- ecb9880: Bumping versions to overcome a bad prelease publish.
+
 ## 1.2.3
 
 ### Patch Changes
