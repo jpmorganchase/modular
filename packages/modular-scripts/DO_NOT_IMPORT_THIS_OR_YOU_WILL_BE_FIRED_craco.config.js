@@ -44,6 +44,16 @@ module.exports = {
         // This is needed because the plugin imports from `@finos/perspective`
         // and would crash if imported when `@finos/perspective` isn't installed
         require.resolve('@finos/perspective');
+        try {
+          require.resolve('@finos/perspective-webpack-plugin');
+        } catch (err) {
+          console.info(
+            "It appears you're using `@finos/perspective`. Run `yarn install @finos/perspective-webpack-plugin`, and modular will automatically optimise its bundling to be more efficient as described in https://github.com/finos/perspective/tree/master/packages/perspective-webpack-plugin.",
+          );
+          throw err;
+        }
+        // both perspective and its webpack plugin are available, let's
+        // add it to our webpack pipeline.
         const PerspectivePlugin = require('@finos/perspective-webpack-plugin');
         webpackConfig.plugins.push(new PerspectivePlugin());
       } catch (err) {
