@@ -105,5 +105,4 @@ This type identifies a standalone application that can be started or built.
 ##### `"package"`
 
 This type identifies a regular package (e.g. a library that can be used by other
-`"view"` or `"app"` modules). s a regular package (e.g. a library that can be
-used by other `"view"` or `"app"` modules).
+`"view"` or `"app"` modules).
