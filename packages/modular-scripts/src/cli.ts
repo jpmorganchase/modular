@@ -7,6 +7,9 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 import chalk from 'chalk';
 import resolve from 'resolve';
+import waitOn from 'wait-on';
+import terminate from 'terminate';
+
 import {
   pascalCase as toPascalCase,
   paramCase as toParamCase,
@@ -105,7 +108,7 @@ async function run() {
     $ modular build
     $ modular test
     $ modular init-e2e
-    $ modular run-e2e
+    $ modular e2e
 `;
 
   await preflightCheck();
@@ -132,7 +135,7 @@ async function run() {
         );
       case 'init-e2e':
         return initE2E(argv._[1]);
-      case 'run-e2e':
+      case 'e2e':
           return runE2E(argv._[1]);
       default:
         console.log(help);
@@ -337,6 +340,7 @@ function test(args: string[]) {
 function start(appPath: string) {
   const modularRoot = getModularRoot();
 
+  console.log(path.join(modularRoot, packagesRoot, appPath));
   if (!isModularType(path.join(modularRoot, packagesRoot, appPath), 'app')) {
     throw new Error(`The package at ${appPath} is not a valid modular app.`);
   }
@@ -369,8 +373,7 @@ async function buildSequential(
 }
 
 // currently assumes cypress/e2e tests are not set up at all.
-async function initE2E(someArgs: any) {
-
+async function initE2E(someArgs: string) {
   // TODO: possibly detect and alter/generate global build yml files to set up cypress.
 
   // TODO: check for user overrides and if the project is package or app.
@@ -385,12 +388,7 @@ async function initE2E(someArgs: any) {
     // TODO: e2e setup for views
     console.warn('E2E setup not implemented for views');
   } else if(isModularType('./', 'app')) {
-    await execa.command('yarn add -D cypress', {
-      stderr: process.stderr,
-      stdout: process.stdout
-    });
-
-    await execa.command('./node_modules/.bin/cypress open', {
+    await execa.command('cypress open', {
       stderr: process.stderr,
       stdout: process.stdout
     });
@@ -402,15 +400,13 @@ async function initE2E(someArgs: any) {
 }
 
 function getE2EEnabledPackagePaths() {
-  const files = fs.readdirSync(packagesRoot)
+  const files = fs.readdirSync(packagesRoot);
   const packagePaths = [];
   for (const file of files) {
     const packagePath = path.join(packagesRoot, file);
     const stat = fs.lstatSync(packagePath);
-  
     if(stat.isDirectory() && isModularPackage(packagePath)) {
-      const packageJson = fs.readJsonSync(path.join(packagePath, 'package.json')) as ModularPackageJson;
-      if(packageJson.devDependencies?.cypress) {
+      if(fs.readdirSync(packagePath).includes('cypress.json')) {
         packagePaths.push(packagePath);
       }
     }
@@ -419,27 +415,43 @@ function getE2EEnabledPackagePaths() {
 }
 
 async function runE2E(someArgs: any) {
-  // if run in root it will run every packages e2e that has e2e set up.
   if(isModularType('./', 'root')) {
-    const e2eEnabledPackagePaths = getE2EEnabledPackagePaths();
+    const e2eEnabledPackagePaths = getE2EEnabledPackagePaths()
     for(const packagePath of e2eEnabledPackagePaths) {
-      await execa.command('./node_modules/.bin/cypress run', {
+      // cypress should be installed in workspaces root node-modules
+      const packageName = packagePath.split('/')[1];
+
+      const devServerProcess = execa.command(`BROWSER=none ./node_modules/.bin/modular start ./${packageName}`, {
+        shell: true,
+        stderr: process.stderr,
+        stdout: process.stdout
+      })
+      
+      console.log(`"${packageName}": starting app server`)
+
+      await waitOn({ 
+        timeout: 20000,
+        resources: ['http://localhost:3000/index.html'], 
+      })
+
+      console.log(`"${packageName}": app server started`)
+
+      await execa.commandSync('../../node_modules/.bin/cypress run --config video=false', {
         stderr: process.stderr,
         stdout: process.stdout,
         cwd: packagePath
-      });
+      })
+
+      console.log(`"${packageName}": killing app server`)
+
+      await terminate(devServerProcess.pid); // 'terminate' helps kill the child server process, https://github.com/sindresorhus/execa/issues/96
+
+      console.log(`"${packageName}": killed app server`)
 
       // TODO: collect all coverage and merge
     }
-  } else if(isModularType('./', 'view')) {
-    console.warn('E2E setup not implemented for views');
-  } else if(isModularType('./', 'app')) {
-    await execa.command('./node_modules/.bin/cypress run', {
-      stderr: process.stderr,
-      stdout: process.stdout
-    });
   } else {
-    console.warn('E2E setup not implemented for packages');
+    console.log('can only be run in a modular workspace in the root folder.')
   }
 }
 

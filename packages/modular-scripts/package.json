@@ -26,6 +26,7 @@
     "builtin-modules": "^3.1.0",
     "chalk": "^4.1.0",
     "change-case": "^4.1.1",
+    "cypress": "^6.4.0",
     "execa": "^4.0.3",
     "find-up": "^5.0.0",
     "fs-extra": "^9.0.1",
@@ -39,7 +40,9 @@
     "rimraf": "^3.0.2",
     "rollup": "^2.38.3",
     "rollup-plugin-postcss": "^3.1.8",
-    "update-notifier": "^5.0.1"
+    "terminate": "^2.1.2",
+    "update-notifier": "^5.0.1",
+    "wait-on": "^5.2.1"
   },
   "devDependencies": {
     "@schemastore/package": "^0.0.6",
