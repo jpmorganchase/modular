@@ -92,7 +92,6 @@ export default function createModularApp(argv: {
       start: 'modular start app',
       build: 'modular build app',
       test: 'modular test',
-      e2e: 'modular e2e',
       lint: 'eslint . --ext .js,.ts,.tsx',
       prettier: 'prettier --write .',
     },
