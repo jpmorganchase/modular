@@ -134,6 +134,7 @@ async function startApp(appPath: string): Promise<DevServer> {
 
 afterAll(() => {
   rimraf.sync(path.join(packagesPath, 'sample-app'));
+  rimraf.sync(path.join(packagesPath, 'sample-e2e-app'));
   rimraf.sync(path.join(packagesPath, 'sample-view'));
   rimraf.sync(path.join(packagesPath, 'sample-package'));
   rimraf.sync(path.join(packagesPath, 'nested/sample-nested-package'));
@@ -337,6 +338,41 @@ describe('modular-scripts', () => {
     expect(cleanedOutput).toContain(
       'PASS packages/nested/sample-nested-package/src/__tests__/index.test.ts',
     );
+  });
+
+  it('can run e2e tests for apps configured with cypress', async () => {
+    // set up another app with e2e tests
+    await modular(
+      'add sample-e2e-app --unstable-type=app --unstable-name=sample-e2e-app',
+      { stdio: 'inherit' },
+    );
+
+    // // copy test file in.
+    await fs.copyFile(
+      path.join(__dirname, 'TestApp.test-tsx'),
+      path.join(packagesPath, 'sample-e2e-app', 'src', 'App.tsx'),
+    );
+
+    // setup cypress folders and copy in files.
+    await fs.copyFile(
+      path.join(__dirname, 'cypressTestSetup', 'cypress.json'),
+      path.join(packagesPath, 'sample-e2e-app', 'cypress.json'),
+    );
+    await fs.mkdir(
+      path.join(packagesPath, 'sample-e2e-app', 'cypress')
+    );
+    await fs.mkdir(
+      path.join(packagesPath, 'sample-e2e-app', 'cypress', 'integration')
+    );
+    await fs.copyFile(
+      path.join(__dirname, 'cypressTestSetup', 'actions.spec-js'),
+      path.join(packagesPath, 'sample-e2e-app', 'cypress', 'integration', 'actions.spec.js'),
+    );
+
+    const output = JSON.stringify(await modular('e2e'));
+    // eslint-disable-next-line no-control-regex
+    expect(output).toContain('✔  actions.spec.js')
+    expect(output).toContain('✔  All specs passed!')
   });
 
   it('can build libraries', async () => {

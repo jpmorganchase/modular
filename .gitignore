@@ -5,8 +5,10 @@ node_modules
 
 # created by tests in modular-scripts
 packages/sample-app
+packages/sample-e2e-app
 packages/sample-view
 packages/sample-package
+packages/nested
 
 # created by tests in modular-views.macro
 packages/view-1

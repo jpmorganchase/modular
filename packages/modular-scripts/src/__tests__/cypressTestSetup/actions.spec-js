@@ -1,0 +1,14 @@
+/// <reference types="cypress" />
+
+context('Actions', () => {
+  beforeEach(() => {
+    cy.visit('localhost:3000')
+  })
+
+  // https://on.cypress.io/interacting-with-elements
+
+  it('has the learn react link', () => {
+    // https://on.cypress.io/type
+    cy.get('[data-testid="test-this"]').should('contain', 'this is a modular app')
+  })
+})

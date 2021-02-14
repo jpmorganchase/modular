@@ -136,6 +136,7 @@ describe('create-modular-react-app', () => {
         "private": true,
         "scripts": Object {
           "build": "modular build app",
+          "e2e": "modular e2e",
           "lint": "eslint . --ext .js,.ts,.tsx",
           "prettier": "prettier --write .",
           "start": "modular start app",

@@ -136,7 +136,7 @@ async function run() {
       case 'init-e2e':
         return initE2E(argv._[1]);
       case 'e2e':
-          return runE2E(argv._[1]);
+          return runE2E();
       default:
         console.log(help);
         process.exit(1);
@@ -414,7 +414,7 @@ function getE2EEnabledPackagePaths() {
   return packagePaths;
 }
 
-async function runE2E(someArgs: any) {
+async function runE2E() {
   if(isModularType('./', 'root')) {
     const e2eEnabledPackagePaths = getE2EEnabledPackagePaths()
     for(const packagePath of e2eEnabledPackagePaths) {
@@ -430,14 +430,14 @@ async function runE2E(someArgs: any) {
       console.log(`"${packageName}": app server started`)
 
       // Disable video for a speed up.
-      await execa.commandSync('../../node_modules/.bin/cypress run --config video=false', {
+      execa.commandSync('../../node_modules/.bin/cypress run --config video=false', {
         stderr: process.stderr,
         stdout: process.stdout,
         cwd: packagePath
       })
 
       console.log(`"${packageName}": killing app server`)
-      await terminate(devServerProcess.pid); // 'terminate' helps kill the child server process, https://github.com/sindresorhus/execa/issues/96
+      terminate(devServerProcess.pid); // 'terminate' helps kill the child server process, https://github.com/sindresorhus/execa/issues/96
       console.log(`"${packageName}": killed app server`)
 
       // TODO: collect all coverage and merge
