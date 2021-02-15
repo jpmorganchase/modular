@@ -421,13 +421,13 @@ async function runE2E() {
       // cypress should be installed in workspaces root node-modules
       const packageName = packagePath.split('/')[1];
 
-      console.log(`"${packageName}": starting app server`)
+      console.log(`"${packageName}": starting dev server`)
       const devServerProcess = execa.command(`BROWSER=none ./node_modules/.bin/modular start ./${packageName}`, { shell: true })
       await waitOn({ 
         timeout: 20000,
         resources: ['http://localhost:3000/index.html'],  // assuming port 3000 since all modular apps are created to run on it.
       })
-      console.log(`"${packageName}": app server started`)
+      console.log(`"${packageName}": dev server started`)
 
       // Disable video for a speed up.
       execa.commandSync('../../node_modules/.bin/cypress run --config video=false', {
@@ -436,9 +436,9 @@ async function runE2E() {
         cwd: packagePath
       })
 
-      console.log(`"${packageName}": killing app server`)
+      console.log(`"${packageName}": killing dev server`)
       terminate(devServerProcess.pid); // 'terminate' helps kill the child server process, https://github.com/sindresorhus/execa/issues/96
-      console.log(`"${packageName}": killed app server`)
+      console.log(`"${packageName}": killed dev server`)
 
       // TODO: collect all coverage and merge
     }

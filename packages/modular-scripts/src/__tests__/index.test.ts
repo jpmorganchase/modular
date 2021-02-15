@@ -347,7 +347,7 @@ describe('modular-scripts', () => {
       { stdio: 'inherit' },
     );
 
-    // // copy test file in.
+    // copy test file in.
     await fs.copyFile(
       path.join(__dirname, 'TestApp.test-tsx'),
       path.join(packagesPath, 'sample-e2e-app', 'src', 'App.tsx'),
