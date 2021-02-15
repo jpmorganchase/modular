@@ -340,7 +340,6 @@ function test(args: string[]) {
 function start(appPath: string) {
   const modularRoot = getModularRoot();
 
-  console.log(path.join(modularRoot, packagesRoot, appPath));
   if (!isModularType(path.join(modularRoot, packagesRoot, appPath), 'app')) {
     throw new Error(`The package at ${appPath} is not a valid modular app.`);
   }
