@@ -6,7 +6,4 @@
     "packages/modular-scripts/types/",
     "packages/create-modular-react-app/template/"
   ],
-  "compilerOptions": {
-    "typeRoots": ["./node_modules/@types", "./packages/modular-scripts/@types"]
-  }
 }

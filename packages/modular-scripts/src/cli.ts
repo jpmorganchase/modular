@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/// <reference path="./terminate" />
 
 import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import mri from 'mri';
