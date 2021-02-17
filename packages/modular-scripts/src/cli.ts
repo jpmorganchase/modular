@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-/// <reference path="./terminate" />
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference path="./terminate.d.ts" />
 
 import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import mri from 'mri';
