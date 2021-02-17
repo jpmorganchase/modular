@@ -137,7 +137,7 @@ async function run() {
       case 'init-e2e':
         return initE2E(argv._[1]);
       case 'e2e':
-          return runE2E();
+        return runE2E();
       default:
         console.log(help);
         process.exit(1);
@@ -382,18 +382,22 @@ async function initE2E(someArgs: string) {
 
   // TODO: check if cypress is already set up
 
-  if(isModularType('./', 'root')) {
-    console.log(chalk.red('The "init-e2e" command can only be run inside a folder a modular type of "package", "view" or "app".'))
-  } else if(isModularType('./', 'view')) {
+  if (isModularType('./', 'root')) {
+    console.log(
+      chalk.red(
+        'The "init-e2e" command can only be run inside a folder a modular type of "package", "view" or "app".',
+      ),
+    );
+  } else if (isModularType('./', 'view')) {
     // TODO: e2e setup for views
     console.warn('E2E setup not implemented for views');
-  } else if(isModularType('./', 'app')) {
+  } else if (isModularType('./', 'app')) {
     await execa.command('cypress open', {
       stderr: process.stderr,
-      stdout: process.stdout
+      stdout: process.stdout,
     });
-
-  } else {  // assume we are in a package since it is the default.
+  } else {
+    // assume we are in a package since it is the default.
     // TODO: detect if there is JSX in which we integrate storybook
     console.warn('E2E setup not implemented for packages');
   }
@@ -405,8 +409,8 @@ function getE2EEnabledPackagePaths() {
   for (const file of files) {
     const packagePath = path.join(packagesRoot, file);
     const stat = fs.lstatSync(packagePath);
-    if(stat.isDirectory() && isModularPackage(packagePath)) {
-      if(fs.readdirSync(packagePath).includes('cypress.json')) {
+    if (stat.isDirectory() && isModularPackage(packagePath)) {
+      if (fs.readdirSync(packagePath).includes('cypress.json')) {
         packagePaths.push(packagePath);
       }
     }
@@ -415,35 +419,41 @@ function getE2EEnabledPackagePaths() {
 }
 
 async function runE2E() {
-  if(isModularType('./', 'root')) {
-    const e2eEnabledPackagePaths = getE2EEnabledPackagePaths()
-    for(const packagePath of e2eEnabledPackagePaths) {
+  if (isModularType('./', 'root')) {
+    const e2eEnabledPackagePaths = getE2EEnabledPackagePaths();
+    for (const packagePath of e2eEnabledPackagePaths) {
       // cypress should be installed in workspaces root node-modules
       const packageName = packagePath.split('/')[1];
 
-      console.log(`"${packageName}": starting dev server`)
-      const devServerProcess = execa.command(`BROWSER=none ./node_modules/.bin/modular start ./${packageName}`, { shell: true })
-      await waitOn({ 
+      console.log(`"${packageName}": starting dev server`);
+      const devServerProcess = execa.command(
+        `BROWSER=none ./node_modules/.bin/modular start ./${packageName}`,
+        { shell: true },
+      );
+      await waitOn({
         timeout: 20000,
-        resources: ['http://localhost:3000/index.html'],  // assuming port 3000 since all modular apps are created to run on it.
-      })
-      console.log(`"${packageName}": dev server started`)
+        resources: ['http://localhost:3000/index.html'], // assuming port 3000 since all modular apps are created to run on it.
+      });
+      console.log(`"${packageName}": dev server started`);
 
       // Disable video for a speed up.
-      execa.commandSync('../../node_modules/.bin/cypress run --config video=false', {
-        stderr: process.stderr,
-        stdout: process.stdout,
-        cwd: packagePath
-      })
+      execa.commandSync(
+        '../../node_modules/.bin/cypress run --config video=false',
+        {
+          stderr: process.stderr,
+          stdout: process.stdout,
+          cwd: packagePath,
+        },
+      );
 
-      console.log(`"${packageName}": killing dev server`)
+      console.log(`"${packageName}": killing dev server`);
       terminate(devServerProcess.pid); // 'terminate' helps kill the child server process, https://github.com/sindresorhus/execa/issues/96
-      console.log(`"${packageName}": killed dev server`)
+      console.log(`"${packageName}": killed dev server`);
 
       // TODO: collect all coverage and merge
     }
   } else {
-    console.log('can only be run in a modular workspace in the root folder.')
+    console.log('can only be run in a modular workspace in the root folder.');
   }
 }
 

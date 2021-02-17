@@ -358,21 +358,25 @@ describe('modular-scripts', () => {
       path.join(__dirname, 'cypressTestSetup', 'cypress.json'),
       path.join(packagesPath, 'sample-e2e-app', 'cypress.json'),
     );
+    await fs.mkdir(path.join(packagesPath, 'sample-e2e-app', 'cypress'));
     await fs.mkdir(
-      path.join(packagesPath, 'sample-e2e-app', 'cypress')
-    );
-    await fs.mkdir(
-      path.join(packagesPath, 'sample-e2e-app', 'cypress', 'integration')
+      path.join(packagesPath, 'sample-e2e-app', 'cypress', 'integration'),
     );
     await fs.copyFile(
       path.join(__dirname, 'cypressTestSetup', 'actions.spec-js'),
-      path.join(packagesPath, 'sample-e2e-app', 'cypress', 'integration', 'actions.spec.js'),
+      path.join(
+        packagesPath,
+        'sample-e2e-app',
+        'cypress',
+        'integration',
+        'actions.spec.js',
+      ),
     );
 
     const output = JSON.stringify(await modular('e2e'));
     // eslint-disable-next-line no-control-regex
-    expect(output).toContain('✔  actions.spec.js')
-    expect(output).toContain('✔  All specs passed!')
+    expect(output).toContain('✔  actions.spec.js');
+    expect(output).toContain('✔  All specs passed!');
   });
 
   it('can build libraries', async () => {
