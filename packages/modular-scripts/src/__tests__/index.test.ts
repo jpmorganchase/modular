@@ -375,7 +375,6 @@ describe('modular-scripts', () => {
 
     const output = await modular('e2e');
 
-
     // eslint-disable-next-line no-control-regex
     const cleanedOutput = output.all?.replace(/|\[\d+./gm, '');
     expect(cleanedOutput).toContain('✔  actions.spec.js');
