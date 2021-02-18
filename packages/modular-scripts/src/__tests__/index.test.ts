@@ -373,10 +373,13 @@ describe('modular-scripts', () => {
       ),
     );
 
-    const output = JSON.stringify(await modular('e2e'));
+    const output = await modular('e2e');
 
-    expect(output).toContain('✔  actions.spec.js');
-    expect(output).toContain('✔  All specs passed!');
+
+    // eslint-disable-next-line no-control-regex
+    const cleanedOutput = output.all?.replace(/|\[\d+./gm, '');
+    expect(cleanedOutput).toContain('✔  actions.spec.js');
+    expect(cleanedOutput).toContain('✔  All specs passed!');
   });
 
   it('can build libraries', async () => {
