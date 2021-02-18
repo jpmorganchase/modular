@@ -374,7 +374,7 @@ describe('modular-scripts', () => {
     );
 
     const output = JSON.stringify(await modular('e2e'));
-    // eslint-disable-next-line no-control-regex
+
     expect(output).toContain('✔  actions.spec.js');
     expect(output).toContain('✔  All specs passed!');
   });
