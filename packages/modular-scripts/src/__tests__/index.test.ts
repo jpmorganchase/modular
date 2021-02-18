@@ -363,7 +363,7 @@ describe('modular-scripts', () => {
       path.join(packagesPath, 'sample-e2e-app', 'cypress', 'integration'),
     );
     await fs.copyFile(
-      path.join(__dirname, 'cypressTestSetup', 'actions.spec-js'),
+      path.join(__dirname, 'cypressTestSetup', 'actions.spec-ts'),
       path.join(
         packagesPath,
         'sample-e2e-app',
