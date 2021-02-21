@@ -1,3 +1,5 @@
+/* eslint-disable import/first */
+require('leaked-handles');
 import execa from 'execa';
 import rimraf from 'rimraf';
 import tree from 'tree-view-for-tests';
@@ -383,7 +385,7 @@ describe('modular-scripts', () => {
 
     // eslint-disable-next-line no-control-regex
     const cleanedOutput = output.all?.replace(/|\[\d+./gm, '');
-
+    
     expect(cleanedOutput).toContain('✔  actions.spec.js');
     expect(cleanedOutput).toContain('✔  All specs passed!');
   });
