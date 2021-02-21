@@ -38,7 +38,7 @@ function modular(str: string, opts: Record<string, unknown> = {}) {
 async function startApp(appPath: string): Promise<DevServer> {
   const devServer = execa('yarnpkg', ['modular', 'start', `${appPath}`], {
     cwd: modularRoot,
-    cleanup: true
+    cleanup: true,
   });
 
   await new Promise((resolve, reject) => {
@@ -148,10 +148,9 @@ afterAll(() => {
 
 describe('modular-scripts', () => {
   it('can add an app', async () => {
-    modular(
-      'add sample-app --unstable-type=app --unstable-name=sample-app',
-      { stdio: 'inherit' },
-    );
+    modular('add sample-app --unstable-type=app --unstable-name=sample-app', {
+      stdio: 'inherit',
+    });
 
     // Let's replace the App module with something of our own
     // with a test specific element we can introspect
