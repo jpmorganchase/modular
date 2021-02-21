@@ -28,7 +28,7 @@ jest.setTimeout(10 * 60 * 1000);
 const packagesPath = path.join(getModularRoot(), 'packages');
 
 function modular(str: string, opts: Record<string, unknown> = {}) {
-  return execa.sync('yarnpkg', ['modular', ...str.split(' ')], {
+  return execa('yarnpkg', ['modular', ...str.split(' ')], {
     cwd: modularRoot,
     cleanup: true,
     ...opts,
@@ -36,8 +36,7 @@ function modular(str: string, opts: Record<string, unknown> = {}) {
 }
 
 async function startApp(appPath: string): Promise<DevServer> {
-  const devServer = execa('yarnpkg', ['modular', 'start', `${appPath}`], {
-    cwd: modularRoot,
+  const devServer = modular(`start ${appPath}`, {
     cleanup: true,
   });
 
@@ -141,16 +140,17 @@ afterAll(() => {
   rimraf.sync(path.join(packagesPath, 'nested/sample-nested-package'));
   rimraf.sync(path.join(modularRoot, 'dist'));
   // run yarn so yarn.lock gets reset
-  return execa('yarnpkg', [], {
+  return execa.sync('yarnpkg', [], {
     cwd: modularRoot,
   });
 });
 
 describe('modular-scripts', () => {
   it('can add an app', async () => {
-    modular('add sample-app --unstable-type=app --unstable-name=sample-app', {
-      stdio: 'inherit',
-    });
+    await modular(
+      'add sample-app --unstable-type=app --unstable-name=sample-app',
+      { stdio: 'inherit' },
+    );
 
     // Let's replace the App module with something of our own
     // with a test specific element we can introspect
@@ -252,8 +252,8 @@ describe('modular-scripts', () => {
     /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
   });
 
-  it('can add a view', () => {
-    modular(
+  it('can add a view', async () => {
+    await modular(
       'add sample-view --unstable-type=view --unstable-name=sample-view',
       { stdio: 'inherit' },
     );
@@ -268,8 +268,8 @@ describe('modular-scripts', () => {
     `);
   });
 
-  it('can add a package', () => {
-    modular(
+  it('can add a package', async () => {
+    await modular(
       'add sample-package --unstable-type=package --unstable-name=sample-package',
       {
         stdio: 'inherit',
@@ -287,8 +287,8 @@ describe('modular-scripts', () => {
     `);
   });
 
-  it('can add a nested package', () => {
-    modular(
+  it('can add a nested package', async () => {
+    await modular(
       'add nested/sample-nested-package --unstable-type=package --unstable-name=@nested/sample-package',
       {
         stdio: 'inherit',
@@ -306,8 +306,8 @@ describe('modular-scripts', () => {
     `);
   });
 
-  it('can execute tests', () => {
-    const output = modular(
+  it('can execute tests', async () => {
+    const output = await modular(
       'test sample-app sample-package sample-view sample-nested-package --watchAll=false',
       {
         all: true,
@@ -324,7 +324,7 @@ describe('modular-scripts', () => {
     // Open to suggestions/fixes.
 
     // eslint-disable-next-line no-control-regex
-    const cleanedOutput = output.stderr?.replace(/|\[\d+./gm, '');
+    const cleanedOutput = output.all?.replace(/|\[\d+./gm, '');
 
     expect(cleanedOutput).toContain(
       'PASS packages/sample-app/src/__tests__/App.test.tsx',
@@ -342,12 +342,12 @@ describe('modular-scripts', () => {
 
   it('can run e2e tests for apps configured with cypress', async () => {
     // set up another app with e2e tests
-    modular(
+    await modular(
       'add sample-e2e-app --unstable-type=app --unstable-name=sample-e2e-app',
       { stdio: 'inherit' },
     );
 
-    // // copy test file in.
+    // copy test file in.
     await fs.copyFile(
       path.join(__dirname, 'TestApp.test-tsx'),
       path.join(packagesPath, 'sample-e2e-app', 'src', 'App.tsx'),
@@ -373,7 +373,7 @@ describe('modular-scripts', () => {
       ),
     );
 
-    const output = modular('e2e', {
+    const output = await modular('e2e', {
       all: true,
       reject: false,
       env: {
@@ -382,7 +382,7 @@ describe('modular-scripts', () => {
     });
 
     // eslint-disable-next-line no-control-regex
-    const cleanedOutput = output.stdout?.replace(/|\[\d+./gm, '');
+    const cleanedOutput = output.all?.replace(/|\[\d+./gm, '');
 
     expect(cleanedOutput).toContain('✔  actions.spec.js');
     expect(cleanedOutput).toContain('✔  All specs passed!');
@@ -393,13 +393,13 @@ describe('modular-scripts', () => {
     rimraf.sync(path.join(modularRoot, 'dist'));
 
     // build a view
-    modular('build sample-view', { stdio: 'inherit' });
+    await modular('build sample-view', { stdio: 'inherit' });
     // build a package too, but preserve modules
-    modular('build sample-package --preserve-modules', {
+    await modular('build sample-package --preserve-modules', {
       stdio: 'inherit',
     });
     // build the nested package
-    modular('build nested/sample-nested-package', {
+    await modular('build nested/sample-nested-package', {
       stdio: 'inherit',
     });
 
