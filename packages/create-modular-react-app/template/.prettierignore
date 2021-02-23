@@ -1,2 +1,5 @@
 /dist
 /packages/**/public
+/packages/**/dist-cjs
+/packages/**/dist-es
+/packages/**/dist-types

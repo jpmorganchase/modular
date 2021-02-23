@@ -642,16 +642,25 @@ export async function build(
   // (if you're curious why we unpack it here, it's because
   // we observed problems with publishing tgz files directly to npm.)
 
+  // there's a race condition when we run modular build <path> on
+  // several packages at the same time, in different processes.
+  // makeTypings(), despite being synchronouse, can be interleaved across processes
+  // so, it maye have picked up a built package, where the package.json is pointing to
+  // built typings. when we delete the built folders, the generated types don't exist
+  // anymore (but it won't pick up the original source folders)
+  // To fix this for now, we're just going to *not* delete the generated folders.
+  // Leaving this code here to revisit later.
+
   // delete the local dist folders
-  await prom(rimraf)(
-    path.join(packagesRoot, packagePath, `${outputDirectory}-cjs`),
-  );
-  await prom(rimraf)(
-    path.join(packagesRoot, packagePath, `${outputDirectory}-es`),
-  );
-  await prom(rimraf)(
-    path.join(packagesRoot, packagePath, `${outputDirectory}-types`),
-  );
+  // await prom(rimraf)(
+  //   path.join(packagesRoot, packagePath, `${outputDirectory}-cjs`),
+  // );
+  // await prom(rimraf)(
+  //   path.join(packagesRoot, packagePath, `${outputDirectory}-es`),
+  // );
+  // await prom(rimraf)(
+  //   path.join(packagesRoot, packagePath, `${outputDirectory}-types`),
+  // );
 
   // then delete the tgz
 

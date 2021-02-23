@@ -21,3 +21,6 @@ yarn-error.log*
 
 packages/**/public
 /dist
+/packages/**/dist-cjs
+/packages/**/dist-es
+/packages/**/dist-types
