@@ -28,12 +28,12 @@ process.on('unhandledRejection', (err) => {
 const packagesRoot = 'packages';
 const outputDirectory = 'dist';
 
-const cracoBin = resolveAsBin('craco');
+const viteBin = resolveAsBin('vite');
 const jestBin = resolveAsBin('jest');
-const cracoConfig = path.join(
+const viteConfig = path.join(
   __dirname,
   '..',
-  'DO_NOT_IMPORT_THIS_OR_YOU_WILL_BE_FIRED_craco.config.js',
+  'DO_NOT_IMPORT_THIS_OR_YOU_WILL_BE_FIRED_modular_config.js',
 );
 
 function execSync(
@@ -217,15 +217,16 @@ type VerifyPackageTree = () => void;
 
 function test(args: string[]) {
   if (process.env.SKIP_PREFLIGHT_CHECK !== 'true') {
-    const verifyPackageTree = require('react-scripts/scripts/utils/verifyPackageTree') as VerifyPackageTree; // eslint-disable-line @typescript-eslint/no-var-requires
-    verifyPackageTree();
+    // const verifyPackageTree = require('react-scripts/scripts/utils/verifyPackageTree') as VerifyPackageTree; // eslint-disable-line @typescript-eslint/no-var-requires
+    // verifyPackageTree();
+    console.log('TODO: verifyPackageTree');
   }
 
   const modularRoot = getModularRoot();
 
   let argv = process.argv
     .slice(3)
-    .concat(['--config', path.join(__dirname, '..', 'jest-config.js')]);
+    .concat(['--config', path.join(__dirname, 'config', 'jest', 'index.js')]);
 
   // Watch unless on CI or explicitly running all tests
   if (!process.env.CI && args.indexOf('--watchAll=false') === -1) {
@@ -326,7 +327,7 @@ function start(appPath: string) {
     throw new Error(`The package at ${appPath} is not a valid modular app.`);
   }
 
-  execSync(cracoBin, ['start', '--config', cracoConfig], {
+  execSync(viteBin, ['--config', viteConfig], {
     cwd: path.join(modularRoot, packagesRoot, appPath),
     log: false,
     // @ts-ignore
@@ -361,7 +362,7 @@ async function build(packagePath: string, preserveModules?: boolean) {
     // so --preserve-modules has no effect here
     await fs.remove(path.join(outputDirectory, packagePath));
     // TODO: this shouldn't be sync
-    execSync(cracoBin, ['build', '--config', cracoConfig], {
+    execSync(viteBin, ['build', '--config', viteConfig], {
       cwd: path.join(modularRoot, packagesRoot, packagePath),
       log: false,
       // @ts-ignore
@@ -371,7 +372,7 @@ async function build(packagePath: string, preserveModules?: boolean) {
     });
 
     await fs.move(
-      path.join(packagesRoot, packagePath, 'build'),
+      path.join(packagesRoot, packagePath, 'dist'),
       path.join(outputDirectory, packagePath),
     );
   } else {

@@ -1,6 +1,6 @@
 // from https://github.com/finos/perspective/tree/master/examples/react
 
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import perspective, { Table } from '@finos/perspective';
 import '@finos/perspective-viewer';
@@ -13,9 +13,10 @@ import type {
 } from '@finos/perspective-viewer';
 
 // @ts-ignore
-import superstore from 'superstore-arrow';
+import superstore from 'superstore-arrow/superstore.arrow?url';
 
 import './App.css';
+// import { x } from './App.module.css';
 
 const worker = perspective.shared_worker();
 

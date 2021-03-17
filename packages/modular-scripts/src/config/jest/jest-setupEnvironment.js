@@ -3,9 +3,7 @@
 // of a monorepo. Owning the runner then gives us the opportunity to generate
 // coverage reports correctly across workspaces, etc.
 
+// https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/scripts/test.js
 'use strict';
 
-const { createJestConfig } = require('@craco/craco');
-const cracoConfig = require('./DO_NOT_IMPORT_THIS_OR_YOU_WILL_BE_FIRED_craco.config.js');
-const jestConfig = createJestConfig(cracoConfig);
-module.exports = jestConfig;
+// require('../env');

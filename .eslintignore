@@ -35,3 +35,5 @@ yarn-error.log*
 # Used by typescript for incremental builds 
 .tsbuildinfo
 *.tsbuildinfo
+
+/packages/modular-scripts/types/

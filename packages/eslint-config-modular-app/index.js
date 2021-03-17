@@ -30,9 +30,9 @@ module.exports = {
         project: ['./tsconfig.json'],
       },
       extends: [
-        'plugin:@typescript-eslint/recommended',
-        'plugin:@typescript-eslint/recommended-requiring-type-checking',
-        'plugin:import/typescript',
+        // 'plugin:@typescript-eslint/recommended',
+        // 'plugin:@typescript-eslint/recommended-requiring-type-checking',
+        // 'plugin:import/typescript',
       ],
 
       plugins: ['@typescript-eslint'],

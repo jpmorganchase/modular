@@ -160,10 +160,10 @@ describe('modular-scripts', () => {
 
     expect(tree(path.join(packagesPath, 'sample-app'))).toMatchInlineSnapshot(`
       "sample-app
+      ├─ index.html #f34cs1
       ├─ package.json
       ├─ public
       │  ├─ favicon.ico #6pu3rg
-      │  ├─ index.html #1wohq3p
       │  ├─ logo192.png #1nez7vk
       │  ├─ logo512.png #1hwqvcc
       │  ├─ manifest.json #19gah8o
