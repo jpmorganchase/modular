@@ -279,12 +279,13 @@ async function makeBundle(
       babel({
         babelHelpers: 'bundled',
         presets: [
-          ['@babel/preset-typescript', { isTSX: true, allExtensions: true }],
-          '@babel/preset-react',
+          // Preset orders matters, please see: https://github.com/babel/babel/issues/8752#issuecomment-486541662
           [
             '@babel/preset-env',
             // TODO: why doesn't this read `targets` from package.json?
           ],
+          ['@babel/preset-typescript', { isTSX: true, allExtensions: true }],
+          '@babel/preset-react',
         ],
         plugins: ['@babel/plugin-proposal-class-properties'],
         extensions,
