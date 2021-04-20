@@ -23,6 +23,7 @@ import json from '@rollup/plugin-json';
 import resolve from '@rollup/plugin-node-resolve';
 import babel from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
+import { preserveShebangs } from 'rollup-plugin-preserve-shebangs';
 
 import * as ts from 'typescript';
 import * as fse from 'fs-extra';
@@ -182,7 +183,7 @@ const typescriptConfig: TSConfig = {};
 async function makeBundle(
   packagePath: string,
   preserveModules: boolean,
-): Promise<boolean> {
+): Promise<[boolean, boolean]> {
   const console = getConsole(packagePath);
 
   const packageJson = packageJsonsByPackagePath[packagePath];
@@ -197,15 +198,33 @@ async function makeBundle(
       `${packagesRoot}/${packagePath} is marked private, bailing...`,
     );
   }
-  if (!packageJson.main) {
-    throw new Error(
-      `package.json at ${packagesRoot}/${packagePath} does not have a "main" field, bailing...`,
-    );
+
+  let compilingBin = false;
+  let main: string | undefined;
+
+  if (packageJson.main) {
+    main = packageJson.main;
+  } else {
+    if (packageJson.bin) {
+      const bins: string[] = Object.values(packageJson.bin) as string[];
+      if (bins.length === 1) {
+        compilingBin = true;
+        main = bins[0];
+      } else {
+        throw new Error(
+          `package.json at ${packagesRoot}/${packagePath} contains multiple "bin" values, bailing...`,
+        );
+      }
+    } else {
+      throw new Error(
+        `package.json at ${packagesRoot}/${packagePath} does not have a "main" or "bin" field, bailing...`,
+      );
+    }
   }
 
-  if (!fse.existsSync(path.join(packagesRoot, packagePath, packageJson.main))) {
+  if (!fse.existsSync(path.join(packagesRoot, packagePath, main))) {
     throw new Error(
-      `package.json at ${packagesRoot}/${packagePath} does not have a "main" field that points to an existing source file, bailing...`,
+      `package.json at ${packagesRoot}/${packagePath} does not have a main file that points to an existing source file, bailing...`,
     );
   }
 
@@ -235,7 +254,7 @@ async function makeBundle(
   console.log(`building ${packageJson.name} at packages/${packagePath}...`);
 
   const bundle = await rollup.rollup({
-    input: path.join(packagesRoot, packagePath, packageJson.main),
+    input: path.join(packagesRoot, packagePath, main),
     external: (id) => {
       // via tsdx
       // TODO: this should probably be included into deps instead
@@ -275,23 +294,7 @@ async function makeBundle(
       postcss({ extract: false }),
       // TODO: add sass, dotenv
       json(),
-      {
-        // via tsdx
-        // Custom plugin that removes shebang from code because newer
-        // versions of bublé bundle their own private version of `acorn`
-        // and I don't know a way to patch in the option `allowHashBang`
-        // to acorn. Taken from microbundle.
-        // See: https://github.com/Rich-Harris/buble/pull/165
-        name: 'strip-shebang',
-        transform(code) {
-          code = code.replace(/^#!(.*)/, '');
-
-          return {
-            code,
-            map: null,
-          };
-        },
-      },
+      preserveShebangs(),
     ],
     // TODO: support for css modules, sass, dotenv,
     // and anything else create-react-app supports
@@ -438,49 +441,69 @@ async function makeBundle(
     exports: 'auto',
   });
 
-  await bundle.write({
-    ...outputOptions,
-    ...(preserveModules
-      ? {
-          preserveModules: true,
-          dir: path.join(packagesRoot, packagePath, `${outputDirectory}-es`),
-        }
-      : {
-          file: path.join(
-            packagesRoot,
-            packagePath,
+  if (!compilingBin) {
+    await bundle.write({
+      ...outputOptions,
+      ...(preserveModules
+        ? {
+            preserveModules: true,
+            dir: path.join(packagesRoot, packagePath, `${outputDirectory}-es`),
+          }
+        : {
+            file: path.join(
+              packagesRoot,
+              packagePath,
+              `${outputDirectory}-es`,
+              toParamCase(packageJson.name) + '.es.js',
+            ),
+          }),
+      format: 'es',
+      exports: 'auto',
+    });
+  }
+
+  let outputFilesPackageJson: Partial<PackageJson>;
+  if (compilingBin && packageJson.bin) {
+    const binName = Object.keys(packageJson.bin)[0];
+    const binPath = main
+      .replace(/\.tsx?$/, '.js')
+      .replace(path.dirname(main) + '/', '');
+
+    outputFilesPackageJson = {
+      bin: {
+        [binName]: binPath,
+      },
+    };
+  } else {
+    outputFilesPackageJson = {
+      // TODO: what of 'bin' fields?
+      main: preserveModules
+        ? path.join(
+            `${outputDirectory}-cjs`,
+            main
+              .replace(/\.tsx?$/, '.js')
+              .replace(path.dirname(main) + '/', ''),
+          )
+        : `${outputDirectory}-cjs/${toParamCase(packageJson.name) + '.cjs.js'}`,
+      module: preserveModules
+        ? path.join(
             `${outputDirectory}-es`,
-            toParamCase(packageJson.name) + '.es.js',
-          ),
-        }),
-    format: 'es',
-    exports: 'auto',
-  });
+            main
+              .replace(/\.tsx?$/, '.js')
+              .replace(path.dirname(main) + '/', ''),
+          )
+        : `${outputDirectory}-es/${toParamCase(packageJson.name) + '.es.js'}`,
+      typings: path.join(
+        `${outputDirectory}-types`,
+        main.replace(/\.tsx?$/, '.d.ts'),
+      ),
+    };
+  }
 
   // store the public facing package.json that we'll write to disk later
   publicPackageJsons[packageJson.name] = {
     ...packageJson,
-    // TODO: what of 'bin' fields?
-    main: preserveModules
-      ? path.join(
-          `${outputDirectory}-cjs`,
-          packageJson.main
-            .replace(/\.tsx?$/, '.js')
-            .replace(path.dirname(packageJson.main) + '/', ''),
-        )
-      : `${outputDirectory}-cjs/${toParamCase(packageJson.name) + '.cjs.js'}`,
-    module: preserveModules
-      ? path.join(
-          `${outputDirectory}-es`,
-          packageJson.main
-            .replace(/\.tsx?$/, '.js')
-            .replace(path.dirname(packageJson.main) + '/', ''),
-        )
-      : `${outputDirectory}-es/${toParamCase(packageJson.name) + '.es.js'}`,
-    typings: path.join(
-      `${outputDirectory}-types`,
-      packageJson.main.replace(/\.tsx?$/, '.d.ts'),
-    ),
+    ...outputFilesPackageJson,
     dependencies: {
       ...packageJson.dependencies,
       ...localImports,
@@ -495,7 +518,7 @@ async function makeBundle(
   };
 
   console.log(`built ${packageJson.name} at ${packagePath}`);
-  return true;
+  return [true, compilingBin];
 }
 
 function makeTypings(packagePath: string) {
@@ -580,12 +603,17 @@ export async function build(
   );
 
   // generate the js files
-  const didBundle = await makeBundle(packagePath, preserveModules);
+  const [didBundle, compilingBin] = await makeBundle(
+    packagePath,
+    preserveModules,
+  );
   if (!didBundle) {
     return;
   }
   // then the .d.ts files
-  makeTypings(packagePath);
+  if (!compilingBin) {
+    makeTypings(packagePath);
+  }
 
   const originalPkgJsonContent = (await fse.readJson(
     path.join(packagesRoot, packagePath, 'package.json'),
