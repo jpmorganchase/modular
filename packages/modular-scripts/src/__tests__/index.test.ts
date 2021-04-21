@@ -132,17 +132,20 @@ async function startApp(appPath: string): Promise<DevServer> {
   };
 }
 
-afterAll(() => {
+function cleanup() {
   rimraf.sync(path.join(packagesPath, 'sample-app'));
   rimraf.sync(path.join(packagesPath, 'sample-view'));
   rimraf.sync(path.join(packagesPath, 'sample-package'));
-  rimraf.sync(path.join(packagesPath, 'nested/sample-nested-package'));
+  rimraf.sync(path.join(packagesPath, 'nested'));
   rimraf.sync(path.join(modularRoot, 'dist'));
   // run yarn so yarn.lock gets reset
   return execa.sync('yarnpkg', [], {
     cwd: modularRoot,
   });
-});
+}
+
+beforeAll(cleanup);
+afterAll(cleanup);
 
 describe('modular-scripts', () => {
   it('can add an app', async () => {
@@ -460,11 +463,11 @@ describe('modular-scripts', () => {
       └─ sample-view
          ├─ README.md #11adaka
          ├─ dist-cjs
-         │  ├─ sample-view.cjs.js #fmbogr
-         │  └─ sample-view.cjs.js.map #4xu206
+         │  ├─ sample-view.cjs.js #8jw6cg
+         │  └─ sample-view.cjs.js.map #130r3z8
          ├─ dist-es
-         │  ├─ sample-view.es.js #10hnw4k
-         │  └─ sample-view.es.js.map #jqhhy5
+         │  ├─ sample-view.es.js #1ctbbz8
+         │  └─ sample-view.es.js.map #12deywy
          ├─ dist-types
          │  └─ src
          │     └─ index.d.ts #1vloh7q
