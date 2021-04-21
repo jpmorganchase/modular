@@ -37,7 +37,7 @@
     "resolve": "^1.19.0",
     "resolve-as-bin": "^2.1.0",
     "rimraf": "^3.0.2",
-    "rollup": "^2.38.3",
+    "rollup": "^2.45.2",
     "rollup-plugin-postcss": "^3.1.8",
     "rollup-plugin-preserve-shebangs": "^0.2.0",
     "update-notifier": "^5.0.1"
