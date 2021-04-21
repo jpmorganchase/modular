@@ -2,7 +2,7 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 import {
   pascalCase as toPascalCase,
-  paramCase as toParamCase
+  paramCase as toParamCase,
 } from 'change-case';
 import prompts from 'prompts';
 import getModularRoot from './getModularRoot';
@@ -12,26 +12,27 @@ const packagesRoot = 'packages';
 
 // recursively get all files in a folder
 function getAllFiles(dirPath: string, arrayOfFiles: string[] = []): string[] {
-    const files = fs.readdirSync(dirPath);
-  
-    files.forEach(function (file) {
-      const pathToCheck = path.join(dirPath, file);
-      if (fs.statSync(pathToCheck).isDirectory()) {
-        arrayOfFiles = getAllFiles(pathToCheck, arrayOfFiles);
-      } else {
-        arrayOfFiles.push(pathToCheck);
-      }
-    });
-  
-    return arrayOfFiles;
-  }
-  
+  const files = fs.readdirSync(dirPath);
+
+  files.forEach(function (file) {
+    const pathToCheck = path.join(dirPath, file);
+    if (fs.statSync(pathToCheck).isDirectory()) {
+      arrayOfFiles = getAllFiles(pathToCheck, arrayOfFiles);
+    } else {
+      arrayOfFiles.push(pathToCheck);
+    }
+  });
+
+  return arrayOfFiles;
+}
 
 export default async function addPackage(
   destination: string,
   typeArg: string | void,
-  nameArg: string | void): Promise<void> {
-  const { type, name } = (typeArg && nameArg ? { type: typeArg, name: nameArg } : null) ||
+  nameArg: string | void,
+): Promise<void> {
+  const { type, name } =
+    (typeArg && nameArg ? { type: typeArg, name: nameArg } : null) ||
     ((await prompts([
       {
         name: 'name',
@@ -50,7 +51,7 @@ export default async function addPackage(
         ],
         initial: 0,
       },
-    ])) as { type: string; name: string; });
+    ])) as { type: string; name: string });
 
   const modularRoot = getModularRoot();
   const newComponentName = toPascalCase(name);
@@ -75,13 +76,13 @@ export default async function addPackage(
       fs
         .readFileSync(packageFilePath, 'utf8')
         .replace(/PackageName__/g, name)
-        .replace(/ComponentName__/g, newComponentName)
+        .replace(/ComponentName__/g, newComponentName),
     );
     if (path.basename(packageFilePath) === 'packagejson') {
       // we've named package.json as packagejson in these templates
       fs.moveSync(
         packageFilePath,
-        packageFilePath.replace('packagejson', 'package.json')
+        packageFilePath.replace('packagejson', 'package.json'),
       );
     }
   }
@@ -93,7 +94,7 @@ export default async function addPackage(
       {
         extends: path.relative(newPackagePath, modularRoot) + '/tsconfig.json',
       },
-      { spaces: 2 }
+      { spaces: 2 },
     );
   }
 

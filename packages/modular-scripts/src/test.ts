@@ -34,17 +34,17 @@ export default function test(args: string[]): Promise<void> {
     const jestDir = path.dirname(
       resolve.sync('jest', {
         basedir: __dirname,
-      })
+      }),
     );
     const jestCLIDir = path.dirname(
       resolve.sync('jest-cli', {
         basedir: jestDir,
-      })
+      }),
     );
     const jestConfigDir = path.dirname(
       resolve.sync('jest-config', {
         basedir: jestCLIDir,
-      })
+      }),
     );
     return resolve.sync(name, {
       basedir: jestConfigDir,
@@ -96,7 +96,7 @@ export default function test(args: string[]): Promise<void> {
     ];
   }
 
-    execSync(testBin, testArgs, {
+  execSync(testBin, testArgs, {
     cwd: modularRoot,
     log: false,
     // @ts-ignore
