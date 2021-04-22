@@ -5,6 +5,7 @@
   "bin": {
     "modular": "build/cli.js"
   },
+  "main": "./build/index.js",
   "engines": {
     "node": ">=12"
   },
