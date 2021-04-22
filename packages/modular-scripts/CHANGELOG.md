@@ -1,5 +1,21 @@
 # modular-scripts
 
+## 0.10.0
+
+### Minor Changes
+
+- 9023f11: Expose node.js API for modular-scripts
+- aa95360: Enable bin development for packages
+
+### Patch Changes
+
+- 4080e8f: Dependabot: Bump rollup from 2.38.3 to 2.45.2
+- 9f9a332: Update create-react-app from 4.0.1 to 4.0.2
+- 74ab5d2: Suggest installing @finos/perspective-webpack-plugin if
+  @finos/perspective is available.
+- 1166d26: Corrected issue with Babel plugins that was making
+  @babel/preset-typescript not to apply correctly
+
 ## 0.9.10
 
 ### Patch Changes
