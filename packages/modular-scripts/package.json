@@ -24,7 +24,7 @@
     "@rollup/plugin-commonjs": "^16.0.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^11.0.1",
-    "builtin-modules": "^3.1.0",
+    "builtin-modules": "^3.2.0",
     "chalk": "^4.1.0",
     "change-case": "^4.1.1",
     "execa": "^4.0.3",
