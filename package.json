@@ -33,7 +33,7 @@
     "@types/jest": "^25.2.3",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.0",
-    "eslint": "^7.19.0",
+    "eslint": "^7.24.0",
     "execa": "^4.0.3",
     "husky": "^4.2.5",
     "is-ci": "^2.0.0",
