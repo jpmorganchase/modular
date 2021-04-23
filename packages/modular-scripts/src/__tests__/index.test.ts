@@ -139,7 +139,7 @@ function cleanup() {
   rimraf.sync(path.join(packagesPath, 'nested'));
   rimraf.sync(path.join(modularRoot, 'dist'));
   // run yarn so yarn.lock gets reset
-  return execa.sync('yarnpkg', [], {
+  return execa.sync('yarnpkg', ['--silent'], {
     cwd: modularRoot,
   });
 }
@@ -150,7 +150,7 @@ afterAll(cleanup);
 describe('modular-scripts', () => {
   it('can add an app', async () => {
     await modular(
-      'add sample-app --unstable-type=app --unstable-name=sample-app',
+      'add sample-app --unstable-type app --unstable-name sample-app',
       { stdio: 'inherit' },
     );
 
@@ -256,7 +256,7 @@ describe('modular-scripts', () => {
 
   it('can add a view', async () => {
     await modular(
-      'add sample-view --unstable-type=view --unstable-name=sample-view',
+      'add sample-view --unstable-type view --unstable-name sample-view',
       { stdio: 'inherit' },
     );
     expect(tree(path.join(packagesPath, 'sample-view'))).toMatchInlineSnapshot(`
@@ -272,7 +272,7 @@ describe('modular-scripts', () => {
 
   it('can add a package', async () => {
     await modular(
-      'add sample-package --unstable-type=package --unstable-name=sample-package',
+      'add sample-package --unstable-type package --unstable-name sample-package',
       {
         stdio: 'inherit',
       },
@@ -291,7 +291,7 @@ describe('modular-scripts', () => {
 
   it('can add a nested package', async () => {
     await modular(
-      'add nested/sample-nested-package --unstable-type=package --unstable-name=@nested/sample-package',
+      'add nested/sample-nested-package --unstable-type package --unstable-name @nested/sample-package',
       {
         stdio: 'inherit',
       },
@@ -310,7 +310,7 @@ describe('modular-scripts', () => {
 
   it('can execute tests', async () => {
     const output = await modular(
-      'test sample-app sample-package sample-view sample-nested-package --watchAll=false',
+      'test sample-app sample-package sample-view sample-nested-package --watchAll false',
       {
         all: true,
         reject: false,

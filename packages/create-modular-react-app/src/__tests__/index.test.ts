@@ -56,7 +56,7 @@ afterEach(() => {
 
 describe('create-modular-react-app', () => {
   it('should create a project', async () => {
-    createModularApp({ _: [destination] });
+    await createModularApp({ name: destination });
     expect(tree(destination)).toMatchInlineSnapshot(`
       "test-repo
       ├─ .editorconfig #1p4gvuw
@@ -177,8 +177,8 @@ describe('create-modular-react-app', () => {
     `);
   });
 
-  it('should create a project without git metadata', () => {
-    createModularApp({ _: [destination], repo: false });
+  it('should create a project without git metadata', async () => {
+    await createModularApp({ name: destination, repo: false });
     expect(fs.existsSync(path.join(destination, '.git'))).toEqual(false);
   });
 });

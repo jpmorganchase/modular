@@ -1,13 +1,13 @@
 #!/usr/bin/env node
-
-import mri from 'mri';
+import commander from 'commander';
+import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 
 import preflightCheck from './utils/preflightCheck';
 
-import build from './build';
+import buildPackages from './build';
 import addPackage from './addPackage';
 import start from './start';
-import test from './test';
+import test, { TestOptions } from './test';
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
@@ -17,74 +17,122 @@ process.on('unhandledRejection', (err) => {
   throw err;
 });
 
-async function run() {
-  const help = `
-  Usage:
+const program = new commander.Command('modular');
+program.version(
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  (require('../package.json') as PackageJson).version as string,
+);
 
-    $ modular add <package-name>
-    $ modular start
-    $ modular build
-    $ modular test
-`;
+program
+  .command('add <package-name>')
+  .description(`Add a new folder into the modular workspace.`)
+  .option('--unstable-type <type>', "Type of the folder ('app', 'view')")
+  .option(
+    '--unstable-name <name>',
+    "Package name for the package.json ('app', 'view')",
+  )
+  .action(
+    (
+      packageName: string,
+      addOptions: {
+        unstableType?: string;
+        unstableName?: string;
+      },
+    ) => {
+      return addPackage(
+        packageName,
+        addOptions['unstableType'],
+        addOptions['unstableName'],
+      );
+    },
+  );
 
-  await preflightCheck();
+program
+  .command('build <packages...>')
+  .description('Build a list of packages')
+  .option('--preserve-modules')
+  .action(
+    async (
+      packagePaths: string[],
+      options: {
+        preserveModules?: boolean;
+      },
+    ) => {
+      console.log('building packages at:', packagePaths.join(', '));
 
-  const argv = mri(process.argv.slice(2));
+      for (let i = 0; i < packagePaths.length; i++) {
+        try {
+          await buildPackages(packagePaths[i], options['preserveModules']);
+        } catch (err) {
+          console.error(`building ${packagePaths[i]} failed`);
+          throw err;
+        }
+      }
+    },
+  );
 
-  const command = argv._[0];
-  try {
-    switch (command) {
-      case 'add':
-        return addPackage(
-          argv._[1],
-          argv['unstable-type'] as string | undefined,
-          argv['unstable-name'] as string | undefined,
-        );
-      case 'test':
-        return test(process.argv.slice(3));
-      case 'start':
-        return start(argv._[1]);
-      case 'build':
-        return buildSequential(
-          argv._[1].split(','),
-          argv['preserve-modules'] as boolean | undefined,
-        );
-      default:
-        console.log(help);
-        process.exit(1);
-    }
-  } catch (err) {
-    /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-    // When there is an `execa` Error with an `.exitCode` the
-    // error message will already have been printed out by the
-    // process so we only need to bail with the exit code.
-    if (err.exitCode !== undefined) {
-      process.exit(err.exitCode);
-    }
-    /* eslint-enable @typescript-eslint/no-unsafe-member-access */
+interface JestOption {
+  default?: boolean | string;
+  description: string;
+  type: 'boolean' | 'string';
+}
+type JestOptions = Record<string, JestOption>;
 
-    throw err;
-  }
+const testOptions =
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  (require('jest-cli/build/cli/args.js') as { options: JestOptions }).options;
+
+interface CLITestOptions extends TestOptions {
+  U: boolean;
 }
 
-async function buildSequential(
-  packagePaths: string[],
-  preserveModules?: boolean,
-): Promise<void> {
-  console.log('building packages at:', packagePaths.join(', '));
+program
+  .command('test [regexes...]')
+  .option(
+    '--debug',
+    'Setup node.js debugger on the test process - equivalent of setting --inspect-brk on a node.js process',
+    false,
+  )
+  .option('--coverage', testOptions.coverage.description)
+  .option('--forceExit', testOptions.forceExit.description)
+  .option('--env <env>', testOptions.env.description, 'jsdom')
+  .option('--maxWorkers <workers>', testOptions.maxWorkers.description)
+  .option('--onlyChanged', testOptions.onlyChanged.description)
+  .option('--json', testOptions.json.description)
+  .option('--outputFile <file>', testOptions.outputFile.description)
+  .option('--reporters <reporters...>', testOptions.reporters.description)
+  .option('--runInBand', testOptions.runInBand.description)
+  .option('--silent', testOptions.silent.description)
+  .option('--showConfig', testOptions.showConfig.description)
+  .option(
+    '--testResultsProcessor <reporter>',
+    testOptions.testResultsProcessor.description,
+  )
+  .option('--updateSnapshot, -u', testOptions.updateSnapshot.description)
+  .option('--verbose', testOptions.verbose.description)
+  .option('--watch', testOptions.watch.description)
+  .option(
+    '--watchAll [value]',
+    testOptions.watchAll.description,
+    !process.env.CI,
+  )
+  .description('Run tests over the codebase')
+  .action((regexes: string[], options: CLITestOptions) => {
+    const { U, ...testOptions } = options;
 
-  for (let i = 0; i < packagePaths.length; i++) {
-    try {
-      await build(packagePaths[i], preserveModules);
-    } catch (err) {
-      console.error(`building ${packagePaths[i]} failed`);
-      throw err;
-    }
-  }
-}
+    // proxy simplified options to testOptions;
+    testOptions.updateSnapshot = !!(options.updateSnapshot || U);
 
-void run().catch((err) => {
-  // todo - cleanup on errors
-  console.error(err);
-  process.exit(1);
+    return test(testOptions, regexes);
+  });
+
+program
+  .command('start <packageName>')
+  .description('Start a dev-server for a package')
+  .action((packageName: string) => {
+    return start(packageName);
+  });
+
+void preflightCheck().then(() => {
+  return program.parseAsync(process.argv);
 });

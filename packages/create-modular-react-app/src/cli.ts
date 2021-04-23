@@ -3,14 +3,6 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 import chalk from 'chalk';
 
-// Makes the script crash on unhandled rejections instead of silently
-// ignoring them. In the future, promise rejections that are not handled will
-// terminate the Node.js process with a non-zero exit code.
-// See https://github.com/facebook/create-react-app/blob/f36d61a/packages/react-scripts/bin/react-scripts.js#L11-L16
-process.on('unhandledRejection', (err) => {
-  throw err;
-});
-
 function execSync(
   file: string,
   args: string[],
@@ -38,10 +30,10 @@ function isYarnInstalled(): boolean {
 }
 
 export default function createModularApp(argv: {
-  _: readonly string[];
+  name: string;
   repo?: boolean;
   'prefer-offline'?: boolean;
-}): void {
+}): Promise<void> {
   const preferOfflineArg = argv['prefer-offline'] ? ['--prefer-offline'] : [];
   if (isYarnInstalled() === false) {
     console.error(
@@ -50,14 +42,7 @@ export default function createModularApp(argv: {
     process.exit(1);
   }
 
-  const [name] = argv._;
-  if (!name) {
-    console.error(
-      'Please pass a name into `yarn create modular-react-app [name]`.',
-    );
-    process.exit(1);
-  }
-
+  const name = argv.name;
   const newModularRoot =
     name[0] === '/' || name.includes(':\\')
       ? /* absolute */ name
@@ -146,8 +131,10 @@ export default function createModularApp(argv: {
       'modular',
       'add',
       'app',
-      '--unstable-type=app',
-      '--unstable-name=app',
+      '--unstable-type',
+      'app',
+      '--unstable-name',
+      'app',
       '--silent',
       ...preferOfflineArg,
     ],
@@ -168,4 +155,6 @@ export default function createModularApp(argv: {
       });
     }
   }
+
+  return Promise.resolve();
 }

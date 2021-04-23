@@ -53,6 +53,12 @@ export default async function addPackage(
       },
     ])) as { type: string; name: string });
 
+  if (!['app', 'view', 'package'].includes(type)) {
+    throw new Error(
+      `Type ${type} does not exist, please use app, view or package`,
+    );
+  }
+
   const modularRoot = getModularRoot();
   const newComponentName = toPascalCase(name);
 
@@ -98,6 +104,6 @@ export default async function addPackage(
     );
   }
 
-  execSync('yarnpkg', [], { cwd: newPackagePath });
-  execSync('yarnpkg', [], { cwd: modularRoot });
+  execSync('yarnpkg', ['--silent'], { cwd: newPackagePath });
+  execSync('yarnpkg', ['--silent'], { cwd: modularRoot });
 }

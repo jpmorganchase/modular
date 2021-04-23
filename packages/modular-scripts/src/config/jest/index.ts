@@ -15,6 +15,7 @@ const supportedOverrides = [
   'modulePathIgnorePatterns',
   'testPathIgnorePatterns',
   'transformIgnorePatterns',
+  'testRunner',
 ];
 
 type SetUpFilesMap = {
@@ -28,13 +29,21 @@ const modulularSetUpFilesMap: SetUpFilesMap = {
   setupFilesAfterEnv: 'setupTests',
 };
 
-export default function createJestConfig(): Config.InitialOptions {
+interface TestCliOptions {
+  reporters?: string[];
+  testResultsProcessor?: string;
+}
+
+export function createJestConfig(
+  cliOptions: TestCliOptions,
+): Config.InitialOptions {
   const modularRoot = getModularRoot();
   const absolutePackagesPath = path.resolve(modularRoot, 'packages');
   const absoluteModularGlobalConfigsPath = path.resolve(modularRoot, 'modular');
 
   const jestConfig: Config.InitialOptions = {
     ...defaults,
+    ...cliOptions,
     resetMocks: false,
     transform: {
       '^.+\\.jsx?$': 'babel-jest',

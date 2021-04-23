@@ -15,6 +15,8 @@ async function isYarnInstalled(): Promise<boolean> {
   }
 }
 
+type VerifyPackageTree = () => void;
+
 async function preflightCheck(): Promise<void> {
   if (process.env.SKIP_PREFLIGHT_CHECK !== 'true' || isCI) {
     const { name, version } = fs.readJSONSync(
@@ -46,6 +48,13 @@ async function preflightCheck(): Promise<void> {
     throw new Error(
       'Please install `yarn` before attempting to run `modular-scripts`.',
     );
+  }
+
+  if (process.env.SKIP_PREFLIGHT_CHECK !== 'true') {
+    const verifyPackageTree =
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      require('react-scripts/scripts/utils/verifyPackageTree') as VerifyPackageTree;
+    verifyPackageTree();
   }
 }
 
