@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "chalk": "^4.1.0",
-    "execa": "^4.0.3",
+    "execa": "^5.0.0",
     "fs-extra": "^9.0.1",
     "mri": "^1.1.6"
   },
