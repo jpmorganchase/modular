@@ -35,7 +35,7 @@
     "mri": "^1.1.6",
     "prompts": "^2.4.1",
     "react-scripts": "^4.0.2",
-    "resolve": "^1.19.0",
+    "resolve": "^1.20.0",
     "resolve-as-bin": "^2.1.0",
     "rimraf": "^3.0.2",
     "rollup": "^2.45.2",
