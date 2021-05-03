@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@schemastore/package": "^0.0.6",
-    "@types/fs-extra": "^5.0.2",
+    "@types/fs-extra": "^9.0.11",
     "@types/mri": "^1.1.0",
     "@types/node": "*",
     "@types/tmp": "^0.2.0",

@@ -47,7 +47,7 @@
     "@schemastore/package": "^0.0.6",
     "@schemastore/tsconfig": "^0.0.9",
     "@types/find-up": "^4.0.0",
-    "@types/fs-extra": "^5.0.2",
+    "@types/fs-extra": "^9.0.11",
     "@types/is-ci": "^2.0.0",
     "@types/mri": "^1.1.0",
     "@types/node": "*",
