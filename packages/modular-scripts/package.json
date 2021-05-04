@@ -25,7 +25,7 @@
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^11.0.1",
     "builtin-modules": "^3.2.0",
-    "chalk": "^4.1.0",
+    "chalk": "^4.1.1",
     "change-case": "^4.1.2",
     "execa": "^5.0.0",
     "find-up": "^5.0.0",
