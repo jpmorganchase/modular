@@ -1794,6 +1794,23 @@
     lodash "^4.17.4"
     mobile-drag-drop "^2.3.0-rc.2"
 
+"@finos/perspective-viewer@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@finos/perspective-viewer/-/perspective-viewer-0.8.0.tgz#733a50d77f69ab755012efb4d3fb885af8977e6f"
+  integrity sha512-VzE9ce/2sk/P8D6pv+ez1aYu+I1bIBBiMT2fQ+d6lIfkRLInlILYuij3qo8d2USUz5wQj4sxGs5u7Mrt7bER4A==
+  dependencies:
+    "@babel/runtime" "^7.8.4"
+    "@finos/perspective" "^0.8.0"
+    "@types/react" "^16.8.6"
+    awesomplete "^1.1.2"
+    chevrotain "^6.5.0"
+    core-js "^3.6.4"
+    d3-array "^1.2.1"
+    detectie "1.0.0"
+    lit-html "^1.1.2"
+    lodash "^4.17.4"
+    mobile-drag-drop "^2.3.0-rc.2"
+
 "@finos/perspective@^0.6.0":
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/@finos/perspective/-/perspective-0.6.0.tgz#52dc2ba88b184094e0ee1d50d15b56a774ea76ce"
@@ -1813,6 +1830,21 @@
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/@finos/perspective/-/perspective-0.7.0.tgz#f10cb51b186021e08b2d422b1f2a4573d8a71fc0"
   integrity sha512-2WPlCu4t50uPJvL9RbKxhffRxdyOFUGed5e2FsZVytkZ8kk79Sbl7i6uPvwud1UXtDfnaVPphrsTSpgyxYZy0A==
+  dependencies:
+    "@babel/runtime" "^7.8.4"
+    core-js "^3.6.4"
+    d3-array "^1.2.1"
+    detectie "1.0.0"
+    flatbuffers "^1.10.2"
+    lodash "^4.17.4"
+    text-encoding-utf-8 "^1.0.2"
+    tslib "^1.9.3"
+    ws "^6.1.2"
+
+"@finos/perspective@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@finos/perspective/-/perspective-0.8.0.tgz#2dba84317c2e414d913a12fa48767c9187dc0b46"
+  integrity sha512-QhZNx6dyJ1N3GZzSWeFEzH6tzGqdf05gaYXSaB6TuHFN/6N2YcthrbotbMh78ouGYVwbtBOo4vsM1mJAPAu84w==
   dependencies:
     "@babel/runtime" "^7.8.4"
     core-js "^3.6.4"
