@@ -14,7 +14,7 @@
     "lint:fix": "yarn lint --fix",
     "linc:fix": "yarn linc --fix",
     "modular": "ts-node packages/modular-scripts/src/cli.ts",
-    "test": "yarn modular test --watchAll=false --runInBand",
+    "test": "yarn modular test --watchAll=false --runInBand --forceExit",
     "build": "yarn workspace create-modular-react-app build && yarn workspace modular-scripts build && yarn workspace modular-views.macro build",
     "release": "yarn build && changeset publish",
     "start": "yarn modular start modular-site"
@@ -47,7 +47,7 @@
     "typescript": "^4.2.4"
   },
   "optionalDependencies": {
-    "puppeteer": "^5.4.1"
+    "puppeteer": "^9.1.1"
   },
   "husky": {
     "hooks": {
