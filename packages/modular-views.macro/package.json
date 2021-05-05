@@ -6,7 +6,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@types/babel-plugin-macros": "^2.8.4",
-    "babel-plugin-macros": "^2.8.0",
+    "babel-plugin-macros": "^3.0.1",
     "execa": "^5.0.0",
     "find-up": "^5.0.0",
     "fs-extra": "^9.0.1"
