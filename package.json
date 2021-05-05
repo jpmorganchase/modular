@@ -20,7 +20,7 @@
     "start": "yarn modular start modular-site"
   },
   "dependencies": {
-    "@babel/cli": "^7.10.1",
+    "@babel/cli": "^7.13.16",
     "@babel/core": "7.14.0",
     "@babel/preset-env": "^7.13.15",
     "@babel/preset-react": "^7.9.4",
