@@ -16,7 +16,7 @@
     "build": "babel --root-mode upward src --out-dir build --extensions .ts --ignore 'src/**/*.test.ts'"
   },
   "dependencies": {
-    "@babel/core": "7.12.3",
+    "@babel/core": "7.14.0",
     "@babel/plugin-proposal-class-properties": "^7.13.0",
     "@babel/preset-env": "^7.13.15",
     "@craco/craco": "^6.1.2",
