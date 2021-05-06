@@ -386,7 +386,7 @@ describe('modular-scripts', () => {
     ).toMatchInlineSnapshot(`
       Object {
         "dependencies": Object {
-          "react": "^17.0.1",
+          "react": "^17.0.2",
         },
         "files": Array [
           "/dist-cjs",
