@@ -4,7 +4,12 @@
 // is good enough for everybody, or we have alternate workarounds.
 
 const path = require('path');
-const { getLoader, loaderByName, addAfterLoader } = require('@craco/craco');
+const {
+  getLoader,
+  loaderByName,
+  addAfterLoader,
+  removeLoaders,
+} = require('@craco/craco');
 const glob = require('glob');
 
 if (!process.env.MODULAR_ROOT) {
@@ -58,6 +63,8 @@ module.exports = {
             target: 'es2015',
           },
         });
+
+        removeLoaders(webpackConfig, loaderByName('babel-loader'));
       }
 
       // perspective (https://perspective.finos.org/) is so useful
