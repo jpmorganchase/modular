@@ -4,13 +4,7 @@
 // is good enough for everybody, or we have alternate workarounds.
 
 const path = require('path');
-const {
-  getLoader,
-  loaderByName,
-  removeLoaders,
-  addAfterLoader,
-} = require('@craco/craco');
-const { ESBuildMinifyPlugin } = require('esbuild-loader');
+const { getLoader, loaderByName, addAfterLoader } = require('@craco/craco');
 const glob = require('glob');
 
 if (!process.env.MODULAR_ROOT) {
@@ -27,6 +21,7 @@ module.exports = {
   webpack: {
     configure(webpackConfig, context) {
       if (process.env.USE_MODULAR_BABEL) {
+        console.log('Falling back to babel-loader for builds.');
         const { isFound, match } = getLoader(
           webpackConfig,
           loaderByName('babel-loader'),
@@ -63,14 +58,7 @@ module.exports = {
             target: 'es2015',
           },
         });
-
-        // remove the babel loaders
-        removeLoaders(webpackConfig, loaderByName('babel-loader'));
       }
-      // Replace terser with esbuild
-      webpackConfig.optimization.minimizer[0] = new ESBuildMinifyPlugin({
-        target: 'es2015',
-      });
 
       // perspective (https://perspective.finos.org/) is so useful
       // and widely used for us (JPM) that it makes sense to install

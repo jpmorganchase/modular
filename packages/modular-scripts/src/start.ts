@@ -17,6 +17,7 @@ export default async function start(appPath: string): Promise<void> {
     log: false,
     // @ts-ignore
     env: {
+      USE_MODULAR_BABEL: process.env.USE_MODULAR_BABEL,
       MODULAR_ROOT: modularRoot,
     },
   });
