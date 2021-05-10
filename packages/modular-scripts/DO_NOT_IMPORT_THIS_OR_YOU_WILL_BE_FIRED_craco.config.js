@@ -4,7 +4,12 @@
 // is good enough for everybody, or we have alternate workarounds.
 
 const path = require('path');
-const { loaderByName, removeLoaders, addAfterLoader } = require('@craco/craco');
+const {
+  getLoader,
+  loaderByName,
+  removeLoaders,
+  addAfterLoader,
+} = require('@craco/craco');
 const { ESBuildMinifyPlugin } = require('esbuild-loader');
 const glob = require('glob');
 
@@ -21,34 +26,47 @@ const absoluteModularGlobalConfigsPath = path.resolve(modularRoot, 'modular');
 module.exports = {
   webpack: {
     configure(webpackConfig, context) {
-      const paths = context.paths;
+      if (process.env.USE_MODULAR_BABEL) {
+        const { isFound, match } = getLoader(
+          webpackConfig,
+          loaderByName('babel-loader'),
+        );
 
-      /**
-       * Enable the svgr plugin
-       * svg will not be loaded as a file anymore
-       */
-      webpackConfig.module.rules.unshift({
-        test: /\.svg$/,
-        use: ['@svgr/webpack'],
-      });
+        if (isFound) {
+          const include = Array.isArray(match.loader.include)
+            ? match.loader.include
+            : [match.loader.include];
+          match.loader.include = [...include, absolutePackagesPath];
+        }
+      } else {
+        const paths = context.paths;
 
-      const include = [paths.appSrc, absolutePackagesPath];
+        /**
+         * Enable the svgr plugin
+         * svg will not be loaded as a file anymore
+         */
+        webpackConfig.module.rules.unshift({
+          test: /\.svg$/,
+          use: ['@svgr/webpack'],
+        });
 
-      // add esbuild-loader
-      addAfterLoader(webpackConfig, loaderByName('babel-loader'), {
-        test: /\.(js|mjs|jsx|ts|tsx)$/,
-        include,
-        loader: require.resolve('esbuild-loader'),
-        options: {
-          implementation: require('esbuild'),
-          loader: 'tsx',
-          target: 'es2015',
-        },
-      });
+        const include = [paths.appSrc, absolutePackagesPath];
 
-      // remove the babel loaders
-      removeLoaders(webpackConfig, loaderByName('babel-loader'));
+        // add esbuild-loader
+        addAfterLoader(webpackConfig, loaderByName('babel-loader'), {
+          test: /\.(js|mjs|jsx|ts|tsx)$/,
+          include,
+          loader: require.resolve('esbuild-loader'),
+          options: {
+            implementation: require('esbuild'),
+            loader: 'tsx',
+            target: 'es2015',
+          },
+        });
 
+        // remove the babel loaders
+        removeLoaders(webpackConfig, loaderByName('babel-loader'));
+      }
       // Replace terser with esbuild
       webpackConfig.optimization.minimizer[0] = new ESBuildMinifyPlugin({
         target: 'es2015',
