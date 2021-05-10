@@ -1,5 +1,15 @@
 # modular-scripts
 
+## 0.11.0
+
+### Minor Changes
+
+- 972af73: Replace transpilation implementation with esbuild instead of babel.
+
+### Patch Changes
+
+- e12fedd: Update react-scripts to 4.0.3
+
 ## 0.10.0
 
 ### Minor Changes
