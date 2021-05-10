@@ -17,7 +17,8 @@
     "test": "yarn modular test --watchAll=false --runInBand --forceExit",
     "build": "yarn workspace create-modular-react-app build && yarn workspace modular-scripts build && yarn workspace modular-views.macro build",
     "release": "yarn build && changeset publish",
-    "start": "yarn modular start modular-site"
+    "start": "yarn modular start modular-site",
+    "postinstall": "husky install"
   },
   "dependencies": {
     "@babel/cli": "^7.13.16",
@@ -48,11 +49,6 @@
   },
   "optionalDependencies": {
     "puppeteer": "^9.1.1"
-  },
-  "husky": {
-    "hooks": {
-      "pre-push": "lint-staged"
-    }
   },
   "modular": {
     "type": "root"
