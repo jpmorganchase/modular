@@ -1679,13 +1679,13 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@finos/perspective-viewer-d3fc@^0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@finos/perspective-viewer-d3fc/-/perspective-viewer-d3fc-0.7.0.tgz#dbffa53a28bbef56b18ad0e2070dbc66533aff15"
-  integrity sha512-MsXdKDaR5jrQxV1i6u84JCeZBxyEnaUhIE15PYqodQTw31NoyFp/TjwBveZxyhgR3Gjq7sv0CmHd/KtEG9cA4w==
+"@finos/perspective-viewer-d3fc@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@finos/perspective-viewer-d3fc/-/perspective-viewer-d3fc-0.8.0.tgz#1a00a688032acafd79d251e5370ed4502358aca7"
+  integrity sha512-xQRQ867pszDbYWz7FGrXrx268DsRxX9HpIsnaCJiW+F637V851PTNlopD//cmUPM1ZQ5rnV4IiiBrXBD276Eag==
   dependencies:
-    "@finos/perspective" "^0.7.0"
-    "@finos/perspective-viewer" "^0.7.0"
+    "@finos/perspective" "^0.8.0"
+    "@finos/perspective-viewer" "^0.8.0"
     babel-runtime "^6.26.0"
     chroma-js "^1.3.4"
     core-js "^3.6.4"
@@ -1722,23 +1722,6 @@
     lodash "^4.17.4"
     mobile-drag-drop "^2.3.0-rc.2"
 
-"@finos/perspective-viewer@^0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@finos/perspective-viewer/-/perspective-viewer-0.7.0.tgz#19cb182bf0c2c760ab282e819197da053cb6c07f"
-  integrity sha512-0eGJUiVUp7st3/NpAG0yjjnLI2hpqaeY59+XpAHF/iyjkVBS1PvHKirxvssBijVLgEdf29/l92CmxCgOImB2FQ==
-  dependencies:
-    "@babel/runtime" "^7.8.4"
-    "@finos/perspective" "^0.7.0"
-    "@types/react" "^16.8.6"
-    awesomplete "^1.1.2"
-    chevrotain "^6.5.0"
-    core-js "^3.6.4"
-    d3-array "^1.2.1"
-    detectie "1.0.0"
-    lit-html "^1.1.2"
-    lodash "^4.17.4"
-    mobile-drag-drop "^2.3.0-rc.2"
-
 "@finos/perspective-viewer@^0.8.0":
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/@finos/perspective-viewer/-/perspective-viewer-0.8.0.tgz#733a50d77f69ab755012efb4d3fb885af8977e6f"
@@ -1760,21 +1743,6 @@
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/@finos/perspective/-/perspective-0.6.0.tgz#52dc2ba88b184094e0ee1d50d15b56a774ea76ce"
   integrity sha512-qVEz6aD/lS8pskmrM6gZwfVQo5Uti2wUG6ncqvt3FapdxyZmvNYceBboXdl5c+j7bQqLdh3i9LHt1+RZXlmRkA==
-  dependencies:
-    "@babel/runtime" "^7.8.4"
-    core-js "^3.6.4"
-    d3-array "^1.2.1"
-    detectie "1.0.0"
-    flatbuffers "^1.10.2"
-    lodash "^4.17.4"
-    text-encoding-utf-8 "^1.0.2"
-    tslib "^1.9.3"
-    ws "^6.1.2"
-
-"@finos/perspective@^0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@finos/perspective/-/perspective-0.7.0.tgz#f10cb51b186021e08b2d422b1f2a4573d8a71fc0"
-  integrity sha512-2WPlCu4t50uPJvL9RbKxhffRxdyOFUGed5e2FsZVytkZ8kk79Sbl7i6uPvwud1UXtDfnaVPphrsTSpgyxYZy0A==
   dependencies:
     "@babel/runtime" "^7.8.4"
     core-js "^3.6.4"
