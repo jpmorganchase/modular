@@ -1,6 +1,6 @@
 // from https://github.com/finos/perspective/tree/master/examples/react
 
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import perspective, { Table } from '@finos/perspective';
 import '@finos/perspective-viewer';

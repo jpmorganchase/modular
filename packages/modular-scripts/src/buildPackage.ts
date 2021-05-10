@@ -107,9 +107,8 @@ for (const [name, { location }] of Object.entries(getAllWorkspaces())) {
   const packageJson = fse.readJsonSync(pathToPackageJson) as PackageJson;
 
   packageJsons[name] = packageJson;
-  packageJsonsByPackagePath[
-    location.replace(new RegExp('^packages\\/'), '')
-  ] = packageJson;
+  packageJsonsByPackagePath[location.replace(new RegExp('^packages\\/'), '')] =
+    packageJson;
   packageNames.push(name);
 }
 

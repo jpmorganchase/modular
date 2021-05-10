@@ -25,9 +25,9 @@ async function readCensoredPackageJson(
       if (packageJson[dependencyTypeProperty]) {
         // This replaces the version numbers of packages with `?`.
         packageJson[dependencyTypeProperty] = Object.fromEntries(
-          Object.entries(
-            packageJson[dependencyTypeProperty],
-          ).map(([packageName]) => [packageName, '?']),
+          Object.entries(packageJson[dependencyTypeProperty]).map(
+            ([packageName]) => [packageName, '?'],
+          ),
         );
       }
     }

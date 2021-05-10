@@ -22,6 +22,7 @@ export default async function build(
       log: false,
       // @ts-ignore
       env: {
+        USE_MODULAR_BABEL: process.env.USE_MODULAR_BABEL,
         MODULAR_ROOT: modularRoot,
       },
     });

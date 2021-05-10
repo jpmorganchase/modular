@@ -10,7 +10,8 @@ type VerifyPackageTree = () => void;
 
 export default function test(args: string[]): Promise<void> {
   if (process.env.SKIP_PREFLIGHT_CHECK !== 'true') {
-    const verifyPackageTree = require('react-scripts/scripts/utils/verifyPackageTree') as VerifyPackageTree; // eslint-disable-line @typescript-eslint/no-var-requires
+    const verifyPackageTree =
+      require('react-scripts/scripts/utils/verifyPackageTree') as VerifyPackageTree; // eslint-disable-line @typescript-eslint/no-var-requires
     verifyPackageTree();
   }
 
