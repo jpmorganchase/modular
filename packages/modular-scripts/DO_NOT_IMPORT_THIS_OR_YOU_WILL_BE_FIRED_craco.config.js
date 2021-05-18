@@ -119,10 +119,11 @@ module.exports = {
         ...jestConfig,
         resetMocks: false,
         transform: {
-          '^.+\\.tsx?$': require.resolve('ts-jest'),
-          '^.+\\.(css|scss)$': require.resolve('jest-transform-stub'),
+          '^.+\\.jsx?$': 'babel-jest',
+          '^.+\\.tsx?$': 'ts-jest',
+          '^.+\\.(css|scss)$': 'jest-transform-stub',
           '.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
-            require.resolve('jest-transform-stub'),
+            'jest-transform-stub',
         },
         testPathIgnorePatterns: ['/node_modules/', '/__integration__/'],
         rootDir: absolutePackagesPath,
