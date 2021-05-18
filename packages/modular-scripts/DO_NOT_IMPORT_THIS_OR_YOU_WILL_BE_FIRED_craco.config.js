@@ -104,7 +104,7 @@ module.exports = {
           // add it to our webpack pipeline.
           const WebpackPlugin = require(plugin.package);
 
-          webpackConfig.plugins.push(new WebpackPlugin(plugin?.options));
+          webpackConfig.plugins.push(new WebpackPlugin(plugin.options));
         } catch (err) {
           /* silently fail */
         }
