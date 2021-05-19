@@ -18,11 +18,15 @@ if (!process.env.MODULAR_ROOT) {
     'MODULAR_ROOT not found in environment, did you forget to pass it when calling cracoBin in cli.ts?',
   );
 }
+
 const modularRoot = process.env.MODULAR_ROOT;
 const absolutePackagesPath = path.resolve(modularRoot, 'packages');
 const absoluteModularGlobalConfigsPath = path.resolve(modularRoot, 'modular');
 
 module.exports = {
+  eslint: {
+    enable: process.env.ENABLED_ESLINT || false,
+  },
   webpack: {
     configure(webpackConfig, context) {
       if (process.env.USE_MODULAR_BABEL) {
@@ -67,95 +71,82 @@ module.exports = {
         removeLoaders(webpackConfig, loaderByName('babel-loader'));
       }
 
-      // perspective (https://perspective.finos.org/) is so useful
-      // and widely used for us (JPM) that it makes sense to install
-      // their webpack plugin by default. In the future, if
-      // perspective provides a build that works by default, or if
-      // there's any other workaround, we could remove this.
-      // Of note; this doesn't include perspective itself in your app.
+      // These dependencies are so widely used for us (JPM) that it makes sense to install
+      // their webpack plugin when used.
+      // NOTE: this doesn't include the dependencies themselves in your app.
+      const dependencyPlugins = {
+        '@finos/perspective': {
+          package: '@finos/perspective-webpack-plugin',
+        },
+        'react-monaco-editor': {
+          package: 'monaco-editor-webpack-plugin',
+          options: {
+            languages: ['json', 'generic'],
+          },
+        },
+      };
 
-      try {
-        // test whether `@finos/perspective` has been installed.
-        // This is needed because the plugin imports from `@finos/perspective`
-        // and would crash if imported when `@finos/perspective` isn't installed
-        require.resolve('@finos/perspective');
+      Object.keys(dependencyPlugins).forEach((dependency) => {
+        const plugin = dependencyPlugins[dependency];
         try {
-          require.resolve('@finos/perspective-webpack-plugin');
+          // test whether the dependency has been installed.
+          // if not don't install the corresponding plugin
+          require.resolve(dependency);
+          try {
+            require.resolve(plugin.package);
+          } catch (err) {
+            console.info(
+              `It appears you're using ${dependency}. Run 'yarn add -D ${plugin.package}' to install`,
+            );
+            throw err;
+          }
+          // both dependency and its webpack plugin are available, let's
+          // add it to our webpack pipeline.
+          const WebpackPlugin = require(plugin.package);
+
+          webpackConfig.plugins.push(new WebpackPlugin(plugin.options));
         } catch (err) {
-          console.info(
-            "It appears you're using `@finos/perspective`. Run `yarn install @finos/perspective-webpack-plugin`, and modular will automatically optimise its bundling to be more efficient as described in https://github.com/finos/perspective/tree/master/packages/perspective-webpack-plugin.",
-          );
-          throw err;
+          /* silently fail */
         }
-        // both perspective and its webpack plugin are available, let's
-        // add it to our webpack pipeline.
-        const PerspectivePlugin = require('@finos/perspective-webpack-plugin');
-        webpackConfig.plugins.push(new PerspectivePlugin());
-      } catch (err) {
-        /* silently fail */
-      }
+      });
 
       return webpackConfig;
     },
   },
   jest: {
     configure(jestConfig) {
-      const options = {
-        loaders: {
-          '.js': 'jsx',
-          '.test.js': 'jsx',
-          '.ts': 'tsx',
-          '.test.ts': 'tsx',
-        },
-      };
-
-      const transform = { ...jestConfig.transform };
-
-      // Replace babel transform with esbuild
-      // babelTransform is first transformer key
-      /* 
-      transform:
-        {
-          '^.+\\.(js|jsx|mjs|cjs|ts|tsx)$': 'node_modules\\react-scripts\\config\\jest\\babelTransform.js',
-          '^.+\\.css$': 'node_modules\\react-scripts\\config\\jest\\cssTransform.js',
-          '^(?!.*\\.(js|jsx|mjs|cjs|ts|tsx|css|json)$)': 'node_modules\\react-scripts\\config\\jest\\fileTransform.js'
-        }
-      */
-      const babelKey = Object.keys(transform)[0];
-
-      // We replace babelTransform and add loaders to esbuild-jest
-      transform[babelKey] = [require.resolve('esbuild-jest'), options];
-
-      // Adds loader to all other transform options (2 in this case: cssTransform and fileTransform)
-      // Reason for this is esbuild-jest plugin. It considers only loaders or other options from the last transformer
-      // You can see it for yourself in: /node_modules/esbuild-jest/esbuid-jest.js:21 getOptions method
-      // also in process method line 32 gives empty loaders, because options is already empty object
-      // Issue reported here: https://github.com/aelbore/esbuild-jest/issues/18
-      Object.keys(transform).forEach((key) => {
-        if (babelKey === key) return; // ebuild-jest transform, already has loader
-
-        // Checks if value is array, usually it's not
-        // Our example is above on 70-72 lines. Usually default is: {"\\.[jt]sx?$": "babel-jest"}
-        // (https://jestjs.io/docs/en/configuration#transform-objectstring-pathtotransformer--pathtotransformer-object)
-        // But we have to cover all the cases
-        if (Array.isArray(transform[key]) && transform[key].length === 1) {
-          transform[key].push(options);
-        } else {
-          transform[key] = [transform[key], options];
-        }
-      });
-
       return {
         ...jestConfig,
+        resetMocks: false,
+        transform: {
+          '^.+\\.jsx?$': 'babel-jest',
+          '^.+\\.tsx?$': 'ts-jest',
+          '^.+\\.(css|scss)$': 'jest-transform-stub',
+          '.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
+            'jest-transform-stub',
+        },
+        testPathIgnorePatterns: ['/node_modules/', '/__integration__/'],
         rootDir: absolutePackagesPath,
         roots: ['<rootDir>'],
         testMatch: ['<rootDir>/**/src/**/*.{spec,test}.{js,ts,tsx}'],
         coverageDirectory: path.resolve(modularRoot, 'coverage'),
-        transform,
         collectCoverageFrom: [
           '<rootDir>/**/src/**/*.{js,ts,tsx}',
           '!**/*.d.ts',
         ],
+        coveragePathIgnorePatterns: [
+          '/__tests__/',
+          '/node_modules/',
+          'serviceWorker.ts',
+        ],
+        coverageThreshold: {
+          global: {
+            branches: 85,
+            functions: 85,
+            lines: 85,
+            statements: 85,
+          },
+        },
         setupFiles: jestConfig.setupFiles
           .concat([path.join(__dirname, './jest-setupEnvironment.js')])
           .concat(
