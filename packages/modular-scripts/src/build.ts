@@ -1,9 +1,9 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 
-import getModularRoot from './getModularRoot';
-import isModularType from './isModularType';
-import execSync from './execSync';
+import getModularRoot from './utils/getModularRoot';
+import isModularType from './utils/isModularType';
+import execSync from './utils/execSync';
 import { cracoBin, outputDirectory, packagesRoot, cracoConfig } from './config';
 
 export default async function build(

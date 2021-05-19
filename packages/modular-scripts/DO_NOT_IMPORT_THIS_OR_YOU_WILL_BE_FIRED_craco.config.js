@@ -148,7 +148,7 @@ module.exports = {
           },
         },
         setupFiles: jestConfig.setupFiles
-          .concat([path.join(__dirname, './jest-setupEnvironment.js')])
+          .concat([require.resolve('react-scripts/config/env.js')])
           .concat(
             glob.sync(
               `${absoluteModularGlobalConfigsPath}/setupEnvironment.{js,ts,tsx}`,

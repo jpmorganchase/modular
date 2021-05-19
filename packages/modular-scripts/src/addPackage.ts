@@ -5,8 +5,8 @@ import {
   paramCase as toParamCase,
 } from 'change-case';
 import prompts from 'prompts';
-import getModularRoot from './getModularRoot';
-import execSync from './execSync';
+import getModularRoot from './utils/getModularRoot';
+import execSync from './utils/execSync';
 
 const packagesRoot = 'packages';
 

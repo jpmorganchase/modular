@@ -18,7 +18,7 @@ async function isYarnInstalled(): Promise<boolean> {
 async function preflightCheck(): Promise<void> {
   if (process.env.SKIP_PREFLIGHT_CHECK !== 'true' || isCI) {
     const { name, version } = fs.readJSONSync(
-      path.join(__dirname, '..', 'package.json'),
+      path.join(__dirname, '..', '..', 'package.json'),
     ) as PackageJson;
 
     const message =

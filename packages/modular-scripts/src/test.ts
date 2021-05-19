@@ -1,7 +1,7 @@
 import * as path from 'path';
 import resolve from 'resolve';
-import getModularRoot from './getModularRoot';
-import execSync from './execSync';
+import getModularRoot from './utils/getModularRoot';
+import execSync from './utils/execSync';
 import resolveAsBin from 'resolve-as-bin';
 
 const jestBin = resolveAsBin('jest');
@@ -16,7 +16,6 @@ export default function test(args: string[]): Promise<void> {
   }
 
   const modularRoot = getModularRoot();
-
   let argv = process.argv
     .slice(3)
     .concat(['--config', path.join(__dirname, '..', 'jest-config.js')]);
