@@ -52,7 +52,7 @@
     "@schemastore/tsconfig": "^0.0.9",
     "@types/find-up": "^4.0.0",
     "@types/fs-extra": "^9.0.11",
-    "@types/is-ci": "^2.0.0",
+    "@types/is-ci": "^3.0.0",
     "@types/mri": "^1.1.0",
     "@types/node": "*",
     "@types/prompts": "^2.0.11",
