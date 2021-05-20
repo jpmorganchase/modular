@@ -125,7 +125,7 @@ module.exports = {
           '.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
             'jest-transform-stub',
         },
-        testPathIgnorePatterns: ['/node_modules/', '/__integration__/'],
+        testPathIgnorePatterns: ['/node_modules/'],
         rootDir: absolutePackagesPath,
         roots: ['<rootDir>'],
         testMatch: ['<rootDir>/**/src/**/*.{spec,test}.{js,ts,tsx}'],
@@ -139,14 +139,6 @@ module.exports = {
           '/node_modules/',
           'serviceWorker.ts',
         ],
-        coverageThreshold: {
-          global: {
-            branches: 85,
-            functions: 85,
-            lines: 85,
-            statements: 85,
-          },
-        },
         setupFiles: jestConfig.setupFiles
           .concat([require.resolve('react-scripts/config/env.js')])
           .concat(

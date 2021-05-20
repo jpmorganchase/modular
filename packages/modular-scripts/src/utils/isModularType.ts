@@ -4,7 +4,7 @@ import * as fs from 'fs-extra';
 
 type PackageType = 'app' | 'view' | 'root'; // | 'package', the default
 
-type ModularPackageJson = PackageJson & {
+export type ModularPackageJson = PackageJson & {
   modular?: {
     type: PackageType;
   };

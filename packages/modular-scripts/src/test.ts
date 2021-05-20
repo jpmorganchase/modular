@@ -18,7 +18,7 @@ export default function test(args: string[]): Promise<void> {
   const modularRoot = getModularRoot();
   let argv = process.argv
     .slice(3)
-    .concat(['--config', path.join(__dirname, '..', 'jest-config.js')]);
+    .concat(['--config', path.join(__dirname, 'config', 'jest', 'index.ts')]);
 
   // Watch unless on CI or explicitly running all tests
   if (!process.env.CI && args.indexOf('--watchAll=false') === -1) {
