@@ -24,6 +24,7 @@ const cracoJestConfig = getCracoJestConfig() as Config.DefaultOptions;
 // 1. modular root jest config
 // 2. craco config
 
+// This list may change as we learn of options where flexibility would be valuable
 const supportedOverrides = [
   'collectCoverageFrom',
   'coveragePathIgnorePatterns',
