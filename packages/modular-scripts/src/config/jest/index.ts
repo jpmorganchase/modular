@@ -44,7 +44,7 @@ const modulularSetUpFilesMap: SetUpFilesMap = {
   setupFilesAfterEnv: 'setupTests',
 };
 
-function createJestConfig() {
+export default function createJestConfig(): Config.InitialOptions {
   const jestConfig: Config.InitialOptions = cracoJestConfig;
   if (packageJsonJest && jestConfigFile) {
     console.error(
@@ -114,5 +114,3 @@ function createJestConfig() {
   }
   return jestConfig;
 }
-
-export default createJestConfig();

@@ -3,6 +3,7 @@ import resolve from 'resolve';
 import getModularRoot from './utils/getModularRoot';
 import execSync from './utils/execSync';
 import resolveAsBin from 'resolve-as-bin';
+import createJestConfig from './config/jest';
 
 const jestBin = resolveAsBin('jest');
 
@@ -16,9 +17,10 @@ export default function test(args: string[]): Promise<void> {
   }
 
   const modularRoot = getModularRoot();
+  const jestConfig = createJestConfig();
   let argv = process.argv
     .slice(3)
-    .concat(['--config', path.join(__dirname, 'config', 'jest', 'index.ts')]);
+    .concat(['--config', JSON.stringify(jestConfig)]);
 
   // Watch unless on CI or explicitly running all tests
   if (!process.env.CI && args.indexOf('--watchAll=false') === -1) {
