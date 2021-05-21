@@ -1,10 +1,10 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
-
+import resolveAsBin from 'resolve-as-bin';
 import getModularRoot from './utils/getModularRoot';
 import isModularType from './utils/isModularType';
 import execSync from './utils/execSync';
-import { cracoBin, outputDirectory, packagesRoot, cracoConfig } from './config';
+import { outputDirectory, packagesRoot, cracoConfig } from './config';
 
 export default async function build(
   packagePath: string,
@@ -13,6 +13,8 @@ export default async function build(
   const modularRoot = getModularRoot();
 
   if (isModularType(path.join(modularRoot, packagesRoot, packagePath), 'app')) {
+    const cracoBin = resolveAsBin('craco');
+
     // create-react-app doesn't support plain module outputs yet,
     // so --preserve-modules has no effect here
     await fs.remove(path.join(outputDirectory, packagePath));

@@ -1,14 +1,11 @@
 import * as fs from 'fs-extra';
 import path from 'path';
 import chalk from 'chalk';
+import glob from 'glob';
 import type { Config } from '@jest/types';
-import { getCracoJestConfig } from '../index';
+import { defaults } from 'jest-config';
 import getModularRoot from '../../utils/getModularRoot';
 import { ModularPackageJson } from '../../utils/isModularType';
-
-// Priority of jest configurations:
-// 1. modular root jest config
-// 2. craco config
 
 // This list may change as we learn of options where flexibility would be valuable
 const supportedOverrides = [
@@ -17,6 +14,7 @@ const supportedOverrides = [
   'coverageThreshold',
   'modulePathIgnorePatterns',
   'testPathIgnorePatterns',
+  'transformIgnorePatterns',
 ];
 
 type SetUpFilesMap = {
@@ -32,6 +30,47 @@ const modulularSetUpFilesMap: SetUpFilesMap = {
 
 export default function createJestConfig(): Config.InitialOptions {
   const modularRoot = getModularRoot();
+  const absolutePackagesPath = path.resolve(modularRoot, 'packages');
+  const absoluteModularGlobalConfigsPath = path.resolve(modularRoot, 'modular');
+
+  const jestConfig: Config.InitialOptions = {
+    ...defaults,
+    resetMocks: false,
+    transform: {
+      '^.+\\.jsx?$': 'babel-jest',
+      '^.+\\.tsx?$': 'ts-jest',
+      '^.+\\.(css|scss)$': 'jest-transform-stub',
+      '.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
+        'jest-transform-stub',
+    },
+    testPathIgnorePatterns: ['/node_modules/'],
+    rootDir: absolutePackagesPath,
+    roots: ['<rootDir>'],
+    testMatch: ['<rootDir>/**/src/**/*.{spec,test}.{js,ts,tsx}'],
+    coverageDirectory: path.resolve(modularRoot, 'coverage'),
+    collectCoverageFrom: ['<rootDir>/**/src/**/*.{js,ts,tsx}', '!**/*.d.ts'],
+    coveragePathIgnorePatterns: [
+      '/__tests__/',
+      '/node_modules/',
+      'serviceWorker.ts',
+    ],
+    setupFiles: defaults.setupFiles
+      .concat([require.resolve('react-scripts/config/env.js')])
+      .concat(
+        glob.sync(
+          `${absoluteModularGlobalConfigsPath}/setupEnvironment.{js,ts,tsx}`,
+          {
+            cwd: process.cwd(),
+          },
+        ),
+      ),
+    setupFilesAfterEnv: glob.sync(
+      `${absoluteModularGlobalConfigsPath}/setupTests.{js,ts,tsx}`,
+      {
+        cwd: process.cwd(),
+      },
+    ),
+  };
 
   const rootPackageJson = fs.readJSONSync(
     path.join(modularRoot, 'package.json'),
@@ -45,12 +84,10 @@ export default function createJestConfig(): Config.InitialOptions {
     path.join(modularRoot, 'jest.config.js'),
   );
 
-  const jestConfig = getCracoJestConfig() as Config.InitialOptions;
-
   if (jestConfigFile) {
-    console.error(
+    throw new Error(
       chalk.red(
-        'We detected a jest.config.js file in your root directory.\n' +
+        '\nWe detected a jest.config.js file in your root directory.\n' +
           'We read your jest options from package.json.\n',
         `
         {
@@ -59,17 +96,10 @@ export default function createJestConfig(): Config.InitialOptions {
         `,
       ),
     );
-    process.exit(1);
   }
 
   if (packageJsonJest) {
-    const customJest = (
-      packageJsonJest
-        ? packageJsonJest
-        : require(path.join(modularRoot, 'jest.config.js'))
-    ) as Config.InitialOptions;
-
-    const overrideKeys = Object.keys(customJest);
+    const overrideKeys = Object.keys(packageJsonJest);
     const unsupportedOverrides = overrideKeys.filter(
       (key) => !supportedOverrides.includes(key),
     );
@@ -78,7 +108,7 @@ export default function createJestConfig(): Config.InitialOptions {
     );
 
     if (setUpOptions.length) {
-      console.error(
+      throw new Error(
         chalk.red(
           '\n We detected options in your Jest configuration' +
             ' that should be initialized in here: \n\n' +
@@ -94,11 +124,10 @@ export default function createJestConfig(): Config.InitialOptions {
           '\n\n We will load theses files for you. \n',
         ),
       );
-      process.exit(1);
     }
 
     if (unsupportedOverrides.length) {
-      console.error(
+      throw new Error(
         chalk.red(
           '\nModular only supports overriding these Jest options:\n\n' +
             supportedOverrides
@@ -112,10 +141,9 @@ export default function createJestConfig(): Config.InitialOptions {
           '\n',
         ),
       );
-      process.exit(1);
     }
 
-    Object.assign(jestConfig, customJest);
+    Object.assign(jestConfig, packageJsonJest);
   }
   return jestConfig;
 }

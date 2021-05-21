@@ -10,7 +10,6 @@ const {
   addAfterLoader,
   removeLoaders,
 } = require('@craco/craco');
-const glob = require('glob');
 
 if (!process.env.MODULAR_ROOT) {
   throw new Error(
@@ -21,7 +20,6 @@ if (!process.env.MODULAR_ROOT) {
 
 const modularRoot = process.env.MODULAR_ROOT;
 const absolutePackagesPath = path.resolve(modularRoot, 'packages');
-const absoluteModularGlobalConfigsPath = path.resolve(modularRoot, 'modular');
 
 module.exports = {
   eslint: {
@@ -111,51 +109,6 @@ module.exports = {
       });
 
       return webpackConfig;
-    },
-  },
-  jest: {
-    configure(jestConfig) {
-      return {
-        ...jestConfig,
-        resetMocks: false,
-        transform: {
-          '^.+\\.jsx?$': 'babel-jest',
-          '^.+\\.tsx?$': 'ts-jest',
-          '^.+\\.(css|scss)$': 'jest-transform-stub',
-          '.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
-            'jest-transform-stub',
-        },
-        testPathIgnorePatterns: ['/node_modules/'],
-        rootDir: absolutePackagesPath,
-        roots: ['<rootDir>'],
-        testMatch: ['<rootDir>/**/src/**/*.{spec,test}.{js,ts,tsx}'],
-        coverageDirectory: path.resolve(modularRoot, 'coverage'),
-        collectCoverageFrom: [
-          '<rootDir>/**/src/**/*.{js,ts,tsx}',
-          '!**/*.d.ts',
-        ],
-        coveragePathIgnorePatterns: [
-          '/__tests__/',
-          '/node_modules/',
-          'serviceWorker.ts',
-        ],
-        setupFiles: jestConfig.setupFiles
-          .concat([require.resolve('react-scripts/config/env.js')])
-          .concat(
-            glob.sync(
-              `${absoluteModularGlobalConfigsPath}/setupEnvironment.{js,ts,tsx}`,
-              {
-                cwd: process.cwd(),
-              },
-            ),
-          ),
-        setupFilesAfterEnv: glob.sync(
-          `${absoluteModularGlobalConfigsPath}/setupTests.{js,ts,tsx}`,
-          {
-            cwd: process.cwd(),
-          },
-        ),
-      };
     },
   },
 };

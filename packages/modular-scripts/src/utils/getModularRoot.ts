@@ -26,13 +26,8 @@ export default function getModularRoot(): string {
       console.error('These commands must be run within a modular repository.');
       process.exit(1);
     }
-    const modularRootPath = path.dirname(modularRoot);
 
-    // Exposing this to enable configurations to be constructed before a cli command is called,
-    // given that we know at this point we are in modular root.
-    process.env.MODULAR_ROOT = modularRootPath;
-
-    return modularRootPath;
+    return path.dirname(modularRoot);
   } catch (err) {
     console.error(err);
     return process.exit(1);

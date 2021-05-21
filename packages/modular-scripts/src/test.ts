@@ -5,8 +5,6 @@ import execSync from './utils/execSync';
 import resolveAsBin from 'resolve-as-bin';
 import createJestConfig from './config/jest';
 
-const jestBin = resolveAsBin('jest');
-
 type VerifyPackageTree = () => void;
 
 export default function test(args: string[]): Promise<void> {
@@ -84,6 +82,9 @@ export default function test(args: string[]): Promise<void> {
   argv.push('--env', testEnvironment || '');
 
   // ends the section copied from CRA
+
+  const jestBin = resolveAsBin('jest');
+
   let testBin = jestBin,
     testArgs = argv;
 
