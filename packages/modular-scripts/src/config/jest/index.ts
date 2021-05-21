@@ -6,20 +6,6 @@ import { getCracoJestConfig } from '../index';
 import getModularRoot from '../../utils/getModularRoot';
 import { ModularPackageJson } from '../../utils/isModularType';
 
-const modularRoot = getModularRoot();
-
-const rootPackageJson = fs.readJSONSync(
-  path.join(modularRoot, 'package.json'),
-) as ModularPackageJson;
-
-const packageJsonJest = rootPackageJson?.jest as
-  | Config.InitialOptions
-  | undefined;
-
-const jestConfigFile = fs.existsSync(path.join(modularRoot, 'jest.config.js'));
-
-const cracoJestConfig = getCracoJestConfig() as Config.DefaultOptions;
-
 // Priority of jest configurations:
 // 1. modular root jest config
 // 2. craco config
@@ -45,19 +31,38 @@ const modulularSetUpFilesMap: SetUpFilesMap = {
 };
 
 export default function createJestConfig(): Config.InitialOptions {
-  const jestConfig: Config.InitialOptions = cracoJestConfig;
-  if (packageJsonJest && jestConfigFile) {
+  const modularRoot = getModularRoot();
+
+  const rootPackageJson = fs.readJSONSync(
+    path.join(modularRoot, 'package.json'),
+  ) as ModularPackageJson;
+
+  const packageJsonJest = rootPackageJson?.jest as
+    | Config.InitialOptions
+    | undefined;
+
+  const jestConfigFile = fs.existsSync(
+    path.join(modularRoot, 'jest.config.js'),
+  );
+
+  const jestConfig = getCracoJestConfig() as Config.InitialOptions;
+
+  if (jestConfigFile) {
     console.error(
       chalk.red(
-        'We detected Jest options in two locations: ' +
-          'jest.config.js and package.json' +
-          '\n Please congregate your Jest options to one location.\n',
+        'We detected a jest.config.js file in your root directory.\n' +
+          'We read your jest options from package.json.\n',
+        `
+        {
+          "jest": {}
+        }
+        `,
       ),
     );
     process.exit(1);
   }
 
-  if (packageJsonJest || jestConfigFile) {
+  if (packageJsonJest) {
     const customJest = (
       packageJsonJest
         ? packageJsonJest
