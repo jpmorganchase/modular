@@ -2,7 +2,7 @@
 
 import mri from 'mri';
 
-import preflightCheck from './preflightCheck';
+import preflightCheck from './utils/preflightCheck';
 
 import build from './build';
 import addPackage from './addPackage';

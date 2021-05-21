@@ -1,10 +1,9 @@
 import * as path from 'path';
 import resolve from 'resolve';
-import getModularRoot from './getModularRoot';
-import execSync from './execSync';
+import getModularRoot from './utils/getModularRoot';
+import execSync from './utils/execSync';
 import resolveAsBin from 'resolve-as-bin';
-
-const jestBin = resolveAsBin('jest');
+import createJestConfig from './config/jest';
 
 type VerifyPackageTree = () => void;
 
@@ -16,10 +15,10 @@ export default function test(args: string[]): Promise<void> {
   }
 
   const modularRoot = getModularRoot();
-
+  const jestConfig = createJestConfig();
   let argv = process.argv
     .slice(3)
-    .concat(['--config', path.join(__dirname, '..', 'jest-config.js')]);
+    .concat(['--config', JSON.stringify(jestConfig)]);
 
   // Watch unless on CI or explicitly running all tests
   if (!process.env.CI && args.indexOf('--watchAll=false') === -1) {
@@ -83,6 +82,9 @@ export default function test(args: string[]): Promise<void> {
   argv.push('--env', testEnvironment || '');
 
   // ends the section copied from CRA
+
+  const jestBin = resolveAsBin('jest');
+
   let testBin = jestBin,
     testArgs = argv;
 

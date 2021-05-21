@@ -10,7 +10,7 @@ import {
   queries,
 } from 'pptr-testing-library';
 
-import getModularRoot from '../getModularRoot';
+import getModularRoot from '../utils/getModularRoot';
 
 const modularRoot = getModularRoot();
 
