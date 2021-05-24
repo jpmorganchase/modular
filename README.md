@@ -6,7 +6,7 @@
 
 ---
 
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?)](https://github.com/jpmorganchase/modular/blob/master/CONTRIBUTING.md)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?)](https://github.com/jpmorganchase/modular/blob/main/CONTRIBUTING.md)
 ![Build](https://github.com/jpmorganchase/modular/actions/workflows/node.js.yml/badge.svg)
 
 `modular` is a collection of tools and guidance to enable UI development at
