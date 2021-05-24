@@ -15,14 +15,13 @@
   },
   "dependencies": {
     "chalk": "^4.1.1",
+    "commander": "^7.2.0",
     "execa": "^5.0.0",
-    "fs-extra": "^10.0.0",
-    "mri": "^1.1.6"
+    "fs-extra": "^10.0.0"
   },
   "devDependencies": {
     "@schemastore/package": "^0.0.6",
     "@types/fs-extra": "^9.0.11",
-    "@types/mri": "^1.1.0",
     "@types/node": "*",
     "@types/tmp": "^0.2.0",
     "rimraf": "^3.0.2"
