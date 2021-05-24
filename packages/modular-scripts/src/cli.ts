@@ -26,11 +26,11 @@ program.version(
 program
   .command('add <package-name>')
   .description(`Add a new folder into the modular workspace.`)
-  .option('--unstable-type <type>', "Type of the folder ('app', 'view')")
   .option(
-    '--unstable-name <name>',
-    "Package name for the package.json ('app', 'view')",
+    '--unstable-type <type>',
+    "Type of the folder ('app', 'view', 'package')",
   )
+  .option('--unstable-name <name>', 'Package name for the package.json')
   .action(
     (
       packageName: string,
@@ -49,7 +49,9 @@ program
 
 program
   .command('build <packages...>')
-  .description('Build a list of packages')
+  .description(
+    'Build a list of packages (multiple package names can be supplied seperated by space)',
+  )
   .option('--preserve-modules')
   .action(
     async (
@@ -128,7 +130,9 @@ program
 
 program
   .command('start <packageName>')
-  .description('Start a dev-server for a package')
+  .description(
+    `Start a dev-server for an app. Only available for modular 'app' types.`,
+  )
   .action((packageName: string) => {
     return start(packageName);
   });

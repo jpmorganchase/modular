@@ -282,6 +282,12 @@ async function makeBundle(
           [
             '@babel/preset-env',
             // TODO: why doesn't this read `targets` from package.json?
+            {
+              targets: {
+                // We should be building packages for environments which support esmodules given their wide support now.
+                esmodules: true,
+              },
+            },
           ],
           ['@babel/preset-typescript', { isTSX: true, allExtensions: true }],
           '@babel/preset-react',
@@ -301,7 +307,7 @@ async function makeBundle(
     // (alternatively, disable support for those in apps)
   });
 
-  const outputOptions = {
+  const outputOptions: rollup.OutputOptions = {
     freeze: false,
     sourcemap: true, // TODO: read this off env
   };
