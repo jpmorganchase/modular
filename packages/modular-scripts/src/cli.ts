@@ -50,7 +50,7 @@ program
 program
   .command('build <packages...>')
   .description(
-    'Build a list of packages (multiple package names can be supplied seperated by space)',
+    'Build a list of packages (multiple package names can be supplied separated by space)',
   )
   .option('--preserve-modules')
   .action(
