@@ -30,7 +30,7 @@ import * as fse from 'fs-extra';
 
 import builtinModules from 'builtin-modules';
 import getModularRoot from './utils/getModularRoot';
-import { getAllWorkspaces } from './utils/workspaces';
+import { getAllWorkspaces } from './utils/getAllWorkspaces';
 
 type Console = {
   log: typeof console.log;

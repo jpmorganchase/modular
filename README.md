@@ -79,6 +79,11 @@ Runs [`jest`](https://jestjs.io/) against the entire `modular` project.
 Runs [`react-scripts build`](https://create-react-app.dev/docs/production-build)
 against the selected app.
 
+#### `yarn modular workspace`
+
+Prints an extension of `yarn workspaces info` to the console. Extended with
+modular metadata about package type and public/private status.
+
 ## Config
 
 #### `modular/setupEnvironment.ts`

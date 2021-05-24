@@ -5,7 +5,7 @@ import * as fs from 'fs-extra';
 import isCI from 'is-ci';
 import path from 'path';
 import updateNotifier from 'update-notifier';
-import getModularRoot from './getModularRoot';
+import { getWorkspaceInfo } from '../getWorkspaceInfo';
 
 async function isYarnInstalled(): Promise<boolean> {
   try {
@@ -55,15 +55,16 @@ async function preflightCheck(): Promise<void> {
     }
 
     // ensure that workspaces are setup correctly with yarn
-    const modularRoot = getModularRoot();
-    try {
-      await execa('yarnpkg', ['--silent', 'workspaces', 'info'], {
-        cwd: modularRoot,
-        cleanup: true,
-      });
-    } catch (e) {
-      const err = e as execa.ExecaSyncError;
-      throw new Error(err.stderr);
+    const workspace = await getWorkspaceInfo();
+
+    for (const [packageName, packageInfo] of Object.entries(workspace)) {
+      if (packageInfo.mismatchedWorkspaceDependencies.length) {
+        throw new Error(
+          `${packageName} has mismatchedWorkspaceDependencies ${packageInfo.mismatchedWorkspaceDependencies.join(
+            ', ',
+          )}`,
+        );
+      }
     }
   }
 
