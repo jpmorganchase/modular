@@ -37,11 +37,16 @@ export default function createJestConfig(): Config.InitialOptions {
     ...defaults,
     resetMocks: false,
     transform: {
-      '^.+\\.jsx?$': 'babel-jest',
-      '^.+\\.tsx?$': 'ts-jest',
-      '^.+\\.(css|scss)$': 'jest-transform-stub',
+      '^.+\\.(js|jsx|mjs|cjs)$': [
+        require.resolve('babel-jest'),
+        {
+          presets: [require.resolve('babel-preset-react-app')],
+        },
+      ],
+      '^.+\\.(ts|tsx)$': require.resolve('ts-jest'),
+      '^.+\\.(css|scss)$': require.resolve('jest-transform-stub'),
       '.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
-        'jest-transform-stub',
+        require.resolve('jest-transform-stub'),
     },
     testPathIgnorePatterns: ['/node_modules/'],
     rootDir: absolutePackagesPath,
