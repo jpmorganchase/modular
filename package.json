@@ -9,10 +9,8 @@
   },
   "scripts": {
     "prettier": "prettier --write .",
-    "lint": "node ./scripts/lint.js --cache --ext .js,.ts,.tsx --max-warnings 0",
-    "linc": "node ./scripts/linc.js --cache --ext .js,.ts,.tsx --max-warnings 0",
+    "lint": "eslint --cache --ext .js,.ts,.tsx --max-warnings 0",
     "lint:fix": "yarn lint --fix",
-    "linc:fix": "yarn linc --fix",
     "create-modular-react-app": "ts-node packages/create-modular-react-app/src/index.ts",
     "modular": "ts-node packages/modular-scripts/src/cli.ts",
     "test": "yarn modular test --watchAll false --runInBand --forceExit",
