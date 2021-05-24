@@ -347,14 +347,19 @@ describe('modular-scripts', () => {
     rimraf.sync(path.join(modularRoot, 'dist'));
 
     // build a view
-    await modular('build sample-view', { stdio: 'inherit' });
+    await modular('build sample-view', {
+      stdio: 'inherit',
+      env: { NODE_ENV: 'production' },
+    });
     // build a package too, but preserve modules
     await modular('build sample-package --preserve-modules', {
       stdio: 'inherit',
+      env: { NODE_ENV: 'production' },
     });
     // build the nested package
     await modular('build nested/sample-nested-package', {
       stdio: 'inherit',
+      env: { NODE_ENV: 'production' },
     });
 
     expect(
@@ -363,7 +368,9 @@ describe('modular-scripts', () => {
       ),
     ).toMatchInlineSnapshot(`
       Object {
-        "dependencies": Object {},
+        "dependencies": Object {
+          "@babel/runtime": "^7.12.5",
+        },
         "files": Array [
           "/dist-cjs",
           "/dist-es",
@@ -386,6 +393,7 @@ describe('modular-scripts', () => {
     ).toMatchInlineSnapshot(`
       Object {
         "dependencies": Object {
+          "@babel/runtime": "^7.12.5",
           "react": "^17.0.2",
         },
         "files": Array [
@@ -417,7 +425,9 @@ describe('modular-scripts', () => {
       ),
     ).toMatchInlineSnapshot(`
       Object {
-        "dependencies": Object {},
+        "dependencies": Object {
+          "@babel/runtime": "^7.12.5",
+        },
         "files": Array [
           "/dist-cjs",
           "/dist-es",
@@ -463,11 +473,11 @@ describe('modular-scripts', () => {
       └─ sample-view
          ├─ README.md #11adaka
          ├─ dist-cjs
-         │  ├─ sample-view.cjs.js #8jw6cg
-         │  └─ sample-view.cjs.js.map #130r3z8
+         │  ├─ sample-view.cjs.js #pz1p9l
+         │  └─ sample-view.cjs.js.map #1o7p2t4
          ├─ dist-es
-         │  ├─ sample-view.es.js #1ctbbz8
-         │  └─ sample-view.es.js.map #12deywy
+         │  ├─ sample-view.es.js #1pcl5b9
+         │  └─ sample-view.es.js.map #2jby31
          ├─ dist-types
          │  └─ src
          │     └─ index.d.ts #1vloh7q

@@ -4,7 +4,7 @@ import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/pa
 
 import preflightCheck from './utils/preflightCheck';
 
-import buildPackages from './build';
+import build from './build';
 import addPackage from './addPackage';
 import start from './start';
 import test, { TestOptions } from './test';
@@ -60,11 +60,18 @@ program
         preserveModules?: boolean;
       },
     ) => {
+      if (process.env.NODE_ENV !== 'production') {
+        console.error(
+          'Builds should be done with production settings. Try calling NODE_ENV=production modular build <name>',
+        );
+        process.exit(1);
+      }
+
       console.log('building packages at:', packagePaths.join(', '));
 
       for (let i = 0; i < packagePaths.length; i++) {
         try {
-          await buildPackages(packagePaths[i], options['preserveModules']);
+          await build(packagePaths[i], options['preserveModules']);
         } catch (err) {
           console.error(`building ${packagePaths[i]} failed`);
           throw err;

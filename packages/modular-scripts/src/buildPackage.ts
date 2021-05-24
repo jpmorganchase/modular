@@ -268,21 +268,9 @@ async function makeBundle(
       }),
       commonjs({ include: /\/node_modules\// }),
       babel({
-        babelHelpers: 'bundled',
+        babelHelpers: 'runtime',
         presets: [
-          // Preset orders matters, please see: https://github.com/babel/babel/issues/8752#issuecomment-486541662
-          [
-            '@babel/preset-env',
-            // TODO: why doesn't this read `targets` from package.json?
-            {
-              targets: {
-                // We should be building packages for environments which support esmodules given their wide support now.
-                esmodules: true,
-              },
-            },
-          ],
-          ['@babel/preset-typescript', { isTSX: true, allExtensions: true }],
-          '@babel/preset-react',
+          ['babel-preset-react-app', { flow: false, typescript: true }],
         ],
         plugins: ['@babel/plugin-proposal-class-properties'],
         extensions,
@@ -313,6 +301,17 @@ async function makeBundle(
 
   // "local" workspaces/packages that were imported, i.e - packages/*
   const localImports: { [name: string]: string } = {};
+
+  if (
+    !(
+      packageJson.dependencies?.['@babel/runtime'] ||
+      packageJson.peerDependencies?.['@babel/runtime']
+    )
+  ) {
+    // we include @babel/runtime by default for lib builds.
+    // don't worry, it's likely already there in your dependency tree.
+    localImports['@babel/runtime'] = '^7.12.5';
+  }
 
   // this is used to collect local filenames being referenced
   // to prevent errors where facades are imported as dependencies
@@ -381,6 +380,7 @@ async function makeBundle(
             if (rootPackageJsonDependencies[importedPackage]) {
               localImports[importedPackage] =
                 rootPackageJsonDependencies[importedPackage];
+              // ^ this also updates @babel/runtime's version if available
             } else {
               // not mentioned in the root package.json either, so
               // let's collect its name and throw an error later
@@ -399,7 +399,11 @@ async function makeBundle(
     }
   }
 
-  if (Object.keys(localImports).length > 0) {
+  if (
+    Object.keys(localImports).filter(
+      (imported) => imported !== '@babel/runtime',
+    ).length > 0
+  ) {
     console.log('Adding dependencies to the generated package.json:');
     console.log(localImports);
   }
