@@ -1,5 +1,17 @@
 # modular-scripts
 
+## 0.12.0
+
+### Minor Changes
+
+- 6feeaf4: Replaced esbuild-jest and added check for monaco plugin
+- 257862c: Allow overriding for certain jest options found in package.json or
+  jest.config.js
+
+### Patch Changes
+
+- 68eae74: Target esmodules for transpilation of packages
+
 ## 0.11.0
 
 ### Minor Changes
