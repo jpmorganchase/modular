@@ -37,8 +37,13 @@ export default function createJestConfig(): Config.InitialOptions {
     ...defaults,
     resetMocks: false,
     transform: {
-      '^.+\\.jsx?$': 'babel-jest',
-      '^.+\\.tsx?$': 'ts-jest',
+      '^.+\\.(js|jsx|mjs|cjs)$': [
+        'babel-jest',
+        {
+          presets: ['babel-preset-react-app'],
+        },
+      ],
+      '^.+\\.(ts|tsx)$': 'ts-jest',
       '^.+\\.(css|scss)$': 'jest-transform-stub',
       '.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
         'jest-transform-stub',
