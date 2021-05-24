@@ -32,14 +32,6 @@ import builtinModules from 'builtin-modules';
 import getModularRoot from './utils/getModularRoot';
 import { getAllWorkspaces } from './utils/workspaces';
 
-const modularRoot = getModularRoot();
-
-if (process.cwd() !== modularRoot) {
-  throw new Error(
-    'This command can only be run from the root of a modular project',
-  );
-}
-
 type Console = {
   log: typeof console.log;
   error: typeof console.error;
@@ -593,6 +585,14 @@ export async function buildPackage(
   packagePath: string,
   preserveModules = false,
 ): Promise<void> {
+  const modularRoot = getModularRoot();
+
+  if (process.cwd() !== modularRoot) {
+    throw new Error(
+      'This command can only be run from the root of a modular project',
+    );
+  }
+
   const console = getConsole(packagePath);
   // ensure the root build folder is ready
   await fse.mkdirp(outputDirectory);

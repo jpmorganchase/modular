@@ -1,11 +1,12 @@
 import execa from 'execa';
 import getModularRoot from './getModularRoot';
-const modularRoot = getModularRoot();
 
 let workspaces: { [name: string]: { location: string } };
 
 export function getAllWorkspaces(): typeof workspaces {
   if (!workspaces) {
+    const modularRoot = getModularRoot();
+
     workspaces = JSON.parse(
       execa.sync('yarnpkg', ['workspaces', 'info'], {
         all: true,
