@@ -32,9 +32,9 @@ jobs:
           restore-keys: |
             v2-${{ runner.os }}-yarn-
 
-      - run: yarn
-      - run: npx prettier --check .
-      - run: npx tsc
+      - run: yarn --frozen-lockfile
+      - run: yarn prettier --check .
+      - run: yarn tsc
       - run: yarn lint
   test:
     runs-on: ubuntu-latest
