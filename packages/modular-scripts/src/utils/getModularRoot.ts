@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
 import findUp from 'find-up';
+import memoize from './memoize';
 
 function isModularRoot(packageJson: { modular?: Record<string, unknown> }) {
   return packageJson?.modular?.type === 'root';
@@ -19,7 +20,7 @@ function findUpModularRoot() {
   });
 }
 
-export default function getModularRoot(): string {
+function getModularRoot(): string {
   try {
     const modularRoot = findUpModularRoot();
     if (modularRoot === undefined) {
@@ -33,3 +34,5 @@ export default function getModularRoot(): string {
     return process.exit(1);
   }
 }
+
+export default memoize(getModularRoot);
