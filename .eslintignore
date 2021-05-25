@@ -13,7 +13,9 @@ packages/view-1
 packages/view-2
 
 # Build output
-/packages/**/build/
+!/packages/modular-scripts/src/commands/build/
+/packages/*/build/*
+!/packages/modular-scripts/src/commands/build/*
 
 # Testing
 /coverage

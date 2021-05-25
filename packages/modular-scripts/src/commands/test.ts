@@ -1,8 +1,8 @@
 import * as path from 'path';
 import resolve from 'resolve';
 import resolveBin from 'resolve-as-bin';
-import execSync from './utils/execSync';
-import getModularRoot from './utils/getModularRoot';
+import execSync from '../utils/execSync';
+import getModularRoot from '../utils/getModularRoot';
 export interface TestOptions {
   debug: boolean;
   coverage: boolean;
@@ -58,7 +58,7 @@ export default async function test(
   const cleanArgv: string[] = [];
 
   // pass in path to configuration file
-  const { createJestConfig } = await import('./config/jest');
+  const { createJestConfig } = await import('../config/jest');
   cleanArgv.push(
     '--config',
     `'${JSON.stringify(
