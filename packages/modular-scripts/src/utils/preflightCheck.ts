@@ -5,7 +5,7 @@ import * as fs from 'fs-extra';
 import isCI from 'is-ci';
 import path from 'path';
 import updateNotifier from 'update-notifier';
-import { getWorkspaceInfo } from '../getWorkspaceInfo';
+import { getWorkspaceInfo } from '../utils/getWorkspaceInfo';
 
 async function isYarnInstalled(): Promise<boolean> {
   try {
