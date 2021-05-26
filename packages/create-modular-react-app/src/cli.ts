@@ -135,7 +135,6 @@ export default function createModularApp(argv: {
       'app',
       '--unstable-name',
       'app',
-      '--silent',
       ...preferOfflineArg,
     ],
     {
