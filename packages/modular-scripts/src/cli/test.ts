@@ -1,4 +1,4 @@
-import { Command } from 'commander';
+import program from './program';
 import { test, TestOptions } from '../';
 
 interface JestOption {
@@ -16,7 +16,8 @@ interface CLITestOptions extends TestOptions {
   U: boolean;
 }
 
-const command = new Command('test [regexes...]')
+const command = program
+  .command('test [regexes...]')
   .option(
     '--debug',
     'Setup node.js debugger on the test process - equivalent of setting --inspect-brk on a node.js process',

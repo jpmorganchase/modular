@@ -1,7 +1,8 @@
-import { Command } from 'commander';
+import program from './program';
 import { addPackage } from '../';
 
-const command = new Command('add <package-name>')
+const command = program
+  .command('add <package-name>')
   .description(`Add a new folder into the modular workspace.`)
   .option(
     '--unstable-type <type>',

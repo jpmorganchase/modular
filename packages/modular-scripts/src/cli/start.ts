@@ -1,7 +1,8 @@
-import { Command } from 'commander';
+import program from './program';
 import { start } from '../';
 
-const command = new Command('start <packageName>')
+const command = program
+  .command('start <packageName>')
   .description(
     `Start a dev-server for an app. Only available for modular 'app' types.`,
   )

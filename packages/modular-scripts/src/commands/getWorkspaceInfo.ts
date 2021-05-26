@@ -1,9 +1,9 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 
-import { PackageType, ModularPackageJson } from './utils/isModularType';
-import { getAllWorkspaces } from './utils/getAllWorkspaces';
-import getModularRoot from './utils/getModularRoot';
+import { PackageType, ModularPackageJson } from '../utils/isModularType';
+import { getAllWorkspaces } from '../utils/getAllWorkspaces';
+import getModularRoot from '../utils/getModularRoot';
 
 export interface WorkSpaceRecord {
   location: string;
@@ -25,7 +25,8 @@ export async function getWorkspaceInfo(): Promise<WorkspaceInfo> {
       path.join(workspaceRoot, packageInfo.location, 'package.json'),
     )) as ModularPackageJson;
 
-    const type = packageJson.modular?.type || ('package' as PackageType);
+    const type: PackageType = (packageJson.modular?.type ||
+      'package') as PackageType;
 
     const modularPackageInfo = Object.assign(packageInfo, {
       type,

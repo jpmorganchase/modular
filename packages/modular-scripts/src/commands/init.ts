@@ -22,10 +22,20 @@ export async function initModularFolder(
   const packageJson = (await fs.readJSON(
     packageJsonPath,
   )) as ModularPackageJson;
+
+  let changed = false;
   if (!packageJson.modular) {
     packageJson.modular = {
       type: 'root',
     };
+    changed = true;
+  }
+
+  if (!packageJson.workspaces) {
+    packageJson.workspaces = ['packages/**'];
+  }
+
+  if (changed) {
     await fs.writeJSON(packageJsonPath, packageJson, {
       spaces: 2,
     });

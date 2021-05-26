@@ -1,4 +1,4 @@
-import { getWorkspaceInfo } from '../getWorkspaceInfo';
+import { getWorkspaceInfo } from '../commands/getWorkspaceInfo';
 
 test('getWorkspaceInfo', async () => {
   const workspace = await getWorkspaceInfo();

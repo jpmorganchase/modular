@@ -13,7 +13,7 @@ type YarnWorkspaces = Record<string, YarnWorkspace>;
 function _getAllWorkspaces(): YarnWorkspaces {
   const modularRoot = getModularRoot();
   return JSON.parse(
-    execa.sync('yarnpkg', ['workspaces', 'info'], {
+    execa.sync('yarnpkg', ['--silent', 'workspaces', 'info'], {
       all: true,
       reject: false,
       cwd: modularRoot,

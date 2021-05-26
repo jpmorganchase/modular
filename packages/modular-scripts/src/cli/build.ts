@@ -1,7 +1,8 @@
-import { Command } from 'commander';
+import program from './program';
 import { build } from '../';
 
-const command = new Command('build <packages...>')
+const command = program
+  .command('build <packages...>')
   .description(
     'Build a list of packages (multiple package names can be supplied separated by space)',
   )

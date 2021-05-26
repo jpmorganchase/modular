@@ -17,12 +17,15 @@ describe('Creating a new modular folder', () => {
     await fs.remove(folder);
   });
 
-  it('should make a new repo with the right name', async () => {
+  it('should make a new repo with the right name and properties', async () => {
     await initModularFolder(folder, true);
 
     const packageJson = (await fs.readJSON(
       path.join(folder, 'package.json'),
     )) as ModularPackageJson;
+
+    packageJson.name = 'test-modular-app';
+
     expect(packageJson).toMatchSnapshot();
   });
 });

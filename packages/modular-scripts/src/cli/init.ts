@@ -1,11 +1,12 @@
-import { Command } from 'commander';
+import program from './program';
 import { init } from '../';
 
 interface Options {
   y: boolean;
 }
 
-const command = new Command('init')
+const command = program
+  .command('init')
   .description(
     `Initialize a new modular repository in the current working directory.`,
   )
