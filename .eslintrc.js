@@ -1,19 +1,10 @@
-'use strict';
-
-// Short hand codes for the values eslint expects
-// Might feel like overkill, but is also effectively visually
-// when scanning through the config and looking for values.
-
-// eslint-disable-next-line  no-unused-vars
-const ERROR = 'error';
-const WARN = 'warn';
 const OFF = 'off';
 
 module.exports = {
-  extends: ['modular-app'],
-  rules: {
-    strict: [WARN, 'global'],
-  },
+  root: true,
+  extends: [
+    'plugin:modular-app/recommended'
+  ],  
   overrides: [
     {
       files: 'packages/modular-scripts/types/**/*',

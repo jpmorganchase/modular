@@ -119,7 +119,7 @@ describe('create-modular-react-app', () => {
           "typescript": "?",
         },
         "eslintConfig": Object {
-          "extends": "modular-app",
+          "extends": "plugin:modular-app/recommended",
         },
         "license": "MIT",
         "main": "index.js",
