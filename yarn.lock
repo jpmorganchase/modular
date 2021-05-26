@@ -2197,7 +2197,7 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
-"@testing-library/dom@^7.22.2", "@testing-library/dom@^7.28.1", "@testing-library/dom@^7.29.4":
+"@testing-library/dom@^7.28.1", "@testing-library/dom@^7.29.4", "@testing-library/dom@^7.31.0":
   version "7.31.0"
   resolved "https://registry.npmjs.org/@testing-library/dom/-/dom-7.31.0.tgz#938451abd3ca27e1b69bb395d4a40759fd7f5b3b"
   integrity sha512-0X7ACg4YvTRDFMIuTOEj6B4NpN7i3F/4j5igOcTI5NC5J+N4TribNdErCHOZF1LBWhhcyfwxelVwvoYNMUXTOA==
@@ -10918,12 +10918,13 @@ postcss@^8.1.0:
     nanoid "^3.1.23"
     source-map "^0.6.1"
 
-pptr-testing-library@^0.6.4:
-  version "0.6.4"
-  resolved "https://registry.npmjs.org/pptr-testing-library/-/pptr-testing-library-0.6.4.tgz#0b38d85431b5b5bb91aed5bdd110fb5647ad6e1f"
-  integrity sha512-gO9BBG1KPy694G48xAujLCyVknNYzu9V8x5uRJgu/XfcO46NH3M6bhoOydiAkF6oJfm7N2Z+JDo5+eEqLft5gA==
+pptr-testing-library@^0.6.5:
+  version "0.6.5"
+  resolved "https://registry.yarnpkg.com/pptr-testing-library/-/pptr-testing-library-0.6.5.tgz#8421920b6be568b28cc0113b42b99b1e74a631a5"
+  integrity sha512-0F7g2pSv3fgdjMlUT4GLdcPOivm/g3na1IM6rqjBWUApeu7gS5uOAdnEr3N4EgSUT2bBVMlqrs6jUWBF78NKlQ==
   dependencies:
-    "@testing-library/dom" "^7.22.2"
+    "@testing-library/dom" "^7.31.0"
+    esbuild "^0.12.2"
     wait-for-expect "^3.0.2"
 
 preferred-pm@^3.0.0:
