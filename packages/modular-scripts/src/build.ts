@@ -1,10 +1,12 @@
 import * as fs from 'fs-extra';
+import * as lockfile from 'lockfile';
 import * as path from 'path';
 import resolveAsBin from 'resolve-as-bin';
+
+import { outputDirectory, packagesRoot, cracoConfig } from './config';
 import getModularRoot from './utils/getModularRoot';
 import isModularType from './utils/isModularType';
 import execSync from './utils/execSync';
-import { outputDirectory, packagesRoot, cracoConfig } from './config';
 
 export default async function build(
   packagePath: string,
@@ -34,10 +36,16 @@ export default async function build(
       path.join(outputDirectory, packagePath),
     );
   } else {
-    // it's a view/package, run a library build
-    const { buildPackage } = await import('./buildPackage');
-    // ^ we do a dynamic import here to defer the module's initial side effects
-    // till when it's actually needed (i.e. now)
-    await buildPackage(packagePath, preserveModules);
+    try {
+      lockfile.lockSync(path.join(modularRoot, 'build.lock'));
+
+      // it's a view/package, run a library build
+      const { buildPackage } = await import('./buildPackage');
+      // ^ we do a dynamic import here to defer the module's initial side effects
+      // till when it's actually needed (i.e. now)
+      await buildPackage(packagePath, preserveModules);
+    } finally {
+      lockfile.unlockSync(path.join(modularRoot, 'build.lock'));
+    }
   }
 }
