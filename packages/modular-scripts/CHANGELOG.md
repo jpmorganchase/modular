@@ -1,5 +1,11 @@
 # modular-scripts
 
+## 0.12.1
+
+### Patch Changes
+
+- a663161: Update modular scripts bin
+
 ## 0.12.0
 
 ### Minor Changes
