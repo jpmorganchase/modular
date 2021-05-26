@@ -5,9 +5,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
-    branches: [master]
+    branches: [main]
 
 jobs:
   test_static:
@@ -16,9 +16,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2.1.5
         with:
-          node-version: 12.x
+          node-version: 14.x
 
       - name: Get Yarn cache directory path
         id: yarn-cache-dir-path
@@ -32,21 +32,21 @@ jobs:
           restore-keys: |
             v2-${{ runner.os }}-yarn-
 
-      - run: yarn
-      - run: npx prettier --check .
-      - run: npx tsc
+      - run: yarn --frozen-lockfile
+      - run: yarn prettier --check .
+      - run: yarn tsc
       - run: yarn lint
   test:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [12.x, 14.x]
 
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2.1.5
         with:
           node-version: ${{ matrix.node-version }}
       - name: Get Yarn cache directory path

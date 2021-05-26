@@ -1,3 +1,3 @@
-import views from '../index.macro';
+import views from '../../build/index.macro';
 
 console.log(views);

@@ -1,3 +1,8 @@
+// We're only using this file for builds right now.
+// It'll go away once we self host builds as well.
+
+'use strict';
+
 const semver = require('semver');
 const pkgJson = require('./package.json');
 

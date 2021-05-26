@@ -1,5 +1,66 @@
 # create-modular-react-app
 
+## 0.8.6
+
+### Patch Changes
+
+- 52e4c3d: Better \*ignore files in new projects.
+- 308847e: Bumping versions for actually landing/releasing
+
+## 0.8.5
+
+### Patch Changes
+
+- ecb9880: Bumping versions to overcome a bad prelease publish.
+
+## 0.8.5-next.0
+
+### Patch Changes
+
+- ecb9880: Bumping versions to overcome a bad prelease publish.
+
+## 0.8.4
+
+### Patch Changes
+
+- f035528: Allow arbitrary directory structures for packages
+
+## 0.8.4-next.0
+
+### Patch Changes
+
+- f035528: Allow arbitrary directory structures for packages
+
+## 0.8.3
+
+### Patch Changes
+
+- 84ef2db: Enhance eslint-config-modular-app, add .prettierignore and
+  .eslintignore files in templates
+
+## 0.8.2
+
+### Patch Changes
+
+- d8aee46: Use yarn --silent where possible
+- 6a249ea: Avoid some console spam by installing dependencies correctly.
+
+## 0.8.1
+
+### Patch Changes
+
+- beb619c: Adds a debug test launch config for vscode
+
+## 0.8.0
+
+### Minor Changes
+
+- 4466eb6: Use a common tsconfig that we can update whenever
+
+### Patch Changes
+
+- 6e49be1: Ignore new build folders in local workspaces
+
 ## 0.7.2
 
 ### Patch Changes

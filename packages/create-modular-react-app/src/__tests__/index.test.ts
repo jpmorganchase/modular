@@ -25,9 +25,9 @@ async function readCensoredPackageJson(
       if (packageJson[dependencyTypeProperty]) {
         // This replaces the version numbers of packages with `?`.
         packageJson[dependencyTypeProperty] = Object.fromEntries(
-          Object.entries(
-            packageJson[dependencyTypeProperty],
-          ).map(([packageName]) => [packageName, '?']),
+          Object.entries(packageJson[dependencyTypeProperty]).map(
+            ([packageName]) => [packageName, '?'],
+          ),
         );
       }
     }
@@ -56,14 +56,16 @@ afterEach(() => {
 
 describe('create-modular-react-app', () => {
   it('should create a project', async () => {
-    createModularApp({ _: [destination] });
+    await createModularApp({ name: destination });
     expect(tree(destination)).toMatchInlineSnapshot(`
       "test-repo
       ├─ .editorconfig #1p4gvuw
-      ├─ .eslintignore #1ugsijf
-      ├─ .gitignore #1ugsijf
+      ├─ .eslintignore #1ot2bpo
+      ├─ .gitignore #175wbq
+      ├─ .prettierignore #10uqwgj
       ├─ .vscode
       │  ├─ extensions.json #1i4584r
+      │  ├─ launch.json #15fzacl
       │  └─ settings.json #xncm1d
       ├─ README.md #1nksyzj
       ├─ modular
@@ -85,13 +87,13 @@ describe('create-modular-react-app', () => {
       │     │  ├─ App.css #1o0zosm
       │     │  ├─ App.tsx #c80ven
       │     │  ├─ __tests__
-      │     │  │  └─ App.test.tsx #lrjomi
+      │     │  │  └─ App.test.tsx #16urcos
       │     │  ├─ index.css #o7sk21
       │     │  ├─ index.tsx #zdn6mw
       │     │  ├─ logo.svg #1okqmlj
       │     │  └─ react-app-env.d.ts #1dm2mq6
       │     └─ tsconfig.json #6rw46b
-      ├─ tsconfig.json #e5344q
+      ├─ tsconfig.json #1h72lkd
       └─ yarn.lock"
     `);
     expect(
@@ -100,6 +102,7 @@ describe('create-modular-react-app', () => {
       Object {
         "author": "?",
         "dependencies": Object {
+          "@testing-library/dom": "?",
           "@testing-library/jest-dom": "?",
           "@testing-library/react": "?",
           "@testing-library/user-event": "?",
@@ -107,6 +110,7 @@ describe('create-modular-react-app', () => {
           "@types/node": "?",
           "@types/react": "?",
           "@types/react-dom": "?",
+          "eslint": "?",
           "eslint-config-modular-app": "?",
           "modular-scripts": "?",
           "prettier": "?",
@@ -139,7 +143,7 @@ describe('create-modular-react-app', () => {
         },
         "version": "1.0.0",
         "workspaces": Array [
-          "packages/*",
+          "packages/**",
         ],
       }
     `);
@@ -173,8 +177,8 @@ describe('create-modular-react-app', () => {
     `);
   });
 
-  it('should create a project without git metadata', () => {
-    createModularApp({ _: [destination], repo: false });
+  it('should create a project without git metadata', async () => {
+    await createModularApp({ name: destination, repo: false });
     expect(fs.existsSync(path.join(destination, '.git'))).toEqual(false);
   });
 });

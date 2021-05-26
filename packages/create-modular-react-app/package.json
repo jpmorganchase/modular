@@ -1,6 +1,6 @@
 {
   "name": "create-modular-react-app",
-  "version": "0.7.2",
+  "version": "0.8.6",
   "license": "Apache-2.0",
   "bin": {
     "create-modular-react-app": "build/index.js"
@@ -14,15 +14,14 @@
     "build": "babel --root-mode upward src --out-dir build --extensions .ts --ignore 'src/**/*.test.ts'"
   },
   "dependencies": {
-    "chalk": "^4.1.0",
-    "execa": "^4.0.3",
-    "fs-extra": "^9.0.1",
-    "mri": "^1.1.6"
+    "chalk": "^4.1.1",
+    "commander": "^7.2.0",
+    "execa": "^5.0.0",
+    "fs-extra": "^10.0.0"
   },
   "devDependencies": {
     "@schemastore/package": "^0.0.6",
-    "@types/fs-extra": "^5.0.2",
-    "@types/mri": "^1.1.0",
+    "@types/fs-extra": "^9.0.11",
     "@types/node": "*",
     "@types/tmp": "^0.2.0",
     "rimraf": "^3.0.2"

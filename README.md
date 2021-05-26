@@ -1,7 +1,13 @@
-_DISCLAIMER: THIS PROJECT IS EXPERIMENTAL. ITS BEHAVIOR, AND THE BEHAVIOR OF
-COMMANDS, WILL LIKELY CHANGE IN THE FUTURE._
+<div align="center">
+  <h1><img height="38px" width="44px" style="height: 38px; max-width: 44px" src="docs/img/modular-hero.svg"> &nbsp; Modular</h1>
 
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?)](https://github.com/jpmorganchase/modular/blob/master/CONTRIBUTING.md)
+  <p><strong>Scaled Web Engineering</strong>. Where Libraries, Views & apps coexist together and tooling is a first-class citizen.</p>
+</div>
+
+---
+
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?)](https://github.com/jpmorganchase/modular/blob/main/CONTRIBUTING.md)
+![Build](https://github.com/jpmorganchase/modular/actions/workflows/node.js.yml/badge.svg)
 
 `modular` is a collection of tools and guidance to enable UI development at
 scale. It is derived from work at JP Morgan to enable development in a single
@@ -10,22 +16,40 @@ repository by many teams.
 It provides a `modular` CLI to scaffold and develop a new application from
 scratch, as well as commands to add and manage further modules.
 
-It is implemented on top of [`create-react-app`](https://create-react-app.dev/)
-and [Yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces/).
+## Philosophy
+
+`modular` believes the burden to learn a "Framework" with proprietary APIs in a
+rapidly evolving landscape is an inhibitor to **scaled web engineering**.
+
+There is already a very strong set of **Language Constructs, Frameworks and
+Tooling** that the front end community is rallying around like `TypeScript`,
+`ES6 Modules`, `React`, `Parcel`, `Webpack`, `GitHub Actions`, `Jest`,
+`Workspaces` etc.
+
+Scaled Engineering requires a few more Frameworks, Libraries and Tools that are
+not yet first class citizens in the world of Front End Engineering like
+**Universal Data Fetching**, **Feature Flags**, **Analytics Capture**,
+**Security**, **Deployment** etc.
+
+`modular` attempts to bring the best Language Constructs, Libraries, Frameworks
+and Tooling together to establish a set of patterns and definitions to enable
+**Monorepo** based engineering.
 
 ## Commands
 
 #### `yarn create modular-react-app <project-name>`
 
-Bootstraps a new project, configured to use workspaces.
+Bootstraps a new project, configured to use
+[Yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces/).
 
-This also creates a workspace named 'app' containing a fresh application written
-in [TypeScript](https://www.typescriptlang.org/).
+This also creates a workspace named 'app' containing a fresh
+[`create-react-app`](https://create-react-app.dev/) application written in
+[TypeScript](https://www.typescriptlang.org/).
 
-#### `yarn modular add <module-name>`
+#### `yarn modular add <path/to/package>`
 
-Adds a new package by creating a new workspace under `packages/`. Packages can
-currently be one of 3 types:
+Adds a new package by creating a new workspace at `packages/path/to/package`.
+Packages can currently be one of 3 types:
 
 - A standalone application. This corresponds to a single `create-react-app`
   project in a workspace. Inside this workspace, you can import packages from
@@ -40,7 +64,7 @@ currently be one of 3 types:
   utility, tool, or whatever your needs require you to do. As an example, you
   could build a node.js server inside one of these.
 
-#### `yarn modular start <app-name>`
+#### `yarn modular start <path/to/package>`
 
 Runs
 [`react-scripts start`](https://create-react-app.dev/docs/getting-started#npm-start-or-yarn-start)
@@ -48,26 +72,29 @@ against the selected app.
 
 #### `yarn modular test`
 
-Runs [`react-scripts test`](https://create-react-app.dev/docs/running-tests)
-against the entire `modular` project.
+Runs [`jest`](https://jestjs.io/) against the entire `modular` project.
 
-#### `yarn modular build <app-name>`
+#### `yarn modular build <path/to/package>`
 
 Runs [`react-scripts build`](https://create-react-app.dev/docs/production-build)
 against the selected app.
 
+#### `yarn modular workspace`
+
+Prints an extension of `yarn workspaces info` to the console. Extended with
+modular metadata about package type and public/private status.
+
 ## Config
+
+#### `modular/setupEnvironment.ts`
+
+This contains the setup for tests corresponding to
+[`jest.config.js#setupFiles`](https://jestjs.io/docs/en/configuration#setupfiles-array).
 
 #### `modular/setupTests.ts`
 
-This contains the setup for tests (e.g.
-[`jest.config.js#setupFilesAfterEnv`](https://jestjs.io/docs/en/configuration#setupfilesafterenv-array)).
-
-Unlike `create-react-app` which stores the setup for tests in an individual
-application's
-[`src/setupTests.ts`](https://create-react-app.dev/docs/running-tests/#srcsetuptestsjs)
-we place it at the root of the project within `modular/setupTests.ts` where it
-applies to the whole project.
+This contains the setup for tests corresponding to
+[`jest.config.js#setupFilesAfterEnv`](https://jestjs.io/docs/en/configuration#setupfilesafterenv-array).
 
 #### `package.json#modular`
 
@@ -105,5 +132,4 @@ This type identifies a standalone application that can be started or built.
 ##### `"package"`
 
 This type identifies a regular package (e.g. a library that can be used by other
-`"view"` or `"app"` modules). s a regular package (e.g. a library that can be
-used by other `"view"` or `"app"` modules).
+`"view"` or `"app"` modules).

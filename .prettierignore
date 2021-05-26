@@ -1,0 +1,4 @@
+/dist
+packages/**/dist
+packages/**/build
+packages/**/public

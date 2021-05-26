@@ -7,6 +7,7 @@ node_modules
 packages/sample-app
 packages/sample-view
 packages/sample-package
+packages/nested
 
 # created by tests in modular-views.macro
 packages/view-1
@@ -15,6 +16,8 @@ packages/view-2
 
 # Build output
 /packages/*/build/
+/packages/*/dist-cjs/
+/packages/*/dist-types/
 
 # Testing
 /coverage

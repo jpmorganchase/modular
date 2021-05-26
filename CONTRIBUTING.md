@@ -2,7 +2,7 @@
 
 We are open to, and grateful for, any contributions made by the community. By
 contributing to **Modular**, you agree to abide by the
-[code of conduct](https://github.com/jpmorganchase/modular/blob/master/CODE_OF_CONDUCT.md).
+[code of conduct](https://github.com/jpmorganchase/modular/blob/main/CODE_OF_CONDUCT.md).
 
 ## Reporting Issues and Asking Questions
 
@@ -68,7 +68,7 @@ In general, the contribution workflow looks like this:
 - Open a new issue in the
   [Issue tracker](https://github.com/jpmorganchase/modular/issues).
 - Fork the repo.
-- Create a new feature branch based off the `master` branch.
+- Create a new feature branch based off the `main` branch.
 - Make sure all tests pass and there are no linting errors.
 - Submit a pull request, referencing any issues it addresses.
 

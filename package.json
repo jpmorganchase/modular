@@ -2,72 +2,76 @@
   "name": "modular",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/**"
   ],
   "engines": {
     "node": ">=12"
   },
   "scripts": {
-    "prettier": "prettier --write .",
-    "prelint": "yarn workspace eslint-plugin-modular-app build",
-    "lint": "node ./scripts/lint.js --cache --ext .js,.ts,.tsx --max-warnings 0",
-    "prelinc": "yarn workspace eslint-plugin-modular-app build",
-    "linc": "node ./scripts/linc.js --cache --fix --ext .js,.ts,.tsx --max-warnings 0",
-    "modular": "ts-node packages/modular-scripts/src/cli.ts",
-    "test": "yarn modular test --watchAll=false --runInBand",
     "build": "yarn workspace create-modular-react-app build && yarn workspace modular-scripts build && yarn workspace modular-views.macro build && yarn workspace eslint-plugin-modular-app build",
+    "create-modular-react-app": "ts-node packages/create-modular-react-app/src/index.ts",
+    "linc": "node ./scripts/linc.js --cache --fix --ext .js,.ts,.tsx --max-warnings 0",
+    "lint:fix": "yarn lint --fix",
+    "lint": "eslint --cache --ext .js,.ts,.tsx --max-warnings 0",
+    "modular": "ts-node packages/modular-scripts/src/cli.ts",
+    "prelinc": "yarn workspace eslint-plugin-modular-app build",
+    "prelint": "yarn workspace eslint-plugin-modular-app build",
+    "prettier": "prettier --write .",
     "release": "yarn build && changeset publish",
-    "start": "yarn modular start modular-site"
+    "start": "yarn modular start modular-site",
+    "test": "yarn modular test --watchAll false --runInBand --forceExit",
+    "postinstall": "husky install"
   },
   "dependencies": {
-    "@babel/cli": "^7.10.1",
-    "@babel/core": "^7.9.6",
+    "@babel/cli": "^7.13.16",
+    "@babel/core": "7.14.3",
     "@babel/preset-env": "^7.9.6",
-    "@babel/preset-react": "^7.9.4",
-    "@babel/preset-typescript": "^7.9.0",
-    "@changesets/cli": "^2.10.2",
-    "@testing-library/jest-dom": "^5.8.0",
-    "@testing-library/react": "^10.0.4",
-    "@types/jest": "^25.2.3",
-    "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0",
+    "@babel/preset-react": "^7.13.13",
+    "@babel/preset-typescript": "^7.13.0",
+    "@changesets/cli": "^2.16.0",
+    "@testing-library/dom": "^7.29.4",
+    "@testing-library/jest-dom": "^5.12.0",
+    "@testing-library/react": "^11.2.6",
+    "@testing-library/user-event": "^13.1.8",
+    "@types/jest": "^26.0.23",
+    "@types/react-dom": "^17.0.3",
+    "@types/react": "^17.0.6",
     "@typescript-eslint/eslint-plugin": "^4.0.0",
     "@typescript-eslint/parser": "^4.0.0",
     "babel-eslint": "^10.1.0",
-    "eslint": "^7.1.0",
+    "commander": "^7.2.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.22.0",
-    "eslint-plugin-jest": "^24.0.0",
     "eslint-plugin-jest-dom": "^2.1.0",
-    "eslint-plugin-react": "^7.20.3",
+    "eslint-plugin-jest": "^24.0.0",
     "eslint-plugin-react-hooks": "^4.0.8",
+    "eslint-plugin-react": "^7.20.3",
     "eslint-plugin-testing-library": "^3.9.2",
-    "execa": "^4.0.3",
-    "husky": "^4.2.5",
+    "eslint": "^7.27.0",
+    "execa": "^5.0.0",
+    "husky": "^6.0.0",
     "is-ci": "^2.0.0",
-    "lint-staged": "^10.2.6",
-    "micromatch": "^4.0.2",
-    "prettier": "2.0.5",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "semver": "^7.3.2",
-    "ts-node": "^9.0.0",
-    "typescript": "^4.1.2"
+    "lint-staged": "^11.0.0",
+    "micromatch": "^4.0.4",
+    "prettier": "^2.2.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "semver": "^7.3.5",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.4"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+  "optionalDependencies": {
+    "puppeteer": "^9.1.1"
   },
   "modular": {
     "type": "root"
   },
   "lint-staged": {
-    "*.{js,ts,tsx}": "eslint --cache --fix --ext .js,.ts,.tsx --max-warnings 0",
+    "*.{js,ts,tsx}": "eslint --cache --ext .js,.ts,.tsx --max-warnings 0",
     "*.{js,json,ts,tsx,css,md,mdx}": "prettier --write"
   },
   "resolutions": {
-    "rollup": "^2.33.3",
+    "rollup": "^2.38.3",
     "**/update-notifier/boxen": "^5.0.0"
   }
 }

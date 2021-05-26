@@ -15,21 +15,24 @@ test('it can serialise a folder', () => {
     ├─ package.json
     ├─ src
     │  ├─ __tests__
-    │  │  └─ index.test.ts #1lu3g5f
-    │  ├─ cli.ts #gcx3cm
-    │  └─ index.ts #un0l9d
+    │  │  └─ index.test.ts #qhhzh
+    │  ├─ cli.ts #19w82qp
+    │  └─ index.ts #1spcux6
     └─ template
        ├─ .editorconfig #1p4gvuw
+       ├─ .eslintignore #1ot2bpo
+       ├─ .prettierignore #10uqwgj
        ├─ .vscode
        │  ├─ extensions.json #1i4584r
+       │  ├─ launch.json #15fzacl
        │  └─ settings.json #xncm1d
        ├─ README.md #1nksyzj
-       ├─ gitignore #1ugsijf
+       ├─ gitignore #175wbq
        ├─ modular
        │  ├─ setupEnvironment.ts #m0s4vb
        │  └─ setupTests.ts #bnjknz
        ├─ packages
        │  └─ README.md #14bthrh
-       └─ tsconfig.json #e5344q"
+       └─ tsconfig.json #1h72lkd"
   `);
 });

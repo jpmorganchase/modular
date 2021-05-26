@@ -1,5 +1,153 @@
 # modular-scripts
 
+## 0.11.0
+
+### Minor Changes
+
+- 972af73: Replace transpilation implementation with esbuild instead of babel.
+
+### Patch Changes
+
+- e12fedd: Update react-scripts to 4.0.3
+
+## 0.10.0
+
+### Minor Changes
+
+- 9023f11: Expose node.js API for modular-scripts
+- aa95360: Enable bin development for packages
+
+### Patch Changes
+
+- 4080e8f: Dependabot: Bump rollup from 2.38.3 to 2.45.2
+- 9f9a332: Update create-react-app from 4.0.1 to 4.0.2
+- 74ab5d2: Suggest installing @finos/perspective-webpack-plugin if
+  @finos/perspective is available.
+- 1166d26: Corrected issue with Babel plugins that was making
+  @babel/preset-typescript not to apply correctly
+
+## 0.9.10
+
+### Patch Changes
+
+- 84c7b2a: Don't convert all css files to css modules
+
+## 0.9.9
+
+### Patch Changes
+
+- 1e94448: Install fewer dependencies
+- 308847e: Bumping versions for actually landing/releasing
+
+## 0.9.8
+
+### Patch Changes
+
+- ecb9880: Bumping versions to overcome a bad prelease publish.
+
+## 0.9.8-next.0
+
+### Patch Changes
+
+- ecb9880: Bumping versions to overcome a bad prelease publish.
+
+## 0.9.7
+
+### Patch Changes
+
+- f035528: Allow arbitrary directory structures for packages
+
+## 0.9.7-next.0
+
+### Patch Changes
+
+- f035528: Allow arbitrary directory structures for packages
+
+## 0.9.6
+
+### Patch Changes
+
+- 84f2a3b: Don't install puppeteer as a dependency
+- bb278f7: Update rollup to 2.38.3
+
+## 0.9.5
+
+### Patch Changes
+
+- 84ef2db: Enhance eslint-config-modular-app, add .prettierignore and
+  .eslintignore files in templates
+
+## 0.9.4
+
+### Patch Changes
+
+- a2df764: Don't install the perspective plugin (but still use it if it's
+  available)
+
+## 0.9.3
+
+### Patch Changes
+
+- d8aee46: Use yarn --silent where possible
+
+## 0.9.2
+
+### Patch Changes
+
+- 7c14fdb: Fix the macro's type generation, and avoid some console spam when
+  installing.
+
+## 0.9.1
+
+### Patch Changes
+
+- a79b8da: Bring back support for --inspect-brk, for testing with a debugger.
+- f193cfd: Bail `modular build` for libraries when there is a setup issue.
+
+## 0.9.0
+
+### Minor Changes
+
+- 8de0a31: Include @finos/perspective-webpack-plugin by default.
+
+## 0.8.1
+
+### Patch Changes
+
+- 4cb46cc: Add tsconfig for publishing
+
+## 0.8.0
+
+### Minor Changes
+
+- 4466eb6: Use a common tsconfig that we can update whenever
+
+### Patch Changes
+
+- 72637d7: Do sequential builds instead of parallel\
+- c5c15eb: Fix an issue where generated files from libraries would interfere
+  with typescript definition generation
+
+## 0.7.0
+
+### Minor Changes
+
+- 6c5e925: When building libs, don't throw an error on submodule import for
+  non-js files
+
+## 0.6.3
+
+### Patch Changes
+
+- 74780c4: Fix broken build from #207
+
+## 0.6.2
+
+### Patch Changes
+
+- 11912bb: Use update-notifier to point out upgrades when possible (in #203)
+- 4e285e6: minor enhancements/fixes to `modular build <package>`
+
 ## 0.6.1
 
 ### Patch Changes
