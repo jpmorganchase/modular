@@ -2,7 +2,7 @@ import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/pa
 import * as path from 'path';
 import * as fs from 'fs-extra';
 
-type PackageType = 'app' | 'view' | 'root'; // | 'package', the default
+export type PackageType = 'app' | 'view' | 'root'; // | 'package', the default
 
 export type ModularPackageJson = PackageJson & {
   modular?: {
