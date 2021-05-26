@@ -1,5 +1,29 @@
 # modular-scripts
 
+## 0.12.0
+
+### Minor Changes
+
+- 0e949cd: Add filelock around package builds to ensure that multiple process
+  builds don't conflict
+- 6feeaf4: Replaced esbuild-jest and added check for monaco plugin
+- 257862c: Allow overriding for certain jest options found in package.json or
+  jest.config.js
+- 21e9449: Expose workspace info via CLI command
+- 94cdea4: Migrate CLI interface to commander to enable command introspection
+  via declarative options API
+
+### Patch Changes
+
+- c30d576: Clean up build folder
+- f95179f: Bump esbuild from 0.12.1 to 0.12.2
+- 74a6323: Bump esbuild from 0.12.2 to 0.12.3
+- 68eae74: Target esmodules for transpilation of packages
+- 79a385d: Bump pptr-testing-library from 0.6.4 to 0.6.5
+- 6061996: Bump rollup from 2.49.0 to 2.50.0
+- 6e1fa8c: Set babel-jest presets to babel-preset-react-app
+- 9568838: Prevent yarn workspace errors when starting modular via the CLI.
+
 ## 0.11.0
 
 ### Minor Changes
