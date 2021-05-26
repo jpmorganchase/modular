@@ -141,7 +141,7 @@ program
   .command('workspace')
   .description('Retrieve the information for the current workspace info')
   .action(async () => {
-    const { getWorkspaceInfo } = await import('./getWorkspaceInfo');
+    const { getWorkspaceInfo } = await import('./utils/getWorkspaceInfo');
     const workspace = await getWorkspaceInfo();
     console.log(JSON.stringify(workspace, null, 2));
   });

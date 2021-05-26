@@ -1,9 +1,9 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 
-import { PackageType, ModularPackageJson } from './utils/isModularType';
-import { getAllWorkspaces } from './utils/getAllWorkspaces';
-import getModularRoot from './utils/getModularRoot';
+import { PackageType, ModularPackageJson } from './isModularType';
+import { getAllWorkspaces } from './getAllWorkspaces';
+import getModularRoot from './getModularRoot';
 
 export interface WorkSpaceRecord {
   location: string;
