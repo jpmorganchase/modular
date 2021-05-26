@@ -1,5 +1,11 @@
 # modular-scripts
 
+## 0.12.2
+
+### Patch Changes
+
+- e32b47e: Add types and full built files to npm
+
 ## 0.12.1
 
 ### Patch Changes
