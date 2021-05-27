@@ -32,9 +32,9 @@ function isYarnInstalled(): boolean {
 export default function createModularApp(argv: {
   name: string;
   repo?: boolean;
-  'prefer-offline'?: boolean;
+  preferOffline?: boolean;
 }): Promise<void> {
-  const preferOfflineArg = argv['prefer-offline'] ? ['--prefer-offline'] : [];
+  const preferOfflineArg = argv.preferOffline ? ['--prefer-offline'] : [];
   if (isYarnInstalled() === false) {
     console.error(
       'Please install `yarn` before attempting to run `create-modular-react-app`.',
@@ -96,7 +96,7 @@ export default function createModularApp(argv: {
     [
       'add',
       '-W',
-      '--silent',
+      ...preferOfflineArg,
       '@testing-library/dom',
       '@testing-library/jest-dom',
       '@testing-library/react',
@@ -112,7 +112,6 @@ export default function createModularApp(argv: {
       'eslint',
       'eslint-config-modular-app',
       'typescript@^4.1.2',
-      ...preferOfflineArg,
     ],
     { cwd: newModularRoot },
   );
@@ -135,7 +134,6 @@ export default function createModularApp(argv: {
       'app',
       '--unstable-name',
       'app',
-      ...preferOfflineArg,
     ],
     {
       cwd: newModularRoot,

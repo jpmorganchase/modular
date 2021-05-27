@@ -31,18 +31,25 @@ program
     "Type of the folder ('app', 'view', 'package')",
   )
   .option('--unstable-name <name>', 'Package name for the package.json')
+  .option(
+    '--prefer-offline',
+    'Equivalent of --prefer-offline for yarn installations',
+    true,
+  )
   .action(
     (
       packageName: string,
       addOptions: {
         unstableType?: string;
         unstableName?: string;
+        preferOffline?: boolean;
       },
     ) => {
       return addPackage(
         packageName,
-        addOptions['unstableType'],
-        addOptions['unstableName'],
+        addOptions.unstableType,
+        addOptions.unstableName,
+        addOptions.preferOffline,
       );
     },
   );
