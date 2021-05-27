@@ -30,6 +30,7 @@ export default async function addPackage(
   destination: string,
   typeArg: string | void,
   nameArg: string | void,
+  preferOffline = true,
 ): Promise<void> {
   const { type, name } =
     (typeArg && nameArg ? { type: typeArg, name: nameArg } : null) ||
@@ -104,6 +105,9 @@ export default async function addPackage(
     );
   }
 
-  execSync('yarnpkg', ['--silent'], { cwd: newPackagePath });
-  execSync('yarnpkg', ['--silent'], { cwd: modularRoot });
+  const yarnArgs = ['--silent'];
+  if (preferOffline) {
+    yarnArgs.push('--prefer-offline');
+  }
+  execSync('yarnpkg', yarnArgs, { cwd: modularRoot });
 }

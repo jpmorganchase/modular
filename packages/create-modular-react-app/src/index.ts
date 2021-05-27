@@ -22,7 +22,7 @@ program.option('--prefer-offline', 'Yarn --prefer-offline', true);
 program.action(async (name: string, options: Options) => {
   await createModularApp({
     name,
-    'prefer-offline': options.preferOffline,
+    preferOffline: options.preferOffline,
     repo: options.repo,
   });
 });
