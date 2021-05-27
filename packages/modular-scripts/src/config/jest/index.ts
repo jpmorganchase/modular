@@ -7,15 +7,17 @@ import { defaults } from 'jest-config';
 import getModularRoot from '../../utils/getModularRoot';
 import { ModularPackageJson } from '../../utils/isModularType';
 
-// This list may change as we learn of options where flexibility would be valuable
+// This list may change as we learn of options where flexibility would be valuable.
+// Based on react-scripts supported override options
 const supportedOverrides = [
   'collectCoverageFrom',
   'coveragePathIgnorePatterns',
   'coverageThreshold',
   'modulePathIgnorePatterns',
+  'moduleNameMapper',
   'testPathIgnorePatterns',
-  'transformIgnorePatterns',
   'testRunner',
+  'transformIgnorePatterns',
 ];
 
 type SetUpFilesMap = {
@@ -57,6 +59,32 @@ export function createJestConfig(
       '.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
         require.resolve('jest-transform-stub'),
     },
+    transformIgnorePatterns: [
+      '[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$',
+      '^.+\\.module\\.(css|sass|scss)$',
+    ],
+    moduleNameMapper: {
+      '^.+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$':
+        require.resolve('jest-transform-stub'),
+      '^react-native$': require.resolve('react-native-web'),
+    },
+    watchPlugins: [
+      require.resolve('jest-watch-typeahead/filename'),
+      require.resolve('jest-watch-typeahead/testname'),
+    ],
+    moduleFileExtensions: [
+      'web.js',
+      'js',
+      'web.ts',
+      'ts',
+      'web.tsx',
+      'tsx',
+      'json',
+      'web.jsx',
+      'jsx',
+      'node',
+    ],
+    testRunner: require.resolve('jest-circus/runner'),
     testPathIgnorePatterns: ['/node_modules/'],
     rootDir: absolutePackagesPath,
     roots: ['<rootDir>'],
@@ -157,7 +185,15 @@ export function createJestConfig(
       );
     }
 
-    Object.assign(jestConfig, packageJsonJest);
+    const mergedMapper: Record<string, string | Array<string>> = {
+      ...jestConfig.moduleNameMapper,
+      ...packageJsonJest.moduleNameMapper,
+    };
+
+    Object.assign(jestConfig, {
+      ...packageJsonJest,
+      moduleNameMapper: mergedMapper,
+    });
   }
   return jestConfig;
 }
