@@ -118,6 +118,8 @@ program
     testOptions.watchAll.description,
     !process.env.CI,
   )
+  .option('--ci', testOptions.ci.description)
+  .option('--passWithNoTests', testOptions.passWithNoTests.description)
   .description('Run tests over the codebase')
   .action((regexes: string[], options: CLITestOptions) => {
     const { U, ...testOptions } = options;
