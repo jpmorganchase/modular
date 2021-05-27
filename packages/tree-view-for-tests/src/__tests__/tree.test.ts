@@ -15,9 +15,9 @@ test('it can serialise a folder', () => {
     ├─ package.json
     ├─ src
     │  ├─ __tests__
-    │  │  └─ index.test.ts #qhhzh
-    │  ├─ cli.ts #8gy08n
-    │  └─ index.ts #1spcux6
+    │  │  └─ index.test.ts #f554zq
+    │  ├─ cli.ts #1g9uxyv
+    │  └─ index.ts #6pzlbf
     └─ template
        ├─ .editorconfig #1p4gvuw
        ├─ .eslintignore #1ot2bpo
