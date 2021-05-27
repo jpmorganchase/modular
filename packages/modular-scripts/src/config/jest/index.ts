@@ -10,21 +10,11 @@ import { ModularPackageJson } from '../../utils/isModularType';
 // This list may change as we learn of options where flexibility would be valuable.
 // Based on react-scripts supported override options
 const supportedOverrides = [
-  'clearMocks',
   'collectCoverageFrom',
   'coveragePathIgnorePatterns',
   'coverageThreshold',
-  'coverageReporters',
-  'displayName',
-  'extraGlobals',
-  'globalSetup',
-  'globalTeardown',
   'modulePathIgnorePatterns',
   'moduleNameMapper',
-  'resetMocks',
-  'resetModules',
-  'restoreMocks',
-  'snapshotSerializers',
   'testPathIgnorePatterns',
   'testRunner',
   'transformIgnorePatterns',
@@ -125,8 +115,6 @@ export function createJestConfig(
     ),
   };
 
-  console.log('jestConfig: ', jestConfig);
-
   const rootPackageJson = fs.readJSONSync(
     path.join(modularRoot, 'package.json'),
   ) as ModularPackageJson;
@@ -198,7 +186,15 @@ export function createJestConfig(
       );
     }
 
-    Object.assign(jestConfig, packageJsonJest);
+    const mergedMapper: Record<string, string | Array<string>> = {
+      ...jestConfig.moduleNameMapper,
+      ...packageJsonJest.moduleNameMapper,
+    };
+
+    Object.assign(jestConfig, {
+      ...packageJsonJest,
+      moduleNameMapper: mergedMapper,
+    });
   }
   return jestConfig;
 }
