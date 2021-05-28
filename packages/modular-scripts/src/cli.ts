@@ -153,6 +153,10 @@ program
     console.log(JSON.stringify(workspace, null, 2));
   });
 
-void preflightCheck().then(() => {
-  return program.parseAsync(process.argv);
-});
+void preflightCheck()
+  .then(() => {
+    return program.parseAsync(process.argv);
+  })
+  .catch((_err) => {
+    process.exit(1);
+  });
