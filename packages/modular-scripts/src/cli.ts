@@ -9,6 +9,8 @@ import addPackage from './addPackage';
 import start from './start';
 import test, { TestOptions } from './test';
 
+console.log('WHAT');
+
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
 // terminate the Node.js process with a non-zero exit code.
@@ -139,12 +141,15 @@ program
     return test(testOptions, regexes);
   });
 
+console.log('HMM');
+
 program
   .command('start <packageName>')
   .description(
     `Start a dev-server for an app. Only available for modular 'app' types.`,
   )
   .action((packageName: string) => {
+    console.log('OK');
     return start(packageName);
   });
 

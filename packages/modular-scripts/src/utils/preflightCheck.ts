@@ -59,6 +59,7 @@ async function preflightCheck(): Promise<void> {
 
     for (const [packageName, packageInfo] of Object.entries(workspace)) {
       if (packageInfo.mismatchedWorkspaceDependencies.length) {
+        console.log(packageInfo);
         throw new Error(
           `${packageName} has mismatchedWorkspaceDependencies ${packageInfo.mismatchedWorkspaceDependencies.join(
             ', ',

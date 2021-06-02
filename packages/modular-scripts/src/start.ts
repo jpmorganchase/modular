@@ -13,10 +13,10 @@ export default async function start(appPath: string): Promise<void> {
     throw new Error(`The package at ${appPath} is not a valid modular app.`);
   }
   const cracoBin = resolveAsBin('craco');
-
+  console.log('GOT HERE');
   execSync(cracoBin, ['start', '--config', cracoConfig], {
     cwd: path.join(modularRoot, packagesRoot, appPath),
-    log: false,
+    log: true,
     // @ts-ignore
     env: {
       USE_MODULAR_BABEL: process.env.USE_MODULAR_BABEL,
