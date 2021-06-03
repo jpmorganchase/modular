@@ -1,6 +1,6 @@
 {
   "name": "create-modular-react-app",
-  "version": "0.8.6",
+  "version": "0.8.7",
   "license": "Apache-2.0",
   "bin": {
     "create-modular-react-app": "build/index.js"
@@ -16,7 +16,7 @@
   "dependencies": {
     "chalk": "^4.1.1",
     "commander": "^7.2.0",
-    "execa": "^5.0.1",
+    "execa": "^5.1.0",
     "fs-extra": "^10.0.0"
   },
   "devDependencies": {
