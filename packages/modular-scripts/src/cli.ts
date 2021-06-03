@@ -157,6 +157,7 @@ void preflightCheck()
   .then(() => {
     return program.parseAsync(process.argv);
   })
-  .catch((_err) => {
+  .catch((err) => {
+    console.error(err);
     process.exit(1);
   });
