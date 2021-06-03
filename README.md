@@ -35,9 +35,11 @@ not yet first class citizens in the world of Front End Engineering like
 and Tooling together to establish a set of patterns and definitions to enable
 **Monorepo** based engineering.
 
-## Commands
+## Getting Started
 
-#### `yarn create modular-react-app <project-name>`
+```bash
+  yarn create modular-react-app my-new-modular-project
+```
 
 Bootstraps a new project, configured to use
 [Yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces/).
@@ -46,90 +48,10 @@ This also creates a workspace named 'app' containing a fresh
 [`create-react-app`](https://create-react-app.dev/) application written in
 [TypeScript](https://www.typescriptlang.org/).
 
-#### `yarn modular add <path/to/package>`
+## Commands
 
-Adds a new package by creating a new workspace at `packages/path/to/package`.
-Packages can currently be one of 3 types:
+More documentation about modular commands is [here](/docs/commands.md).
 
-- A standalone application. This corresponds to a single `create-react-app`
-  project in a workspace. Inside this workspace, you can import packages from
-  other workspaces freely, and features like jsx and typechecking work out of
-  the box.
+## Configuration
 
-- A View, which is a package that exports a React component by default. Views
-  are primary, top-level components in `modular`. Read more about Views in
-  [this explainer](/docs/views.md).
-
-- A typical javascript package. You can use this to create any other kind of
-  utility, tool, or whatever your needs require you to do. As an example, you
-  could build a node.js server inside one of these.
-
-#### `yarn modular start <path/to/package>`
-
-Runs
-[`react-scripts start`](https://create-react-app.dev/docs/getting-started#npm-start-or-yarn-start)
-against the selected app.
-
-#### `yarn modular test`
-
-Runs [`jest`](https://jestjs.io/) against the entire `modular` project.
-
-#### `yarn modular build <path/to/package>`
-
-Runs [`react-scripts build`](https://create-react-app.dev/docs/production-build)
-against the selected app.
-
-#### `yarn modular workspace`
-
-Prints an extension of `yarn workspaces info` to the console. Extended with
-modular metadata about package type and public/private status.
-
-## Config
-
-#### `modular/setupEnvironment.ts`
-
-This contains the setup for tests corresponding to
-[`jest.config.js#setupFiles`](https://jestjs.io/docs/en/configuration#setupfiles-array).
-
-#### `modular/setupTests.ts`
-
-This contains the setup for tests corresponding to
-[`jest.config.js#setupFilesAfterEnv`](https://jestjs.io/docs/en/configuration#setupfilesafterenv-array).
-
-#### `package.json#modular`
-
-_NOTE: This property is created automatically and is described here for
-reference only._
-
-_e.g._
-
-```json
-{
-  "modular": {
-    "type": "root"
-  }
-}
-```
-
-The `package.json#modular.type` can be `"root"`, `"app"`, `"view"` or
-`"package"`.
-
-##### `"root"`
-
-This type identifies the root of the project.
-
-##### `"view"`
-
-This type identifies modules that export a single React component as their
-default export. `modular` makes these modules available via a dynamically
-generated view map with `modular-views.macro`. Read more about Views in
-[this explainer](/docs/views.md).
-
-##### `"app"`
-
-This type identifies a standalone application that can be started or built.
-
-##### `"package"`
-
-This type identifies a regular package (e.g. a library that can be used by other
-`"view"` or `"app"` modules).
+Modular is based around the idea of minimal configuration - however documentation for the options available is [here](/docs/configuration.md).
