@@ -4,7 +4,7 @@ import getModularRoot from './utils/getModularRoot';
 import isModularType from './utils/isModularType';
 import execSync from './utils/execSync';
 
-import { packagesRoot, cracoConfig } from './config';
+import { packagesRoot } from './config';
 
 export default async function start(appPath: string): Promise<void> {
   const modularRoot = getModularRoot();
@@ -12,8 +12,8 @@ export default async function start(appPath: string): Promise<void> {
   if (!isModularType(path.join(modularRoot, packagesRoot, appPath), 'app')) {
     throw new Error(`The package at ${appPath} is not a valid modular app.`);
   }
-  const cracoBin = resolveAsBin('craco');
-  execSync(cracoBin, ['start', '--config', cracoConfig], {
+  const rsBin = resolveAsBin('react-scripts');
+  execSync(rsBin, ['start'], {
     cwd: path.join(modularRoot, packagesRoot, appPath),
     log: true,
     // @ts-ignore

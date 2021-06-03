@@ -3,7 +3,7 @@ import * as lockfile from 'lockfile';
 import * as path from 'path';
 import resolveAsBin from 'resolve-as-bin';
 
-import { outputDirectory, packagesRoot, cracoConfig } from './config';
+import { outputDirectory, packagesRoot } from './config';
 import getModularRoot from './utils/getModularRoot';
 import isModularType from './utils/isModularType';
 import execSync from './utils/execSync';
@@ -15,13 +15,13 @@ export default async function build(
   const modularRoot = getModularRoot();
 
   if (isModularType(path.join(modularRoot, packagesRoot, packagePath), 'app')) {
-    const cracoBin = resolveAsBin('craco');
+    const rsBin = resolveAsBin('react-scripts');
 
     // create-react-app doesn't support plain module outputs yet,
     // so --preserve-modules has no effect here
     await fs.remove(path.join(outputDirectory, packagePath));
     // TODO: this shouldn't be sync
-    execSync(cracoBin, ['build', '--config', cracoConfig], {
+    execSync(rsBin, ['build'], {
       cwd: path.join(modularRoot, packagesRoot, packagePath),
       log: false,
       // @ts-ignore

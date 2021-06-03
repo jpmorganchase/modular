@@ -83,9 +83,8 @@ const hasJsxRuntime = (() => {
   }
 })();
 
-// TODO: add all packages to babel loader include
-//const modularRoot = process.env.MODULAR_ROOT;
-//const absolutePackagesPath = path.resolve(modularRoot, 'packages');
+const modularRoot = process.env.MODULAR_ROOT;
+const absolutePackagesPath = path.resolve(modularRoot, 'packages');
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
@@ -404,7 +403,7 @@ module.exports = function (webpackEnv) {
             // The preset includes JSX, Flow, TypeScript, and some ESnext features.
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
-              include: paths.appSrc,
+              include: [paths.appSrc, absolutePackagesPath],
               loader: require.resolve('babel-loader'),
               options: {
                 customize: require.resolve(
