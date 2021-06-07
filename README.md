@@ -54,4 +54,5 @@ More documentation about modular commands is [here](/docs/commands.md).
 
 ## Configuration
 
-Modular is based around the idea of minimal configuration - however documentation for the options available is [here](/docs/configuration.md).
+Modular is based around the idea of minimal configuration - however
+documentation for the options available is [here](/docs/configuration.md).
