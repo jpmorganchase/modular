@@ -4,16 +4,20 @@ import resolveBin from 'resolve-as-bin';
 import execSync from './utils/execSync';
 import getModularRoot from './utils/getModularRoot';
 export interface TestOptions {
+  bail: boolean;
   debug: boolean;
+  clearCache: boolean;
   coverage: boolean;
   forceExit: boolean;
   env: string;
-  maxWorkers: number;
-  onlyChanged: boolean;
   json: boolean;
-  outputFile: string;
+  logHeapUsage: boolean;
+  maxWorkers: number;
+  'no-cache': boolean;
   reporters: string[] | undefined;
   runInBand: boolean;
+  onlyChanged: boolean;
+  outputFile: string;
   silent: boolean;
   testResultsProcessor: string | undefined;
   updateSnapshot: boolean;
@@ -82,6 +86,9 @@ export default async function test(
   const testEnvironment = resolvedEnv || env;
   cleanArgv.push(`--env=${testEnvironment}`);
 
+  if (process.env.CI) {
+    jestOptions.bail = true;
+  }
   // pass on all programatic options
   const jestArgv = Object.entries(jestOptions).map(([key, v]) => {
     const value = JSON.parse(v as string) as string | number | boolean;
