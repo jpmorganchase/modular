@@ -61,9 +61,9 @@ export default async function test(
   const { createJestConfig } = await import('./config/jest');
   cleanArgv.push(
     '--config',
-    `'${JSON.stringify(
+    `"${JSON.stringify(
       createJestConfig({ reporters, testResultsProcessor }),
-    )}'`,
+    )}"`,
   );
 
   let resolvedEnv;
