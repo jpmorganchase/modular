@@ -8,7 +8,7 @@
     "node": ">=12"
   },
   "scripts": {
-    "prettier": "prettier --write .",
+    "format": "prettier --write .",
     "lint": "eslint --cache --ext .js,.ts,.tsx --max-warnings 0",
     "lint:fix": "yarn lint --fix",
     "create-modular-react-app": "ts-node packages/create-modular-react-app/src/index.ts",
@@ -26,21 +26,21 @@
     "@babel/preset-react": "^7.13.13",
     "@babel/preset-typescript": "^7.13.0",
     "@changesets/cli": "^2.16.0",
-    "@testing-library/dom": "^7.29.4",
-    "@testing-library/jest-dom": "^5.12.0",
+    "@testing-library/dom": "^7.31.2",
+    "@testing-library/jest-dom": "^5.13.0",
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^13.1.8",
     "@types/jest": "^26.0.23",
-    "@types/react": "^17.0.8",
-    "@types/react-dom": "^17.0.3",
+    "@types/react": "^17.0.10",
+    "@types/react-dom": "^17.0.7",
     "commander": "^7.2.0",
-    "eslint": "^7.27.0",
-    "execa": "^5.0.1",
+    "eslint": "^7.28.0",
+    "execa": "^5.1.1",
     "husky": "^6.0.0",
     "is-ci": "^2.0.0",
     "lint-staged": "^11.0.0",
     "micromatch": "^4.0.4",
-    "prettier": "^2.2.1",
+    "prettier": "^2.3.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "semver": "^7.3.5",
@@ -48,7 +48,7 @@
     "typescript": "^4.3.2"
   },
   "optionalDependencies": {
-    "puppeteer": "^9.1.1"
+    "puppeteer": "^10.0.0"
   },
   "modular": {
     "type": "root"

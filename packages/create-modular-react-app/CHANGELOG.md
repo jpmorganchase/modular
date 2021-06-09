@@ -1,5 +1,12 @@
 # create-modular-react-app
 
+## 0.8.7
+
+### Patch Changes
+
+- cff1dd2: Removed unneccessary silent flag
+- 18aea9d: Bump execa from 5.0.0 to 5.0.1
+
 ## 0.8.6
 
 ### Patch Changes

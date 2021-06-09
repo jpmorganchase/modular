@@ -1,5 +1,18 @@
 # modular-scripts
 
+## 0.12.3
+
+### Patch Changes
+
+- 384e19e: Bump esbuild from 0.12.4 to 0.12.5
+- 20c66ed: Bump rollup from 2.50.1 to 2.50.2
+- 1f85f22: Bump esbuild from 0.12.3 to 0.12.4
+- b20a09c: Bump @babel/preset-env from 7.14.2 to 7.14.4
+- 1771a1a: Clean exit of start and build processes
+- c787596: Add jest defaults back to config
+- 73b4b12: Bump typescript from 4.2.4 to 4.3.2
+- 18aea9d: Bump execa from 5.0.0 to 5.0.1
+
 ## 0.12.2
 
 ### Patch Changes
