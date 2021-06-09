@@ -61,123 +61,123 @@ describe('create-modular-react-app', () => {
       it('should create a project', async () => {
         await createModularApp({ name: destination, preferOffline });
         expect(tree(destination)).toMatchInlineSnapshot(`
-        "test-repo
-        ├─ .editorconfig #1p4gvuw
-        ├─ .eslintignore #1ot2bpo
-        ├─ .gitignore #175wbq
-        ├─ .prettierignore #10uqwgj
-        ├─ .vscode
-        │  ├─ extensions.json #1i4584r
-        │  ├─ launch.json #15fzacl
-        │  └─ settings.json #xncm1d
-        ├─ README.md #1nksyzj
-        ├─ modular
-        │  ├─ setupEnvironment.ts #m0s4vb
-        │  └─ setupTests.ts #bnjknz
-        ├─ package.json
-        ├─ packages
-        │  ├─ README.md #14bthrh
-        │  └─ app
-        │     ├─ package.json
-        │     ├─ public
-        │     │  ├─ favicon.ico #6pu3rg
-        │     │  ├─ index.html #1wohq3p
-        │     │  ├─ logo192.png #1nez7vk
-        │     │  ├─ logo512.png #1hwqvcc
-        │     │  ├─ manifest.json #19gah8o
-        │     │  └─ robots.txt #1sjb8b3
-        │     ├─ src
-        │     │  ├─ App.css #1o0zosm
-        │     │  ├─ App.tsx #c80ven
-        │     │  ├─ __tests__
-        │     │  │  └─ App.test.tsx #16urcos
-        │     │  ├─ index.css #o7sk21
-        │     │  ├─ index.tsx #zdn6mw
-        │     │  ├─ logo.svg #1okqmlj
-        │     │  └─ react-app-env.d.ts #1dm2mq6
-        │     └─ tsconfig.json #6rw46b
-        ├─ tsconfig.json #1h72lkd
-        └─ yarn.lock"
-      `);
+          "test-repo
+          ├─ .editorconfig #1p4gvuw
+          ├─ .eslintignore #1ot2bpo
+          ├─ .gitignore #175wbq
+          ├─ .prettierignore #10uqwgj
+          ├─ .vscode
+          │  ├─ extensions.json #1i4584r
+          │  ├─ launch.json #15fzacl
+          │  └─ settings.json #xncm1d
+          ├─ README.md #1nksyzj
+          ├─ modular
+          │  ├─ setupEnvironment.ts #m0s4vb
+          │  └─ setupTests.ts #bnjknz
+          ├─ package.json
+          ├─ packages
+          │  ├─ README.md #14bthrh
+          │  └─ app
+          │     ├─ package.json
+          │     ├─ public
+          │     │  ├─ favicon.ico #6pu3rg
+          │     │  ├─ index.html #1wohq3p
+          │     │  ├─ logo192.png #1nez7vk
+          │     │  ├─ logo512.png #1hwqvcc
+          │     │  ├─ manifest.json #19gah8o
+          │     │  └─ robots.txt #1sjb8b3
+          │     ├─ src
+          │     │  ├─ App.css #1o0zosm
+          │     │  ├─ App.tsx #c80ven
+          │     │  ├─ __tests__
+          │     │  │  └─ App.test.tsx #lrjomi
+          │     │  ├─ index.css #o7sk21
+          │     │  ├─ index.tsx #zdn6mw
+          │     │  ├─ logo.svg #1okqmlj
+          │     │  └─ react-app-env.d.ts #1dm2mq6
+          │     └─ tsconfig.json #6rw46b
+          ├─ tsconfig.json #1h72lkd
+          └─ yarn.lock"
+        `);
         expect(
           await readCensoredPackageJson(path.join(destination, 'package.json')),
         ).toMatchInlineSnapshot(`
-        Object {
-          "author": "?",
-          "dependencies": Object {
-            "@testing-library/dom": "?",
-            "@testing-library/jest-dom": "?",
-            "@testing-library/react": "?",
-            "@testing-library/user-event": "?",
-            "@types/jest": "?",
-            "@types/node": "?",
-            "@types/react": "?",
-            "@types/react-dom": "?",
-            "eslint": "?",
-            "eslint-config-modular-app": "?",
-            "modular-scripts": "?",
-            "prettier": "?",
-            "react": "?",
-            "react-dom": "?",
-            "typescript": "?",
-          },
-          "eslintConfig": Object {
-            "extends": "modular-app",
-          },
-          "license": "MIT",
-          "main": "index.js",
-          "modular": Object {
-            "type": "root",
-          },
-          "name": "test-repo",
-          "prettier": Object {
-            "printWidth": 80,
-            "proseWrap": "always",
-            "singleQuote": true,
-            "trailingComma": "all",
-          },
-          "private": true,
-          "scripts": Object {
-            "build": "modular build app",
-            "lint": "eslint . --ext .js,.ts,.tsx",
-            "prettier": "prettier --write .",
-            "start": "modular start app",
-            "test": "modular test",
-          },
-          "version": "1.0.0",
-          "workspaces": Array [
-            "packages/**",
-          ],
-        }
-      `);
+                  Object {
+                    "author": "?",
+                    "dependencies": Object {
+                      "@testing-library/dom": "?",
+                      "@testing-library/jest-dom": "?",
+                      "@testing-library/react": "?",
+                      "@testing-library/user-event": "?",
+                      "@types/jest": "?",
+                      "@types/node": "?",
+                      "@types/react": "?",
+                      "@types/react-dom": "?",
+                      "eslint": "?",
+                      "eslint-config-modular-app": "?",
+                      "modular-scripts": "?",
+                      "prettier": "?",
+                      "react": "?",
+                      "react-dom": "?",
+                      "typescript": "?",
+                    },
+                    "eslintConfig": Object {
+                      "extends": "modular-app",
+                    },
+                    "license": "MIT",
+                    "main": "index.js",
+                    "modular": Object {
+                      "type": "root",
+                    },
+                    "name": "test-repo",
+                    "prettier": Object {
+                      "printWidth": 80,
+                      "proseWrap": "always",
+                      "singleQuote": true,
+                      "trailingComma": "all",
+                    },
+                    "private": true,
+                    "scripts": Object {
+                      "build": "modular build app",
+                      "lint": "eslint . --ext .js,.ts,.tsx",
+                      "prettier": "prettier --write .",
+                      "start": "modular start app",
+                      "test": "modular test",
+                    },
+                    "version": "1.0.0",
+                    "workspaces": Array [
+                      "packages/**",
+                    ],
+                  }
+              `);
         expect(
           await readCensoredPackageJson(
             path.join(destination, 'packages', 'app', 'package.json'),
           ),
         ).toMatchInlineSnapshot(`
-        Object {
-          "author": "?",
-          "browserslist": Object {
-            "development": Array [
-              "last 1 chrome version",
-              "last 1 firefox version",
-              "last 1 safari version",
-            ],
-            "production": Array [
-              ">0.2%",
-              "not dead",
-              "not op_mini all",
-            ],
-          },
-          "dependencies": Object {},
-          "modular": Object {
-            "type": "app",
-          },
-          "name": "app",
-          "private": true,
-          "version": "0.1.0",
-        }
-      `);
+                  Object {
+                    "author": "?",
+                    "browserslist": Object {
+                      "development": Array [
+                        "last 1 chrome version",
+                        "last 1 firefox version",
+                        "last 1 safari version",
+                      ],
+                      "production": Array [
+                        ">0.2%",
+                        "not dead",
+                        "not op_mini all",
+                      ],
+                    },
+                    "dependencies": Object {},
+                    "modular": Object {
+                      "type": "app",
+                    },
+                    "name": "app",
+                    "private": true,
+                    "version": "0.1.0",
+                  }
+              `);
       });
 
       it('should create a project without git metadata', async () => {
