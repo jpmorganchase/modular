@@ -90,7 +90,7 @@ describe('create-modular-react-app', () => {
           │     │  ├─ App.css #1o0zosm
           │     │  ├─ App.tsx #c80ven
           │     │  ├─ __tests__
-          │     │  │  └─ App.test.tsx #lrjomi
+          │     │  │  └─ App.test.tsx #16urcos
           │     │  ├─ index.css #o7sk21
           │     │  ├─ index.tsx #zdn6mw
           │     │  ├─ logo.svg #1okqmlj
