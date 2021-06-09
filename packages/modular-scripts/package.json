@@ -69,7 +69,6 @@
     "react-dev-utils": "^11.0.3",
     "react-native-web": "^0.16.5",
     "react-refresh": "^0.8.3",
-    "react-scripts": "^4.0.3",
     "resolve": "^1.20.0",
     "resolve-as-bin": "^2.1.0",
     "resolve-url-loader": "^3.1.2",
