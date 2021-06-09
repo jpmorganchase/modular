@@ -4,16 +4,20 @@ import resolveBin from 'resolve-as-bin';
 import execSync from './utils/execSync';
 import getModularRoot from './utils/getModularRoot';
 export interface TestOptions {
+  bail: boolean;
   debug: boolean;
+  clearCache: boolean;
   coverage: boolean;
   forceExit: boolean;
   env: string;
-  maxWorkers: number;
-  onlyChanged: boolean;
   json: boolean;
-  outputFile: string;
+  logHeapUsage: boolean;
+  maxWorkers: number;
+  'no-cache': boolean;
   reporters: string[] | undefined;
   runInBand: boolean;
+  onlyChanged: boolean;
+  outputFile: string;
   silent: boolean;
   testResultsProcessor: string | undefined;
   updateSnapshot: boolean;
@@ -61,9 +65,9 @@ export default async function test(
   const { createJestConfig } = await import('./config/jest');
   cleanArgv.push(
     '--config',
-    `'${JSON.stringify(
+    `"${JSON.stringify(
       createJestConfig({ reporters, testResultsProcessor }),
-    )}'`,
+    )}"`,
   );
 
   let resolvedEnv;
