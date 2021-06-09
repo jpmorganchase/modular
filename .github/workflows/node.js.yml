@@ -12,7 +12,9 @@ on:
 jobs:
   test_static:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        command: ["prettier --check .", tsc, lint ]
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js
@@ -33,15 +35,13 @@ jobs:
             v2-${{ runner.os }}-yarn-
 
       - run: yarn --frozen-lockfile
-      - run: yarn prettier --check .
-      - run: yarn tsc
-      - run: yarn lint
+      - run: yarn ${{ matrix.command }}
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
-        os: [windows-2016, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
         node-version: [12.x, 14.x, 16.x]
 
     steps:
