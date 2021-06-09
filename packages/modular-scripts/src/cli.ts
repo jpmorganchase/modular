@@ -125,7 +125,7 @@ program
     testOptions.watchAll.description,
     !process.env.CI,
   )
-  .option('--bail', testOptions.bail.description)
+  .option('--bail [value]', testOptions.bail.description, process.env.CI)
   .option('--clearCache', testOptions.clearCache.description)
   .option('--logHeapUsage', testOptions.logHeapUsage.description)
   .option('--no-cache', testOptions.cache.description)

@@ -86,9 +86,6 @@ export default async function test(
   const testEnvironment = resolvedEnv || env;
   cleanArgv.push(`--env=${testEnvironment}`);
 
-  if (process.env.CI) {
-    jestOptions.bail = true;
-  }
   // pass on all programatic options
   const jestArgv = Object.entries(jestOptions).map(([key, v]) => {
     const value = JSON.parse(v as string) as string | number | boolean;
