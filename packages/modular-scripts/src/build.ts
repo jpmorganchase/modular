@@ -1,12 +1,11 @@
 import * as fs from 'fs-extra';
 import * as lockfile from 'lockfile';
 import * as path from 'path';
-import resolveAsBin from 'resolve-as-bin';
 
 import { outputDirectory, packagesRoot } from './config';
 import getModularRoot from './utils/getModularRoot';
 import isModularType from './utils/isModularType';
-import execSync from './utils/execSync';
+import buildApp from './buildApp';
 
 export default async function build(
   packagePath: string,
@@ -15,21 +14,10 @@ export default async function build(
   const modularRoot = getModularRoot();
 
   if (isModularType(path.join(modularRoot, packagesRoot, packagePath), 'app')) {
-    const rsBin = resolveAsBin('react-scripts');
-
     // create-react-app doesn't support plain module outputs yet,
     // so --preserve-modules has no effect here
     await fs.remove(path.join(outputDirectory, packagePath));
-    // TODO: this shouldn't be sync
-    execSync(rsBin, ['build'], {
-      cwd: path.join(modularRoot, packagesRoot, packagePath),
-      log: false,
-      // @ts-ignore
-      env: {
-        USE_MODULAR_BABEL: process.env.USE_MODULAR_BABEL,
-        MODULAR_ROOT: modularRoot,
-      },
-    });
+    await buildApp(path.join(modularRoot, packagesRoot, packagePath));
 
     await fs.move(
       path.join(packagesRoot, packagePath, 'build'),
