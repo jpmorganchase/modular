@@ -72,7 +72,7 @@ async function preflightCheck(): Promise<void> {
   if (process.env.SKIP_PREFLIGHT_CHECK !== 'true') {
     const verifyPackageTree =
       // eslint-disable-next-line @typescript-eslint/no-var-requires
-      require('react-scripts/scripts/utils/verifyPackageTree') as VerifyPackageTree;
+      require('./verifyPackageTree.js') as VerifyPackageTree;
     verifyPackageTree();
   }
 }
