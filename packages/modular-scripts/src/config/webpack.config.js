@@ -433,7 +433,7 @@ module.exports = function (webpackEnv, paths) {
                     'babel-plugin-named-asset-import',
                     'babel-preset-react-app',
                     'react-dev-utils',
-                    'react-scripts',
+                    'modular-scripts',
                   ],
                 ),
                 // @remove-on-eject-end
@@ -490,7 +490,7 @@ module.exports = function (webpackEnv, paths) {
                     'babel-plugin-named-asset-import',
                     'babel-preset-react-app',
                     'react-dev-utils',
-                    'react-scripts',
+                    'modular-scripts',
                   ],
                 ),
                 // @remove-on-eject-end

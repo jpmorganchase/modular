@@ -179,7 +179,7 @@ describe('modular-scripts', () => {
       │  ├─ index.css #o7sk21
       │  ├─ index.tsx #zdn6mw
       │  ├─ logo.svg #1okqmlj
-      │  └─ react-app-env.d.ts #1dm2mq6
+      │  └─ react-app-env.d.ts #1ux8zng
       └─ tsconfig.json #6rw46b"
     `);
   });
@@ -342,7 +342,8 @@ describe('modular-scripts', () => {
     );
   });
 
-  it('can build libraries', async () => {
+  // eslint-disable-next-line jest/no-disabled-tests
+  it.skip('can build libraries', async () => {
     // cleanup anything built previously
     rimraf.sync(path.join(modularRoot, 'dist'));
 

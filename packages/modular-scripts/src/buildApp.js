@@ -133,13 +133,7 @@ module.exports = function build(appPath) {
           process.exit(1);
         }
       },
-    )
-    .catch((err) => {
-      if (err && err.message) {
-        console.log(err.message);
-      }
-      process.exit(1);
-    });
+    );
 
   function copyPublicFolder() {
     fs.copySync(paths.appPublic, paths.appBuild, {

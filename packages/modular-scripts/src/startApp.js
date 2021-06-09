@@ -167,11 +167,5 @@ module.exports = function start(appPath) {
           process.exit();
         });
       }
-    })
-    .catch((err) => {
-      if (err && err.message) {
-        console.log(err);
-      }
-      process.exit(1);
     });
 };
