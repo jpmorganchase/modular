@@ -45,7 +45,7 @@
     "lockfile": "^1.0.4",
     "postcss": "^8.3.0",
     "prompts": "^2.4.1",
-    "react-native-web": "^0.16.3",
+    "react-native-web": "^0.16.5",
     "react-scripts": "^4.0.3",
     "resolve": "^1.20.0",
     "resolve-as-bin": "^2.1.0",
