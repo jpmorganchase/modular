@@ -56,18 +56,16 @@ export function createJestConfig(
       ],
       '^.+\\.(ts|tsx)$': require.resolve('ts-jest'),
       '^.+\\.(css|scss)$': require.resolve('jest-transform-stub'),
-      '.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$': require.resolve(
-        'jest-transform-stub',
-      ),
+      '.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
+        require.resolve('jest-transform-stub'),
     },
     transformIgnorePatterns: [
       '[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$',
       '^.+\\.module\\.(css|sass|scss)$',
     ],
     moduleNameMapper: {
-      '^.+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$': require.resolve(
-        'jest-transform-stub',
-      ),
+      '^.+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$':
+        require.resolve('jest-transform-stub'),
       '^react-native$': require.resolve('react-native-web'),
     },
     watchPlugins: [

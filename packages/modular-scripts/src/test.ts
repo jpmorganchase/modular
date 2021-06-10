@@ -55,13 +55,8 @@ export default async function test(
   options: TestOptions,
   regexes?: string[],
 ): Promise<void> {
-  const {
-    debug,
-    env,
-    reporters,
-    testResultsProcessor,
-    ...jestOptions
-  } = options;
+  const { debug, env, reporters, testResultsProcessor, ...jestOptions } =
+    options;
 
   // create argv from jest Options
   const cleanArgv: string[] = [];
@@ -96,10 +91,34 @@ export default async function test(
     const value = JSON.parse(v as string) as string | number | boolean;
     return `--${key}${!!value ? '' : `=${String(value)}`}`;
   });
+
   cleanArgv.push(...jestArgv);
 
+  const additionalOptions: string[] = [];
+  const cleanRegexes: string[] = [];
+  if (regexes?.length) {
+    regexes.forEach((reg) => {
+      if (/^(--)([\w]+)/.exec(reg)) {
+        return additionalOptions.push(reg);
+      }
+      return cleanRegexes.push(reg);
+    });
+    if (additionalOptions.length) {
+      additionalOptions.map((reg) => {
+        const [option, value] = reg.split('=');
+        if (value) {
+          return `${option}=${JSON.stringify(value)}`;
+        }
+        return option;
+      });
+    }
+  }
+
+  // push any other options passed in
+  cleanArgv.push(...additionalOptions);
+
   // finally add the script regexes to run
-  cleanArgv.push(...(regexes || []));
+  cleanArgv.push(...cleanRegexes);
 
   const jestBin = resolveBin('jest');
   let testBin = jestBin,
