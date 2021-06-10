@@ -16,19 +16,15 @@ function _getAllWorkspaces(): YarnWorkspaces {
 
   // strip out ANSI color codes and escape characters
   const strippedStd = stripAnsi(
-    execa.sync('yarnpkg', ['workspaces', 'info'], {
+    execa.sync('yarnpkg', ['--silent', 'workspaces', 'info'], {
       all: true,
       reject: false,
       cwd: modularRoot,
       cleanup: true,
     }).stdout,
   );
-  // For when the stdout includes the command in at the start of the string
-  // Or when the stdout includes the "Done in <time>" at the end
-  const startJson = strippedStd.indexOf('{');
-  const hasDoneConsole = strippedStd.indexOf('Done');
-  const endJson = hasDoneConsole > 0 ? hasDoneConsole - 1 : undefined;
-  return JSON.parse(strippedStd.slice(startJson, endJson)) as YarnWorkspaces;
+
+  return JSON.parse(strippedStd) as YarnWorkspaces;
 }
 
 export const getAllWorkspaces = memoize(_getAllWorkspaces);
