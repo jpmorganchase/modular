@@ -179,7 +179,7 @@ describe('modular-scripts', () => {
       │  ├─ index.css #o7sk21
       │  ├─ index.tsx #zdn6mw
       │  ├─ logo.svg #1okqmlj
-      │  └─ react-app-env.d.ts #1ux8zng
+      │  └─ react-app-env.d.ts #1v3by9l
       └─ tsconfig.json #6rw46b"
     `);
   });
