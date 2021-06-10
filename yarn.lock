@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@babel/cli@^7.13.16":
-  version "7.14.3"
-  resolved "https://registry.npmjs.org/@babel/cli/-/cli-7.14.3.tgz#9f6c8aee12e8660df879610f19a8010958b26a6f"
-  integrity sha512-zU4JLvwk32ay1lhhyGfqiRUSPoltVDjhYkA3aQq8+Yby9z30s/EsFw1EPOHxWG9YZo2pAGfgdRNeHZQAYU5m9A==
+"@babel/cli@^7.14.5":
+  version "7.14.5"
+  resolved "https://registry.yarnpkg.com/@babel/cli/-/cli-7.14.5.tgz#9551b194f02360729de6060785bbdcce52c69f0a"
+  integrity sha512-poegjhRvXHWO0EAsnYajwYZuqcz7gyfxwfaecUESxDujrqOivf3zrjFbub8IJkrqEaz3fvJWh001EzxBub54fg==
   dependencies:
     commander "^4.0.1"
     convert-source-map "^1.1.0"
@@ -15,7 +15,7 @@
     slash "^2.0.0"
     source-map "^0.5.0"
   optionalDependencies:
-    "@nicolo-ribaudo/chokidar-2" "2.1.8-no-fsevents"
+    "@nicolo-ribaudo/chokidar-2" "2.1.8-no-fsevents.2"
     chokidar "^3.4.0"
 
 "@babel/code-frame@7.10.4":
@@ -2041,15 +2041,15 @@
     globby "^11.0.0"
     read-yaml-file "^1.1.0"
 
-"@nicolo-ribaudo/chokidar-2@2.1.8-no-fsevents":
-  version "2.1.8-no-fsevents"
-  resolved "https://registry.npmjs.org/@nicolo-ribaudo/chokidar-2/-/chokidar-2-2.1.8-no-fsevents.tgz#da7c3996b8e6e19ebd14d82eaced2313e7769f9b"
-  integrity sha512-+nb9vWloHNNMFHjGofEam3wopE3m1yuambrrd/fnPc+lFOMB9ROTqQlche9ByFWNkdNqfSgR/kkQtQ8DzEWt2w==
+"@nicolo-ribaudo/chokidar-2@2.1.8-no-fsevents.2":
+  version "2.1.8-no-fsevents.2"
+  resolved "https://registry.yarnpkg.com/@nicolo-ribaudo/chokidar-2/-/chokidar-2-2.1.8-no-fsevents.2.tgz#e324c0a247a5567192dd7180647709d7e2faf94b"
+  integrity sha512-Fb8WxUFOBQVl+CX4MWet5o7eCc6Pj04rXIwVKZ6h1NnqTo45eOQW6aWyhG25NIODvWFwTDMwBsYxrQ3imxpetg==
   dependencies:
     anymatch "^2.0.0"
     async-each "^1.0.1"
     braces "^2.3.2"
-    glob-parent "^3.1.0"
+    glob-parent "^5.1.2"
     inherits "^2.0.3"
     is-binary-path "^1.0.0"
     is-glob "^4.0.0"
@@ -6092,10 +6092,10 @@ esbuild@^0.11.19:
   resolved "https://registry.npmjs.org/esbuild/-/esbuild-0.11.23.tgz#c42534f632e165120671d64db67883634333b4b8"
   integrity sha512-iaiZZ9vUF5wJV8ob1tl+5aJTrwDczlvGP0JoMmnpC2B0ppiMCu8n8gmy5ZTGl5bcG081XBVn+U+jP+mPFm5T5Q==
 
-esbuild@^0.12.2, esbuild@^0.12.7:
-  version "0.12.7"
-  resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.12.7.tgz#0243ff94b241d9c815720083633731bc5b601b24"
-  integrity sha512-vxENKWBo928ErLiT/uUv8Sl2EoC5cF3cZzCTc8hDEh9ZAZ75xblJCr72NeJo74lxWaGopIePZPIWq1qDpLUHQQ==
+esbuild@^0.12.2, esbuild@^0.12.8:
+  version "0.12.8"
+  resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.12.8.tgz#ac90da77cb3bfbf49ab815200bcef7ffe1a3348f"
+  integrity sha512-sx/LwlP/SWTGsd9G4RlOPrXnIihAJ2xwBUmzoqe2nWwbXORMQWtAGNJNYLBJJqa3e9PWvVzxdrtyFZJcr7D87g==
 
 escalade@^3.0.2, escalade@^3.1.1:
   version "3.1.1"
