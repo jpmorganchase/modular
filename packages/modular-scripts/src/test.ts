@@ -87,8 +87,9 @@ export default async function test(
   cleanArgv.push(`--env=${testEnvironment}`);
 
   // pass on all programatic options
-  const jestArgv = Object.entries(jestOptions).map(([key, value]) => {
-    return `--${key}${!!value ? '' : `=${String(value)}`}`;
+  const jestArgv = Object.entries(jestOptions).map(([key, v]) => {
+    const booleanValue = /^(true)$/.exec(String(v));
+    return `--${key}${!!booleanValue ? '' : `=${String(v)}`}`;
   });
 
   cleanArgv.push(...jestArgv);
