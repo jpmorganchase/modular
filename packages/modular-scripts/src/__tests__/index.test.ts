@@ -38,6 +38,7 @@ function modular(str: string, opts: Record<string, unknown> = {}) {
 async function startApp(appPath: string): Promise<DevServer> {
   const devServer = modular(`start ${appPath}`, {
     cleanup: true,
+    env: { CHOKIDAR_USEPOLLING: 1 },
   });
 
   await new Promise((resolve, reject) => {
