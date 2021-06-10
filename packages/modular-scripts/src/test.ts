@@ -87,8 +87,7 @@ export default async function test(
   cleanArgv.push(`--env=${testEnvironment}`);
 
   // pass on all programatic options
-  const jestArgv = Object.entries(jestOptions).map(([key, v]) => {
-    const value = JSON.parse(v as string) as string | number | boolean;
+  const jestArgv = Object.entries(jestOptions).map(([key, value]) => {
     return `--${key}${!!value ? '' : `=${String(value)}`}`;
   });
 
@@ -96,6 +95,7 @@ export default async function test(
 
   const additionalOptions: string[] = [];
   const cleanRegexes: string[] = [];
+
   if (regexes?.length) {
     regexes.forEach((reg) => {
       if (/^(--)([\w]+)/.exec(reg)) {
@@ -114,7 +114,7 @@ export default async function test(
     }
   }
 
-  // push any other options passed in
+  // push any additional options passed in by debugger or other processes
   cleanArgv.push(...additionalOptions);
 
   // finally add the script regexes to run
