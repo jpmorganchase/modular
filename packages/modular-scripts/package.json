@@ -43,7 +43,7 @@
     "is-ci": "^2.0.0",
     "jest-transform-stub": "^2.0.0",
     "lockfile": "^1.0.4",
-    "postcss": "^8.3.1",
+    "postcss": "^8.3.2",
     "prompts": "^2.4.1",
     "react-native-web": "^0.16.5",
     "react-scripts": "^4.0.3",
