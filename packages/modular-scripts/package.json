@@ -50,7 +50,7 @@
     "resolve": "^1.20.0",
     "resolve-as-bin": "^2.1.0",
     "rimraf": "^3.0.2",
-    "rollup": "^2.51.1",
+    "rollup": "^2.51.2",
     "rollup-plugin-postcss": "^4.0.0",
     "rollup-plugin-preserve-shebangs": "^0.2.0",
     "ts-jest": "^26.5.6",
