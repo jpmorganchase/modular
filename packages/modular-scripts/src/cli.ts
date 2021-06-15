@@ -129,10 +129,10 @@ program
   .option('--clearCache', testOptions.clearCache.description)
   .option('--logHeapUsage', testOptions.logHeapUsage.description)
   .option('--no-cache', testOptions.cache.description)
+  .allowUnknownOption()
   .description('Run tests over the codebase')
   .action((regexes: string[], options: CLITestOptions) => {
     const { U, ...testOptions } = options;
-
     // proxy simplified options to testOptions;
     testOptions.updateSnapshot = !!(options.updateSnapshot || U);
 

@@ -88,13 +88,38 @@ export default async function test(
 
   // pass on all programatic options
   const jestArgv = Object.entries(jestOptions).map(([key, v]) => {
-    const value = JSON.parse(v as string) as string | number | boolean;
-    return `--${key}${!!value ? '' : `=${String(value)}`}`;
+    const booleanValue = /^(true)$/.exec(String(v));
+    return `--${key}${!!booleanValue ? '' : `=${String(v)}`}`;
   });
+
   cleanArgv.push(...jestArgv);
 
+  const additionalOptions: string[] = [];
+  const cleanRegexes: string[] = [];
+
+  if (regexes?.length) {
+    regexes.forEach((reg) => {
+      if (/^(--)([\w]+)/.exec(reg)) {
+        return additionalOptions.push(reg);
+      }
+      return cleanRegexes.push(reg);
+    });
+    if (additionalOptions.length) {
+      additionalOptions.map((reg) => {
+        const [option, value] = reg.split('=');
+        if (value) {
+          return `${option}=${JSON.stringify(value)}`;
+        }
+        return option;
+      });
+    }
+  }
+
+  // push any additional options passed in by debugger or other processes
+  cleanArgv.push(...additionalOptions);
+
   // finally add the script regexes to run
-  cleanArgv.push(...(regexes || []));
+  cleanArgv.push(...cleanRegexes);
 
   const jestBin = resolveBin('jest');
   let testBin = jestBin,
