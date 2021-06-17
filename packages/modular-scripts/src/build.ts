@@ -1,5 +1,4 @@
 import * as fs from 'fs-extra';
-import * as lockfile from 'lockfile';
 import * as path from 'path';
 import resolveAsBin from 'resolve-as-bin';
 
@@ -36,16 +35,9 @@ export default async function build(
       path.join(outputDirectory, packagePath),
     );
   } else {
-    try {
-      lockfile.lockSync(path.join(modularRoot, 'build.lock'));
-
-      // it's a view/package, run a library build
-      const { buildPackage } = await import('./buildPackage');
-      // ^ we do a dynamic import here to defer the module's initial side effects
-      // till when it's actually needed (i.e. now)
-      await buildPackage(packagePath, preserveModules);
-    } finally {
-      lockfile.unlockSync(path.join(modularRoot, 'build.lock'));
-    }
+    const { buildPackage } = await import('./buildPackage');
+    // ^ we do a dynamic import here to defer the module's initial side effects
+    // till when it's actually needed (i.e. now)
+    await buildPackage(packagePath, preserveModules);
   }
 }
