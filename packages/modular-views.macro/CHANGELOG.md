@@ -1,5 +1,12 @@
 # modular-views.macro
 
+## 1.2.7
+
+### Patch Changes
+
+- ab4aa76: Bump execa from 5.0.1 to 5.1.0
+- 9585460: Bump execa from 5.1.0 to 5.1.1
+
 ## 1.2.6
 
 ### Patch Changes
