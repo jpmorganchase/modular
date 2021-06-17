@@ -1,5 +1,12 @@
 # create-modular-react-app
 
+## 0.8.8
+
+### Patch Changes
+
+- ab4aa76: Bump execa from 5.0.1 to 5.1.0
+- 9585460: Bump execa from 5.1.0 to 5.1.1
+
 ## 0.8.7
 
 ### Patch Changes

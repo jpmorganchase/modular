@@ -1,5 +1,30 @@
 # modular-scripts
 
+## 0.12.4
+
+### Patch Changes
+
+- 7854bce: Allow for extraneous test options for jest debuggers
+- 6123408: Bump esbuild from 0.12.5 to 0.12.6
+- ab4aa76: Bump execa from 5.0.1 to 5.1.0
+- 18038e0: Bump esbuild from 0.12.8 to 0.12.9
+- 2cef335: Bump @types/prompts from 2.0.12 to 2.0.13
+- 9585460: Bump execa from 5.1.0 to 5.1.1
+- 7c380ad: Bump react-native-web from 0.16.3 to 0.16.5
+- 3b62172: Add post-css dependency
+- dda9ca7: Bump postcss from 8.3.2 to 8.3.4
+- c4e7dac: Bump @babel/core from 7.14.5 to 7.14.6
+- fba4fb5: Bump rollup from 2.51.2 to 2.52.0
+- 8062204: Bump postcss from 8.3.1 to 8.3.2
+- 3f33953: Bump rollup from 2.51.1 to 2.51.2
+- 6afcd66: Bump esbuild from 0.12.7 to 0.12.8
+- a72049c: Bump esbuild from 0.12.6 to 0.12.7
+- 24fba84: Bump rollup from 2.50.6 to 2.51.0
+- 41b1d93: Bump rollup from 2.51.0 to 2.51.1
+- 03528a0: Bump postcss from 8.3.0 to 8.3.1
+- e69b457: Bump @babel/plugin-proposal-class-properties from 7.13.0 to 7.14.5
+- 1eab107: Bump @babel/core from 7.14.3 to 7.14.5
+
 ## 0.12.3
 
 ### Patch Changes
