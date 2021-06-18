@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import commander from 'commander';
+import * as path from 'path';
 import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 
 import preflightCheck from './utils/preflightCheck';
@@ -8,6 +9,7 @@ import buildPackages from './build';
 import addPackage from './addPackage';
 import start from './start';
 import test, { TestOptions } from './test';
+import rimraf from 'rimraf';
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
@@ -145,7 +147,13 @@ program
     `Start a dev-server for an app. Only available for modular 'app' types.`,
   )
   .action((packageName: string) => {
-    return start(packageName);
+    process.on('SIGINT', (err) => {
+      throw err;
+    });
+    return start(packageName).catch((err) => {
+      // Clean up locally hosted view
+      rimraf.sync(path.join(__dirname, 'temp', packageName));
+    });
   });
 
 program
