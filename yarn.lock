@@ -11501,10 +11501,10 @@ react-is@^17.0.1:
   resolved "https://registry.npmjs.org/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
-react-native-web@^0.16.5:
-  version "0.16.5"
-  resolved "https://registry.yarnpkg.com/react-native-web/-/react-native-web-0.16.5.tgz#859e95cae21e63330a1dabbce8cd0d953b2239f2"
-  integrity sha512-bsoSq9pnjPerNKC1uzvJi7464to3SSMbGG9QFdj6woV3xk5fhq2jB2vQ5+iH/KC7F5lpDRukcb2hMHL1rzKJUQ==
+react-native-web@^0.17.0:
+  version "0.17.0"
+  resolved "https://registry.yarnpkg.com/react-native-web/-/react-native-web-0.17.0.tgz#a5c2765da93086fa7ac9850b784adf878ca725ca"
+  integrity sha512-6HfitapMLbpUysviJKxZ9M22GnEek1KYO6HbiDH5shBJ5bhG9LpQwKq1mqhTUU6qYQKtXO27oiZNbadrx58ryQ==
   dependencies:
     array-find-index "^1.0.2"
     create-react-class "^15.7.0"
@@ -12102,9 +12102,9 @@ rollup-pluginutils@^2.8.1, rollup-pluginutils@^2.8.2:
     estree-walker "^0.6.1"
 
 rollup@^1.31.1, rollup@^2.38.3, rollup@^2.52.0:
-  version "2.52.0"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.52.0.tgz#9df3de6028fae79569a985942b81110205a5a411"
-  integrity sha512-lSkBDGsVoXjqaBf7dsHwxBJz+p+hJEP72P+LOitA0yVs+Nzxj76FidkZE2thrmhjwGqLYiJo39opi7mAfaQ/Vg==
+  version "2.52.1"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.52.1.tgz#dd1cc178d70cf35c48d943fc06fdc32d546e6876"
+  integrity sha512-/SPqz8UGnp4P1hq6wc9gdTqA2bXQXGx13TtoL03GBm6qGRI6Hm3p4Io7GeiHNLl0BsQAne1JNYY+q/apcY933w==
   optionalDependencies:
     fsevents "~2.3.2"
 
