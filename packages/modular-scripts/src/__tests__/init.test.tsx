@@ -11,6 +11,7 @@ describe('Creating a new modular folder', () => {
   let folder: string;
   beforeEach(async () => {
     folder = await mktempd();
+    await initModularFolder(folder, true);
   });
 
   afterEach(async () => {
@@ -18,8 +19,6 @@ describe('Creating a new modular folder', () => {
   });
 
   it('should make a new repo with the right name and properties', async () => {
-    await initModularFolder(folder, true);
-
     const packageJson = (await fs.readJSON(
       path.join(folder, 'package.json'),
     )) as ModularPackageJson;
@@ -27,5 +26,15 @@ describe('Creating a new modular folder', () => {
     packageJson.name = 'test-modular-app';
 
     expect(packageJson).toMatchSnapshot();
+  });
+
+  it('should create a modular folder', async () => {
+    expect(fs.existsSync(path.join(folder, 'modular'))).toEqual(true);
+    expect(await fs.readdir(path.join(folder, 'modular'))).toEqual([]);
+  });
+
+  it('should create a packages folder', async () => {
+    expect(fs.existsSync(path.join(folder, 'packages'))).toEqual(true);
+    expect(await fs.readdir(path.join(folder, 'packages'))).toEqual([]);
   });
 });

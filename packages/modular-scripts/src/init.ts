@@ -41,6 +41,9 @@ export async function initModularFolder(
     });
   }
 
+  await fs.mkdirp(path.join(folder, 'modular'));
+  await fs.mkdirp(path.join(folder, 'packages'));
+
   console.log('Modular repository initialized!');
 }
 
