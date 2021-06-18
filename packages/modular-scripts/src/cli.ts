@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+
+import * as fs from 'fs-extra';
 import commander from 'commander';
 import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 
@@ -19,8 +21,11 @@ process.on('unhandledRejection', (err) => {
 
 const program = new commander.Command('modular');
 program.version(
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  (require('../package.json') as PackageJson).version as string,
+  (
+    fs.readJsonSync(
+      require.resolve('modular-scripts/package.json'),
+    ) as PackageJson
+  ).version as string,
 );
 
 program

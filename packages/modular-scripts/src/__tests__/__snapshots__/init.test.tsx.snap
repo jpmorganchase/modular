@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Creating a new modular folder should make a new repo with the right name and properties 1`] = `
+Object {
+  "author": "",
+  "description": "",
+  "keywords": Array [],
+  "license": "MIT",
+  "main": "index.js",
+  "modular": Object {
+    "type": "root",
+  },
+  "name": "test-modular-app",
+  "scripts": Object {
+    "test": "echo \\"Error: no test specified\\" && exit 1",
+  },
+  "version": "1.0.0",
+  "workspaces": Array [
+    "packages/**",
+  ],
+}
+`;
