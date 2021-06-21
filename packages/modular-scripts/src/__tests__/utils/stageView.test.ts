@@ -39,7 +39,7 @@ describe('stageView', () => {
       │  ├─ __tests__
       │  │  └─ App.test.tsx #16urcos
       │  ├─ index.css #o7sk21
-      │  ├─ index.tsx #ku1642
+      │  ├─ index.tsx #1qbgs9s
       │  ├─ logo.svg #1okqmlj
       │  └─ react-app-env.d.ts #1dm2mq6
       └─ tsconfig.json #ns1qls"

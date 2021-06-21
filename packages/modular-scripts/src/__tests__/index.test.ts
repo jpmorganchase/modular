@@ -270,6 +270,62 @@ describe('modular-scripts', () => {
     `);
   });
 
+  it('can start a view', async () => {
+    /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
+    if (!process.env.CI) {
+      return;
+    }
+
+    const puppeteer = require('puppeteer');
+
+    // @ts-expect-error FIXME
+    let browser: puppeteer.Browser | undefined;
+    let devServer: DevServer | undefined;
+    try {
+      const targetedView = 'sample-view';
+      await fs.copyFile(
+        path.join(__dirname, 'TestView.test-tsx'),
+        path.join(packagesPath, targetedView, 'src', 'index.tsx'),
+      );
+
+      browser = await puppeteer.launch(
+        process.env.CI
+          ? {
+              headless: true,
+              args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            }
+          : {},
+      );
+      devServer = await startApp(targetedView);
+
+      const page = await browser.newPage();
+      await page.goto('http://localhost:3000', {});
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      const { getByTestId, findByTestId } = getQueriesForElement(
+        await getDocument(page),
+      );
+
+      await findByTestId('test-this');
+
+      // eslint-disable-next-line testing-library/no-await-sync-query
+      expect(await getNodeText(await getByTestId('test-this'))).toBe(
+        'this is a modular view',
+      );
+    } finally {
+      if (browser) {
+        await browser.close();
+      }
+      if (devServer) {
+        // this is the problematic bit, it leaves hanging node processes
+        // despite closing the parent process. Only happens in tests!
+        devServer.kill();
+      }
+    }
+
+    /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
+  });
+
   it('can add a package', async () => {
     await modular(
       'add sample-package --unstable-type package --unstable-name sample-package',

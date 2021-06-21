@@ -24,8 +24,8 @@ test('it can serialise a folder', () => {
        ├─ .prettierignore #10uqwgj
        ├─ .vscode
        │  ├─ extensions.json #1i4584r
-       │  ├─ launch.json #15fzacl
-       │  └─ settings.json #xncm1d
+       │  ├─ launch.json #1kk1omt
+       │  └─ settings.json #xes41c
        ├─ README.md #1nksyzj
        ├─ gitignore #175wbq
        ├─ modular
