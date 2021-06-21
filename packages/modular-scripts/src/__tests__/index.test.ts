@@ -299,7 +299,7 @@ describe('modular-scripts', () => {
       devServer = await startApp(targetedView);
 
       const page = await browser.newPage();
-      await page.goto('http://localhost:3000', {});
+      await page.goto('http://localhost:3001', {});
 
       // eslint-disable-next-line @typescript-eslint/unbound-method
       const { getByTestId, findByTestId } = getQueriesForElement(
