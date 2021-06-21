@@ -1,29 +1,14 @@
 import * as fs from 'fs-extra';
 import path from 'path';
 import { pascalCase as toPascalCase } from 'change-case';
+import getAllFiles from './getAllFiles';
 
-function getAllFiles(dirPath: string, arrayOfFiles: string[] = []): string[] {
-  const files = fs.readdirSync(dirPath);
-
-  files.forEach(function (file) {
-    const pathToCheck = path.join(dirPath, file);
-    if (fs.statSync(pathToCheck).isDirectory()) {
-      arrayOfFiles = getAllFiles(pathToCheck, arrayOfFiles);
-    } else {
-      arrayOfFiles.push(pathToCheck);
-    }
-  });
-
-  return arrayOfFiles;
-}
-
-export default async function stageView(
+export default function stageView(
   modularRoot: string,
-  packagesRoot: string,
   targetedView: string,
-): Promise<boolean> {
+): boolean {
   const appTypePath = path.join(__dirname, '../../types', 'app');
-  const indexTemplate = `import * as React from 'react';\n
+  const indexTemplate = `import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import App from '${targetedView}';
@@ -53,7 +38,6 @@ ReactDOM.render(
         .replace(/ComponentName__/g, toPascalCase(targetedView)),
     );
     if (path.basename(packageFilePath) === 'packagejson') {
-      // we've named package.json as packagejson in these templates
       fs.moveSync(
         packageFilePath,
         packageFilePath.replace('packagejson', 'package.json'),
@@ -66,7 +50,7 @@ ReactDOM.render(
       path.join(stagedViewAppPath, 'src', 'index.tsx'),
       indexTemplate,
     );
-    await fs.writeJSON(
+    fs.writeJSONSync(
       path.join(stagedViewAppPath, 'tsconfig.json'),
       {
         extends:

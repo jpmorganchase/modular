@@ -7,24 +7,8 @@ import {
 import prompts from 'prompts';
 import getModularRoot from './utils/getModularRoot';
 import execSync from './utils/execSync';
-
+import getAllFiles from './utils/getAllFiles';
 const packagesRoot = 'packages';
-
-// recursively get all files in a folder
-function getAllFiles(dirPath: string, arrayOfFiles: string[] = []): string[] {
-  const files = fs.readdirSync(dirPath);
-
-  files.forEach(function (file) {
-    const pathToCheck = path.join(dirPath, file);
-    if (fs.statSync(pathToCheck).isDirectory()) {
-      arrayOfFiles = getAllFiles(pathToCheck, arrayOfFiles);
-    } else {
-      arrayOfFiles.push(pathToCheck);
-    }
-  });
-
-  return arrayOfFiles;
-}
 
 export default async function addPackage(
   destination: string,
