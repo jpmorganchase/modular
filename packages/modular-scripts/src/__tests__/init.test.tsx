@@ -4,6 +4,7 @@ import * as tmp from 'tmp';
 import * as fs from 'fs-extra';
 import { promisify } from 'util';
 import { ModularPackageJson } from '../utils/isModularType';
+import { getYarnWorkspaceInfo } from '../utils/getAllWorkspaces';
 
 const mktempd = promisify(tmp.dir);
 
@@ -36,5 +37,16 @@ describe('Creating a new modular folder', () => {
   it('should create a packages folder', async () => {
     expect(fs.existsSync(path.join(folder, 'packages'))).toEqual(true);
     expect(await fs.readdir(path.join(folder, 'packages'))).toEqual([]);
+  });
+
+  it('should have an empty yarn.lock', async () => {
+    const lockfile = await fs.readFile(path.join(folder, 'yarn.lock'));
+
+    expect(String(lockfile)).toMatchSnapshot();
+  });
+
+  it('should not have any workspace info', () => {
+    const workspace = getYarnWorkspaceInfo(folder);
+    expect(workspace).toEqual({});
   });
 });
