@@ -6,33 +6,12 @@ test('it can serialise a folder', () => {
   // so can't include any .test.ts files that actually use this.
   // I picked one of our packages instead.
 
-  expect(tree(path.join(__dirname, '../../../create-modular-react-app')))
+  expect(tree(path.join(__dirname, '../../../eslint-config-modular-app')))
     .toMatchInlineSnapshot(`
-    "create-modular-react-app
-    ├─ .npmignore #1rstiru
+    "eslint-config-modular-app
     ├─ CHANGELOG.md
-    ├─ README.md #r0jsfd
-    ├─ package.json
-    ├─ src
-    │  ├─ __tests__
-    │  │  └─ index.test.ts #28gtp9
-    │  ├─ cli.ts #1g9uxyv
-    │  └─ index.ts #6pzlbf
-    └─ template
-       ├─ .editorconfig #1p4gvuw
-       ├─ .eslintignore #1ot2bpo
-       ├─ .prettierignore #10uqwgj
-       ├─ .vscode
-       │  ├─ extensions.json #1i4584r
-       │  ├─ launch.json #1kk1omt
-       │  └─ settings.json #xes41c
-       ├─ README.md #1nksyzj
-       ├─ gitignore #175wbq
-       ├─ modular
-       │  ├─ setupEnvironment.ts #m0s4vb
-       │  └─ setupTests.ts #bnjknz
-       ├─ packages
-       │  └─ README.md #14bthrh
-       └─ tsconfig.json #1h72lkd"
+    ├─ README.md #1gd0v2k
+    ├─ index.js #10qqo8n
+    └─ package.json"
   `);
 });

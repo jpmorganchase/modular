@@ -33,6 +33,8 @@ yarn-debug.log*
 yarn-error.log*
 
 /dist
+/packages/**/dist-cjs/
+/packages/**/dist-types/
 
 # Used by typescript for incremental builds
 .tsbuildinfo
