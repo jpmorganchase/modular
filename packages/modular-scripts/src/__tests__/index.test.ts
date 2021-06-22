@@ -184,76 +184,6 @@ describe('modular-scripts', () => {
     `);
   });
 
-  it('can start an app', async () => {
-    // Ok, so. Sunil's decided to get the new M1 MacBook Air. Some software doesn't run on it
-    // well yet. Particularly the puppeteer npm package failes to install and run
-    // (see https://github.com/puppeteer/puppeteer/issues/, issues #6634 and #6641,
-    // possible fix in pull #6495)
-
-    // Because of this, he's marked puppeteer in optionalDependencies, so it's failure to install
-    // doesn't block everything else. Further, because this particular test is already flaky,
-    // it's disabled when running locally. However, because it fails to install, it causes
-    // typescript and eslint failures. Hence the need to disable those errors for now.
-
-    // It's Sunil's responsibility to fix this when better, so shout at him if he doesn't.
-
-    /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
-
-    // This seems to be leaving hanging processes locally,
-    // so marking this test as a no-op for now. Sigh.
-    if (!process.env.CI) {
-      return;
-    }
-
-    const puppeteer = require('puppeteer');
-
-    // @ts-expect-error FIXME
-    let browser: puppeteer.Browser | undefined;
-    let devServer: DevServer | undefined;
-    try {
-      await fs.copyFile(
-        path.join(__dirname, 'TestApp.test-tsx'),
-        path.join(packagesPath, 'sample-app', 'src', 'App.tsx'),
-      );
-
-      browser = await puppeteer.launch(
-        process.env.CI
-          ? {
-              headless: true,
-              args: ['--no-sandbox', '--disable-setuid-sandbox'],
-            }
-          : {},
-      );
-      devServer = await startApp('sample-app');
-
-      const page = await browser.newPage();
-      await page.goto('http://localhost:3000', {});
-
-      // eslint-disable-next-line @typescript-eslint/unbound-method
-      const { getByTestId, findByTestId } = getQueriesForElement(
-        await getDocument(page),
-      );
-
-      await findByTestId('test-this');
-
-      // eslint-disable-next-line testing-library/no-await-sync-query
-      expect(await getNodeText(await getByTestId('test-this'))).toBe(
-        'this is a modular app',
-      );
-    } finally {
-      if (browser) {
-        await browser.close();
-      }
-      if (devServer) {
-        // this is the problematic bit, it leaves hanging node processes
-        // despite closing the parent process. Only happens in tests!
-        devServer.kill();
-      }
-    }
-
-    /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
-  });
-
   it('can add a view', async () => {
     await modular(
       'add sample-view --unstable-type view --unstable-name sample-view',
@@ -268,63 +198,6 @@ describe('modular-scripts', () => {
          │  └─ index.test.tsx #slarlz
          └─ index.tsx #fxrie0"
     `);
-  });
-
-  it('can start a view', async () => {
-    /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
-    if (!process.env.CI) {
-      return;
-    }
-
-    const puppeteer = require('puppeteer');
-
-    // @ts-expect-error FIXME
-    let browser: puppeteer.Browser | undefined;
-    let devServer: DevServer | undefined;
-    try {
-      const targetedView = 'sample-view';
-      await fs.copyFile(
-        path.join(__dirname, 'TestView.test-tsx'),
-        path.join(packagesPath, targetedView, 'src', 'index.tsx'),
-      );
-
-      browser = await puppeteer.launch(
-        process.env.CI
-          ? {
-              headless: true,
-              args: ['--no-sandbox', '--disable-setuid-sandbox'],
-            }
-          : {},
-      );
-      process.env.PORT = '3001';
-      devServer = await startApp(targetedView);
-
-      const page = await browser.newPage();
-      await page.goto('http://localhost:3001', {});
-
-      // eslint-disable-next-line @typescript-eslint/unbound-method
-      const { getByTestId, findByTestId } = getQueriesForElement(
-        await getDocument(page),
-      );
-
-      await findByTestId('test-this');
-
-      // eslint-disable-next-line testing-library/no-await-sync-query
-      expect(await getNodeText(await getByTestId('test-this'))).toBe(
-        'this is a modular view',
-      );
-    } finally {
-      if (browser) {
-        await browser.close();
-      }
-      if (devServer) {
-        // this is the problematic bit, it leaves hanging node processes
-        // despite closing the parent process. Only happens in tests!
-        devServer.kill();
-      }
-    }
-
-    /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
   });
 
   it('can add a package', async () => {
@@ -530,5 +403,132 @@ describe('modular-scripts', () => {
          │     └─ index.d.ts #1vloh7q
          └─ package.json"
     `);
+  });
+
+  it('can start an app', async () => {
+    // Ok, so. Sunil's decided to get the new M1 MacBook Air. Some software doesn't run on it
+    // well yet. Particularly the puppeteer npm package failes to install and run
+    // (see https://github.com/puppeteer/puppeteer/issues/, issues #6634 and #6641,
+    // possible fix in pull #6495)
+
+    // Because of this, he's marked puppeteer in optionalDependencies, so it's failure to install
+    // doesn't block everything else. Further, because this particular test is already flaky,
+    // it's disabled when running locally. However, because it fails to install, it causes
+    // typescript and eslint failures. Hence the need to disable those errors for now.
+
+    // It's Sunil's responsibility to fix this when better, so shout at him if he doesn't.
+
+    /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
+
+    // This seems to be leaving hanging processes locally,
+    // so marking this test as a no-op for now. Sigh.
+    if (!process.env.CI) {
+      return;
+    }
+
+    const puppeteer = require('puppeteer');
+
+    // @ts-expect-error FIXME
+    let browser: puppeteer.Browser | undefined;
+    let devServer: DevServer | undefined;
+    try {
+      await fs.copyFile(
+        path.join(__dirname, 'TestApp.test-tsx'),
+        path.join(packagesPath, 'sample-app', 'src', 'App.tsx'),
+      );
+
+      browser = await puppeteer.launch(
+        process.env.CI
+          ? {
+              headless: true,
+              args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            }
+          : {},
+      );
+      devServer = await startApp('sample-app');
+
+      const page = await browser.newPage();
+      await page.goto('http://localhost:3000', {});
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      const { getByTestId, findByTestId } = getQueriesForElement(
+        await getDocument(page),
+      );
+
+      await findByTestId('test-this');
+
+      // eslint-disable-next-line testing-library/no-await-sync-query
+      expect(await getNodeText(await getByTestId('test-this'))).toBe(
+        'this is a modular app',
+      );
+    } finally {
+      if (browser) {
+        await browser.close();
+      }
+      if (devServer) {
+        // this is the problematic bit, it leaves hanging node processes
+        // despite closing the parent process. Only happens in tests!
+        devServer.kill();
+      }
+    }
+
+    /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
+  });
+
+  it('can start a view', async () => {
+    /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
+    if (!process.env.CI) {
+      return;
+    }
+
+    const puppeteer = require('puppeteer');
+
+    // @ts-expect-error FIXME
+    let browser: puppeteer.Browser | undefined;
+    let devServer: DevServer | undefined;
+    try {
+      const targetedView = 'sample-view';
+      await fs.copyFile(
+        path.join(__dirname, 'TestView.test-tsx'),
+        path.join(packagesPath, targetedView, 'src', 'index.tsx'),
+      );
+
+      browser = await puppeteer.launch(
+        process.env.CI
+          ? {
+              headless: true,
+              args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            }
+          : {},
+      );
+      process.env.PORT = '3001';
+      devServer = await startApp(targetedView);
+
+      const page = await browser.newPage();
+      await page.goto('http://localhost:3001', {});
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      const { getByTestId, findByTestId } = getQueriesForElement(
+        await getDocument(page),
+      );
+
+      await findByTestId('test-this');
+
+      // eslint-disable-next-line testing-library/no-await-sync-query
+      expect(await getNodeText(await getByTestId('test-this'))).toBe(
+        'this is a modular view',
+      );
+    } finally {
+      if (browser) {
+        await browser.close();
+      }
+      if (devServer) {
+        // this is the problematic bit, it leaves hanging node processes
+        // despite closing the parent process. Only happens in tests!
+        devServer.kill();
+      }
+    }
+
+    /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
   });
 });
