@@ -6,18 +6,12 @@ test('it can serialise a folder', () => {
   // so can't include any .test.ts files that actually use this.
   // I picked one of our packages instead.
 
-  expect(tree(path.join(__dirname, '../../../modular-views.macro')))
+  expect(tree(path.join(__dirname, '../../../eslint-config-modular-app')))
     .toMatchInlineSnapshot(`
-    "modular-views.macro
+    "eslint-config-modular-app
     ├─ CHANGELOG.md
-    ├─ README.md #16yav87
-    ├─ package.json
-    ├─ src
-    │  ├─ __tests__
-    │  │  ├─ .eslintrc.json #ofb4ml
-    │  │  ├─ fixture.js #rm4stb
-    │  │  └─ index.test.ts #hzaled
-    │  └─ index.macro.ts #wgikox
-    └─ tsconfig.json #11buryo"
+    ├─ README.md #1gd0v2k
+    ├─ index.js #10qqo8n
+    └─ package.json"
   `);
 });
