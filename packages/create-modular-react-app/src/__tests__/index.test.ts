@@ -177,6 +177,45 @@ describe('create-modular-react-app', () => {
   });
   it('should create a project with prefer offline', async () => {
     await createModularApp({ name: destination, preferOffline: true });
+    expect(tree(destination)).toMatchInlineSnapshot(`
+      "test-repo
+      ├─ .editorconfig #1p4gvuw
+      ├─ .eslintignore #1ot2bpo
+      ├─ .gitignore #175wbq
+      ├─ .prettierignore #10uqwgj
+      ├─ .vscode
+      │  ├─ extensions.json #1i4584r
+      │  ├─ launch.json #1kk1omt
+      │  └─ settings.json #xes41c
+      ├─ README.md #1nksyzj
+      ├─ modular
+      │  ├─ setupEnvironment.ts #m0s4vb
+      │  └─ setupTests.ts #bnjknz
+      ├─ package.json
+      ├─ packages
+      │  ├─ README.md #14bthrh
+      │  └─ app
+      │     ├─ package.json
+      │     ├─ public
+      │     │  ├─ favicon.ico #6pu3rg
+      │     │  ├─ index.html #1wohq3p
+      │     │  ├─ logo192.png #1nez7vk
+      │     │  ├─ logo512.png #1hwqvcc
+      │     │  ├─ manifest.json #19gah8o
+      │     │  └─ robots.txt #1sjb8b3
+      │     ├─ src
+      │     │  ├─ App.css #1o0zosm
+      │     │  ├─ App.tsx #c80ven
+      │     │  ├─ __tests__
+      │     │  │  └─ App.test.tsx #lrjomi
+      │     │  ├─ index.css #o7sk21
+      │     │  ├─ index.tsx #zdn6mw
+      │     │  ├─ logo.svg #1okqmlj
+      │     │  └─ react-app-env.d.ts #1dm2mq6
+      │     └─ tsconfig.json #6rw46b
+      ├─ tsconfig.json #1h72lkd
+      └─ yarn.lock"
+    `);
     expect(
       await readCensoredPackageJson(path.join(destination, 'package.json')),
     ).toMatchInlineSnapshot(`
