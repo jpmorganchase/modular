@@ -1,8 +1,8 @@
 import * as path from 'path';
 import resolve from 'resolve';
-import resolveBin from 'resolve-as-bin';
 import execSync from './utils/execSync';
 import getModularRoot from './utils/getModularRoot';
+import { resolveAsBin } from './utils/resolve-as-bin';
 export interface TestOptions {
   bail: boolean;
   debug: boolean;
@@ -121,7 +121,7 @@ export default async function test(
   // finally add the script regexes to run
   cleanArgv.push(...cleanRegexes);
 
-  const jestBin = resolveBin('jest');
+  const jestBin = await resolveAsBin('jest-cli');
   let testBin = jestBin,
     testArgs = cleanArgv;
 

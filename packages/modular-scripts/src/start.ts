@@ -1,5 +1,5 @@
 import * as path from 'path';
-import resolveAsBin from 'resolve-as-bin';
+import { resolveAsBin } from './utils/resolve-as-bin';
 import getModularRoot from './utils/getModularRoot';
 import isModularType from './utils/isModularType';
 import execSync from './utils/execSync';
@@ -14,7 +14,8 @@ export default function start(target: string): Promise<void> {
       `The package at ${targetPath} is not a valid modular app or view.`,
     );
   }
-  const cracoBin = resolveAsBin('craco');
+
+  const cracoBin = await resolveAsBin('@craco/craco');
 
   if (isModularType(targetPath, 'view')) {
     stageView(modularRoot, target);
