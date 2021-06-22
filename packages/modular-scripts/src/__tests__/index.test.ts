@@ -1,4 +1,5 @@
 import execa from 'execa';
+import { exec } from 'child_process';
 import rimraf from 'rimraf';
 import tree from 'tree-view-for-tests';
 import path from 'path';
@@ -35,9 +36,13 @@ function modular(str: string, opts: Record<string, unknown> = {}) {
   });
 }
 
-async function startApp(appPath: string): Promise<DevServer> {
+async function startApp(
+  appPath: string,
+  opts: Record<string, unknown> = {},
+): Promise<DevServer> {
   const devServer = modular(`start ${appPath}`, {
     cleanup: true,
+    ...opts,
   });
 
   await new Promise((resolve, reject) => {
@@ -210,6 +215,7 @@ describe('modular-scripts', () => {
     // @ts-expect-error FIXME
     let browser: puppeteer.Browser | undefined;
     let devServer: DevServer | undefined;
+    let port: string;
     try {
       await fs.copyFile(
         path.join(__dirname, 'TestApp.test-tsx'),
@@ -224,10 +230,11 @@ describe('modular-scripts', () => {
             }
           : {},
       );
-      devServer = await startApp('sample-app');
+      port = '3000';
+      devServer = await startApp('sample-app', { env: { PORT: port } });
 
       const page = await browser.newPage();
-      await page.goto('http://localhost:3000', {});
+      await page.goto(`http://localhost:${port}`, {});
 
       // eslint-disable-next-line @typescript-eslint/unbound-method
       const { getByTestId, findByTestId } = getQueriesForElement(
@@ -250,6 +257,19 @@ describe('modular-scripts', () => {
         devServer.kill();
       }
     }
+
+    if (port) {
+      // kill all processes listening to the dev server port
+      exec(
+        `lsof -n -i4TCP:${port} | grep LISTEN | awk '{ print $2 }' | xargs kill`,
+        (err) => {
+          if (err) {
+            console.log('err: ', err);
+          }
+          console.log(`Cleaned up processes on port ${port}`);
+        },
+      );
+    }
     /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
   });
 
@@ -267,6 +287,76 @@ describe('modular-scripts', () => {
          │  └─ index.test.tsx #slarlz
          └─ index.tsx #fxrie0"
     `);
+  });
+
+  it('can start a view', async () => {
+    /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
+    if (!process.env.CI) {
+      return;
+    }
+
+    const puppeteer = require('puppeteer');
+
+    // @ts-expect-error FIXME
+    let browser: puppeteer.Browser | undefined;
+    let devServer: DevServer | undefined;
+    let port: string;
+    try {
+      const targetedView = 'sample-view';
+      await fs.copyFile(
+        path.join(__dirname, 'TestView.test-tsx'),
+        path.join(packagesPath, targetedView, 'src', 'index.tsx'),
+      );
+
+      browser = await puppeteer.launch(
+        process.env.CI
+          ? {
+              headless: true,
+              args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            }
+          : {},
+      );
+      port = '4000';
+      devServer = await startApp(targetedView, { env: { PORT: port } });
+
+      const page = await browser.newPage();
+      await page.goto(`http://localhost:${port}`, {});
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      const { getByTestId, findByTestId } = getQueriesForElement(
+        await getDocument(page),
+      );
+
+      await findByTestId('test-this');
+
+      // eslint-disable-next-line testing-library/no-await-sync-query
+      expect(await getNodeText(await getByTestId('test-this'))).toBe(
+        'this is a modular view',
+      );
+    } finally {
+      if (browser) {
+        await browser.close();
+      }
+      if (devServer) {
+        // this is the problematic bit, it leaves hanging node processes
+        // despite closing the parent process. Only happens in tests!
+        devServer.kill();
+      }
+    }
+    if (port) {
+      // kill all processes listening to the dev server port
+      exec(
+        `lsof -n -i4TCP:${port} | grep LISTEN | awk '{ print $2 }' | xargs kill`,
+        (err) => {
+          if (err) {
+            console.log('err: ', err);
+          }
+          console.log(`Cleaned up processes on port ${port}`);
+        },
+      );
+    }
+
+    /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
   });
 
   it('can build a view', async () => {
