@@ -296,6 +296,7 @@ describe('modular-scripts', () => {
             }
           : {},
       );
+      process.env.PORT = '3001';
       devServer = await startApp(targetedView);
 
       const page = await browser.newPage();
