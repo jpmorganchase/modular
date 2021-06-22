@@ -398,11 +398,11 @@ describe('modular-scripts', () => {
       "sample-view
       ├─ README.md #11adaka
       ├─ dist-cjs
-      │  ├─ sample-view.cjs.js #10vycz1
-      │  └─ sample-view.cjs.js.map #15ks78h
+      │  ├─ sample-view.cjs.js #8jw6cg
+      │  └─ sample-view.cjs.js.map #130r3z8
       ├─ dist-es
-      │  ├─ sample-view.es.js #1rtqi2k
-      │  └─ sample-view.es.js.map #1sky7si
+      │  ├─ sample-view.es.js #1ctbbz8
+      │  └─ sample-view.es.js.map #12deywy
       ├─ dist-types
       │  └─ src
       │     └─ index.d.ts #1vloh7q

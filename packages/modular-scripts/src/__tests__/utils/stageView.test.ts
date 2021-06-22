@@ -39,10 +39,10 @@ describe('stageView', () => {
       │  ├─ __tests__
       │  │  └─ App.test.tsx #16urcos
       │  ├─ index.css #o7sk21
-      │  ├─ index.tsx #jn7ye
+      │  ├─ index.tsx #1qbgs9s
       │  ├─ logo.svg #1okqmlj
       │  └─ react-app-env.d.ts #1dm2mq6
-      └─ tsconfig.json #6hj4hv"
+      └─ tsconfig.json #ns1qls"
     `);
   });
   it('should import the view as the main app in index.tsx', () => {
