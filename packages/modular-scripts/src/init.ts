@@ -18,13 +18,9 @@ export async function initModularFolder(
     packageJson = {};
   }
 
-  let changed = false;
-  if (!packageJson.modular) {
-    packageJson.modular = {
-      type: 'root',
-    };
-    changed = true;
-  }
+  packageJson.modular = {
+    type: 'root',
+  };
 
   packageJson.private = true;
 
@@ -32,11 +28,9 @@ export async function initModularFolder(
     packageJson.workspaces = ['packages/**'];
   }
 
-  if (changed) {
-    await fs.writeJSON(packageJsonPath, packageJson, {
-      spaces: 2,
-    });
-  }
+  await fs.writeJSON(packageJsonPath, packageJson, {
+    spaces: 2,
+  });
 
   // now run npm init to ensure that our new content is picked up properly.
   // we don't do this before because npm init prints the package.json to console
