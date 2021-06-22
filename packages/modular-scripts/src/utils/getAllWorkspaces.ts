@@ -21,6 +21,9 @@ export function getYarnWorkspaceInfo(cwd: string): YarnWorkspaces {
         cwd,
         cleanup: true,
       }).stdout,
+      // there's an edge case where if there are no packages in the current workspace
+      // then this command returns an empty string and no JSON - so we have to default
+      // to an empty directory which can be JSON parsed.
     ) || '{}';
 
   return JSON.parse(strippedStd) as YarnWorkspaces;
