@@ -15,14 +15,15 @@ function _getAllWorkspaces(): YarnWorkspaces {
   const modularRoot = getModularRoot();
 
   // strip out ANSI color codes and escape characters
-  const strippedStd = stripAnsi(
-    execa.sync('yarnpkg', ['--silent', 'workspaces', 'info'], {
-      all: true,
-      reject: false,
-      cwd: modularRoot,
-      cleanup: true,
-    }).stdout,
-  );
+  const strippedStd =
+    stripAnsi(
+      execa.sync('yarnpkg', ['--silent', 'workspaces', 'info'], {
+        all: true,
+        reject: false,
+        cwd: modularRoot,
+        cleanup: true,
+      }).stdout,
+    ) || '{}';
 
   return JSON.parse(strippedStd) as YarnWorkspaces;
 }
