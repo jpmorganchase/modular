@@ -162,6 +162,21 @@ program
     console.log(JSON.stringify(workspace, null, 2));
   });
 
+interface InitOptions {
+  y: boolean;
+  preferOffline: string;
+}
+
+program
+  .command('init')
+  .description('Initialize a new modular root in the current folder')
+  .option('-y', 'equivalent to the -y flag in NPM')
+  .option('--prefer-offline [value]', 'delegate to offline cache first', true)
+  .action(async (options: InitOptions) => {
+    const { default: initWorkspace } = await import('./init');
+    await initWorkspace(options.y, JSON.parse(options.preferOffline));
+  });
+
 void preflightCheck()
   .then(() => {
     return program.parseAsync(process.argv);
