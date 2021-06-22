@@ -1,5 +1,5 @@
 import * as path from 'path';
-import resolveAsBin from 'resolve-as-bin';
+import { resolveAsBin } from './utils/resolve-as-bin';
 import getModularRoot from './utils/getModularRoot';
 import isModularType from './utils/isModularType';
 import execSync from './utils/execSync';
@@ -12,7 +12,8 @@ export default async function start(appPath: string): Promise<void> {
   if (!isModularType(path.join(modularRoot, packagesRoot, appPath), 'app')) {
     throw new Error(`The package at ${appPath} is not a valid modular app.`);
   }
-  const cracoBin = resolveAsBin('craco');
+
+  const cracoBin = await resolveAsBin('@craco/craco');
 
   execSync(cracoBin, ['start', '--config', cracoConfig], {
     cwd: path.join(modularRoot, packagesRoot, appPath),
