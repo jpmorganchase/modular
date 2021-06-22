@@ -9,7 +9,7 @@ import { createMacro, MacroHandler } from 'babel-plugin-macros';
 import { LazyExoticComponent, ComponentType } from 'react';
 import execa from 'execa';
 
-type PackageType = 'app' | 'view' | 'root'; // | 'package', the default
+type PackageType = 'app' | 'view' | 'root' | 'package';
 
 type ModularPackageJson = PackageJson & {
   modular?: {

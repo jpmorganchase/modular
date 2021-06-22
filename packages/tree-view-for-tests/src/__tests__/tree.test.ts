@@ -6,33 +6,18 @@ test('it can serialise a folder', () => {
   // so can't include any .test.ts files that actually use this.
   // I picked one of our packages instead.
 
-  expect(tree(path.join(__dirname, '../../../create-modular-react-app')))
+  expect(tree(path.join(__dirname, '../../../modular-views.macro')))
     .toMatchInlineSnapshot(`
-    "create-modular-react-app
-    ├─ .npmignore #1rstiru
+    "modular-views.macro
     ├─ CHANGELOG.md
-    ├─ README.md #r0jsfd
+    ├─ README.md #16yav87
     ├─ package.json
     ├─ src
     │  ├─ __tests__
-    │  │  └─ index.test.ts #6zjrxp
-    │  ├─ cli.ts #1g9uxyv
-    │  └─ index.ts #6pzlbf
-    └─ template
-       ├─ .editorconfig #1p4gvuw
-       ├─ .eslintignore #1ot2bpo
-       ├─ .prettierignore #10uqwgj
-       ├─ .vscode
-       │  ├─ extensions.json #1i4584r
-       │  ├─ launch.json #1kk1omt
-       │  └─ settings.json #xes41c
-       ├─ README.md #1nksyzj
-       ├─ gitignore #175wbq
-       ├─ modular
-       │  ├─ setupEnvironment.ts #m0s4vb
-       │  └─ setupTests.ts #bnjknz
-       ├─ packages
-       │  └─ README.md #14bthrh
-       └─ tsconfig.json #1h72lkd"
+    │  │  ├─ .eslintrc.json #ofb4ml
+    │  │  ├─ fixture.js #rm4stb
+    │  │  └─ index.test.ts #hzaled
+    │  └─ index.macro.ts #wgikox
+    └─ tsconfig.json #11buryo"
   `);
 });
