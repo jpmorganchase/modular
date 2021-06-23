@@ -5,12 +5,12 @@
       "name": "Debug Tests",
       "type": "node",
       "request": "launch",
+      "args": ["${relativeFile}"],
       "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/modular",
-      "args": ["test", "--runInBand", "--no-cache", "--env=jsdom", "{file}"],
+      "runtimeArgs": ["test", "--watchAll=false"],
+      "sourceMaps": true,
       "cwd": "${workspaceRoot}",
-      "protocol": "inspector",
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen"
+      "protocol": "inspector"
     }
   ]
 }
