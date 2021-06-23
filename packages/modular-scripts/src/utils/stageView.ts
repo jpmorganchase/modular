@@ -6,7 +6,7 @@ import getAllFiles from './getAllFiles';
 export default function stageView(
   modularRoot: string,
   targetedView: string,
-): void {
+): string {
   const appTypePath = path.join(__dirname, '../../types', 'app');
   const indexTemplate = `import * as React from 'react';
 import * as ReactDOM from 'react-dom';
@@ -59,4 +59,5 @@ ReactDOM.render(
       { spaces: 2 },
     );
   }
+  return stagedViewAppPath;
 }

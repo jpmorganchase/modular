@@ -6,7 +6,7 @@ import execSync from './utils/execSync';
 import stageView from './utils/stageView';
 import { packagesRoot, cracoConfig } from './config';
 
-export default function start(target: string): Promise<void> {
+export default async function start(target: string): Promise<void> {
   const modularRoot = getModularRoot();
   const targetPath = path.join(modularRoot, packagesRoot, target);
   if (isModularType(targetPath, 'package')) {
@@ -16,22 +16,13 @@ export default function start(target: string): Promise<void> {
   }
 
   const cracoBin = await resolveAsBin('@craco/craco');
-
+  let startPath = path.join(modularRoot, packagesRoot, target);
   if (isModularType(targetPath, 'view')) {
-    stageView(modularRoot, target);
-    execSync(cracoBin, ['start', '--config', cracoConfig], {
-      cwd: path.join(__dirname, 'temp', target),
-      log: false,
-      // @ts-ignore
-      env: {
-        USE_MODULAR_BABEL: process.env.USE_MODULAR_BABEL,
-        MODULAR_ROOT: modularRoot,
-      },
-    });
-    return Promise.resolve();
+    const stagedView = stageView(modularRoot, target);
+    startPath = stagedView;
   }
   execSync(cracoBin, ['start', '--config', cracoConfig], {
-    cwd: path.join(modularRoot, packagesRoot, target),
+    cwd: startPath,
     log: false,
     // @ts-ignore
     env: {
