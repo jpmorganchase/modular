@@ -1,5 +1,11 @@
 # create-modular-react-app
 
+## 0.8.10
+
+### Patch Changes
+
+- 704cec9: Fix typo in package.json
+
 ## 0.8.9
 
 ### Patch Changes
