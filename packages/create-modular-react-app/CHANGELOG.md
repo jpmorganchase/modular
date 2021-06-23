@@ -1,5 +1,12 @@
 # create-modular-react-app
 
+## 0.8.9
+
+### Patch Changes
+
+- 1843843: Fix issue with creating a new modular app with a name
+- 10e1738: Updated vscode template settings in CMRA and moved utils around
+
 ## 0.8.8
 
 ### Patch Changes
