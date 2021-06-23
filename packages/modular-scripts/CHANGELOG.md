@@ -1,5 +1,23 @@
 # modular-scripts
 
+## 0.13.0
+
+### Minor Changes
+
+- 49e5f21: add `init` API which is a replacement of `npm init` for creating a
+  new modular folder in the current working directory.
+
+### Patch Changes
+
+- 834ee7e: Bump postcss from 8.3.4 to 8.3.5
+- 2727ad3: Bump @babel/preset-env from 7.14.5 to 7.14.7
+- fe3cf48: Fix issues with `init` command `package.json` structure so that yarn
+  is setup.
+- 5c2c16e: Fix issues where modular bin dependencies could not be found when
+  running from global CLI
+- fe3cf48: Expose init command via CLI
+- 10e1738: Updated vscode template settings in CMRA and moved utils around
+
 ## 0.12.4
 
 ### Patch Changes
