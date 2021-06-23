@@ -11,7 +11,7 @@
     "format": "prettier --write .",
     "lint": "eslint --cache --ext .js,.ts,.tsx --max-warnings 0",
     "lint:fix": "yarn lint --fix",
-    "create-modular-react-app": "ts-node packages/create-modular-react-app/src/index.ts",
+    "create-modular-react-app": "ts-node packages/create-modular-react-app/src/cli.ts",
     "modular": "ts-node packages/modular-scripts/src/cli.ts",
     "test": "yarn modular test --watchAll false --runInBand --forceExit",
     "build": "yarn workspace create-modular-react-app build && yarn workspace modular-scripts build && yarn workspace modular-views.macro build",

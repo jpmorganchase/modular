@@ -1,4 +1,4 @@
-import createModularApp from '../cli';
+import createModularApp from '../';
 import fs from 'fs-extra';
 import path from 'path';
 import tree from 'tree-view-for-tests';
