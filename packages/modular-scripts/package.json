@@ -48,7 +48,7 @@
     "react-scripts": "^4.0.3",
     "resolve": "^1.20.0",
     "rimraf": "^3.0.2",
-    "rollup": "^2.52.0",
+    "rollup": "^2.52.2",
     "rollup-plugin-postcss": "^4.0.0",
     "rollup-plugin-preserve-shebangs": "^0.2.0",
     "ts-jest": "^26.5.6",
