@@ -27,6 +27,7 @@ export default async function build(
       env: {
         USE_MODULAR_BABEL: process.env.USE_MODULAR_BABEL,
         MODULAR_ROOT: modularRoot,
+        SKIP_PREFLIGHT_CHECK: 'true',
       },
     });
 
