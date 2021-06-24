@@ -16,8 +16,6 @@ async function isYarnInstalled(): Promise<boolean> {
   }
 }
 
-type VerifyPackageTree = () => void;
-
 async function preflightCheck(): Promise<void> {
   if (process.env.SKIP_PREFLIGHT_CHECK === 'true' || isCI) {
     if (!isCI) {
@@ -74,10 +72,8 @@ async function preflightCheck(): Promise<void> {
   }
 
   if (process.env.SKIP_PREFLIGHT_CHECK !== 'true') {
-    const verifyPackageTree =
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      require('react-scripts/scripts/utils/verifyPackageTree') as VerifyPackageTree;
-    verifyPackageTree();
+    const { verifyPackageTree } = await import('./verifyPackageTree');
+    await verifyPackageTree();
   }
 }
 
