@@ -360,7 +360,13 @@ describe('modular-scripts', () => {
   });
 
   it('can build a view', async () => {
+    rimraf.sync(path.join(packagesPath, 'sample-view'));
     rimraf.sync(path.join(modularRoot, 'dist'));
+
+    await modular(
+      'add sample-view --unstable-type view --unstable-name sample-view',
+      { stdio: 'inherit' },
+    );
 
     await modular('build sample-view', {
       stdio: 'inherit',
