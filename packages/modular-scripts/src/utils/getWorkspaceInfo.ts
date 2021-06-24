@@ -13,7 +13,7 @@ export interface WorkSpaceRecord {
   public: boolean;
 }
 
-type WorkspaceInfo = Record<string, WorkSpaceRecord>;
+type WorkspaceInfo = Record<string, WorkSpaceRecord | undefined>;
 
 export async function getWorkspaceInfo(): Promise<WorkspaceInfo> {
   const workspace = getAllWorkspaces();

@@ -24,14 +24,14 @@ function getModularRoot(): string {
   try {
     const modularRoot = findUpModularRoot();
     if (modularRoot === undefined) {
-      console.error('These commands must be run within a modular repository.');
-      process.exit(1);
+      throw new Error(
+        'These commands must be run within a modular repository.',
+      );
     }
 
     return path.dirname(modularRoot);
   } catch (err) {
-    console.error(err);
-    return process.exit(1);
+    throw new Error(err);
   }
 }
 

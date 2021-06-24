@@ -7,10 +7,11 @@ import {
 import prompts from 'prompts';
 import getModularRoot from './utils/getModularRoot';
 import execSync from './utils/execSync';
+import actionPreflightCheck from './utils/actionPreflightCheck';
 import getAllFiles from './utils/getAllFiles';
 const packagesRoot = 'packages';
 
-export default async function addPackage(
+async function addPackage(
   destination: string,
   typeArg: string | void,
   nameArg: string | void,
@@ -95,3 +96,5 @@ export default async function addPackage(
   }
   execSync('yarnpkg', yarnArgs, { cwd: modularRoot });
 }
+
+export default actionPreflightCheck(addPackage);

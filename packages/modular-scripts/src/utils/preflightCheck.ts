@@ -3,9 +3,7 @@ import chalk from 'chalk';
 import execa from 'execa';
 import * as fs from 'fs-extra';
 import isCI from 'is-ci';
-import path from 'path';
 import updateNotifier from 'update-notifier';
-import { getWorkspaceInfo } from '../utils/getWorkspaceInfo';
 
 async function isYarnInstalled(): Promise<boolean> {
   try {
@@ -23,7 +21,7 @@ async function preflightCheck(): Promise<void> {
     }
   } else {
     const { name, version } = fs.readJSONSync(
-      path.join(__dirname, '..', '..', 'package.json'),
+      require.resolve('modular-scripts/package.json'),
     ) as PackageJson;
 
     const message =
@@ -50,24 +48,6 @@ async function preflightCheck(): Promise<void> {
       throw new Error(
         'Please install `yarn` before attempting to run `modular-scripts`.',
       );
-    }
-
-    if (process.argv.slice(2)[0] !== 'init') {
-      // ensure that workspaces are setup correctly with yarn
-      // init is a special case where we don't already need to be in a modular repository
-      // in this case there's no use checking the workspaces yet because we're setting
-      // up a new folder
-      const workspace = await getWorkspaceInfo();
-
-      for (const [packageName, packageInfo] of Object.entries(workspace)) {
-        if (packageInfo.mismatchedWorkspaceDependencies.length) {
-          throw new Error(
-            `${packageName} has mismatchedWorkspaceDependencies ${packageInfo.mismatchedWorkspaceDependencies.join(
-              ', ',
-            )}`,
-          );
-        }
-      }
     }
   }
 
