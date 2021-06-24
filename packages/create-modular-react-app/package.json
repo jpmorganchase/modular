@@ -1,14 +1,15 @@
 {
   "name": "create-modular-react-app",
-  "version": "0.8.8",
+  "version": "0.8.10",
   "license": "Apache-2.0",
   "bin": {
-    "create-modular-react-app": "build/index.js"
+    "create-modular-react-app": "build/cli.js"
   },
   "engines": {
     "node": ">=12"
   },
   "scripts": {
+    "create-modular-react-app": "ts-node src/cli.ts",
     "clean": "rimraf build",
     "prebuild": "yarn clean",
     "build": "babel --root-mode upward src --out-dir build --extensions .ts --ignore 'src/**/*.test.ts'"

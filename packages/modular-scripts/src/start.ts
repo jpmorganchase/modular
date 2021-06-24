@@ -28,6 +28,7 @@ export default async function start(target: string): Promise<void> {
     env: {
       USE_MODULAR_BABEL: process.env.USE_MODULAR_BABEL,
       MODULAR_ROOT: modularRoot,
+      SKIP_PREFLIGHT_CHECK: 'true',
     },
   });
   return Promise.resolve();

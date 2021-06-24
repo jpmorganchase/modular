@@ -1,5 +1,12 @@
 # eslint-config-modular-app
 
+## 0.4.5
+
+### Patch Changes
+
+- f377a3f: Bump @typescript-eslint/eslint-plugin from 4.27.0 to 4.28.0
+- db8440b: Bump @typescript-eslint/parser from 4.27.0 to 4.28.0
+
 ## 0.4.4
 
 ### Patch Changes
