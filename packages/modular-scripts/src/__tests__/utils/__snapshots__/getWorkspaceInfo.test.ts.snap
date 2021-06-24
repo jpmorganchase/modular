@@ -44,12 +44,5 @@ Object {
     "type": "package",
     "workspaceDependencies": Array [],
   },
-  "view-view": Object {
-    "location": "packages/view-view",
-    "mismatchedWorkspaceDependencies": Array [],
-    "public": false,
-    "type": "view",
-    "workspaceDependencies": Array [],
-  },
 }
 `;
