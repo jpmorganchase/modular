@@ -10,7 +10,7 @@ import addPackage from './addPackage';
 import start from './start';
 import test, { TestOptions } from './test';
 
-import preflightCheck from './utils/preflightCheck';
+import startupCheck from './utils/startupCheck';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import * as logger from './utils/logger';
 
@@ -193,7 +193,7 @@ program
     logger.log(chalk.green('Success!'));
   });
 
-void preflightCheck()
+void startupCheck()
   .then(() => {
     return program.parseAsync(process.argv);
   })

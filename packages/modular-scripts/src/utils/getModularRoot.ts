@@ -5,7 +5,10 @@ import memoize from './memoize';
 import * as logger from './logger';
 import execa from 'execa';
 
-function isModularRoot(packageJson: { modular?: Record<string, unknown> }) {
+function isModularRoot(packageJsonPath: string) {
+  const packageJson = fs.readJSONSync(packageJsonPath, {
+    encoding: 'utf8',
+  }) as { modular?: Record<string, unknown> };
   return packageJson?.modular?.type === 'root';
 }
 
@@ -15,7 +18,7 @@ function findUpModularRoot(): string | undefined {
       const packageJsonPath = path.join(directory, 'package.json');
       if (
         findUp.sync.exists(packageJsonPath) &&
-        isModularRoot(fs.readJSONSync(packageJsonPath, { encoding: 'utf8' }))
+        isModularRoot(packageJsonPath)
       ) {
         return packageJsonPath;
       }
@@ -25,10 +28,21 @@ function findUpModularRoot(): string | undefined {
   );
 }
 
+/**
+ * This is a shortcut - when running in a git repo we bail out and
+ * use the git repository root as the modular root. This handles
+ * most use cases since people should be tracking their entire repo
+ * as a modular repo.
+ *
+ * @returns string | undefined
+ */
 function getGitRoot() {
   try {
     const { stdout } = execa.sync(`git`, [`rev-parse`, `--show-toplevel`]);
-    return stdout;
+    const packageJsonPath = path.join(stdout, 'package.json');
+    if (isModularRoot(packageJsonPath)) {
+      return stdout;
+    }
   } catch (e) {
     /// clearly not in a git repo so just use the CWD
     return undefined;
