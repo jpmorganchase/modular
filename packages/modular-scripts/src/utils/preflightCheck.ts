@@ -4,6 +4,7 @@ import execa from 'execa';
 import * as fs from 'fs-extra';
 import isCI from 'is-ci';
 import updateNotifier from 'update-notifier';
+import * as logger from './logger';
 
 async function isYarnInstalled(): Promise<boolean> {
   try {
@@ -15,9 +16,9 @@ async function isYarnInstalled(): Promise<boolean> {
 }
 
 async function preflightCheck(): Promise<void> {
-  if (process.env.SKIP_PREFLIGHT_CHECK === 'true' || isCI) {
+  if (process.env.SKIP_MODULAR_STARTUP_CHECK === 'true' || isCI) {
     if (!isCI) {
-      console.warn('Skipping modular preflight checks.');
+      logger.warn('Skipping modular startup checks.');
     }
   } else {
     const { name, version } = fs.readJSONSync(
@@ -42,6 +43,8 @@ async function preflightCheck(): Promise<void> {
         defer: false,
         isGlobal: false,
       });
+    } else {
+      logger.debug(`Running latest version of modular ${version as string}`);
     }
 
     if ((await isYarnInstalled()) === false) {
@@ -49,11 +52,6 @@ async function preflightCheck(): Promise<void> {
         'Please install `yarn` before attempting to run `modular-scripts`.',
       );
     }
-  }
-
-  if (process.env.SKIP_PREFLIGHT_CHECK !== 'true') {
-    const { verifyPackageTree } = await import('./verifyPackageTree');
-    await verifyPackageTree();
   }
 }
 

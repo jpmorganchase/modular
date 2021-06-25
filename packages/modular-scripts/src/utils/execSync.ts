@@ -1,5 +1,6 @@
 import execa from 'execa';
 import chalk from 'chalk';
+import * as logger from './logger';
 
 export default function execSync(
   file: string,
@@ -8,7 +9,7 @@ export default function execSync(
 ): execa.ExecaSyncReturnValue<string> {
   const { log, ...opts } = options;
   if (log) {
-    console.log(chalk.grey(`$ ${file} ${args.join(' ')}`));
+    logger.log(chalk.grey(`$ ${file} ${args.join(' ')}`));
   }
   return execa.sync(file, args, {
     stdin: process.stdin,

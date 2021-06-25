@@ -12,6 +12,7 @@ import {
 } from 'pptr-testing-library';
 
 import getModularRoot from '../utils/getModularRoot';
+import * as logger from '../utils/logger';
 
 const modularRoot = getModularRoot();
 
@@ -104,7 +105,7 @@ async function startApp(
 
       const output = data.toString();
 
-      console.error(output);
+      logger.error(output);
 
       clearTimeout(startAppTimeout);
 
@@ -116,7 +117,7 @@ async function startApp(
     devServer.on('error', (err: Error) => {
       if (completed) return;
 
-      console.error(err);
+      logger.error(err);
 
       clearTimeout(startAppTimeout);
 

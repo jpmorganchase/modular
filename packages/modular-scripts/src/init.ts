@@ -2,6 +2,7 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 import execSync from './utils/execSync';
 import { ModularPackageJson } from './utils/isModularType';
+import * as logger from './utils/logger';
 
 export async function initModularFolder(
   folder: string,
@@ -52,7 +53,7 @@ export async function initModularFolder(
   }
   execSync('yarnpkg', yarnArgs, { cwd: folder });
 
-  console.log('Modular repository initialized!');
+  logger.log('Modular repository initialized!');
 }
 
 export default function init(

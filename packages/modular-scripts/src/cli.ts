@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import * as fs from 'fs-extra';
+import chalk from 'chalk';
 import commander from 'commander';
 import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 
@@ -11,6 +12,7 @@ import test, { TestOptions } from './test';
 
 import preflightCheck from './utils/preflightCheck';
 import actionPreflightCheck from './utils/actionPreflightCheck';
+import * as logger from './utils/logger';
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
@@ -73,13 +75,13 @@ program
         preserveModules?: boolean;
       },
     ) => {
-      console.log('building packages at:', packagePaths.join(', '));
+      logger.log('building packages at:', packagePaths.join(', '));
 
       for (let i = 0; i < packagePaths.length; i++) {
         try {
           await buildPackages(packagePaths[i], options['preserveModules']);
         } catch (err) {
-          console.error(`building ${packagePaths[i]} failed`);
+          logger.error(`building ${packagePaths[i]} failed`);
           throw err;
         }
       }
@@ -161,7 +163,7 @@ program
     actionPreflightCheck(async () => {
       const { getWorkspaceInfo } = await import('./utils/getWorkspaceInfo');
       const workspace = await getWorkspaceInfo();
-      console.log(JSON.stringify(workspace, null, 2));
+      logger.log(JSON.stringify(workspace, null, 2));
     }),
   );
 
@@ -180,11 +182,22 @@ program
     await initWorkspace(options.y, JSON.parse(options.preferOffline));
   });
 
+program
+  .command('check')
+  .description(
+    'Manually run modular checks against the current modular repository',
+  )
+  .action(async () => {
+    const { check } = await import('./check');
+    await check();
+    logger.log(chalk.green('Success!'));
+  });
+
 void preflightCheck()
   .then(() => {
     return program.parseAsync(process.argv);
   })
   .catch((err: Error) => {
-    console.error(err.message);
+    logger.error(err.message);
     process.exit(1);
   });
