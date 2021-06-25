@@ -22,7 +22,7 @@ export function getModularType(dir: string): ModularType | undefined {
   const packageJsonPath = path.join(dir, 'package.json');
   if (fs.existsSync(packageJsonPath)) {
     const packageJson = fs.readJsonSync(packageJsonPath) as ModularPackageJson;
-    return packageJson.modular?.type;
+    return packageJson.modular?.type || 'package';
   }
 }
 

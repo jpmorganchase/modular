@@ -1,6 +1,7 @@
 import { getWorkspaceInfo, WorkSpaceRecord } from './utils/getWorkspaceInfo';
 import { getModularType, isValidModularType } from './utils/isModularType';
 import * as logger from './utils/logger';
+
 type VerifyPackageTree = () => void;
 
 export async function check(): Promise<void> {
@@ -35,6 +36,14 @@ export async function check(): Promise<void> {
           getModularType(packageInfo.location) as string
         }`,
       );
+    }
+
+    if (packageInfo.type === 'app') {
+      if (packageInfo.public) {
+        throw new Error(
+          `${packageName} is marked as "public" - Modular apps should be marked as private.`,
+        );
+      }
     }
 
     logger.debug(`${packageName} is valid.`);

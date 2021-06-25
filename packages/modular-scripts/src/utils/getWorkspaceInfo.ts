@@ -29,8 +29,7 @@ export async function getWorkspaceInfo(): Promise<WorkspaceInfo> {
 
     const modularPackageInfo = Object.assign(packageInfo, {
       type,
-      public:
-        type === ('package' as ModularType) ? !!packageJson.public : false,
+      public: packageJson.public as boolean,
     });
 
     res[packageName] = modularPackageInfo;
