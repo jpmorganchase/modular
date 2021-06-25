@@ -35,7 +35,6 @@ yarn-error.log*
 /dist
 /packages/**/dist-cjs/
 /packages/**/dist-types/
-/temp
 
 # Used by typescript for incremental builds
 .tsbuildinfo

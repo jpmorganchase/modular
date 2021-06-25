@@ -15,7 +15,7 @@
     "clean": "rimraf build dist-cjs dist-types",
     "prebuild": "yarn clean",
     "build": "yarn build:js && yarn build:ts",
-    "build:js": "babel --root-mode upward src --out-dir dist-cjs --extensions .ts --ignore 'src/**/*.test.ts,src/temp/**'",
+    "build:js": "babel --root-mode upward src --out-dir dist-cjs --extensions .ts --ignore 'src/**/*.test.ts'",
     "build:ts": "tsc --project tsconfig.build.json"
   },
   "dependencies": {
