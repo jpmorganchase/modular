@@ -3,20 +3,26 @@ import { resolveAsBin } from './utils/resolve-as-bin';
 import getModularRoot from './utils/getModularRoot';
 import isModularType from './utils/isModularType';
 import execSync from './utils/execSync';
-
+import stageView from './utils/stageView';
 import { packagesRoot, cracoConfig } from './config';
 
-export default async function start(appPath: string): Promise<void> {
+export default async function start(target: string): Promise<void> {
   const modularRoot = getModularRoot();
-
-  if (!isModularType(path.join(modularRoot, packagesRoot, appPath), 'app')) {
-    throw new Error(`The package at ${appPath} is not a valid modular app.`);
+  const targetPath = path.join(modularRoot, packagesRoot, target);
+  if (isModularType(targetPath, 'package')) {
+    throw new Error(
+      `The package at ${targetPath} is not a valid modular app or view.`,
+    );
   }
 
   const cracoBin = await resolveAsBin('@craco/craco');
-
+  let startPath = path.join(modularRoot, packagesRoot, target);
+  if (isModularType(targetPath, 'view')) {
+    const stagedView = stageView(modularRoot, target);
+    startPath = stagedView;
+  }
   execSync(cracoBin, ['start', '--config', cracoConfig], {
-    cwd: path.join(modularRoot, packagesRoot, appPath),
+    cwd: startPath,
     log: false,
     // @ts-ignore
     env: {
@@ -25,6 +31,5 @@ export default async function start(appPath: string): Promise<void> {
       SKIP_PREFLIGHT_CHECK: 'true',
     },
   });
-
   return Promise.resolve();
 }

@@ -8,7 +8,6 @@ import prompts from 'prompts';
 import getModularRoot from './utils/getModularRoot';
 import execSync from './utils/execSync';
 import getAllFiles from './utils/getAllFiles';
-
 const packagesRoot = 'packages';
 
 export default async function addPackage(

@@ -36,6 +36,7 @@ yarn-error.log*
 
 /dist
 
-# Used by typescript for incremental builds 
+# Used by typescript for incremental builds
 .tsbuildinfo
 *.tsbuildinfo
+
