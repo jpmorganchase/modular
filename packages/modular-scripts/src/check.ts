@@ -49,8 +49,8 @@ export async function check(): Promise<void> {
     logger.debug(`${packageName} is valid.`);
   }
 
-  const verifyPackageTree =
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    require('react-scripts/scripts/utils/verifyPackageTree') as VerifyPackageTree;
-  verifyPackageTree();
+  if (process.env.SKIP_PREFLIGHT_CHECK !== 'true') {
+    const { verifyPackageTree } = await import('./verifyPackageTree');
+    await verifyPackageTree();
+  }
 }
