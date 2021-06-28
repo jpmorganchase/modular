@@ -25,6 +25,6 @@ export function error(...x: any[]): void {
 
 export function debug(...x: any[]): void {
   if (DEBUG) {
-    print(x.join(' '));
+    log(...x);
   }
 }
