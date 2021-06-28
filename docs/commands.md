@@ -3,6 +3,18 @@
 Modular is designed to emulate `react-scripts` with an opinionated way of
 developing, building and testing UI applications.
 
+## `modular init`
+
+Initializes a modular root type package.json in the current directory with
+packages folder set up to add modular packages to.
+
+### Options:
+
+`-y`: Equivalent to setting it for `npm init`. Generates an empty npm project
+without all of the interactive processes.
+
+`--prefer-offline`: Uses offline yarn cache when possible
+
 ## `modular add <path/to/package>`
 
 Adds a new package by creating a new workspace at `packages/path/to/package`.
@@ -21,17 +33,22 @@ Packages can currently be one of 3 types:
   utility, tool, or whatever your needs require you to do. As an example, you
   could build a node.js server inside one of these.
 
+### Options:
+
+`--prefer-offline`: Uses offline yarn cache when possible
+
 ## `modular start <path/to/package>`
 
 Runs
 [`react-scripts start`](https://create-react-app.dev/docs/getting-started#npm-start-or-yarn-start)
-against the selected app.
+against the selected app or view.
 
 ## `modular test`
 
 Runs [`jest`](https://jestjs.io/) against the entire `modular` project.
 
-For more documentation on the test command see the [documentation](./test.md)
+For more documentation on the test command and options see the
+[documentation](./test.md)
 
 ## `modular build <path/to/package>`
 
