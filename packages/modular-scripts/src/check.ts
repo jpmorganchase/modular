@@ -2,8 +2,6 @@ import { getWorkspaceInfo, WorkSpaceRecord } from './utils/getWorkspaceInfo';
 import { getModularType, isValidModularType } from './utils/isModularType';
 import * as logger from './utils/logger';
 
-type VerifyPackageTree = () => void;
-
 export async function check(): Promise<void> {
   // ensure that workspaces are setup correctly with yarn§
   // init is a special case where we don't already need to be in a modular repository
@@ -50,7 +48,7 @@ export async function check(): Promise<void> {
   }
 
   if (process.env.SKIP_PREFLIGHT_CHECK !== 'true') {
-    const { verifyPackageTree } = await import('./verifyPackageTree');
+    const { verifyPackageTree } = await import('./utils/verifyPackageTree');
     await verifyPackageTree();
   }
 }
