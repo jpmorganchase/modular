@@ -11,7 +11,7 @@ instances where it might be necessary to overwrite the default configuration
 provided by modular itself.
 
 Much like `react-scripts` we support overriding a handful of configuration
-thruogh the `jest` property in the root `package.json`
+through the `jest` property in the root `package.json`
 
 - [collectCoverageFrom](#collectCoverageFrom)
 - [coveragePathIgnorePatterns](#coveragePathIgnorePatterns)
