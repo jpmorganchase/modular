@@ -60,9 +60,14 @@ For more documentation on the test command and options see the
 ## `modular build <path/to/package>`
 
 Runs [`react-scripts build`](https://create-react-app.dev/docs/production-build)
-against the selected app.
+against the indicated package.
 
 ## `modular workspace`
 
 Prints an extension of `yarn workspaces info` to the console. Extended with
 modular metadata about package type and public/private status.
+
+## `modular check`
+
+Checks the modular root repo has yarn workspaces and modular packages are set up
+properly and checks your package tree for issues with your dependencies.
