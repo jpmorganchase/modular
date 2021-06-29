@@ -44,9 +44,6 @@ export async function initModularFolder(
     cwd: folder,
   });
 
-  await fs.mkdirp(path.join(folder, 'modular'));
-  await fs.mkdirp(path.join(folder, 'packages'));
-
   const yarnArgs = ['--silent'];
   if (preferOffline) {
     yarnArgs.push('--prefer-offline');

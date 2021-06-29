@@ -198,7 +198,8 @@ program
   .description('Converts react app in current directory into a modular package')
   .action(async () => {
     const { convert } = await import('./convert');
-    convert();
+    await convert();
+    logger.log(chalk.green('Success!'));
   });
 
 void startupCheck()
