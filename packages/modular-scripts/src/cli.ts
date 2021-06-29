@@ -193,6 +193,14 @@ program
     logger.log(chalk.green('Success!'));
   });
 
+program
+  .command('convert')
+  .description('Converts react app in current directory into a modular package')
+  .action(async () => {
+    const { convert } = await import('./convert');
+    convert();
+  });
+
 void startupCheck()
   .then(() => {
     return program.parseAsync(process.argv);
