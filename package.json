@@ -5,7 +5,7 @@
     "packages/**"
   ],
   "engines": {
-    "node": ">=12"
+    "node": "^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0"
   },
   "scripts": {
     "format": "prettier --write .",
