@@ -21,7 +21,7 @@ export function cleanGit(cwd: string): boolean {
 }
 
 export function resetChanges(): void {
-  execa.sync('git', ['reset --hard']);
+  execa.sync('git', ['reset', '--hard']);
 }
 
 export async function convert(cwd: string = process.cwd()): Promise<void> {
@@ -54,17 +54,18 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
         fs.moveSync(path.join(cwd, dir), `packages/${packageName}/${dir}`);
       }
     });
+
     const rootTemplatePath = path.join(__dirname, '../types', 'root');
     fs.readdirSync(rootTemplatePath).forEach((dir) => {
       if (!fs.existsSync(path.join(cwd, dir))) {
-        fs.copySync(path.join(rootTemplatePath, dir), cwd);
+        fs.copySync(path.join(rootTemplatePath, dir), path.join(cwd, dir));
       }
     });
   } catch (err) {
     logger.error(
       'Failed to convert your react app to a modular app cleanly. Reverting changes.',
     );
-    // await resetChanges()
+    resetChanges();
     throw err;
   }
 }
