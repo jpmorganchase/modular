@@ -48,7 +48,7 @@
     "postcss": "^8.3.5",
     "prompts": "^2.4.1",
     "react-dev-utils": "^11.0.4",
-    "react-native-web": "^0.16.5",
+    "react-native-web": "^0.17.1",
     "react-scripts": "^4.0.3",
     "resolve": "^1.20.0",
     "rimraf": "^3.0.2",
