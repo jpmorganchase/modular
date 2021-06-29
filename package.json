@@ -49,7 +49,7 @@
     "typescript": "^4.3.4"
   },
   "optionalDependencies": {
-    "puppeteer": "^10.0.0"
+    "puppeteer": "^10.1.0"
   },
   "modular": {
     "type": "root"
