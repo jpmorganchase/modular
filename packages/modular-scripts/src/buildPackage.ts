@@ -31,22 +31,24 @@ import * as fse from 'fs-extra';
 import builtinModules from 'builtin-modules';
 import getModularRoot from './utils/getModularRoot';
 import { getAllWorkspaces } from './utils/getAllWorkspaces';
+import * as logger from './utils/logger';
+import chalk from 'chalk';
 
 type Console = {
-  log: typeof console.log;
-  error: typeof console.error;
+  log: typeof logger.log;
+  error: typeof logger.error;
 };
 
 const consoles: { [name: string]: Console } = {};
 
-function getConsole(directoryName: string): Console {
+function getLogger(directoryName: string): Console {
   if (!consoles[directoryName]) {
     consoles[directoryName] = {
-      log: (...args: Parameters<typeof console.log>) => {
-        return console.log('$ ' + directoryName + ':', ...args);
+      log: (...args: Parameters<typeof logger.log>) => {
+        return logger.log('$ ' + directoryName + ':', ...args);
       },
-      error: (...args: Parameters<typeof console.error>) => {
-        return console.error('$ ' + directoryName + ':', ...args);
+      error: (...args: Parameters<typeof logger.error>) => {
+        return logger.error('$ ' + directoryName + ':', ...args);
       },
     };
   }
@@ -59,8 +61,10 @@ function reportTSDiagnostics(
   packagePath: string,
   diagnostics: ts.Diagnostic[],
 ): void {
+  const logger = getLogger(packagePath);
+
   diagnostics.forEach((diagnostic) => {
-    let message = 'Error';
+    let message = `Error`;
     if (diagnostic.file) {
       const where = diagnostic.file.getLineAndCharacterOfPosition(
         diagnostic.start as number,
@@ -71,7 +75,7 @@ function reportTSDiagnostics(
     }
     message +=
       ': ' + ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n');
-    console.log(message);
+    logger.error(message);
   });
 }
 
@@ -124,7 +128,7 @@ const typescriptConfig: TSConfig = {};
   // Extract configuration from config file and parse JSON,
   // after removing comments. Just a fancier JSON.parse
   const result = ts.parseConfigFileTextToJson(
-    typescriptConfigFilename,
+    path.join(getModularRoot(), typescriptConfigFilename),
     fse.readFileSync(typescriptConfigFilename, 'utf8').toString(),
   );
 
@@ -171,24 +175,8 @@ const typescriptConfig: TSConfig = {};
   });
 }
 
-async function makeBundle(
-  packagePath: string,
-  preserveModules: boolean,
-): Promise<[boolean, boolean]> {
-  const console = getConsole(packagePath);
-
+function getPackageEntryPoints(packagePath: string) {
   const packageJson = packageJsonsByPackagePath[packagePath];
-
-  if (!packageJson) {
-    throw new Error(
-      `no package.json in ${packagesRoot}/${packagePath}, bailing...`,
-    );
-  }
-  if (packageJson.private === true) {
-    throw new Error(
-      `${packagesRoot}/${packagePath} is marked private, bailing...`,
-    );
-  }
 
   let compilingBin = false;
   let main: string | undefined;
@@ -211,6 +199,30 @@ async function makeBundle(
         `package.json at ${packagesRoot}/${packagePath} does not have a "main" or "bin" field, bailing...`,
       );
     }
+  }
+
+  return { main, compilingBin };
+}
+
+async function makeBundle(
+  packagePath: string,
+  preserveModules: boolean,
+): Promise<boolean> {
+  const logger = getLogger(packagePath);
+
+  const packageJson = packageJsonsByPackagePath[packagePath];
+
+  const { main, compilingBin } = getPackageEntryPoints(packagePath);
+
+  if (!packageJson) {
+    throw new Error(
+      `no package.json in ${packagesRoot}/${packagePath}, bailing...`,
+    );
+  }
+  if (packageJson.private === true) {
+    throw new Error(
+      `${packagesRoot}/${packagePath} is marked private, bailing...`,
+    );
   }
 
   if (!fse.existsSync(path.join(packagesRoot, packagePath, main))) {
@@ -242,7 +254,7 @@ async function makeBundle(
       `package.json at ${packagesRoot}/${packagePath} shouldn't have a "typings" field, bailing...`,
     );
   }
-  console.log(`building ${packageJson.name} at packages/${packagePath}...`);
+  logger.log(`building ${packageJson.name} at packages/${packagePath}...`);
 
   const bundle = await rollup.rollup({
     input: path.join(packagesRoot, packagePath, main),
@@ -351,7 +363,7 @@ async function makeBundle(
         ) {
           // TODO: revisit this if and when we have support for multiple entrypoints
           // TODO: add a line number and file name here
-          console.error(
+          logger.error(
             `cannot import a submodule ${imported} from ${importedPackage}`,
           );
           // TODO: This could probably be an error, but
@@ -400,8 +412,10 @@ async function makeBundle(
   }
 
   if (Object.keys(localImports).length > 0) {
-    console.log('Adding dependencies to the generated package.json:');
-    console.log(localImports);
+    logger.log('Adding dependencies to the generated package.json:');
+    Object.entries(localImports).forEach(([packageName, packageVersion]) => {
+      logger.log(`\t${packageName}: ${chalk.green(packageVersion)}`);
+    });
   }
 
   // remove local filenames from missingDependencies
@@ -515,15 +529,14 @@ async function makeBundle(
     ]),
   };
 
-  console.log(`built ${packageJson.name} at ${packagePath}`);
-  return [true, compilingBin];
+  logger.log(`built ${packageJson.name} at ${packagePath}`);
+  return true;
 }
 
 function makeTypings(packagePath: string) {
-  const console = getConsole(packagePath);
-  const packageJson = packageJsonsByPackagePath[packagePath];
+  const logger = getLogger(packagePath);
 
-  console.log('generating .d.ts files for', packageJson.name);
+  logger.log('generating .d.ts files');
 
   // make a shallow copy of the configuration
   const tsconfig: TSConfig = {
@@ -593,7 +606,7 @@ export async function buildPackage(
     );
   }
 
-  const console = getConsole(packagePath);
+  const logger = getLogger(packagePath);
   // ensure the root build folder is ready
   await fse.mkdirp(outputDirectory);
 
@@ -608,17 +621,16 @@ export async function buildPackage(
     path.join(packagesRoot, packagePath, `${outputDirectory}-types`),
   );
 
-  // generate the js files
-  const [didBundle, compilingBin] = await makeBundle(
-    packagePath,
-    preserveModules,
-  );
-  if (!didBundle) {
-    return;
-  }
-  // then the .d.ts files
+  // Generate the typings for a package first so that we can do type checking and don't waste time bundling otherwise
+  const { compilingBin } = getPackageEntryPoints(packagePath);
   if (!compilingBin) {
     makeTypings(packagePath);
+  }
+
+  // generate the js files now that we know we have a valid package
+  const didBundle = await makeBundle(packagePath, preserveModules);
+  if (!didBundle) {
+    return;
   }
 
   const originalPkgJsonContent = (await fse.readJson(
@@ -693,7 +705,7 @@ export async function buildPackage(
     path.join(modularRoot, outputDirectory, toParamCase(packageName) + '.tgz'),
   );
   /// and... that's it
-  console.log('finished');
+  logger.log('finished');
 }
 
 /* TODO:

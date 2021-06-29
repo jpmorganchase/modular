@@ -1,12 +1,13 @@
 import * as path from 'path';
 import { resolveAsBin } from './utils/resolve-as-bin';
 import getModularRoot from './utils/getModularRoot';
+import actionPreflightCheck from './utils/actionPreflightCheck';
 import isModularType from './utils/isModularType';
 import execSync from './utils/execSync';
 import stageView from './utils/stageView';
 import { packagesRoot, cracoConfig } from './config';
 
-export default async function start(target: string): Promise<void> {
+async function start(target: string): Promise<void> {
   const modularRoot = getModularRoot();
   const targetPath = path.join(modularRoot, packagesRoot, target);
   if (isModularType(targetPath, 'package')) {
@@ -33,3 +34,5 @@ export default async function start(target: string): Promise<void> {
   });
   return Promise.resolve();
 }
+
+export default actionPreflightCheck(start);

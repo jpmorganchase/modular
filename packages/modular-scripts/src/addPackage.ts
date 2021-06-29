@@ -7,10 +7,13 @@ import {
 import prompts from 'prompts';
 import getModularRoot from './utils/getModularRoot';
 import execSync from './utils/execSync';
+import actionPreflightCheck from './utils/actionPreflightCheck';
 import getAllFiles from './utils/getAllFiles';
+import * as logger from './utils/logger';
+
 const packagesRoot = 'packages';
 
-export default async function addPackage(
+async function addPackage(
   destination: string,
   typeArg: string | void,
   nameArg: string | void,
@@ -52,7 +55,7 @@ export default async function addPackage(
 
   // create a new package source folder
   if (fs.existsSync(newPackagePath)) {
-    console.error(`A package already exists at ${destination}!`);
+    logger.error(`A package already exists at ${destination}!`);
     process.exit(1);
   }
 
@@ -95,3 +98,5 @@ export default async function addPackage(
   }
   execSync('yarnpkg', yarnArgs, { cwd: modularRoot });
 }
+
+export default actionPreflightCheck(addPackage);

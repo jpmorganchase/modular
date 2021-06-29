@@ -49,7 +49,7 @@ module.exports = {
          */
         webpackConfig.module.rules.unshift({
           test: /\.svg$/,
-          use: ['@svgr/webpack'],
+          use: [require.resolve('@svgr/webpack')],
         });
 
         const include = [paths.appSrc, absolutePackagesPath];

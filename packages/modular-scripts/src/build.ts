@@ -3,11 +3,12 @@ import * as path from 'path';
 
 import { outputDirectory, packagesRoot, cracoConfig } from './config';
 import getModularRoot from './utils/getModularRoot';
+import actionPreflightCheck from './utils/actionPreflightCheck';
 import isModularType from './utils/isModularType';
 import execSync from './utils/execSync';
 import { resolveAsBin } from './utils/resolve-as-bin';
 
-export default async function build(
+async function build(
   packagePath: string,
   preserveModules?: boolean,
 ): Promise<void> {
@@ -42,3 +43,5 @@ export default async function build(
     await buildPackage(packagePath, preserveModules);
   }
 }
+
+export default actionPreflightCheck(build);
