@@ -10,15 +10,22 @@ While `modular test` should work straight away for most projects there are some
 instances where it might be necessary to overwrite the default configuration
 provided by modular itself.
 
-Much like `react-scripts` it's possible to update configuration for `jest`
-through `package.json` properties.
+Much like `react-scripts` we support overriding a handful of configuration
+through the `jest` property in the root `package.json`
 
-The documentation for these escape hatches are taken directly from the
-[jest documentation]()
+- [collectCoverageFrom](#collectCoverageFrom)
+- [coveragePathIgnorePatterns](#coveragePathIgnorePatterns)
+- [coverageThreshold](#coverageThreshold)
+- [moduleNameMapper](#moduleNameMapper)
+- [modulePathIgnorePatterns](#modulePathIgnorePatterns)
+- [testPathIgnorePatterns](#testPathIgnorePatterns)
+- [testRunner](#testRunner)
+- [transformIgnorePatterns](#transformIgnorePatterns)
 
-### collectCoverageFrom
+#### collectCoverageFrom
 
-(_Documentation_](https://jestjs.io/docs/configuration#collectcoveragefrom-array)
+[_Documentation_](https://jestjs.io/docs/configuration#collectcoveragefrom-array)
+
 Default: `['<rootDir>/**/src/**/*.{js,ts,tsx}', '!**/*.d.ts']`
 
 An array of [glob patterns](https://github.com/micromatch/micromatch) indicating
@@ -39,18 +46,20 @@ Example:
 }
 ```
 
-### coveragePathIgnorePatterns
+#### coveragePathIgnorePatterns
 
-(_Documentation_](https://jestjs.io/docs/configuration#coveragepathignorepatterns-arraystring)
+[_Documentation_](https://jestjs.io/docs/configuration#coveragepathignorepatterns-arraystring)
+
 Default: `[ '/__tests__/', '/node_modules/', 'serviceWorker.ts', ]`
 
 An array of regexp pattern strings that are matched against all file paths
 before executing the test. If the file path matches any of the patterns,
 coverage information will be skipped.
 
-### coverageThreshold
+#### coverageThreshold
 
-(_Documentation_)[https://jestjs.io/docs/configuration#coveragethreshold-object]
+[_Documentation_](https://jestjs.io/docs/configuration#coveragethreshold-object)
+
 Default: `{}`
 
 This will be used to configure minimum threshold enforcement for coverage
@@ -60,25 +69,10 @@ positive number are taken to be the minimum percentage required. Thresholds
 specified as a negative number represent the maximum number of uncovered
 entities allowed.
 
-```json
-{
-  ...
-  "jest": {
-    "coverageThreshold": {
-      "global": {
-        "branches": 80,
-        "functions": 80,
-        "lines": 80,
-        "statements": -10
-      }
-    }
-  }
-}
-```
+#### moduleNameMapper
 
-### moduleNameMapper
+[_Documentation_](https://jestjs.io/docs/configuration#modulenamemapper-objectstring-string--arraystring)
 
-(_Documentation_)[https://jestjs.io/docs/configuration#modulenamemapper-objectstring-string--arraystring]
 Default:
 
 ```javascript
@@ -95,9 +89,10 @@ The moduleNameMapper is merged with the `modular` defaults to provide common use
 cases for static assets, like static assets including images, CSS and
 CSS-modules.
 
-### modulePathIgnorePatterns
+#### modulePathIgnorePatterns
 
-(_Documentation_)[https://jestjs.io/docs/configuration#modulepathignorepatterns-arraystring]
+[_Documentation_](https://jestjs.io/docs/configuration#modulepathignorepatterns-arraystring)
+
 Default: `[]`
 
 An array of regexp pattern strings that are matched against all module paths
@@ -105,34 +100,42 @@ before those paths are to be considered 'visible' to the module loader. If a
 given module's path matches any of the patterns, it will not be `require()`-able
 in the test environment.
 
-### testPathIgnorePatterns
+#### testPathIgnorePatterns
 
-(_Documentation_)[https://jestjs.io/docs/configuration#testpathignorepatterns-arraystring]
+[_Documentation_](https://jestjs.io/docs/configuration#testpathignorepatterns-arraystring)
+
 Default: `[/node_modules/]`
 
 An array of regexp pattern strings that are matched against all test paths
 before executing the test. If the test path matches any of the patterns, it will
 be skipped.
 
-### testRunner
+#### testRunner
 
-(_Documentation_)[https://jestjs.io/docs/configuration#testrunner-string]
+[_Documentation_](https://jestjs.io/docs/configuration#testrunner-string)
+
 Default: `jest-circus`
 
 This option allows the use of a custom test runner. The default is
 `jest-circus`. A custom test runner can be provided by specifying a path to a
 test runner implementation.
 
-This can be used to revert to the previous `jest` default testRunner -
-`jest-jasmine2` in cases where `circus` is not yet compatible with an older
+This can be used to revert to the previous `jest` default testRunner
+(`jest-jasmine2`) in cases where `circus` is not yet compatible with an older
 codebase.
 
-### transformIgnorePatterns
+#### transformIgnorePatterns
 
-(_Documentation_)[https://jestjs.io/docs/configuration#transformignorepatterns-arraystring]
+[_Documentation_](https://jestjs.io/docs/configuration#transformignorepatterns-arraystring)
+
 Default:
 `[ '[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$', '^.+\\.module\\.(css|sass|scss)$', ]`
 
 An array of regexp pattern strings that are matched against all source file
 paths before transformation. If the file path matches any of the patterns, it
 will not be transformed.
+
+## Options
+
+The available options for `modular test` reflect the available offering from
+[Jest CLI](https://jestjs.io/docs/cli)
