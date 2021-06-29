@@ -373,10 +373,29 @@ module.exports = function (webpackEnv) {
                 name: 'static/media/[name].[hash:8].[ext]',
               },
             },
-            // Process application JS with Babel.
-            // The preset includes JSX, Flow, TypeScript, and some ESnext features.
+            // Process application JS with esbuild.
             {
-              test: /\.(js|mjs|jsx|ts|tsx)$/,
+              test: /\.(js|mjs|jsx)$/,
+              include: paths.modularSrc,
+              loader: require.resolve('esbuild-loader'),
+              options: {
+                implementation: require('esbuild'),
+                loader: 'tsx',
+                target: 'es2015',
+              },
+            },
+            {
+              test: /\.ts$/,
+              include: paths.modularSrc,
+              loader: require.resolve('esbuild-loader'),
+              options: {
+                implementation: require('esbuild'),
+                loader: 'ts',
+                target: 'es2015',
+              },
+            },
+            {
+              test: /\.tsx$/,
               include: paths.modularSrc,
               loader: require.resolve('esbuild-loader'),
               options: {
