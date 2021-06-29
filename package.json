@@ -34,6 +34,7 @@
     "@types/react": "^17.0.11",
     "@types/react-dom": "^17.0.8",
     "commander": "^7.2.0",
+    "esbuild": "^0.12.12",
     "eslint": "^7.29.0",
     "execa": "^5.1.1",
     "husky": "^6.0.0",
@@ -59,6 +60,7 @@
   },
   "resolutions": {
     "rollup": "^2.38.3",
-    "**/update-notifier/boxen": "^5.0.0"
+    "**/update-notifier/boxen": "^5.0.0",
+    "esbuild": "^0.12.12"
   }
 }
