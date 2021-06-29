@@ -16,7 +16,7 @@ import * as logger from '../utils/logger';
 
 const modularRoot = getModularRoot();
 
-const START_APP_TIMEOUT = 3 * 60 * 1000;
+const START_APP_TIMEOUT = 60 * 1000;
 
 interface DevServer {
   kill: () => void;
