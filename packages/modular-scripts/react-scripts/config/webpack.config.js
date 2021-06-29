@@ -385,17 +385,6 @@ module.exports = function (webpackEnv) {
                 target: 'es2015',
               },
             },
-            // Process any JS outside of the app with Babel.
-            // Unlike the application JS, we only compile the standard ES features.
-            {
-              test: /\.(js|mjs)$/,
-              exclude: /@babel(?:\/|\\{1,2})runtime/,
-              loader: require.resolve('esbuild-loader'),
-              options: {
-                implementation: require('esbuild'),
-                target: 'es2015',
-              },
-            },
             // Required since esbuild loader will not pass svg the same as babel-loader
             // was handling them
             {

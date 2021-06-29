@@ -76,7 +76,7 @@ module.exports = {
   appJsConfig: resolveApp('jsconfig.json'),
   yarnLockFile: resolveModular('yarn.lock'),
   proxySetup: resolveApp('src/setupProxy.js'),
-  appNodeModules: resolveModular('node_modules'),
+  appNodeModules: resolveApp('node_modules'),
   swSrc: resolveModule(resolveApp, 'src/service-worker'),
   publicUrlOrPath,
 };
