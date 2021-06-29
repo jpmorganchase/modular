@@ -18,7 +18,6 @@ const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
-const ESLintPlugin = require('eslint-webpack-plugin');
 const paths = require('./paths');
 const modules = require('./modules');
 const getClientEnvironment = require('./env');
@@ -45,9 +44,6 @@ const reactRefreshOverlayEntry = require.resolve(
 // makes for a smoother build process.
 const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false';
 
-const emitErrorsAsWarnings = process.env.ESLINT_NO_DEV_ERRORS === 'true';
-const disableESLintPlugin = process.env.DISABLE_ESLINT_PLUGIN === 'true';
-
 const imageInlineSizeLimit = parseInt(
   process.env.IMAGE_INLINE_SIZE_LIMIT || '10000',
 );
@@ -63,19 +59,6 @@ const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
-
-const hasJsxRuntime = (() => {
-  if (process.env.DISABLE_NEW_JSX_TRANSFORM === 'true') {
-    return false;
-  }
-
-  try {
-    require.resolve('react/jsx-runtime');
-    return true;
-  } catch (e) {
-    return false;
-  }
-})();
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
@@ -158,7 +141,7 @@ module.exports = function (webpackEnv) {
     return loaders;
   };
 
-  return {
+  const webpackConfig = {
     mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
     // Stop compilation early in production
     bail: isEnvProduction,
@@ -394,44 +377,12 @@ module.exports = function (webpackEnv) {
             // The preset includes JSX, Flow, TypeScript, and some ESnext features.
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
-              include: paths.appSrc,
-              loader: require.resolve('babel-loader'),
+              include: paths.modularSrc,
+              loader: require.resolve('esbuild-loader'),
               options: {
-                customize: require.resolve(
-                  'babel-preset-react-app/webpack-overrides',
-                ),
-                presets: [
-                  [
-                    require.resolve('babel-preset-react-app'),
-                    {
-                      runtime: hasJsxRuntime ? 'automatic' : 'classic',
-                    },
-                  ],
-                ],
-
-                plugins: [
-                  [
-                    require.resolve('babel-plugin-named-asset-import'),
-                    {
-                      loaderMap: {
-                        svg: {
-                          ReactComponent:
-                            '@svgr/webpack?-svgo,+titleProp,+ref![path]',
-                        },
-                      },
-                    },
-                  ],
-                  isEnvDevelopment &&
-                    shouldUseReactRefresh &&
-                    require.resolve('react-refresh/babel'),
-                ].filter(Boolean),
-                // This is a feature of `babel-loader` for webpack (not Babel itself).
-                // It enables caching results in ./node_modules/.cache/babel-loader/
-                // directory for faster rebuilds.
-                cacheDirectory: true,
-                // See #6846 for context on why cacheCompression is disabled
-                cacheCompression: false,
-                compact: isEnvProduction,
+                implementation: require('esbuild'),
+                loader: 'tsx',
+                target: 'es2015',
               },
             },
             // Process any JS outside of the app with Babel.
@@ -439,27 +390,17 @@ module.exports = function (webpackEnv) {
             {
               test: /\.(js|mjs)$/,
               exclude: /@babel(?:\/|\\{1,2})runtime/,
-              loader: require.resolve('babel-loader'),
+              loader: require.resolve('esbuild-loader'),
               options: {
-                babelrc: false,
-                configFile: false,
-                compact: false,
-                presets: [
-                  [
-                    require.resolve('babel-preset-react-app/dependencies'),
-                    { helpers: true },
-                  ],
-                ],
-                cacheDirectory: true,
-                // See #6846 for context on why cacheCompression is disabled
-                cacheCompression: false,
-
-                // Babel sourcemaps are needed for debugging into node_modules
-                // code.  Without the options below, debuggers like VSCode
-                // show incorrect code and set breakpoints on the wrong lines.
-                sourceMaps: shouldUseSourceMap,
-                inputSourceMap: shouldUseSourceMap,
+                implementation: require('esbuild'),
+                target: 'es2015',
               },
+            },
+            // Required since esbuild loader will not pass svg the same as babel-loader
+            // was handling them
+            {
+              test: /\.svg$/,
+              use: [require.resolve('@svgr/webpack')],
             },
             // "postcss" loader applies autoprefixer to our CSS.
             // "css" loader resolves paths in CSS and adds assets as dependencies.
@@ -713,31 +654,6 @@ module.exports = function (webpackEnv) {
           // The formatter is invoked directly in WebpackDevServerUtils during development
           formatter: isEnvProduction ? typescriptFormatter : undefined,
         }),
-      !disableESLintPlugin &&
-        new ESLintPlugin({
-          // Plugin options
-          extensions: ['js', 'mjs', 'jsx', 'ts', 'tsx'],
-          formatter: require.resolve('react-dev-utils/eslintFormatter'),
-          eslintPath: require.resolve('eslint'),
-          failOnError: !(isEnvDevelopment && emitErrorsAsWarnings),
-          context: paths.appSrc,
-          cache: true,
-          cacheLocation: path.resolve(
-            paths.appNodeModules,
-            '.cache/.eslintcache',
-          ),
-          // ESLint class options
-          cwd: paths.appPath,
-          resolvePluginsRelativeTo: __dirname,
-          baseConfig: {
-            extends: [require.resolve('eslint-config-react-app/base')],
-            rules: {
-              ...(!hasJsxRuntime && {
-                'react/react-in-jsx-scope': 'error',
-              }),
-            },
-          },
-        }),
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.
     // Tell webpack to provide empty mocks for them so importing them works.
@@ -755,4 +671,45 @@ module.exports = function (webpackEnv) {
     // our own hints via the FileSizeReporter
     performance: false,
   };
+
+  // These dependencies are so widely used for us (JPM) that it makes sense to install
+  // their webpack plugin when used.
+  // NOTE: this doesn't include the dependencies themselves in your app.
+  const dependencyPlugins = {
+    '@finos/perspective': {
+      package: '@finos/perspective-webpack-plugin',
+    },
+    'react-monaco-editor': {
+      package: 'monaco-editor-webpack-plugin',
+      options: {
+        languages: ['json', 'generic'],
+      },
+    },
+  };
+
+  Object.keys(dependencyPlugins).forEach((dependency) => {
+    const plugin = dependencyPlugins[dependency];
+    try {
+      // test whether the dependency has been installed.
+      // if not don't install the corresponding plugin
+      require.resolve(dependency);
+      try {
+        require.resolve(plugin.package);
+      } catch (err) {
+        console.info(
+          `It appears you're using ${dependency}. Run 'yarn add -D ${plugin.package}' to install`,
+        );
+        throw err;
+      }
+      // both dependency and its webpack plugin are available, let's
+      // add it to our webpack pipeline.
+      const WebpackPlugin = require(plugin.package);
+
+      webpackConfig.plugins.push(new WebpackPlugin(plugin.options));
+    } catch (err) {
+      /* silently fail */
+    }
+  });
+
+  return webpackConfig;
 };

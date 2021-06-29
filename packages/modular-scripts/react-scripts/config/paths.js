@@ -4,10 +4,21 @@ const path = require('path');
 const fs = require('fs');
 const getPublicUrlOrPath = require('react-dev-utils/getPublicUrlOrPath');
 
+if (!process.env.MODULAR_ROOT) {
+  throw new Error(
+    // this should never be visible to a user, only us when we're developing
+    'MODULAR_ROOT not found in environment, did you forget to pass it when calling cracoBin in cli.ts?',
+  );
+}
+
+const modularRoot = process.env.MODULAR_ROOT;
+
 // Make sure any symlinks in the project folder are resolved:
 // https://github.com/facebook/create-react-app/issues/637
 const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
+const resolveModular = (relativePath) =>
+  path.resolve(modularRoot, relativePath);
 
 // We use `PUBLIC_URL` environment variable or "homepage" field to infer
 // "public path" at which the app is served.
@@ -60,12 +71,12 @@ module.exports = {
   appIndexJs: resolveModule(resolveApp, 'src/index'),
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
+  modularSrc: resolveModular('packages'),
   appTsConfig: resolveApp('tsconfig.json'),
   appJsConfig: resolveApp('jsconfig.json'),
-  yarnLockFile: resolveApp('yarn.lock'),
-  testsSetup: resolveModule(resolveApp, 'src/setupTests'),
+  yarnLockFile: resolveModular('yarn.lock'),
   proxySetup: resolveApp('src/setupProxy.js'),
-  appNodeModules: resolveApp('node_modules'),
+  appNodeModules: resolveModular('node_modules'),
   swSrc: resolveModule(resolveApp, 'src/service-worker'),
   publicUrlOrPath,
 };
