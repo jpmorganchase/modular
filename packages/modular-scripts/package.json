@@ -76,7 +76,6 @@
     "react-dev-utils": "^11.0.4",
     "react-native-web": "^0.16.5",
     "react-refresh": "^0.8.3",
-    "react-scripts": "^4.0.3",
     "resolve-url-loader": "^3.1.2",
     "resolve": "^1.20.0",
     "rimraf": "^3.0.2",
@@ -118,6 +117,8 @@
   "files": [
     "dist-cjs",
     "dist-types",
+    "react-app-env.d.ts",
+    "react-scripts",
     "types",
     "tsconfig.json",
     "*.js"
