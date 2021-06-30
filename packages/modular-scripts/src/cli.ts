@@ -9,6 +9,7 @@ import buildPackages from './build';
 import addPackage from './addPackage';
 import start from './start';
 import test, { TestOptions } from './test';
+import convert from './convert';
 
 import startupCheck from './utils/startupCheck';
 import actionPreflightCheck from './utils/actionPreflightCheck';
@@ -197,9 +198,10 @@ program
   .command('convert')
   .description('Converts react app in current directory into a modular package')
   .action(async () => {
-    const { convert } = await import('./convert');
     await convert();
-    logger.log(chalk.green('Success!'));
+    logger.log(
+      chalk.green('Successfully converted your app into a modular app!'),
+    );
   });
 
 void startupCheck()

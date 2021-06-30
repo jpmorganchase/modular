@@ -3,9 +3,14 @@ import stripAnsi from 'strip-ansi';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import addPackage from './addPackage';
-import { ModularPackageJson } from './utils/isModularType';
+import {
+  ModularPackageJson,
+  isValidModularRootPackageJson,
+} from './utils/isModularType';
 import rimraf from 'rimraf';
 import * as logger from './utils/logger';
+import actionPreflightCheck from './utils/actionPreflightCheck';
+import { check } from './check';
 
 function cleanGit(cwd: string): boolean {
   const trackedChanged = stripAnsi(
@@ -32,7 +37,7 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
 
   try {
     if (
-      !fs.existsSync(path.join(cwd, 'package.json')) ||
+      !isValidModularRootPackageJson(cwd) ||
       !fs.existsSync(path.join(cwd, 'packages'))
     ) {
       throw new Error(
@@ -60,11 +65,17 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
         );
       }
     });
+
+    execa.sync('yarnpkg', ['--silent'], { cwd });
+
+    await check();
   } catch (err) {
     logger.error(
-      'Failed to convert your react app to a modular app cleanly. Reverting changes.',
+      'Failed to convert your react app to a modular app cleanly. Reverting changes...',
     );
     resetChanges();
     throw err;
   }
 }
+
+export default actionPreflightCheck(convert);
