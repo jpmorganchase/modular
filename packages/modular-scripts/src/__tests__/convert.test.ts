@@ -45,10 +45,10 @@ describe('Converting a react app to modular app', () => {
     jest.clearAllMocks();
   });
 
-  it('should create a modular app with the name of the current directory', async () => {
-    const packageJson = (await fs.readJSON(
+  it('should create a modular app with the name of the current directory', () => {
+    const packageJson = fs.readJSONSync(
       path.join(tmpFolderPath, 'packages', tmpProjectName, 'package.json'),
-    )) as ModularPackageJson;
+    ) as ModularPackageJson;
 
     expect(packageJson?.modular?.type).toBe('app');
     expect(
@@ -56,25 +56,25 @@ describe('Converting a react app to modular app', () => {
     ).toBe(true);
   });
 
-  it('should move the starting src folder into the modular app src folder', async () => {
+  it('should move the starting src folder into the modular app src folder', () => {
     expect(
-      await fs.readdir(
+      fs.readdirSync(
         path.join(tmpFolderPath, 'packages', tmpProjectName, 'src'),
       ),
     ).toEqual(
-      await fs.readdir(
+      fs.readdirSync(
         path.join(__dirname, '..', '..', 'types', starterTempType, 'src'),
       ),
     );
   });
 
-  it('should move the starting public folder into the modular app public folder', async () => {
+  it('should move the starting public folder into the modular app public folder', () => {
     expect(
-      await fs.readdir(
+      fs.readdirSync(
         path.join(tmpFolderPath, 'packages', tmpProjectName, 'public'),
       ),
     ).toEqual(
-      await fs.readdir(
+      fs.readdirSync(
         path.join(__dirname, '..', '..', 'types', starterTempType, 'public'),
       ),
     );
