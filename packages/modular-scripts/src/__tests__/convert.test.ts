@@ -41,6 +41,10 @@ describe('Converting a react app to modular app', () => {
     tmpProjectName = '';
   });
 
+  afterAll(() => {
+    jest.clearAllMocks();
+  });
+
   it('should create a modular app with the name of the current directory', async () => {
     const packageJson = (await fs.readJSON(
       path.join(tmpFolderPath, 'packages', tmpProjectName, 'package.json'),
