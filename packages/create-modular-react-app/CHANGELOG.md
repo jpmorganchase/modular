@@ -1,5 +1,12 @@
 # create-modular-react-app
 
+## 0.8.11
+
+### Patch Changes
+
+- 12ec27f: Add required engines for packages
+- 5fe389f: Bump commander from 7.2.0 to 8.0.0
+
 ## 0.8.10
 
 ### Patch Changes
