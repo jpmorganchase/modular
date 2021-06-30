@@ -185,7 +185,7 @@ describe('modular-scripts', () => {
       │  ├─ index.css #o7sk21
       │  ├─ index.tsx #zdn6mw
       │  ├─ logo.svg #1okqmlj
-      │  └─ react-app-env.d.ts #1dm2mq6
+      │  └─ react-app-env.d.ts #t4ygcy
       └─ tsconfig.json #6rw46b"
     `);
   });

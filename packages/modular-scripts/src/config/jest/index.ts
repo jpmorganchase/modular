@@ -97,7 +97,7 @@ export function createJestConfig(
       'serviceWorker.ts',
     ],
     setupFiles: defaults.setupFiles
-      .concat([require.resolve('react-scripts/config/env.js')])
+      .concat([require.resolve('modular-scripts/react-scripts/config/env.js')])
       .concat(
         glob.sync(
           `${absoluteModularGlobalConfigsPath}/setupEnvironment.{js,ts,tsx}`,

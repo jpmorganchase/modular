@@ -1,1 +1,1 @@
-/// <reference types="react-scripts" />
+/// <reference types="modular-scripts/react-app-env" />
