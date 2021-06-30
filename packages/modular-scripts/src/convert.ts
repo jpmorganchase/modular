@@ -52,6 +52,7 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
     )) as ModularPackageJson;
 
     const packageName = rootPackageJson.name as string;
+    console.log('packageName: ', packageName);
 
     // Create a modular app for the current directory
     await addPackage(packageName, 'app', packageName);
@@ -62,18 +63,18 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
       if (fs.existsSync(path.join(cwd, dir))) {
         console.log(
           'removiing dir',
-          path.join(cwd, `packages/${packageName}/${dir}`),
+          path.join(cwd, 'packages', packageName, dir),
         );
-        rimraf.sync(path.join(cwd, `packages/${packageName}/${dir}`));
+        rimraf.sync(path.join(cwd, 'packages', packageName, dir));
         console.log(
           'moving dir from ',
           path.join(cwd, dir),
           ' to ',
-          path.join(cwd, `packages/${packageName}/${dir}`),
+          path.join(cwd, 'packages', packageName, dir),
         );
         fs.moveSync(
           path.join(cwd, dir),
-          path.join(cwd, `packages/${packageName}/${dir}`),
+          path.join(cwd, 'packages', packageName, dir),
         );
       }
     });
