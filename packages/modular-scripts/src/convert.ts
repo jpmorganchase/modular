@@ -25,8 +25,15 @@ function cleanGit(cwd: string): boolean {
 }
 
 function resetChanges(): void {
-  execa.sync('git', ['reset', '--hard']);
+  execa.sync('git', ['clean', '-fd']);
 }
+
+process.on('SIGINT', () => {
+  logger.error(
+    'Failed to convert your react app to a modular app cleanly. Reverting git changes...',
+  );
+  resetChanges();
+});
 
 export async function convert(cwd: string = process.cwd()): Promise<void> {
   if (!cleanGit(cwd)) {
@@ -71,7 +78,7 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
     await check();
   } catch (err) {
     logger.error(
-      'Failed to convert your react app to a modular app cleanly. Reverting changes...',
+      'Failed to convert your react app to a modular app cleanly. Reverting git changes...',
     );
     resetChanges();
     throw err;
