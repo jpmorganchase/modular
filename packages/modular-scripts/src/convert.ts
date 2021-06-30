@@ -35,8 +35,6 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
     );
   }
 
-  console.log('Converting this directory', cwd);
-
   try {
     if (
       !isValidModularRootPackageJson(cwd) ||
@@ -52,7 +50,6 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
     )) as ModularPackageJson;
 
     const packageName = rootPackageJson.name as string;
-    console.log('packageName: ', packageName);
 
     // Create a modular app for the current directory
     await addPackage(packageName, 'app', packageName);
@@ -61,17 +58,7 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
     const srcFolders = ['src', 'public'];
     srcFolders.forEach((dir: string) => {
       if (fs.existsSync(path.join(cwd, dir))) {
-        console.log(
-          'removiing dir',
-          path.join(cwd, 'packages', packageName, dir),
-        );
         rimraf.sync(path.join(cwd, 'packages', packageName, dir));
-        console.log(
-          'moving dir from ',
-          path.join(cwd, dir),
-          ' to ',
-          path.join(cwd, 'packages', packageName, dir),
-        );
         fs.moveSync(
           path.join(cwd, dir),
           path.join(cwd, 'packages', packageName, dir),

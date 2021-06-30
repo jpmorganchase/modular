@@ -50,9 +50,6 @@ async function addPackage(
   const modularRoot = getModularRoot();
   const newComponentName = toPascalCase(name);
 
-  console.log('adding package at modularRoot: ', modularRoot);
-  console.log('adding package destination: ', destination);
-
   const newPackagePath = path.join(modularRoot, packagesRoot, destination);
   const packageTypePath = path.join(__dirname, '../types', type);
 
