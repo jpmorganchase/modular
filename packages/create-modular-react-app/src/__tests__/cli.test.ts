@@ -1,5 +1,6 @@
 import execa from 'execa';
 import * as fs from 'fs-extra';
+import * as path from 'path';
 import * as tmp from 'tmp';
 import tree from 'tree-view-for-tests';
 
@@ -9,7 +10,7 @@ jest.setTimeout(10 * 60 * 1000);
 describe('Creating a new modular app via the CLI', () => {
   let cwd: string;
   beforeEach(async () => {
-    cwd = tmp.dirSync().name;
+    cwd = path.join(tmp.dirSync().name, 'new-modular-app');
 
     console.log('Using ', cwd);
 
@@ -26,6 +27,6 @@ describe('Creating a new modular app via the CLI', () => {
   });
 
   it('should create the right tree', () => {
-    expect(tree(cwd).replace(cwd, 'new-modular-app')).toMatchSnapshot();
+    expect(tree(cwd)).toMatchSnapshot();
   });
 });
