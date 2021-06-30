@@ -1,5 +1,24 @@
 # modular-scripts
 
+## 0.14.0
+
+### Minor Changes
+
+- 3cb05b7: Ability to start dev server for a modular view
+
+### Patch Changes
+
+- d0b8ada: Switch to "jsx": "react" in tsconfig to maintain compatibility with
+  esbuild-loader and React.
+- bc5a48b: Bump esbuild from 0.12.10 to 0.12.12
+- 72379f0: Bump react-native-web from 0.16.5 to 0.17.1
+- 3ab3b71: Fix issues with init and --help flags interactions with preflight
+  checks.
+- 12ec27f: Add required engines for packages
+- 971cdf6: Bump esbuild from 0.12.9 to 0.12.10
+- 5fe389f: Bump commander from 7.2.0 to 8.0.0
+- cbc1224: Move verifyPackageTree into modular to enable customization
+
 ## 0.13.0
 
 ### Minor Changes
