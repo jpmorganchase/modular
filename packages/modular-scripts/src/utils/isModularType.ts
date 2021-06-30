@@ -43,7 +43,11 @@ export function isValidModularRootPackageJson(dir: string): boolean {
   const packageJsonPath = path.join(dir, 'package.json');
   if (fs.existsSync(packageJsonPath)) {
     const packageJson = fs.readJsonSync(packageJsonPath) as ModularPackageJson;
-    return packageJson.modular?.type === 'root';
+    return (
+      packageJson.modular?.type === 'root' &&
+      !!packageJson.private &&
+      !!packageJson?.workspaces?.includes('packages/**')
+    );
   }
   return false;
 }
