@@ -10,6 +10,7 @@ import addPackage from './addPackage';
 import start from './start';
 import test, { TestOptions } from './test';
 import convert from './convert';
+import port from './port';
 
 import startupCheck from './utils/startupCheck';
 import actionPreflightCheck from './utils/actionPreflightCheck';
@@ -202,6 +203,16 @@ program
     logger.log(
       chalk.green('Successfully converted your app into a modular app!'),
     );
+  });
+
+program
+  .command('port <relativePath>')
+  .description(
+    'Ports the react app in specified directory into current modular root as a modular app',
+  )
+  .action(async (relativePath) => {
+    await port(relativePath);
+    logger.log(chalk.green('Successfully ported your app over!'));
   });
 
 void startupCheck()
