@@ -15,13 +15,12 @@ const mockedModularRoot = getModularRoot.default as jest.MockedFunction<
 describe('Converting a react app to modular app', () => {
   let tmpFolder: tmp.DirResult;
   let tmpFolderPath: string;
-  let tmpProjectName: string;
   const starterTempType = 'app-view';
-
+  const tmpProjectName = 'test-modular-convert';
   beforeEach(async () => {
     tmpFolder = tmp.dirSync({ unsafeCleanup: true });
-    tmpFolderPath = tmpFolder.name;
-    tmpProjectName = path.basename(tmpFolderPath);
+    tmpFolderPath = path.join(tmpFolder.name, tmpProjectName);
+    await fs.mkdir(tmpFolderPath);
     mockedModularRoot.mockImplementation(() => tmpFolderPath);
     const starterFolder = ['src', 'public'];
     starterFolder.forEach((dir) => {
@@ -38,7 +37,6 @@ describe('Converting a react app to modular app', () => {
   afterEach(() => {
     tmpFolder.removeCallback();
     tmpFolderPath = '';
-    tmpProjectName = '';
   });
 
   afterAll(() => {
