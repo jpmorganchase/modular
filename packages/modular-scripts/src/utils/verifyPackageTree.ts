@@ -20,7 +20,6 @@ export async function verifyPackageTree(): Promise<void> {
     // These are packages most likely to break in practice.
     // See https://github.com/facebook/create-react-app/issues/1795 for reasons why.
     // I have not included Babel here because plugins typically don't import Babel (so it's not affected).
-    // 'babel-loader', // TODO: this can be removed eventually but I'm hiding it for now since we use esbuild.
     'webpack',
     'webpack-dev-server',
   ];
@@ -29,10 +28,8 @@ export async function verifyPackageTree(): Promise<void> {
   const getSemverRegex = () =>
     /\bv?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[\da-z-]+(?:\.[\da-z-]+)*)?(?:\+[\da-z-]+(?:\.[\da-z-]+)*)?\b/gi;
 
-  // TODO: This should really be our own version of these dependencies - except that
-  // we still currently rely on react-scripts for them to be brought in.
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const ownPackageJson = require('react-scripts/package.json') as PackageJson;
+  const ownPackageJson = require('modular-scripts/package.json') as PackageJson;
   const dependencies: Dependency = ownPackageJson.dependencies || {};
   const expectedVersionsByDep: Record<string, string> = {};
   // Gather wanted deps
@@ -50,7 +47,9 @@ export async function verifyPackageTree(): Promise<void> {
     expectedVersionsByDep[dep] = expectedVersion;
   });
   // Verify we don't have other versions up the tree
-  let currentDir = path.dirname(require.resolve('react-scripts/package.json'));
+  let currentDir = path.dirname(
+    require.resolve('modular-scripts/package.json'),
+  );
 
   while (true) {
     const previousDir = currentDir;

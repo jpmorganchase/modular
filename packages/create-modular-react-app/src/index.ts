@@ -42,11 +42,9 @@ export default function createModularApp(argv: {
     process.exit(1);
   }
 
-  const name = argv.name;
-  const newModularRoot =
-    name[0] === '/' || name.includes(':\\')
-      ? /* absolute */ name
-      : path.join(process.cwd(), name);
+  const newModularRoot = path.isAbsolute(argv.name)
+    ? argv.name
+    : path.join(process.cwd(), argv.name);
   const projectPackageJsonPath = path.join(newModularRoot, 'package.json');
   const templatePath = path.join(__dirname, '..', 'template');
 
