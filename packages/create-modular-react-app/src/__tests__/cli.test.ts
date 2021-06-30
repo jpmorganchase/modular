@@ -12,8 +12,6 @@ describe('Creating a new modular app via the CLI', () => {
   beforeEach(async () => {
     cwd = path.join(tmp.dirSync().name, 'new-modular-app');
 
-    console.log('Using ', cwd);
-
     await execa('yarnpkg', ['create-modular-react-app', cwd], {
       cwd: __dirname,
       cleanup: true,
