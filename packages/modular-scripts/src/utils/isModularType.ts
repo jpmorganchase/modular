@@ -38,3 +38,12 @@ export default function isModularType(dir: string, type: PackageType): boolean {
 export function isValidModularType(dir: string): boolean {
   return ModularTypes.includes(getModularType(dir) as ModularType);
 }
+
+export function isValidModularRootPackageJson(dir: string): boolean {
+  const packageJsonPath = path.join(dir, 'package.json');
+  if (fs.existsSync(packageJsonPath)) {
+    const packageJson = fs.readJsonSync(packageJsonPath) as ModularPackageJson;
+    return packageJson.modular?.type === 'root';
+  }
+  return false;
+}
