@@ -1,5 +1,14 @@
 # eslint-config-modular-app
 
+## 0.4.6
+
+### Patch Changes
+
+- b9c66e2: Add required dependency
+- 983ba7a: Bump eslint-plugin-flowtype from 5.7.2 to 5.8.0
+- bf9ff4e: Bump @typescript-eslint/parser from 4.28.0 to 4.28.1
+- bc8558a: Bump @typescript-eslint/eslint-plugin from 4.28.0 to 4.28.1
+
 ## 0.4.5
 
 ### Patch Changes
