@@ -1,15 +1,16 @@
+import { IncludeDefinition as TSConfig } from '@schemastore/tsconfig';
 import execa from 'execa';
 import stripAnsi from 'strip-ansi';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import addPackage from './addPackage';
+import rimraf from 'rimraf';
 import {
   ModularPackageJson,
   isValidModularRootPackageJson,
 } from './utils/isModularType';
-import rimraf from 'rimraf';
 import * as logger from './utils/logger';
 import actionPreflightCheck from './utils/actionPreflightCheck';
+import addPackage from './addPackage';
 import { check } from './check';
 
 function cleanGit(cwd: string): boolean {
@@ -72,6 +73,24 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
         );
       }
     });
+
+    // If they have a tsconfig, include packages/**/src
+    const tsConfigPath = path.join(cwd, 'tsconfig.json');
+    if (fs.existsSync(tsConfigPath)) {
+      const tsConfig = fs.readJsonSync(tsConfigPath) as TSConfig;
+
+      // The tsconfig might already have the necessary includes
+      // but just in case, this will ensure that it does
+      let include: string[] = tsConfig.include || [];
+      include = include.filter(
+        (key: string) => !['src', 'packages/**/src'].includes(key),
+      );
+      include.push('packages/**/src');
+      fs.writeJsonSync(tsConfigPath, {
+        ...tsConfig,
+        include,
+      });
+    }
 
     execa.sync('yarnpkg', ['--silent'], { cwd });
 
