@@ -31,7 +31,7 @@ describe('stageView', () => {
       │  └─ manifest.json #kalmoq
       ├─ src
       │  ├─ index.tsx #1qbgs9s
-      │  └─ react-app-env.d.ts #1dm2mq6
+      │  └─ react-app-env.d.ts #t4ygcy
       └─ tsconfig.json #1ww9d44"
     `);
   });
