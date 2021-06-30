@@ -26,6 +26,6 @@ describe('Creating a new modular app via the CLI', () => {
   });
 
   it('should create the right tree', () => {
-    expect(tree(cwd)).toMatchSnapshot();
+    expect(tree(cwd).replace(cwd, 'new-modular-app')).toMatchSnapshot();
   });
 });
