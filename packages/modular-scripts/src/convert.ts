@@ -113,16 +113,16 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
       ),
     );
 
-    logger.debug('Moving your setUpTests file to modular');
+    logger.debug('Moving your setupTests file to modular');
 
-    const setUpTests = ['setUpTests.ts', 'setUpTests.js'];
-    setUpTests.forEach((file) => {
+    const setupTests = ['setupTests.ts', 'setupTests.js'];
+    setupTests.forEach((file) => {
       if (fs.existsSync(path.join(newPackagePath, 'src', file))) {
         fs.moveSync(
-          path.join(cwd, 'modular', 'setUpTests.ts'),
+          path.join(cwd, 'modular', 'setupTests.ts'),
           path
-            .join(cwd, 'modular', 'setUpTests.ts')
-            .replace('setUpTests.ts', file),
+            .join(cwd, 'modular', 'setupTests.ts')
+            .replace('setupTests.ts', file),
         );
         fs.writeFileSync(
           path.join(cwd, 'modular', file),
@@ -140,8 +140,7 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
     logger.log('Validating your modular project...');
     await check();
   } catch (err) {
-    console.log('catch err: ', err);
+    logger.error(err);
     resetChanges();
-    throw err;
   }
 }

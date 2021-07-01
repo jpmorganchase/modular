@@ -38,7 +38,7 @@ describe('Converting a react app to modular app', () => {
       }),
     );
     fs.writeFileSync(
-      path.join(tmpFolderPath, 'src', 'setUpTests.js'),
+      path.join(tmpFolderPath, 'src', 'setupTests.js'),
       new Buffer("require('@testing-library/jest-dom/extend-expect')"),
     );
     await initModularFolder(tmpFolderPath, true);
@@ -116,10 +116,10 @@ describe('Converting a react app to modular app', () => {
     );
   });
 
-  it('should copy setUpTests file to modular with correct extension', () => {
+  it('should copy setupTests file to modular with correct extension', () => {
     expect(
       fs
-        .readFileSync(path.join(tmpFolderPath, 'modular', 'setUpTests.js'))
+        .readFileSync(path.join(tmpFolderPath, 'modular', 'setupTests.js'))
         .toString(),
     ).toMatch("require('@testing-library/jest-dom/extend-expect')");
     expect(
@@ -129,7 +129,7 @@ describe('Converting a react app to modular app', () => {
           'packages',
           tmpProjectName,
           'src',
-          'setUpTests.js',
+          'setupTests.js',
         ),
       ),
     ).toBe(false);
