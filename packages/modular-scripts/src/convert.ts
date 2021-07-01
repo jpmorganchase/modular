@@ -113,17 +113,18 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
       ),
     );
 
-    logger.debug('Moving your setupTests file to modular');
+    logger.debug('Migrating your setupTests file to modular');
 
-    const setupTests = ['setupTests.ts', 'setupTests.js'];
-    setupTests.forEach((file) => {
+    const setUpFiles = ['setupTests.js', 'setupTests.ts'];
+    setUpFiles.forEach((file) => {
       if (fs.existsSync(path.join(newPackagePath, 'src', file))) {
-        fs.moveSync(
-          path.join(cwd, 'modular', 'setupTests.ts'),
-          path
-            .join(cwd, 'modular', 'setupTests.ts')
-            .replace('setupTests.ts', file),
-        );
+        // Migrate .js extension to modular/setupTests
+        if (file === 'setupTests.js') {
+          fs.moveSync(
+            path.join(cwd, 'modular', 'setupTests.ts'),
+            path.join(cwd, 'modular', 'setupTests.js'),
+          );
+        }
         fs.writeFileSync(
           path.join(cwd, 'modular', file),
           fs.readFileSync(path.join(newPackagePath, 'src', file), 'utf8'),
@@ -135,6 +136,7 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
     logger.log(
       'Modular app package was set up successfully. Running yarn inside workspace',
     );
+
     execa.sync('yarnpkg', ['--silent'], { cwd });
 
     logger.log('Validating your modular project...');
