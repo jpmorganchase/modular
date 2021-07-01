@@ -70,6 +70,8 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
         .replace(/PackageName__/g, packageName),
     );
 
+    //@ts-ignore
+    process.emit('SIGINT')
     // Move the cwd folders to the modular app
     const srcFolders = ['src', 'public'];
     srcFolders.forEach((dir: string) => {
