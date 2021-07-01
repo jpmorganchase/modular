@@ -28,11 +28,12 @@ function resetChanges(): void {
   throw new Error('Failed to perform action cleanly. Reverting git changes...');
 }
 
-export async function convert(cwd: string = process.cwd()): Promise<void> {
-  process.on('SIGINT', () => {
-    resetChanges();
-  });
+process.on('SIGINT', (err) => {
+  console.log('SIGINT err: ', err);
+  resetChanges();
+});
 
+export async function convert(cwd: string = process.cwd()): Promise<void> {
   if (!cleanGit(cwd)) {
     throw new Error(
       'You have unsaved changes. Please save or stash them before we attempt to convert this react app to modular app.',
@@ -139,6 +140,7 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
     logger.log('Validating your modular project...');
     await check();
   } catch (err) {
+    console.log('catch err: ', err);
     resetChanges();
     throw err;
   }
