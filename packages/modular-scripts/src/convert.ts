@@ -9,7 +9,6 @@ import {
   isValidModularRootPackageJson,
 } from './utils/isModularType';
 import * as logger from './utils/logger';
-import actionPreflightCheck from './utils/actionPreflightCheck';
 import addPackage from './addPackage';
 import { check } from './check';
 
@@ -104,4 +103,4 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
   }
 }
 
-export default actionPreflightCheck(convert);
+export default convert;
