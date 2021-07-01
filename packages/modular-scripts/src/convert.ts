@@ -1,6 +1,5 @@
 import { IncludeDefinition as TSConfig } from '@schemastore/tsconfig';
 import execa from 'execa';
-import stripAnsi from 'strip-ansi';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import {
@@ -10,25 +9,9 @@ import {
 import * as logger from './utils/logger';
 import { check } from './check';
 import rimraf from 'rimraf';
+import { cleanGit, resetChanges } from './utils/gitActions';
 
-function cleanGit(cwd: string): boolean {
-  const trackedChanged = stripAnsi(
-    execa.sync('git', ['status', '-s'], {
-      all: true,
-      reject: false,
-      cwd,
-      cleanup: true,
-    }).stdout,
-  );
-  return trackedChanged.length === 0;
-}
-
-function resetChanges(): void {
-  execa.sync('git', ['clean', '-fd']);
-  throw new Error('Failed to perform action cleanly. Reverting git changes...');
-}
-
-process.on('SIGINT', (err) => {
+process.on('SIGINT', () => {
   resetChanges();
 });
 
