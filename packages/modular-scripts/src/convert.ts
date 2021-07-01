@@ -23,14 +23,14 @@ function cleanGit(cwd: string): boolean {
   return trackedChanged.length === 0;
 }
 
-function resetChanges(cwd: string): void {
-  execa.sync('git', ['clean', '-fd'], { cwd });
+function resetChanges(): void {
+  execa.sync('git', ['clean', '-fd']);
   throw new Error('Failed to perform action cleanly. Reverting git changes...');
 }
 
 export async function convert(cwd: string = process.cwd()): Promise<void> {
   process.on('SIGINT', () => {
-    resetChanges(cwd);
+    resetChanges();
   });
 
   if (!cleanGit(cwd)) {
@@ -139,7 +139,7 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
     logger.log('Validating your modular project...');
     await check();
   } catch (err) {
-    resetChanges(cwd);
+    resetChanges();
     throw err;
   }
 }
