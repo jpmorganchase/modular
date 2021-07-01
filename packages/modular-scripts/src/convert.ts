@@ -3,15 +3,13 @@ import execa from 'execa';
 import stripAnsi from 'strip-ansi';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import rimraf from 'rimraf';
 import {
   ModularPackageJson,
   isValidModularRootPackageJson,
 } from './utils/isModularType';
 import * as logger from './utils/logger';
-import actionPreflightCheck from './utils/actionPreflightCheck';
-import addPackage from './addPackage';
 import { check } from './check';
+import rimraf from 'rimraf';
 
 function cleanGit(cwd: string): boolean {
   const trackedChanged = stripAnsi(
@@ -27,12 +25,10 @@ function cleanGit(cwd: string): boolean {
 
 function resetChanges(): void {
   execa.sync('git', ['clean', '-fd']);
+  throw new Error('Failed to perform action cleanly. Reverting git changes...');
 }
 
-process.on('SIGINT', () => {
-  logger.error(
-    'Failed to convert your react app to a modular app cleanly. Reverting git changes...',
-  );
+process.on('SIGINT', (err) => {
   resetChanges();
 });
 
@@ -59,20 +55,34 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
 
     const packageName = rootPackageJson.name as string;
 
-    // Create a modular app for the current directory
-    await addPackage(packageName, 'app', packageName);
+    logger.log(`Setting up new modular app for ${packageName}`);
 
-    // Replace the template src and public folders with current react app folders
+    // Create a modular app package folder
+    const packageTypePath = path.join(__dirname, '../types', 'app');
+    const newPackagePath = path.join(cwd, 'packages', packageName);
+    fs.mkdirSync(newPackagePath);
+    fs.writeFileSync(
+      path.join(newPackagePath, 'package.json'),
+      fs
+        .readFileSync(path.join(packageTypePath, 'packagejson'), 'utf8')
+        .replace(/PackageName__/g, packageName),
+    );
+
+    // Move the cwd folders to the modular app
     const srcFolders = ['src', 'public'];
     srcFolders.forEach((dir: string) => {
       if (fs.existsSync(path.join(cwd, dir))) {
-        rimraf.sync(path.join(cwd, 'packages', packageName, dir));
-        fs.moveSync(
-          path.join(cwd, dir),
-          path.join(cwd, 'packages', packageName, dir),
+        fs.moveSync(path.join(cwd, dir), path.join(newPackagePath, dir));
+      } else {
+        fs.copySync(
+          path.join(packageTypePath, dir),
+          path.join(newPackagePath, dir),
+          { overwrite: true },
         );
       }
     });
+
+    logger.debug('Updating your tsconfig.json to include your workspaces');
 
     // If they have a tsconfig, include packages/**/src
     const tsConfigPath = path.join(cwd, 'tsconfig.json');
@@ -92,16 +102,48 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
       });
     }
 
+    logger.debug('Updating your react-app-env.d.ts for modular-scripts');
+
+    fs.writeFileSync(
+      path.join(newPackagePath, 'src', 'react-app-env.d.ts'),
+      fs.readFileSync(
+        path.join(packageTypePath, 'src', 'react-app-env.d.ts'),
+        'utf8',
+      ),
+    );
+
+    logger.debug('Migrating your setupTests file to modular');
+
+    const setupFileName = 'setupTests';
+    const setupFiles = ['js', 'ts'];
+    setupFiles.forEach((ext) => {
+      const file = `${setupFileName}.${ext}`;
+      if (fs.existsSync(path.join(newPackagePath, 'src', file))) {
+        // Migrate .js extension to modular/setupTests
+        if (ext === 'js') {
+          fs.moveSync(
+            path.join(cwd, 'modular', `${setupFileName}.ts`),
+            path.join(cwd, 'modular', file),
+          );
+        }
+        fs.writeFileSync(
+          path.join(cwd, 'modular', file),
+          fs.readFileSync(path.join(newPackagePath, 'src', file), 'utf8'),
+        );
+        rimraf.sync(path.join(newPackagePath, 'src', file));
+      }
+    });
+
+    logger.log(
+      'Modular app package was set up successfully. Running yarn inside workspace',
+    );
+
     execa.sync('yarnpkg', ['--silent'], { cwd });
 
+    logger.log('Validating your modular project...');
     await check();
   } catch (err) {
-    logger.error(
-      'Failed to convert your react app to a modular app cleanly. Reverting git changes...',
-    );
+    logger.error(err);
     resetChanges();
-    throw err;
   }
 }
-
-export default actionPreflightCheck(convert);
