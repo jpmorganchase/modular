@@ -60,7 +60,6 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
     const packageTypePath = path.join(__dirname, '../types', 'app');
     const newPackagePath = path.join(cwd, 'packages', packageName);
     fs.mkdirSync(newPackagePath);
-    fs.createFileSync(path.join(newPackagePath, 'package.json'));
     fs.writeFileSync(
       path.join(newPackagePath, 'package.json'),
       fs
@@ -72,11 +71,13 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
     const srcFolders = ['src', 'public'];
     srcFolders.forEach((dir: string) => {
       if (fs.existsSync(path.join(cwd, dir))) {
-        fs.moveSync(
-          path.join(cwd, dir),
-          path.join(cwd, 'packages', packageName, dir),
-        );
+        fs.moveSync(path.join(cwd, dir), path.join(newPackagePath, dir));
       }
+      fs.mkdirSync(path.join(newPackagePath, dir));
+      fs.copySync(
+        path.join(packageTypePath, dir),
+        path.join(newPackagePath, dir),
+      );
     });
 
     // If they have a tsconfig, include packages/**/src
