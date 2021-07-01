@@ -6,7 +6,6 @@
 // rm -rf dist && yarn modular build `ls -m1 packages | sed -e 'H;${x;s/\n/,/g;s/^,//;p;};d'`
 
 import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
-import { JSONSchemaForTheTypeScriptCompilerSConfigurationFile as TSConfig } from '@schemastore/tsconfig';
 
 import { promisify as prom } from 'util';
 
@@ -25,189 +24,36 @@ import babel from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
 import { preserveShebangs } from 'rollup-plugin-preserve-shebangs';
 
-import * as ts from 'typescript';
 import * as fse from 'fs-extra';
 
 import builtinModules from 'builtin-modules';
-import getModularRoot from './utils/getModularRoot';
-import { getAllWorkspaces } from './utils/getAllWorkspaces';
-import * as logger from './utils/logger';
+import getModularRoot from '../utils/getModularRoot';
 import chalk from 'chalk';
-
-type Console = {
-  log: typeof logger.log;
-  error: typeof logger.error;
-};
-
-const consoles: { [name: string]: Console } = {};
-
-function getLogger(directoryName: string): Console {
-  if (!consoles[directoryName]) {
-    consoles[directoryName] = {
-      log: (...args: Parameters<typeof logger.log>) => {
-        return logger.log('$ ' + directoryName + ':', ...args);
-      },
-      error: (...args: Parameters<typeof logger.error>) => {
-        return logger.error('$ ' + directoryName + ':', ...args);
-      },
-    };
-  }
-  return consoles[directoryName];
-}
-
-// from https://github.com/Microsoft/TypeScript/issues/6387
-// a helper to output a readable message from a ts diagnostics object
-function reportTSDiagnostics(
-  packagePath: string,
-  diagnostics: ts.Diagnostic[],
-): void {
-  const logger = getLogger(packagePath);
-
-  diagnostics.forEach((diagnostic) => {
-    let message = `Error`;
-    if (diagnostic.file) {
-      const where = diagnostic.file.getLineAndCharacterOfPosition(
-        diagnostic.start as number,
-      );
-      message += ` ${diagnostic.file.fileName} ${where.line}, ${
-        where.character + 1
-      }`;
-    }
-    message +=
-      ': ' + ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n');
-    logger.error(message);
-  });
-}
+import { getLogger } from './getLogger';
+import { getPackageEntryPoints } from './getPackageEntryPoints';
+import getPackageMetadata from './getPackageMetadata';
+import { makeTypings } from './makeTypings';
 
 const extensions = ['.ts', '.tsx', '.js', '.jsx'];
 const outputDirectory = 'dist';
-const typescriptConfigFilename = 'tsconfig.json';
 const packagesRoot = 'packages';
-
-// dependencies defined at the root
-const rootPackageJsonDependencies =
-  (fse.readJSONSync('package.json') as PackageJson).dependencies || {};
-
-// a map of all package.json contents, indexed by package name
-const packageJsons: { [key: string]: PackageJson } = {};
-// a map of all package.json contents, indexed by directory name
-const packageJsonsByPackagePath: {
-  [key: string]: PackageJson;
-} = {};
-// an array of all the package names
-const packageNames: string[] = [];
-
-// let's populate the above three
-for (const [name, { location }] of Object.entries(getAllWorkspaces())) {
-  const pathToPackageJson = path.join(location, 'package.json');
-  const packageJson = fse.readJsonSync(pathToPackageJson) as PackageJson;
-
-  packageJsons[name] = packageJson;
-  packageJsonsByPackagePath[location.replace(new RegExp('^packages\\/'), '')] =
-    packageJson;
-  packageNames.push(name);
-}
-
-// TODO: the above should probably be lazily evaluated.
-
-// TODO: do a quick check to make sure workspaces aren't
-// explicitly included in dependencies
-// maybe that belongs in `modular check`
-
-const publicPackageJsons: {
-  [name: string]: PackageJson;
-} = {};
 
 function distinct<T>(arr: T[]): T[] {
   return [...new Set(arr)];
-}
-
-const typescriptConfig: TSConfig = {};
-// validate tsconfig
-{
-  // Extract configuration from config file and parse JSON,
-  // after removing comments. Just a fancier JSON.parse
-  const result = ts.parseConfigFileTextToJson(
-    path.join(getModularRoot(), typescriptConfigFilename),
-    fse.readFileSync(typescriptConfigFilename, 'utf8').toString(),
-  );
-
-  const configObject = result.config as TSConfig;
-
-  if (!configObject) {
-    reportTSDiagnostics(':root', [result.error as ts.Diagnostic]);
-    throw new Error('Failed to load Typescript configuration');
-  }
-  Object.assign(typescriptConfig, configObject, {
-    // TODO: should probably include the original exclude in this
-    exclude: distinct([
-      // all TS test files, regardless whether co-located or in test/ etc
-      '**/*.stories.ts',
-      '**/*.stories.tsx',
-      '**/*.spec.ts',
-      '**/*.test.ts',
-      '**/*.e2e.ts',
-      '**/*.spec.tsx',
-      '**/*.test.tsx',
-      '__tests__',
-      '**/dist-cjs',
-      '**/dist-es',
-      '**/dist-types',
-      // TS defaults below
-      'node_modules',
-      'bower_components',
-      'jspm_packages',
-      'tmp',
-      // Casting so that configObject.exclude is set to the correct typing
-      // Since configObject is a index type all values are "any" implicitly.
-      ...((configObject.exclude as string[]) || []),
-    ]),
-  });
-
-  typescriptConfig.compilerOptions = typescriptConfig.compilerOptions || {};
-
-  Object.assign(typescriptConfig.compilerOptions, {
-    declarationDir: outputDirectory,
-    noEmit: false,
-    declaration: true,
-    emitDeclarationOnly: true,
-    incremental: false,
-  });
-}
-
-function getPackageEntryPoints(packagePath: string) {
-  const packageJson = packageJsonsByPackagePath[packagePath];
-
-  let compilingBin = false;
-  let main: string | undefined;
-
-  if (packageJson.main) {
-    main = packageJson.main;
-  } else {
-    if (packageJson.bin) {
-      const bins: string[] = Object.values(packageJson.bin) as string[];
-      if (bins.length === 1) {
-        compilingBin = true;
-        main = bins[0];
-      } else {
-        throw new Error(
-          `package.json at ${packagesRoot}/${packagePath} contains multiple "bin" values, bailing...`,
-        );
-      }
-    } else {
-      throw new Error(
-        `package.json at ${packagesRoot}/${packagePath} does not have a "main" or "bin" field, bailing...`,
-      );
-    }
-  }
-
-  return { main, compilingBin };
 }
 
 async function makeBundle(
   packagePath: string,
   preserveModules: boolean,
 ): Promise<boolean> {
+  const {
+    packageNames,
+    packageJsons,
+    publicPackageJsons,
+    packageJsonsByPackagePath,
+    rootPackageJsonDependencies,
+  } = getPackageMetadata();
+
   const logger = getLogger(packagePath);
 
   const packageJson = packageJsonsByPackagePath[packagePath];
@@ -533,72 +379,12 @@ async function makeBundle(
   return true;
 }
 
-function makeTypings(packagePath: string) {
-  const logger = getLogger(packagePath);
-
-  logger.log('generating .d.ts files');
-
-  // make a shallow copy of the configuration
-  const tsconfig: TSConfig = {
-    ...typescriptConfig,
-    compilerOptions: {
-      ...typescriptConfig.compilerOptions,
-    },
-  };
-
-  // then add our custom stuff
-
-  // Only include src files from the package to prevent already built
-  // files from interferring with the compile
-  tsconfig.include = [`${packagesRoot}/${packagePath}/src`];
-  tsconfig.compilerOptions = {
-    ...tsconfig.compilerOptions,
-    declarationDir: `${packagesRoot}/${packagePath}/${outputDirectory}-types`,
-    rootDir: `${packagesRoot}/${packagePath}`,
-  };
-
-  // Extract config information
-  const configParseResult = ts.parseJsonConfigFileContent(
-    tsconfig,
-    ts.sys,
-    path.dirname(typescriptConfigFilename),
-  );
-
-  if (configParseResult.errors.length > 0) {
-    reportTSDiagnostics(packagePath, configParseResult.errors);
-    throw new Error('Could not parse Typescript configuration');
-  }
-
-  const host = ts.createCompilerHost(configParseResult.options);
-  host.writeFile = (fileName, contents) => {
-    fse.mkdirpSync(path.dirname(fileName));
-    fse.writeFileSync(fileName, contents);
-  };
-
-  // Compile
-  const program = ts.createProgram(
-    configParseResult.fileNames,
-    configParseResult.options,
-    host,
-  );
-
-  const emitResult = program.emit();
-
-  // Report errors
-  const diagnostics = ts
-    .getPreEmitDiagnostics(program)
-    .concat(emitResult.diagnostics);
-  if (diagnostics.length > 0) {
-    reportTSDiagnostics(packagePath, diagnostics);
-    throw new Error('Could not generate .d.ts files');
-  }
-}
-
 export async function buildPackage(
   packagePath: string,
   preserveModules = false,
 ): Promise<void> {
   const modularRoot = getModularRoot();
+  const { publicPackageJsons } = getPackageMetadata();
 
   if (process.cwd() !== modularRoot) {
     throw new Error(
@@ -641,9 +427,10 @@ export async function buildPackage(
 
   // switch in the special package.json
   try {
+    const publicPackageJson = publicPackageJsons[packageName];
     await fse.writeJson(
       path.join(packagesRoot, packagePath, 'package.json'),
-      publicPackageJsons[packageName],
+      publicPackageJson,
       { spaces: 2 },
     );
 
