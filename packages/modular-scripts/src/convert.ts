@@ -143,5 +143,3 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
     throw err;
   }
 }
-
-export default convert;
