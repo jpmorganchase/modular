@@ -3,14 +3,11 @@ import execa from 'execa';
 import stripAnsi from 'strip-ansi';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import rimraf from 'rimraf';
 import {
   ModularPackageJson,
   isValidModularRootPackageJson,
 } from './utils/isModularType';
 import * as logger from './utils/logger';
-import actionPreflightCheck from './utils/actionPreflightCheck';
-import addPackage from './addPackage';
 import { check } from './check';
 
 function cleanGit(cwd: string): boolean {
@@ -60,13 +57,21 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
     const packageName = rootPackageJson.name as string;
 
     // Create a modular app for the current directory
-    await addPackage(packageName, 'app', packageName);
+    const packageTypePath = path.join(__dirname, '../types', 'app');
+    const newPackagePath = path.join(cwd, 'packages', packageName);
+    fs.mkdirSync(newPackagePath);
+    fs.createFileSync(path.join(newPackagePath, 'package.json'));
+    fs.writeFileSync(
+      path.join(newPackagePath, 'package.json'),
+      fs
+        .readFileSync(path.join(packageTypePath, 'packagejson'), 'utf8')
+        .replace(/PackageName__/g, packageName),
+    );
 
     // Replace the template src and public folders with current react app folders
     const srcFolders = ['src', 'public'];
     srcFolders.forEach((dir: string) => {
       if (fs.existsSync(path.join(cwd, dir))) {
-        rimraf.sync(path.join(cwd, 'packages', packageName, dir));
         fs.moveSync(
           path.join(cwd, dir),
           path.join(cwd, 'packages', packageName, dir),
@@ -104,4 +109,4 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
   }
 }
 
-export default actionPreflightCheck(convert);
+export default convert;
