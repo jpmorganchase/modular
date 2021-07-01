@@ -47,7 +47,7 @@
     "commander": "^8.0.0",
     "css-loader": "4.3.0",
     "dotenv-expand": "5.1.0",
-    "dotenv": "8.2.0",
+    "dotenv": "10.0.0",
     "esbuild": "^0.12.12",
     "esbuild-loader": "^2.13.0",
     "execa": "^5.1.1",
