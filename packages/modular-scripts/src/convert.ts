@@ -23,15 +23,15 @@ function cleanGit(cwd: string): boolean {
 }
 
 function resetChanges(cwd: string): void {
+  logger.error(
+    'Failed to perform action cleanly. Reverting git changes...',
+  );
   execa.sync('git', ['clean', '-fd'], { cwd });
-  console.log('reseting the changes')
+  logger.log('reseting the changes');
 }
 
 export async function convert(cwd: string = process.cwd()): Promise<void> {
   process.on('SIGINT', () => {
-    logger.error(
-      'Failed to convert your react app to a modular app cleanly. Reverting git changes...',
-    );
     resetChanges(cwd);
   });
 
@@ -115,15 +115,14 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
       ),
     );
 
-    logger.log('Modular app package was set up successfully. Running `yarn --silent` over the workspace')
+    logger.log(
+      'Modular app package was set up successfully. Running yarn inside workspace',
+    );
     execa.sync('yarnpkg', ['--silent'], { cwd });
 
-    logger.log('Validating your modular project...')
+    logger.log('Validating your modular project...');
     await check();
   } catch (err) {
-    logger.error(
-      'Failed to convert your react app to a modular app cleanly. Reverting git changes...',
-    );
     // resetChanges(cwd);
     throw err;
   }
