@@ -9,6 +9,7 @@ import {
 } from './utils/isModularType';
 import * as logger from './utils/logger';
 import { check } from './check';
+import rimraf from 'rimraf';
 
 function cleanGit(cwd: string): boolean {
   const trackedChanged = stripAnsi(
@@ -23,11 +24,8 @@ function cleanGit(cwd: string): boolean {
 }
 
 function resetChanges(cwd: string): void {
-  logger.error(
-    'Failed to perform action cleanly. Reverting git changes...',
-  );
   execa.sync('git', ['clean', '-fd'], { cwd });
-  logger.log('reseting the changes');
+  throw new Error('Failed to perform action cleanly. Reverting git changes...');
 }
 
 export async function convert(cwd: string = process.cwd()): Promise<void> {
@@ -35,11 +33,11 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
     resetChanges(cwd);
   });
 
-  // if (!cleanGit(cwd)) {
-  //   throw new Error(
-  //     'You have unsaved changes. Please save or stash them before we attempt to convert this react app to modular app.',
-  //   );
-  // }
+  if (!cleanGit(cwd)) {
+    throw new Error(
+      'You have unsaved changes. Please save or stash them before we attempt to convert this react app to modular app.',
+    );
+  }
 
   try {
     if (
@@ -70,8 +68,6 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
         .replace(/PackageName__/g, packageName),
     );
 
-    //@ts-ignore
-    process.emit('SIGINT')
     // Move the cwd folders to the modular app
     const srcFolders = ['src', 'public'];
     srcFolders.forEach((dir: string) => {
@@ -108,7 +104,6 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
 
     logger.debug('Updating your react-app-env.d.ts for modular-scripts');
 
-    // If they have a react-app-env.d.ts file, replace reference types to modular scripts
     fs.writeFileSync(
       path.join(newPackagePath, 'src', 'react-app-env.d.ts'),
       fs.readFileSync(
@@ -116,6 +111,25 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
         'utf8',
       ),
     );
+
+    logger.debug('Moving your setUpTests file to modular');
+
+    const setUpTests = ['setUpTests.ts', 'setUpTests.js'];
+    setUpTests.forEach((file) => {
+      if (fs.existsSync(path.join(newPackagePath, 'src', file))) {
+        fs.moveSync(
+          path.join(cwd, 'modular', 'setUpTests.ts'),
+          path
+            .join(cwd, 'modular', 'setUpTests.ts')
+            .replace('setUpTests.ts', file),
+        );
+        fs.writeFileSync(
+          path.join(cwd, 'modular', file),
+          fs.readFileSync(path.join(newPackagePath, 'src', file), 'utf8'),
+        );
+        rimraf.sync(path.join(newPackagePath, 'src', file));
+      }
+    });
 
     logger.log(
       'Modular app package was set up successfully. Running yarn inside workspace',
@@ -125,7 +139,7 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
     logger.log('Validating your modular project...');
     await check();
   } catch (err) {
-    // resetChanges(cwd);
+    resetChanges(cwd);
     throw err;
   }
 }

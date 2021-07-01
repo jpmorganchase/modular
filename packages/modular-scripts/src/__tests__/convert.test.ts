@@ -37,6 +37,10 @@ describe('Converting a react app to modular app', () => {
         name: tmpProjectName,
       }),
     );
+    fs.writeFileSync(
+      path.join(tmpFolderPath, 'src', 'setUpTests.js'),
+      new Buffer("require('@testing-library/jest-dom/extend-expect')"),
+    );
     await initModularFolder(tmpFolderPath, true);
     await convert(tmpFolderPath);
   });
@@ -110,5 +114,24 @@ describe('Converting a react app to modular app', () => {
     expect(reactAppEnvFile).toMatch(
       '<reference types="modular-scripts/react-app-env" />',
     );
+  });
+
+  it('should copy setUpTests file to modular with correct extension', () => {
+    expect(
+      fs
+        .readFileSync(path.join(tmpFolderPath, 'modular', 'setUpTests.js'))
+        .toString(),
+    ).toMatch("require('@testing-library/jest-dom/extend-expect')");
+    expect(
+      fs.existsSync(
+        path.join(
+          tmpFolderPath,
+          'packages',
+          tmpProjectName,
+          'src',
+          'setUpTests.js',
+        ),
+      ),
+    ).toBe(false);
   });
 });
