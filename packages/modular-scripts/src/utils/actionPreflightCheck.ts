@@ -5,9 +5,8 @@ type ModularAction = (...args: any[]) => Promise<void>;
 
 function actionPreflightCheck(fn: ModularAction): ModularAction {
   const wrappedFn: ModularAction = async (...args) => {
-    const { check } = await import('../check');
-
     if (process.env.SKIP_PREFLIGHT_CHECK !== 'true') {
+      const { check } = await import('../check');
       await check();
     } else {
       logger.warn(
