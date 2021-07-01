@@ -115,14 +115,16 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
 
     logger.debug('Migrating your setupTests file to modular');
 
-    const setUpFiles = ['setupTests.js', 'setupTests.ts'];
-    setUpFiles.forEach((file) => {
+    const setupFileName = 'setupTests';
+    const setupFiles = ['js', 'ts'];
+    setupFiles.forEach((ext) => {
+      const file = `${setupFileName}.${ext}`;
       if (fs.existsSync(path.join(newPackagePath, 'src', file))) {
         // Migrate .js extension to modular/setupTests
-        if (file === 'setupTests.js') {
+        if (ext === 'js') {
           fs.moveSync(
-            path.join(cwd, 'modular', 'setupTests.ts'),
-            path.join(cwd, 'modular', 'setupTests.js'),
+            path.join(cwd, 'modular', `${setupFileName}.ts`),
+            path.join(cwd, 'modular', file),
           );
         }
         fs.writeFileSync(
