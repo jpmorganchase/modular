@@ -22,18 +22,17 @@ function cleanGit(cwd: string): boolean {
   return trackedChanged.length === 0;
 }
 
-function resetChanges(): void {
-  execa.sync('git', ['clean', '-fd']);
+function resetChanges(cwd: string): void {
+  execa.sync('git', ['clean', '-fd'], { cwd });
 }
 
-process.on('SIGINT', () => {
-  logger.error(
-    'Failed to convert your react app to a modular app cleanly. Reverting git changes...',
-  );
-  resetChanges();
-});
-
 export async function convert(cwd: string = process.cwd()): Promise<void> {
+  process.on('SIGINT', () => {
+    logger.error(
+      'Failed to convert your react app to a modular app cleanly. Reverting git changes...',
+    );
+    resetChanges(cwd);
+  });
   if (!cleanGit(cwd)) {
     throw new Error(
       'You have unsaved changes. Please save or stash them before we attempt to convert this react app to modular app.',
@@ -56,7 +55,7 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
 
     const packageName = rootPackageJson.name as string;
 
-    // Create a modular app for the current directory
+    // Create a modular app package folder
     const packageTypePath = path.join(__dirname, '../types', 'app');
     const newPackagePath = path.join(cwd, 'packages', packageName);
     fs.mkdirSync(newPackagePath);
@@ -67,17 +66,18 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
         .replace(/PackageName__/g, packageName),
     );
 
-    // Replace the template src and public folders with current react app folders
+    // Move the cwd folders to the modular app
     const srcFolders = ['src', 'public'];
     srcFolders.forEach((dir: string) => {
       if (fs.existsSync(path.join(cwd, dir))) {
         fs.moveSync(path.join(cwd, dir), path.join(newPackagePath, dir));
+      } else {
+        fs.copySync(
+          path.join(packageTypePath, dir),
+          path.join(newPackagePath, dir),
+          { overwrite: true },
+        );
       }
-      fs.mkdirSync(path.join(newPackagePath, dir));
-      fs.copySync(
-        path.join(packageTypePath, dir),
-        path.join(newPackagePath, dir),
-      );
     });
 
     // If they have a tsconfig, include packages/**/src
@@ -98,6 +98,15 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
       });
     }
 
+    // If they have a react-app-env.d.ts file, replace reference types to modular scripts
+    fs.writeFileSync(
+      path.join(newPackagePath, 'src', 'react-app-env.d.ts'),
+      fs.readFileSync(
+        path.join(packageTypePath, 'src', 'react-app-env.d.ts'),
+        'utf8',
+      ),
+    );
+
     execa.sync('yarnpkg', ['--silent'], { cwd });
 
     await check();
@@ -105,7 +114,7 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
     logger.error(
       'Failed to convert your react app to a modular app cleanly. Reverting git changes...',
     );
-    resetChanges();
+    // resetChanges(cwd);
     throw err;
   }
 }

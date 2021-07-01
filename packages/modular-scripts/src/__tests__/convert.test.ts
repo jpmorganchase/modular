@@ -1,3 +1,4 @@
+import { IncludeDefinition as TSConfig } from '@schemastore/tsconfig';
 import * as path from 'path';
 import * as tmp from 'tmp';
 import * as fs from 'fs-extra';
@@ -24,12 +25,18 @@ describe('Converting a react app to modular app', () => {
     mockedModularRoot.mockImplementation(() => tmpFolderPath);
     const starterFolder = ['src', 'public'];
     starterFolder.forEach((dir) => {
-      fs.mkdirSync(path.join(tmpFolderPath, dir));
       fs.copySync(
         path.join(__dirname, '..', '..', 'types', starterTempType, dir),
         path.join(tmpFolderPath, dir),
+        { overwrite: true },
       );
     });
+    fs.writeFileSync(
+      path.join(tmpFolderPath, 'package.json'),
+      JSON.stringify({
+        name: tmpProjectName,
+      }),
+    );
     await initModularFolder(tmpFolderPath, true);
     await convert(tmpFolderPath);
   });
@@ -37,6 +44,7 @@ describe('Converting a react app to modular app', () => {
   afterEach(() => {
     tmpFolder.removeCallback();
     tmpFolderPath = '';
+    mockedModularRoot.mockClear();
   });
 
   afterAll(() => {
@@ -75,6 +83,32 @@ describe('Converting a react app to modular app', () => {
       fs.readdirSync(
         path.join(__dirname, '..', '..', 'types', starterTempType, 'public'),
       ),
+    );
+  });
+
+  it('should update tsconfig.json', () => {
+    const tsConfigFile = fs.readJsonSync(
+      path.join(tmpFolderPath, 'tsconfig.json'),
+    ) as TSConfig;
+    expect(tsConfigFile.include).not.toContain('src');
+    expect(tsConfigFile.include).toContain('packages/**/src');
+  });
+
+  it('should point react-app-env.d.ts to modular-scripts', () => {
+    const reactAppEnvFile = fs
+      .readFileSync(
+        path.join(
+          tmpFolderPath,
+          'packages',
+          tmpProjectName,
+          'src',
+          'react-app-env.d.ts',
+        ),
+      )
+      .toString();
+    expect(reactAppEnvFile).not.toMatch('<reference types="react-scripts" />');
+    expect(reactAppEnvFile).toMatch(
+      '<reference types="modular-scripts/react-app-env" />',
     );
   });
 });
