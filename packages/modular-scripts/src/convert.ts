@@ -29,7 +29,6 @@ function resetChanges(): void {
 }
 
 process.on('SIGINT', (err) => {
-  console.log('SIGINT err: ', err);
   resetChanges();
 });
 
