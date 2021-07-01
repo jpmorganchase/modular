@@ -24,6 +24,7 @@ function cleanGit(cwd: string): boolean {
 
 function resetChanges(cwd: string): void {
   execa.sync('git', ['clean', '-fd'], { cwd });
+  console.log('reseting the changes')
 }
 
 export async function convert(cwd: string = process.cwd()): Promise<void> {
@@ -33,11 +34,12 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
     );
     resetChanges(cwd);
   });
-  if (!cleanGit(cwd)) {
-    throw new Error(
-      'You have unsaved changes. Please save or stash them before we attempt to convert this react app to modular app.',
-    );
-  }
+
+  // if (!cleanGit(cwd)) {
+  //   throw new Error(
+  //     'You have unsaved changes. Please save or stash them before we attempt to convert this react app to modular app.',
+  //   );
+  // }
 
   try {
     if (
@@ -54,6 +56,8 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
     )) as ModularPackageJson;
 
     const packageName = rootPackageJson.name as string;
+
+    logger.log(`Setting up new modular app for ${packageName}`);
 
     // Create a modular app package folder
     const packageTypePath = path.join(__dirname, '../types', 'app');
@@ -80,6 +84,8 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
       }
     });
 
+    logger.debug('Updating your tsconfig.json to include your workspaces');
+
     // If they have a tsconfig, include packages/**/src
     const tsConfigPath = path.join(cwd, 'tsconfig.json');
     if (fs.existsSync(tsConfigPath)) {
@@ -98,6 +104,8 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
       });
     }
 
+    logger.debug('Updating your react-app-env.d.ts for modular-scripts');
+
     // If they have a react-app-env.d.ts file, replace reference types to modular scripts
     fs.writeFileSync(
       path.join(newPackagePath, 'src', 'react-app-env.d.ts'),
@@ -107,8 +115,10 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
       ),
     );
 
+    logger.log('Modular app package was set up successfully. Running `yarn --silent` over the workspace')
     execa.sync('yarnpkg', ['--silent'], { cwd });
 
+    logger.log('Validating your modular project...')
     await check();
   } catch (err) {
     logger.error(
