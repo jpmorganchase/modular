@@ -1,7 +1,5 @@
 import getPackageMetadata from './getPackageMetadata';
 
-const packagesRoot = 'packages';
-
 export function getPackageEntryPoints(packagePath: string): {
   main: string;
   compilingBin: boolean;
@@ -22,12 +20,12 @@ export function getPackageEntryPoints(packagePath: string): {
         main = bins[0];
       } else {
         throw new Error(
-          `package.json at ${packagesRoot}/${packagePath} contains multiple "bin" values, bailing...`,
+          `package.json at ${packagePath} contains multiple "bin" values, bailing...`,
         );
       }
     } else {
       throw new Error(
-        `package.json at ${packagesRoot}/${packagePath} does not have a "main" or "bin" field, bailing...`,
+        `package.json at ${packagePath} does not have a "main" or "bin" field, bailing...`,
       );
     }
   }

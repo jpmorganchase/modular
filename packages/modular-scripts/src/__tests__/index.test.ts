@@ -498,7 +498,7 @@ describe('modular-scripts', () => {
       stdio: 'inherit',
     });
     // build the nested package
-    await modular('build nested/sample-nested-package', {
+    await modular('build @nested/sample-package', {
       stdio: 'inherit',
     });
 

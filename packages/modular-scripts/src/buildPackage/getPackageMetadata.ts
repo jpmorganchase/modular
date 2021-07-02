@@ -37,9 +37,7 @@ function getPackageMetadata() {
     const packageJson = fse.readJsonSync(pathToPackageJson) as PackageJson;
 
     packageJsons[name] = packageJson;
-    packageJsonsByPackagePath[
-      location.replace(new RegExp('^packages\\/'), '')
-    ] = packageJson;
+    packageJsonsByPackagePath[location] = packageJson;
     packageNames.push(name);
   }
 

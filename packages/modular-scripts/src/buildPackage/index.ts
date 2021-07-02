@@ -33,11 +33,10 @@ import { getLogger } from './getLogger';
 import { getPackageEntryPoints } from './getPackageEntryPoints';
 import getPackageMetadata from './getPackageMetadata';
 import { makeTypings } from './makeTypings';
-import getLocation from '../utils/getLocation';
+import getRelativeLocation from '../utils/getRelativeLocation';
 
 const extensions = ['.ts', '.tsx', '.js', '.jsx'];
 const outputDirectory = 'dist';
-const packagesRoot = 'packages';
 
 const rimraf = promisify(_rimraf);
 
@@ -64,49 +63,45 @@ async function makeBundle(
   const { main, compilingBin } = getPackageEntryPoints(packagePath);
 
   if (!packageJson) {
-    throw new Error(
-      `no package.json in ${packagesRoot}/${packagePath}, bailing...`,
-    );
+    throw new Error(`no package.json in ${packagePath}, bailing...`);
   }
   if (packageJson.private === true) {
-    throw new Error(
-      `${packagesRoot}/${packagePath} is marked private, bailing...`,
-    );
+    throw new Error(`${packagePath} is marked private, bailing...`);
   }
 
-  if (!fse.existsSync(path.join(packagesRoot, packagePath, main))) {
+  if (!fse.existsSync(path.join(getModularRoot(), packagePath, main))) {
     throw new Error(
-      `package.json at ${packagesRoot}/${packagePath} does not have a main file that points to an existing source file, bailing...`,
+      `package.json at ${packagePath} does not have a main file that points to an existing source file, bailing...`,
     );
   }
 
   if (!packageJson.name) {
     throw new Error(
-      `package.json at ${packagesRoot}/${packagePath} does not have a valid "name", bailing...`,
+      `package.json at ${packagePath} does not have a valid "name", bailing...`,
     );
   }
 
   if (!packageJson.version) {
     throw new Error(
-      `package.json at ${packagesRoot}/${packagePath} does not have a valid "version", bailing...`,
+      `package.json at ${packagePath} does not have a valid "version", bailing...`,
     );
   }
 
   if (packageJson.module) {
     throw new Error(
-      `package.json at ${packagesRoot}/${packagePath} shouldn't have a "module" field, bailing...`,
+      `package.json at ${packagePath} shouldn't have a "module" field, bailing...`,
     );
   }
 
   if (packageJson.typings) {
     throw new Error(
-      `package.json at ${packagesRoot}/${packagePath} shouldn't have a "typings" field, bailing...`,
+      `package.json at ${packagePath} shouldn't have a "typings" field, bailing...`,
     );
   }
-  logger.log(`building ${packageJson.name} at packages/${packagePath}...`);
+  logger.log(`building ${packageJson.name} at ${packagePath}...`);
 
   const bundle = await rollup.rollup({
-    input: path.join(packagesRoot, packagePath, main),
+    input: path.join(getModularRoot(), packagePath, main),
     external: (id) => {
       // via tsdx
       // TODO: this should probably be included into deps instead
@@ -147,7 +142,7 @@ async function makeBundle(
         ],
         plugins: ['@babel/plugin-proposal-class-properties'],
         extensions,
-        include: [`${packagesRoot}/**/*`],
+        include: [`packages/**/*`],
         exclude: 'node_modules/**',
       }),
       postcss({ extract: false }),
@@ -288,11 +283,15 @@ async function makeBundle(
     ...(preserveModules
       ? {
           preserveModules: true,
-          dir: path.join(packagesRoot, packagePath, `${outputDirectory}-cjs`),
+          dir: path.join(
+            getModularRoot(),
+            packagePath,
+            `${outputDirectory}-cjs`,
+          ),
         }
       : {
           file: path.join(
-            packagesRoot,
+            getModularRoot(),
             packagePath,
             `${outputDirectory}-cjs`,
             toParamCase(packageJson.name) + '.cjs.js',
@@ -308,11 +307,15 @@ async function makeBundle(
       ...(preserveModules
         ? {
             preserveModules: true,
-            dir: path.join(packagesRoot, packagePath, `${outputDirectory}-es`),
+            dir: path.join(
+              getModularRoot(),
+              packagePath,
+              `${outputDirectory}-es`,
+            ),
           }
         : {
             file: path.join(
-              packagesRoot,
+              getModularRoot(),
               packagePath,
               `${outputDirectory}-es`,
               toParamCase(packageJson.name) + '.es.js',
@@ -387,7 +390,7 @@ export async function buildPackage(
   preserveModules = false,
 ): Promise<void> {
   const modularRoot = getModularRoot();
-  const packagePath = await getLocation(target);
+  const packagePath = await getRelativeLocation(target);
   const { publicPackageJsons } = getPackageMetadata();
 
   if (process.cwd() !== modularRoot) {
@@ -401,20 +404,9 @@ export async function buildPackage(
   await fse.mkdirp(outputDirectory);
 
   // delete any existing local build folders
-  await rimraf(
-    path.join(modularRoot, packagesRoot, packagePath, `${outputDirectory}-cjs`),
-  );
-  await rimraf(
-    path.join(modularRoot, packagesRoot, packagePath, `${outputDirectory}-es`),
-  );
-  await rimraf(
-    path.join(
-      modularRoot,
-      packagesRoot,
-      packagePath,
-      `${outputDirectory}-types`,
-    ),
-  );
+  await rimraf(path.join(modularRoot, packagePath, `${outputDirectory}-cjs`));
+  await rimraf(path.join(modularRoot, packagePath, `${outputDirectory}-es`));
+  await rimraf(path.join(modularRoot, packagePath, `${outputDirectory}-types`));
 
   // Generate the typings for a package first so that we can do type checking and don't waste time bundling otherwise
   const { compilingBin } = getPackageEntryPoints(packagePath);
@@ -429,7 +421,7 @@ export async function buildPackage(
   }
 
   const originalPkgJsonContent = (await fse.readJson(
-    path.join(packagesRoot, packagePath, 'package.json'),
+    path.join(packagePath, 'package.json'),
   )) as PackageJson;
 
   const packageName = originalPkgJsonContent.name as string;
@@ -438,7 +430,7 @@ export async function buildPackage(
   try {
     const publicPackageJson = publicPackageJsons[packageName];
     await fse.writeJson(
-      path.join(packagesRoot, packagePath, 'package.json'),
+      path.join(packagePath, 'package.json'),
       publicPackageJson,
       { spaces: 2 },
     );
@@ -457,7 +449,7 @@ export async function buildPackage(
         ),
       ],
       {
-        cwd: packagesRoot + '/' + packagePath,
+        cwd: path.join(getModularRoot(), packagePath),
         stdin: process.stdin,
         stderr: process.stderr,
         stdout: process.stdout,
@@ -466,29 +458,33 @@ export async function buildPackage(
   } finally {
     // now revert package.json
     await fse.writeJson(
-      path.join(packagesRoot, packagePath, 'package.json'),
+      path.join(getModularRoot(), packagePath, 'package.json'),
       originalPkgJsonContent,
       { spaces: 2 },
     );
   }
 
   // cool. now unpack the tgz's contents in the root dist
-  await fse.mkdirp(path.join(outputDirectory, packagePath));
+  await fse.mkdirp(path.join(outputDirectory, toParamCase(packageName)));
 
   await extract({
     file: path.join(outputDirectory, toParamCase(packageName) + '.tgz'),
     strip: 1,
-    C: path.join(outputDirectory, packagePath),
+    C: path.join(outputDirectory, toParamCase(packageName)),
   });
 
   // (if you're curious why we unpack it here, it's because
   // we observed problems with publishing tgz files directly to npm.)
 
   // delete the local dist folders
-  await rimraf(path.join(packagesRoot, packagePath, `${outputDirectory}-cjs`));
-  await rimraf(path.join(packagesRoot, packagePath, `${outputDirectory}-es`));
   await rimraf(
-    path.join(packagesRoot, packagePath, `${outputDirectory}-types`),
+    path.join(getModularRoot(), packagePath, `${outputDirectory}-cjs`),
+  );
+  await rimraf(
+    path.join(getModularRoot(), packagePath, `${outputDirectory}-es`),
+  );
+  await rimraf(
+    path.join(getModularRoot(), packagePath, `${outputDirectory}-types`),
   );
 
   // then delete the tgz
