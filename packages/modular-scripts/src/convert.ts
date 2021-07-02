@@ -113,6 +113,13 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
       tsConfig.include.push('packages/**/src');
     }
     fs.writeJsonSync(rootTSConfigPath, tsConfig, { spaces: 2 });
+    fs.writeJSONSync(
+      path.join(newPackagePath, 'tsconfig.json'),
+      {
+        extends: path.relative(newPackagePath, cwd) + '/tsconfig.json',
+      },
+      { spaces: 2 },
+    );
 
     logger.debug('Updating your react-app-env.d.ts for modular-scripts');
 
