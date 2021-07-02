@@ -35,6 +35,7 @@ export default function stageView(targetedView: string): string {
   }
 
   if (!fs.existsSync(path.join(stagedViewAppPath, 'tsconfig.json'))) {
+    const modularRoot = getModularRoot();
     const indexTemplate = `import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
