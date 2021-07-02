@@ -63,11 +63,18 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
     const packageTypePath = path.join(__dirname, '../types', 'app');
     const newPackagePath = path.join(cwd, 'packages', packageName);
     fs.mkdirSync(newPackagePath);
-    fs.writeFileSync(
+
+    const newPackageJson = fs.readJsonSync(
+      path.join(packageTypePath, 'packagejson'),
+    ) as ModularPackageJson;
+
+    // Bring key props from root package.json to new app
+    newPackageJson.name = packageName;
+    newPackageJson.browserslist = rootPackageJson.browserslist;
+    fs.writeJsonSync(
       path.join(newPackagePath, 'package.json'),
-      fs
-        .readFileSync(path.join(packageTypePath, 'packagejson'), 'utf8')
-        .replace(/PackageName__/g, packageName),
+      newPackageJson,
+      { spaces: 2 },
     );
 
     // Move the cwd folders to the modular app
@@ -84,25 +91,27 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
       }
     });
 
-    logger.debug('Updating your tsconfig.json to include your workspaces');
+    logger.debug('Set tsconfig.json to include your workspaces');
 
+    let tsConfig: TSConfig = {
+      extends: 'modular-scripts/tsconfig.json',
+      include: ['modular', 'packages/**/src'],
+    };
+
+    const rootTSConfigPath = path.join(cwd, 'tsconfig.json');
     // If they have a tsconfig, include packages/**/src
-    const tsConfigPath = path.join(cwd, 'tsconfig.json');
-    if (fs.existsSync(tsConfigPath)) {
-      const tsConfig = fs.readJsonSync(tsConfigPath) as TSConfig;
+    if (fs.existsSync(rootTSConfigPath)) {
+      tsConfig = fs.readJsonSync(rootTSConfigPath) as TSConfig;
 
       // The tsconfig might already have the necessary includes
       // but just in case, this will ensure that it does
-      let include: string[] = tsConfig.include || [];
-      include = include.filter(
+      const include: string[] = tsConfig.include || [];
+      tsConfig.include = include.filter(
         (key: string) => !['src', 'packages/**/src'].includes(key),
       );
-      include.push('packages/**/src');
-      fs.writeJsonSync(tsConfigPath, {
-        ...tsConfig,
-        include,
-      });
+      tsConfig.include.push('packages/**/src');
     }
+    fs.writeJsonSync(rootTSConfigPath, tsConfig, { spaces: 2 });
 
     logger.debug('Updating your react-app-env.d.ts for modular-scripts');
 
@@ -117,17 +126,10 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
     logger.debug('Migrating your setupTests file to modular');
 
     const setupFileName = 'setupTests';
-    const setupFiles = ['js', 'ts'];
-    setupFiles.forEach((ext) => {
+    const setupFilesExts = ['js', 'ts'];
+    setupFilesExts.forEach((ext) => {
       const file = `${setupFileName}.${ext}`;
       if (fs.existsSync(path.join(newPackagePath, 'src', file))) {
-        // Migrate .js extension to modular/setupTests
-        if (ext === 'js') {
-          fs.moveSync(
-            path.join(cwd, 'modular', `${setupFileName}.ts`),
-            path.join(cwd, 'modular', file),
-          );
-        }
         fs.writeFileSync(
           path.join(cwd, 'modular', file),
           fs.readFileSync(path.join(newPackagePath, 'src', file), 'utf8'),
@@ -136,8 +138,23 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
       }
     });
 
+    logger.debug('Removing react-scripts from dependencies list');
+    // Remove modular scripts dependency
+    rootPackageJson.dependencies = Object.keys(
+      rootPackageJson.dependencies || {},
+    ).reduce((acc, dep) => {
+      if (dep === 'react-scripts') {
+        return { ...acc, [dep]: undefined };
+      }
+      return acc;
+    }, {});
+
+    fs.writeJsonSync(path.join(cwd, 'package.json'), rootPackageJson, {
+      spaces: 2,
+    });
+
     logger.log(
-      'Modular app package was set up successfully. Running yarn inside workspace',
+      'Modular repo was set up successfully. Running yarn to update dependencies',
     );
 
     execa.sync('yarnpkg', ['--silent'], { cwd });
