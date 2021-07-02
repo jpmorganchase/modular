@@ -7,10 +7,10 @@
 
 import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 
-import { promisify as prom } from 'util';
+import { promisify } from 'util';
 
 import * as rollup from 'rollup';
-import rimraf from 'rimraf';
+import _rimraf from 'rimraf';
 import * as path from 'path';
 import { extract } from 'tar';
 
@@ -33,10 +33,13 @@ import { getLogger } from './getLogger';
 import { getPackageEntryPoints } from './getPackageEntryPoints';
 import getPackageMetadata from './getPackageMetadata';
 import { makeTypings } from './makeTypings';
+import getLocation from '../utils/getLocation';
 
 const extensions = ['.ts', '.tsx', '.js', '.jsx'];
 const outputDirectory = 'dist';
 const packagesRoot = 'packages';
+
+const rimraf = promisify(_rimraf);
 
 function distinct<T>(arr: T[]): T[] {
   return [...new Set(arr)];
@@ -380,10 +383,11 @@ async function makeBundle(
 }
 
 export async function buildPackage(
-  packagePath: string,
+  target: string,
   preserveModules = false,
 ): Promise<void> {
   const modularRoot = getModularRoot();
+  const packagePath = await getLocation(target);
   const { publicPackageJsons } = getPackageMetadata();
 
   if (process.cwd() !== modularRoot) {
@@ -397,14 +401,19 @@ export async function buildPackage(
   await fse.mkdirp(outputDirectory);
 
   // delete any existing local build folders
-  await prom(rimraf)(
-    path.join(packagesRoot, packagePath, `${outputDirectory}-cjs`),
+  await rimraf(
+    path.join(modularRoot, packagesRoot, packagePath, `${outputDirectory}-cjs`),
   );
-  await prom(rimraf)(
-    path.join(packagesRoot, packagePath, `${outputDirectory}-es`),
+  await rimraf(
+    path.join(modularRoot, packagesRoot, packagePath, `${outputDirectory}-es`),
   );
-  await prom(rimraf)(
-    path.join(packagesRoot, packagePath, `${outputDirectory}-types`),
+  await rimraf(
+    path.join(
+      modularRoot,
+      packagesRoot,
+      packagePath,
+      `${outputDirectory}-types`,
+    ),
   );
 
   // Generate the typings for a package first so that we can do type checking and don't waste time bundling otherwise
@@ -476,13 +485,9 @@ export async function buildPackage(
   // we observed problems with publishing tgz files directly to npm.)
 
   // delete the local dist folders
-  await prom(rimraf)(
-    path.join(packagesRoot, packagePath, `${outputDirectory}-cjs`),
-  );
-  await prom(rimraf)(
-    path.join(packagesRoot, packagePath, `${outputDirectory}-es`),
-  );
-  await prom(rimraf)(
+  await rimraf(path.join(packagesRoot, packagePath, `${outputDirectory}-cjs`));
+  await rimraf(path.join(packagesRoot, packagePath, `${outputDirectory}-es`));
+  await rimraf(
     path.join(packagesRoot, packagePath, `${outputDirectory}-types`),
   );
 

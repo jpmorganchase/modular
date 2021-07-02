@@ -5,18 +5,12 @@ import { outputDirectory } from './config';
 import getModularRoot from './utils/getModularRoot';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import isModularType from './utils/isModularType';
-import { getWorkspaceInfo } from './utils/getWorkspaceInfo';
 import execSync from './utils/execSync';
+import getLocation from './utils/getLocation';
 
 async function build(target: string, preserveModules?: boolean): Promise<void> {
   const modularRoot = getModularRoot();
-  const workspace = await getWorkspaceInfo();
-  const record = workspace[target];
-  if (!record) {
-    throw new Error(`${target} does not exist in modular workspace`);
-  }
-
-  const targetPath = path.join(modularRoot, record.location);
+  const targetPath = await getLocation(target);
 
   if (isModularType(targetPath, 'app')) {
     const buildScript = require.resolve(
