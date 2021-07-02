@@ -1,4 +1,5 @@
 import { IncludeDefinition as TSConfig } from '@schemastore/tsconfig';
+import { Dependency } from '@schemastore/package';
 import execa from 'execa';
 import stripAnsi from 'strip-ansi';
 import * as fs from 'fs-extra';
@@ -24,8 +25,8 @@ function cleanGit(cwd: string): boolean {
 }
 
 function resetChanges(): void {
-  execa.sync('git', ['clean', '-fd']);
-  throw new Error('Failed to perform action cleanly. Reverting git changes...');
+  execa.sync('git', ['stash', '-u']);
+  throw new Error('Failed to perform action cleanly. Stashing git changes...');
 }
 
 process.on('SIGINT', () => {
@@ -62,7 +63,7 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
     // Create a modular app package folder
     const packageTypePath = path.join(__dirname, '../types', 'app');
     const newPackagePath = path.join(cwd, 'packages', packageName);
-    fs.mkdirSync(newPackagePath);
+    fs.mkdirpSync(newPackagePath);
 
     const newPackageJson = fs.readJsonSync(
       path.join(packageTypePath, 'packagejson'),
@@ -140,11 +141,11 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
 
     logger.debug('Removing react-scripts from dependencies list');
     // Remove modular scripts dependency
-    rootPackageJson.dependencies = Object.keys(
-      rootPackageJson.dependencies || {},
-    ).reduce((acc, dep) => {
-      if (dep === 'react-scripts') {
-        return { ...acc, [dep]: undefined };
+
+    const rootDeps: Dependency = rootPackageJson.dependencies || {};
+    rootPackageJson.dependencies = Object.keys(rootDeps).reduce((acc, dep) => {
+      if (dep !== 'react-scripts') {
+        return { ...acc, [dep]: rootDeps[dep] };
       }
       return acc;
     }, {});
