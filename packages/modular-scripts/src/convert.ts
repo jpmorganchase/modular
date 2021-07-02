@@ -28,7 +28,7 @@ function resetChanges(): void {
   throw new Error('Failed to perform action cleanly. Reverting git changes...');
 }
 
-process.on('SIGINT', (err) => {
+process.on('SIGINT', () => {
   resetChanges();
 });
 
@@ -44,9 +44,11 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
       !isValidModularRootPackageJson(cwd) ||
       !fs.existsSync(path.join(cwd, 'packages'))
     ) {
-      throw new Error(
-        "You don't have a modular repo initialized. Run `yarn modular init -y` for a quick set up.",
+      const { initModularFolder } = await import('./init');
+      logger.debug(
+        "You don't have a modular repo initialized. Setting it up for you now.",
       );
+      await initModularFolder(cwd, true);
     }
 
     const rootPackageJson = (await fs.readJson(

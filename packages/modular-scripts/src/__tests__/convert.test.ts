@@ -2,10 +2,10 @@ import { IncludeDefinition as TSConfig } from '@schemastore/tsconfig';
 import * as path from 'path';
 import * as tmp from 'tmp';
 import * as fs from 'fs-extra';
+
 import { ModularPackageJson } from '../utils/isModularType';
-import { initModularFolder } from '../init';
-import { convert } from '../convert';
 import * as getModularRoot from '../utils/getModularRoot';
+import { convert } from '../convert';
 
 jest.mock('../utils/getModularRoot');
 
@@ -41,7 +41,6 @@ describe('Converting a react app to modular app', () => {
       path.join(tmpFolderPath, 'src', 'setupTests.js'),
       new Buffer("require('@testing-library/jest-dom/extend-expect')"),
     );
-    await initModularFolder(tmpFolderPath, true);
     await convert(tmpFolderPath);
   });
 

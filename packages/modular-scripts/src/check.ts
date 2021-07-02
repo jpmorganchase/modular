@@ -1,6 +1,10 @@
 import * as path from 'path';
 import { getWorkspaceInfo, WorkSpaceRecord } from './utils/getWorkspaceInfo';
-import { getModularType, isValidModularType } from './utils/isModularType';
+import {
+  getModularType,
+  isValidModularType,
+  isValidModularRootPackageJson,
+} from './utils/isModularType';
 import * as logger from './utils/logger';
 import getModularRoot from './utils/getModularRoot';
 
@@ -12,6 +16,11 @@ export async function check(): Promise<void> {
   const workspace = await getWorkspaceInfo();
   const modularRoot = getModularRoot();
 
+  if (!isValidModularRootPackageJson(modularRoot)) {
+    throw new Error(
+      'Your root package.json file has a missing modular type, workspaces, or is not marked private',
+    );
+  }
   for (const [packageName, _packageInfo] of Object.entries(workspace)) {
     const packageInfo = _packageInfo as WorkSpaceRecord;
 
