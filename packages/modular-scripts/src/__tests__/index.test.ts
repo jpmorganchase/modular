@@ -233,7 +233,7 @@ describe('modular-scripts', () => {
 
   it('can execute tests', async () => {
     const output = await modular(
-      'test sample-app sample-package sample-view sample-nested-package --watchAll false',
+      'test sample-package sample-view sample-nested-package --watchAll false',
       {
         all: true,
         reject: false,
@@ -251,9 +251,6 @@ describe('modular-scripts', () => {
     // eslint-disable-next-line no-control-regex
     const cleanedOutput = output.all?.replace(/|\[\d+./gm, '');
 
-    expect(cleanedOutput).toContain(
-      'PASS packages/sample-app/src/__tests__/App.test.tsx',
-    );
     expect(cleanedOutput).toContain(
       'PASS packages/sample-view/src/__tests__/index.test.tsx',
     );
