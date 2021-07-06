@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { getWorkspaceInfo, WorkSpaceRecord } from './utils/getWorkspaceInfo';
+import getWorkspaceInfo, { WorkSpaceRecord } from './utils/getWorkspaceInfo';
 import {
   getModularType,
   isValidModularType,
