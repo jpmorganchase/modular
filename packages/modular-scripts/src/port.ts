@@ -1,23 +1,24 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import execa from 'execa';
+import { Dependency } from '@schemastore/package';
 
 import * as logger from './utils/logger';
 import getModularRoot from './utils/getModularRoot';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import { ModularPackageJson } from './utils/isModularType';
-import { cleanGit, resetChanges } from './utils/gitActions';
+import { cleanGit, stashChanges } from './utils/gitActions';
 import { check } from './check';
 
 process.on('SIGINT', () => {
-  resetChanges();
+  stashChanges();
 });
 
 export async function port(relativePath: string): Promise<void> {
   const modularRoot = getModularRoot();
   if (!cleanGit(modularRoot)) {
     throw new Error(
-      'You have unsaved changes. Please save or stash them before we attempt to convert this react app to modular app.',
+      'You have unsaved changes. Please save or stash them before we attempt to port this react app to your modular project.',
     );
   }
 
@@ -36,7 +37,7 @@ export async function port(relativePath: string): Promise<void> {
     // Create a modular app package to funnel targeted app into
     const packageTypePath = path.join(__dirname, '../types', 'app');
     const newPackagePath = path.join(modularRoot, 'packages', targetedAppName);
-    fs.mkdirSync(newPackagePath);
+    fs.mkdirpSync(newPackagePath);
 
     // Copy the targeted folders to the modular app
     const srcFolders = ['src', 'public'];
@@ -66,6 +67,14 @@ export async function port(relativePath: string): Promise<void> {
       ),
     );
 
+    fs.writeJSONSync(
+      path.join(newPackagePath, 'tsconfig.json'),
+      {
+        extends: path.relative(newPackagePath, modularRoot) + '/tsconfig.json',
+      },
+      { spaces: 2 },
+    );
+
     // Staging ported package.json
     const { name, version, browserslist } = targetedAppPackageJson;
 
@@ -85,15 +94,32 @@ export async function port(relativePath: string): Promise<void> {
     )) as ModularPackageJson;
 
     /* ****** NOTE ******
-     * This does not set up nohoist in workspaces for dependencies
-     * that have mismatched versions. If the targeted app has a
-     * dependency that is versioned differently than modular root
-     * dependency, you will need to resolve it manually.
+     * This doen't set up 'nohoist' or 'exceptions' in workspaces
+     * for mismatched versions. If the targeted app has a
+     * dependency that is versioned differently than the modular root
+     * dependency, the package & version in modular root will take precedence.
      *
-     * Same deal if the targeted app has a dev dependency that is marked
-     * as a dependency in modular root. It will be ported over
-     * into the modular app as a dev dependency and you will have to
-     * resolve any dependency issues yourself.
+     * If the targeted app has a devDependency that is marked
+     * as a dependency in modular root, it will not be ported over
+     * into the modular app as a devDependency but instead be kept as a
+     * dependency in modular root.
+     *
+     * During this resolution, if modular root has the package in its
+     * dependencies, the version in modular root will take precedence.
+     *
+     *
+     * This is not related to yarn workspaces' mismatchedWorkspaceDependencies
+     * property in workspace info.
+     * (https://github.com/yarnpkg/yarn/issues/6898#issuecomment-478188695)
+     *
+     * MismatchedWorkspaceDependencies are when you have a workspace depending on
+     * another workspace, but on a version not satisfied by the one in the repo.
+     * (i.e package-a@1.0.1 depends on package-b@^1.1.0 but the package-b that you
+     * have locally is at version 2.0.0.
+     *
+     * It's important to know, because at that point package-b won't be symlinked
+     * to package-a at all. package-a gets its own copy of package-b in its node_modules
+     *
      */
 
     const { dependencies: rootDeps = {}, devDependencies: rootDevDeps = {} } =
@@ -104,33 +130,37 @@ export async function port(relativePath: string): Promise<void> {
       devDependencies: targetDevDeps = {},
     } = targetedAppPackageJson;
 
-    const dependencies = Object.keys(targetDeps || {}).reduce((acc, dep) => {
-      if (!rootDeps[dep]) {
-        return { ...acc, [dep]: targetDeps[dep] };
-      }
-      return acc;
-    }, {});
+    // if root deps does not have it, add it to target deps
+    const workspaceDeps: Dependency = Object.keys(targetDeps || {}).reduce(
+      (acc, dep) => {
+        if (!rootDeps[dep] && dep !== 'react-scripts') {
+          return { ...acc, [dep]: targetDeps[dep] };
+        }
+        return acc;
+      },
+      {},
+    );
 
-    const devDependencies = Object.keys(targetDevDeps || {}).reduce(
+    // if root devDeps does not have this, add it to target devDeps
+    const workspaceDevDeps = Object.keys(targetDevDeps || {}).reduce(
       (acc, devDep) => {
-        if (!acc[devDep]) {
+        if (!rootDevDeps[devDep]) {
           return { ...acc, [devDep]: targetDevDeps[devDep] };
         }
         return acc;
       },
-      { ...rootDevDeps },
+      {},
     );
 
-    // Move additional dependencies to new app package.json
-    fs.writeFileSync(
+    // update dependencies to new app package.json
+    fs.writeJsonSync(
       path.join(newPackagePath, 'package.json'),
-      JSON.stringify({ ...portedPackageJson, dependencies }, null, 2),
-    );
-
-    // Add target app dev dependencies to root
-    fs.writeFileSync(
-      path.join(modularRoot, 'package.json'),
-      JSON.stringify({ ...modularRootPackageJson, devDependencies }, null, 2),
+      {
+        ...portedPackageJson,
+        dependencies: workspaceDeps,
+        devDependencies: workspaceDevDeps,
+      },
+      { spaces: 2 },
     );
 
     logger.log('Installing dependencies...');
@@ -141,7 +171,7 @@ export async function port(relativePath: string): Promise<void> {
     await check();
   } catch (err) {
     logger.error(err);
-    resetChanges();
+    stashChanges();
   }
 }
 

@@ -13,7 +13,7 @@ export function cleanGit(cwd: string): boolean {
   return trackedChanged.length === 0;
 }
 
-export function resetChanges(): void {
-  execa.sync('git', ['clean', '-fd']);
-  throw new Error('Failed to perform action cleanly. Reverting git changes...');
+export function stashChanges(): void {
+  execa.sync('git', ['stash', '-u']);
+  throw new Error('Failed to perform action cleanly. Stashing git changes...');
 }

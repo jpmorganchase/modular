@@ -205,10 +205,12 @@ program
     );
   });
 
+// TODO: enhancement - should take a type option (app, view, package)
+// port are only available for apps right now
 program
   .command('port <relativePath>')
   .description(
-    'Ports the react app in specified directory into current modular root as a modular app',
+    'Ports the react app in specified directory over into the current modular project as a modular app',
   )
   .action(async (relativePath) => {
     const { port } = await import('./port');
