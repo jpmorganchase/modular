@@ -351,6 +351,15 @@ module.exports = function (webpackEnv) {
           // match the requirements. When no loader matches it will fall
           // back to the "file" loader at the end of the loader list.
           oneOf: [
+            // Required since esbuild loader will not pass svg the same as babel-loader
+            // was handling them
+            {
+              test: /\.svg$/,
+              use: [
+                require.resolve('@svgr/webpack'),
+                require.resolve('url-loader'),
+              ],
+            },
             // TODO: Merge this config once `image/avif` is in the mime-db
             // https://github.com/jshttp/mime-db
             {
@@ -403,12 +412,6 @@ module.exports = function (webpackEnv) {
                 loader: 'tsx',
                 target: 'es2015',
               },
-            },
-            // Required since esbuild loader will not pass svg the same as babel-loader
-            // was handling them
-            {
-              test: /\.svg$/,
-              use: [require.resolve('@svgr/webpack')],
             },
             // "postcss" loader applies autoprefixer to our CSS.
             // "css" loader resolves paths in CSS and adds assets as dependencies.
