@@ -29,13 +29,14 @@ describe('Creating a new modular folder', () => {
     expect(packageJson).toMatchSnapshot();
   });
 
-  it('should copy over the modular root template files if they are not already present', async () => {
-    const rootFiles = await fs.readdir(
-      path.join(__dirname, '..', '..', 'types', 'root'),
-    );
-    rootFiles.forEach((name) => {
-      expect(fs.existsSync(path.join(folder, name))).toBe(true);
-    });
+  it('should create a modular folder', async () => {
+    expect(fs.existsSync(path.join(folder, 'modular'))).toEqual(true);
+    expect(await fs.readdir(path.join(folder, 'modular'))).toEqual([]);
+  });
+
+  it('should create a packages folder', async () => {
+    expect(fs.existsSync(path.join(folder, 'packages'))).toEqual(true);
+    expect(await fs.readdir(path.join(folder, 'packages'))).toEqual([]);
   });
 
   it('should have an empty yarn.lock', async () => {

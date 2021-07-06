@@ -44,14 +44,8 @@ export async function initModularFolder(
     cwd: folder,
   });
 
-  // If this project already has modular root folders/files, don't overwrite
-  // Otherwise, set up the initialized repo with the standard modular root folders/files
-  const rootTemplatePath = path.join(__dirname, '../types', 'root');
-  fs.readdirSync(rootTemplatePath).forEach((dir) => {
-    if (!fs.existsSync(path.join(folder, dir))) {
-      fs.copySync(path.join(rootTemplatePath, dir), path.join(folder, dir));
-    }
-  });
+  await fs.mkdirp(path.join(folder, 'modular'));
+  await fs.mkdirp(path.join(folder, 'packages'));
 
   const yarnArgs = ['--silent'];
   if (preferOffline) {
