@@ -96,7 +96,6 @@ async function addPackage(
   if (preferOffline) {
     yarnArgs.push('--prefer-offline');
   }
-
   execSync('yarnpkg', yarnArgs, { cwd: modularRoot });
 }
 
