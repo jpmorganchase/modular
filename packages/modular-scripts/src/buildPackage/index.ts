@@ -47,13 +47,18 @@ export async function buildPackage(
 
   // delete any existing local build folders
   await prom(rimraf)(
-    path.join(packagesRoot, packagePath, `${outputDirectory}-cjs`),
+    path.join(modularRoot, packagesRoot, packagePath, `${outputDirectory}-cjs`),
   );
   await prom(rimraf)(
-    path.join(packagesRoot, packagePath, `${outputDirectory}-es`),
+    path.join(modularRoot, packagesRoot, packagePath, `${outputDirectory}-es`),
   );
   await prom(rimraf)(
-    path.join(packagesRoot, packagePath, `${outputDirectory}-types`),
+    path.join(
+      modularRoot,
+      packagesRoot,
+      packagePath,
+      `${outputDirectory}-types`,
+    ),
   );
 
   // Generate the typings for a package first so that we can do type checking and don't waste time bundling otherwise
@@ -69,7 +74,7 @@ export async function buildPackage(
   }
 
   const originalPkgJsonContent = (await fse.readJson(
-    path.join(packagesRoot, packagePath, 'package.json'),
+    path.join(modularRoot, packagesRoot, packagePath, 'package.json'),
   )) as PackageJson;
 
   const packageName = originalPkgJsonContent.name as string;
@@ -77,7 +82,7 @@ export async function buildPackage(
   // switch in the special package.json
   try {
     await fse.writeJson(
-      path.join(packagesRoot, packagePath, 'package.json'),
+      path.join(modularRoot, packagesRoot, packagePath, 'package.json'),
       publicPackageJsons[packageName],
       { spaces: 2 },
     );
@@ -96,7 +101,7 @@ export async function buildPackage(
         ),
       ],
       {
-        cwd: packagesRoot + '/' + packagePath,
+        cwd: path.join(modularRoot, packagesRoot, packagePath),
         stdin: process.stdin,
         stderr: process.stderr,
         stdout: process.stdout,
@@ -105,7 +110,7 @@ export async function buildPackage(
   } finally {
     // now revert package.json
     await fse.writeJson(
-      path.join(packagesRoot, packagePath, 'package.json'),
+      path.join(modularRoot, packagesRoot, packagePath, 'package.json'),
       originalPkgJsonContent,
       { spaces: 2 },
     );
@@ -125,13 +130,18 @@ export async function buildPackage(
 
   // delete the local dist folders
   await prom(rimraf)(
-    path.join(packagesRoot, packagePath, `${outputDirectory}-cjs`),
+    path.join(modularRoot, packagesRoot, packagePath, `${outputDirectory}-cjs`),
   );
   await prom(rimraf)(
-    path.join(packagesRoot, packagePath, `${outputDirectory}-es`),
+    path.join(modularRoot, packagesRoot, packagePath, `${outputDirectory}-es`),
   );
   await prom(rimraf)(
-    path.join(packagesRoot, packagePath, `${outputDirectory}-types`),
+    path.join(
+      modularRoot,
+      packagesRoot,
+      packagePath,
+      `${outputDirectory}-types`,
+    ),
   );
 
   // then delete the tgz

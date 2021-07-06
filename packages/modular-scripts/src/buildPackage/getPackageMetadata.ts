@@ -17,6 +17,8 @@ function distinct<T>(arr: T[]): T[] {
 }
 
 function getPackageMetadata() {
+  const modularRoot = getModularRoot();
+
   // dependencies defined at the root
   const rootPackageJsonDependencies =
     (fse.readJSONSync('package.json') as PackageJson).dependencies || {};
@@ -34,12 +36,13 @@ function getPackageMetadata() {
 
   // let's populate the above three
   for (const [name, { location }] of Object.entries(getAllWorkspaces())) {
-    const pathToPackageJson = path.join(location, 'package.json');
+    const pathToPackageJson = path.join(modularRoot, location, 'package.json');
     const packageJson = fse.readJsonSync(pathToPackageJson) as PackageJson;
 
     packageJsons[name] = packageJson;
     packageJsonsByPackagePath[
-      location.replace(new RegExp('^packages\\/'), '')
+      // make it relative to the modular packages directory
+      path.relative('packages', location)
     ] = packageJson;
     packageNames.push(name);
   }
@@ -59,7 +62,7 @@ function getPackageMetadata() {
   // Extract configuration from config file and parse JSON,
   // after removing comments. Just a fancier JSON.parse
   const result = ts.parseConfigFileTextToJson(
-    path.join(getModularRoot(), typescriptConfigFilename),
+    path.join(modularRoot, typescriptConfigFilename),
     fse.readFileSync(typescriptConfigFilename, 'utf8').toString(),
   );
 
@@ -96,7 +99,6 @@ function getPackageMetadata() {
   });
 
   typescriptConfig.compilerOptions = typescriptConfig.compilerOptions || {};
-
   Object.assign(typescriptConfig.compilerOptions, {
     declarationDir: 'dist',
     noEmit: false,
