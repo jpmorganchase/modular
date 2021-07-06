@@ -1,6 +1,12 @@
+import * as path from 'path';
 import { getWorkspaceInfo, WorkSpaceRecord } from './utils/getWorkspaceInfo';
-import { getModularType, isValidModularType } from './utils/isModularType';
+import {
+  getModularType,
+  isValidModularType,
+  isValidModularRootPackageJson,
+} from './utils/isModularType';
 import * as logger from './utils/logger';
+import getModularRoot from './utils/getModularRoot';
 
 export async function check(): Promise<void> {
   // ensure that workspaces are setup correctly with yarn§
@@ -8,7 +14,13 @@ export async function check(): Promise<void> {
   // in this case there's no use checking the workspaces yet because we're setting
   // up a new folder
   const workspace = await getWorkspaceInfo();
+  const modularRoot = getModularRoot();
 
+  if (!isValidModularRootPackageJson(modularRoot)) {
+    throw new Error(
+      'Your root package.json file has a missing modular type, workspaces, or is not marked private',
+    );
+  }
   for (const [packageName, _packageInfo] of Object.entries(workspace)) {
     const packageInfo = _packageInfo as WorkSpaceRecord;
 
@@ -26,7 +38,7 @@ export async function check(): Promise<void> {
       );
     }
 
-    if (!isValidModularType(packageInfo.location)) {
+    if (!isValidModularType(path.join(modularRoot, packageInfo.location))) {
       throw new Error(
         `${packageName} at ${
           packageInfo.location
