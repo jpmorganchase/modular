@@ -5,10 +5,7 @@ import chalk from 'chalk';
 import commander from 'commander';
 import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 
-import buildPackages from './build';
-import addPackage from './addPackage';
-import start from './start';
-import test, { TestOptions } from './test';
+import type { TestOptions } from './test';
 
 import startupCheck from './utils/startupCheck';
 import actionPreflightCheck from './utils/actionPreflightCheck';
@@ -45,7 +42,7 @@ program
     true,
   )
   .action(
-    (
+    async (
       packageName: string,
       addOptions: {
         unstableType?: string;
@@ -53,6 +50,7 @@ program
         preferOffline?: boolean;
       },
     ) => {
+      const { default: addPackage } = await import('./addPackage');
       return addPackage(
         packageName,
         addOptions.unstableType,
@@ -75,6 +73,7 @@ program
         preserveModules?: boolean;
       },
     ) => {
+      const { default: buildPackages } = await import('./build');
       logger.log('building packages at:', packagePaths.join(', '));
 
       for (let i = 0; i < packagePaths.length; i++) {
@@ -139,9 +138,11 @@ program
   .option('--no-cache', testOptions.cache.description)
   .allowUnknownOption()
   .description('Run tests over the codebase')
-  .action((regexes: string[], options: CLITestOptions) => {
+  .action(async (regexes: string[], options: CLITestOptions) => {
+    const { default: test } = await import('./test');
+
+    // proxy simplified options to testOptions
     const { U, ...testOptions } = options;
-    // proxy simplified options to testOptions;
     testOptions.updateSnapshot = !!(options.updateSnapshot || U);
 
     return test(testOptions, regexes);
@@ -152,7 +153,8 @@ program
   .description(
     `Start a dev-server for an app. Only available for modular 'app' types.`,
   )
-  .action((packageName: string) => {
+  .action(async (packageName: string) => {
+    const { default: start } = await import('./start');
     return start(packageName);
   });
 
@@ -161,7 +163,9 @@ program
   .description('Retrieve the information for the current workspace info')
   .action(
     actionPreflightCheck(async () => {
-      const { getWorkspaceInfo } = await import('./utils/getWorkspaceInfo');
+      const { default: getWorkspaceInfo } = await import(
+        './utils/getWorkspaceInfo'
+      );
       const workspace = await getWorkspaceInfo();
       logger.log(JSON.stringify(workspace, null, 2));
     }),
@@ -191,6 +195,17 @@ program
     const { check } = await import('./check');
     await check();
     logger.log(chalk.green('Success!'));
+  });
+
+program
+  .command('convert')
+  .description('Converts react app in current directory into a modular package')
+  .action(async () => {
+    const { convert } = await import('./convert');
+    await convert();
+    logger.log(
+      chalk.green('Successfully converted your app into a modular app!'),
+    );
   });
 
 void startupCheck()

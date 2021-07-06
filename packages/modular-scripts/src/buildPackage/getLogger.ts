@@ -1,10 +1,11 @@
 import * as logger from '../utils/logger';
 
-type Console = {
+export type Console = {
   log: typeof logger.log;
   error: typeof logger.error;
 };
-const consoles: { [name: string]: Console } = {};
+
+export const consoles: { [name: string]: Console } = {};
 
 export function getLogger(directoryName: string): Console {
   if (!consoles[directoryName]) {

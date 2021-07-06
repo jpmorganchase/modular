@@ -1,7 +1,9 @@
+import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import execa from 'execa';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import chalk from 'chalk';
+import * as semver from 'semver';
 
 function execSync(
   file: string,
@@ -34,6 +36,17 @@ export default function createModularApp(argv: {
   repo?: boolean;
   preferOffline?: boolean;
 }): Promise<void> {
+  const { engines } = fs.readJSONSync(
+    require.resolve('create-modular-react-app/package.json'),
+  ) as PackageJson;
+
+  const nodeEngines = engines?.node as string;
+  if (!semver.satisfies(process.version, nodeEngines)) {
+    throw new Error(
+      `${process.version} does not satisfy modular engine constraint ${nodeEngines}`,
+    );
+  }
+
   const preferOfflineArg = argv.preferOffline ? ['--prefer-offline'] : [];
   if (isYarnInstalled() === false) {
     console.error(

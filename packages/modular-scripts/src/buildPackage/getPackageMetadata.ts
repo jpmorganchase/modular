@@ -1,43 +1,49 @@
 import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import { JSONSchemaForTheTypeScriptCompilerSConfigurationFile as TSConfig } from '@schemastore/tsconfig';
-
-import * as fse from 'fs-extra';
 import * as path from 'path';
 import * as ts from 'typescript';
+import * as fse from 'fs-extra';
 
-import { getAllWorkspaces } from '../utils/getAllWorkspaces';
 import getModularRoot from '../utils/getModularRoot';
-import memoize from '../utils/memoize';
+import { getAllWorkspaces } from '../utils/getAllWorkspaces';
 import { reportTSDiagnostics } from './reportTSDiagnostics';
 
-const outputDirectory = 'dist';
+import memoize from '../utils/memoize';
+
 const typescriptConfigFilename = 'tsconfig.json';
 
+function distinct<T>(arr: T[]): T[] {
+  return [...new Set(arr)];
+}
+
 function getPackageMetadata() {
+  const modularRoot = getModularRoot();
+
   // dependencies defined at the root
   const rootPackageJsonDependencies =
-    (
-      fse.readJSONSync(
-        path.join(getModularRoot(), 'package.json'),
-      ) as PackageJson
-    ).dependencies || {};
+    (fse.readJSONSync('package.json') as PackageJson).dependencies || {};
 
   // a map of all package.json contents, indexed by package name
   const packageJsons: { [key: string]: PackageJson } = {};
   // a map of all package.json contents, indexed by directory name
+
   const packageJsonsByPackagePath: {
     [key: string]: PackageJson;
   } = {};
+
   // an array of all the package names
   const packageNames: string[] = [];
 
   // let's populate the above three
   for (const [name, { location }] of Object.entries(getAllWorkspaces())) {
-    const pathToPackageJson = path.join(location, 'package.json');
+    const pathToPackageJson = path.join(modularRoot, location, 'package.json');
     const packageJson = fse.readJsonSync(pathToPackageJson) as PackageJson;
 
     packageJsons[name] = packageJson;
-    packageJsonsByPackagePath[location] = packageJson;
+    packageJsonsByPackagePath[
+      // make it relative to the modular packages directory
+      path.relative('packages', location)
+    ] = packageJson;
     packageNames.push(name);
   }
 
@@ -51,17 +57,12 @@ function getPackageMetadata() {
     [name: string]: PackageJson;
   } = {};
 
-  function distinct<T>(arr: T[]): T[] {
-    return [...new Set(arr)];
-  }
-
   const typescriptConfig: TSConfig = {};
   // validate tsconfig
-
   // Extract configuration from config file and parse JSON,
   // after removing comments. Just a fancier JSON.parse
   const result = ts.parseConfigFileTextToJson(
-    path.join(getModularRoot(), typescriptConfigFilename),
+    path.join(modularRoot, typescriptConfigFilename),
     fse.readFileSync(typescriptConfigFilename, 'utf8').toString(),
   );
 
@@ -98,9 +99,8 @@ function getPackageMetadata() {
   });
 
   typescriptConfig.compilerOptions = typescriptConfig.compilerOptions || {};
-
   Object.assign(typescriptConfig.compilerOptions, {
-    declarationDir: outputDirectory,
+    declarationDir: 'dist',
     noEmit: false,
     declaration: true,
     emitDeclarationOnly: true,
@@ -109,11 +109,11 @@ function getPackageMetadata() {
 
   return {
     packageNames,
-    packageJsons,
-    publicPackageJsons,
     rootPackageJsonDependencies,
-    packageJsonsByPackagePath,
+    packageJsons,
     typescriptConfig,
+    packageJsonsByPackagePath,
+    publicPackageJsons,
   };
 }
 
