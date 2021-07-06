@@ -5,7 +5,9 @@ import getModularRoot from './getModularRoot';
 import getAllFiles from './getAllFiles';
 
 export default function stageView(targetedView: string): string {
-  const tempDir = path.join(getModularRoot(), 'node_modules', '.modular');
+  const modularRoot = getModularRoot();
+
+  const tempDir = path.join(modularRoot, 'node_modules', '.modular');
   if (!fs.existsSync(tempDir)) {
     fs.mkdirSync(tempDir);
   }
@@ -35,7 +37,6 @@ export default function stageView(targetedView: string): string {
   }
 
   if (!fs.existsSync(path.join(stagedViewAppPath, 'tsconfig.json'))) {
-    const modularRoot = getModularRoot();
     const indexTemplate = `import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
