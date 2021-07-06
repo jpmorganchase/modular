@@ -163,7 +163,9 @@ program
   .description('Retrieve the information for the current workspace info')
   .action(
     actionPreflightCheck(async () => {
-      const { getWorkspaceInfo } = await import('./utils/getWorkspaceInfo');
+      const { default: getWorkspaceInfo } = await import(
+        './utils/getWorkspaceInfo'
+      );
       const workspace = await getWorkspaceInfo();
       logger.log(JSON.stringify(workspace, null, 2));
     }),

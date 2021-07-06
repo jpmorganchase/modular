@@ -4,6 +4,7 @@ import * as path from 'path';
 import { ModularType, ModularPackageJson } from './isModularType';
 import { getAllWorkspaces } from './getAllWorkspaces';
 import getModularRoot from './getModularRoot';
+import memoize from './memoize';
 
 export interface WorkSpaceRecord {
   location: string;
@@ -37,3 +38,5 @@ export async function getWorkspaceInfo(): Promise<WorkspaceInfo> {
 
   return res;
 }
+
+export default memoize(getWorkspaceInfo);
