@@ -119,15 +119,9 @@ export async function buildPackage(
   // we observed problems with publishing tgz files directly to npm.)
 
   // delete the local dist folders
-  await rimraf(
-    path.join(getModularRoot(), packagePath, `${outputDirectory}-cjs`),
-  );
-  await rimraf(
-    path.join(getModularRoot(), packagePath, `${outputDirectory}-es`),
-  );
-  await rimraf(
-    path.join(getModularRoot(), packagePath, `${outputDirectory}-types`),
-  );
+  await rimraf(path.join(modularRoot, packagePath, `${outputDirectory}-cjs`));
+  await rimraf(path.join(modularRoot, packagePath, `${outputDirectory}-es`));
+  await rimraf(path.join(modularRoot, packagePath, `${outputDirectory}-types`));
 
   // then delete the tgz
 

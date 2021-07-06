@@ -1,4 +1,4 @@
-import { getWorkspaceInfo } from './getWorkspaceInfo';
+import getWorkspaceInfo from './getWorkspaceInfo';
 
 export async function getRelativeLocation(name: string): Promise<string> {
   const workspaceInfo = await getWorkspaceInfo();
