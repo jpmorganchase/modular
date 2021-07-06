@@ -2,10 +2,13 @@ import { IncludeDefinition as TSConfig } from '@schemastore/tsconfig';
 import * as path from 'path';
 import * as tmp from 'tmp';
 import * as fs from 'fs-extra';
+
 import { ModularPackageJson } from '../utils/isModularType';
-import { initModularFolder } from '../init';
-import { convert } from '../convert';
 import * as getModularRoot from '../utils/getModularRoot';
+import { convert } from '../convert';
+
+// Because we install react-scripts for every test...
+jest.setTimeout(10 * 60 * 1000);
 
 jest.mock('../utils/getModularRoot');
 
@@ -16,8 +19,23 @@ const mockedModularRoot = getModularRoot.default as jest.MockedFunction<
 describe('Converting a react app to modular app', () => {
   let tmpFolder: tmp.DirResult;
   let tmpFolderPath: string;
-  const starterTempType = 'app-view';
+  const starterTempType = 'app';
   const tmpProjectName = 'test-modular-convert';
+  const rootPackageJson: ModularPackageJson = {
+    name: tmpProjectName,
+    browserslist: {
+      production: ['>0.2%', 'not dead', 'not op_mini all'],
+      development: [
+        'last 1 chrome version',
+        'last 1 firefox version',
+        'last 1 safari version',
+      ],
+    },
+    dependencies: {
+      'react-scripts': '4.0.3',
+    },
+  };
+
   beforeEach(async () => {
     tmpFolder = tmp.dirSync({ unsafeCleanup: true });
     tmpFolderPath = path.join(tmpFolder.name, tmpProjectName);
@@ -31,17 +49,15 @@ describe('Converting a react app to modular app', () => {
         { overwrite: true },
       );
     });
-    fs.writeFileSync(
+    fs.writeJSONSync(
       path.join(tmpFolderPath, 'package.json'),
-      JSON.stringify({
-        name: tmpProjectName,
-      }),
+      rootPackageJson,
+      { spaces: 2 },
     );
     fs.writeFileSync(
-      path.join(tmpFolderPath, 'src', 'setupTests.js'),
-      new Buffer("require('@testing-library/jest-dom/extend-expect')"),
+      path.join(tmpFolderPath, 'src', 'setupTests.ts'),
+      new Buffer("import '@testing-library/jest-dom/extend-expect';"),
     );
-    await initModularFolder(tmpFolderPath, true);
     await convert(tmpFolderPath);
   });
 
@@ -119,9 +135,9 @@ describe('Converting a react app to modular app', () => {
   it('should copy setupTests file to modular with correct extension', () => {
     expect(
       fs
-        .readFileSync(path.join(tmpFolderPath, 'modular', 'setupTests.js'))
+        .readFileSync(path.join(tmpFolderPath, 'modular', 'setupTests.ts'))
         .toString(),
-    ).toMatch("require('@testing-library/jest-dom/extend-expect')");
+    ).toMatch("import '@testing-library/jest-dom/extend-expect';");
     expect(
       fs.existsSync(
         path.join(
@@ -129,9 +145,26 @@ describe('Converting a react app to modular app', () => {
           'packages',
           tmpProjectName,
           'src',
-          'setupTests.js',
+          'setupTests.ts',
         ),
       ),
     ).toBe(false);
+  });
+  it('should remove react-scripts from the dependencies', () => {
+    const updatedPackageJson = fs.readJsonSync(
+      path.join(tmpFolderPath, 'package.json'),
+    ) as ModularPackageJson;
+    expect(Object.keys(updatedPackageJson.dependencies || {})).not.toContain(
+      'react-scripts',
+    );
+  });
+
+  it('should copy over root browserslist into app package.json', () => {
+    const newPackageJson = fs.readJsonSync(
+      path.join(tmpFolderPath, 'packages', tmpProjectName, 'package.json'),
+    ) as ModularPackageJson;
+    expect(newPackageJson.browserslist).toMatchObject(
+      rootPackageJson.browserslist as Record<string, string[]>,
+    );
   });
 });

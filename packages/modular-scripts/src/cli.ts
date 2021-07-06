@@ -4,12 +4,7 @@ import * as fs from 'fs-extra';
 import chalk from 'chalk';
 import commander from 'commander';
 import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
-
-import buildPackages from './build';
-import addPackage from './addPackage';
-import start from './start';
-import test, { TestOptions } from './test';
-import port from './port';
+import type { TestOptions } from './test';
 
 import startupCheck from './utils/startupCheck';
 import actionPreflightCheck from './utils/actionPreflightCheck';
@@ -46,7 +41,7 @@ program
     true,
   )
   .action(
-    (
+    async (
       packageName: string,
       addOptions: {
         unstableType?: string;
@@ -54,6 +49,7 @@ program
         preferOffline?: boolean;
       },
     ) => {
+      const { default: addPackage } = await import('./addPackage');
       return addPackage(
         packageName,
         addOptions.unstableType,
@@ -76,6 +72,7 @@ program
         preserveModules?: boolean;
       },
     ) => {
+      const { default: buildPackages } = await import('./build');
       logger.log('building packages at:', packagePaths.join(', '));
 
       for (let i = 0; i < packagePaths.length; i++) {
@@ -140,9 +137,11 @@ program
   .option('--no-cache', testOptions.cache.description)
   .allowUnknownOption()
   .description('Run tests over the codebase')
-  .action((regexes: string[], options: CLITestOptions) => {
+  .action(async (regexes: string[], options: CLITestOptions) => {
+    const { default: test } = await import('./test');
+
+    // proxy simplified options to testOptions
     const { U, ...testOptions } = options;
-    // proxy simplified options to testOptions;
     testOptions.updateSnapshot = !!(options.updateSnapshot || U);
 
     return test(testOptions, regexes);
@@ -153,7 +152,8 @@ program
   .description(
     `Start a dev-server for an app. Only available for modular 'app' types.`,
   )
-  .action((packageName: string) => {
+  .action(async (packageName: string) => {
+    const { default: start } = await import('./start');
     return start(packageName);
   });
 
@@ -211,6 +211,7 @@ program
     'Ports the react app in specified directory into current modular root as a modular app',
   )
   .action(async (relativePath) => {
+    const { port } = await import('./port');
     await port(relativePath);
     logger.log(chalk.green('Successfully ported your app over!'));
   });

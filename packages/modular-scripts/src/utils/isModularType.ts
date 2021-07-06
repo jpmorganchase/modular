@@ -13,7 +13,7 @@ export type PackageType = 'app' | 'view' | 'package';
 export type ModularType = PackageType | 'root';
 
 export type ModularPackageJson = PackageJson & {
-  browserslist?: Record<string, []>;
+  browserslist?: Record<string, string[]>;
   modular?: {
     type: ModularType;
   };
