@@ -115,6 +115,28 @@ describe('when working with an app', () => {
     `);
   });
 
+  it('can execute tests', async () => {
+    const output = await modular('test sample-app --watchAll false', {
+      all: true,
+      reject: false,
+      env: {
+        CI: 'true',
+      },
+    });
+
+    // TODO: Passing CI=true *should* remove all the coloring stuff,
+    // it's weird that it doesn't. To workaround it, I've manually
+    // removed those tokens from the string for the snapshot test.
+    // Open to suggestions/fixes.
+
+    // eslint-disable-next-line no-control-regex
+    const cleanedOutput = output.all?.replace(/|\[\d+./gm, '');
+
+    expect(cleanedOutput).toContain(
+      'PASS packages/sample-app/src/__tests__/App.test.tsx',
+    );
+  });
+
   skipIfCI('can start an app', async () => {
     // Ok, so. Sunil's decided to get the new M1 MacBook Air. Some software doesn't run on it
     // well yet. Particularly the puppeteer npm package failes to install and run
