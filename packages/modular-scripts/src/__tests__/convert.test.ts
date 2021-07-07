@@ -56,7 +56,7 @@ describe('Converting a react app to modular app', () => {
     );
     fs.writeFileSync(
       path.join(tmpFolderPath, 'src', 'setupTests.ts'),
-      new Buffer("import '@testing-library/jest-dom/extend-expect';"),
+      Buffer.from("import '@testing-library/jest-dom/extend-expect';"),
     );
     await convert(tmpFolderPath);
   });
