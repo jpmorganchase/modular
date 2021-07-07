@@ -15,9 +15,13 @@ without all of the interactive processes.
 
 `--prefer-offline`: Uses offline yarn cache when possible
 
-## `modular add <path/to/package>`
+## `modular add <packagePath>`
 
-Adds a new package by creating a new workspace at `packages/path/to/package`.
+Adds a new package by creating a new workspace at `packages/<packagePath>`
+
+(e.g. `modular add my-app` would create a package in `packages/my-app` and
+`modular add libs/lib-a` would create a package in `packages/libs/lib-a`)
+
 Packages can currently be one of 3 types:
 
 - A standalone application. This corresponds to a single `create-react-app`
@@ -37,7 +41,7 @@ Packages can currently be one of 3 types:
 
 `--prefer-offline`: Uses offline yarn cache when possible
 
-## `modular start <path/to/package>`
+## `modular start <packageName>`
 
 Runs
 [`react-scripts start`](https://create-react-app.dev/docs/getting-started#npm-start-or-yarn-start)
@@ -57,10 +61,21 @@ Runs [`jest`](https://jestjs.io/) against the entire `modular` project.
 For more documentation on the test command and options see the
 [documentation](./test.md)
 
-## `modular build <path/to/package>`
+## `modular build <packageName>`
 
-Runs [`react-scripts build`](https://create-react-app.dev/docs/production-build)
-against the indicated package.
+Searches by the name of the package indicated in the `package.json` file in the
+workspace and runs
+[`react-scripts build`](https://create-react-app.dev/docs/production-build)
+against that package.
+
+The output directory for built artifacts is `dist/`, which has a flat structure
+of modular package names. Each built app/view/package is added to the `dist/` as
+its own folder.
+
+Package names are transformed to `Param case` (i.e. this-is-param-case)
+
+(e.g. `modular build @scoped/package-a` will output built artifacts into
+`dist/scoped-package-a`)
 
 ## `modular workspace`
 
@@ -71,3 +86,25 @@ modular metadata about package type and public/private status.
 
 Checks the modular root repo has yarn workspaces and modular packages are set up
 properly and checks your package tree for issues with your dependencies.
+
+## `modular convert`
+
+Converts the react app in the current directory into a modular project with a
+modular app workspace.
+
+This action is `atomic` so if an error occurs while converting, it will stash
+any changes made and bring the repo back to the previous state prior to the
+attempt.
+
+- Sets up the current directory as a modular project with a `packages/`
+  workspaces
+
+- Moves the current react app source content (`src/` and `public/`) into a
+  modular app within `packages/` workspace
+
+- Relocates setupTests file from `src/` to `modular/`
+
+- Updates the react-app-env.d.ts file within the modular app to reference
+  modular-scripts for types
+
+- Updates tsconfig.json to include the modular packages workspace
