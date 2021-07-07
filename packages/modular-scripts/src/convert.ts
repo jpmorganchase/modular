@@ -123,13 +123,20 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
 
     logger.debug('Updating your react-app-env.d.ts for modular-scripts');
 
-    fs.writeFileSync(
-      path.join(newPackagePath, 'src', 'react-app-env.d.ts'),
-      fs.readFileSync(
-        path.join(packageTypePath, 'src', 'react-app-env.d.ts'),
-        'utf8',
-      ),
-    );
+    if (fs.existsSync(path.join(newPackagePath, 'src', 'react-app-env.d.ts'))) {
+      fs.writeFileSync(
+        path.join(newPackagePath, 'src', 'react-app-env.d.ts'),
+        fs
+          .readFileSync(
+            path.join(newPackagePath, 'src', 'react-app-env.d.ts'),
+            'utf8',
+          )
+          .replace(
+            '<reference types="react-scripts" />',
+            '<reference types="modular-scripts/react-app-env" />',
+          ),
+      );
+    }
 
     logger.debug('Migrating your setupTests file to modular');
 
@@ -147,7 +154,6 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
     });
 
     logger.debug('Removing react-scripts from dependencies list');
-    // Remove react scripts dependency
 
     const rootDeps: Dependency = rootPackageJson.dependencies || {};
     rootPackageJson.dependencies = Object.keys(rootDeps).reduce((acc, dep) => {

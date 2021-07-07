@@ -9,18 +9,20 @@ import actionPreflightCheck from './utils/actionPreflightCheck';
 import { ModularPackageJson } from './utils/isModularType';
 import { cleanGit, stashChanges } from './utils/gitActions';
 import { check } from './check';
+import rimraf from 'rimraf';
 
 process.on('SIGINT', () => {
   stashChanges();
+  process.exit(1)
 });
 
 export async function port(relativePath: string): Promise<void> {
   const modularRoot = getModularRoot();
-  if (!cleanGit(modularRoot)) {
-    throw new Error(
-      'You have unsaved changes. Please save or stash them before we attempt to port this react app to your modular project.',
-    );
-  }
+  // if (!cleanGit(modularRoot)) {
+  //   throw new Error(
+  //     'You have unsaved changes. Please save or stash them before we attempt to port this react app to your modular project.',
+  //   );
+  // }
 
   try {
     const targetRoot = path.resolve(relativePath);
@@ -57,15 +59,22 @@ export async function port(relativePath: string): Promise<void> {
       }
     });
 
-    logger.debug('Updating your src/react-app-env.d.ts for modular-scripts');
+    logger.debug('Updating your react-app-env.d.ts for modular-scripts');
 
-    fs.writeFileSync(
-      path.join(newPackagePath, 'src', 'react-app-env.d.ts'),
-      fs.readFileSync(
-        path.join(packageTypePath, 'src', 'react-app-env.d.ts'),
-        'utf8',
-      ),
-    );
+    if (fs.existsSync(path.join(newPackagePath, 'src', 'react-app-env.d.ts'))) {
+      fs.writeFileSync(
+        path.join(newPackagePath, 'src', 'react-app-env.d.ts'),
+        fs
+          .readFileSync(
+            path.join(newPackagePath, 'src', 'react-app-env.d.ts'),
+            'utf8',
+          )
+          .replace(
+            '<reference types="react-scripts" />',
+            '<reference types="modular-scripts/react-app-env" />',
+          ),
+      );
+    }
 
     fs.writeJSONSync(
       path.join(newPackagePath, 'tsconfig.json'),
@@ -74,6 +83,38 @@ export async function port(relativePath: string): Promise<void> {
       },
       { spaces: 2 },
     );
+
+    logger.debug('Migrating setupTests if not already present')
+
+    const setupFileName = 'setupTests';
+    const setupFilesExts = ['setupTests.js', 'setupTests.ts'];
+
+    const setupTests = setupFilesExts.find((file) => {
+      return fs.existsSync(path.join(newPackagePath, 'src', file));
+    });
+
+    if (
+      fs.existsSync(path.join(modularRoot, 'modular')) &&
+      !fs
+        .readdirSync(path.join(modularRoot, 'modular'))
+        .some((f) => f.includes(setupFileName))
+    ) {
+      // check if setupTests are already present in modular folder
+      // if not, move it over
+      setupFilesExts.forEach((ext) => {
+        const file = `${setupFileName}.${ext}`;
+        if (fs.existsSync(path.join(newPackagePath, 'src', file))) {
+          fs.writeFileSync(
+            path.join(modularRoot, 'modular', file),
+            fs.readFileSync(path.join(newPackagePath, 'src', file), 'utf8'),
+          );
+          rimraf.sync(path.join(newPackagePath, 'src', file));
+        }
+      });
+    } else if (fs.existsSync(path.join(modularRoot, 'modular'))) {
+    }
+
+
 
     // Staging ported package.json
     const { name, version, browserslist } = targetedAppPackageJson;
@@ -94,7 +135,7 @@ export async function port(relativePath: string): Promise<void> {
     )) as ModularPackageJson;
 
     /* ****** NOTE ******
-     * This doen't set up 'nohoist' or 'exceptions' in workspaces
+     * This does not set up 'nohoist' or 'exceptions' in workspaces
      * for mismatched versions. If the targeted app has a
      * dependency that is versioned differently than the modular root
      * dependency, the package & version in modular root will take precedence.
@@ -107,8 +148,7 @@ export async function port(relativePath: string): Promise<void> {
      * During this resolution, if modular root has the package in its
      * dependencies, the version in modular root will take precedence.
      *
-     *
-     * This is not related to yarn workspaces' mismatchedWorkspaceDependencies
+     * This is not related to yarn workspaces mismatchedWorkspaceDependencies
      * property in workspace info.
      * (https://github.com/yarnpkg/yarn/issues/6898#issuecomment-478188695)
      *
@@ -141,7 +181,7 @@ export async function port(relativePath: string): Promise<void> {
       {},
     );
 
-    // if root devDeps does not have this, add it to target devDeps
+    // if root devDeps does not have it, add it to target devDeps
     const workspaceDevDeps = Object.keys(targetDevDeps || {}).reduce(
       (acc, devDep) => {
         if (!rootDevDeps[devDep]) {
@@ -152,7 +192,7 @@ export async function port(relativePath: string): Promise<void> {
       {},
     );
 
-    // update dependencies to new app package.json
+    // add updated dependencies to new app package.json
     fs.writeJsonSync(
       path.join(newPackagePath, 'package.json'),
       {
@@ -171,7 +211,7 @@ export async function port(relativePath: string): Promise<void> {
     await check();
   } catch (err) {
     logger.error(err);
-    stashChanges();
+    // stashChanges();
   }
 }
 
