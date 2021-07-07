@@ -130,13 +130,11 @@ describe('modular-scripts', () => {
     let port: string;
 
     beforeAll(async () => {
-      const launchArgs: LaunchOptions & BrowserLaunchArgumentOptions = process
-        .env.CI
-        ? {
-            headless: true,
-            args: ['--no-sandbox', '--disable-setuid-sandbox'],
-          }
-        : {};
+      const launchArgs: LaunchOptions & BrowserLaunchArgumentOptions = {
+        // always run in headless - if you want to debug this locally use the env var to
+        headless: !Boolean(process.env.NO_HEADLESS_TESTS),
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      };
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,  @typescript-eslint/no-var-requires
       const { launch } = require('puppeteer');
