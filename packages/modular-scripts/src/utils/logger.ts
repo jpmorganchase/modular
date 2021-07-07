@@ -11,7 +11,9 @@ function print(x: string) {
   if (SILENT) {
     return;
   }
-  process.stderr.write(chalk.dim(prefix) + x + '\n');
+  x.split('\n').forEach((l) => {
+    process.stderr.write(chalk.dim(prefix) + l + '\n');
+  });
 }
 export function log(...x: any[]): void {
   print(x.join(' '));

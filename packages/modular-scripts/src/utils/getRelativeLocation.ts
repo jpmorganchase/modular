@@ -6,7 +6,12 @@ export async function getRelativeLocation(name: string): Promise<string> {
   if (workspace) {
     return workspace.location;
   } else {
-    throw new Error(`Could not find ${name} in current workspace.`);
+    const available = Object.keys(workspaceInfo);
+    throw new Error(
+      `Could not find ${name} in current workspace. Available packages are \n\t${available.join(
+        '\n\t',
+      )}`,
+    );
   }
 }
 

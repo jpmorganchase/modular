@@ -22,7 +22,6 @@ import { makeBundle } from './makeBundle';
 import { makeTypings } from './makeTypings';
 import getRelativeLocation from '../utils/getRelativeLocation';
 
-const packagesRoot = 'packages';
 const outputDirectory = 'dist';
 
 const rimraf = promisify(_rimraf);
@@ -63,7 +62,7 @@ export async function buildPackage(
   }
 
   const originalPkgJsonContent = (await fse.readJson(
-    path.join(modularRoot, packagesRoot, packagePath, 'package.json'),
+    path.join(modularRoot, packagePath, 'package.json'),
   )) as PackageJson;
 
   const packageName = originalPkgJsonContent.name as string;

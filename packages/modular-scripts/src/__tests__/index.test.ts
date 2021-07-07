@@ -46,15 +46,35 @@ function cleanup() {
   });
 }
 
-beforeAll(cleanup);
-afterAll(cleanup);
-
 describe('modular-scripts', () => {
-  it('can add a view', async () => {
+  beforeAll(async () => {
+    cleanup();
+
+    await modular(
+      'add sample-package --unstable-type package --unstable-name sample-package',
+      {
+        stdio: 'inherit',
+      },
+    );
+
     await modular(
       'add sample-view --unstable-type view --unstable-name sample-view',
       { stdio: 'inherit' },
     );
+
+    await modular(
+      'add nested/sample-nested-package --unstable-type package --unstable-name @nested/sample-package',
+      {
+        stdio: 'inherit',
+      },
+    );
+  });
+
+  afterAll(() => {
+    cleanup();
+  });
+
+  it('can add a view', () => {
     expect(tree(path.join(packagesPath, 'sample-view'))).toMatchInlineSnapshot(`
       "sample-view
       ├─ README.md #11adaka
@@ -137,14 +157,6 @@ describe('modular-scripts', () => {
   });
 
   it('can build a view', async () => {
-    rimraf.sync(path.join(packagesPath, 'sample-view'));
-    rimraf.sync(path.join(modularRoot, 'dist'));
-
-    await modular(
-      'add sample-view --unstable-type view --unstable-name sample-view',
-      { stdio: 'inherit' },
-    );
-
     await modular('build sample-view', {
       stdio: 'inherit',
     });
@@ -193,13 +205,7 @@ describe('modular-scripts', () => {
     `);
   });
 
-  it('can add a package', async () => {
-    await modular(
-      'add sample-package --unstable-type package --unstable-name sample-package',
-      {
-        stdio: 'inherit',
-      },
-    );
+  it('can add a package', () => {
     expect(tree(path.join(packagesPath, 'sample-package')))
       .toMatchInlineSnapshot(`
       "sample-package
@@ -212,13 +218,7 @@ describe('modular-scripts', () => {
     `);
   });
 
-  it('can add a nested package', async () => {
-    await modular(
-      'add nested/sample-nested-package --unstable-type package --unstable-name @nested/sample-package',
-      {
-        stdio: 'inherit',
-      },
-    );
+  it('can add a nested package', () => {
     expect(tree(path.join(packagesPath, 'nested/sample-nested-package')))
       .toMatchInlineSnapshot(`
       "sample-nested-package
@@ -263,15 +263,75 @@ describe('modular-scripts', () => {
   });
 
   it('can build packages', async () => {
-    // cleanup anything built previously
-    rimraf.sync(path.join(modularRoot, 'dist'));
-
-    // build a package too, but preserve modules
-    await modular('build sample-package --preserve-modules', {
+    // build the nested package
+    await modular('build sample-package', {
       stdio: 'inherit',
     });
-    // build the nested package
-    await modular('build @nested/sample-package', {
+
+    expect(
+      await fs.readJson(
+        path.join(modularRoot, 'dist', 'sample-package', 'package.json'),
+      ),
+    ).toMatchInlineSnapshot(`
+      Object {
+        "dependencies": Object {},
+        "files": Array [
+          "/dist-cjs",
+          "/dist-es",
+          "/dist-types",
+          "README.md",
+        ],
+        "license": "UNLICENSED",
+        "main": "dist-cjs/sample-package.cjs.js",
+        "module": "dist-es/sample-package.es.js",
+        "name": "sample-package",
+        "typings": "dist-types/src/index.d.ts",
+        "version": "1.0.0",
+      }
+    `);
+
+    expect(
+      await fs.readJson(
+        path.join(modularRoot, 'dist', 'sample-package', 'package.json'),
+      ),
+    ).toMatchInlineSnapshot(`
+      Object {
+        "dependencies": Object {},
+        "files": Array [
+          "/dist-cjs",
+          "/dist-es",
+          "/dist-types",
+          "README.md",
+        ],
+        "license": "UNLICENSED",
+        "main": "dist-cjs/sample-package.cjs.js",
+        "module": "dist-es/sample-package.es.js",
+        "name": "sample-package",
+        "typings": "dist-types/src/index.d.ts",
+        "version": "1.0.0",
+      }
+    `);
+
+    expect(tree(path.join(modularRoot, 'dist', 'sample-package')))
+      .toMatchInlineSnapshot(`
+      "sample-package
+      ├─ README.md #1jv3l2q
+      ├─ dist-cjs
+      │  ├─ sample-package.cjs.js #w7tmsr
+      │  └─ sample-package.cjs.js.map #xiwnyx
+      ├─ dist-es
+      │  ├─ sample-package.es.js #tek2qp
+      │  └─ sample-package.es.js.map #1ua8w0t
+      ├─ dist-types
+      │  └─ src
+      │     └─ index.d.ts #f68aj
+      └─ package.json"
+    `);
+  });
+
+  it('can build packages with preserved modules', async () => {
+    // build a package too, but preserve modules
+    await modular('build sample-package --preserve-modules', {
       stdio: 'inherit',
     });
 
@@ -319,32 +379,24 @@ describe('modular-scripts', () => {
       }
     `);
 
-    expect(tree(path.join(modularRoot, 'dist'))).toMatchInlineSnapshot(`
-      "dist
-      ├─ nested-sample-package
-      │  ├─ README.md #1jv3l2q
-      │  ├─ dist-cjs
-      │  │  ├─ nested-sample-package.cjs.js #kv2xzp
-      │  │  └─ nested-sample-package.cjs.js.map #j26x67
-      │  ├─ dist-es
-      │  │  ├─ nested-sample-package.es.js #40jnpo
-      │  │  └─ nested-sample-package.es.js.map #11g8lh9
-      │  ├─ dist-types
-      │  │  └─ src
-      │  │     └─ index.d.ts #f68aj
-      │  └─ package.json
-      └─ sample-package
-         ├─ README.md #1jv3l2q
-         ├─ dist-cjs
-         │  ├─ index.js #rq9uxe
-         │  └─ index.js.map #ys8x0i
-         ├─ dist-es
-         │  ├─ index.js #1gjntzw
-         │  └─ index.js.map #b17359
-         ├─ dist-types
-         │  └─ src
-         │     └─ index.d.ts #f68aj
-         └─ package.json"
+    expect(tree(path.join(modularRoot, 'dist', 'sample-package')))
+      .toMatchInlineSnapshot(`
+      "sample-package
+      ├─ README.md #1jv3l2q
+      ├─ dist-cjs
+      │  ├─ index.js #rq9uxe
+      │  ├─ index.js.map #ys8x0i
+      │  ├─ sample-package.cjs.js #w7tmsr
+      │  └─ sample-package.cjs.js.map #xiwnyx
+      ├─ dist-es
+      │  ├─ index.js #1gjntzw
+      │  ├─ index.js.map #b17359
+      │  ├─ sample-package.es.js #tek2qp
+      │  └─ sample-package.es.js.map #1ua8w0t
+      ├─ dist-types
+      │  └─ src
+      │     └─ index.d.ts #f68aj
+      └─ package.json"
     `);
   });
 });
