@@ -170,14 +170,11 @@ describe('when working with an app', () => {
         path.join(packagesPath, 'sample-app', 'src', 'App.tsx'),
       );
 
-      browser = await puppeteer.launch(
-        process.env.CI
-          ? {
-              headless: true,
-              args: ['--no-sandbox', '--disable-setuid-sandbox'],
-            }
-          : {},
-      );
+      browser = await puppeteer.launch({
+        // always run in headless - if you want to debug this locally use the env var to
+        headless: !Boolean(process.env.NO_HEADLESS_TESTS),
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      });
       port = '3000';
       devServer = await startApp('sample-app', { env: { PORT: port } });
 

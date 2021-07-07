@@ -6,16 +6,12 @@
 // rm -rf dist && yarn modular build `ls -m1 packages | sed -e 'H;${x;s/\n/,/g;s/^,//;p;};d'`
 
 import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
-
-import { promisify as prom } from 'util';
-
-import rimraf from 'rimraf';
+import { promisify } from 'util';
+import _rimraf from 'rimraf';
 import * as path from 'path';
 import { extract } from 'tar';
-
 import execa from 'execa';
 import { paramCase as toParamCase } from 'change-case';
-
 import * as fse from 'fs-extra';
 
 import getModularRoot from '../utils/getModularRoot';
@@ -27,6 +23,8 @@ import { makeTypings } from './makeTypings';
 
 const outputDirectory = 'dist';
 const packagesRoot = 'packages';
+
+const rimraf = promisify(_rimraf);
 
 export async function buildPackage(
   packagePath: string,
@@ -46,13 +44,13 @@ export async function buildPackage(
   await fse.mkdirp(outputDirectory);
 
   // delete any existing local build folders
-  await prom(rimraf)(
+  await rimraf(
     path.join(modularRoot, packagesRoot, packagePath, `${outputDirectory}-cjs`),
   );
-  await prom(rimraf)(
+  await rimraf(
     path.join(modularRoot, packagesRoot, packagePath, `${outputDirectory}-es`),
   );
-  await prom(rimraf)(
+  await rimraf(
     path.join(
       modularRoot,
       packagesRoot,
@@ -129,13 +127,13 @@ export async function buildPackage(
   // we observed problems with publishing tgz files directly to npm.)
 
   // delete the local dist folders
-  await prom(rimraf)(
+  await rimraf(
     path.join(modularRoot, packagesRoot, packagePath, `${outputDirectory}-cjs`),
   );
-  await prom(rimraf)(
+  await rimraf(
     path.join(modularRoot, packagesRoot, packagePath, `${outputDirectory}-es`),
   );
-  await prom(rimraf)(
+  await rimraf(
     path.join(
       modularRoot,
       packagesRoot,

@@ -12,6 +12,11 @@ import {
 } from 'pptr-testing-library';
 import getModularRoot from '../utils/getModularRoot';
 import { startApp, DevServer } from './start-app';
+import type {
+  Browser,
+  LaunchOptions,
+  BrowserLaunchArgumentOptions,
+} from 'puppeteer';
 
 const rimraf = promisify(_rimraf);
 
@@ -46,6 +51,8 @@ async function cleanup() {
   });
 }
 
+const targetedView = 'sample-view';
+
 describe('modular-scripts', () => {
   beforeAll(async () => {
     await cleanup();
@@ -66,6 +73,11 @@ describe('modular-scripts', () => {
         stdio: 'inherit',
       },
     );
+
+    await fs.copyFile(
+      path.join(__dirname, 'TestView.test-tsx'),
+      path.join(packagesPath, targetedView, 'src', 'index.tsx'),
+    );
   });
 
   afterAll(async () => {
@@ -82,7 +94,7 @@ describe('modular-scripts', () => {
         └─ src
            ├─ __tests__
            │  └─ index.test.tsx #slarlz
-           └─ index.tsx #fxrie0"
+           └─ index.tsx #19kersg"
       `);
     });
 
@@ -113,36 +125,54 @@ describe('modular-scripts', () => {
     });
   });
 
-  it('can start a view', async () => {
-    /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
-    if (!process.env.CI) {
-      return;
-    }
+  const describeSkipIf: typeof describe = process.env.CI
+    ? describe.skip
+    : describe;
 
-    const puppeteer = require('puppeteer');
-
-    // @ts-expect-error FIXME
-    let browser: puppeteer.Browser | undefined;
-    let devServer: DevServer | undefined;
+  describeSkipIf('WHEN starting a view', () => {
+    let browser: Browser;
+    let devServer: DevServer;
     let port: string;
-    try {
-      const targetedView = 'sample-view';
-      await fs.copyFile(
-        path.join(__dirname, 'TestView.test-tsx'),
-        path.join(packagesPath, targetedView, 'src', 'index.tsx'),
-      );
 
-      browser = await puppeteer.launch(
-        process.env.CI
-          ? {
-              headless: true,
-              args: ['--no-sandbox', '--disable-setuid-sandbox'],
-            }
-          : {},
-      );
+    beforeAll(async () => {
+      const launchArgs: LaunchOptions & BrowserLaunchArgumentOptions = {
+        // always run in headless - if you want to debug this locally use the env var to
+        headless: !Boolean(process.env.NO_HEADLESS_TESTS),
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      };
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,  @typescript-eslint/no-var-requires
+      const puppeteer = require('puppeteer');
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      browser = await puppeteer.launch(launchArgs);
       port = '4000';
       devServer = await startApp(targetedView, { env: { PORT: port } });
+    });
 
+    afterAll(async () => {
+      if (browser) {
+        await browser.close();
+      }
+      if (devServer) {
+        // this is the problematic bit, it leaves hanging node processes
+        // despite closing the parent process. Only happens in tests!
+        devServer.kill();
+      }
+      if (port) {
+        // kill all processes listening to the dev server port
+        exec(
+          `lsof -n -i4TCP:${port} | grep LISTEN | awk '{ print $2 }' | xargs kill`,
+          (err) => {
+            if (err) {
+              console.log('err: ', err);
+            }
+            console.log(`Cleaned up processes on port ${port}`);
+          },
+        );
+      }
+    });
+
+    it('THEN can start a view', async () => {
       const page = await browser.newPage();
       await page.goto(`http://localhost:${port}`, {});
 
@@ -157,30 +187,7 @@ describe('modular-scripts', () => {
       expect(await getNodeText(await getByTestId('test-this'))).toBe(
         'this is a modular view',
       );
-    } finally {
-      if (browser) {
-        await browser.close();
-      }
-      if (devServer) {
-        // this is the problematic bit, it leaves hanging node processes
-        // despite closing the parent process. Only happens in tests!
-        devServer.kill();
-      }
-    }
-    if (port) {
-      // kill all processes listening to the dev server port
-      exec(
-        `lsof -n -i4TCP:${port} | grep LISTEN | awk '{ print $2 }' | xargs kill`,
-        (err) => {
-          if (err) {
-            console.log('err: ', err);
-          }
-          console.log(`Cleaned up processes on port ${port}`);
-        },
-      );
-    }
-
-    /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
+    });
   });
 
   describe('WHEN building a view', () => {
@@ -237,15 +244,13 @@ describe('modular-scripts', () => {
 
     it('THEN outputs the correct output cjs map file', () => {
       expect(
-        String(
-          fs.readFileSync(
-            path.join(
-              modularRoot,
-              'dist',
-              'sample-view',
-              'dist-cjs',
-              'sample-view.cjs.js.map',
-            ),
+        fs.readJsonSync(
+          path.join(
+            modularRoot,
+            'dist',
+            'sample-view',
+            'dist-cjs',
+            'sample-view.cjs.js.map',
           ),
         ),
       ).toMatchSnapshot();
