@@ -244,15 +244,13 @@ describe('modular-scripts', () => {
 
     it('THEN outputs the correct output cjs map file', () => {
       expect(
-        String(
-          fs.readFileSync(
-            path.join(
-              modularRoot,
-              'dist',
-              'sample-view',
-              'dist-cjs',
-              'sample-view.cjs.js.map',
-            ),
+        fs.readJsonSync(
+          path.join(
+            modularRoot,
+            'dist',
+            'sample-view',
+            'dist-cjs',
+            'sample-view.cjs.js.map',
           ),
         ),
       ).toMatchSnapshot();
