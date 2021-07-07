@@ -19,7 +19,7 @@ without all of the interactive processes.
 
 Adds a new package by creating a new workspace at `packages/<packagePath>`
 
-(e.g. `modular add my-app` would create a package in `packages/my-app` and
+(i.e. `modular add my-app` would create a package in `packages/my-app` and
 `modular add libs/lib-a` would create a package in `packages/libs/lib-a`)
 
 Packages can currently be one of 3 types:
@@ -72,9 +72,10 @@ The output directory for built artifacts is `dist/`, which has a flat structure
 of modular package names. Each built app/view/package is added to the `dist/` as
 its own folder.
 
-Package names are transformed to `Param case` (i.e. this-is-param-case)
+For views and packages, package names are transformed to `Param case` (e.g.
+this-is-param-case) in `dist/`
 
-(e.g. `modular build @scoped/package-a` will output built artifacts into
+(i.e. `modular build @scoped/package-a` will output built artifacts into
 `dist/scoped-package-a`)
 
 ## `modular workspace`
