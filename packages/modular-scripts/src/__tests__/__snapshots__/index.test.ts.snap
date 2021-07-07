@@ -41,7 +41,7 @@ module.exports = SampleView;
 exports[`modular-scripts WHEN building a view THEN outputs the correct output cjs map file 1`] = `
 Object {
   "file": "sample-view.cjs.js",
-  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;AAEe,SAASA,UAAT,GAAmC;AAChD,sBAAOC,iEAAP;AACD;;;;",
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;AAEe,SAASA,UAAT,GAAmC;AAChD,sBAAOC;AAAK,mBAAY;AAAjB,8BAAP;AACD;;;;",
   "names": Array [
     "SampleView",
     "React",
@@ -53,9 +53,8 @@ Object {
     "import * as React from 'react';
 
 export default function SampleView(): JSX.Element {
-  return <div>This is SampleView</div>;
-}
-",
+  return <div data-testid=\\"test-this\\">this is a modular view</div>
+}",
   ],
   "version": 3,
 }
