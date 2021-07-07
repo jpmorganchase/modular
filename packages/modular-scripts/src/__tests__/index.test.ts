@@ -12,6 +12,11 @@ import {
 } from 'pptr-testing-library';
 import getModularRoot from '../utils/getModularRoot';
 import { startApp, DevServer } from './start-app';
+import type {
+  Browser,
+  LaunchOptions,
+  BrowserLaunchArgumentOptions,
+} from 'puppeteer';
 
 const rimraf = promisify(_rimraf);
 
@@ -113,35 +118,62 @@ describe('modular-scripts', () => {
     });
   });
 
-  it('can start a view', async () => {
-    /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
-    if (!process.env.CI) {
-      return;
-    }
+  const describeSkipIf: typeof describe = process.env.CI
+    ? describe.skip
+    : describe;
 
-    const puppeteer = require('puppeteer');
+  describeSkipIf('WHEN starting a view', () => {
+    const targetedView = 'sample-view';
 
-    // @ts-expect-error FIXME
-    let browser: puppeteer.Browser | undefined;
-    let devServer: DevServer | undefined;
+    let browser: Browser;
+    let devServer: DevServer;
     let port: string;
-    try {
-      const targetedView = 'sample-view';
+
+    beforeAll(async () => {
+      const launchArgs: LaunchOptions & BrowserLaunchArgumentOptions = process
+        .env.CI
+        ? {
+            headless: true,
+            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+          }
+        : {};
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,  @typescript-eslint/no-var-requires
+      const { launch } = require('puppeteer');
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+      browser = await launch(launchArgs);
+      port = '4000';
+      devServer = await startApp(targetedView, { env: { PORT: port } });
+    });
+
+    afterAll(async () => {
+      if (browser) {
+        await browser.close();
+      }
+      if (devServer) {
+        // this is the problematic bit, it leaves hanging node processes
+        // despite closing the parent process. Only happens in tests!
+        devServer.kill();
+      }
+      if (port) {
+        // kill all processes listening to the dev server port
+        exec(
+          `lsof -n -i4TCP:${port} | grep LISTEN | awk '{ print $2 }' | xargs kill`,
+          (err) => {
+            if (err) {
+              console.log('err: ', err);
+            }
+            console.log(`Cleaned up processes on port ${port}`);
+          },
+        );
+      }
+    });
+
+    it('THEN can start a view', async () => {
       await fs.copyFile(
         path.join(__dirname, 'TestView.test-tsx'),
         path.join(packagesPath, targetedView, 'src', 'index.tsx'),
       );
-
-      browser = await puppeteer.launch(
-        process.env.CI
-          ? {
-              headless: true,
-              args: ['--no-sandbox', '--disable-setuid-sandbox'],
-            }
-          : {},
-      );
-      port = '4000';
-      devServer = await startApp(targetedView, { env: { PORT: port } });
 
       const page = await browser.newPage();
       await page.goto(`http://localhost:${port}`, {});
@@ -157,30 +189,7 @@ describe('modular-scripts', () => {
       expect(await getNodeText(await getByTestId('test-this'))).toBe(
         'this is a modular view',
       );
-    } finally {
-      if (browser) {
-        await browser.close();
-      }
-      if (devServer) {
-        // this is the problematic bit, it leaves hanging node processes
-        // despite closing the parent process. Only happens in tests!
-        devServer.kill();
-      }
-    }
-    if (port) {
-      // kill all processes listening to the dev server port
-      exec(
-        `lsof -n -i4TCP:${port} | grep LISTEN | awk '{ print $2 }' | xargs kill`,
-        (err) => {
-          if (err) {
-            console.log('err: ', err);
-          }
-          console.log(`Cleaned up processes on port ${port}`);
-        },
-      );
-    }
-
-    /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
+    });
   });
 
   describe('WHEN building a view', () => {
@@ -355,7 +364,7 @@ describe('modular-scripts', () => {
   describe('WHEN building without preserve modules', () => {
     beforeAll(async () => {
       // build the nested package
-      await modular('build nested/sample-nested-package', {
+      await modular('build @nested/sample-package', {
         stdio: 'inherit',
       });
     });
@@ -366,7 +375,7 @@ describe('modular-scripts', () => {
           path.join(
             modularRoot,
             'dist',
-            'nested/sample-nested-package',
+            'nested-sample-package',
             'package.json',
           ),
         ),
@@ -390,21 +399,20 @@ describe('modular-scripts', () => {
     });
 
     it('THEN outputs the right directory structure', () => {
-      expect(tree(path.join(modularRoot, 'dist', 'nested')))
+      expect(tree(path.join(modularRoot, 'dist', 'nested-sample-package')))
         .toMatchInlineSnapshot(`
-        "nested
-        └─ sample-nested-package
-           ├─ README.md #1jv3l2q
-           ├─ dist-cjs
-           │  ├─ nested-sample-package.cjs.js #kv2xzp
-           │  └─ nested-sample-package.cjs.js.map #j26x67
-           ├─ dist-es
-           │  ├─ nested-sample-package.es.js #40jnpo
-           │  └─ nested-sample-package.es.js.map #11g8lh9
-           ├─ dist-types
-           │  └─ src
-           │     └─ index.d.ts #f68aj
-           └─ package.json"
+        "nested-sample-package
+        ├─ README.md #1jv3l2q
+        ├─ dist-cjs
+        │  ├─ nested-sample-package.cjs.js #kv2xzp
+        │  └─ nested-sample-package.cjs.js.map #j26x67
+        ├─ dist-es
+        │  ├─ nested-sample-package.es.js #40jnpo
+        │  └─ nested-sample-package.es.js.map #11g8lh9
+        ├─ dist-types
+        │  └─ src
+        │     └─ index.d.ts #f68aj
+        └─ package.json"
       `);
     });
   });
