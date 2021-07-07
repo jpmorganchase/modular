@@ -51,6 +51,8 @@ async function cleanup() {
   });
 }
 
+const targetedView = 'sample-view';
+
 describe('modular-scripts', () => {
   beforeAll(async () => {
     await cleanup();
@@ -71,6 +73,11 @@ describe('modular-scripts', () => {
         stdio: 'inherit',
       },
     );
+
+    await fs.copyFile(
+      path.join(__dirname, 'TestView.test-tsx'),
+      path.join(packagesPath, targetedView, 'src', 'index.tsx'),
+    );
   });
 
   afterAll(async () => {
@@ -87,7 +94,7 @@ describe('modular-scripts', () => {
         └─ src
            ├─ __tests__
            │  └─ index.test.tsx #slarlz
-           └─ index.tsx #fxrie0"
+           └─ index.tsx #19kersg"
       `);
     });
 
@@ -123,8 +130,6 @@ describe('modular-scripts', () => {
     : describe;
 
   describeSkipIf('WHEN starting a view', () => {
-    const targetedView = 'sample-view';
-
     let browser: Browser;
     let devServer: DevServer;
     let port: string;
@@ -137,9 +142,9 @@ describe('modular-scripts', () => {
       };
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,  @typescript-eslint/no-var-requires
-      const { launch } = require('puppeteer');
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-      browser = await launch(launchArgs);
+      const puppeteer = require('puppeteer');
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      browser = await puppeteer.launch(launchArgs);
       port = '4000';
       devServer = await startApp(targetedView, { env: { PORT: port } });
     });
@@ -168,11 +173,6 @@ describe('modular-scripts', () => {
     });
 
     it('THEN can start a view', async () => {
-      await fs.copyFile(
-        path.join(__dirname, 'TestView.test-tsx'),
-        path.join(packagesPath, targetedView, 'src', 'index.tsx'),
-      );
-
       const page = await browser.newPage();
       await page.goto(`http://localhost:${port}`, {});
 
