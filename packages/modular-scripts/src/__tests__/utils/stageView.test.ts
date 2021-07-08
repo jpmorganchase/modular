@@ -22,7 +22,7 @@ describe('stageView', () => {
   it('should create a temp app using the app type template', () => {
     testView = 'test-view';
     const testViewPath = path.join(tempDirPath, testView);
-    stageView(modularRoot, testView);
+    stageView(testView);
     expect(tree(testViewPath)).toMatchInlineSnapshot(`
       "test-view
       ├─ package.json
@@ -38,7 +38,7 @@ describe('stageView', () => {
   it('should import the view as the main app in index.tsx', () => {
     testView = 'test-view';
     const testViewPath = path.join(tempDirPath, testView);
-    stageView(modularRoot, testView);
+    stageView(testView);
     const indexFile = fs
       .readFileSync(path.join(testViewPath, 'src', 'index.tsx'), 'utf-8')
       .toString();

@@ -360,7 +360,7 @@ describe('modular-scripts', () => {
   describe('WHEN building without preserve modules', () => {
     beforeAll(async () => {
       // build the nested package
-      await modular('build nested/sample-nested-package', {
+      await modular('build @nested/sample-package', {
         stdio: 'inherit',
       });
     });
@@ -371,7 +371,7 @@ describe('modular-scripts', () => {
           path.join(
             modularRoot,
             'dist',
-            'nested/sample-nested-package',
+            'nested-sample-package',
             'package.json',
           ),
         ),
@@ -395,21 +395,20 @@ describe('modular-scripts', () => {
     });
 
     it('THEN outputs the right directory structure', () => {
-      expect(tree(path.join(modularRoot, 'dist', 'nested')))
+      expect(tree(path.join(modularRoot, 'dist', 'nested-sample-package')))
         .toMatchInlineSnapshot(`
-        "nested
-        └─ sample-nested-package
-           ├─ README.md #1jv3l2q
-           ├─ dist-cjs
-           │  ├─ nested-sample-package.cjs.js #kv2xzp
-           │  └─ nested-sample-package.cjs.js.map #j26x67
-           ├─ dist-es
-           │  ├─ nested-sample-package.es.js #40jnpo
-           │  └─ nested-sample-package.es.js.map #11g8lh9
-           ├─ dist-types
-           │  └─ src
-           │     └─ index.d.ts #f68aj
-           └─ package.json"
+        "nested-sample-package
+        ├─ README.md #1jv3l2q
+        ├─ dist-cjs
+        │  ├─ nested-sample-package.cjs.js #kv2xzp
+        │  └─ nested-sample-package.cjs.js.map #j26x67
+        ├─ dist-es
+        │  ├─ nested-sample-package.es.js #40jnpo
+        │  └─ nested-sample-package.es.js.map #11g8lh9
+        ├─ dist-types
+        │  └─ src
+        │     └─ index.d.ts #f68aj
+        └─ package.json"
       `);
     });
   });

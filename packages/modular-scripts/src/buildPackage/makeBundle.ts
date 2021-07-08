@@ -16,8 +16,8 @@ import resolve from '@rollup/plugin-node-resolve';
 import { getLogger } from './getLogger';
 import { getPackageEntryPoints } from './getPackageEntryPoints';
 import getPackageMetadata from './getPackageMetadata';
+import getModularRoot from '../utils/getModularRoot';
 
-const packagesRoot = 'packages';
 const outputDirectory = 'dist';
 const extensions = ['.ts', '.tsx', '.js', '.jsx'];
 
@@ -29,6 +29,7 @@ export async function makeBundle(
   packagePath: string,
   preserveModules: boolean,
 ): Promise<boolean> {
+  const modularRoot = getModularRoot();
   const metadata = getPackageMetadata();
   const {
     rootPackageJsonDependencies,
@@ -44,49 +45,45 @@ export async function makeBundle(
   const { main, compilingBin } = getPackageEntryPoints(packagePath);
 
   if (!packageJson) {
-    throw new Error(
-      `no package.json in ${packagesRoot}/${packagePath}, bailing...`,
-    );
+    throw new Error(`no package.json in ${packagePath}, bailing...`);
   }
   if (packageJson.private === true) {
-    throw new Error(
-      `${packagesRoot}/${packagePath} is marked private, bailing...`,
-    );
+    throw new Error(`${packagePath} is marked private, bailing...`);
   }
 
-  if (!fse.existsSync(path.join(packagesRoot, packagePath, main))) {
+  if (!fse.existsSync(path.join(modularRoot, packagePath, main))) {
     throw new Error(
-      `package.json at ${packagesRoot}/${packagePath} does not have a main file that points to an existing source file, bailing...`,
+      `package.json at ${packagePath} does not have a main file that points to an existing source file, bailing...`,
     );
   }
 
   if (!packageJson.name) {
     throw new Error(
-      `package.json at ${packagesRoot}/${packagePath} does not have a valid "name", bailing...`,
+      `package.json at ${packagePath} does not have a valid "name", bailing...`,
     );
   }
 
   if (!packageJson.version) {
     throw new Error(
-      `package.json at ${packagesRoot}/${packagePath} does not have a valid "version", bailing...`,
+      `package.json at ${packagePath} does not have a valid "version", bailing...`,
     );
   }
 
   if (packageJson.module) {
     throw new Error(
-      `package.json at ${packagesRoot}/${packagePath} shouldn't have a "module" field, bailing...`,
+      `package.json at ${packagePath} shouldn't have a "module" field, bailing...`,
     );
   }
 
   if (packageJson.typings) {
     throw new Error(
-      `package.json at ${packagesRoot}/${packagePath} shouldn't have a "typings" field, bailing...`,
+      `package.json at ${packagePath} shouldn't have a "typings" field, bailing...`,
     );
   }
-  logger.log(`building ${packageJson.name} at packages/${packagePath}...`);
+  logger.log(`building ${packageJson.name} at ${packagePath}...`);
 
   const bundle = await rollup.rollup({
-    input: path.join(packagesRoot, packagePath, main),
+    input: path.join(modularRoot, packagePath, main),
     external: (id) => {
       // via tsdx
       // TODO: this should probably be included into deps instead
@@ -127,7 +124,7 @@ export async function makeBundle(
         ],
         plugins: ['@babel/plugin-proposal-class-properties'],
         extensions,
-        include: [`${packagesRoot}/**/*`],
+        include: [`packages/**/*`],
         exclude: 'node_modules/**',
       }),
       postcss({ extract: false }),
@@ -266,11 +263,11 @@ export async function makeBundle(
     ...(preserveModules
       ? {
           preserveModules: true,
-          dir: path.join(packagesRoot, packagePath, `${outputDirectory}-cjs`),
+          dir: path.join(modularRoot, packagePath, `${outputDirectory}-cjs`),
         }
       : {
           file: path.join(
-            packagesRoot,
+            modularRoot,
             packagePath,
             `${outputDirectory}-cjs`,
             toParamCase(packageJson.name) + '.cjs.js',
@@ -286,11 +283,11 @@ export async function makeBundle(
       ...(preserveModules
         ? {
             preserveModules: true,
-            dir: path.join(packagesRoot, packagePath, `${outputDirectory}-es`),
+            dir: path.join(modularRoot, packagePath, `${outputDirectory}-es`),
           }
         : {
             file: path.join(
-              packagesRoot,
+              modularRoot,
               packagePath,
               `${outputDirectory}-es`,
               toParamCase(packageJson.name) + '.es.js',
