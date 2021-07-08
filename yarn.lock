@@ -2624,10 +2624,10 @@
   resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.3.tgz#7ee330ba7caafb98090bece86a5ee44115904c2c"
   integrity sha512-ewFXqrQHlFsgc09MK5jP5iR7vumV/BYayNC6PgJO2LPe8vrnNFyjQjSppfEngITi0qvfKtzFvgKymGheFM9UOA==
 
-"@types/react-dev-utils@^9.0.6":
-  version "9.0.6"
-  resolved "https://registry.yarnpkg.com/@types/react-dev-utils/-/react-dev-utils-9.0.6.tgz#c5d74358786ecd06caea3bd7b3af3195f53c73e4"
-  integrity sha512-CtrGzH+tSw4MCAZ92QzchrCq8kES/NUUu1kAXeeDXJyb7hRzucry0sRk/bcSwBR8dJJY7N7oaEDranyyOcX3hQ==
+"@types/react-dev-utils@^9.0.7":
+  version "9.0.7"
+  resolved "https://registry.yarnpkg.com/@types/react-dev-utils/-/react-dev-utils-9.0.7.tgz#ebe054a9841297ba547a64ed5afbc163e30b4958"
+  integrity sha512-wylXXRiOHcVC3DasKc6mXQxwLFNzeRTc92NWPTnBvplLjvpd8KjBqijjqXEeOrbvjJUxhXmkX9UJk2+oZvi9Cg==
   dependencies:
     "@types/eslint" "*"
     "@types/express" "*"
