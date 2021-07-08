@@ -33,7 +33,7 @@
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^13.1.8",
     "@types/find-up": "^4.0.0",
-    "@types/fs-extra": "^9.0.11",
+    "@types/fs-extra": "^9.0.12",
     "@types/is-ci": "^3.0.0",
     "@types/jest": "^26.0.24",
     "@types/node": "*",

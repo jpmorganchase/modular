@@ -24,7 +24,7 @@
   "devDependencies": {
     "@types/semver": "^7.3.7",
     "@schemastore/package": "^0.0.6",
-    "@types/fs-extra": "^9.0.11",
+    "@types/fs-extra": "^9.0.12",
     "@types/node": "*",
     "@types/tmp": "^0.2.1",
     "rimraf": "^3.0.2"
