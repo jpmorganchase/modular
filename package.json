@@ -17,7 +17,7 @@
     "build": "yarn workspace create-modular-react-app build && yarn workspace modular-scripts build && yarn workspace modular-views.macro build",
     "release": "yarn build && changeset publish",
     "start": "yarn modular start modular-site",
-    "postinstall": "husky install"
+    "postinstall": "is-ci || husky install"
   },
   "dependencies": {
     "@babel/cli": "^7.14.5",
