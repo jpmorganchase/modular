@@ -35,7 +35,6 @@
     "@types/react-dev-utils": "^9.0.6",
     "@types/semver": "^7.3.7",
     "babel-jest": "^26.6.3",
-    "babel-loader": "8.1.0",
     "babel-preset-react-app": "^10.0.0",
     "bfj": "^7.0.2",
     "builtin-modules": "^3.2.0",
@@ -75,7 +74,7 @@
     "react-dev-utils": "^11.0.4",
     "react-native-web": "^0.17.1",
     "react-refresh": "^0.8.3",
-    "resolve-url-loader": "^3.1.2",
+    "resolve-url-loader": "^4.0.0",
     "resolve": "^1.20.0",
     "rimraf": "^3.0.2",
     "rollup-plugin-postcss": "^4.0.0",
@@ -89,10 +88,9 @@
     "ts-pnp": "1.2.0",
     "update-notifier": "^5.1.0",
     "url-loader": "4.1.1",
-    "web-vitals": "^1.0.1",
     "webpack-dev-server": "3.11.1",
     "webpack-manifest-plugin": "2.2.0",
-    "webpack": "4.44.2",
+    "webpack": "4.46.0",
     "workbox-webpack-plugin": "5.1.4"
   },
   "peerDependencies": {
