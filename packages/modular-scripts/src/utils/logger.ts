@@ -1,7 +1,5 @@
 import chalk from 'chalk';
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 const prefix = '[modular] ';
 
 const DEBUG = process.env.MODULAR_LOGGER_DEBUG;
@@ -11,19 +9,21 @@ function print(x: string) {
   if (SILENT) {
     return;
   }
-  process.stderr.write(chalk.dim(prefix) + x + '\n');
+  x.split('\n').forEach((l) => {
+    process.stderr.write(chalk.dim(prefix) + l + '\n');
+  });
 }
-export function log(...x: any[]): void {
+export function log(...x: string[]): void {
   print(x.join(' '));
 }
-export function warn(...x: any[]): void {
+export function warn(...x: string[]): void {
   print(chalk.yellow(x.join(' ')));
 }
-export function error(...x: any[]): void {
+export function error(...x: string[]): void {
   print(chalk.red(x.join(' ')));
 }
 
-export function debug(...x: any[]): void {
+export function debug(...x: string[]): void {
   if (DEBUG) {
     log(...x);
   }
