@@ -1,3 +1,4 @@
+import { paramCase as toParamCase } from 'change-case';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 
@@ -19,7 +20,7 @@ async function build(target: string, preserveModules?: boolean): Promise<void> {
 
     // create-react-app doesn't support plain module outputs yet,
     // so --preserve-modules has no effect here
-    await fs.remove(path.join(outputDirectory, target));
+    await fs.remove(path.join(outputDirectory, toParamCase(target)));
 
     // TODO: this shouldn't be sync
     execSync('node', [buildScript], {
@@ -33,7 +34,7 @@ async function build(target: string, preserveModules?: boolean): Promise<void> {
 
     await fs.move(
       path.join(targetPath, 'build'),
-      path.join(outputDirectory, target),
+      path.join(outputDirectory, toParamCase(target)),
     );
   } else {
     const { buildPackage } = await import('./buildPackage');
