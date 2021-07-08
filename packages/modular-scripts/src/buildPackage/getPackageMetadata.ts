@@ -16,7 +16,7 @@ function distinct<T>(arr: T[]): T[] {
   return [...new Set(arr)];
 }
 
-function getPackageMetadata() {
+async function getPackageMetadata() {
   const modularRoot = getModularRoot();
 
   // dependencies defined at the root
@@ -36,7 +36,8 @@ function getPackageMetadata() {
   const packageNames: string[] = [];
 
   // let's populate the above three
-  for (const [name, { location }] of Object.entries(getAllWorkspaces())) {
+  const workspace = await getAllWorkspaces();
+  for (const [name, { location }] of Object.entries(workspace)) {
     const pathToPackageJson = path.join(modularRoot, location, 'package.json');
     const packageJson = fse.readJsonSync(pathToPackageJson) as PackageJson;
 

@@ -32,7 +32,7 @@ export async function buildPackage(
 ): Promise<void> {
   const modularRoot = getModularRoot();
   const packagePath = await getRelativeLocation(target);
-  const { publicPackageJsons } = getPackageMetadata();
+  const { publicPackageJsons } = await getPackageMetadata();
 
   if (process.cwd() !== modularRoot) {
     throw new Error(
@@ -50,9 +50,9 @@ export async function buildPackage(
   await rimraf(path.join(modularRoot, packagePath, `${outputDirectory}-types`));
 
   // Generate the typings for a package first so that we can do type checking and don't waste time bundling otherwise
-  const { compilingBin } = getPackageEntryPoints(packagePath);
+  const { compilingBin } = await getPackageEntryPoints(packagePath);
   if (!compilingBin) {
-    makeTypings(packagePath);
+    await makeTypings(packagePath);
   }
 
   // generate the js files now that we know we have a valid package

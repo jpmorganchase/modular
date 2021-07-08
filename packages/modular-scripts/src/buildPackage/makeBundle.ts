@@ -30,7 +30,7 @@ export async function makeBundle(
   preserveModules: boolean,
 ): Promise<boolean> {
   const modularRoot = getModularRoot();
-  const metadata = getPackageMetadata();
+  const metadata = await getPackageMetadata();
   const {
     rootPackageJsonDependencies,
     packageJsons,
@@ -42,7 +42,7 @@ export async function makeBundle(
 
   const packageJson = packageJsonsByPackagePath[packagePath];
 
-  const { main, compilingBin } = getPackageEntryPoints(packagePath);
+  const { main, compilingBin } = await getPackageEntryPoints(packagePath);
 
   if (!packageJson) {
     throw new Error(`no package.json in ${packagePath}, bailing...`);
