@@ -43,7 +43,7 @@
     "@types/react": "^17.0.11",
     "@types/rimraf": "^3.0.1",
     "@types/tar": "^4.0.4",
-    "@types/update-notifier": "^5.0.0",
+    "@types/update-notifier": "^5.0.1",
     "commander": "^8.0.0",
     "esbuild": "^0.12.12",
     "eslint": "^7.29.0",
