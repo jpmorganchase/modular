@@ -29,6 +29,7 @@ export async function makeBundle(
   packagePath: string,
   preserveModules: boolean,
 ): Promise<boolean> {
+  const modularRoot = getModularRoot();
   const metadata = getPackageMetadata();
   const {
     rootPackageJsonDependencies,
@@ -50,7 +51,7 @@ export async function makeBundle(
     throw new Error(`${packagePath} is marked private, bailing...`);
   }
 
-  if (!fse.existsSync(path.join(getModularRoot(), packagePath, main))) {
+  if (!fse.existsSync(path.join(modularRoot, packagePath, main))) {
     throw new Error(
       `package.json at ${packagePath} does not have a main file that points to an existing source file, bailing...`,
     );
@@ -82,7 +83,7 @@ export async function makeBundle(
   logger.log(`building ${packageJson.name} at ${packagePath}...`);
 
   const bundle = await rollup.rollup({
-    input: path.join(getModularRoot(), packagePath, main),
+    input: path.join(modularRoot, packagePath, main),
     external: (id) => {
       // via tsdx
       // TODO: this should probably be included into deps instead
@@ -262,15 +263,11 @@ export async function makeBundle(
     ...(preserveModules
       ? {
           preserveModules: true,
-          dir: path.join(
-            getModularRoot(),
-            packagePath,
-            `${outputDirectory}-cjs`,
-          ),
+          dir: path.join(modularRoot, packagePath, `${outputDirectory}-cjs`),
         }
       : {
           file: path.join(
-            getModularRoot(),
+            modularRoot,
             packagePath,
             `${outputDirectory}-cjs`,
             toParamCase(packageJson.name) + '.cjs.js',
@@ -286,15 +283,11 @@ export async function makeBundle(
       ...(preserveModules
         ? {
             preserveModules: true,
-            dir: path.join(
-              getModularRoot(),
-              packagePath,
-              `${outputDirectory}-es`,
-            ),
+            dir: path.join(modularRoot, packagePath, `${outputDirectory}-es`),
           }
         : {
             file: path.join(
-              getModularRoot(),
+              modularRoot,
               packagePath,
               `${outputDirectory}-es`,
               toParamCase(packageJson.name) + '.es.js',
