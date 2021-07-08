@@ -35,7 +35,7 @@
     "@types/react-dev-utils": "^9.0.6",
     "@types/semver": "^7.3.7",
     "babel-jest": "^26.6.3",
-    "babel-loader": "8.1.0",
+    "babel-loader": "8.2.2",
     "babel-preset-react-app": "^10.0.0",
     "bfj": "^7.0.2",
     "builtin-modules": "^3.2.0",
