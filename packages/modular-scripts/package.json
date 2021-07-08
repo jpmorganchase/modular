@@ -93,7 +93,7 @@
     "webpack-dev-server": "3.11.1",
     "webpack-manifest-plugin": "2.2.0",
     "webpack": "4.44.2",
-    "workbox-webpack-plugin": "5.1.4"
+    "workbox-webpack-plugin": "6.1.5"
   },
   "peerDependencies": {
     "typescript": "^4.3.4"
