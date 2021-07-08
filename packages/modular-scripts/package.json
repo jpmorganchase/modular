@@ -39,7 +39,7 @@
     "bfj": "^7.0.2",
     "builtin-modules": "^3.2.0",
     "camelcase": "^6.1.0",
-    "case-sensitive-paths-webpack-plugin": "2.3.0",
+    "case-sensitive-paths-webpack-plugin": "2.4.0",
     "chalk": "^4.1.1",
     "change-case": "^4.1.2",
     "commander": "^8.0.0",
