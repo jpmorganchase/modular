@@ -167,7 +167,7 @@ program
         './utils/getWorkspaceInfo'
       );
       const workspace = await getWorkspaceInfo();
-      logger.log(JSON.stringify(workspace, null, 2));
+      process.stdout.write(JSON.stringify(workspace, null, 2));
     }),
   );
 
