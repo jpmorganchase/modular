@@ -1,10 +1,11 @@
 import getPackageMetadata from './getPackageMetadata';
 
-export function getPackageEntryPoints(packagePath: string): {
+export async function getPackageEntryPoints(packagePath: string): Promise<{
   main: string;
   compilingBin: boolean;
-} {
-  const { packageJsonsByPackagePath } = getPackageMetadata();
+}> {
+  const { packageJsonsByPackagePath } = await getPackageMetadata();
+
   const packageJson = packageJsonsByPackagePath[packagePath];
 
   let compilingBin = false;

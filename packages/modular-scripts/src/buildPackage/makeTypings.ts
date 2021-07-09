@@ -9,9 +9,9 @@ import getPackageMetadata from './getPackageMetadata';
 const outputDirectory = 'dist';
 const typescriptConfigFilename = 'tsconfig.json';
 
-export function makeTypings(packagePath: string): void {
+export async function makeTypings(packagePath: string): Promise<void> {
   const logger = getLogger(packagePath);
-  const { typescriptConfig } = getPackageMetadata();
+  const { typescriptConfig } = await getPackageMetadata();
 
   logger.log('generating .d.ts files');
 
