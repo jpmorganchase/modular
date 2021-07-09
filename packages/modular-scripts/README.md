@@ -1,5 +1,5 @@
 <div align="center">
-  <h1><img height="38px" width="44px" style="height: 38px; max-width: 44px" src="/docs/img/modular-hero.svg"> &nbsp; Modular</h1>
+  <h1><img height="38px" width="44px" style="height: 38px; max-width: 44px" src="https://github.com/jpmorganchase/modular/tree/main/docs/img/modular-hero.svg"> &nbsp; Modular</h1>
 
   <p><strong>Scaled Web Engineering</strong>. Where Libraries, Views & apps coexist together and tooling is a first-class citizen.</p>
 </div>
@@ -50,9 +50,11 @@ This also creates a workspace named 'app' containing a fresh
 
 ## Commands
 
-More documentation about modular commands is [here](/docs/commands.md).
+More documentation about modular commands is
+[here](https://github.com/jpmorganchase/modular/tree/main/docs/commands.md).
 
 ## Configuration
 
 Modular is based around the idea of minimal configuration - however
-documentation for the options available is [here](/docs/configuration.md).
+documentation for the options available is
+[here](https://github.com/jpmorganchase/modular/tree/main/docs/configuration.md).
