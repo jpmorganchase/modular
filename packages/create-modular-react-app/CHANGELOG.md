@@ -1,5 +1,19 @@
 # create-modular-react-app
 
+## 1.0.0
+
+### Major Changes
+
+- af8f49f: Remove react-scripts as a dependency and release major change.
+- 6fc027c: Add engine startup check to CLIs to ensure that the version of node
+  running is supported
+
+### Patch Changes
+
+- c9b6a66: Bump @types/fs-extra from 9.0.11 to 9.0.12
+- 2f57d60: Bump @types/semver from 7.3.6 to 7.3.7
+- 11aa1c1: Bump @types/tmp from 0.2.0 to 0.2.1
+
 ## 0.8.11
 
 ### Patch Changes
