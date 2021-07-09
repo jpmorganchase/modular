@@ -1,5 +1,5 @@
 <div align="center">
-  <h1><img height="38px" width="44px" style="height: 38px; max-width: 44px" src="docs/img/modular-hero.svg"> &nbsp; Modular</h1>
+  <h1><img height="38px" width="44px" style="height: 38px; max-width: 44px" src="/docs/img/modular-hero.svg"> &nbsp; Modular</h1>
 
   <p><strong>Scaled Web Engineering</strong>. Where Libraries, Views & apps coexist together and tooling is a first-class citizen.</p>
 </div>
