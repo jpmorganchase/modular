@@ -1,0 +1,93 @@
+# Upgrading to 1.0.0
+
+## Worktree Structure
+
+## Removing `react-scripts` dependency.
+
+With the release of `1.0.0` we have removed the dependency of `craco` and
+`react-scripts` from the `modular` codebase. This is really exciting for us as
+it will allow for greater development as well develop our ability to scale to
+working with larger monorepos and developing solutions for cross-app builds /
+typechecking, etc.
+
+The Create React App (CRA) controllers in `react-scripts` will no longer be
+installed with `modular`. This is a significant breaking change as users will
+not be able to rely on all of the CRA conventions. While most features are
+retained we have streamlined the features which we expose.
+
+### TypeScript setup
+
+This file is created in `src/react-app-env.d.ts` of each `app` which is
+generated in `modular`. Previously this would reference `react-scripts` to
+introduce global typings for React Apps. This file is responsible for
+configuring the types of static assets which are imported in TypeScript files.
+
+When upgrading to `1.x` of `modular-scripts` this file must be updated.
+
+```typescript
+- /// <reference types="react-scripts">
++ /// <reference types="modular-scripts/react-app-env">
+```
+
+### Eslint webpack plugin
+
+The `eslint` webpack plugin for app builds has been disabled for several
+versions now. However this release of `modular` removes this functionality
+entirely in favor of programatically linting your files. This provides improved
+build performance and linting performance since users can utilize eslints
+caching functionality to perform incremental linting.
+
+## Building by Workspace Name
+
+In `0.x` of `modular-scripts` APIs were designed around the relative path on
+disk of each workspace, and commands followd this same convention. With the
+release of `1.x` commands are now based around the workspace name. This can
+cause some differences - especially when using nested package structured within
+your modular worktree.
+
+For example, given the following work tree with package names in brackets
+alongside
+
+```
+packages
+├─ sample-app
+│   └─ package.json (sample-app)
+└─ nested
+    └─ another-app
+        └─ package.json (@nested/app)
+
+```
+
+Previously two build `sample-app` and `nested/another-app` you could run
+
+```bash
+modular build sample-app nested/another-app
+```
+
+With `1.x` of modular this command now needs to reference the package names
+directly, i.e.
+
+```bash
+modular build sample-app @nested/app
+```
+
+### Flat output Structure
+
+The output structure of builds preserves the input structure to build commands.
+For the above example the `/dist` folder structure would update from
+
+```
+dist
+├─ sample-app
+└─ nested
+    └─ another-app
+
+```
+
+to a new flatter structure based on package name
+
+```
+dist
+├─ sample-app
+└─ nested-app
+```
