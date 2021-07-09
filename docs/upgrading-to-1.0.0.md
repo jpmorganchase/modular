@@ -2,7 +2,7 @@
 
 ## Worktree Structure
 
-## Removing `react-scripts` dependency.
+## Removing `react-scripts` dependency
 
 With the release of `1.0.0` we have removed the dependency of `craco` and
 `react-scripts` from the `modular` codebase. This is really exciting for us as
@@ -37,7 +37,7 @@ entirely in favor of programatically linting your files. This provides improved
 build performance and linting performance since users can utilize eslints
 caching functionality to perform incremental linting.
 
-## Building by Workspace Name
+## Building by workspace name
 
 In `0.x` of `modular-scripts` APIs were designed around the relative path on
 disk of each workspace, and commands followd this same convention. With the
@@ -71,7 +71,7 @@ directly, i.e.
 modular build sample-app @nested/app
 ```
 
-### Flat output Structure
+### Flat output structure
 
 The output structure of builds preserves the input structure to build commands.
 For the above example the `/dist` folder structure would update from
