@@ -1,5 +1,44 @@
 # modular-scripts
 
+## 1.0.0
+
+### Major Changes
+
+- 5d1d40b: Build output is now flat by prettified package name instead of
+  relative package location in the worktree.
+- 5d1d40b: Package operations are now via name instead of workspace location.
+- af8f49f: Remove react-scripts as a dependency and release major change.
+- 6fc027c: Add engine startup check to CLIs to ensure that the version of node
+  running is supported
+- 90a9b45: Add validation of worktree stucture to prevent nested workspaces.
+
+### Minor Changes
+
+- 3e705a3: Modular convert will assume your current directory is an initialized
+  modularrepo and move any src and public folders into a modular app to convert
+  yourreact app project into a modular project
+
+### Patch Changes
+
+- 9c6b612: Make action imports asyncronous in cli startup
+- ba9652a: Fix modular workspace public prop
+- cd73064: Bump webpack from 4.44.2 to 4.46.0
+- 090030b: Write result of modular workspace to stdout
+- 2488c64: Bump case-sensitive-paths-webpack-plugin from 2.3.0 to 2.4.0
+- 3fd0120: Bump @types/react-dev-utils from 9.0.6 to 9.0.7
+- 5f105e2: Bump @types/jest from 26.0.23 to 26.0.24
+- 6e0838f: Bump jest-watch-typeahead from 0.6.1 to 0.6.4
+- 4af6880: Bump html-webpack-plugin from 4.5.0 to 4.5.2
+- 2f57d60: Bump @types/semver from 7.3.6 to 7.3.7
+- d9f6f6f: Fix issue with SVG loading with svgr/webpack loader
+- b02f864: Bump webpack-dev-server from 3.11.1 to 3.11.2
+- d59c9cf: Bump file-loader from 6.1.1 to 6.2.0
+- 2d89a00: Remove babel-loader from modular-scripts dependencies
+- a088791: Bump rollup from 2.52.3 to 2.52.4
+- 1f515e3: Bump resolve-url-loader from 3.1.4 to 4.0.0
+- f9ba0ad: Bump esbuild from 0.12.12 to 0.12.15
+- 2d89a00: Remove web-vitals from modular-scripts dependencies
+
 ## 0.14.0
 
 ### Minor Changes

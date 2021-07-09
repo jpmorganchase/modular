@@ -1,5 +1,17 @@
 # eslint-config-modular-app
 
+## 1.0.0
+
+### Major Changes
+
+- af8f49f: Remove react-scripts as a dependency and release major change.
+
+### Patch Changes
+
+- 732b487: Bump eslint-plugin-testing-library from 4.6.0 to 4.9.0
+- 72842b6: Bump @typescript-eslint/eslint-plugin from 4.28.1 to 4.28.2
+- 0cd7296: Bump @typescript-eslint/parser from 4.28.1 to 4.28.2
+
 ## 0.4.6
 
 ### Patch Changes
