@@ -11,6 +11,7 @@ import * as logger from './utils/logger';
 import getModularRoot from './utils/getModularRoot';
 
 export async function check(): Promise<void> {
+  let failed = false;
   const modularRoot = getModularRoot();
 
   const rootPackageJsonPath = path.join(modularRoot, 'package.json');
@@ -18,13 +19,15 @@ export async function check(): Promise<void> {
     rootPackageJsonPath,
   )) as ModularPackageJson;
   if (!rootPackageJson.private) {
-    throw new Error(`Modular workspace roots must be marked as private`);
+    logger.error(`Modular workspace roots must be marked as private`);
+    failed = true;
   }
 
   if (!rootPackageJson?.workspaces?.includes('packages/**')) {
-    throw new Error(
+    logger.error(
       `Modular workspaces must include "packages/**" to pick up any modular packages in the worktree`,
     );
+    failed = true;
   }
 
   // ensure that workspaces are setup correctly with yarn
@@ -39,34 +42,38 @@ export async function check(): Promise<void> {
    */
   for (const [packageName, packageInfo] of Object.entries(workspace)) {
     if (packageInfo.mismatchedWorkspaceDependencies.length) {
-      throw new Error(
+      logger.error(
         `${packageName} has mismatchedWorkspaceDependencies ${packageInfo.mismatchedWorkspaceDependencies.join(
           ', ',
         )}`,
       );
+      failed = true;
     }
 
     if (!packageInfo.location.startsWith('packages')) {
-      throw new Error(
+      logger.error(
         `${packageName} is not located within the "/packages" directory in the repository, instead found "${packageInfo.location}"`,
       );
+      failed = true;
     }
 
     if (!isValidModularType(path.join(modularRoot, packageInfo.location))) {
-      throw new Error(
+      logger.error(
         `${packageName} at ${
           packageInfo.location
         } is not a valid modular type - Found ${
           getModularType(packageInfo.location) as string
         }`,
       );
+      failed = true;
     }
 
     if (packageInfo.type === 'app') {
       if (packageInfo.public) {
-        throw new Error(
+        logger.error(
           `${packageName} is marked as "public" - Modular apps should be marked as private.`,
         );
+        failed = true;
       }
     }
 
@@ -96,11 +103,12 @@ export async function check(): Promise<void> {
       }
     });
     if (overlapping.length) {
-      throw new Error(
+      logger.error(
         `Found ${l} which is an overlapping workspace with ${overlapping.join(
           ', ',
         )} in your current worktree`,
       );
+      failed = true;
     }
   });
 
@@ -108,5 +116,13 @@ export async function check(): Promise<void> {
    * Taken from react-scripts - this assets that we share common versions of utils which we depend on.
    */
   const { verifyPackageTree } = await import('./utils/verifyPackageTree');
-  await verifyPackageTree();
+  try {
+    await verifyPackageTree();
+  } catch (e) {
+    failed = true;
+  }
+
+  if (failed) {
+    throw new Error(`The above errors were found during modular check`);
+  }
 }

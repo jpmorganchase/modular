@@ -22,10 +22,10 @@
     "semver": "^7.3.5"
   },
   "devDependencies": {
-    "@types/semver": "^7.3.7",
     "@schemastore/package": "^0.0.6",
     "@types/fs-extra": "^9.0.12",
     "@types/node": "*",
+    "@types/semver": "^7.3.7",
     "@types/tmp": "^0.2.1",
     "rimraf": "^3.0.2"
   }
