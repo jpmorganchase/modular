@@ -93,18 +93,17 @@ export async function check(): Promise<void> {
     })
   ).map((l) => path.dirname(l));
 
-  workspaces.forEach((l) => {
-    const overlapping = workspaceLocations.filter((workspaceLocation) => {
+  workspaces.forEach((workspaceLocation) => {
+    const overlapping = workspaceLocations.filter((otherWorkspaceLocation) => {
       // obviously workspaces which are the same can't be overlapping
-      if (workspaceLocation === l) {
-        return false;
-      } else {
-        return workspaceLocation.startsWith(l);
-      }
+      const relative = path.relative(workspaceLocation, otherWorkspaceLocation);
+      return (
+        relative && !relative.startsWith('..') && !path.isAbsolute(relative)
+      );
     });
     if (overlapping.length) {
       logger.error(
-        `Found ${l} which is an overlapping workspace with ${overlapping.join(
+        `Found ${workspaceLocation} which is an overlapping workspace with ${overlapping.join(
           ', ',
         )} in your current worktree`,
       );
