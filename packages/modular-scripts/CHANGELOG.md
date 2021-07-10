@@ -1,5 +1,12 @@
 # modular-scripts
 
+## 1.0.1
+
+### Patch Changes
+
+- 613678d: Fix `modular check` to support directories which start with the same
+  names
+
 ## 1.0.0
 
 ### Major Changes
