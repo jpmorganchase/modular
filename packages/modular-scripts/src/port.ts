@@ -206,7 +206,7 @@ export async function port(relativePath: string): Promise<void> {
     await check();
   } catch (err) {
     logger.error(err);
-    // stashChanges();
+    stashChanges();
   }
 }
 
