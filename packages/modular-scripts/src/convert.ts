@@ -1,36 +1,21 @@
 import { IncludeDefinition as TSConfig } from '@schemastore/tsconfig';
 import { Dependency } from '@schemastore/package';
 import execa from 'execa';
-import stripAnsi from 'strip-ansi';
 import * as fs from 'fs-extra';
 import * as path from 'path';
+import rimraf from 'rimraf';
+
 import {
   ModularPackageJson,
   isValidModularRootPackageJson,
 } from './utils/isModularType';
 import * as logger from './utils/logger';
 import { check } from './check';
-import rimraf from 'rimraf';
-
-function cleanGit(cwd: string): boolean {
-  const trackedChanged = stripAnsi(
-    execa.sync('git', ['status', '-s'], {
-      all: true,
-      reject: false,
-      cwd,
-      cleanup: true,
-    }).stdout,
-  );
-  return trackedChanged.length === 0;
-}
-
-function resetChanges(): void {
-  execa.sync('git', ['stash', '-u']);
-  throw new Error('Failed to perform action cleanly. Stashing git changes...');
-}
+import { cleanGit, stashChanges } from './utils/gitActions';
 
 process.on('SIGINT', () => {
-  resetChanges();
+  stashChanges();
+  process.exit(1);
 });
 
 export async function convert(cwd: string = process.cwd()): Promise<void> {
@@ -177,6 +162,6 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
     await check();
   } catch (err) {
     logger.error(err);
-    resetChanges();
+    stashChanges();
   }
 }
