@@ -26,7 +26,7 @@ export async function port(relativePath: string): Promise<void> {
   }
 
   try {
-    const targetRoot = path.resolve(relativePath);
+    const targetRoot = path.resolve(modularRoot, relativePath);
 
     const targetedAppPackageJson = (await fs.readJSON(
       path.join(targetRoot, 'package.json'),
@@ -206,7 +206,7 @@ export async function port(relativePath: string): Promise<void> {
     await check();
   } catch (err) {
     logger.error(err);
-    stashChanges();
+    // stashChanges();
   }
 }
 
