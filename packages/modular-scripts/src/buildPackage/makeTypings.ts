@@ -7,12 +7,11 @@ import { reportTSDiagnostics } from './reportTSDiagnostics';
 import getPackageMetadata from './getPackageMetadata';
 
 const outputDirectory = 'dist';
-const packagesRoot = 'packages';
 const typescriptConfigFilename = 'tsconfig.json';
 
-export function makeTypings(packagePath: string): void {
+export async function makeTypings(packagePath: string): Promise<void> {
   const logger = getLogger(packagePath);
-  const { typescriptConfig } = getPackageMetadata();
+  const { typescriptConfig } = await getPackageMetadata();
 
   logger.log('generating .d.ts files');
 
@@ -27,11 +26,11 @@ export function makeTypings(packagePath: string): void {
   // then add our custom stuff
   // Only include src files from the package to prevent already built
   // files from interferring with the compile
-  tsconfig.include = [`${packagesRoot}/${packagePath}/src`];
+  tsconfig.include = [`${packagePath}/src`];
   tsconfig.compilerOptions = {
     ...tsconfig.compilerOptions,
-    declarationDir: `${packagesRoot}/${packagePath}/${outputDirectory}-types`,
-    rootDir: `${packagesRoot}/${packagePath}`,
+    declarationDir: `${packagePath}/${outputDirectory}-types`,
+    rootDir: packagePath,
   };
 
   // Extract config information

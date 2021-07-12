@@ -1,6 +1,6 @@
 {
   "name": "create-modular-react-app",
-  "version": "0.8.11",
+  "version": "1.0.0",
   "license": "Apache-2.0",
   "bin": {
     "create-modular-react-app": "build/cli.js"
@@ -22,11 +22,11 @@
     "semver": "^7.3.5"
   },
   "devDependencies": {
-    "@types/semver": "^7.3.6",
     "@schemastore/package": "^0.0.6",
-    "@types/fs-extra": "^9.0.11",
+    "@types/fs-extra": "^9.0.12",
     "@types/node": "*",
-    "@types/tmp": "^0.2.0",
+    "@types/semver": "^7.3.7",
+    "@types/tmp": "^0.2.1",
     "rimraf": "^3.0.2"
   }
 }

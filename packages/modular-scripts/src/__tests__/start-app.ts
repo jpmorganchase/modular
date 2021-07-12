@@ -98,7 +98,8 @@ export async function startApp(
     devServer.on('error', (err: Error) => {
       if (completed) return;
 
-      logger.error(err);
+      logger.error(String(err));
+      logger.error(err.stack || '');
 
       clearTimeout(startAppTimeout);
 

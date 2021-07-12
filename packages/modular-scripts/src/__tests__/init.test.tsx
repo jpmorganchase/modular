@@ -45,8 +45,8 @@ describe('Creating a new modular folder', () => {
     expect(String(lockfile)).toMatchSnapshot();
   });
 
-  it('should not have any workspace info', () => {
-    const workspace = getYarnWorkspaceInfo(folder);
+  it('should not have any workspace info', async () => {
+    const workspace = await getYarnWorkspaceInfo(folder);
     expect(workspace).toEqual({});
   });
 });

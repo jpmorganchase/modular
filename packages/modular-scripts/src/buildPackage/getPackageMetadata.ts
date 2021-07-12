@@ -16,12 +16,13 @@ function distinct<T>(arr: T[]): T[] {
   return [...new Set(arr)];
 }
 
-function getPackageMetadata() {
+async function getPackageMetadata() {
   const modularRoot = getModularRoot();
 
   // dependencies defined at the root
   const rootPackageJsonDependencies =
-    (fse.readJSONSync('package.json') as PackageJson).dependencies || {};
+    (fse.readJSONSync(path.join(modularRoot, 'package.json')) as PackageJson)
+      .dependencies || {};
 
   // a map of all package.json contents, indexed by package name
   const packageJsons: { [key: string]: PackageJson } = {};
@@ -35,15 +36,13 @@ function getPackageMetadata() {
   const packageNames: string[] = [];
 
   // let's populate the above three
-  for (const [name, { location }] of Object.entries(getAllWorkspaces())) {
+  const workspace = await getAllWorkspaces();
+  for (const [name, { location }] of Object.entries(workspace)) {
     const pathToPackageJson = path.join(modularRoot, location, 'package.json');
     const packageJson = fse.readJsonSync(pathToPackageJson) as PackageJson;
 
     packageJsons[name] = packageJson;
-    packageJsonsByPackagePath[
-      // make it relative to the modular packages directory
-      path.relative('packages', location)
-    ] = packageJson;
+    packageJsonsByPackagePath[location] = packageJson;
     packageNames.push(name);
   }
 

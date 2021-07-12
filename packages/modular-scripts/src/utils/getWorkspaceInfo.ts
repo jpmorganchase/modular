@@ -14,10 +14,10 @@ export interface WorkSpaceRecord {
   public: boolean;
 }
 
-type WorkspaceInfo = Record<string, WorkSpaceRecord | undefined>;
+type WorkspaceInfo = Record<string, WorkSpaceRecord>;
 
 export async function getWorkspaceInfo(): Promise<WorkspaceInfo> {
-  const workspaces = getAllWorkspaces();
+  const workspaces = await getAllWorkspaces();
   const workspaceRoot = getModularRoot();
 
   const res: WorkspaceInfo = {};
@@ -28,10 +28,11 @@ export async function getWorkspaceInfo(): Promise<WorkspaceInfo> {
 
     const type = packageJson.modular?.type || ('package' as ModularType);
 
-    const modularPackageInfo = Object.assign(packageInfo, {
+    const modularPackageInfo = {
+      ...packageInfo,
       type,
-      public: !!packageJson.public,
-    });
+      public: !packageJson.private,
+    };
 
     res[packageName] = modularPackageInfo;
   }

@@ -1,12 +1,12 @@
 import * as fs from 'fs-extra';
 import path from 'path';
 import { pascalCase as toPascalCase } from 'change-case';
+import getModularRoot from './getModularRoot';
 import getAllFiles from './getAllFiles';
 
-export default function stageView(
-  modularRoot: string,
-  targetedView: string,
-): string {
+export default function stageView(targetedView: string): string {
+  const modularRoot = getModularRoot();
+
   const tempDir = path.join(modularRoot, 'node_modules', '.modular');
   if (!fs.existsSync(tempDir)) {
     fs.mkdirSync(tempDir);

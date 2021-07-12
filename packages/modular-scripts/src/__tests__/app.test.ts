@@ -37,6 +37,10 @@ function modular(str: string, opts: Record<string, unknown> = {}) {
 function cleanup() {
   rimraf.sync(path.join(packagesPath, 'sample-app'));
   rimraf.sync(path.join(modularRoot, 'dist/sample-app'));
+
+  rimraf.sync(path.join(packagesPath, 'scoped/sample-app'));
+  rimraf.sync(path.join(modularRoot, 'dist/scoped-sample-app'));
+
   // run yarn so yarn.lock gets reset
   return execa.sync('yarnpkg', ['--silent'], {
     cwd: modularRoot,
@@ -45,6 +49,45 @@ function cleanup() {
 
 beforeAll(cleanup);
 afterAll(cleanup);
+
+describe('When working with a nested app', () => {
+  beforeAll(async () => {
+    await modular(
+      'add scoped/sample-app --unstable-type app --unstable-name @scoped/sample-app',
+      { stdio: 'inherit' },
+    );
+  });
+
+  it('can build a nested app', async () => {
+    await modular('build @scoped/sample-app', {
+      stdio: 'inherit',
+    });
+
+    expect(tree(path.join(modularRoot, 'dist', 'scoped-sample-app')))
+      .toMatchInlineSnapshot(`
+      "scoped-sample-app
+      ├─ asset-manifest.json #111grhw
+      ├─ favicon.ico #6pu3rg
+      ├─ index.html #9t1szr
+      ├─ logo192.png #1nez7vk
+      ├─ logo512.png #1hwqvcc
+      ├─ manifest.json #19gah8o
+      ├─ robots.txt #1sjb8b3
+      └─ static
+         ├─ css
+         │  ├─ main.8bcbd900.chunk.css #xno22u
+         │  └─ main.8bcbd900.chunk.css.map #9wvvfl
+         └─ js
+            ├─ 2.80389273.chunk.js #qw7gmy
+            ├─ 2.80389273.chunk.js.LICENSE.txt #eplx8h
+            ├─ 2.80389273.chunk.js.map #uhj9bl
+            ├─ main.4fce9af6.chunk.js #1tsx3qp
+            ├─ main.4fce9af6.chunk.js.map #9ihrad
+            ├─ runtime-main.53595a4a.js #wiku4d
+            └─ runtime-main.53595a4a.js.map #2l54cs"
+    `);
+  });
+});
 
 describe('when working with an app', () => {
   beforeAll(async () => {
@@ -170,14 +213,11 @@ describe('when working with an app', () => {
         path.join(packagesPath, 'sample-app', 'src', 'App.tsx'),
       );
 
-      browser = await puppeteer.launch(
-        process.env.CI
-          ? {
-              headless: true,
-              args: ['--no-sandbox', '--disable-setuid-sandbox'],
-            }
-          : {},
-      );
+      browser = await puppeteer.launch({
+        // always run in headless - if you want to debug this locally use the env var to
+        headless: !Boolean(process.env.NO_HEADLESS_TESTS),
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      });
       port = '3000';
       devServer = await startApp('sample-app', { env: { PORT: port } });
 

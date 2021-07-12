@@ -6,34 +6,33 @@
 // rm -rf dist && yarn modular build `ls -m1 packages | sed -e 'H;${x;s/\n/,/g;s/^,//;p;};d'`
 
 import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
-
-import { promisify as prom } from 'util';
-
-import rimraf from 'rimraf';
+import { promisify } from 'util';
+import _rimraf from 'rimraf';
 import * as path from 'path';
 import { extract } from 'tar';
-
 import execa from 'execa';
 import { paramCase as toParamCase } from 'change-case';
-
 import * as fse from 'fs-extra';
 
-import getModularRoot from '../utils/getModularRoot';
 import { getLogger } from './getLogger';
 import { getPackageEntryPoints } from './getPackageEntryPoints';
 import getPackageMetadata from './getPackageMetadata';
+import getModularRoot from '../utils/getModularRoot';
 import { makeBundle } from './makeBundle';
 import { makeTypings } from './makeTypings';
+import getRelativeLocation from '../utils/getRelativeLocation';
 
 const outputDirectory = 'dist';
-const packagesRoot = 'packages';
+
+const rimraf = promisify(_rimraf);
 
 export async function buildPackage(
-  packagePath: string,
+  target: string,
   preserveModules = false,
 ): Promise<void> {
-  const { publicPackageJsons } = getPackageMetadata();
   const modularRoot = getModularRoot();
+  const packagePath = await getRelativeLocation(target);
+  const { publicPackageJsons } = await getPackageMetadata();
 
   if (process.cwd() !== modularRoot) {
     throw new Error(
@@ -46,25 +45,14 @@ export async function buildPackage(
   await fse.mkdirp(outputDirectory);
 
   // delete any existing local build folders
-  await prom(rimraf)(
-    path.join(modularRoot, packagesRoot, packagePath, `${outputDirectory}-cjs`),
-  );
-  await prom(rimraf)(
-    path.join(modularRoot, packagesRoot, packagePath, `${outputDirectory}-es`),
-  );
-  await prom(rimraf)(
-    path.join(
-      modularRoot,
-      packagesRoot,
-      packagePath,
-      `${outputDirectory}-types`,
-    ),
-  );
+  await rimraf(path.join(modularRoot, packagePath, `${outputDirectory}-cjs`));
+  await rimraf(path.join(modularRoot, packagePath, `${outputDirectory}-es`));
+  await rimraf(path.join(modularRoot, packagePath, `${outputDirectory}-types`));
 
   // Generate the typings for a package first so that we can do type checking and don't waste time bundling otherwise
-  const { compilingBin } = getPackageEntryPoints(packagePath);
+  const { compilingBin } = await getPackageEntryPoints(packagePath);
   if (!compilingBin) {
-    makeTypings(packagePath);
+    await makeTypings(packagePath);
   }
 
   // generate the js files now that we know we have a valid package
@@ -74,16 +62,17 @@ export async function buildPackage(
   }
 
   const originalPkgJsonContent = (await fse.readJson(
-    path.join(modularRoot, packagesRoot, packagePath, 'package.json'),
+    path.join(modularRoot, packagePath, 'package.json'),
   )) as PackageJson;
 
   const packageName = originalPkgJsonContent.name as string;
 
   // switch in the special package.json
   try {
+    const publicPackageJson = publicPackageJsons[packageName];
     await fse.writeJson(
-      path.join(modularRoot, packagesRoot, packagePath, 'package.json'),
-      publicPackageJsons[packageName],
+      path.join(packagePath, 'package.json'),
+      publicPackageJson,
       { spaces: 2 },
     );
 
@@ -101,7 +90,7 @@ export async function buildPackage(
         ),
       ],
       {
-        cwd: path.join(modularRoot, packagesRoot, packagePath),
+        cwd: path.join(modularRoot, packagePath),
         stdin: process.stdin,
         stderr: process.stderr,
         stdout: process.stdout,
@@ -110,39 +99,28 @@ export async function buildPackage(
   } finally {
     // now revert package.json
     await fse.writeJson(
-      path.join(modularRoot, packagesRoot, packagePath, 'package.json'),
+      path.join(modularRoot, packagePath, 'package.json'),
       originalPkgJsonContent,
       { spaces: 2 },
     );
   }
 
   // cool. now unpack the tgz's contents in the root dist
-  await fse.mkdirp(path.join(outputDirectory, packagePath));
+  await fse.mkdirp(path.join(outputDirectory, toParamCase(packageName)));
 
   await extract({
     file: path.join(outputDirectory, toParamCase(packageName) + '.tgz'),
     strip: 1,
-    C: path.join(outputDirectory, packagePath),
+    C: path.join(outputDirectory, toParamCase(packageName)),
   });
 
   // (if you're curious why we unpack it here, it's because
   // we observed problems with publishing tgz files directly to npm.)
 
   // delete the local dist folders
-  await prom(rimraf)(
-    path.join(modularRoot, packagesRoot, packagePath, `${outputDirectory}-cjs`),
-  );
-  await prom(rimraf)(
-    path.join(modularRoot, packagesRoot, packagePath, `${outputDirectory}-es`),
-  );
-  await prom(rimraf)(
-    path.join(
-      modularRoot,
-      packagesRoot,
-      packagePath,
-      `${outputDirectory}-types`,
-    ),
-  );
+  await rimraf(path.join(modularRoot, packagePath, `${outputDirectory}-cjs`));
+  await rimraf(path.join(modularRoot, packagePath, `${outputDirectory}-es`));
+  await rimraf(path.join(modularRoot, packagePath, `${outputDirectory}-types`));
 
   // then delete the tgz
 

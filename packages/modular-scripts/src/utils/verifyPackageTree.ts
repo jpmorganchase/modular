@@ -144,7 +144,7 @@ export async function verifyPackageTree(): Promise<void> {
               `P.S. We know this message is long but please read the steps above :-)\n`,
             ),
         );
-        process.exit(1);
+        throw new Error(`verify package tree failed`);
       }
     }
   }
