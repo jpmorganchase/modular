@@ -7,6 +7,7 @@ import chalk from 'chalk';
 
 import * as logger from './utils/logger';
 import getModularRoot from './utils/getModularRoot';
+import getWorkspaceInfo from './utils/getWorkspaceInfo';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import { ModularPackageJson } from './utils/isModularType';
 import { cleanGit, stashChanges } from './utils/gitActions';
@@ -120,7 +121,12 @@ export async function port(relativePath: string): Promise<void> {
     }
 
     // Staging ported package.json
-    const { name, version, browserslist } = targetedAppPackageJson;
+    const {
+      name,
+      version,
+      browserslist,
+      private: prv,
+    } = targetedAppPackageJson;
 
     const stagedPackageJson: ModularPackageJson = {
       name,
@@ -129,6 +135,7 @@ export async function port(relativePath: string): Promise<void> {
       modular: {
         type: 'app',
       },
+      private: prv,
     };
 
     /* ****** NOTE ******
@@ -145,9 +152,25 @@ export async function port(relativePath: string): Promise<void> {
      * During this resolution, if modular root has the package in its
      * dependencies, the version in modular root will take precedence.
      *
-     * This is not related to the yarn workspaces mismatchedWorkspaceDependencies
+     * This may affect the yarn workspaces mismatchedWorkspaceDependencies
      * property in workspace info.
      * (https://github.com/yarnpkg/yarn/issues/6898#issuecomment-478188695)
+     *
+     * Given the case that the app you are porting over has a dependency that is a
+     * local package in the workspace, if the target app's dep has a different
+     * version than the local version, that package would not be symlinked to
+     * the local package at all. It would get its own copy in its node_modules.
+     *
+     * Example:
+     * TargetApp's dependency: foo@^1.0.5
+     * Modular package foo's local version: 2.0.1
+     *
+     * TargetApp will have copy of foo@1.0.5 in its workspace node_modules.
+     * It will be marked as a mismatchedWorkspaceDependencies in yarn workspaces.
+     *
+     * We do not allow mismatchedWorkspaceDependencies in the modular workspace.
+     * Thus, we will remove that dependency from the target app and have it use
+     * the local symlinked version instead.
      *
      */
 
@@ -165,29 +188,67 @@ export async function port(relativePath: string): Promise<void> {
       devDependencies: targetDevDeps = {},
     } = targetedAppPackageJson;
 
-    // Only port over deps that root does not have
+    const workspaces = await getWorkspaceInfo();
+
+    const publicPackages = Object.keys(workspaces).filter(
+      (name) => workspaces[name].public,
+    );
+
     const workspaceDeps: Dependency = Object.keys(targetDeps || {}).reduce(
       (acc, dep) => {
-        if (!rootDeps[dep] && dep !== 'react-scripts') {
+        // Do not bring over dep if modular root has it or if it's react-scripts
+        // or if it is already a public package in the modular workspace
+        if (
+          !rootDeps[dep] &&
+          dep !== 'react-scripts' &&
+          !publicPackages.includes(dep)
+        ) {
           return { ...acc, [dep]: targetDeps[dep] };
         }
-        return acc;
-      },
-      {},
-    );
-
-    // Only port over dev deps that root does not have
-    const workspaceDevDeps = Object.keys(targetDevDeps || {}).reduce(
-      (acc, devDep) => {
-        if (!rootDevDeps[devDep]) {
-          return { ...acc, [devDep]: targetDevDeps[devDep] };
+        if (workspaces[dep] !== undefined) {
+          logger.warn(
+            `The targeted app has local '${chalk.bold(
+              dep,
+            )}' package marked as a dependency. `,
+          );
+          logger.warn('We will be ignoring this dependency.');
+          logger.warn(
+            `${targetedAppName} will now use the local package symlinked version.`,
+          );
         }
         return acc;
       },
       {},
     );
 
-    // add updated dependencies to new app's package.json
+    const workspaceDevDeps = Object.keys(targetDevDeps || {}).reduce(
+      (acc, devDep) => {
+        // Do not bring over dev dep if modular root has it installed
+        // or if it is already a public package in the modular workspace
+        if (
+          !rootDevDeps[devDep] &&
+          !rootDeps[devDep] &&
+          !publicPackages.includes(devDep)
+        ) {
+          return { ...acc, [devDep]: targetDevDeps[devDep] };
+        }
+        if (workspaces[devDep] !== undefined) {
+          logger.warn(
+            `The targeted app has local ${chalk.bold(
+              devDep,
+            )} package marked as a dev dependency. `,
+          );
+          logger.warn('We will be ignoring this dependency.');
+          logger.warn(
+            `${targetedAppName} will now use the local package symlinked version.`,
+          );
+        }
+        return acc;
+      },
+      {},
+    );
+
+    // Add updated dependencies to new app's package.json
     fs.writeJsonSync(
       path.join(newPackagePath, 'package.json'),
       {
