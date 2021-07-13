@@ -4,6 +4,7 @@ import execa from 'execa';
 import { Dependency } from '@schemastore/package';
 import rimraf from 'rimraf';
 import chalk from 'chalk';
+import semver from 'semver';
 
 import * as logger from './utils/logger';
 import getModularRoot from './utils/getModularRoot';
@@ -194,27 +195,38 @@ export async function port(relativePath: string): Promise<void> {
       (name) => workspaces[name].public,
     );
 
+    // [targeted dep name] : root dep version that's taken precedence
+    const droppedDeps: Dependency = {};
+
+    // [targeted dep name] : local package version that's taken precedence
+    const droppedWorkspaceDeps: Dependency = {};
+
     const workspaceDeps: Dependency = Object.keys(targetDeps || {}).reduce(
       (acc, dep) => {
-        // Do not bring over dep if modular root has it or if it's react-scripts
-        // or if it is already a public package in the modular workspace
-        if (
-          !rootDeps[dep] &&
-          dep !== 'react-scripts' &&
-          !publicPackages.includes(dep)
-        ) {
-          return { ...acc, [dep]: targetDeps[dep] };
-        }
-        if (workspaces[dep] !== undefined) {
-          logger.warn(
-            `The targeted app has local '${chalk.bold(
-              dep,
-            )}' package marked as a dependency. `,
-          );
-          logger.warn('We will be ignoring this dependency.');
-          logger.warn(
-            `${targetedAppName} will now use the local package symlinked version.`,
-          );
+        // Do not bring over dep if it's react-scripts or if modular root has it
+        // or if it is a public package in the modular workspace
+        if (dep !== 'react-scripts') {
+          if (!rootDeps[dep] && !publicPackages.includes(dep)) {
+            return { ...acc, [dep]: targetDeps[dep] };
+          }
+          // if local package is marked as dependency, note it for later warnings
+          if (publicPackages.includes(dep)) {
+            droppedWorkspaceDeps[dep] = (
+              fs.readJsonSync(
+                path.join(
+                  modularRoot,
+                  workspaces[dep].location,
+                  'package.json',
+                ),
+              ) as ModularPackageJson
+            ).version as string;
+            return acc;
+          }
+          // if it modular workspace dep doesn't satisfy semver, note it for later warnings
+          if (!semver.satisfies(rootDeps[dep], targetDeps[dep])) {
+            droppedDeps[dep] = rootDeps[dep];
+            return acc;
+          }
         }
         return acc;
       },
@@ -223,25 +235,44 @@ export async function port(relativePath: string): Promise<void> {
 
     const workspaceDevDeps = Object.keys(targetDevDeps || {}).reduce(
       (acc, devDep) => {
-        // Do not bring over dev dep if modular root has it installed
-        // or if it is already a public package in the modular workspace
-        if (
-          !rootDevDeps[devDep] &&
-          !rootDeps[devDep] &&
-          !publicPackages.includes(devDep)
-        ) {
-          return { ...acc, [devDep]: targetDevDeps[devDep] };
-        }
-        if (workspaces[devDep] !== undefined) {
-          logger.warn(
-            `The targeted app has local ${chalk.bold(
-              devDep,
-            )} package marked as a dev dependency. `,
-          );
-          logger.warn('We will be ignoring this dependency.');
-          logger.warn(
-            `${targetedAppName} will now use the local package symlinked version.`,
-          );
+        // Do not bring over dep if it's react-scripts or if modular root has it
+        // or if it is a public package in the modular workspace
+        if (devDep !== 'react-scripts') {
+          if (
+            !rootDevDeps[devDep] &&
+            !rootDeps[devDep] &&
+            !publicPackages.includes(devDep)
+          ) {
+            return { ...acc, [devDep]: targetDevDeps[devDep] };
+          }
+          // if local package is marked as dependency, note it for later warnings
+          if (publicPackages.includes(devDep)) {
+            droppedWorkspaceDeps[devDep] = (
+              fs.readJsonSync(
+                path.join(
+                  modularRoot,
+                  workspaces[devDep].location,
+                  'package.json',
+                ),
+              ) as ModularPackageJson
+            ).version as string;
+            return acc;
+          }
+          // if it modular workspace dep doesn't satisfy semver, note it for later warnings
+          if (
+            rootDeps[devDep] &&
+            !semver.satisfies(rootDeps[devDep], targetDevDeps[devDep])
+          ) {
+            droppedDeps[devDep] = rootDeps[devDep];
+            return acc;
+          }
+          if (
+            rootDevDeps[devDep] &&
+            !semver.satisfies(rootDevDeps[devDep], targetDevDeps[devDep])
+          ) {
+            droppedDeps[devDep] = rootDevDeps[devDep];
+            return acc;
+          }
         }
         return acc;
       },
@@ -264,7 +295,56 @@ export async function port(relativePath: string): Promise<void> {
     execa.sync('yarnpkg', ['--silent'], { cwd: modularRoot });
 
     logger.log('Validating your modular project...');
+
     await check();
+
+    logger.log('Successfully ported your app over!');
+
+    const droppedDepKeys = Object.keys(droppedDeps);
+    const droppedWorkspaceKeys = Object.keys(droppedWorkspaceDeps);
+
+    if (droppedDepKeys.length) {
+      logger.warn(
+        'We found mismatched dependency versions between your targeted app and the root modular workspace',
+      );
+      logger.warn(
+        'As part of the dependency resolution process, the dependencies in modular workspace were given precendent.',
+      );
+      logger.warn(
+        `Your targeted app (${targetedAppName}) will use these modular workspace dependencies:\n\n` +
+          droppedDepKeys
+            .map((dep) => chalk.bold(`  \u2022 ${dep}: ${droppedDeps[dep]}`))
+            .join('\n') +
+          '\n\n',
+      );
+    }
+
+    if (droppedWorkspaceKeys.length) {
+      logger.warn(
+        'Your targeted app has a modular workspace public package marked as a dependency.',
+      );
+      logger.warn(
+        "As part of the dependency resolution process, the local public package's version was given precedent.",
+      );
+      logger.warn(
+        `Your targeted app (${targetedAppName}) will use the local package version:\n\n` +
+          droppedWorkspaceKeys
+            .map((dep) =>
+              chalk.bold(`  \u2022 ${dep}: ${droppedWorkspaceDeps[dep]}`),
+            )
+            .join('\n') +
+          '\n\n',
+      );
+    }
+
+    if (droppedDepKeys.length || droppedWorkspaceDeps.length) {
+      logger.error(
+        'You should look at the dependency resolution warning(s) above and confirm the current workspace dependencies will work for your app',
+      );
+      logger.error(
+        'You may encounter issues later if you ignore these warnings.',
+      );
+    }
   } catch (err) {
     logger.error(err);
     stashChanges();

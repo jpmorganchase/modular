@@ -217,7 +217,6 @@ program
   .action(async (relativePath) => {
     const { port } = await import('./port');
     await port(relativePath);
-    logger.log(chalk.green('Successfully ported your app over!'));
   });
 
 void startupCheck()
