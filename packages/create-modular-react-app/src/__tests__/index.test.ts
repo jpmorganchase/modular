@@ -90,7 +90,7 @@ describe('create-modular-react-app', () => {
       │     │  ├─ index.css #o7sk21
       │     │  ├─ index.tsx #zdn6mw
       │     │  ├─ logo.svg #1okqmlj
-      │     │  └─ react-app-env.d.ts #1dm2mq6
+      │     │  └─ react-app-env.d.ts #t4ygcy
       │     └─ tsconfig.json #6rw46b
       ├─ tsconfig.json #1h72lkd
       └─ yarn.lock"
@@ -211,7 +211,7 @@ describe('create-modular-react-app', () => {
       │     │  ├─ index.css #o7sk21
       │     │  ├─ index.tsx #zdn6mw
       │     │  ├─ logo.svg #1okqmlj
-      │     │  └─ react-app-env.d.ts #1dm2mq6
+      │     │  └─ react-app-env.d.ts #t4ygcy
       │     └─ tsconfig.json #6rw46b
       ├─ tsconfig.json #1h72lkd
       └─ yarn.lock"
