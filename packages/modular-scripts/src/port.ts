@@ -223,7 +223,10 @@ export async function port(relativePath: string): Promise<void> {
             return acc;
           }
           // if it modular workspace dep doesn't satisfy semver, note it for later warnings
-          if (!semver.satisfies(rootDeps[dep], targetDeps[dep])) {
+          if (
+            rootDeps[dep] &&
+            !semver.satisfies(rootDeps[dep], targetDeps[dep])
+          ) {
             droppedDeps[dep] = rootDeps[dep];
             return acc;
           }
