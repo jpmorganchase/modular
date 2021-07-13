@@ -311,7 +311,7 @@ export async function port(relativePath: string): Promise<void> {
         'We found mismatched dependency versions between your targeted app and the root modular workspace',
       );
       logger.warn(
-        'As part of the dependency resolution process, the dependencies in modular workspace were given precendent.',
+        'As part of the dependency resolution process, the dependencies in modular workspace were given precedence.',
       );
       logger.warn(
         `Your targeted app (${targetedAppName}) will use these modular workspace dependencies:\n\n` +
@@ -327,7 +327,7 @@ export async function port(relativePath: string): Promise<void> {
         'Your targeted app has a modular workspace public package marked as a dependency.',
       );
       logger.warn(
-        "As part of the dependency resolution process, the local public package's version was given precedent.",
+        "As part of the dependency resolution process, the local public package's version was given precedence.",
       );
       logger.warn(
         `Your targeted app (${targetedAppName}) will use the local package version:\n\n` +
