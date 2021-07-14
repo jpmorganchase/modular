@@ -4,7 +4,6 @@ import * as fs from 'fs-extra';
 import chalk from 'chalk';
 import commander from 'commander';
 import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
-
 import type { TestOptions } from './test';
 
 import startupCheck from './utils/startupCheck';
@@ -206,6 +205,18 @@ program
     logger.log(
       chalk.green('Successfully converted your app into a modular app!'),
     );
+  });
+
+// TODO: enhancement - should take a type option (app, view, package)
+// port are only available for apps right now
+program
+  .command('port <relativePath>')
+  .description(
+    'Ports the react app in specified directory over into the current modular project as a modular app',
+  )
+  .action(async (relativePath) => {
+    const { port } = await import('./port');
+    await port(relativePath);
   });
 
 void startupCheck()

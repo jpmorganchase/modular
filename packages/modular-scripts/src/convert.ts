@@ -1,36 +1,21 @@
 import { IncludeDefinition as TSConfig } from '@schemastore/tsconfig';
 import { Dependency } from '@schemastore/package';
 import execa from 'execa';
-import stripAnsi from 'strip-ansi';
 import * as fs from 'fs-extra';
 import * as path from 'path';
+import rimraf from 'rimraf';
+
 import {
   ModularPackageJson,
   isValidModularRootPackageJson,
 } from './utils/isModularType';
 import * as logger from './utils/logger';
 import { check } from './check';
-import rimraf from 'rimraf';
-
-function cleanGit(cwd: string): boolean {
-  const trackedChanged = stripAnsi(
-    execa.sync('git', ['status', '-s'], {
-      all: true,
-      reject: false,
-      cwd,
-      cleanup: true,
-    }).stdout,
-  );
-  return trackedChanged.length === 0;
-}
-
-function resetChanges(): void {
-  execa.sync('git', ['stash', '-u']);
-  throw new Error('Failed to perform action cleanly. Stashing git changes...');
-}
+import { cleanGit, stashChanges } from './utils/gitActions';
 
 process.on('SIGINT', () => {
-  resetChanges();
+  stashChanges();
+  process.exit(1);
 });
 
 export async function convert(cwd: string = process.cwd()): Promise<void> {
@@ -123,13 +108,20 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
 
     logger.debug('Updating your react-app-env.d.ts for modular-scripts');
 
-    fs.writeFileSync(
-      path.join(newPackagePath, 'src', 'react-app-env.d.ts'),
-      fs.readFileSync(
-        path.join(packageTypePath, 'src', 'react-app-env.d.ts'),
-        'utf8',
-      ),
-    );
+    if (fs.existsSync(path.join(newPackagePath, 'src', 'react-app-env.d.ts'))) {
+      fs.writeFileSync(
+        path.join(newPackagePath, 'src', 'react-app-env.d.ts'),
+        fs
+          .readFileSync(
+            path.join(newPackagePath, 'src', 'react-app-env.d.ts'),
+            'utf8',
+          )
+          .replace(
+            '<reference types="react-scripts" />',
+            '<reference types="modular-scripts/react-app-env" />',
+          ),
+      );
+    }
 
     logger.debug('Migrating your setupTests file to modular');
 
@@ -147,7 +139,6 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
     });
 
     logger.debug('Removing react-scripts from dependencies list');
-    // Remove modular scripts dependency
 
     const rootDeps: Dependency = rootPackageJson.dependencies || {};
     rootPackageJson.dependencies = Object.keys(rootDeps).reduce((acc, dep) => {
@@ -171,6 +162,6 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
     await check();
   } catch (err) {
     logger.error(err);
-    resetChanges();
+    stashChanges();
   }
 }
