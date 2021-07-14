@@ -17,11 +17,11 @@ export interface WorkSpaceRecord {
 type WorkspaceInfo = Record<string, WorkSpaceRecord>;
 
 export async function getWorkspaceInfo(): Promise<WorkspaceInfo> {
-  const workspace = await getAllWorkspaces();
+  const workspaces = await getAllWorkspaces();
   const workspaceRoot = getModularRoot();
 
   const res: WorkspaceInfo = {};
-  for (const [packageName, packageInfo] of Object.entries(workspace)) {
+  for (const [packageName, packageInfo] of Object.entries(workspaces)) {
     const packageJson = (await fs.readJSON(
       path.join(workspaceRoot, packageInfo.location, 'package.json'),
     )) as ModularPackageJson;
