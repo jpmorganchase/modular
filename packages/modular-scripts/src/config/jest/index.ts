@@ -1,7 +1,7 @@
 import * as fs from 'fs-extra';
 import path from 'path';
 import chalk from 'chalk';
-import glob from 'glob';
+import globby from 'globby';
 import type { Config } from '@jest/types';
 import { defaults } from 'jest-config';
 import getModularRoot from '../../utils/getModularRoot';
@@ -99,19 +99,17 @@ export function createJestConfig(
     setupFiles: defaults.setupFiles
       .concat([require.resolve('modular-scripts/react-scripts/config/env.js')])
       .concat(
-        glob.sync(
-          `${absoluteModularGlobalConfigsPath}/setupEnvironment.{js,ts,tsx}`,
-          {
-            cwd: process.cwd(),
-          },
-        ),
+        globby
+          .sync(`setupEnvironment.{js,ts,tsx}`, {
+            cwd: absoluteModularGlobalConfigsPath,
+          })
+          .map((f) => path.join(absoluteModularGlobalConfigsPath, f)),
       ),
-    setupFilesAfterEnv: glob.sync(
-      `${absoluteModularGlobalConfigsPath}/setupTests.{js,ts,tsx}`,
-      {
-        cwd: process.cwd(),
-      },
-    ),
+    setupFilesAfterEnv: globby
+      .sync(`setupTests.{js,ts,tsx}`, {
+        cwd: absoluteModularGlobalConfigsPath,
+      })
+      .map((f) => path.join(absoluteModularGlobalConfigsPath, f)),
   };
 
   const rootPackageJson = fs.readJSONSync(

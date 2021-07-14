@@ -2,7 +2,7 @@
 
 const path = require('path');
 const fs = require('fs');
-const getPublicUrlOrPath = require('react-dev-utils/getPublicUrlOrPath');
+const getPublicUrlOrPath = require('../../react-dev-utils/getPublicUrlOrPath');
 
 if (!process.env.MODULAR_ROOT) {
   throw new Error(
