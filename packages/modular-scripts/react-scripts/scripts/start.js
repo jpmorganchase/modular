@@ -86,8 +86,7 @@ checkBrowsers(paths.appPath, isInteractive)
     const appName = require(paths.appPackageJson).name;
 
     const useTypeScript = !isCI && fs.existsSync(paths.appTsConfig);
-    const tscCompileOnError =
-      isCI || process.env.TSC_COMPILE_ON_ERROR === 'true';
+    const tscCompileOnError = process.env.TSC_COMPILE_ON_ERROR === 'true';
     const urls = prepareUrls(
       protocol,
       HOST,
