@@ -1,3 +1,5 @@
+import { paramCase as toParamCase } from 'change-case';
+
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import isModularType from './utils/isModularType';
 import execSync from './utils/execSync';
@@ -28,14 +30,16 @@ async function start(target: string): Promise<void> {
     'modular-scripts/react-scripts/scripts/start.js',
   );
   const modularRoot = getModularRoot();
+  const targetName = toParamCase(target);
 
   execSync('node', [startScript], {
     cwd: startPath,
     log: false,
     // @ts-ignore
     env: {
-      USE_MODULAR_BABEL: process.env.USE_MODULAR_BABEL,
       MODULAR_ROOT: modularRoot,
+      MODULAR_PACKAGE: target,
+      MODULAR_PACKAGE_NAME: targetName,
     },
   });
   return Promise.resolve();

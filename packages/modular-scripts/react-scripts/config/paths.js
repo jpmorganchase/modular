@@ -7,11 +7,27 @@ const getPublicUrlOrPath = require('../../react-dev-utils/getPublicUrlOrPath');
 if (!process.env.MODULAR_ROOT) {
   throw new Error(
     // this should never be visible to a user, only us when we're developing
-    'MODULAR_ROOT not found in environment, did you forget to pass it when calling react-scripts in cli.ts?',
+    'MODULAR_ROOT not found in environment, did you forget to pass it when calling modular-scripts in cli.ts?',
+  );
+}
+
+if (!process.env.MODULAR_PACKAGE) {
+  throw new Error(
+    // this should never be visible to a user, only us when we're developing
+    'MODULAR_PACKAGE not found in environment, did you forget to pass it when calling modular-scripts in cli.ts?',
+  );
+}
+
+if (!process.env.MODULAR_PACKAGE_NAME) {
+  throw new Error(
+    // this should never be visible to a user, only us when we're developing
+    'MODULAR_PACKAGE_NAME not found in environment, did you forget to pass it when calling modular-scripts in cli.ts?',
   );
 }
 
 const modularRoot = process.env.MODULAR_ROOT;
+const modularPackage = process.env.MODULAR_PACKAGE;
+const modularPackageName = process.env.MODULAR_PACKAGE_NAME;
 
 // Make sure any symlinks in the project folder are resolved:
 // https://github.com/facebook/create-react-app/issues/637
@@ -32,7 +48,7 @@ const publicUrlOrPath = getPublicUrlOrPath(
   process.env.PUBLIC_URL,
 );
 
-const buildPath = process.env.BUILD_PATH || 'build';
+const buildPath = path.join(modularRoot, 'dist', modularPackageName);
 
 const moduleFileExtensions = [
   'web.mjs',
@@ -65,7 +81,7 @@ const resolveModule = (resolveFn, filePath) => {
 module.exports = {
   dotenv: resolveApp('.env'),
   appPath: resolveApp('.'),
-  appBuild: resolveApp(buildPath),
+  appBuild: buildPath,
   appPublic: resolveApp('public'),
   appHtml: resolveApp('public/index.html'),
   appIndexJs: resolveModule(resolveApp, 'src/index'),
@@ -81,6 +97,9 @@ module.exports = {
   appNodeModules: resolveApp('node_modules'),
   swSrc: resolveModule(resolveApp, 'src/service-worker'),
   publicUrlOrPath,
+  modularRoot,
+  modularPackage,
+  modularPackageName,
 };
 
 module.exports.moduleFileExtensions = moduleFileExtensions;
