@@ -149,13 +149,11 @@ checkBrowsers(paths.appPath, isInteractive)
       });
     });
 
-    if (process.env.CI !== 'true') {
-      // Gracefully exit when stdin ends
-      process.stdin.on('end', function () {
-        devServer.close();
-        process.exit();
-      });
-    }
+    // Gracefully exit when stdin ends
+    process.stdin.on('end', function () {
+      devServer.close();
+      process.exit();
+    });
   })
   .catch((err) => {
     if (err && err.message) {
