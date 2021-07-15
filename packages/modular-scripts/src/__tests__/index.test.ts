@@ -12,11 +12,7 @@ import {
 } from 'pptr-testing-library';
 import getModularRoot from '../utils/getModularRoot';
 import { startApp, DevServer } from './start-app';
-import type {
-  Browser,
-  LaunchOptions,
-  BrowserLaunchArgumentOptions,
-} from 'puppeteer';
+import puppeteer from 'puppeteer';
 
 const rimraf = promisify(_rimraf);
 
@@ -125,25 +121,19 @@ describe('modular-scripts', () => {
     });
   });
 
-  const describeSkipIf: typeof describe = process.env.CI
-    ? describe.skip
-    : describe;
-
-  describeSkipIf('WHEN starting a view', () => {
-    let browser: Browser;
+  describe('WHEN starting a view', () => {
+    let browser: puppeteer.Browser;
     let devServer: DevServer;
     let port: string;
 
     beforeAll(async () => {
-      const launchArgs: LaunchOptions & BrowserLaunchArgumentOptions = {
+      const launchArgs: puppeteer.LaunchOptions &
+        puppeteer.BrowserLaunchArgumentOptions = {
         // always run in headless - if you want to debug this locally use the env var to
         headless: !Boolean(process.env.NO_HEADLESS_TESTS),
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
       };
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,  @typescript-eslint/no-var-requires
-      const puppeteer = require('puppeteer');
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       browser = await puppeteer.launch(launchArgs);
       port = '4000';
       devServer = await startApp(targetedView, { env: { PORT: port } });

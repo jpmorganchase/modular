@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import * as fs from 'fs-extra';
+import * as isCi from 'is-ci';
 import chalk from 'chalk';
 import commander from 'commander';
 import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
@@ -126,12 +127,8 @@ program
   .option('--updateSnapshot, -u', testOptions.updateSnapshot.description)
   .option('--verbose', testOptions.verbose.description)
   .option('--watch', testOptions.watch.description)
-  .option(
-    '--watchAll [value]',
-    testOptions.watchAll.description,
-    !process.env.CI,
-  )
-  .option('--bail [value]', testOptions.bail.description, process.env.CI)
+  .option('--watchAll [value]', testOptions.watchAll.description, !isCi)
+  .option('--bail [value]', testOptions.bail.description, isCi)
   .option('--clearCache', testOptions.clearCache.description)
   .option('--logHeapUsage', testOptions.logHeapUsage.description)
   .option('--no-cache', testOptions.cache.description)

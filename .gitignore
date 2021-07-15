@@ -12,6 +12,7 @@ packages/nested
 # created by tests in modular-views.macro
 packages/view-1
 packages/view-2
+packages/scoped
 
 
 # Build output
