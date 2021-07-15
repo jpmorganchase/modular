@@ -30,7 +30,7 @@ export async function makeTypings(packagePath: string): Promise<void> {
   tsconfig.compilerOptions = {
     ...tsconfig.compilerOptions,
     declarationDir: `${packagePath}/${outputDirectory}-types`,
-    rootDir: packagePath,
+    rootDir: `${packagePath}/src`,
   };
 
   // Extract config information
