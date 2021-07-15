@@ -2,6 +2,7 @@ import * as fs from 'fs-extra';
 import path from 'path';
 import chalk from 'chalk';
 import glob from 'glob';
+import isCi from 'is-ci';
 import type { Config } from '@jest/types';
 import { defaults } from 'jest-config';
 import getModularRoot from '../../utils/getModularRoot';
@@ -195,5 +196,16 @@ export function createJestConfig(
       moduleNameMapper: mergedMapper,
     });
   }
+
+  // don't typecheck tests in CI
+  if (isCi) {
+    jestConfig.globals = {
+      'ts-jest': {
+        diagnostics: false,
+        isolatedModules: true,
+      },
+    };
+  }
+
   return jestConfig;
 }
