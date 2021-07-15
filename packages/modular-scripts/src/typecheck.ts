@@ -1,10 +1,12 @@
 import isCI from 'is-ci';
 import path from 'path';
 import ts from 'typescript';
+import chalk from 'chalk';
 import getPackageMetadata from './buildPackage/getPackageMetadata';
 import { reportTSDiagnostics } from './buildPackage/reportTSDiagnostics';
+import * as logger from './utils/logger';
 
-export async function typecheck(): Promise<void> {
+export async function typecheck(silent: boolean): Promise<void> {
   const { typescriptConfig } = await getPackageMetadata();
 
   const { _compilerOptions, ...tsConfig } = typescriptConfig;
@@ -45,12 +47,19 @@ export async function typecheck(): Promise<void> {
       ts.sys.useCaseSensitiveFileNames ? file : toFileNameLowerCase(file),
   };
 
-  if (isCI && diagnostics.length) {
-    throw new Error(ts.formatDiagnostics(diagnostics, diagnosticHost));
-  }
   if (diagnostics.length) {
+    if (silent) {
+      throw new Error('\u0078 Typecheck did not pass');
+    }
+
+    if (isCI) {
+      throw new Error(ts.formatDiagnostics(diagnostics, diagnosticHost));
+    }
+
     throw new Error(
       ts.formatDiagnosticsWithColorAndContext(diagnostics, diagnosticHost),
     );
   }
+
+  logger.log(chalk.green('\u2713 Typecheck passed'));
 }

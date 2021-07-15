@@ -219,12 +219,20 @@ program
     await port(relativePath);
   });
 
+interface TypecheckOptions {
+  silent: boolean;
+}
+
 program
   .command('typecheck')
+  .option(
+    '--silent',
+    'silences the error messages gathered during the type check',
+  )
   .description('Typechecks the entire project')
-  .action(async () => {
+  .action(async (options: TypecheckOptions) => {
     const { typecheck } = await import('./typecheck');
-    await typecheck();
+    await typecheck(options.silent);
   });
 
 void startupCheck()
