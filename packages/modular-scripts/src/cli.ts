@@ -216,6 +216,14 @@ program
     await port(relativePath);
   });
 
+program
+  .command('lint')
+  .description('Lints the codebase')
+  .action(async () => {
+    const { lint } = await import('./lint');
+    await lint();
+  });
+
 void startupCheck()
   .then(() => {
     return program.parseAsync(process.argv);
