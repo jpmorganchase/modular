@@ -1,5 +1,20 @@
 # modular-scripts
 
+## 1.1.0
+
+### Minor Changes
+
+- f049ab9: Modular port takes a relative path to a react app from modular root
+  and ports the source code over as a modular app in the current modular
+  packages workspace
+
+### Patch Changes
+
+- 4098979: Expose react-scripts internally through modular-scripts. Improve
+  performance of app builds by directly building into the output dist directory
+- 8b75851: Bump rollup from 2.52.8 to 2.53.1
+- f560685: Close dev-server when running `start` in CI.
+
 ## 1.0.1
 
 ### Patch Changes
