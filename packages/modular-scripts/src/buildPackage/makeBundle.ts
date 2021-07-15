@@ -110,7 +110,7 @@ export async function makeBundle(
         presets: [
           // Preset orders matters, please see: https://github.com/babel/babel/issues/8752#issuecomment-486541662
           [
-            '@babel/preset-env',
+            require.resolve('@babel/preset-env'),
             // TODO: why doesn't this read `targets` from package.json?
             {
               targets: {
@@ -119,10 +119,13 @@ export async function makeBundle(
               },
             },
           ],
-          ['@babel/preset-typescript', { isTSX: true, allExtensions: true }],
-          '@babel/preset-react',
+          [
+            require.resolve('@babel/preset-typescript'),
+            { isTSX: true, allExtensions: true },
+          ],
+          require.resolve('@babel/preset-react'),
         ],
-        plugins: ['@babel/plugin-proposal-class-properties'],
+        plugins: [require.resolve('@babel/plugin-proposal-class-properties')],
         extensions,
         include: [`packages/**/*`],
         exclude: 'node_modules/**',

@@ -73,12 +73,12 @@ program
         preserveModules?: boolean;
       },
     ) => {
-      const { default: buildPackages } = await import('./build');
+      const { default: build } = await import('./build');
       logger.log('building packages at:', packagePaths.join(', '));
 
       for (let i = 0; i < packagePaths.length; i++) {
         try {
-          await buildPackages(packagePaths[i], options['preserveModules']);
+          await build(packagePaths[i], options['preserveModules']);
         } catch (err) {
           logger.error(`building ${packagePaths[i]} failed`);
           throw err;
