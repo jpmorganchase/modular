@@ -28,6 +28,7 @@ function distinct<T>(arr: T[]): T[] {
 export async function makeBundle(
   packagePath: string,
   preserveModules: boolean,
+  includePrivate: boolean,
 ): Promise<boolean> {
   const modularRoot = getModularRoot();
   const metadata = await getPackageMetadata();
@@ -47,7 +48,7 @@ export async function makeBundle(
   if (!packageJson) {
     throw new Error(`no package.json in ${packagePath}, bailing...`);
   }
-  if (packageJson.private === true) {
+  if (!includePrivate && packageJson.private === true) {
     throw new Error(`${packagePath} is marked private, bailing...`);
   }
 

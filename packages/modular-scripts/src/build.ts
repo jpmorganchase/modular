@@ -9,7 +9,11 @@ import isModularType from './utils/isModularType';
 import execSync from './utils/execSync';
 import getLocation from './utils/getLocation';
 
-async function build(target: string, preserveModules?: boolean): Promise<void> {
+async function build(
+  target: string,
+  preserveModules = true,
+  includePrivate = false,
+): Promise<void> {
   const modularRoot = getModularRoot();
   const targetPath = await getLocation(target);
 
@@ -39,7 +43,7 @@ async function build(target: string, preserveModules?: boolean): Promise<void> {
     const { buildPackage } = await import('./buildPackage');
     // ^ we do a dynamic import here to defer the module's initial side effects
     // till when it's actually needed (i.e. now)
-    await buildPackage(target, preserveModules);
+    await buildPackage(target, preserveModules, includePrivate);
   }
 }
 
