@@ -18,9 +18,11 @@ async function build(target: string, preserveModules?: boolean): Promise<void> {
       'modular-scripts/react-scripts/scripts/build.js',
     );
 
+    const targetName = toParamCase(target);
+
     // create-react-app doesn't support plain module outputs yet,
     // so --preserve-modules has no effect here
-    await fs.remove(path.join(outputDirectory, toParamCase(target)));
+    await fs.remove(path.join(outputDirectory, targetName));
 
     // TODO: this shouldn't be sync
     execSync('node', [buildScript], {
@@ -29,13 +31,10 @@ async function build(target: string, preserveModules?: boolean): Promise<void> {
       // @ts-ignore
       env: {
         MODULAR_ROOT: modularRoot,
+        MODULAR_PACKAGE: target,
+        MODULAR_PACKAGE_NAME: targetName,
       },
     });
-
-    await fs.move(
-      path.join(targetPath, 'build'),
-      path.join(outputDirectory, toParamCase(target)),
-    );
   } else {
     const { buildPackage } = await import('./buildPackage');
     // ^ we do a dynamic import here to defer the module's initial side effects

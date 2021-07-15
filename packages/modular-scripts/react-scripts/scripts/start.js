@@ -12,21 +12,21 @@ process.on('unhandledRejection', (err) => {
 });
 
 // Ensure environment variables are read.
-require('../config/env');
+require('../config/setupEnv');
 
 const fs = require('fs');
-const chalk = require('react-dev-utils/chalk');
+const chalk = require('chalk');
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
-const clearConsole = require('react-dev-utils/clearConsole');
-const checkRequiredFiles = require('react-dev-utils/checkRequiredFiles');
+const clearConsole = require('../../react-dev-utils/clearConsole');
+const checkRequiredFiles = require('../../react-dev-utils/checkRequiredFiles');
 const {
   choosePort,
   createCompiler,
   prepareProxy,
   prepareUrls,
-} = require('react-dev-utils/WebpackDevServerUtils');
-const openBrowser = require('react-dev-utils/openBrowser');
+} = require('../../react-dev-utils/WebpackDevServerUtils');
+const openBrowser = require('../../react-dev-utils/openBrowser');
 const semver = require('semver');
 const isCI = require('is-ci');
 
@@ -37,7 +37,6 @@ const getClientEnvironment = require('../config/env');
 const react = require(require.resolve('react', { paths: [paths.appPath] }));
 
 const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
-const useYarn = true;
 const isInteractive = process.stdout.isTTY;
 
 // Warn and crash if required files are missing
@@ -68,7 +67,7 @@ if (process.env.HOST) {
 
 // We require that you explicitly set browsers and do not fall back to
 // browserslist defaults.
-const { checkBrowsers } = require('react-dev-utils/browsersHelper');
+const { checkBrowsers } = require('../../react-dev-utils/browsersHelper');
 checkBrowsers(paths.appPath, isInteractive)
   .then(() => {
     // We attempt to use the default port but if it is busy, we offer the user to
@@ -106,7 +105,6 @@ checkBrowsers(paths.appPath, isInteractive)
       config,
       devSocket,
       urls,
-      useYarn,
       useTypeScript,
       tscCompileOnError,
       webpack,
@@ -152,13 +150,11 @@ checkBrowsers(paths.appPath, isInteractive)
       });
     });
 
-    if (process.env.CI !== 'true') {
-      // Gracefully exit when stdin ends
-      process.stdin.on('end', function () {
-        devServer.close();
-        process.exit();
-      });
-    }
+    // Gracefully exit when stdin ends
+    process.stdin.on('end', function () {
+      devServer.close();
+      process.exit();
+    });
   })
   .catch((err) => {
     if (err && err.message) {
