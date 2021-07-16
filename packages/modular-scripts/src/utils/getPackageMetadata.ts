@@ -6,7 +6,7 @@ import * as fse from 'fs-extra';
 
 import getModularRoot from './getModularRoot';
 import { getAllWorkspaces } from './getAllWorkspaces';
-import { reportTSDiagnostics } from '../buildPackage/reportTSDiagnostics';
+import { reportTSDiagnostics } from './reportTSDiagnostics';
 
 import memoize from './memoize';
 
