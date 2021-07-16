@@ -65,8 +65,7 @@
     "type": "root"
   },
   "lint-staged": {
-    "*.{js,ts,tsx}": "eslint --cache --ext .js,.ts,.tsx --max-warnings 0",
-    "*.{js,json,ts,tsx,css,md,mdx}": "prettier --write"
+    "*.{js,ts,tsx}": "eslint --cache --ext .js,.ts,.tsx --max-warnings 0"
   },
   "resolutions": {
     "rollup": "^2.38.3",
