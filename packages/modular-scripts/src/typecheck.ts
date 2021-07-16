@@ -64,9 +64,10 @@ export async function typecheck(silent = false): Promise<void> {
       : x;
   }
 
+  // Does not emit files or typings but will add declaration diagnostics to our errors
+  // This will ensure that makeTypings will be successful in CI before actually attempting to build
   const emitResult = program.emit();
 
-  // Report errors
   const diagnostics = ts
     .getPreEmitDiagnostics(program)
     .concat(emitResult.diagnostics);
