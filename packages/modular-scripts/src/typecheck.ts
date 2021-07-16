@@ -2,14 +2,21 @@ import isCI from 'is-ci';
 import path from 'path';
 import ts from 'typescript';
 import chalk from 'chalk';
-import getPackageMetadata from './buildPackage/getPackageMetadata';
-import { reportTSDiagnostics } from './buildPackage/reportTSDiagnostics';
+import getPackageMetadata from './utils/getPackageMetadata';
 import * as logger from './utils/logger';
+import getModularRoot from './utils/getModularRoot';
 
 export async function typecheck(silent: boolean): Promise<void> {
   const { typescriptConfig } = await getPackageMetadata();
 
   const { _compilerOptions, ...tsConfig } = typescriptConfig;
+
+  const diagnosticHost = {
+    getCurrentDirectory: (): string => getModularRoot(),
+    getNewLine: (): string => ts.sys.newLine,
+    getCanonicalFileName: (file: string): string =>
+      ts.sys.useCaseSensitiveFileNames ? file : toFileNameLowerCase(file),
+  };
 
   // Parse all config except for compilerOptions
   const configParseResult = ts.parseJsonConfigFileContent(
@@ -19,8 +26,10 @@ export async function typecheck(silent: boolean): Promise<void> {
   );
 
   if (configParseResult.errors.length > 0) {
-    reportTSDiagnostics(':root', configParseResult.errors);
-    throw new Error('Could not parse Typescript configuration');
+    logger.error('Failed to parse your tsconfig.json');
+    throw new Error(
+      ts.formatDiagnostics(configParseResult.errors, diagnosticHost),
+    );
   }
 
   const program = ts.createProgram(
@@ -40,26 +49,24 @@ export async function typecheck(silent: boolean): Promise<void> {
 
   const diagnostics = ts.getPreEmitDiagnostics(program) as ts.Diagnostic[];
 
-  const diagnosticHost = {
-    getCurrentDirectory: (): string => ts.sys.getCurrentDirectory(),
-    getNewLine: (): string => ts.sys.newLine,
-    getCanonicalFileName: (file: string): string =>
-      ts.sys.useCaseSensitiveFileNames ? file : toFileNameLowerCase(file),
-  };
-
   if (diagnostics.length) {
     if (silent) {
+      // "x Typecheck did not pass"
       throw new Error('\u0078 Typecheck did not pass');
     }
 
     if (isCI) {
+      // formatDiagnostics will return a readable list of error messages, each with its own line
       throw new Error(ts.formatDiagnostics(diagnostics, diagnosticHost));
     }
 
     throw new Error(
+      // formatDiagnosticsWithColorAndContext will return a list of errors, each with its own line
+      // and provide an expanded snapshot of the line with the error
       ts.formatDiagnosticsWithColorAndContext(diagnostics, diagnosticHost),
     );
   }
 
+  // "✓ Typecheck passed"
   logger.log(chalk.green('\u2713 Typecheck passed'));
 }

@@ -634,7 +634,8 @@ module.exports = function (webpackEnv) {
           // See https://github.com/cra-template/pwa/issues/13#issuecomment-722667270
           maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
         }),
-      // TypeScript type checking for non CI envs
+      // TypeScript type checking turned off for CI envs
+      // https://github.com/jpmorganchase/modular/issues/605
       useTypeScript &&
         !isCI &&
         new ForkTsCheckerWebpackPlugin({

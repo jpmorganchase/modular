@@ -16,7 +16,7 @@ import * as fse from 'fs-extra';
 
 import { getLogger } from './getLogger';
 import { getPackageEntryPoints } from './getPackageEntryPoints';
-import getPackageMetadata from './getPackageMetadata';
+import getPackageMetadata from '../utils/getPackageMetadata';
 import getModularRoot from '../utils/getModularRoot';
 import { makeBundle } from './makeBundle';
 import { makeTypings } from './makeTypings';

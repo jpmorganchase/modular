@@ -1,4 +1,4 @@
-import getPackageMetadata from './getPackageMetadata';
+import getPackageMetadata from '../utils/getPackageMetadata';
 
 export async function getPackageEntryPoints(packagePath: string): Promise<{
   main: string;

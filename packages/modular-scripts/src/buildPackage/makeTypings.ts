@@ -4,7 +4,7 @@ import * as ts from 'typescript';
 import * as fse from 'fs-extra';
 import { getLogger } from './getLogger';
 import { reportTSDiagnostics } from './reportTSDiagnostics';
-import getPackageMetadata from './getPackageMetadata';
+import getPackageMetadata from '../utils/getPackageMetadata';
 
 const outputDirectory = 'dist';
 const typescriptConfigFilename = 'tsconfig.json';
