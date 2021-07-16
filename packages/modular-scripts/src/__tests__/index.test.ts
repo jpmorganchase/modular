@@ -13,6 +13,7 @@ import {
 import getModularRoot from '../utils/getModularRoot';
 import { startApp, DevServer } from './start-app';
 import puppeteer from 'puppeteer';
+import { ModularPackageJson } from '../utils/isModularType';
 
 const rimraf = promisify(_rimraf);
 
@@ -210,7 +211,7 @@ describe('modular-scripts', () => {
           },
           "module": "dist-es/index.js",
           "name": "sample-view",
-          "typings": "dist-types/src/index.d.ts",
+          "typings": "dist-types/index.d.ts",
           "version": "1.0.0",
         }
       `);
@@ -321,7 +322,7 @@ describe('modular-scripts', () => {
           "main": "dist-cjs/index.js",
           "module": "dist-es/index.js",
           "name": "sample-package",
-          "typings": "dist-types/src/index.d.ts",
+          "typings": "dist-types/index.d.ts",
           "version": "1.0.0",
         }
       `);
@@ -343,6 +344,21 @@ describe('modular-scripts', () => {
         └─ package.json"
       `);
     });
+
+    it.each(['main', 'module', 'typings'])(
+      'THEN validates the typings file exists: %s',
+      async (key: keyof ModularPackageJson) => {
+        const packageJson = (await fs.readJSON(
+          path.join(modularRoot, 'dist', 'sample-package', 'package.json'),
+        )) as ModularPackageJson;
+        const value = packageJson[key] as string;
+        expect(
+          fs
+            .statSync(path.join(modularRoot, 'dist', 'sample-package', value))
+            .isFile(),
+        ).toEqual(true);
+      },
+    );
   });
 
   describe('WHEN building without preserve modules', () => {
@@ -376,7 +392,7 @@ describe('modular-scripts', () => {
           "main": "dist-cjs/nested-sample-package.cjs.js",
           "module": "dist-es/nested-sample-package.es.js",
           "name": "@nested/sample-package",
-          "typings": "dist-types/src/index.d.ts",
+          "typings": "dist-types/index.d.ts",
           "version": "1.0.0",
         }
       `);
@@ -398,5 +414,27 @@ describe('modular-scripts', () => {
         └─ package.json"
       `);
     });
+
+    it.each(['main', 'module', 'typings'])(
+      'THEN validates the typings file exists: %s',
+      async (key: keyof ModularPackageJson) => {
+        const packageJson = (await fs.readJSON(
+          path.join(
+            modularRoot,
+            'dist',
+            'nested-sample-package',
+            'package.json',
+          ),
+        )) as ModularPackageJson;
+        const value = packageJson[key] as string;
+        expect(
+          fs
+            .statSync(
+              path.join(modularRoot, 'dist', 'nested-sample-package', value),
+            )
+            .isFile(),
+        ).toEqual(true);
+      },
+    );
   });
 });
