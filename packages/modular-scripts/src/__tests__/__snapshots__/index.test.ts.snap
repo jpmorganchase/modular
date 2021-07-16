@@ -34,13 +34,13 @@ function SampleView() {
 }
 
 module.exports = SampleView;
-//# sourceMappingURL=sample-view.cjs.js.map
+//# sourceMappingURL=index.js.map
 "
 `;
 
 exports[`modular-scripts WHEN building a view THEN outputs the correct output cjs map file 1`] = `
 Object {
-  "file": "sample-view.cjs.js",
+  "file": "index.js",
   "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;AAEe,SAASA,UAAT,GAAmC;AAChD,sBAAOC;AAAK,mBAAY;AAAjB,8BAAP;AACD;;;;",
   "names": Array [
     "SampleView",

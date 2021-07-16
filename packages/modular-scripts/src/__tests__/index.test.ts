@@ -13,6 +13,7 @@ import {
 import getModularRoot from '../utils/getModularRoot';
 import { startApp, DevServer } from './start-app';
 import puppeteer from 'puppeteer';
+import { ModularPackageJson } from '../utils/isModularType';
 
 const rimraf = promisify(_rimraf);
 
@@ -204,13 +205,13 @@ describe('modular-scripts', () => {
             "README.md",
           ],
           "license": "UNLICENSED",
-          "main": "dist-cjs/sample-view.cjs.js",
+          "main": "dist-cjs/index.js",
           "modular": Object {
             "type": "view",
           },
-          "module": "dist-es/sample-view.es.js",
+          "module": "dist-es/index.js",
           "name": "sample-view",
-          "typings": "dist-types/src/index.d.ts",
+          "typings": "dist-types/index.d.ts",
           "version": "1.0.0",
         }
       `);
@@ -225,7 +226,7 @@ describe('modular-scripts', () => {
               'dist',
               'sample-view',
               'dist-cjs',
-              'sample-view.cjs.js',
+              'index.js',
             ),
           ),
         ),
@@ -240,7 +241,7 @@ describe('modular-scripts', () => {
             'dist',
             'sample-view',
             'dist-cjs',
-            'sample-view.cjs.js.map',
+            'index.js.map',
           ),
         ),
       ).toMatchSnapshot();
@@ -252,14 +253,13 @@ describe('modular-scripts', () => {
         "sample-view
         ├─ README.md #11adaka
         ├─ dist-cjs
-        │  ├─ sample-view.cjs.js #10vycz1
-        │  └─ sample-view.cjs.js.map #15ks78h
+        │  ├─ index.js #l140cq
+        │  └─ index.js.map #b9qv26
         ├─ dist-es
-        │  ├─ sample-view.es.js #1rtqi2k
-        │  └─ sample-view.es.js.map #1sky7si
+        │  ├─ index.js #ru9c3p
+        │  └─ index.js.map #171l8pf
         ├─ dist-types
-        │  └─ src
-        │     └─ index.d.ts #1vloh7q
+        │  └─ index.d.ts #1vloh7q
         └─ package.json"
       `);
     });
@@ -322,7 +322,7 @@ describe('modular-scripts', () => {
           "main": "dist-cjs/index.js",
           "module": "dist-es/index.js",
           "name": "sample-package",
-          "typings": "dist-types/src/index.d.ts",
+          "typings": "dist-types/index.d.ts",
           "version": "1.0.0",
         }
       `);
@@ -340,17 +340,31 @@ describe('modular-scripts', () => {
         │  ├─ index.js #1gjntzw
         │  └─ index.js.map #b17359
         ├─ dist-types
-        │  └─ src
-        │     └─ index.d.ts #f68aj
+        │  └─ index.d.ts #f68aj
         └─ package.json"
       `);
     });
+
+    it.each(['main', 'module', 'typings'])(
+      'THEN validates the typings file exists: %s',
+      async (key: keyof ModularPackageJson) => {
+        const packageJson = (await fs.readJSON(
+          path.join(modularRoot, 'dist', 'sample-package', 'package.json'),
+        )) as ModularPackageJson;
+        const value = packageJson[key] as string;
+        expect(
+          fs
+            .statSync(path.join(modularRoot, 'dist', 'sample-package', value))
+            .isFile(),
+        ).toEqual(true);
+      },
+    );
   });
 
   describe('WHEN building without preserve modules', () => {
     beforeAll(async () => {
       // build the nested package
-      await modular('build @nested/sample-package', {
+      await modular('build @nested/sample-package --preserve-modules false', {
         stdio: 'inherit',
       });
     });
@@ -378,7 +392,7 @@ describe('modular-scripts', () => {
           "main": "dist-cjs/nested-sample-package.cjs.js",
           "module": "dist-es/nested-sample-package.es.js",
           "name": "@nested/sample-package",
-          "typings": "dist-types/src/index.d.ts",
+          "typings": "dist-types/index.d.ts",
           "version": "1.0.0",
         }
       `);
@@ -396,10 +410,31 @@ describe('modular-scripts', () => {
         │  ├─ nested-sample-package.es.js #40jnpo
         │  └─ nested-sample-package.es.js.map #11g8lh9
         ├─ dist-types
-        │  └─ src
-        │     └─ index.d.ts #f68aj
+        │  └─ index.d.ts #f68aj
         └─ package.json"
       `);
     });
+
+    it.each(['main', 'module', 'typings'])(
+      'THEN validates the typings file exists: %s',
+      async (key: keyof ModularPackageJson) => {
+        const packageJson = (await fs.readJSON(
+          path.join(
+            modularRoot,
+            'dist',
+            'nested-sample-package',
+            'package.json',
+          ),
+        )) as ModularPackageJson;
+        const value = packageJson[key] as string;
+        expect(
+          fs
+            .statSync(
+              path.join(modularRoot, 'dist', 'nested-sample-package', value),
+            )
+            .isFile(),
+        ).toEqual(true);
+      },
+    );
   });
 });

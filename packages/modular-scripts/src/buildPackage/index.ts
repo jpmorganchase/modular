@@ -28,7 +28,8 @@ const rimraf = promisify(_rimraf);
 
 export async function buildPackage(
   target: string,
-  preserveModules = false,
+  preserveModules = true,
+  includePrivate = false,
 ): Promise<void> {
   const modularRoot = getModularRoot();
   const packagePath = await getRelativeLocation(target);
@@ -50,13 +51,20 @@ export async function buildPackage(
   await rimraf(path.join(modularRoot, packagePath, `${outputDirectory}-types`));
 
   // Generate the typings for a package first so that we can do type checking and don't waste time bundling otherwise
-  const { compilingBin } = await getPackageEntryPoints(packagePath);
+  const { compilingBin } = await getPackageEntryPoints(
+    packagePath,
+    includePrivate,
+  );
   if (!compilingBin) {
     await makeTypings(packagePath);
   }
 
   // generate the js files now that we know we have a valid package
-  const didBundle = await makeBundle(packagePath, preserveModules);
+  const didBundle = await makeBundle(
+    packagePath,
+    preserveModules,
+    includePrivate,
+  );
   if (!didBundle) {
     return;
   }

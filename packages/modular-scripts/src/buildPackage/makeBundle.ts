@@ -1,6 +1,5 @@
 import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import { paramCase as toParamCase } from 'change-case';
-import * as fse from 'fs-extra';
 import * as path from 'path';
 import builtinModules from 'builtin-modules';
 import chalk from 'chalk';
@@ -28,6 +27,7 @@ function distinct<T>(arr: T[]): T[] {
 export async function makeBundle(
   packagePath: string,
   preserveModules: boolean,
+  includePrivate: boolean,
 ): Promise<boolean> {
   const modularRoot = getModularRoot();
   const metadata = await getPackageMetadata();
@@ -42,45 +42,13 @@ export async function makeBundle(
 
   const packageJson = packageJsonsByPackagePath[packagePath];
 
-  const { main, compilingBin } = await getPackageEntryPoints(packagePath);
+  const { main, compilingBin } = await getPackageEntryPoints(
+    packagePath,
+    includePrivate,
+  );
 
-  if (!packageJson) {
-    throw new Error(`no package.json in ${packagePath}, bailing...`);
-  }
-  if (packageJson.private === true) {
-    throw new Error(`${packagePath} is marked private, bailing...`);
-  }
-
-  if (!fse.existsSync(path.join(modularRoot, packagePath, main))) {
-    throw new Error(
-      `package.json at ${packagePath} does not have a main file that points to an existing source file, bailing...`,
-    );
-  }
-
-  if (!packageJson.name) {
-    throw new Error(
-      `package.json at ${packagePath} does not have a valid "name", bailing...`,
-    );
-  }
-
-  if (!packageJson.version) {
-    throw new Error(
-      `package.json at ${packagePath} does not have a valid "version", bailing...`,
-    );
-  }
-
-  if (packageJson.module) {
-    throw new Error(
-      `package.json at ${packagePath} shouldn't have a "module" field, bailing...`,
-    );
-  }
-
-  if (packageJson.typings) {
-    throw new Error(
-      `package.json at ${packagePath} shouldn't have a "typings" field, bailing...`,
-    );
-  }
-  logger.log(`building ${packageJson.name} at ${packagePath}...`);
+  const packageJsonName = packageJson.name as string;
+  logger.log(`building ${packageJsonName} at ${packagePath}...`);
 
   const bundle = await rollup.rollup({
     input: path.join(modularRoot, packagePath, main),
@@ -273,7 +241,7 @@ export async function makeBundle(
             modularRoot,
             packagePath,
             `${outputDirectory}-cjs`,
-            toParamCase(packageJson.name) + '.cjs.js',
+            toParamCase(packageJsonName) + '.cjs.js',
           ),
         }),
     format: 'cjs',
@@ -293,7 +261,7 @@ export async function makeBundle(
               modularRoot,
               packagePath,
               `${outputDirectory}-es`,
-              toParamCase(packageJson.name) + '.es.js',
+              toParamCase(packageJsonName) + '.es.js',
             ),
           }),
       format: 'es',
@@ -323,7 +291,7 @@ export async function makeBundle(
               .replace(/\.tsx?$/, '.js')
               .replace(path.dirname(main) + '/', ''),
           )
-        : `${outputDirectory}-cjs/${toParamCase(packageJson.name) + '.cjs.js'}`,
+        : `${outputDirectory}-cjs/${toParamCase(packageJsonName) + '.cjs.js'}`,
       module: preserveModules
         ? path.join(
             `${outputDirectory}-es`,
@@ -331,16 +299,16 @@ export async function makeBundle(
               .replace(/\.tsx?$/, '.js')
               .replace(path.dirname(main) + '/', ''),
           )
-        : `${outputDirectory}-es/${toParamCase(packageJson.name) + '.es.js'}`,
+        : `${outputDirectory}-es/${toParamCase(packageJsonName) + '.es.js'}`,
       typings: path.join(
         `${outputDirectory}-types`,
-        main.replace(/\.tsx?$/, '.d.ts'),
+        path.relative('src', main).replace(/\.tsx?$/, '.d.ts'),
       ),
     };
   }
 
   // store the public facing package.json that we'll write to disk later
-  publicPackageJsons[packageJson.name] = {
+  publicPackageJsons[packageJsonName] = {
     ...packageJson,
     ...outputFilesPackageJson,
     dependencies: {
@@ -356,6 +324,6 @@ export async function makeBundle(
     ]),
   };
 
-  logger.log(`built ${packageJson.name} at ${packagePath}`);
+  logger.log(`built ${packageJsonName} at ${packagePath}`);
   return true;
 }
