@@ -6,10 +6,27 @@ import getPackageMetadata from './utils/getPackageMetadata';
 import * as logger from './utils/logger';
 import getModularRoot from './utils/getModularRoot';
 
-export async function typecheck(silent: boolean): Promise<void> {
+export async function typecheck(silent = false): Promise<void> {
   const { typescriptConfig } = await getPackageMetadata();
 
-  const { _compilerOptions, ...tsConfig } = typescriptConfig;
+  const { _compilerOptions, ...rest } = typescriptConfig;
+
+  const tsConfig = {
+    ...rest,
+    exclude: [
+      'node_modules',
+      'bower_components',
+      'jspm_packages',
+      'tmp',
+      '**/dist-types',
+      '**/dist-cjs',
+      '**/dist-es',
+      'dist',
+    ],
+    compilerOptions: {
+      noEmit: true,
+    },
+  };
 
   const diagnosticHost = {
     getCurrentDirectory: (): string => getModularRoot(),
@@ -47,7 +64,12 @@ export async function typecheck(silent: boolean): Promise<void> {
       : x;
   }
 
-  const diagnostics = ts.getPreEmitDiagnostics(program) as ts.Diagnostic[];
+  const emitResult = program.emit();
+
+  // Report errors
+  const diagnostics = ts
+    .getPreEmitDiagnostics(program)
+    .concat(emitResult.diagnostics);
 
   if (diagnostics.length) {
     if (silent) {
@@ -60,9 +82,9 @@ export async function typecheck(silent: boolean): Promise<void> {
       throw new Error(ts.formatDiagnostics(diagnostics, diagnosticHost));
     }
 
+    // formatDiagnosticsWithColorAndContext will return a list of errors, each with its own line
+    // and provide an expanded snapshot of the line with the error
     throw new Error(
-      // formatDiagnosticsWithColorAndContext will return a list of errors, each with its own line
-      // and provide an expanded snapshot of the line with the error
       ts.formatDiagnosticsWithColorAndContext(diagnostics, diagnosticHost),
     );
   }

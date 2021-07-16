@@ -4,11 +4,11 @@ import * as path from 'path';
 import * as ts from 'typescript';
 import * as fse from 'fs-extra';
 
-import getModularRoot from './getModularRoot';
-import { getAllWorkspaces } from './getAllWorkspaces';
+import getModularRoot from '../utils/getModularRoot';
+import { getAllWorkspaces } from '../utils/getAllWorkspaces';
 import { reportTSDiagnostics } from './reportTSDiagnostics';
 
-import memoize from './memoize';
+import memoize from '../utils/memoize';
 
 const typescriptConfigFilename = 'tsconfig.json';
 
