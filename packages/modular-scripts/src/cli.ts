@@ -65,12 +65,18 @@ program
   .description(
     'Build a list of packages (multiple package names can be supplied separated by space)',
   )
-  .option('--preserve-modules')
+  .option(
+    '--preserve-modules [value]',
+    'Preserve module structure in generated modules',
+    'true',
+  )
+  .option('--private', 'Enable the building of private packages', false)
   .action(
     async (
       packagePaths: string[],
       options: {
-        preserveModules?: boolean;
+        preserveModules: string;
+        private: boolean;
       },
     ) => {
       const { default: build } = await import('./build');
@@ -78,7 +84,11 @@ program
 
       for (let i = 0; i < packagePaths.length; i++) {
         try {
-          await build(packagePaths[i], options['preserveModules']);
+          await build(
+            packagePaths[i],
+            JSON.parse(options.preserveModules) as boolean,
+            options.private,
+          );
         } catch (err) {
           logger.error(`building ${packagePaths[i]} failed`);
           throw err;

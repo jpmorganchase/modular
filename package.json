@@ -31,7 +31,7 @@
     "@testing-library/dom": "^8.1.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.6",
-    "@testing-library/user-event": "^13.1.8",
+    "@testing-library/user-event": "^13.2.0",
     "@types/find-up": "^4.0.0",
     "@types/fs-extra": "^9.0.12",
     "@types/is-ci": "^3.0.0",
@@ -46,7 +46,7 @@
     "@types/update-notifier": "^5.0.1",
     "commander": "^8.0.0",
     "esbuild": "^0.12.15",
-    "eslint": "^7.30.0",
+    "eslint": "^7.31.0",
     "execa": "^5.1.1",
     "husky": "^7.0.1",
     "is-ci": "^2.0.0",
@@ -65,8 +65,7 @@
     "type": "root"
   },
   "lint-staged": {
-    "*.{js,ts,tsx}": "eslint --cache --ext .js,.ts,.tsx --max-warnings 0",
-    "*.{js,json,ts,tsx,css,md,mdx}": "prettier --write"
+    "*.{js,ts,tsx}": "eslint --cache --ext .js,.ts,.tsx --max-warnings 0"
   },
   "resolutions": {
     "rollup": "^2.38.3",
