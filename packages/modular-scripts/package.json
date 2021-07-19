@@ -66,7 +66,7 @@
     "is-root": "2.1.0",
     "jest": "26.6.0",
     "jest-circus": "26.6.0",
-    "jest-config": "^26.6.3",
+    "jest-config": "^27.0.6",
     "jest-transform-stub": "^2.0.0",
     "jest-watch-typeahead": "0.6.4",
     "loader-utils": "2.0.0",
