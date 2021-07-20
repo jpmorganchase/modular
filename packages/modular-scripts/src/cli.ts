@@ -245,6 +245,14 @@ program
     await lint(options);
   });
 
+program
+  .command('typecheck')
+  .description('Typechecks the entire project')
+  .action(async () => {
+    const { typecheck } = await import('./typecheck');
+    await typecheck();
+  });
+
 void startupCheck()
   .then(() => {
     return program.parseAsync(process.argv);
