@@ -1,25 +1,39 @@
 import * as path from 'path';
+import isCI from 'is-ci';
 import { resolveAsBin } from './utils/resolve-as-bin';
-import execSync from './utils/execSync';
 import getModularRoot from './utils/getModularRoot';
-import { getChangedFiles } from './utils/gitActions';
+import execSync from './utils/execSync';
+import { getDiffedFiles } from './utils/gitActions';
+import * as logger from './utils/logger';
+import type { LintOptions } from './cli';
 
-export async function lint(): Promise<void> {
+export async function lint({
+  onlyDiff = false,
+  fix = false,
+}: LintOptions): Promise<void> {
   const modularRoot = getModularRoot();
-  const changedFiles = getChangedFiles();
-
   const lintExtensions = ['.ts', '.tsx', '.js', '.jsx'];
+  let targetedFiles = ['<rootDir>/**/src/**/*.{js,ts,tsx}'];
 
-  const testMatch = changedFiles
-    .filter((p) => lintExtensions.includes(path.extname(p)))
-    .map((p) => `<rootDir>/${p}`);
+  if (onlyDiff && !isCI) {
+    const diffedFiles = getDiffedFiles();
+    if (diffedFiles.length === 0) {
+      logger.log(
+        'No diffed files detected. Remove --onlyDiff option to lint the entire codebase',
+      );
+      return;
+    }
+    targetedFiles = diffedFiles
+      .filter((p: string) => lintExtensions.includes(path.extname(p)))
+      .map((p: string) => `<rootDir>/${p}`);
+  }
 
   const jestEslintConfig = {
-    runner: 'jest-runner-eslint',
-    watchPlugins: ['jest-runner-eslint/watch-fix'],
+    runner: 'modular-scripts/jest-runner-eslint',
     displayName: 'lint',
     rootDir: modularRoot,
-    testMatch: testMatch,
+    testMatch: targetedFiles,
+    testPathIgnorePatterns: ['/node_modules/', '/dist/'],
     globals: {
       'ts-jest': {
         diagnostics: false,
@@ -28,17 +42,22 @@ export async function lint(): Promise<void> {
     },
   };
 
-  const testBin = await resolveAsBin('jest-cli');
   const testArgs = ['--config', `"${JSON.stringify(jestEslintConfig)}"`];
-  execSync(testBin, testArgs, {
-    cwd: getModularRoot(),
-    log: false,
-    // @ts-ignore
-    env: {
-      BABEL_ENV: 'test',
-      NODE_ENV: 'test',
-      PUBLIC_URL: '',
-      MODULAR_ROOT: getModularRoot(),
-    },
-  });
+
+  const testBin = await resolveAsBin('jest-cli');
+
+  try {
+    execSync(testBin, testArgs, {
+      cwd: modularRoot,
+      log: false,
+      // @ts-ignore
+      env: {
+        MODULAR_ROOT: modularRoot,
+        MODULAR_LINT_FIX: String(fix),
+      },
+    });
+  } catch (_err) {
+    // silence CLI command failure message because jest-runner-eslint handles printing the lint errors
+    process.exit(1);
+  }
 }

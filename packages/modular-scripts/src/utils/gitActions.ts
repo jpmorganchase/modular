@@ -19,7 +19,7 @@ export function stashChanges(): void {
   throw new Error('Failed to perform action cleanly. Stashing git changes...');
 }
 
-function getGitDefaultBranch() {
+function getGitDefaultBranch(): string {
   const result = execa.sync('git', [
     'symbolic-ref',
     'refs/remotes/origin/HEAD',
@@ -27,18 +27,39 @@ function getGitDefaultBranch() {
   return stripAnsi(result.stdout).split('/').pop() || 'master';
 }
 
-function getModifiedAndUntrackedFileChanges() {
+function getModifiedAndUntrackedFileChanges(): string[] {
+  // get all modified and untracked files, excluding the standard Git exclusion sources
   const lsFiles = execa.sync('git', ['ls-files', '-mo', '--exclude-standard'], {
     cwd: getModularRoot(),
   });
-  return stripAnsi(lsFiles.stdout).split('\n');
+  if (lsFiles.stdout.length) {
+    return stripAnsi(lsFiles.stdout).split('\n');
+  }
+  return [];
 }
 
-function getGitDiff() {
+// Get all diffed files from git remote origin HEAD
+function getGitDiff(): string[] {
   const defaultBranch = getGitDefaultBranch();
-  const sha = execa.sync('git', ['merge-base', 'HEAD', defaultBranch], {
-    cwd: getModularRoot(),
-  });
+  // get a commit sha between the HEAD of the current branch and git remote origin HEAD
+  const sha = execa.sync(
+    'git',
+    ['merge-base', 'HEAD', `origin/${defaultBranch}`],
+    {
+      cwd: getModularRoot(),
+    },
+  );
+
+  /**
+   * diff-filter=ACMRTUB
+   * (A) Added
+   * (C) Copied
+   * (M) Modified
+   * (R) Renamed
+   * (T) Type (i.e. regular file, symlink, submodule, …​) changed
+   * (U) Unmerged
+   * (B) Broken pairing (file that has had at least a certain percentage of its content deleted or changed)
+   */
   const diff = execa.sync(
     'git',
     ['diff', '--name-only', '--diff-filter=ACMRTUB', sha.stdout],
@@ -46,14 +67,17 @@ function getGitDiff() {
       cwd: getModularRoot(),
     },
   );
-  return stripAnsi(diff.stdout).split('\n');
+  if (diff.stdout.length) {
+    return stripAnsi(diff.stdout).split('\n');
+  }
+  return [];
 }
 
-export function getChangedFiles(): string[] {
+export function getDiffedFiles(): string[] {
   return Array.from(
     new Set([
-      ...getModifiedAndUntrackedFileChanges(),
       ...getGitDiff(),
+      ...getModifiedAndUntrackedFileChanges(),
     ]).values(),
   );
 }

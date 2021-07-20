@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import * as fs from 'fs-extra';
-import * as isCi from 'is-ci';
+import * as isCI from 'is-ci';
 import chalk from 'chalk';
 import commander from 'commander';
 import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
@@ -137,8 +137,8 @@ program
   .option('--updateSnapshot, -u', testOptions.updateSnapshot.description)
   .option('--verbose', testOptions.verbose.description)
   .option('--watch', testOptions.watch.description)
-  .option('--watchAll [value]', testOptions.watchAll.description, !isCi)
-  .option('--bail [value]', testOptions.bail.description, isCi)
+  .option('--watchAll [value]', testOptions.watchAll.description, !isCI)
+  .option('--bail [value]', testOptions.bail.description, isCI)
   .option('--clearCache', testOptions.clearCache.description)
   .option('--logHeapUsage', testOptions.logHeapUsage.description)
   .option('--no-cache', testOptions.cache.description)
@@ -226,12 +226,23 @@ program
     await port(relativePath);
   });
 
+export interface LintOptions {
+  all: boolean;
+  onlyDiff: boolean;
+  fix: boolean;
+}
+
 program
   .command('lint')
+  .option(
+    '--onlyDiff',
+    'Only lint diffed files from your remote origin default branch (e.g. main or master)',
+  )
+  .option('--fix', 'Fix the lint errors wherever possible')
   .description('Lints the codebase')
-  .action(async () => {
+  .action(async (options: LintOptions) => {
     const { lint } = await import('./lint');
-    await lint();
+    await lint(options);
   });
 
 void startupCheck()

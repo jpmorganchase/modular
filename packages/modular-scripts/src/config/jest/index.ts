@@ -46,6 +46,7 @@ export function createJestConfig(
   const jestConfig: Config.InitialOptions = {
     ...defaults,
     ...cliOptions,
+    displayName: 'test',
     resetMocks: false,
     transform: {
       '^.+\\.(js|jsx|mjs|cjs)$': [
@@ -85,7 +86,7 @@ export function createJestConfig(
       'node',
     ],
     testRunner: require.resolve('jest-circus/runner'),
-    testPathIgnorePatterns: ['/node_modules/'],
+    testPathIgnorePatterns: ['/node_modules/', '/dist/'],
     rootDir: absolutePackagesPath,
     roots: ['<rootDir>'],
     testMatch: ['<rootDir>/**/src/**/*.{spec,test}.{js,ts,tsx}'],
