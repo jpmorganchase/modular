@@ -13,9 +13,6 @@
     "lint:fix": "yarn lint --fix",
     "create-modular-react-app": "ts-node packages/create-modular-react-app/src/cli.ts",
     "modular": "ts-node packages/modular-scripts/src/cli.ts",
-    "prelinc": "yarn workspace eslint-plugin-modular-app build",
-    "prelint": "yarn workspace eslint-plugin-modular-app build",
-    "prettier": "prettier --write .",
     "release": "yarn build && changeset publish",
     "start": "yarn modular start modular-site",
     "postinstall": "is-ci || husky install"
