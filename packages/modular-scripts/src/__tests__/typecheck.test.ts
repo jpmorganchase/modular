@@ -92,20 +92,6 @@ describe('Modular typecheck', () => {
         });
       });
     });
-    describe('when run silently', () => {
-      it('should print a one line error message', async () => {
-        let output = '';
-        try {
-          await execa('yarnpkg', ['modular', 'typecheck', '--silent'], {
-            all: true,
-            cleanup: true,
-          });
-        } catch ({ stderr }) {
-          output = stderr as string;
-        }
-        expect(output).toMatch('\u0078 Typecheck did not pass');
-      });
-    });
   });
   describe('when there are no type errors', () => {
     it('should print a one line success message', async () => {

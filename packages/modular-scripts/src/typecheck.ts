@@ -6,7 +6,7 @@ import getPackageMetadata from './utils/getPackageMetadata';
 import * as logger from './utils/logger';
 import getModularRoot from './utils/getModularRoot';
 
-export async function typecheck(silent = false): Promise<void> {
+export async function typecheck(): Promise<void> {
   const { typescriptConfig } = await getPackageMetadata();
 
   const { _compilerOptions, ...rest } = typescriptConfig;
@@ -73,11 +73,6 @@ export async function typecheck(silent = false): Promise<void> {
     .concat(emitResult.diagnostics);
 
   if (diagnostics.length) {
-    if (silent) {
-      // "x Typecheck did not pass"
-      throw new Error('\u0078 Typecheck did not pass');
-    }
-
     if (isCI) {
       // formatDiagnostics will return a readable list of error messages, each with its own line
       throw new Error(ts.formatDiagnostics(diagnostics, diagnosticHost));
