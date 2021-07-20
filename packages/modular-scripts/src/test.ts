@@ -1,19 +1,23 @@
 import * as path from 'path';
 import resolve from 'resolve';
-import resolveBin from 'resolve-as-bin';
 import execSync from './utils/execSync';
 import getModularRoot from './utils/getModularRoot';
+import { resolveAsBin } from './utils/resolve-as-bin';
 export interface TestOptions {
+  bail: boolean;
   debug: boolean;
+  clearCache: boolean;
   coverage: boolean;
   forceExit: boolean;
   env: string;
-  maxWorkers: number;
-  onlyChanged: boolean;
   json: boolean;
-  outputFile: string;
+  logHeapUsage: boolean;
+  maxWorkers: number;
+  'no-cache': boolean;
   reporters: string[] | undefined;
   runInBand: boolean;
+  onlyChanged: boolean;
+  outputFile: string;
   silent: boolean;
   testResultsProcessor: string | undefined;
   updateSnapshot: boolean;
@@ -61,9 +65,9 @@ export default async function test(
   const { createJestConfig } = await import('./config/jest');
   cleanArgv.push(
     '--config',
-    `'${JSON.stringify(
+    `"${JSON.stringify(
       createJestConfig({ reporters, testResultsProcessor }),
-    )}'`,
+    )}"`,
   );
 
   let resolvedEnv;
@@ -84,15 +88,40 @@ export default async function test(
 
   // pass on all programatic options
   const jestArgv = Object.entries(jestOptions).map(([key, v]) => {
-    const value = JSON.parse(v as string) as string | number | boolean;
-    return `--${key}${!!value ? '' : `=${String(value)}`}`;
+    const booleanValue = /^(true)$/.exec(String(v));
+    return `--${key}${!!booleanValue ? '' : `=${String(v)}`}`;
   });
+
   cleanArgv.push(...jestArgv);
 
-  // finally add the script regexes to run
-  cleanArgv.push(...(regexes || []));
+  const additionalOptions: string[] = [];
+  const cleanRegexes: string[] = [];
 
-  const jestBin = resolveBin('jest');
+  if (regexes?.length) {
+    regexes.forEach((reg) => {
+      if (/^(--)([\w]+)/.exec(reg)) {
+        return additionalOptions.push(reg);
+      }
+      return cleanRegexes.push(reg);
+    });
+    if (additionalOptions.length) {
+      additionalOptions.map((reg) => {
+        const [option, value] = reg.split('=');
+        if (value) {
+          return `${option}=${JSON.stringify(value)}`;
+        }
+        return option;
+      });
+    }
+  }
+
+  // push any additional options passed in by debugger or other processes
+  cleanArgv.push(...additionalOptions);
+
+  // finally add the script regexes to run
+  cleanArgv.push(...cleanRegexes);
+
+  const jestBin = await resolveAsBin('jest-cli');
   let testBin = jestBin,
     testArgs = cleanArgv;
 

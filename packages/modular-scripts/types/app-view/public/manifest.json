@@ -1,0 +1,8 @@
+{
+  "short_name": "Modular View",
+  "name": "Modular View Sample",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

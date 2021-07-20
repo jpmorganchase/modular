@@ -1,43 +1,51 @@
+import { paramCase as toParamCase } from 'change-case';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import resolveAsBin from 'resolve-as-bin';
+
+import { outputDirectory } from './config';
 import getModularRoot from './utils/getModularRoot';
+import actionPreflightCheck from './utils/actionPreflightCheck';
 import isModularType from './utils/isModularType';
 import execSync from './utils/execSync';
-import { outputDirectory, packagesRoot, cracoConfig } from './config';
+import getLocation from './utils/getLocation';
 
-export default async function build(
-  packagePath: string,
-  preserveModules?: boolean,
+async function build(
+  target: string,
+  preserveModules = true,
+  includePrivate = false,
 ): Promise<void> {
   const modularRoot = getModularRoot();
+  const targetPath = await getLocation(target);
 
-  if (isModularType(path.join(modularRoot, packagesRoot, packagePath), 'app')) {
-    const cracoBin = resolveAsBin('craco');
+  const targetName = toParamCase(target);
 
+  if (isModularType(targetPath, 'app')) {
     // create-react-app doesn't support plain module outputs yet,
     // so --preserve-modules has no effect here
-    await fs.remove(path.join(outputDirectory, packagePath));
+
+    const buildScript = require.resolve(
+      'modular-scripts/react-scripts/scripts/build.js',
+    );
+
     // TODO: this shouldn't be sync
-    execSync(cracoBin, ['build', '--config', cracoConfig], {
-      cwd: path.join(modularRoot, packagesRoot, packagePath),
+    execSync('node', [buildScript], {
+      cwd: targetPath,
       log: false,
       // @ts-ignore
       env: {
-        USE_MODULAR_BABEL: process.env.USE_MODULAR_BABEL,
         MODULAR_ROOT: modularRoot,
+        MODULAR_PACKAGE: target,
+        MODULAR_PACKAGE_NAME: targetName,
       },
     });
-
-    await fs.move(
-      path.join(packagesRoot, packagePath, 'build'),
-      path.join(outputDirectory, packagePath),
-    );
   } else {
-    // it's a view/package, run a library build
+    await fs.emptyDir(path.join(outputDirectory, targetName));
+
     const { buildPackage } = await import('./buildPackage');
     // ^ we do a dynamic import here to defer the module's initial side effects
     // till when it's actually needed (i.e. now)
-    await buildPackage(packagePath, preserveModules);
+    await buildPackage(target, preserveModules, includePrivate);
   }
 }
+
+export default actionPreflightCheck(build);

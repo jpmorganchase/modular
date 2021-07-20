@@ -2,3 +2,5 @@
 packages/**/dist
 packages/**/build
 packages/**/public
+packages/**/dist-cjs
+packages/**/dist-types

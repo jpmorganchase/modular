@@ -7,29 +7,17 @@ import {
 import prompts from 'prompts';
 import getModularRoot from './utils/getModularRoot';
 import execSync from './utils/execSync';
+import actionPreflightCheck from './utils/actionPreflightCheck';
+import getAllFiles from './utils/getAllFiles';
+import * as logger from './utils/logger';
 
 const packagesRoot = 'packages';
 
-// recursively get all files in a folder
-function getAllFiles(dirPath: string, arrayOfFiles: string[] = []): string[] {
-  const files = fs.readdirSync(dirPath);
-
-  files.forEach(function (file) {
-    const pathToCheck = path.join(dirPath, file);
-    if (fs.statSync(pathToCheck).isDirectory()) {
-      arrayOfFiles = getAllFiles(pathToCheck, arrayOfFiles);
-    } else {
-      arrayOfFiles.push(pathToCheck);
-    }
-  });
-
-  return arrayOfFiles;
-}
-
-export default async function addPackage(
+async function addPackage(
   destination: string,
   typeArg: string | void,
   nameArg: string | void,
+  preferOffline = true,
 ): Promise<void> {
   const { type, name } =
     (typeArg && nameArg ? { type: typeArg, name: nameArg } : null) ||
@@ -67,7 +55,7 @@ export default async function addPackage(
 
   // create a new package source folder
   if (fs.existsSync(newPackagePath)) {
-    console.error(`A package already exists at ${destination}!`);
+    logger.error(`A package already exists at ${destination}!`);
     process.exit(1);
   }
 
@@ -104,6 +92,11 @@ export default async function addPackage(
     );
   }
 
-  execSync('yarnpkg', ['--silent'], { cwd: newPackagePath });
-  execSync('yarnpkg', ['--silent'], { cwd: modularRoot });
+  const yarnArgs = ['--silent'];
+  if (preferOffline) {
+    yarnArgs.push('--prefer-offline');
+  }
+  execSync('yarnpkg', yarnArgs, { cwd: modularRoot });
 }
+
+export default actionPreflightCheck(addPackage);

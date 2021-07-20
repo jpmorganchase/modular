@@ -1,5 +1,53 @@
 # create-modular-react-app
 
+## 1.0.0
+
+### Major Changes
+
+- af8f49f: Remove react-scripts as a dependency and release major change.
+- 6fc027c: Add engine startup check to CLIs to ensure that the version of node
+  running is supported
+
+### Patch Changes
+
+- c9b6a66: Bump @types/fs-extra from 9.0.11 to 9.0.12
+- 2f57d60: Bump @types/semver from 7.3.6 to 7.3.7
+- 11aa1c1: Bump @types/tmp from 0.2.0 to 0.2.1
+
+## 0.8.11
+
+### Patch Changes
+
+- 12ec27f: Add required engines for packages
+- 5fe389f: Bump commander from 7.2.0 to 8.0.0
+
+## 0.8.10
+
+### Patch Changes
+
+- 704cec9: Fix typo in package.json
+
+## 0.8.9
+
+### Patch Changes
+
+- 1843843: Fix issue with creating a new modular app with a name
+- 10e1738: Updated vscode template settings in CMRA and moved utils around
+
+## 0.8.8
+
+### Patch Changes
+
+- ab4aa76: Bump execa from 5.0.1 to 5.1.0
+- 9585460: Bump execa from 5.1.0 to 5.1.1
+
+## 0.8.7
+
+### Patch Changes
+
+- cff1dd2: Removed unneccessary silent flag
+- 18aea9d: Bump execa from 5.0.0 to 5.0.1
+
 ## 0.8.6
 
 ### Patch Changes

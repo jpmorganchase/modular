@@ -1,28 +1,48 @@
-import * as path from 'path';
-import resolveAsBin from 'resolve-as-bin';
-import getModularRoot from './utils/getModularRoot';
+import { paramCase as toParamCase } from 'change-case';
+
+import actionPreflightCheck from './utils/actionPreflightCheck';
 import isModularType from './utils/isModularType';
 import execSync from './utils/execSync';
+import getLocation from './utils/getLocation';
+import stageView from './utils/stageView';
+import getModularRoot from './utils/getModularRoot';
 
-import { packagesRoot, cracoConfig } from './config';
-
-export default async function start(appPath: string): Promise<void> {
-  const modularRoot = getModularRoot();
-
-  if (!isModularType(path.join(modularRoot, packagesRoot, appPath), 'app')) {
-    throw new Error(`The package at ${appPath} is not a valid modular app.`);
+async function start(target: string): Promise<void> {
+  const targetPath = await getLocation(target);
+  if (isModularType(targetPath, 'package')) {
+    throw new Error(
+      `The package at ${targetPath} is not a valid modular app or view.`,
+    );
   }
-  const cracoBin = resolveAsBin('craco');
 
-  execSync(cracoBin, ['start', '--config', cracoConfig], {
-    cwd: path.join(modularRoot, packagesRoot, appPath),
+  /**
+   * If we're trying to start a view then we first need to stage out the
+   * view into an 'app' directory which can be built.
+   */
+  let startPath: string;
+  if (isModularType(targetPath, 'view')) {
+    startPath = stageView(target);
+  } else {
+    startPath = targetPath;
+  }
+
+  const startScript = require.resolve(
+    'modular-scripts/react-scripts/scripts/start.js',
+  );
+  const modularRoot = getModularRoot();
+  const targetName = toParamCase(target);
+
+  execSync('node', [startScript], {
+    cwd: startPath,
     log: false,
     // @ts-ignore
     env: {
-      USE_MODULAR_BABEL: process.env.USE_MODULAR_BABEL,
       MODULAR_ROOT: modularRoot,
+      MODULAR_PACKAGE: target,
+      MODULAR_PACKAGE_NAME: targetName,
     },
   });
-
   return Promise.resolve();
 }
+
+export default actionPreflightCheck(start);

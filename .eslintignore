@@ -14,6 +14,8 @@ packages/view-2
 
 # Build output
 /packages/**/build/
+/packages/**/dist-cjs/
+/packages/**/dist-types/
 
 # Testing
 /coverage
@@ -31,7 +33,9 @@ yarn-debug.log*
 yarn-error.log*
 
 /dist
+/packages/**/dist-cjs/
+/packages/**/dist-types/
 
-# Used by typescript for incremental builds 
+# Used by typescript for incremental builds
 .tsbuildinfo
 *.tsbuildinfo

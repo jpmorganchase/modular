@@ -1,13 +1,15 @@
 #!/usr/bin/env node
+
+import * as fs from 'fs-extra';
+import * as isCi from 'is-ci';
+import chalk from 'chalk';
 import commander from 'commander';
 import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
+import type { TestOptions } from './test';
 
-import preflightCheck from './utils/preflightCheck';
-
-import buildPackages from './build';
-import addPackage from './addPackage';
-import start from './start';
-import test, { TestOptions } from './test';
+import startupCheck from './utils/startupCheck';
+import actionPreflightCheck from './utils/actionPreflightCheck';
+import * as logger from './utils/logger';
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
@@ -19,8 +21,11 @@ process.on('unhandledRejection', (err) => {
 
 const program = new commander.Command('modular');
 program.version(
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  (require('../package.json') as PackageJson).version as string,
+  (
+    fs.readJsonSync(
+      require.resolve('modular-scripts/package.json'),
+    ) as PackageJson
+  ).version as string,
 );
 
 program
@@ -31,18 +36,26 @@ program
     "Type of the folder ('app', 'view', 'package')",
   )
   .option('--unstable-name <name>', 'Package name for the package.json')
+  .option(
+    '--prefer-offline',
+    'Equivalent of --prefer-offline for yarn installations',
+    true,
+  )
   .action(
-    (
+    async (
       packageName: string,
       addOptions: {
         unstableType?: string;
         unstableName?: string;
+        preferOffline?: boolean;
       },
     ) => {
+      const { default: addPackage } = await import('./addPackage');
       return addPackage(
         packageName,
-        addOptions['unstableType'],
-        addOptions['unstableName'],
+        addOptions.unstableType,
+        addOptions.unstableName,
+        addOptions.preferOffline,
       );
     },
   );
@@ -52,21 +65,32 @@ program
   .description(
     'Build a list of packages (multiple package names can be supplied separated by space)',
   )
-  .option('--preserve-modules')
+  .option(
+    '--preserve-modules [value]',
+    'Preserve module structure in generated modules',
+    'true',
+  )
+  .option('--private', 'Enable the building of private packages', false)
   .action(
     async (
       packagePaths: string[],
       options: {
-        preserveModules?: boolean;
+        preserveModules: string;
+        private: boolean;
       },
     ) => {
-      console.log('building packages at:', packagePaths.join(', '));
+      const { default: build } = await import('./build');
+      logger.log('building packages at:', packagePaths.join(', '));
 
       for (let i = 0; i < packagePaths.length; i++) {
         try {
-          await buildPackages(packagePaths[i], options['preserveModules']);
+          await build(
+            packagePaths[i],
+            JSON.parse(options.preserveModules) as boolean,
+            options.private,
+          );
         } catch (err) {
-          console.error(`building ${packagePaths[i]} failed`);
+          logger.error(`building ${packagePaths[i]} failed`);
           throw err;
         }
       }
@@ -113,16 +137,18 @@ program
   .option('--updateSnapshot, -u', testOptions.updateSnapshot.description)
   .option('--verbose', testOptions.verbose.description)
   .option('--watch', testOptions.watch.description)
-  .option(
-    '--watchAll [value]',
-    testOptions.watchAll.description,
-    !process.env.CI,
-  )
+  .option('--watchAll [value]', testOptions.watchAll.description, !isCi)
+  .option('--bail [value]', testOptions.bail.description, isCi)
+  .option('--clearCache', testOptions.clearCache.description)
+  .option('--logHeapUsage', testOptions.logHeapUsage.description)
+  .option('--no-cache', testOptions.cache.description)
+  .allowUnknownOption()
   .description('Run tests over the codebase')
-  .action((regexes: string[], options: CLITestOptions) => {
-    const { U, ...testOptions } = options;
+  .action(async (regexes: string[], options: CLITestOptions) => {
+    const { default: test } = await import('./test');
 
-    // proxy simplified options to testOptions;
+    // proxy simplified options to testOptions
+    const { U, ...testOptions } = options;
     testOptions.updateSnapshot = !!(options.updateSnapshot || U);
 
     return test(testOptions, regexes);
@@ -133,19 +159,78 @@ program
   .description(
     `Start a dev-server for an app. Only available for modular 'app' types.`,
   )
-  .action((packageName: string) => {
+  .action(async (packageName: string) => {
+    const { default: start } = await import('./start');
     return start(packageName);
   });
 
 program
   .command('workspace')
   .description('Retrieve the information for the current workspace info')
-  .action(async () => {
-    const { getWorkspaceInfo } = await import('./getWorkspaceInfo');
-    const workspace = await getWorkspaceInfo();
-    console.log(JSON.stringify(workspace, null, 2));
+  .action(
+    actionPreflightCheck(async () => {
+      const { default: getWorkspaceInfo } = await import(
+        './utils/getWorkspaceInfo'
+      );
+      const workspace = await getWorkspaceInfo();
+      process.stdout.write(JSON.stringify(workspace, null, 2));
+    }),
+  );
+
+interface InitOptions {
+  y: boolean;
+  preferOffline: string;
+}
+
+program
+  .command('init')
+  .description('Initialize a new modular root in the current folder')
+  .option('-y', 'equivalent to the -y flag in NPM')
+  .option('--prefer-offline [value]', 'delegate to offline cache first', true)
+  .action(async (options: InitOptions) => {
+    const { default: initWorkspace } = await import('./init');
+    await initWorkspace(options.y, JSON.parse(options.preferOffline));
   });
 
-void preflightCheck().then(() => {
-  return program.parseAsync(process.argv);
-});
+program
+  .command('check')
+  .description(
+    'Manually run modular checks against the current modular repository',
+  )
+  .action(async () => {
+    const { check } = await import('./check');
+    await check();
+    logger.log(chalk.green('Success!'));
+  });
+
+program
+  .command('convert')
+  .description('Converts react app in current directory into a modular package')
+  .action(async () => {
+    const { convert } = await import('./convert');
+    await convert();
+    logger.log(
+      chalk.green('Successfully converted your app into a modular app!'),
+    );
+  });
+
+// TODO: enhancement - should take a type option (app, view, package)
+// port are only available for apps right now
+program
+  .command('port <relativePath>')
+  .description(
+    'Ports the react app in specified directory over into the current modular project as a modular app',
+  )
+  .action(async (relativePath) => {
+    const { port } = await import('./port');
+    await port(relativePath);
+  });
+
+void startupCheck()
+  .then(() => {
+    return program.parseAsync(process.argv);
+  })
+  .catch((err: Error) => {
+    logger.error(err.message);
+    process.exit(1);
+  });

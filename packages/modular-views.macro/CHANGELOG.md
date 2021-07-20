@@ -1,5 +1,28 @@
 # modular-views.macro
 
+## 2.0.0
+
+### Major Changes
+
+- af8f49f: Remove react-scripts as a dependency and release major change.
+
+### Patch Changes
+
+- d78cfa8: Bump @types/babel-plugin-macros from 2.8.4 to 2.8.5
+
+## 1.2.7
+
+### Patch Changes
+
+- ab4aa76: Bump execa from 5.0.1 to 5.1.0
+- 9585460: Bump execa from 5.1.0 to 5.1.1
+
+## 1.2.6
+
+### Patch Changes
+
+- 18aea9d: Bump execa from 5.0.0 to 5.0.1
+
 ## 1.2.5
 
 ### Patch Changes

@@ -1,5 +1,50 @@
 # eslint-config-modular-app
 
+## 1.0.0
+
+### Major Changes
+
+- af8f49f: Remove react-scripts as a dependency and release major change.
+
+### Patch Changes
+
+- 732b487: Bump eslint-plugin-testing-library from 4.6.0 to 4.9.0
+- 72842b6: Bump @typescript-eslint/eslint-plugin from 4.28.1 to 4.28.2
+- 0cd7296: Bump @typescript-eslint/parser from 4.28.1 to 4.28.2
+
+## 0.4.6
+
+### Patch Changes
+
+- b9c66e2: Add required dependency
+- 983ba7a: Bump eslint-plugin-flowtype from 5.7.2 to 5.8.0
+- bf9ff4e: Bump @typescript-eslint/parser from 4.28.0 to 4.28.1
+- bc8558a: Bump @typescript-eslint/eslint-plugin from 4.28.0 to 4.28.1
+
+## 0.4.5
+
+### Patch Changes
+
+- f377a3f: Bump @typescript-eslint/eslint-plugin from 4.27.0 to 4.28.0
+- db8440b: Bump @typescript-eslint/parser from 4.27.0 to 4.28.0
+
+## 0.4.4
+
+### Patch Changes
+
+- 9f1604f: Bump @typescript-eslint/parser from 4.26.1 to 4.27.0
+- 82c0bba: Bump @typescript-eslint/parser from 4.26.0 to 4.26.1
+- 3dfa404: Bump @typescript-eslint/eslint-plugin from 4.26.0 to 4.26.1
+
+## 0.4.3
+
+### Patch Changes
+
+- e187ee7: Bump @typescript-eslint/parser from 4.25.0 to 4.26.0
+- 9de19d4: Bump eslint-plugin-react from 7.23.2 to 7.24.0
+- 73b4b12: Bump typescript from 4.2.4 to 4.3.2
+- 8ae4126: Bump eslint-plugin-import from 2.23.3 to 2.23.4
+
 ## 0.4.2
 
 ### Patch Changes

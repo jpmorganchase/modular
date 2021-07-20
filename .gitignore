@@ -12,6 +12,7 @@ packages/nested
 # created by tests in modular-views.macro
 packages/view-1
 packages/view-2
+packages/scoped
 
 
 # Build output
@@ -36,6 +37,7 @@ yarn-error.log*
 
 /dist
 
-# Used by typescript for incremental builds 
+# Used by typescript for incremental builds
 .tsbuildinfo
 *.tsbuildinfo
+
