@@ -286,13 +286,13 @@ describe('modular-scripts', () => {
     const cleanedOutput = output.all?.replace(/|\[\d+./gm, '');
 
     expect(cleanedOutput).toContain(
-      'PASS packages/sample-view/src/__tests__/index.test.tsx',
+      'PASS test packages/sample-view/src/__tests__/index.test.tsx',
     );
     expect(cleanedOutput).toContain(
-      'PASS packages/sample-package/src/__tests__/index.test.ts',
+      'PASS test packages/sample-package/src/__tests__/index.test.ts',
     );
     expect(cleanedOutput).toContain(
-      'PASS packages/nested/sample-nested-package/src/__tests__/index.test.ts',
+      'PASS test packages/nested/sample-nested-package/src/__tests__/index.test.ts',
     );
   });
 

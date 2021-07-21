@@ -175,7 +175,7 @@ describe('when working with an app', () => {
     const cleanedOutput = output.all?.replace(/|\[\d+./gm, '');
 
     expect(cleanedOutput).toContain(
-      'PASS packages/sample-app/src/__tests__/App.test.tsx',
+      'PASS test packages/sample-app/src/__tests__/App.test.tsx',
     );
   });
 
