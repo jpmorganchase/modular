@@ -2,6 +2,13 @@
 
 exports[`getWorkspaceInfo 1`] = `
 Object {
+  "@scoped/sample-app": Object {
+    "location": "packages/scoped/sample-app",
+    "mismatchedWorkspaceDependencies": Array [],
+    "public": false,
+    "type": "app",
+    "workspaceDependencies": Array [],
+  },
   "create-modular-react-app": Object {
     "location": "packages/create-modular-react-app",
     "mismatchedWorkspaceDependencies": Array [],
@@ -21,7 +28,9 @@ Object {
     "mismatchedWorkspaceDependencies": Array [],
     "public": true,
     "type": "package",
-    "workspaceDependencies": Array [],
+    "workspaceDependencies": Array [
+      "eslint-config-modular-app",
+    ],
   },
   "modular-site": Object {
     "location": "packages/modular-site",
@@ -35,6 +44,13 @@ Object {
     "mismatchedWorkspaceDependencies": Array [],
     "public": true,
     "type": "package",
+    "workspaceDependencies": Array [],
+  },
+  "sample-app": Object {
+    "location": "packages/sample-app",
+    "mismatchedWorkspaceDependencies": Array [],
+    "public": false,
+    "type": "app",
     "workspaceDependencies": Array [],
   },
   "tree-view-for-tests": Object {
