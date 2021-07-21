@@ -228,21 +228,20 @@ program
 
 export interface LintOptions {
   all: boolean;
-  onlyDiff: boolean;
   fix: boolean;
 }
 
 program
-  .command('lint')
+  .command('lint [regexes...]')
   .option(
-    '--onlyDiff',
+    '--all',
     'Only lint diffed files from your remote origin default branch (e.g. main or master)',
   )
   .option('--fix', 'Fix the lint errors wherever possible')
   .description('Lints the codebase')
-  .action(async (options: LintOptions) => {
+  .action(async (regexes: string[], options: LintOptions) => {
     const { lint } = await import('./lint');
-    await lint(options);
+    await lint(options, regexes);
   });
 
 program

@@ -7,19 +7,20 @@ import { getDiffedFiles } from './utils/gitActions';
 import * as logger from './utils/logger';
 import type { LintOptions } from './cli';
 
-export async function lint({
-  onlyDiff = false,
-  fix = false,
-}: LintOptions): Promise<void> {
+export async function lint(
+  options: LintOptions,
+  regexes: string[] = [],
+): Promise<void> {
+  const { all = false, fix = false } = options;
   const modularRoot = getModularRoot();
   const lintExtensions = ['.ts', '.tsx', '.js', '.jsx'];
-  let targetedFiles = ['<rootDir>/**/src/**/*.{js,ts,tsx}'];
+  let targetedFiles = ['<rootDir>/**/src/**/*.{js,jsx,ts,tsx}'];
 
-  if (onlyDiff && !isCI) {
+  if (!all && !isCI) {
     const diffedFiles = getDiffedFiles();
     if (diffedFiles.length === 0) {
       logger.log(
-        'No diffed files detected. Remove --onlyDiff option to lint the entire codebase',
+        'No diffed files detected. Add the `--all` option to lint the entire codebase',
       );
       return;
     }
@@ -42,7 +43,11 @@ export async function lint({
     },
   };
 
-  const testArgs = ['--config', `"${JSON.stringify(jestEslintConfig)}"`];
+  const testArgs = [
+    ...regexes,
+    '--config',
+    `"${JSON.stringify(jestEslintConfig)}"`,
+  ];
 
   const testBin = await resolveAsBin('jest-cli');
 
