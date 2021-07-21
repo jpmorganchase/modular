@@ -2,6 +2,8 @@ import { JSONSchemaForTheTypeScriptCompilerSConfigurationFile as TSConfig } from
 import * as path from 'path';
 import * as ts from 'typescript';
 import * as fse from 'fs-extra';
+import isCI from 'is-ci';
+
 import { getLogger } from './getLogger';
 import { reportTSDiagnostics } from '../utils/reportTSDiagnostics';
 import getPackageMetadata from '../utils/getPackageMetadata';
@@ -31,6 +33,7 @@ export async function makeTypings(packagePath: string): Promise<void> {
     ...tsconfig.compilerOptions,
     declarationDir: `${packagePath}/${outputDirectory}-types`,
     rootDir: `${packagePath}/src`,
+    diagnostics: !isCI,
   };
 
   // Extract config information
@@ -60,7 +63,10 @@ export async function makeTypings(packagePath: string): Promise<void> {
 
   const emitResult = program.emit();
 
-  // Report errors
+  // Skip disagnostic reporting in CI
+  if (isCI) {
+    return;
+  }
   const diagnostics = ts
     .getPreEmitDiagnostics(program)
     .concat(emitResult.diagnostics);
