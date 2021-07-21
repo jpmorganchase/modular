@@ -1,10 +1,9 @@
-//@ts-nocheck
 /* eslint-disable */
 
 const path = require('path');
 
 function funcHasNoType(props) {
-  const type: any = '';
+  let type;
 
   if (type) {
   } else {

@@ -1,4 +1,3 @@
-//@ts-nocheck
 /* eslint-disable */
 
 import { useEffect } from 'react';
