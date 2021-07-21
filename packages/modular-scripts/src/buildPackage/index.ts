@@ -59,7 +59,7 @@ export async function buildPackage(
 
   // generate the js files now that we know we have a valid package
   const publicPackageJson = await makeBundle(
-    packagePath,
+    target,
     preserveModules,
     includePrivate,
   );

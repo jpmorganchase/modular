@@ -5,7 +5,7 @@
   "bin": {
     "modular": "dist-cjs/cli.js"
   },
-  "main": "./dist-cjs/index.js",
+  "main": "src/cli.ts",
   "types": "dist-types/index.d.ts",
   "engines": {
     "node": "^12.13.0 || ^14.15.0 || >=15.0.0"
@@ -65,6 +65,7 @@
     "is-ci": "^2.0.0",
     "is-root": "2.1.0",
     "jest": "26.6.0",
+    "jest-cli": "26.6.0",
     "jest-circus": "26.6.0",
     "jest-config": "^26.6.3",
     "jest-transform-stub": "^2.0.0",
