@@ -6010,10 +6010,10 @@ eslint-plugin-react@^7.24.0:
     resolve "^2.0.0-next.3"
     string.prototype.matchall "^4.0.5"
 
-eslint-plugin-testing-library@^4.9.1:
-  version "4.9.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-testing-library/-/eslint-plugin-testing-library-4.9.1.tgz#cf16eba21e8fa6179811ac0e488cd36842f5cae5"
-  integrity sha512-K8mWyx2MiHJ4CN3DJ62aUe2oUjO7LwvOEVVRhh0GPYLuQNPEYooxlcWK/aW/M6j9CrSCGuaZCPHWXUSramRkFg==
+eslint-plugin-testing-library@^4.10.0:
+  version "4.10.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-testing-library/-/eslint-plugin-testing-library-4.10.0.tgz#6b5f054738ac750026213b2a60d1a7b47fbb6169"
+  integrity sha512-2lsoJQi4Gy3TIqy+iDZNKIWR8XFcS3jC+EhfPV1GH2DYW5mYpFi16Vrzm1AdGzI+9kCdZDWdKuU6BKQDgZkNBg==
   dependencies:
     "@typescript-eslint/experimental-utils" "^4.24.0"
 
