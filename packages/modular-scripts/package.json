@@ -71,7 +71,7 @@
     "jest-watch-typeahead": "0.6.4",
     "loader-utils": "2.0.0",
     "mini-css-extract-plugin": "0.11.3",
-    "open": "^7.0.2",
+    "open": "^8.2.1",
     "optimize-css-assets-webpack-plugin": "5.0.4",
     "pkg-up": "3.1.0",
     "pnp-webpack-plugin": "1.6.4",
