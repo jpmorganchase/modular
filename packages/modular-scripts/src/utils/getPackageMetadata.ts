@@ -82,7 +82,7 @@ async function getPackageMetadata() {
       '**/*.e2e.ts',
       '**/*.spec.tsx',
       '**/*.test.tsx',
-      '__tests__',
+      '**/__tests__',
       '**/dist-cjs',
       '**/dist-es',
       '**/dist-types',

@@ -75,6 +75,20 @@ describe('modular-scripts', () => {
       path.join(__dirname, 'TestView.test-tsx'),
       path.join(packagesPath, targetedView, 'src', 'index.tsx'),
     );
+
+    await fs.writeFile(
+      path.join(
+        packagesPath,
+        'sample-package',
+        'src',
+        '__tests__',
+        'mock-util.tsx',
+      ),
+      `
+    export default function() {
+      console.log("Just a util");
+    }`,
+    );
   });
 
   afterAll(async () => {
@@ -103,7 +117,8 @@ describe('modular-scripts', () => {
         ├─ package.json
         └─ src
            ├─ __tests__
-           │  └─ index.test.ts #1qvvmz7
+           │  ├─ index.test.ts #1qvvmz7
+           │  └─ mock-util.tsx #rjzbd3
            └─ index.ts #1woe74n"
       `);
     });
