@@ -66,6 +66,7 @@
     "type": "root"
   },
   "lint-staged": {
+    "*.{ts,tsx}": "yarn typecheck",
     "*.{js,ts,tsx}": "eslint --cache --ext .js,.ts,.tsx --max-warnings 0"
   },
   "resolutions": {

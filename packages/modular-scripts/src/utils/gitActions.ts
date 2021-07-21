@@ -19,12 +19,28 @@ export function stashChanges(): void {
   throw new Error('Failed to perform action cleanly. Stashing git changes...');
 }
 
+function getGitLocalDefaultBranch(): string {
+  try {
+    // this config may be set to a different default branch (e.g. main)
+    const result = execa.sync('git', ['config', 'init.defaultBranch']);
+    return stripAnsi(result.stdout);
+  } catch (_err) {
+    // if there init.defaultBranch hasn't been set, the default is master
+    return 'master';
+  }
+}
+
 function getGitDefaultBranch(): string {
-  const result = execa.sync('git', [
-    'symbolic-ref',
-    'refs/remotes/origin/HEAD',
-  ]);
-  return stripAnsi(result.stdout).split('/').pop() || 'master';
+  try {
+    const result = execa.sync('git', [
+      'symbolic-ref',
+      'refs/remotes/origin/HEAD',
+    ]);
+    return `origin/${stripAnsi(result.stdout).split('/').pop() as string}`;
+  } catch (err) {
+    // no remote origin, look into git config for init.defaultBranch setting
+    return getGitLocalDefaultBranch();
+  }
 }
 
 function getModifiedAndUntrackedFileChanges(): string[] {
@@ -42,13 +58,9 @@ function getModifiedAndUntrackedFileChanges(): string[] {
 function getGitDiff(): string[] {
   const defaultBranch = getGitDefaultBranch();
   // get a commit sha between the HEAD of the current branch and git remote origin HEAD
-  const sha = execa.sync(
-    'git',
-    ['merge-base', 'HEAD', `origin/${defaultBranch}`],
-    {
-      cwd: getModularRoot(),
-    },
-  );
+  const sha = execa.sync('git', ['merge-base', 'HEAD', defaultBranch], {
+    cwd: getModularRoot(),
+  });
 
   /**
    * diff-filter=ACMRTUB
