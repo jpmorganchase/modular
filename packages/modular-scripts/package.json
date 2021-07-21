@@ -120,7 +120,7 @@
     "react-dev-utils",
     "types",
     "tsconfig.json",
-    "eslint-runner",
+    "jest-runner-eslint",
     "*.js"
   ],
   "devDependencies": {
