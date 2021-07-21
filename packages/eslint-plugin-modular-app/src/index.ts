@@ -8,6 +8,7 @@ import restrictedGlobals from 'confusing-browser-globals';
 import * as ESlint from 'eslint';
 
 import ModularNoPrivateImports from './ModularNoPrivateImports';
+import NoUnexportedImports from './NoUnexportedImports';
 
 const ERROR = 'error';
 const WARN = 'warn';
@@ -20,6 +21,7 @@ interface Plugin {
 const plugin: Plugin = {
   rules: {
     'no-private-imports': ModularNoPrivateImports,
+    'no-unexported-imports': NoUnexportedImports,
   },
   configs: {
     recommended: {
@@ -65,6 +67,7 @@ const plugin: Plugin = {
         // 'import/no-extraneous-dependencies': ERROR,
         'import/no-webpack-loader-syntax': ERROR,
         'modular-app/no-private-imports': ERROR,
+        'modular-app/no-unexported-imports': ERROR,
       },
       settings: {
         react: {

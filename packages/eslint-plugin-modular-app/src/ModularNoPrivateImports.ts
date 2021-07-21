@@ -3,6 +3,7 @@ import * as ESLint from 'eslint';
 import * as ESTree from 'estree'; // eslint-disable-line  import/no-unresolved
 import * as fs from 'fs-extra';
 import * as path from 'path';
+import findUp from 'find-up';
 
 const buildModularMap = (): Record<string, boolean> => {
   return fs
@@ -33,36 +34,62 @@ const validatePackageUse = (
   packageName: string,
   modularMap: Record<string, boolean>,
 ) => {
-  for (const modularPackage in modularMap) {
-    if (packageName.startsWith(modularPackage)) {
-      if (modularMap[modularPackage]) {
-        context.report({
-          node,
-          message: `${modularPackage} is marked as private and cannot be dependended on`,
-        });
-      }
-    }
+  if (modularMap[packageName]) {
+    context.report({
+      node,
+      message: `${packageName} is marked as private and cannot be dependended on`,
+    });
   }
 };
 
-const rule: ESLint.Rule.RuleModule = {
-  create(context) {
-    const modularMap: Record<string, boolean> = buildModularMap();
+type PackageType = 'app' | 'view' | 'package';
 
-    return {
-      ImportDeclaration(node) {
-        validatePackageUse(
-          context,
-          node,
-          String(node.source.value),
-          modularMap,
-        );
-      },
-      ImportExpression(node: ESTree.ImportExpression) {
-        const source = node.source as ESTree.SimpleLiteral;
-        validatePackageUse(context, node, String(source.value), modularMap);
-      },
-    };
+type ModularType = PackageType | 'root';
+
+type ModularPackageJson = PackageJson & {
+  modular?: {
+    type: ModularType;
+  };
+};
+
+function findUpPackageJson(cwd: string): string | undefined {
+  return findUp.sync(
+    (directory: string) => {
+      const packageJsonPath = path.join(directory, 'package.json');
+      if (findUp.sync.exists(packageJsonPath)) {
+        return packageJsonPath;
+      }
+      return;
+    },
+    { type: 'file', allowSymlinks: false, cwd },
+  );
+}
+
+const rule: ESLint.Rule.RuleModule = {
+  create(context: ESLint.Rule.RuleContext) {
+    const modularMap: Record<string, boolean> = buildModularMap();
+    const fileName = context.getFilename();
+    const pkgJson = findUpPackageJson(fileName);
+    const appType =
+      pkgJson &&
+      (fs.readJsonSync(pkgJson) as ModularPackageJson).modular?.type === 'app';
+    if (!appType) {
+      return {
+        ImportDeclaration(node: ESTree.ImportDeclaration) {
+          validatePackageUse(
+            context,
+            node,
+            String(node.source.value),
+            modularMap,
+          );
+        },
+        ImportExpression(node: ESTree.ImportExpression) {
+          const source = node.source as ESTree.SimpleLiteral;
+          validatePackageUse(context, node, String(source.value), modularMap);
+        },
+      } as ESLint.Rule.RuleListener;
+    }
+    return {};
   },
 };
 

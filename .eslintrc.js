@@ -2,7 +2,8 @@ const OFF = 'off';
 
 module.exports = {
   root: true,
-  extends: ['plugin:modular-app/recommended'],
+  plugins: ['modular-app'],
+  extends: ['plugin:modular-app/recommended', 'modular-app'],
   overrides: [
     {
       files: 'packages/modular-scripts/types/**/*',
