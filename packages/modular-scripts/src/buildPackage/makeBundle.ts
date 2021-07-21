@@ -1,178 +1,27 @@
 import builtinModules from 'builtin-modules';
 import { paramCase as toParamCase } from 'change-case';
-import * as esbuild from 'esbuild';
 import * as path from 'path';
 import chalk from 'chalk';
-import nodeResolve from 'resolve';
 
 import { getLogger } from './getLogger';
 import { getPackageEntryPoints } from './getPackageEntryPoints';
 import getPackageMetadata from '../utils/getPackageMetadata';
 import getModularRoot from '../utils/getModularRoot';
-import getPackageName from '../utils/getPackageName';
 import getRelativeLocation from '../utils/getRelativeLocation';
 import { ModularPackageJson } from '../utils/isModularType';
 
-const outputDirectory = 'dist';
+import runQueuedEsbuild from './runQueuedEsbuild';
+
 // It's important that .mjs is listed before .js so that we will interpret npm modules
 // which deploy both ESM .mjs and CommonJS .js files as ESM.
 const extensions = ['.ts', '.tsx', '.mjs', '.js', '.jsx'];
+
+const outputDirectory = 'dist';
 
 const builtins = new Set(builtinModules);
 
 function distinct<T>(arr: T[]): T[] {
   return [...new Set(arr)];
-}
-
-async function runEsbuild({
-  packagePath,
-  entryPoint,
-  write,
-  format = 'esm',
-}: {
-  packagePath: string;
-  entryPoint: string;
-  write: boolean;
-  format?: esbuild.Format;
-}) {
-  const outExtension: { [ext: string]: string } | undefined =
-    format === 'esm'
-      ? {
-          '.js': '.mjs',
-        }
-      : undefined;
-
-  const dependencies: string[] = [];
-  const queue: string[] = [];
-
-  const packageName = await getPackageName(packagePath);
-
-  const output = await esbuild.build({
-    entryPoints: [entryPoint],
-    write,
-    bundle: true,
-    sourcemap: true,
-    outbase: path.join(getModularRoot(), packagePath, 'src'),
-    outdir: path.join(
-      getModularRoot(),
-      'dist',
-      toParamCase(packageName),
-      `${outputDirectory}-${format}`,
-    ),
-    target: 'es2015',
-    format,
-    outExtension,
-    plugins: [
-      {
-        name: 'pre-resolve',
-        setup(build) {
-          build.onResolve({ filter: /.*/ }, (args) => {
-            return new Promise<undefined | esbuild.OnResolveResult>(
-              (resolve, reject) => {
-                if (args.kind !== 'entry-point') {
-                  if (args.path.startsWith('.')) {
-                    if (path.parse(args.path).ext) {
-                      const resolvedFile = path.join(
-                        args.resolveDir,
-                        args.path,
-                      );
-                      queue.push(resolvedFile);
-                      resolve({
-                        path: resolvedFile,
-                        external: true,
-                      });
-                    } else {
-                      nodeResolve(
-                        args.path,
-                        {
-                          basedir: args.resolveDir,
-                          extensions,
-                        },
-                        (err, resolvedFile) => {
-                          if (err) {
-                            reject(err);
-                          } else {
-                            if (resolvedFile) {
-                              queue.push(resolvedFile);
-                              resolve({
-                                path: resolvedFile,
-                                external: true,
-                              });
-                            } else {
-                              reject(`${args.path} could not be resolved.`);
-                            }
-                          }
-                        },
-                      );
-                    }
-                  } else {
-                    dependencies.push(args.path);
-                    resolve({
-                      path: args.path,
-                      external: true,
-                    });
-                  }
-                } else {
-                  resolve(undefined);
-                }
-              },
-            );
-          });
-        },
-      },
-    ],
-  });
-
-  return {
-    output,
-    queue,
-    dependencies,
-  };
-}
-
-async function runQueuedEsbuild({
-  packagePath,
-  entryPoint,
-  write,
-  format = 'esm',
-}: {
-  packagePath: string;
-  entryPoint: string;
-  write: boolean;
-  format?: esbuild.Format;
-}) {
-  const logger = getLogger(packagePath);
-
-  const queue: string[] = [entryPoint];
-  const outputs = [];
-  const dependencies: Set<string> = new Set();
-  const compiled: Set<string> = new Set();
-
-  while (queue.length) {
-    const entryPoint = queue.splice(0, 1)[0];
-    if (compiled.has(entryPoint)) {
-      // we've already compiled this file and there's no problem becuase we don't need to compile it again
-    } else {
-      compiled.add(entryPoint);
-
-      const logPrefix = write ? `Compiling [${format}]` : `Analyzing`;
-      logger.debug(`${logPrefix} ${entryPoint}`);
-
-      const out = await runEsbuild({
-        packagePath,
-        entryPoint,
-        format,
-        write,
-      });
-      outputs.push(out.output);
-      queue.push(...out.queue);
-      out.dependencies.forEach((dep) => {
-        dependencies.add(dep);
-      });
-    }
-  }
-
-  return { outputs, compiled, dependencies: Array.from(dependencies) };
 }
 
 export async function makeBundle(
