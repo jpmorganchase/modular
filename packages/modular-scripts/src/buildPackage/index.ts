@@ -16,11 +16,10 @@ import * as fse from 'fs-extra';
 
 import { getLogger } from './getLogger';
 import { getPackageEntryPoints } from './getPackageEntryPoints';
-import getPackageMetadata from './getPackageMetadata';
 import getModularRoot from '../utils/getModularRoot';
 import { makeBundle } from './makeBundle';
 import { makeTypings } from './makeTypings';
-import getRelativeLocation from '../utils/getRelativeLocation';
+import { getRelativeLocation } from '../utils/getRelativeLocation';
 
 const outputDirectory = 'dist';
 
@@ -33,7 +32,6 @@ export async function buildPackage(
 ): Promise<void> {
   const modularRoot = getModularRoot();
   const packagePath = await getRelativeLocation(target);
-  const { publicPackageJsons } = await getPackageMetadata();
 
   if (process.cwd() !== modularRoot) {
     throw new Error(
@@ -60,14 +58,11 @@ export async function buildPackage(
   }
 
   // generate the js files now that we know we have a valid package
-  const didBundle = await makeBundle(
+  const publicPackageJson = await makeBundle(
     packagePath,
     preserveModules,
     includePrivate,
   );
-  if (!didBundle) {
-    return;
-  }
 
   const originalPkgJsonContent = (await fse.readJson(
     path.join(modularRoot, packagePath, 'package.json'),
@@ -77,7 +72,6 @@ export async function buildPackage(
 
   // switch in the special package.json
   try {
-    const publicPackageJson = publicPackageJsons[packageName];
     await fse.writeJson(
       path.join(packagePath, 'package.json'),
       publicPackageJson,

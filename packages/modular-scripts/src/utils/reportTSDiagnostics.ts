@@ -1,5 +1,5 @@
 import * as ts from 'typescript';
-import { getLogger } from './getLogger';
+import { getLogger } from '../buildPackage/getLogger';
 
 // from https://github.com/Microsoft/TypeScript/issues/6387
 // a helper to output a readable message from a ts diagnostics object

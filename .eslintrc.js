@@ -6,6 +6,12 @@ module.exports = {
   extends: ['plugin:modular-app/recommended', 'modular-app'],
   overrides: [
     {
+      files: 'packages/modular-scripts/src/__tests__/**/*',
+      rules: {
+        'modular-app/no-private-imports': OFF,
+      },
+    },
+    {
       files: 'packages/modular-scripts/types/**/*',
       rules: {
         'react/jsx-pascal-case': OFF,
@@ -17,6 +23,9 @@ module.exports = {
       files: '**/*.js',
       parserOptions: {
         sourceType: 'script',
+        ecmaFeatures: {
+          impliedStrict: true
+        },
       },
     },
   ],

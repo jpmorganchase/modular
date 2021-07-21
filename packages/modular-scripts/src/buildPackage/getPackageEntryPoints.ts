@@ -1,6 +1,6 @@
+import getPackageMetadata from '../utils/getPackageMetadata';
 import * as path from 'path';
 import * as fse from 'fs-extra';
-import getPackageMetadata from './getPackageMetadata';
 import getModularRoot from '../utils/getModularRoot';
 
 export async function getPackageEntryPoints(

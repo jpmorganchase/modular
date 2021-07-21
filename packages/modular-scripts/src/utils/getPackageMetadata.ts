@@ -52,10 +52,6 @@ async function getPackageMetadata() {
   // explicitly included in dependencies
   // maybe that belongs in `modular check`
 
-  const publicPackageJsons: {
-    [name: string]: PackageJson;
-  } = {};
-
   const typescriptConfig: TSConfig = {};
   // validate tsconfig
   // Extract configuration from config file and parse JSON,
@@ -82,7 +78,7 @@ async function getPackageMetadata() {
       '**/*.e2e.ts',
       '**/*.spec.tsx',
       '**/*.test.tsx',
-      '__tests__',
+      '**/__tests__',
       '**/dist-cjs',
       '**/dist-es',
       '**/dist-types',
@@ -112,7 +108,6 @@ async function getPackageMetadata() {
     packageJsons,
     typescriptConfig,
     packageJsonsByPackagePath,
-    publicPackageJsons,
   };
 }
 
