@@ -64,25 +64,25 @@ describe('When working with a nested app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'scoped-sample-app')))
       .toMatchInlineSnapshot(`
       "scoped-sample-app
-      ├─ asset-manifest.json #111grhw
+      ├─ asset-manifest.json #56wf93
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #9t1szr
+      ├─ index.html #16nh34
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
       ├─ robots.txt #1sjb8b3
       └─ static
          ├─ css
-         │  ├─ main.8bcbd900.chunk.css #xno22u
-         │  └─ main.8bcbd900.chunk.css.map #9wvvfl
+         │  ├─ main.f09a1402.chunk.css #1db4ooj
+         │  └─ main.f09a1402.chunk.css.map #1sxvdk1
          └─ js
-            ├─ 2.80389273.chunk.js #qw7gmy
-            ├─ 2.80389273.chunk.js.LICENSE.txt #eplx8h
-            ├─ 2.80389273.chunk.js.map #uhj9bl
-            ├─ main.4fce9af6.chunk.js #1tsx3qp
-            ├─ main.4fce9af6.chunk.js.map #9ihrad
-            ├─ runtime-main.53595a4a.js #wiku4d
-            └─ runtime-main.53595a4a.js.map #2l54cs"
+            ├─ 2.928f002b.chunk.js #rc6z5l
+            ├─ 2.928f002b.chunk.js.LICENSE.txt #eplx8h
+            ├─ 2.928f002b.chunk.js.map #13hx5k0
+            ├─ main.301a9b5d.chunk.js #1y03mcv
+            ├─ main.301a9b5d.chunk.js.map #133lc1b
+            ├─ runtime-main.90523c3e.js #vchyhf
+            └─ runtime-main.90523c3e.js.map #stcog7"
     `);
   });
 });
@@ -134,25 +134,25 @@ describe('when working with an app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'sample-app')))
       .toMatchInlineSnapshot(`
       "sample-app
-      ├─ asset-manifest.json #d9mm4w
+      ├─ asset-manifest.json #11r4gus
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #15ve80l
+      ├─ index.html #1l8nrn6
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
       ├─ robots.txt #1sjb8b3
       └─ static
          ├─ css
-         │  ├─ main.8bcbd900.chunk.css #xno22u
-         │  └─ main.8bcbd900.chunk.css.map #9wvvfl
+         │  ├─ main.f09a1402.chunk.css #1db4ooj
+         │  └─ main.f09a1402.chunk.css.map #1sxvdk1
          └─ js
-            ├─ 2.fe4bf1bd.chunk.js #1bpavcu
-            ├─ 2.fe4bf1bd.chunk.js.LICENSE.txt #eplx8h
-            ├─ 2.fe4bf1bd.chunk.js.map #1yp1aqn
-            ├─ main.fb6fdc37.chunk.js #13wv077
-            ├─ main.fb6fdc37.chunk.js.map #16r4uew
-            ├─ runtime-main.45650a35.js #7ikulh
-            └─ runtime-main.45650a35.js.map #mgczg9"
+            ├─ 2.9da65802.chunk.js #ls3f41
+            ├─ 2.9da65802.chunk.js.LICENSE.txt #eplx8h
+            ├─ 2.9da65802.chunk.js.map #1wl9rc5
+            ├─ main.b20ef164.chunk.js #12tx661
+            ├─ main.b20ef164.chunk.js.map #z7f7vz
+            ├─ runtime-main.46d4e883.js #1tf2izh
+            └─ runtime-main.46d4e883.js.map #e0v9b3"
     `);
   });
 
