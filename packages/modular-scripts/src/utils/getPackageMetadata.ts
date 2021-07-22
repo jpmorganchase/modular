@@ -95,7 +95,6 @@ async function getPackageMetadata() {
 
   typescriptConfig.compilerOptions = typescriptConfig.compilerOptions || {};
   Object.assign(typescriptConfig.compilerOptions, {
-    declarationDir: 'dist',
     noEmit: false,
     declaration: true,
     emitDeclarationOnly: true,

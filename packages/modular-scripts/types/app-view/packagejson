@@ -17,5 +17,8 @@
   },
   "modular": {
     "type": "app"
-  }
+  },
+  "files": [
+    "README.md"
+  ]
 }

@@ -2,5 +2,8 @@
   "name": "PackageName__",
   "version": "1.0.0",
   "main": "src/index.ts",
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "files": [
+    "README.md"
+  ]
 }

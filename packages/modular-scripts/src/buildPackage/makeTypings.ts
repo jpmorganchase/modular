@@ -1,18 +1,29 @@
 import { JSONSchemaForTheTypeScriptCompilerSConfigurationFile as TSConfig } from '@schemastore/tsconfig';
 import * as path from 'path';
+import { paramCase as toParamCase } from 'change-case';
 import * as ts from 'typescript';
 import * as fse from 'fs-extra';
 import isCI from 'is-ci';
 
 import { getLogger } from './getLogger';
+import getModularRoot from '../utils/getModularRoot';
 import { reportTSDiagnostics } from '../utils/reportTSDiagnostics';
 import getPackageMetadata from '../utils/getPackageMetadata';
+import getRelativeLocation from '../utils/getRelativeLocation';
 
 const outputDirectory = 'dist';
 const typescriptConfigFilename = 'tsconfig.json';
 
-export async function makeTypings(packagePath: string): Promise<void> {
+export async function makeTypings(target: string): Promise<void> {
+  const modularRoot = getModularRoot();
+  const packagePath = await getRelativeLocation(target);
+  const targetOutputDirectory = path.join(
+    modularRoot,
+    outputDirectory,
+    toParamCase(target),
+  );
   const logger = getLogger(packagePath);
+
   const { typescriptConfig } = await getPackageMetadata();
 
   logger.log('generating .d.ts files');
@@ -28,11 +39,14 @@ export async function makeTypings(packagePath: string): Promise<void> {
   // then add our custom stuff
   // Only include src files from the package to prevent already built
   // files from interferring with the compile
-  tsconfig.include = [`${packagePath}/src`];
+  tsconfig.include = [path.join(modularRoot, packagePath, `src`)];
   tsconfig.compilerOptions = {
     ...tsconfig.compilerOptions,
-    declarationDir: `${packagePath}/${outputDirectory}-types`,
-    rootDir: `${packagePath}/src`,
+    declarationDir: path.join(
+      targetOutputDirectory,
+      `${outputDirectory}-types`,
+    ),
+    rootDir: path.join(modularRoot, packagePath, `src`),
     diagnostics: !isCI,
   };
 

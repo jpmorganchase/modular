@@ -16,6 +16,7 @@ import { getPackageEntryPoints } from './getPackageEntryPoints';
 import getPackageMetadata from '../utils/getPackageMetadata';
 import getModularRoot from '../utils/getModularRoot';
 import { ModularPackageJson } from '../utils/isModularType';
+import getRelativeLocation from '../utils/getRelativeLocation';
 
 const outputDirectory = 'dist';
 const extensions = ['.ts', '.tsx', '.js', '.jsx'];
@@ -25,7 +26,7 @@ function distinct<T>(arr: T[]): T[] {
 }
 
 export async function makeBundle(
-  packagePath: string,
+  target: string,
   preserveModules: boolean,
   includePrivate: boolean,
 ): Promise<ModularPackageJson> {
@@ -37,6 +38,15 @@ export async function makeBundle(
     packageJsonsByPackagePath,
     packageNames,
   } = metadata;
+
+  const paramCaseTarget = toParamCase(target);
+  const packagePath = await getRelativeLocation(target);
+  const targetOutputDirectory = path.join(
+    modularRoot,
+    outputDirectory,
+    paramCaseTarget,
+  );
+
   const logger = getLogger(packagePath);
 
   const packageJson = packageJsonsByPackagePath[packagePath];
@@ -46,8 +56,7 @@ export async function makeBundle(
     includePrivate,
   );
 
-  const packageJsonName = packageJson.name as string;
-  logger.log(`building ${packageJsonName} at ${packagePath}...`);
+  logger.log(`building ${target}...`);
 
   const bundle = await rollup.rollup({
     input: path.join(modularRoot, packagePath, main),
@@ -107,9 +116,26 @@ export async function makeBundle(
     // (alternatively, disable support for those in apps)
   });
 
+  const absolutePackagePath = path.join(modularRoot, packagePath);
+
   const outputOptions: rollup.OutputOptions = {
     freeze: false,
     sourcemap: true, // TODO: read this off env
+    sourcemapPathTransform(relativeSourcePath: string, sourceMapPath: string) {
+      // make source map input files relative to the `${packagePath}/dist-${format}` within
+      // the package directory
+
+      const absoluteSourcepath = path.resolve(
+        path.dirname(sourceMapPath),
+        relativeSourcePath,
+      );
+      const packageRelativeSourcePath = path.relative(
+        absolutePackagePath,
+        absoluteSourcepath,
+      );
+
+      return `../${packageRelativeSourcePath}`;
+    },
   };
 
   // we're going to use bundle.write() to actually generate the
@@ -233,14 +259,13 @@ export async function makeBundle(
     ...(preserveModules
       ? {
           preserveModules: true,
-          dir: path.join(modularRoot, packagePath, `${outputDirectory}-cjs`),
+          dir: path.join(targetOutputDirectory, `${outputDirectory}-cjs`),
         }
       : {
           file: path.join(
-            modularRoot,
-            packagePath,
+            targetOutputDirectory,
             `${outputDirectory}-cjs`,
-            toParamCase(packageJsonName) + '.cjs.js',
+            paramCaseTarget + '.cjs.js',
           ),
         }),
     format: 'cjs',
@@ -253,14 +278,13 @@ export async function makeBundle(
       ...(preserveModules
         ? {
             preserveModules: true,
-            dir: path.join(modularRoot, packagePath, `${outputDirectory}-es`),
+            dir: path.join(targetOutputDirectory, `${outputDirectory}-es`),
           }
         : {
             file: path.join(
-              modularRoot,
-              packagePath,
+              targetOutputDirectory,
               `${outputDirectory}-es`,
-              toParamCase(packageJsonName) + '.es.js',
+              paramCaseTarget + '.es.js',
             ),
           }),
       format: 'es',
@@ -290,7 +314,7 @@ export async function makeBundle(
               .replace(/\.tsx?$/, '.js')
               .replace(path.dirname(main) + '/', ''),
           )
-        : `${outputDirectory}-cjs/${toParamCase(packageJsonName) + '.cjs.js'}`,
+        : `${outputDirectory}-cjs/${paramCaseTarget + '.cjs.js'}`,
       module: preserveModules
         ? path.join(
             `${outputDirectory}-es`,
@@ -298,15 +322,13 @@ export async function makeBundle(
               .replace(/\.tsx?$/, '.js')
               .replace(path.dirname(main) + '/', ''),
           )
-        : `${outputDirectory}-es/${toParamCase(packageJsonName) + '.es.js'}`,
+        : `${outputDirectory}-es/${paramCaseTarget + '.es.js'}`,
       typings: path.join(
         `${outputDirectory}-types`,
         path.relative('src', main).replace(/\.tsx?$/, '.d.ts'),
       ),
     };
   }
-
-  logger.log(`built ${packageJsonName} at ${packagePath}`);
 
   // return the public facing package.json that we'll write to disk later
   return {
@@ -318,9 +340,9 @@ export async function makeBundle(
     },
     files: distinct([
       ...(packageJson.files || []),
-      '/dist-cjs',
-      '/dist-es',
-      '/dist-types',
+      'dist-cjs',
+      'dist-es',
+      'dist-types',
       'README.md',
     ]),
   };
