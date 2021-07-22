@@ -21,7 +21,6 @@ const { getNodeText } = queries;
 const modularRoot = getModularRoot();
 
 // These tests must be executed sequentially with `--runInBand`.
-jest.setTimeout(10 * 60 * 1000);
 
 const packagesPath = path.join(getModularRoot(), 'packages');
 

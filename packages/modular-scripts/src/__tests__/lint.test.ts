@@ -4,8 +4,6 @@ import * as fs from 'fs-extra';
 import getModularRoot from '../utils/getModularRoot';
 import execa from 'execa';
 
-jest.setTimeout(10 * 60 * 1000);
-
 const fixturesFolder = path.join(__dirname, '__fixtures__', 'lint');
 
 let lintedFiles: string[];

@@ -7,9 +7,6 @@ import { ModularPackageJson } from '../utils/isModularType';
 import * as getModularRoot from '../utils/getModularRoot';
 import { convert } from '../convert';
 
-// Because we install react-scripts for every test...
-jest.setTimeout(10 * 60 * 1000);
-
 jest.mock('../utils/getModularRoot');
 
 const mockedModularRoot = getModularRoot.default as jest.MockedFunction<

@@ -4,8 +4,6 @@ import path from 'path';
 import tree from 'tree-view-for-tests';
 import tmp from 'tmp';
 
-jest.setTimeout(10 * 60 * 1000);
-
 // We want to omit any information that makes our snapshots
 // fragile and therefore censor the author and package versions
 // using `?`.
@@ -98,54 +96,53 @@ describe('create-modular-react-app', () => {
     expect(
       await readCensoredPackageJson(path.join(destination, 'package.json')),
     ).toMatchInlineSnapshot(`
-                  Object {
-                    "author": "?",
-                    "dependencies": Object {
-                      "@testing-library/dom": "?",
-                      "@testing-library/jest-dom": "?",
-                      "@testing-library/react": "?",
-                      "@testing-library/user-event": "?",
-                      "@types/jest": "?",
-                      "@types/node": "?",
-                      "@types/react": "?",
-                      "@types/react-dom": "?",
-                      "eslint": "?",
-                      "eslint-config-modular-app": "?",
-                      "modular-scripts": "?",
-                      "prettier": "?",
-                      "react": "?",
-                      "react-dom": "?",
-                      "typescript": "?",
-                    },
-                    "eslintConfig": Object {
-                      "extends": "modular-app",
-                    },
-                    "license": "MIT",
-                    "main": "index.js",
-                    "modular": Object {
-                      "type": "root",
-                    },
-                    "name": "test-repo",
-                    "prettier": Object {
-                      "printWidth": 80,
-                      "proseWrap": "always",
-                      "singleQuote": true,
-                      "trailingComma": "all",
-                    },
-                    "private": true,
-                    "scripts": Object {
-                      "build": "modular build app",
-                      "lint": "eslint . --ext .js,.ts,.tsx",
-                      "prettier": "prettier --write .",
-                      "start": "modular start app",
-                      "test": "modular test",
-                    },
-                    "version": "1.0.0",
-                    "workspaces": Array [
-                      "packages/**",
-                    ],
-                  }
-              `);
+      Object {
+        "author": "?",
+        "dependencies": Object {
+          "@testing-library/dom": "?",
+          "@testing-library/jest-dom": "?",
+          "@testing-library/react": "?",
+          "@testing-library/user-event": "?",
+          "@types/jest": "?",
+          "@types/node": "?",
+          "@types/react": "?",
+          "@types/react-dom": "?",
+          "eslint-config-modular-app": "?",
+          "modular-scripts": "?",
+          "prettier": "?",
+          "react": "?",
+          "react-dom": "?",
+          "typescript": "?",
+        },
+        "eslintConfig": Object {
+          "extends": "modular-app",
+        },
+        "license": "MIT",
+        "main": "index.js",
+        "modular": Object {
+          "type": "root",
+        },
+        "name": "test-repo",
+        "prettier": Object {
+          "printWidth": 80,
+          "proseWrap": "always",
+          "singleQuote": true,
+          "trailingComma": "all",
+        },
+        "private": true,
+        "scripts": Object {
+          "build": "modular build app",
+          "lint": "eslint . --ext .js,.ts,.tsx",
+          "prettier": "prettier --write .",
+          "start": "modular start app",
+          "test": "modular test",
+        },
+        "version": "1.0.0",
+        "workspaces": Array [
+          "packages/**",
+        ],
+      }
+    `);
     expect(
       await readCensoredPackageJson(
         path.join(destination, 'packages', 'app', 'package.json'),
@@ -219,54 +216,53 @@ describe('create-modular-react-app', () => {
     expect(
       await readCensoredPackageJson(path.join(destination, 'package.json')),
     ).toMatchInlineSnapshot(`
-                  Object {
-                    "author": "?",
-                    "dependencies": Object {
-                      "@testing-library/dom": "?",
-                      "@testing-library/jest-dom": "?",
-                      "@testing-library/react": "?",
-                      "@testing-library/user-event": "?",
-                      "@types/jest": "?",
-                      "@types/node": "?",
-                      "@types/react": "?",
-                      "@types/react-dom": "?",
-                      "eslint": "?",
-                      "eslint-config-modular-app": "?",
-                      "modular-scripts": "?",
-                      "prettier": "?",
-                      "react": "?",
-                      "react-dom": "?",
-                      "typescript": "?",
-                    },
-                    "eslintConfig": Object {
-                      "extends": "modular-app",
-                    },
-                    "license": "MIT",
-                    "main": "index.js",
-                    "modular": Object {
-                      "type": "root",
-                    },
-                    "name": "test-repo",
-                    "prettier": Object {
-                      "printWidth": 80,
-                      "proseWrap": "always",
-                      "singleQuote": true,
-                      "trailingComma": "all",
-                    },
-                    "private": true,
-                    "scripts": Object {
-                      "build": "modular build app",
-                      "lint": "eslint . --ext .js,.ts,.tsx",
-                      "prettier": "prettier --write .",
-                      "start": "modular start app",
-                      "test": "modular test",
-                    },
-                    "version": "1.0.0",
-                    "workspaces": Array [
-                      "packages/**",
-                    ],
-                  }
-              `);
+      Object {
+        "author": "?",
+        "dependencies": Object {
+          "@testing-library/dom": "?",
+          "@testing-library/jest-dom": "?",
+          "@testing-library/react": "?",
+          "@testing-library/user-event": "?",
+          "@types/jest": "?",
+          "@types/node": "?",
+          "@types/react": "?",
+          "@types/react-dom": "?",
+          "eslint-config-modular-app": "?",
+          "modular-scripts": "?",
+          "prettier": "?",
+          "react": "?",
+          "react-dom": "?",
+          "typescript": "?",
+        },
+        "eslintConfig": Object {
+          "extends": "modular-app",
+        },
+        "license": "MIT",
+        "main": "index.js",
+        "modular": Object {
+          "type": "root",
+        },
+        "name": "test-repo",
+        "prettier": Object {
+          "printWidth": 80,
+          "proseWrap": "always",
+          "singleQuote": true,
+          "trailingComma": "all",
+        },
+        "private": true,
+        "scripts": Object {
+          "build": "modular build app",
+          "lint": "eslint . --ext .js,.ts,.tsx",
+          "prettier": "prettier --write .",
+          "start": "modular start app",
+          "test": "modular test",
+        },
+        "version": "1.0.0",
+        "workspaces": Array [
+          "packages/**",
+        ],
+      }
+    `);
     expect(
       await readCensoredPackageJson(
         path.join(destination, 'packages', 'app', 'package.json'),

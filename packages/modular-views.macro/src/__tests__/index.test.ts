@@ -5,8 +5,6 @@ import * as rimraf from 'rimraf';
 const modularRoot = path.join(__dirname, '../../../../');
 const packagesPath = path.join(modularRoot, 'packages');
 
-jest.setTimeout(3 * 60 * 1000);
-
 async function transform() {
   const result = await execa(
     'babel',

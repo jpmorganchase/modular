@@ -120,7 +120,6 @@ export default function createModularApp(argv: {
       'react-dom',
       'prettier',
       'modular-scripts',
-      'eslint',
       'eslint-config-modular-app',
       'typescript@^4.1.2',
     ],

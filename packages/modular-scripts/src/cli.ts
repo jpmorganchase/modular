@@ -6,6 +6,7 @@ import chalk from 'chalk';
 import commander from 'commander';
 import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import type { TestOptions } from './test';
+import type { LintOptions } from './lint';
 
 import startupCheck from './utils/startupCheck';
 import actionPreflightCheck from './utils/actionPreflightCheck';
@@ -225,11 +226,6 @@ program
     const { port } = await import('./port');
     await port(relativePath);
   });
-
-export interface LintOptions {
-  all: boolean;
-  fix: boolean;
-}
 
 program
   .command('lint [regexes...]')

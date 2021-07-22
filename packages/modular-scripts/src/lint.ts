@@ -1,11 +1,16 @@
 import * as path from 'path';
 import isCI from 'is-ci';
+
 import { resolveAsBin } from './utils/resolve-as-bin';
 import getModularRoot from './utils/getModularRoot';
 import execSync from './utils/execSync';
 import { getDiffedFiles } from './utils/gitActions';
 import * as logger from './utils/logger';
-import type { LintOptions } from './cli';
+
+export interface LintOptions {
+  all: boolean;
+  fix: boolean;
+}
 
 export async function lint(
   options: LintOptions,
@@ -30,17 +35,11 @@ export async function lint(
   }
 
   const jestEslintConfig = {
-    runner: 'modular-scripts/jest-runner-eslint',
+    runner: require.resolve('modular-scripts/jest-runner-eslint'),
     displayName: 'lint',
     rootDir: modularRoot,
     testMatch: targetedFiles,
     testPathIgnorePatterns: ['/node_modules/', '/dist/'],
-    globals: {
-      'ts-jest': {
-        diagnostics: false,
-        isolateModules: true,
-      },
-    },
   };
 
   const testArgs = [

@@ -2,8 +2,6 @@ import * as path from 'path';
 import * as fs from 'fs-extra';
 import execa from 'execa';
 
-jest.setTimeout(10 * 60 * 1000);
-
 const fixturesFolder = path.join(__dirname, '__fixtures__');
 
 describe('Modular typecheck', () => {
