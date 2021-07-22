@@ -1,12 +1,17 @@
 'use strict';
 
 const { createJestRunner } = require('create-jest-runner');
-const getConfig = require('./config');
 
 const runner = createJestRunner(
   require.resolve('jest-runner-eslint/build/runner/runESLint'),
   {
-    getExtraOptions: getConfig,
+    getExtraOptions: () => ({
+      cache: true,
+      maxWarnings: 0,
+      fix: process.env.MODULAR_LINT_FIX
+        ? process.env.MODULAR_LINT_FIX.toLowerCase() === 'true'
+        : false,
+    }),
   },
 );
 

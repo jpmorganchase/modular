@@ -66,6 +66,7 @@
     "type": "root"
   },
   "lint-staged": {
+    "*.{ts,tsx}": "yarn typecheck",
     "*.{js,ts,tsx}": "yarn lint"
   },
   "resolutions": {
