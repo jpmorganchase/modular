@@ -148,15 +148,18 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
       return acc;
     }, {});
 
+    // Deps that need to be reintroduced because we removed react-scripts
+    const additionalDeps = ['eslint-config-modular-app'];
+
     fs.writeJsonSync(path.join(cwd, 'package.json'), rootPackageJson, {
       spaces: 2,
     });
 
-    logger.log(
-      'Modular repo was set up successfully. Running yarn to update dependencies',
-    );
+    logger.log('Running yarn to update dependencies');
 
-    execa.sync('yarnpkg', ['--silent'], { cwd });
+    execa.sync('yarnpkg', ['--silent', 'add', '-W', ...additionalDeps], {
+      cwd,
+    });
 
     logger.log('Validating your modular project...');
     await check();
