@@ -21,9 +21,7 @@ Object {
     "mismatchedWorkspaceDependencies": Array [],
     "public": true,
     "type": "package",
-    "workspaceDependencies": Array [
-      "eslint-config-modular-app",
-    ],
+    "workspaceDependencies": Array [],
   },
   "modular-site": Object {
     "location": "packages/modular-site",
