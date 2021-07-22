@@ -244,13 +244,6 @@
   dependencies:
     "@babel/types" "^7.14.8"
 
-"@babel/helper-simple-access@^7.14.8":
-  version "7.14.8"
-  resolved "https://registry.yarnpkg.com/@babel/helper-simple-access/-/helper-simple-access-7.14.8.tgz#82e1fec0644a7e775c74d305f212c39f8fe73924"
-  integrity sha512-TrFN4RHh9gnWEU+s7JloIho2T76GPwRHhdzOWLqTrMnlas8T9O7ec+oEDNsRXndOmru9ymH9DFrEOxpzPoSbdg==
-  dependencies:
-    "@babel/types" "^7.14.8"
-
 "@babel/helper-skip-transparent-expression-wrappers@^7.12.1", "@babel/helper-skip-transparent-expression-wrappers@^7.14.5":
   version "7.14.5"
   resolved "https://registry.yarnpkg.com/@babel/helper-skip-transparent-expression-wrappers/-/helper-skip-transparent-expression-wrappers-7.14.5.tgz#96f486ac050ca9f44b009fbe5b7d394cab3a0ee4"
