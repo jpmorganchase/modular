@@ -74,7 +74,7 @@
     "open": "^8.2.1",
     "optimize-css-assets-webpack-plugin": "5.0.4",
     "pkg-up": "3.1.0",
-    "pnp-webpack-plugin": "1.6.4",
+    "pnp-webpack-plugin": "1.7.0",
     "postcss": "^8.3.6",
     "postcss-flexbugs-fixes": "4.2.1",
     "postcss-loader": "3.0.0",
