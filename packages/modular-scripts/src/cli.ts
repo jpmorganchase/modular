@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 
 import * as fs from 'fs-extra';
-import * as isCi from 'is-ci';
+import * as isCI from 'is-ci';
 import chalk from 'chalk';
 import commander from 'commander';
 import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import type { TestOptions } from './test';
+import type { LintOptions } from './lint';
 
 import startupCheck from './utils/startupCheck';
 import actionPreflightCheck from './utils/actionPreflightCheck';
@@ -137,8 +138,8 @@ program
   .option('--updateSnapshot, -u', testOptions.updateSnapshot.description)
   .option('--verbose', testOptions.verbose.description)
   .option('--watch', testOptions.watch.description)
-  .option('--watchAll [value]', testOptions.watchAll.description, !isCi)
-  .option('--bail [value]', testOptions.bail.description, isCi)
+  .option('--watchAll [value]', testOptions.watchAll.description, !isCI)
+  .option('--bail [value]', testOptions.bail.description, isCI)
   .option('--clearCache', testOptions.clearCache.description)
   .option('--logHeapUsage', testOptions.logHeapUsage.description)
   .option('--no-cache', testOptions.cache.description)
@@ -224,6 +225,19 @@ program
   .action(async (relativePath) => {
     const { port } = await import('./port');
     await port(relativePath);
+  });
+
+program
+  .command('lint [regexes...]')
+  .option(
+    '--all',
+    'Only lint diffed files from your remote origin default branch (e.g. main or master)',
+  )
+  .option('--fix', 'Fix the lint errors wherever possible')
+  .description('Lints the codebase')
+  .action(async (regexes: string[], options: LintOptions) => {
+    const { lint } = await import('./lint');
+    await lint(options, regexes);
   });
 
 program

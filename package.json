@@ -9,7 +9,7 @@
   },
   "scripts": {
     "format": "prettier --write .",
-    "lint": "eslint --cache --ext .js,.ts,.tsx --max-warnings 0",
+    "lint": "yarn modular lint",
     "lint:fix": "yarn lint --fix",
     "create-modular-react-app": "ts-node packages/create-modular-react-app/src/cli.ts",
     "modular": "ts-node packages/modular-scripts/src/cli.ts",
@@ -66,7 +66,8 @@
     "type": "root"
   },
   "lint-staged": {
-    "*.{js,ts,tsx}": "eslint --cache --ext .js,.ts,.tsx --max-warnings 0"
+    "*.{ts,tsx}": "yarn typecheck",
+    "*.{js,ts,tsx}": "yarn lint"
   },
   "resolutions": {
     "rollup": "^2.38.3",

@@ -4,9 +4,6 @@ import * as path from 'path';
 import * as tmp from 'tmp';
 import tree from 'tree-view-for-tests';
 
-// this can take a while...
-jest.setTimeout(10 * 60 * 1000);
-
 describe('Creating a new modular app via the CLI', () => {
   let cwd: string;
   beforeEach(async () => {

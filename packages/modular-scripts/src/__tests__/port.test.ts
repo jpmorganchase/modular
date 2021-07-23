@@ -8,9 +8,6 @@ import * as getModularRoot from '../utils/getModularRoot';
 import { port } from '../port';
 import { initModularFolder } from '../init';
 
-// Because we run install for every test...
-jest.setTimeout(10 * 60 * 1000);
-
 jest.mock('../utils/getModularRoot');
 
 const mockedModularRoot = getModularRoot.default as jest.MockedFunction<
