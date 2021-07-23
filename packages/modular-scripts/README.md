@@ -38,7 +38,7 @@ and Tooling together to establish a set of patterns and definitions to enable
 ## Getting Started
 
 ```bash
-  yarn create modular-react-app my-new-modular-project
+  yarn create modular-react-app my-new-modular-project [--verbose]
 ```
 
 Bootstraps a new project, configured to use

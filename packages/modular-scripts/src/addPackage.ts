@@ -18,6 +18,7 @@ async function addPackage(
   typeArg: string | void,
   nameArg: string | void,
   preferOffline = true,
+  verbose = false,
 ): Promise<void> {
   const { type, name } =
     (typeArg && nameArg ? { type: typeArg, name: nameArg } : null) ||
@@ -92,7 +93,7 @@ async function addPackage(
     );
   }
 
-  const yarnArgs = ['--silent'];
+  const yarnArgs = verbose ? ['--verbose'] : ['--silent'];
   if (preferOffline) {
     yarnArgs.push('--prefer-offline');
   }

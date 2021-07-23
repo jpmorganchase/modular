@@ -66,6 +66,7 @@ describe('create-modular-react-app', () => {
       │  ├─ extensions.json #1i4584r
       │  ├─ launch.json #1kk1omt
       │  └─ settings.json #xes41c
+      ├─ .yarnrc #1orkcoz
       ├─ README.md #1nksyzj
       ├─ modular
       │  ├─ setupEnvironment.ts #m0s4vb
@@ -187,6 +188,7 @@ describe('create-modular-react-app', () => {
       │  ├─ extensions.json #1i4584r
       │  ├─ launch.json #1kk1omt
       │  └─ settings.json #xes41c
+      ├─ .yarnrc #1orkcoz
       ├─ README.md #1nksyzj
       ├─ modular
       │  ├─ setupEnvironment.ts #m0s4vb
