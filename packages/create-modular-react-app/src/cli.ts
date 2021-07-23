@@ -6,16 +6,13 @@ import * as fs from 'fs-extra';
 import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 
 // this is a bit gross - but there's no better way of doing this.
-let verbose = false;
+const verbose = process.argv.includes('--verbose');
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
 // terminate the Node.js process with a non-zero exit code.
 process.on('unhandledRejection', (err) => {
-  if (verbose) {
-    console.error(err);
-  }
-  process.exit(1);
+  throw err;
 });
 
 interface Options {
@@ -35,12 +32,8 @@ program.version(
 program.arguments('<name>');
 program.option('--repo [value]', 'Should a repository be initialized', false);
 program.option('--prefer-offline', 'Yarn --prefer-offline', true);
-program.option('--verbose');
+program.option('--verbose', 'Run yarn commands with --verbose set');
 program.action(async (name: string, options: Options) => {
-  if (options.verbose) {
-    verbose = true;
-  }
-
   await createModularApp({
     name,
     preferOffline: options.preferOffline,
