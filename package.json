@@ -46,7 +46,7 @@
     "@types/tar": "^4.0.5",
     "@types/update-notifier": "^5.0.1",
     "commander": "^8.0.0",
-    "esbuild": "^0.12.15",
+    "esbuild": "^0.12.16",
     "eslint": "^7.31.0",
     "execa": "^5.1.1",
     "husky": "^7.0.1",
