@@ -154,6 +154,7 @@ export default async function test(
     });
   } catch (err) {
     logger.debug((err as ExecaError).message);
+    // ✕ Modular test did not pass
     throw new Error('\u2715 Modular test did not pass');
   }
 }

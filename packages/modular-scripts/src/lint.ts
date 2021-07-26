@@ -63,6 +63,7 @@ export async function lint(
     });
   } catch (err) {
     logger.debug((err as ExecaError).message);
+    // ✕ Modular lint did not pass
     throw new Error('\u2715 Modular lint did not pass');
   }
 }
