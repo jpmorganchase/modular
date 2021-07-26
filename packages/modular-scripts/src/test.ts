@@ -3,6 +3,9 @@ import resolve from 'resolve';
 import execSync from './utils/execSync';
 import getModularRoot from './utils/getModularRoot';
 import { resolveAsBin } from './utils/resolve-as-bin';
+import { ExecaError } from 'execa';
+import * as logger from './utils/logger';
+
 export interface TestOptions {
   bail: boolean;
   debug: boolean;
@@ -136,19 +139,22 @@ export default async function test(
     ];
   }
 
-  try {
-    execSync(testBin, testArgs, {
-      cwd: getModularRoot(),
-      log: false,
-      // @ts-ignore
-      env: {
-        BABEL_ENV: 'test',
-        NODE_ENV: 'test',
-        PUBLIC_URL: '',
-        MODULAR_ROOT: getModularRoot(),
-      },
-    });
-  } catch (e) {
-    process.exit(1);
+  const result = execSync(testBin, testArgs, {
+    cwd: getModularRoot(),
+    log: false,
+    reject: false,
+    // @ts-ignore
+    env: {
+      BABEL_ENV: 'test',
+      NODE_ENV: 'test',
+      PUBLIC_URL: '',
+      MODULAR_ROOT: getModularRoot(),
+    },
+  });
+  if(result.failed){
+    const error = result as ExecaError
+    logger.debug(error.shortMessage)
+    process.exitCode = result.exitCode || 1;
+    return;
   }
 }

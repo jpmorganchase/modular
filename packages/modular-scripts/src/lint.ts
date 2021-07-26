@@ -50,18 +50,18 @@ export async function lint(
 
   const testBin = await resolveAsBin('jest-cli');
 
-  try {
-    execSync(testBin, testArgs, {
-      cwd: modularRoot,
-      log: false,
-      // @ts-ignore
-      env: {
-        MODULAR_ROOT: modularRoot,
-        MODULAR_LINT_FIX: String(fix),
-      },
-    });
-  } catch (_err) {
-    // silence CLI command failure message because jest-runner-eslint handles printing the lint errors
-    process.exit(1);
+  // Resolve the outcome, error or not, and set the process.exitCode directly if there was an error.
+  const result = execSync(testBin, testArgs, {
+    cwd: modularRoot,
+    log: false,
+    reject: false,
+    // @ts-ignore
+    env: {
+      MODULAR_ROOT: modularRoot,
+      MODULAR_LINT_FIX: String(fix),
+    },
+  });
+  if (result.failed) {
+    process.exitCode = result.exitCode || 1;
   }
 }

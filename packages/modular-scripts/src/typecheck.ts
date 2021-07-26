@@ -44,9 +44,9 @@ export async function typecheck(): Promise<void> {
 
   if (configParseResult.errors.length > 0) {
     logger.error('Failed to parse your tsconfig.json');
-    throw new Error(
-      ts.formatDiagnostics(configParseResult.errors, diagnosticHost),
-    );
+    logger.log(ts.formatDiagnostics(configParseResult.errors, diagnosticHost));
+    process.exitCode = 1;
+    return;
   }
 
   const program = ts.createProgram(
@@ -73,16 +73,19 @@ export async function typecheck(): Promise<void> {
     .concat(emitResult.diagnostics);
 
   if (diagnostics.length) {
+    process.exitCode = 1;
     if (isCI) {
       // formatDiagnostics will return a readable list of error messages, each with its own line
-      throw new Error(ts.formatDiagnostics(diagnostics, diagnosticHost));
+      logger.error(ts.formatDiagnostics(diagnostics, diagnosticHost));
+      return;
     }
 
     // formatDiagnosticsWithColorAndContext will return a list of errors, each with its own line
     // and provide an expanded snapshot of the line with the error
-    throw new Error(
+    logger.error(
       ts.formatDiagnosticsWithColorAndContext(diagnostics, diagnosticHost),
     );
+    return;
   }
 
   // "✓ Typecheck passed"

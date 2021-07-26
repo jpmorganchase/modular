@@ -5,6 +5,8 @@ import * as isCI from 'is-ci';
 import chalk from 'chalk';
 import commander from 'commander';
 import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
+import { ExecaError } from 'execa';
+
 import type { TestOptions } from './test';
 import type { LintOptions } from './lint';
 
@@ -252,7 +254,6 @@ void startupCheck()
   .then(() => {
     return program.parseAsync(process.argv);
   })
-  .catch((err: Error) => {
-    logger.error(err.message);
-    process.exit(1);
+  .catch((err: Error & ExecaError) => {
+    process.exit(err.exitCode || process.exitCode || 1);
   });
