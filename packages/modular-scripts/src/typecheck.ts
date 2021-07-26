@@ -44,10 +44,9 @@ export async function typecheck(): Promise<void> {
 
   if (configParseResult.errors.length > 0) {
     logger.error('Failed to parse your tsconfig.json');
-    logger.error(
+    throw new Error(
       ts.formatDiagnostics(configParseResult.errors, diagnosticHost),
     );
-    process.exit(1);
   }
 
   const program = ts.createProgram(

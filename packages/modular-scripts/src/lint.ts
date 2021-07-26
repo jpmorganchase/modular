@@ -1,5 +1,6 @@
 import * as path from 'path';
 import isCI from 'is-ci';
+import { ExecaError } from 'execa';
 
 import { resolveAsBin } from './utils/resolve-as-bin';
 import getModularRoot from './utils/getModularRoot';
@@ -50,18 +51,18 @@ export async function lint(
 
   const testBin = await resolveAsBin('jest-cli');
 
-  const result = execSync(testBin, testArgs, {
-    cwd: modularRoot,
-    log: false,
-    reject: false,
-    // @ts-ignore
-    env: {
-      MODULAR_ROOT: modularRoot,
-      MODULAR_LINT_FIX: String(fix),
-    },
-  });
-  if (result.failed) {
-    // ✕ Modular lint did not pass
+  try {
+    execSync(testBin, testArgs, {
+      cwd: modularRoot,
+      log: false,
+      // @ts-ignore
+      env: {
+        MODULAR_ROOT: modularRoot,
+        MODULAR_LINT_FIX: String(fix),
+      },
+    });
+  } catch (err) {
+    logger.debug((err as ExecaError).message);
     throw new Error('\u2715 Modular lint did not pass');
   }
 }

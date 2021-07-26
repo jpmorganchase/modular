@@ -34,6 +34,6 @@ export function error(...x: string[]): void {
 
 export function debug(...x: string[]): void {
   if (DEBUG) {
-    log(...x);
+    log('[debug]', ...x);
   }
 }

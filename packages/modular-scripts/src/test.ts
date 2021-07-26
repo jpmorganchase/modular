@@ -1,8 +1,10 @@
 import * as path from 'path';
 import resolve from 'resolve';
+import { ExecaError } from 'execa';
 import execSync from './utils/execSync';
 import getModularRoot from './utils/getModularRoot';
 import { resolveAsBin } from './utils/resolve-as-bin';
+import * as logger from './utils/logger';
 
 export interface TestOptions {
   bail: boolean;
@@ -137,20 +139,21 @@ export default async function test(
     ];
   }
 
-  const result = execSync(testBin, testArgs, {
-    cwd: getModularRoot(),
-    log: false,
-    reject: false,
-    // @ts-ignore
-    env: {
-      BABEL_ENV: 'test',
-      NODE_ENV: 'test',
-      PUBLIC_URL: '',
-      MODULAR_ROOT: getModularRoot(),
-    },
-  });
-  if (result.failed) {
-    //✕ Modular test did not pass
+  try {
+    execSync(testBin, testArgs, {
+      cwd: getModularRoot(),
+      log: false,
+      reject: false,
+      // @ts-ignore
+      env: {
+        BABEL_ENV: 'test',
+        NODE_ENV: 'test',
+        PUBLIC_URL: '',
+        MODULAR_ROOT: getModularRoot(),
+      },
+    });
+  } catch (err) {
+    logger.debug((err as ExecaError).message);
     throw new Error('\u2715 Modular test did not pass');
   }
 }
