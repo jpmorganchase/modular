@@ -143,7 +143,6 @@ export function createJestConfig(
         `,
       ),
     );
-    process.exitCode = 1;
     failed = true;
   }
 
@@ -173,7 +172,6 @@ export function createJestConfig(
           '\n\n We will load theses files for you. \n',
         ),
       );
-      process.exitCode = 1;
       failed = true;
     }
 
@@ -192,12 +190,11 @@ export function createJestConfig(
           '\n',
         ),
       );
-      process.exitCode = 1;
       failed = true;
     }
 
     if (failed) {
-      throw new Error('Failed to load jest config');
+      process.exit(1);
     }
 
     const mergedMapper: Record<string, string | Array<string>> = {
