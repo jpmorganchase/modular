@@ -76,16 +76,14 @@ export async function typecheck(): Promise<void> {
   if (diagnostics.length) {
     if (isCI) {
       // formatDiagnostics will return a readable list of error messages, each with its own line
-      logger.error(ts.formatDiagnostics(diagnostics, diagnosticHost));
-      process.exit(1);
+      throw new Error(ts.formatDiagnostics(diagnostics, diagnosticHost));
     }
 
     // formatDiagnosticsWithColorAndContext will return a list of errors, each with its own line
     // and provide an expanded snapshot of the line with the error
-    logger.error(
+    throw new Error(
       ts.formatDiagnosticsWithColorAndContext(diagnostics, diagnosticHost),
     );
-    process.exit(1);
   }
 
   // "✓ Typecheck passed"

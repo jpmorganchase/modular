@@ -50,7 +50,6 @@ export async function lint(
 
   const testBin = await resolveAsBin('jest-cli');
 
-  // Resolve the outcome, error or not, and set the process.exitCode directly if there was an error.
   const result = execSync(testBin, testArgs, {
     cwd: modularRoot,
     log: false,
@@ -62,6 +61,7 @@ export async function lint(
     },
   });
   if (result.failed) {
-    process.exit(result.exitCode || 1);
+    // ✕ Modular lint did not pass
+    throw new Error('\u2715 Modular lint did not pass');
   }
 }

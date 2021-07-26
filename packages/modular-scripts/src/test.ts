@@ -150,6 +150,7 @@ export default async function test(
     },
   });
   if (result.failed) {
-    process.exit(result.exitCode || 1);
+    //✕ Modular test did not pass
+    throw new Error('\u2715 Modular test did not pass');
   }
 }

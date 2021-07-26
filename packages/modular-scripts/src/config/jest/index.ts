@@ -7,7 +7,6 @@ import type { Config } from '@jest/types';
 import { defaults } from 'jest-config';
 import getModularRoot from '../../utils/getModularRoot';
 import { ModularPackageJson } from '../../utils/isModularType';
-import * as logger from '../../utils/logger';
 
 // This list may change as we learn of options where flexibility would be valuable.
 // Based on react-scripts supported override options
@@ -129,10 +128,8 @@ export function createJestConfig(
     path.join(modularRoot, 'jest.config.js'),
   );
 
-  let failed = false;
-
   if (jestConfigFile) {
-    logger.error(
+    throw new Error(
       chalk.red(
         '\nWe detected a jest.config.js file in your root directory.\n' +
           'We read your jest options from package.json.\n',
@@ -143,7 +140,6 @@ export function createJestConfig(
         `,
       ),
     );
-    failed = true;
   }
 
   if (packageJsonJest) {
@@ -156,7 +152,7 @@ export function createJestConfig(
     );
 
     if (setUpOptions.length) {
-      logger.error(
+      throw new Error(
         chalk.red(
           '\n We detected options in your Jest configuration' +
             ' that should be initialized in here: \n\n' +
@@ -172,11 +168,10 @@ export function createJestConfig(
           '\n\n We will load theses files for you. \n',
         ),
       );
-      failed = true;
     }
 
     if (unsupportedOverrides.length) {
-      logger.error(
+      throw new Error(
         chalk.red(
           '\nModular only supports overriding these Jest options:\n\n' +
             supportedOverrides
@@ -190,11 +185,6 @@ export function createJestConfig(
           '\n',
         ),
       );
-      failed = true;
-    }
-
-    if (failed) {
-      process.exit(1);
     }
 
     const mergedMapper: Record<string, string | Array<string>> = {
