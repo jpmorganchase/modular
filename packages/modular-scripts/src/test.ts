@@ -3,8 +3,6 @@ import resolve from 'resolve';
 import execSync from './utils/execSync';
 import getModularRoot from './utils/getModularRoot';
 import { resolveAsBin } from './utils/resolve-as-bin';
-import { ExecaError } from 'execa';
-import * as logger from './utils/logger';
 
 export interface TestOptions {
   bail: boolean;
@@ -151,10 +149,7 @@ export default async function test(
       MODULAR_ROOT: getModularRoot(),
     },
   });
-  if(result.failed){
-    const error = result as ExecaError
-    logger.debug(error.shortMessage)
-    process.exitCode = result.exitCode || 1;
-    return;
+  if (result.failed) {
+    process.exit(result.exitCode || 1);
   }
 }

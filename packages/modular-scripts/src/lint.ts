@@ -62,6 +62,6 @@ export async function lint(
     },
   });
   if (result.failed) {
-    process.exitCode = result.exitCode || 1;
+    process.exit(result.exitCode || 1);
   }
 }

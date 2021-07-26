@@ -65,9 +65,6 @@
   "modular": {
     "type": "root"
   },
-  "jest": {
-    "displayName": "cang"
-  },
   "lint-staged": {
     "*.{ts,tsx}": "yarn typecheck",
     "*.{js,ts,tsx}": "yarn lint"

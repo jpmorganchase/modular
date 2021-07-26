@@ -23,11 +23,9 @@ async function startupCheck(): Promise<void> {
 
   const nodeEngines = engines?.node as string;
   if (!semver.satisfies(process.version, nodeEngines)) {
-    logger.error(
+    throw new Error(
       `${process.version} does not satisfy modular engine constraint ${nodeEngines}`,
     );
-    process.exitCode = 1;
-    return;
   }
 
   if (process.env.SKIP_MODULAR_STARTUP_CHECK === 'true' || isCI) {
@@ -58,11 +56,9 @@ async function startupCheck(): Promise<void> {
     }
 
     if ((await isYarnInstalled()) === false) {
-      logger.error(
+      throw new Error(
         'Please install `yarn` before attempting to run `modular-scripts`.',
       );
-      process.exitCode = 1;
-      return;
     }
   }
 }
