@@ -5,7 +5,6 @@
   "typings": "build/index.macro.d.ts",
   "license": "Apache-2.0",
   "dependencies": {
-    "@types/babel-plugin-macros": "^2.8.5",
     "babel-plugin-macros": "^3.1.0",
     "execa": "^5.1.1",
     "find-up": "^5.0.0",

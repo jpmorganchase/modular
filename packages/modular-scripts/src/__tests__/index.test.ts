@@ -10,9 +10,10 @@ import {
   getQueriesForElement,
   queries,
 } from 'pptr-testing-library';
+import puppeteer from 'puppeteer';
+
 import getModularRoot from '../utils/getModularRoot';
 import { startApp, DevServer } from './start-app';
-import puppeteer from 'puppeteer';
 import { ModularPackageJson } from '../utils/isModularType';
 
 const rimraf = promisify(_rimraf);
@@ -213,10 +214,10 @@ describe('modular-scripts', () => {
             "react": "^17.0.2",
           },
           "files": Array [
-            "/dist-cjs",
-            "/dist-es",
-            "/dist-types",
             "README.md",
+            "dist-cjs",
+            "dist-es",
+            "dist-types",
           ],
           "license": "UNLICENSED",
           "main": "dist-cjs/index.js",
@@ -327,10 +328,10 @@ describe('modular-scripts', () => {
         Object {
           "dependencies": Object {},
           "files": Array [
-            "/dist-cjs",
-            "/dist-es",
-            "/dist-types",
             "README.md",
+            "dist-cjs",
+            "dist-es",
+            "dist-types",
           ],
           "license": "UNLICENSED",
           "main": "dist-cjs/index.js",
@@ -397,10 +398,10 @@ describe('modular-scripts', () => {
         Object {
           "dependencies": Object {},
           "files": Array [
-            "/dist-cjs",
-            "/dist-es",
-            "/dist-types",
             "README.md",
+            "dist-cjs",
+            "dist-es",
+            "dist-types",
           ],
           "license": "UNLICENSED",
           "main": "dist-cjs/nested-sample-package.cjs.js",

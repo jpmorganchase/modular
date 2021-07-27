@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { ExecaError } from 'execa';
 import * as fs from 'fs-extra';
 import * as isCI from 'is-ci';
 import chalk from 'chalk';
@@ -11,7 +12,7 @@ import type { LintOptions } from './lint';
 import startupCheck from './utils/startupCheck';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import * as logger from './utils/logger';
-import { ExecaError } from 'execa';
+import getModularRoot from './utils/getModularRoot';
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
@@ -84,6 +85,13 @@ program
         private: boolean;
       },
     ) => {
+      const modularRoot = getModularRoot();
+      if (process.cwd() !== modularRoot) {
+        throw new Error(
+          'This command can only be run from the root of a modular project',
+        );
+      }
+
       const { default: build } = await import('./build');
       logger.log('building packages at:', packagePaths.join(', '));
 

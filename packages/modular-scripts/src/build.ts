@@ -1,8 +1,5 @@
 import { paramCase as toParamCase } from 'change-case';
-import * as fs from 'fs-extra';
-import * as path from 'path';
 
-import { outputDirectory } from './config';
 import getModularRoot from './utils/getModularRoot';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import isModularType from './utils/isModularType';
@@ -39,11 +36,10 @@ async function build(
       },
     });
   } else {
-    await fs.emptyDir(path.join(outputDirectory, targetName));
-
     const { buildPackage } = await import('./buildPackage');
     // ^ we do a dynamic import here to defer the module's initial side effects
     // till when it's actually needed (i.e. now)
+
     await buildPackage(target, preserveModules, includePrivate);
   }
 }
