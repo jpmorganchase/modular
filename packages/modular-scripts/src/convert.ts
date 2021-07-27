@@ -4,7 +4,7 @@ import execa from 'execa';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import rimraf from 'rimraf';
-
+import { paramCase as toParamCase } from 'change-case';
 import {
   ModularPackageJson,
   isValidModularRootPackageJson,
@@ -47,7 +47,7 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
 
     // Create a modular app package folder
     const packageTypePath = path.join(__dirname, '../types', 'app');
-    const newPackagePath = path.join(cwd, 'packages', packageName);
+    const newPackagePath = path.join(cwd, 'packages', toParamCase(packageName));
     fs.mkdirpSync(newPackagePath);
 
     const newPackageJson = fs.readJsonSync(
@@ -106,9 +106,8 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
       { spaces: 2 },
     );
 
-    logger.debug('Updating your react-app-env.d.ts for modular-scripts');
-
     if (fs.existsSync(path.join(newPackagePath, 'src', 'react-app-env.d.ts'))) {
+      logger.debug('Updating your react-app-env.d.ts for modular-scripts');
       fs.writeFileSync(
         path.join(newPackagePath, 'src', 'react-app-env.d.ts'),
         fs
