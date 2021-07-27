@@ -45,7 +45,7 @@
     "@types/puppeteer": "^5.4.4",
     "@types/tar": "^4.0.5",
     "@types/update-notifier": "^5.0.1",
-    "commander": "^8.0.0",
+    "commander": "^8.1.0",
     "esbuild": "^0.12.15",
     "eslint": "^7.31.0",
     "execa": "^5.1.1",
