@@ -6,6 +6,7 @@
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^4.28.5",
     "@typescript-eslint/parser": "^4.28.5",
+    "@babel/eslint-parser": "^7.14.7",
     "babel-eslint": "^10.1.0",
     "eslint-config-react-app": "^6.0.0",
     "eslint-plugin-flowtype": "^5.8.1",

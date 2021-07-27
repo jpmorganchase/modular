@@ -1,6 +1,7 @@
 import globby from 'globby';
 import * as fs from 'fs-extra';
 import * as path from 'path';
+
 import getWorkspaceInfo from './utils/getWorkspaceInfo';
 import {
   getModularType,
@@ -111,15 +112,8 @@ export async function check(): Promise<void> {
     }
   });
 
-  /**
-   * Taken from react-scripts - this assets that we share common versions of utils which we depend on.
-   */
   const { verifyPackageTree } = await import('./utils/verifyPackageTree');
-  try {
-    await verifyPackageTree();
-  } catch (e) {
-    failed = true;
-  }
+  failed = await verifyPackageTree();
 
   if (failed) {
     throw new Error(`The above errors were found during modular check`);

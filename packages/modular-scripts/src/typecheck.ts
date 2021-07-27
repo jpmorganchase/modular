@@ -5,8 +5,9 @@ import chalk from 'chalk';
 import getPackageMetadata from './utils/getPackageMetadata';
 import * as logger from './utils/logger';
 import getModularRoot from './utils/getModularRoot';
+import actionPreflightCheck from './utils/actionPreflightCheck';
 
-export async function typecheck(): Promise<void> {
+async function typecheck(): Promise<void> {
   const { typescriptConfig } = await getPackageMetadata();
 
   const { _compilerOptions, ...rest } = typescriptConfig;
@@ -88,3 +89,5 @@ export async function typecheck(): Promise<void> {
   // "✓ Typecheck passed"
   logger.log(chalk.green('\u2713 Typecheck passed'));
 }
+
+export default actionPreflightCheck(typecheck);

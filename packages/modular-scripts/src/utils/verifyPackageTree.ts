@@ -3,43 +3,42 @@
  * Customized for modular
  */
 
-import * as chalk from 'chalk';
+import chalk from 'chalk';
+import dedent from 'dedent';
 import * as fs from 'fs-extra';
 import semver from 'semver';
 import * as path from 'path';
+import semverRegex from 'semver-regex';
+
 import {
   Dependency,
   JSONSchemaForNPMPackageJsonFiles as PackageJson,
 } from '@schemastore/package';
+import * as logger from './logger';
+
+const DEPS_TO_CHECK = [
+  // These are packages most likely to break in practice.
+  'esbuild',
+  'eslint',
+  'webpack',
+  'webpack-dev-server',
+];
 
 // We assume that having wrong versions of these
 // in the tree will likely break your setup.
 // This is a relatively low-effort way to find common issues.
-export async function verifyPackageTree(): Promise<void> {
-  const depsToCheck = [
-    // These are packages most likely to break in practice.
-    // See https://github.com/facebook/create-react-app/issues/1795 for reasons why.
-    // I have not included Babel here because plugins typically don't import Babel (so it's not affected).
-    'webpack',
-    'webpack-dev-server',
-  ];
-  // Inlined from semver-regex, MIT license.
-  // Don't want to make this a dependency after ejecting.
-  const getSemverRegex = () =>
-    /\bv?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[\da-z-]+(?:\.[\da-z-]+)*)?(?:\+[\da-z-]+(?:\.[\da-z-]+)*)?\b/gi;
-
+export async function verifyPackageTree(): Promise<boolean> {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const ownPackageJson = require('modular-scripts/package.json') as PackageJson;
   const dependencies: Dependency = ownPackageJson.dependencies || {};
   const expectedVersionsByDep: Record<string, string> = {};
   // Gather wanted deps
-  depsToCheck.forEach((dep) => {
+  DEPS_TO_CHECK.forEach((dep) => {
     const expectedVersion = dependencies[dep];
     if (!expectedVersion) {
-      console.log('HMM', dep, expectedVersion);
       throw new Error('This dependency list is outdated, fix it.');
     }
-    if (!getSemverRegex().test(expectedVersion)) {
+    if (!semverRegex().test(expectedVersion)) {
       throw new Error(
         `The ${dep} package should be pinned, instead got version ${expectedVersion}.`,
       );
@@ -47,39 +46,48 @@ export async function verifyPackageTree(): Promise<void> {
     expectedVersionsByDep[dep] = expectedVersion;
   });
   // Verify we don't have other versions up the tree
-  let currentDir = path.dirname(
+  const startDirectory = path.dirname(
     require.resolve('modular-scripts/package.json'),
   );
 
-  while (true) {
-    const previousDir = currentDir;
-    currentDir = path.resolve(currentDir, '..');
-    if (currentDir === previousDir) {
-      // We've reached the root.
-      break;
-    }
-    const maybeNodeModules = path.resolve(currentDir, 'node_modules');
-    if (!fs.existsSync(maybeNodeModules)) {
-      continue;
-    }
+  for (const dep of DEPS_TO_CHECK) {
+    let currentDir = startDirectory;
 
-    for (const dep of depsToCheck) {
+    // We've reached the root of the modular repo
+    // in which case we want to bail out
+    while (currentDir !== path.resolve('/')) {
+      currentDir = path.resolve(currentDir, '..');
+
+      const maybeNodeModules = path.resolve(currentDir, 'node_modules');
+      if (!fs.existsSync(maybeNodeModules)) {
+        continue;
+      }
+
       const maybeDep = path.resolve(maybeNodeModules, dep);
       if (!fs.existsSync(maybeDep)) {
-        return;
+        logger.debug(`${dep} is not installed in ${maybeNodeModules}.`);
+        continue;
       }
       const maybeDepPackageJson = path.resolve(maybeDep, 'package.json');
       if (!fs.existsSync(maybeDepPackageJson)) {
-        return;
+        logger.debug(`${dep} does not have package.json in ${maybeDep}`);
+        continue;
       }
       const packageJsonString = await fs.readFile(maybeDepPackageJson, 'utf8');
       const depPackageJson = JSON.parse(packageJsonString) as PackageJson;
       const expectedVersion = expectedVersionsByDep[dep];
-      if (
-        !semver.satisfies(depPackageJson.version as string, expectedVersion)
-      ) {
-        console.error(
-          chalk.red(
+      if (semver.satisfies(depPackageJson.version as string, expectedVersion)) {
+        logger.debug(
+          `${dep} is valid ${currentDir}@${depPackageJson.version as string}`,
+        );
+        continue;
+      } else {
+        logger.debug(
+          `${dep} is invalid ${currentDir}@${depPackageJson.version as string}`,
+        );
+
+        logger.log(
+          dedent(
             `\nThere might be a problem with the project dependency tree.\n` +
               `It is likely ${chalk.bold(
                 'not',
@@ -144,8 +152,10 @@ export async function verifyPackageTree(): Promise<void> {
               `P.S. We know this message is long but please read the steps above :-)\n`,
             ),
         );
-        throw new Error(`verify package tree failed`);
+
+        return true;
       }
     }
   }
+  return false;
 }

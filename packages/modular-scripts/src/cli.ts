@@ -254,7 +254,7 @@ program
   .option('--fix', 'Fix the lint errors wherever possible')
   .description('Lints the codebase')
   .action(async (regexes: string[], options: LintOptions) => {
-    const { lint } = await import('./lint');
+    const { default: lint } = await import('./lint');
     await lint(options, regexes);
   });
 
@@ -262,7 +262,7 @@ program
   .command('typecheck')
   .description('Typechecks the entire project')
   .action(async () => {
-    const { typecheck } = await import('./typecheck');
+    const { default: typecheck } = await import('./typecheck');
     await typecheck();
   });
 
@@ -272,5 +272,8 @@ void startupCheck()
   })
   .catch((err: Error & ExecaError) => {
     logger.error(err.message);
+    if (err.stack) {
+      logger.debug(err.stack);
+    }
     process.exit(err.exitCode || process.exitCode || 1);
   });
