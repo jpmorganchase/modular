@@ -1,5 +1,32 @@
 # modular-scripts
 
+## 1.2.0
+
+### Minor Changes
+
+- 89574bc: Added `modular lint` command which tests diffed files against eslint
+  and reports on passing and failing files, set to not tolerate any warnings and
+  cache results.
+
+### Patch Changes
+
+- f8b03b2: Bump rollup from 2.53.2 to 2.53.3
+- 2900ab7: Bump @rollup/plugin-node-resolve from 13.0.2 to 13.0.4
+- 5dc54a7: Add eslint-config-modular-app as a dependency when we remove
+  react-scripts during `modular convert` to maintain eslint functionality
+- 805edb0: Bump commander from 8.0.0 to 8.1.0
+- b00cddc: Bump @types/semver from 7.3.7 to 7.3.8
+- 459fc35: Bump @rollup/plugin-commonjs from 19.0.1 to 19.0.2
+- 4902595: Give CLI more control of when to exit the process when handling
+  failures
+- 87d7d2a: Bump postcss from 8.3.5 to 8.3.6
+- f3b4dba: Ensure that errors from verifyPackageTree are surfaced and ensure
+  esbuild is at the same version as modular-scripts.
+- c2e0581: Build packages directly into the `dist` directory instead of copying
+  a packed tarbull.
+- 32ca75b: Bump @babel/core from 7.14.6 to 7.14.8
+- 1b8ba25: Bump rollup from 2.53.3 to 2.54.0
+
 ## 1.1.0
 
 ### Minor Changes

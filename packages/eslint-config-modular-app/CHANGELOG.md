@@ -1,5 +1,15 @@
 # eslint-config-modular-app
 
+## 1.0.2
+
+### Patch Changes
+
+- fe485c9: Bump @typescript-eslint/eslint-plugin from 4.28.4 to 4.28.5
+- 6f3923c: Bump eslint-plugin-testing-library from 4.10.0 to 4.10.1
+- b3a615c: Bump @typescript-eslint/parser from 4.28.4 to 4.28.5
+- 78b8026: Bump eslint-plugin-jest from 24.3.6 to 24.4.0
+- 429b124: Bump eslint-plugin-flowtype from 5.8.0 to 5.8.1
+
 ## 1.0.1
 
 ### Patch Changes
