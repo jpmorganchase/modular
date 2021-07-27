@@ -38,15 +38,22 @@ and Tooling together to establish a set of patterns and definitions to enable
 ## Getting Started
 
 ```bash
-  yarn create modular-react-app my-new-modular-project
+  yarn create modular-react-app my-new-modular-project [--verbose] [--prefer-offline] [--repo]
 ```
 
 Bootstraps a new project, configured to use
 [Yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces/).
 
-This also creates a workspace named 'app' containing a fresh
-[`create-react-app`](https://create-react-app.dev/) application written in
+This also creates a workspace named 'app' which is a new modular app written in
 [TypeScript](https://www.typescriptlang.org/).
+
+It supports three flags:
+
+- `--verbose` enables verbose `yarn` and `modular` logging.
+- `--prefer-offline` will prefer locally cached `node_modules` versions over
+  those from your remote registry.
+- `--repo <value>` will toggle whether a new `git` repo is created and the
+  initial files commited.
 
 ## Commands
 

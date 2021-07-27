@@ -5,21 +5,19 @@ import * as path from 'path';
 import chalk from 'chalk';
 import * as semver from 'semver';
 
-function execSync(
-  file: string,
-  args: string[],
-  options: { log?: boolean } & execa.SyncOptions = { log: true },
-) {
-  const { log, ...opts } = options;
-  if (log) {
-    console.log(chalk.grey(`$ ${file} ${args.join(' ')}`));
+function exec(file: string, args: string[], cwd: string) {
+  console.log(chalk.grey(`$ ${file} ${args.join(' ')}`));
+  try {
+    return execa(file, args, {
+      stdin: process.stdin,
+      stderr: process.stderr,
+      stdout: process.stdout,
+      cwd,
+    });
+  } catch (e) {
+    console.error(chalk.red(`$ FAILED ${file} ${args.join(' ')}`));
+    throw e;
   }
-  return execa.sync(file, args, {
-    stdin: process.stdin,
-    stderr: process.stderr,
-    stdout: process.stdout,
-    ...opts,
-  });
 }
 
 function isYarnInstalled(): boolean {
@@ -31,10 +29,11 @@ function isYarnInstalled(): boolean {
   }
 }
 
-export default function createModularApp(argv: {
+export default async function createModularApp(argv: {
   name: string;
   repo?: boolean;
   preferOffline?: boolean;
+  verbose?: boolean;
 }): Promise<void> {
   const { engines } = fs.readJSONSync(
     require.resolve('create-modular-react-app/package.json'),
@@ -48,11 +47,13 @@ export default function createModularApp(argv: {
   }
 
   const preferOfflineArg = argv.preferOffline ? ['--prefer-offline'] : [];
+  const verboseArgs = argv.verbose ? ['--verbose'] : [];
+
   if (isYarnInstalled() === false) {
     console.error(
       'Please install `yarn` before attempting to run `create-modular-react-app`.',
     );
-    process.exit(1);
+    throw new Error(`Yarn was not installed`);
   }
 
   const newModularRoot = path.isAbsolute(argv.name)
@@ -68,14 +69,10 @@ export default function createModularApp(argv: {
   //
   // See: https://github.com/facebook/create-react-app/blob/47e9e2c7a07bfe60b52011cf71de5ca33bdeb6e3/packages/react-scripts/scripts/init.js#L48-L50
   if (argv.repo !== false) {
-    execSync('git', ['init'], {
-      cwd: newModularRoot,
-    });
+    await exec('git', ['init'], newModularRoot);
   }
 
-  execSync('yarnpkg', ['init', '-y'], {
-    cwd: newModularRoot,
-  });
+  await exec('yarnpkg', ['init', '-y'], newModularRoot);
 
   fs.writeJsonSync(projectPackageJsonPath, {
     ...fs.readJsonSync(projectPackageJsonPath),
@@ -102,11 +99,12 @@ export default function createModularApp(argv: {
     },
   });
 
-  execSync(
+  await exec(
     'yarnpkg',
     [
       'add',
       '-W',
+      ...verboseArgs,
       ...preferOfflineArg,
       '@testing-library/dom',
       '@testing-library/jest-dom',
@@ -123,18 +121,23 @@ export default function createModularApp(argv: {
       'eslint-config-modular-app',
       'typescript@^4.1.2',
     ],
-    { cwd: newModularRoot },
+    newModularRoot,
   );
 
-  fs.copySync(templatePath, newModularRoot);
+  await fs.copy(templatePath, newModularRoot);
 
   // rename gitgnore to .gitgnore so it actually works
-  fs.moveSync(
+  await fs.move(
     path.join(newModularRoot, 'gitignore'),
     path.join(newModularRoot, '.gitignore'),
   );
 
-  execSync(
+  await fs.move(
+    path.join(newModularRoot, 'yarnrc'),
+    path.join(newModularRoot, '.yarnrc'),
+  );
+
+  await exec(
     'yarnpkg',
     [
       'modular',
@@ -144,22 +147,17 @@ export default function createModularApp(argv: {
       'app',
       '--unstable-name',
       'app',
+      ...verboseArgs,
     ],
-    {
-      cwd: newModularRoot,
-    },
+    newModularRoot,
   );
 
   if (argv.repo !== false) {
-    execSync('git', ['add', '.'], {
-      cwd: newModularRoot,
-    });
+    await exec('git', ['add', '.'], newModularRoot);
 
     // don't try to commit in CI
     if (!process.env.CI) {
-      execSync('git', ['commit', '-m', 'Initial commit'], {
-        cwd: newModularRoot,
-      });
+      await exec('git', ['commit', '-m', 'Initial commit'], newModularRoot);
     }
   }
 

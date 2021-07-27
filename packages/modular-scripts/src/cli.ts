@@ -42,6 +42,7 @@ program
     'Equivalent of --prefer-offline for yarn installations',
     true,
   )
+  .option('--verbose', 'Run yarn commands with --verbose set')
   .action(
     async (
       packageName: string,
@@ -49,6 +50,7 @@ program
         unstableType?: string;
         unstableName?: string;
         preferOffline?: boolean;
+        verbose?: boolean;
       },
     ) => {
       const { default: addPackage } = await import('./addPackage');
@@ -57,6 +59,7 @@ program
         addOptions.unstableType,
         addOptions.unstableName,
         addOptions.preferOffline,
+        addOptions.verbose,
       );
     },
   );
@@ -181,6 +184,7 @@ program
 interface InitOptions {
   y: boolean;
   preferOffline: string;
+  verbose: boolean;
 }
 
 program
@@ -188,9 +192,14 @@ program
   .description('Initialize a new modular root in the current folder')
   .option('-y', 'equivalent to the -y flag in NPM')
   .option('--prefer-offline [value]', 'delegate to offline cache first', true)
+  .option('--verbose', 'Run yarn commands with --verbose set')
   .action(async (options: InitOptions) => {
     const { default: initWorkspace } = await import('./init');
-    await initWorkspace(options.y, JSON.parse(options.preferOffline));
+    await initWorkspace(
+      options.y,
+      JSON.parse(options.preferOffline),
+      options.verbose,
+    );
   });
 
 program
