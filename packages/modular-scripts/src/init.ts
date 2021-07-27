@@ -8,6 +8,7 @@ export async function initModularFolder(
   folder: string,
   initOverride: boolean,
   preferOffline = true,
+  verbose = false,
 ): Promise<void> {
   const packageJsonPath = path.join(folder, 'package.json');
 
@@ -47,7 +48,7 @@ export async function initModularFolder(
   await fs.mkdirp(path.join(folder, 'modular'));
   await fs.mkdirp(path.join(folder, 'packages'));
 
-  const yarnArgs = ['--silent'];
+  const yarnArgs = verbose ? ['--verbose'] : ['--silent'];
   if (preferOffline) {
     yarnArgs.push('--prefer-offline');
   }
@@ -59,6 +60,7 @@ export async function initModularFolder(
 export default function init(
   initOverride = false,
   preferOffline = true,
+  verbose = false,
 ): Promise<void> {
-  return initModularFolder(process.cwd(), initOverride, preferOffline);
+  return initModularFolder(process.cwd(), initOverride, preferOffline, verbose);
 }

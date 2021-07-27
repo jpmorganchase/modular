@@ -1,5 +1,5 @@
 /* eslint-disable */
-//@ts-nocheck
+// @ts-nocheck
 
 import foo from 'foo';
 

@@ -1,5 +1,6 @@
 import * as path from 'path';
 import isCI from 'is-ci';
+import { ExecaError } from 'execa';
 
 import { resolveAsBin } from './utils/resolve-as-bin';
 import getModularRoot from './utils/getModularRoot';
@@ -60,8 +61,9 @@ export async function lint(
         MODULAR_LINT_FIX: String(fix),
       },
     });
-  } catch (_err) {
-    // silence CLI command failure message because jest-runner-eslint handles printing the lint errors
-    process.exit(1);
+  } catch (err) {
+    logger.debug((err as ExecaError).message);
+    // ✕ Modular lint did not pass
+    throw new Error('\u2715 Modular lint did not pass');
   }
 }

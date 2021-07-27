@@ -2,7 +2,8 @@ import chalk from 'chalk';
 
 const prefix = '[modular] ';
 
-const DEBUG = process.env.MODULAR_LOGGER_DEBUG;
+const DEBUG =
+  process.env.MODULAR_LOGGER_DEBUG || process.argv.includes('--verbose');
 const SILENT = process.env.MODULAR_LOGGER_MUTE;
 
 function printStdErr(x: string) {
@@ -34,6 +35,6 @@ export function error(...x: string[]): void {
 
 export function debug(...x: string[]): void {
   if (DEBUG) {
-    log(...x);
+    log('[debug]', ...x);
   }
 }

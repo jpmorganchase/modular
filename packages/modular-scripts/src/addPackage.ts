@@ -9,7 +9,6 @@ import getModularRoot from './utils/getModularRoot';
 import execSync from './utils/execSync';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import getAllFiles from './utils/getAllFiles';
-import * as logger from './utils/logger';
 
 const packagesRoot = 'packages';
 
@@ -18,6 +17,7 @@ async function addPackage(
   typeArg: string | void,
   nameArg: string | void,
   preferOffline = true,
+  verbose = false,
 ): Promise<void> {
   const { type, name } =
     (typeArg && nameArg ? { type: typeArg, name: nameArg } : null) ||
@@ -55,8 +55,7 @@ async function addPackage(
 
   // create a new package source folder
   if (fs.existsSync(newPackagePath)) {
-    logger.error(`A package already exists at ${destination}!`);
-    process.exit(1);
+    throw new Error(`A package already exists at ${destination}!`);
   }
 
   fs.mkdirpSync(newPackagePath);
@@ -92,7 +91,7 @@ async function addPackage(
     );
   }
 
-  const yarnArgs = ['--silent'];
+  const yarnArgs = verbose ? ['--verbose'] : ['--silent'];
   if (preferOffline) {
     yarnArgs.push('--prefer-offline');
   }
