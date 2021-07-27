@@ -1,5 +1,17 @@
 # create-modular-react-app
 
+## 1.1.0
+
+### Minor Changes
+
+- ab7b04d: Add `--verbose` to create-modular-react-app and improve error
+  handling for sub-processes
+
+### Patch Changes
+
+- 805edb0: Bump commander from 8.0.0 to 8.1.0
+- b00cddc: Bump @types/semver from 7.3.7 to 7.3.8
+
 ## 1.0.0
 
 ### Major Changes
