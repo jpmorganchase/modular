@@ -15,6 +15,9 @@ without all of the interactive processes.
 
 `--prefer-offline`: Uses offline yarn cache when possible
 
+`--verbose`: Run yarn commands with --verbose set and sets
+`MODULAR_LOGGER_DEBUG` to true
+
 ## `modular add <packagePath>`
 
 Adds a new package by creating a new workspace at `packages/<packagePath>`
@@ -40,6 +43,9 @@ Packages can currently be one of 3 types:
 ### Options:
 
 `--prefer-offline`: Uses offline yarn cache when possible
+
+`--verbose`: Run yarn commands with --verbose set and sets
+`MODULAR_LOGGER_DEBUG` to true
 
 ## `modular start <packageName>`
 
@@ -77,6 +83,12 @@ this-is-param-case) in `dist/`
 
 (i.e. `modular build @scoped/package-a` will output built artifacts into
 `dist/scoped-package-a`)
+
+### Options:
+
+`--private`: Allows the building of private packages
+
+`--preserve-modules`: Preserve module structure in generated modules
 
 ## `modular workspace`
 
