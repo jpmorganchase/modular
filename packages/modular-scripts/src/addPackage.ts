@@ -9,7 +9,6 @@ import getModularRoot from './utils/getModularRoot';
 import execSync from './utils/execSync';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import getAllFiles from './utils/getAllFiles';
-import * as logger from './utils/logger';
 
 const packagesRoot = 'packages';
 
@@ -56,8 +55,7 @@ async function addPackage(
 
   // create a new package source folder
   if (fs.existsSync(newPackagePath)) {
-    logger.error(`A package already exists at ${destination}!`);
-    process.exit(1);
+    throw new Error(`A package already exists at ${destination}!`);
   }
 
   fs.mkdirpSync(newPackagePath);

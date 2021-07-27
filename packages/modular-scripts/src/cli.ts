@@ -11,6 +11,7 @@ import type { LintOptions } from './lint';
 import startupCheck from './utils/startupCheck';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import * as logger from './utils/logger';
+import { ExecaError } from 'execa';
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
@@ -261,7 +262,7 @@ void startupCheck()
   .then(() => {
     return program.parseAsync(process.argv);
   })
-  .catch((err: Error) => {
+  .catch((err: Error & ExecaError) => {
     logger.error(err.message);
-    process.exit(1);
+    process.exit(err.exitCode || process.exitCode || 1);
   });
