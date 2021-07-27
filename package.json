@@ -34,6 +34,7 @@
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^13.2.1",
     "@types/babel-plugin-macros": "^2.8.5",
+    "@types/dedent": "^0.7.0",
     "@types/find-up": "^4.0.0",
     "@types/fs-extra": "^9.0.12",
     "@types/is-ci": "^3.0.0",
@@ -46,6 +47,7 @@
     "@types/react-dom": "^17.0.9",
     "@types/rimraf": "^3.0.1",
     "@types/semver": "^7.3.7",
+    "@types/semver-regex": "^3.1.0",
     "@types/tmp": "^0.2.1",
     "@types/update-notifier": "^5.0.1",
     "commander": "^8.1.0",
@@ -57,8 +59,8 @@
     "lint-staged": "^11.1.1",
     "micromatch": "^4.0.4",
     "pptr-testing-library": "^0.6.5",
-    "puppeteer": "^10.1.0",
     "prettier": "^2.3.2",
+    "puppeteer": "^10.1.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "semver": "^7.3.5",
@@ -73,8 +75,9 @@
     "*.{js,ts,tsx}": "yarn lint"
   },
   "resolutions": {
+    "chalk": "^4.1.1",
     "rollup": "^2.38.3",
     "**/update-notifier/boxen": "^5.0.0",
-    "esbuild": "^0.12.12"
+    "esbuild": "0.12.15"
   }
 }

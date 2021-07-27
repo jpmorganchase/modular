@@ -12,6 +12,8 @@ on:
 jobs:
   test_static:
     runs-on: ubuntu-latest
+    env:
+      MODULAR_LOGGER_DEBUG: true
     strategy:
       matrix:
         command: ['prettier --check .', typecheck, lint]
@@ -27,6 +29,8 @@ jobs:
       - run: yarn ${{ matrix.command }}
   test:
     runs-on: ${{ matrix.os }}
+    env:
+      MODULAR_LOGGER_DEBUG: true
 
     strategy:
       matrix:

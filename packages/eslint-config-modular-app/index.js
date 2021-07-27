@@ -12,6 +12,7 @@ const OFF = 'off';
 
 module.exports = {
   extends: ['react-app'],
+  parser: '@babel/eslint-parser',
   reportUnusedDisableDirectives: true,
   overrides: [
     {

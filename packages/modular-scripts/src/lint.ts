@@ -2,6 +2,7 @@ import * as path from 'path';
 import isCI from 'is-ci';
 import { ExecaError } from 'execa';
 
+import actionPreflightCheck from './utils/actionPreflightCheck';
 import { resolveAsBin } from './utils/resolve-as-bin';
 import getModularRoot from './utils/getModularRoot';
 import execSync from './utils/execSync';
@@ -13,7 +14,7 @@ export interface LintOptions {
   fix: boolean;
 }
 
-export async function lint(
+async function lint(
   options: LintOptions,
   regexes: string[] = [],
 ): Promise<void> {
@@ -67,3 +68,5 @@ export async function lint(
     throw new Error('\u2715 Modular lint did not pass');
   }
 }
+
+export default actionPreflightCheck(lint);
