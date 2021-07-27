@@ -36,6 +36,9 @@ export default function stageView(targetedView: string): string {
     }
   }
 
+  // This optimizes repeated modular start <view> executions. If a tsconfig.json is present
+  // we assume that this view has been staged before and we do not need to write to the index.tsx
+  // file or write a tsconfig.json again
   if (!fs.existsSync(path.join(stagedViewAppPath, 'tsconfig.json'))) {
     const indexTemplate = `import * as React from 'react';
 import * as ReactDOM from 'react-dom';
