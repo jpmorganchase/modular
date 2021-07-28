@@ -5,6 +5,7 @@ import { Dependency } from '@schemastore/package';
 import rimraf from 'rimraf';
 import chalk from 'chalk';
 import semver from 'semver';
+import { paramCase as toParamCase } from 'change-case';
 
 import * as logger from './utils/logger';
 import getModularRoot from './utils/getModularRoot';
@@ -26,10 +27,14 @@ export async function port(relativePath: string): Promise<void> {
       'You have unsaved changes. Please save or stash them before we attempt to port this react app to your modular project.',
     );
   }
+  const targetRoot = path.resolve(modularRoot, relativePath);
+  if (!fs.existsSync(path.join(targetRoot, 'package.json'))) {
+    throw new Error(
+      "Couldn't find a `package.json` in your react-app directory. Unable to proceed.",
+    );
+  }
 
   try {
-    const targetRoot = path.resolve(modularRoot, relativePath);
-
     const targetedAppPackageJson = (await fs.readJSON(
       path.join(targetRoot, 'package.json'),
     )) as ModularPackageJson;
@@ -41,7 +46,11 @@ export async function port(relativePath: string): Promise<void> {
     );
     // Create a modular app package to funnel targeted app into
     const packageTypePath = path.join(__dirname, '../types', 'app');
-    const newPackagePath = path.join(modularRoot, 'packages', targetedAppName);
+    const newPackagePath = path.join(
+      modularRoot,
+      'packages',
+      toParamCase(targetedAppName),
+    );
     fs.mkdirpSync(newPackagePath);
 
     // Copy the targeted folders to the modular app
