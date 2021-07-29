@@ -1618,13 +1618,13 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@finos/perspective-viewer-d3fc@0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@finos/perspective-viewer-d3fc/-/perspective-viewer-d3fc-0.6.0.tgz#a246b896a0f747edfe67804d88809e853e1b853f"
-  integrity sha512-wwM+HfqlLMVDwo12Fmac+mHemvU0ECyypYSFIfIylg+dim/5jYcnpn6x5p8qIexsnbUnV+H1PKLNH2kEvxxo7w==
+"@finos/perspective-viewer-d3fc@0.6.2":
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/@finos/perspective-viewer-d3fc/-/perspective-viewer-d3fc-0.6.2.tgz#74884f6c3ad82747ec40b0cf655b73d0e6dfe8db"
+  integrity sha512-iDD8vUMGDvKDpWaVu+rwSEKi1lcXUZm8g64u/sWrMOXy3sFO9ZIKz7vhwcI8w4YLRzEFoaitRmHTWOzhLdriQA==
   dependencies:
-    "@finos/perspective" "^0.6.0"
-    "@finos/perspective-viewer" "^0.6.0"
+    "@finos/perspective" "^0.6.2"
+    "@finos/perspective-viewer" "^0.6.2"
     babel-runtime "^6.26.0"
     chroma-js "^1.3.4"
     core-js "^3.6.4"
@@ -1661,7 +1661,7 @@
     lodash "^4.17.4"
     mobile-drag-drop "^2.3.0-rc.2"
 
-"@finos/perspective-viewer@^0.6.0":
+"@finos/perspective-viewer@^0.6.0", "@finos/perspective-viewer@^0.6.2":
   version "0.6.2"
   resolved "https://registry.yarnpkg.com/@finos/perspective-viewer/-/perspective-viewer-0.6.2.tgz#fcccd9a6084d1a42306c40301475c17db1535d23"
   integrity sha512-05CAFCRnuPIz8B/DQIYx+71lNujZsSK+hHFkEswGe1Vubg0Q/V0ofWCosO36Vz9QKEkLeKUSu5qorB11RYaw8A==
