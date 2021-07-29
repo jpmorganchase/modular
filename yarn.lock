@@ -1642,26 +1642,7 @@
     "@finos/perspective-viewer" "^0.6.0"
     regular-table "=0.1.5"
 
-"@finos/perspective-viewer@0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@finos/perspective-viewer/-/perspective-viewer-0.6.0.tgz#dfd2e1fe2a09504e87c7ac758157f0438a8228dd"
-  integrity sha512-1sTX7pnb4nbg9OgfqYVAAbY1mUIaC4Lsig0KGiMSBG2QZpgEqJ9gk60m2lW20msOdPR3Dv9/FZ6cQAqIPkfh1w==
-  dependencies:
-    "@babel/runtime" "^7.8.4"
-    "@finos/perspective" "^0.6.0"
-    "@types/react" "^16.9.17"
-    "@webcomponents/shadycss" "^1.5.2"
-    "@webcomponents/webcomponentsjs" "~2.0.4"
-    awesomplete "^1.1.2"
-    chevrotain "^6.5.0"
-    core-js "^3.6.4"
-    d3-array "^1.2.1"
-    detectie "1.0.0"
-    lit-html "^1.1.2"
-    lodash "^4.17.4"
-    mobile-drag-drop "^2.3.0-rc.2"
-
-"@finos/perspective-viewer@^0.6.0":
+"@finos/perspective-viewer@0.6.2", "@finos/perspective-viewer@^0.6.0":
   version "0.6.2"
   resolved "https://registry.yarnpkg.com/@finos/perspective-viewer/-/perspective-viewer-0.6.2.tgz#fcccd9a6084d1a42306c40301475c17db1535d23"
   integrity sha512-05CAFCRnuPIz8B/DQIYx+71lNujZsSK+hHFkEswGe1Vubg0Q/V0ofWCosO36Vz9QKEkLeKUSu5qorB11RYaw8A==
@@ -2573,7 +2554,7 @@
     "@types/scheduler" "*"
     csstype "^3.0.2"
 
-"@types/react@^16.8.6", "@types/react@^16.9.17":
+"@types/react@^16.8.6":
   version "16.14.11"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.14.11.tgz#992a0cd4b66b9f27315042b5d96e976717368f04"
   integrity sha512-Don0MtsZZ3fjwTJ2BsoqkyOy7e176KplEAKOpr/4XDdzinlyJBn9yfsKn5mcSgn4kh1B22+3tBnzBC1z63ybtQ==
