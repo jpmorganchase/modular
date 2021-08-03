@@ -23,7 +23,7 @@ async function lint(
   const lintExtensions = ['.ts', '.tsx', '.js', '.jsx'];
   let targetedFiles = ['<rootDir>/**/src/**/*.{js,jsx,ts,tsx}'];
 
-  if (!all && !isCI) {
+  if (!all && !isCI && !regexes) {
     const diffedFiles = getDiffedFiles();
     if (diffedFiles.length === 0) {
       logger.log(
@@ -31,9 +31,18 @@ async function lint(
       );
       return;
     }
-    targetedFiles = diffedFiles
+
+    const targetExts = diffedFiles
       .filter((p: string) => lintExtensions.includes(path.extname(p)))
       .map((p: string) => `<rootDir>/${p}`);
+
+    // if none of the diffed files do not meet the extension criteria, do not lint
+    // end the process early with a success
+    if (!targetExts.length) {
+      logger.debug('No diffed js,jsx,ts,tsx files found');
+      return;
+    }
+    targetedFiles = targetExts;
   }
 
   const jestEslintConfig = {
