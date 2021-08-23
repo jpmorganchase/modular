@@ -40,7 +40,7 @@
     "browserslist": "4.16.6",
     "builtin-modules": "3.2.0",
     "case-sensitive-paths-webpack-plugin": "2.4.0",
-    "chalk": "4.1.1",
+    "chalk": "4.1.2",
     "change-case": "4.1.2",
     "commander": "8.1.0",
     "cross-spawn": "7.0.3",
