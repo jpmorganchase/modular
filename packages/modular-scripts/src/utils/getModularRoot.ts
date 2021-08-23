@@ -64,7 +64,7 @@ function getModularRoot(): string {
     }
 
     logger.debug(`Located modular root ${modularRoot}`);
-    return modularRoot;
+    return path.normalize(modularRoot);
   } catch (err) {
     throw new Error(err);
   }
