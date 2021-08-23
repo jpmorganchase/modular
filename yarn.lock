@@ -1660,14 +1660,14 @@
     d3fc "14.0.40"
     gradient-parser "0.1.5"
 
-"@finos/perspective-viewer-datagrid@0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@finos/perspective-viewer-datagrid/-/perspective-viewer-datagrid-0.6.0.tgz#ad56ac5e60a99a9de3a0c3cb796042e28ac652a3"
-  integrity sha512-XX+HW1ah6dml4fBQIjGXCKKZHf72921pTxm0sFvElw7PY71+0bkcUvVqgxtnwOyL9eDBo4s7BYMqjtAY11T9jA==
+"@finos/perspective-viewer-datagrid@0.6.2":
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/@finos/perspective-viewer-datagrid/-/perspective-viewer-datagrid-0.6.2.tgz#2bd89b5d8d0aa5455ffd23174f0b1aeed4abb8cb"
+  integrity sha512-41jprfPyxC1CUpVosFBISgiJqR3gxhaHfQECMxk53RXJrLxg6w8Y+JacmAVn9yQXXNarMIqp6ZgGT7b+tGtonw==
   dependencies:
-    "@finos/perspective" "^0.6.0"
-    "@finos/perspective-viewer" "^0.6.0"
-    regular-table "=0.1.5"
+    "@finos/perspective" "^0.6.2"
+    "@finos/perspective-viewer" "^0.6.2"
+    regular-table "=0.2.1"
 
 "@finos/perspective-viewer@0.6.0":
   version "0.6.0"
@@ -1688,7 +1688,7 @@
     lodash "^4.17.4"
     mobile-drag-drop "^2.3.0-rc.2"
 
-"@finos/perspective-viewer@^0.6.0":
+"@finos/perspective-viewer@^0.6.0", "@finos/perspective-viewer@^0.6.2":
   version "0.6.2"
   resolved "https://registry.yarnpkg.com/@finos/perspective-viewer/-/perspective-viewer-0.6.2.tgz#fcccd9a6084d1a42306c40301475c17db1535d23"
   integrity sha512-05CAFCRnuPIz8B/DQIYx+71lNujZsSK+hHFkEswGe1Vubg0Q/V0ofWCosO36Vz9QKEkLeKUSu5qorB11RYaw8A==
@@ -11798,10 +11798,10 @@ regjsparser@^0.6.4:
   dependencies:
     jsesc "~0.5.0"
 
-regular-table@=0.1.5:
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/regular-table/-/regular-table-0.1.5.tgz#11e4ba9fd799800006d27a9f5415bf33c0cd0246"
-  integrity sha512-cNBVD8Qw/o9rqs3h4bS/4cnDSyH5egAcBT2bJw7ihKQQFIz6MtJoE9iIC/kozTPlIK//EiFw5C4VKKkckElwmQ==
+regular-table@=0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/regular-table/-/regular-table-0.2.1.tgz#af3d1efeeebe7d8071eda4e0dda689b4683ae156"
+  integrity sha512-24cKRtO/Gkj1p16mvqvkqWCTJSngAtFhYea7bax9XzNjTOy2DAF/507bQE+5zjq/qydfFXOUpTjnAjyIC1E5ug==
 
 relateurl@^0.2.7:
   version "0.2.7"
