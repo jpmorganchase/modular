@@ -1,5 +1,11 @@
 # create-modular-react-app
 
+## 1.1.1
+
+### Patch Changes
+
+- e85a2d3: Bump chalk from 4.1.1 to 4.1.2
+
 ## 1.1.0
 
 ### Minor Changes

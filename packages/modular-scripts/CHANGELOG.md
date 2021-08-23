@@ -1,5 +1,31 @@
 # modular-scripts
 
+## 1.2.1
+
+### Patch Changes
+
+- 6d01728: Bump esbuild from 0.12.15 to 0.12.22
+- deb2f5c: Bump @babel/core from 7.14.8 to 7.15.0
+- 9046031: Modular lint should not check for diffed files if regex is passed in.
+  If there are no files that meet the extension criteria (ts, tsx, js, jsx),
+  then end the lint.
+- 8eb370b: Fix false positive modular project root error on Windows.
+- 4a8a40c: Uses the param case version of the targeted app of `modular port` and
+  `modular convert` to create the folder in `packages` directory. Ensures
+  uniformity between all commands when creating new workspaces in the repo.
+
+  `modular port` will check to confirm that there is a `package.json` file in
+  the targeted react-app directory before proceeding with the port. The
+  package.json holds key information, such as `name`, `dependencies`,
+  `devDependencies`, and `browserslist`, that modular uses to create and resolve
+  the new app workspace.
+
+- d6a13db: Bump rollup-plugin-postcss from 4.0.0 to 4.0.1
+- cea0cc9: Bump esbuild-loader from 2.13.0 to 2.13.1
+- 1e1777a: Bump eslint from 7.31.0 to 7.32.0
+- 01a3e3d: Bump esbuild-loader from 2.13.1 to 2.15.1
+- e85a2d3: Bump chalk from 4.1.1 to 4.1.2
+
 ## 1.2.0
 
 ### Minor Changes
