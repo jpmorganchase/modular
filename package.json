@@ -38,7 +38,7 @@
     "@types/find-up": "4.0.0",
     "@types/fs-extra": "9.0.12",
     "@types/is-ci": "3.0.0",
-    "@types/jest": "26.0.24",
+    "@types/jest": "27.0.1",
     "@types/node": "*",
     "@types/npm-packlist": "1.1.2",
     "@types/prompts": "2.0.14",
