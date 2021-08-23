@@ -1,5 +1,12 @@
 # eslint-config-modular-app
 
+## 1.0.3
+
+### Patch Changes
+
+- 16b9556: Bump eslint-plugin-jsx-a11y from 6.3.1 to 6.4.1
+- b45af6a: Bump @babel/eslint-parser from 7.14.7 to 7.15.0
+
 ## 1.0.2
 
 ### Patch Changes
