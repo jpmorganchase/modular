@@ -43,7 +43,7 @@
     "@types/npm-packlist": "1.1.2",
     "@types/prompts": "2.0.14",
     "@types/puppeteer": "5.4.4",
-    "@types/react": "17.0.15",
+    "@types/react": "17.0.19",
     "@types/react-dom": "17.0.9",
     "@types/rimraf": "3.0.1",
     "@types/semver": "7.3.7",
