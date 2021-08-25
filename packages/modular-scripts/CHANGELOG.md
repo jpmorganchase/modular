@@ -1,5 +1,16 @@
 # modular-scripts
 
+## 1.2.2
+
+### Patch Changes
+
+- 649ed4f: Bump @rollup/plugin-commonjs from 19.0.2 to 20.0.0
+- 290ee5f: Bump filesize from 7.0.0 to 8.0.0
+- 5653a7d: Bump @babel/preset-env from 7.14.8 to 7.15.0
+- 06aa0d5: Bump @babel/preset-typescript from 7.14.5 to 7.15.0
+- 9c2ca01: Bump npm-packlist from 2.2.2 to 3.0.0
+- bbf9b10: Bump browserslist from 4.16.6 to 4.16.8
+
 ## 1.2.1
 
 ### Patch Changes
