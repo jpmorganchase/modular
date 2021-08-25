@@ -1,5 +1,11 @@
 # eslint-config-modular-app
 
+## 1.0.5
+
+### Patch Changes
+
+- f9eb3a1: Bump eslint-plugin-testing-library from 4.11.0 to 4.12.0
+
 ## 1.0.4
 
 ### Patch Changes
