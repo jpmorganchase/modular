@@ -54,7 +54,7 @@
     "esbuild": "0.12.22",
     "eslint": "7.32.0",
     "execa": "5.1.1",
-    "husky": "7.0.1",
+    "husky": "7.0.2",
     "is-ci": "2.0.0",
     "lint-staged": "11.1.2",
     "micromatch": "4.0.4",
