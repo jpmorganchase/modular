@@ -50,7 +50,7 @@
     "dotenv": "10.0.0",
     "dotenv-expand": "5.1.0",
     "esbuild-loader": "2.15.1",
-    "esbuild": "0.12.22",
+    "esbuild": "0.12.23",
     "escape-string-regexp": "2.0.0",
     "eslint": "7.32.0",
     "execa": "5.1.1",
