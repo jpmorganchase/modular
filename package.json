@@ -51,7 +51,7 @@
     "@types/tmp": "0.2.1",
     "@types/update-notifier": "5.1.0",
     "commander": "8.1.0",
-    "esbuild": "0.12.23",
+    "esbuild": "0.12.24",
     "eslint": "7.32.0",
     "execa": "5.1.1",
     "husky": "7.0.2",
