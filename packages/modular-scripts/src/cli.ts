@@ -1,5 +1,6 @@
 import { ExecaError } from 'execa';
 import startupCheck from './utils/startupCheck';
+import setupEnv from './utils/setupEnv';
 import * as logger from './utils/logger';
 
 // Makes the script crash on unhandled rejections instead of silently
@@ -10,15 +11,30 @@ process.on('unhandledRejection', (err) => {
   throw err;
 });
 
-void startupCheck()
-  .then(async () => {
-    const { program } = await import('./program');
-    return program.parseAsync(process.argv);
-  })
-  .catch((err: Error & ExecaError) => {
-    logger.error(err.message);
-    if (err.stack) {
-      logger.debug(err.stack);
+async function startUp(env: typeof process.env.NODE_ENV) {
+  await setupEnv(env);
+
+  await startupCheck();
+}
+
+void (async () => {
+  switch (process.argv[1]) {
+    // "build" is the only task which runs with NODE_ENV "production"
+    case 'build': {
+      await startUp('production');
+      break;
     }
-    process.exit(err.exitCode || process.exitCode || 1);
-  });
+    default: {
+      await startUp('development');
+    }
+  }
+
+  const { program } = await import('./program');
+  return program.parseAsync(process.argv);
+})().catch((err: Error & ExecaError) => {
+  logger.error(err.message);
+  if (err.stack) {
+    logger.debug(err.stack);
+  }
+  process.exit(err.exitCode || process.exitCode || 1);
+});
