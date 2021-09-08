@@ -1,5 +1,4 @@
 import isCI from 'is-ci';
-import path from 'path';
 import ts from 'typescript';
 import chalk from 'chalk';
 import getPackageMetadata from './utils/getPackageMetadata';
@@ -40,7 +39,7 @@ async function typecheck(): Promise<void> {
   const configParseResult = ts.parseJsonConfigFileContent(
     tsConfig,
     ts.sys,
-    path.dirname('tsconfig.json'),
+    getModularRoot(),
   );
 
   if (configParseResult.errors.length > 0) {
@@ -64,6 +63,14 @@ async function typecheck(): Promise<void> {
       ? x.replace(fileNameLowerCaseRegExp, x.toLowerCase())
       : x;
   }
+
+  program
+    .getSourceFiles()
+    .map((f) => f.fileName)
+    .sort()
+    .forEach((f) => {
+      logger.debug(f);
+    });
 
   // Does not emit files or typings but will add declaration diagnostics to our errors
   // This will ensure that makeTypings will be successful in CI before actually attempting to build
