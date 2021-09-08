@@ -1,3 +1,4 @@
+.changeset
 /dist
 packages/**/dist
 packages/**/build
