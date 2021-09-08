@@ -1,5 +1,15 @@
 # eslint-config-modular-app
 
+## 1.0.6
+
+### Patch Changes
+
+- 5c6893f: Bump eslint-plugin-react from 7.24.0 to 7.25.1
+- fefa3bc: Bump @typescript-eslint/eslint-plugin from 4.29.3 to 4.31.0
+- b785b41: Bump @typescript-eslint/parser from 4.29.3 to 4.31.0
+- dfa9a4a: Bump eslint-plugin-testing-library from 4.12.0 to 4.12.1
+- f92c6eb: Bump eslint-plugin-flowtype from 5.9.0 to 5.9.2
+
 ## 1.0.5
 
 ### Patch Changes

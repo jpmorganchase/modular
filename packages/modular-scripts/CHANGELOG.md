@@ -1,5 +1,16 @@
 # modular-scripts
 
+## 1.2.3
+
+### Patch Changes
+
+- 1951495: fix `modular test` exiting with exit code 0 when tests fail
+- 9205a63: Bump esbuild from 0.12.23 to 0.12.24
+- 94bf265: Bump browserslist from 4.16.8 to 4.17.0
+- 95fde2a: Bump esbuild from 0.12.24 to 0.12.25
+- 8f822d2: Bump @babel/preset-env from 7.15.0 to 7.15.4
+- ad000da: Bump esbuild from 0.12.22 to 0.12.23
+
 ## 1.2.2
 
 ### Patch Changes
