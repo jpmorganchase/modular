@@ -358,7 +358,7 @@ export async function port(relativePath: string): Promise<void> {
       );
     }
   } catch (err) {
-    logger.error(err);
+    logger.error(err as string);
     stashChanges();
   }
 }
