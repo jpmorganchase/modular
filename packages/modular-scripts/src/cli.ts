@@ -261,6 +261,7 @@ program
 program
   .command('typecheck')
   .description('Typechecks the entire project')
+  .option('--verbose', 'Show debug files for type checking.')
   .action(async () => {
     const { default: typecheck } = await import('./typecheck');
     await typecheck();

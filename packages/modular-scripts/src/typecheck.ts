@@ -64,6 +64,14 @@ async function typecheck(): Promise<void> {
       : x;
   }
 
+  program
+    .getSourceFiles()
+    .map((f) => f.fileName)
+    .sort()
+    .forEach((f) => {
+      logger.debug(f);
+    });
+
   // Does not emit files or typings but will add declaration diagnostics to our errors
   // This will ensure that makeTypings will be successful in CI before actually attempting to build
   const emitResult = program.emit();
