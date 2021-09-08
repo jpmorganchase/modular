@@ -143,7 +143,6 @@ export default async function test(
     execSync(testBin, testArgs, {
       cwd: getModularRoot(),
       log: false,
-      reject: false,
       // @ts-ignore
       env: {
         BABEL_ENV: 'test',
