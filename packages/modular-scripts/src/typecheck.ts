@@ -1,5 +1,4 @@
 import isCI from 'is-ci';
-import path from 'path';
 import ts from 'typescript';
 import chalk from 'chalk';
 import getPackageMetadata from './utils/getPackageMetadata';
@@ -40,7 +39,7 @@ async function typecheck(): Promise<void> {
   const configParseResult = ts.parseJsonConfigFileContent(
     tsConfig,
     ts.sys,
-    path.dirname('tsconfig.json'),
+    getModularRoot(),
   );
 
   if (configParseResult.errors.length > 0) {
