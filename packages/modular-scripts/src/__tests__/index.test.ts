@@ -211,7 +211,7 @@ describe('modular-scripts', () => {
       ).toMatchInlineSnapshot(`
         Object {
           "dependencies": Object {
-            "react": "^17.0.2",
+            "react": "17.0.2",
           },
           "files": Array [
             "README.md",
@@ -271,7 +271,7 @@ describe('modular-scripts', () => {
         │  ├─ index.js #l140cq
         │  └─ index.js.map #b9qv26
         ├─ dist-es
-        │  ├─ index.js #ru9c3p
+        │  ├─ index.js #bpsk7y
         │  └─ index.js.map #171l8pf
         ├─ dist-types
         │  └─ index.d.ts #1vloh7q
@@ -352,7 +352,7 @@ describe('modular-scripts', () => {
         │  ├─ index.js #rq9uxe
         │  └─ index.js.map #ys8x0i
         ├─ dist-es
-        │  ├─ index.js #1gjntzw
+        │  ├─ index.js #3bszhr
         │  └─ index.js.map #b17359
         ├─ dist-types
         │  └─ index.d.ts #f68aj
@@ -422,7 +422,7 @@ describe('modular-scripts', () => {
         │  ├─ nested-sample-package.cjs.js #kv2xzp
         │  └─ nested-sample-package.cjs.js.map #j26x67
         ├─ dist-es
-        │  ├─ nested-sample-package.es.js #40jnpo
+        │  ├─ nested-sample-package.es.js #11z6hlv
         │  └─ nested-sample-package.es.js.map #11g8lh9
         ├─ dist-types
         │  └─ index.d.ts #f68aj
