@@ -4,6 +4,7 @@ import rimraf from 'rimraf';
 import tree from 'tree-view-for-tests';
 import path from 'path';
 import fs from 'fs-extra';
+import prettier from 'prettier';
 
 import {
   getDocument,
@@ -113,10 +114,15 @@ describe('When working with a nested app', () => {
 
   it('can generate a index.html', async () => {
     expect(
-      String(
-        await fs.readFile(
-          path.join(modularRoot, 'dist', 'scoped-sample-app', 'index.html'),
+      prettier.format(
+        String(
+          await fs.readFile(
+            path.join(modularRoot, 'dist', 'scoped-sample-app', 'index.html'),
+          ),
         ),
+        {
+          filepath: 'index.html',
+        },
       ),
     ).toMatchSnapshot();
   });
@@ -213,10 +219,15 @@ describe('when working with an app', () => {
 
   it('can generate a index.html', async () => {
     expect(
-      String(
-        await fs.readFile(
-          path.join(modularRoot, 'dist', 'sample-app', 'index.html'),
+      prettier.format(
+        String(
+          await fs.readFile(
+            path.join(modularRoot, 'dist', 'sample-app', 'index.html'),
+          ),
         ),
+        {
+          filepath: 'index.html',
+        },
       ),
     ).toMatchSnapshot();
   });
