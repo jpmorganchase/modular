@@ -1,10 +1,10 @@
 import * as path from 'path';
 import resolve from 'resolve';
 import { ExecaError } from 'execa';
-import execSync from './utils/execSync';
-import getModularRoot from './utils/getModularRoot';
-import { resolveAsBin } from './utils/resolveAsBin';
-import * as logger from './utils/logger';
+import execSync from '../utils/execSync';
+import getModularRoot from '../utils/getModularRoot';
+import { resolveAsBin } from '../utils/resolveAsBin';
+import * as logger from '../utils/logger';
 
 export interface TestOptions {
   bail: boolean;
@@ -65,7 +65,7 @@ export default async function test(
   const cleanArgv: string[] = [];
 
   // pass in path to configuration file
-  const { createJestConfig } = await import('./config/jest');
+  const { createJestConfig } = await import('./config');
   cleanArgv.push(
     '--config',
     `"${JSON.stringify(
