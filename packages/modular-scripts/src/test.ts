@@ -3,7 +3,7 @@ import resolve from 'resolve';
 import { ExecaError } from 'execa';
 import execSync from './utils/execSync';
 import getModularRoot from './utils/getModularRoot';
-import { resolveAsBin } from './utils/resolve-as-bin';
+import { resolveAsBin } from './utils/resolveAsBin';
 import * as logger from './utils/logger';
 
 export interface TestOptions {

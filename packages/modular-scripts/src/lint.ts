@@ -3,7 +3,7 @@ import isCI from 'is-ci';
 import { ExecaError } from 'execa';
 
 import actionPreflightCheck from './utils/actionPreflightCheck';
-import { resolveAsBin } from './utils/resolve-as-bin';
+import { resolveAsBin } from './utils/resolveAsBin';
 import getModularRoot from './utils/getModularRoot';
 import execSync from './utils/execSync';
 import { getDiffedFiles } from './utils/gitActions';
