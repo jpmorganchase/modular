@@ -5,6 +5,7 @@ import actionPreflightCheck from './utils/actionPreflightCheck';
 import isModularType from './utils/isModularType';
 import execSync from './utils/execSync';
 import getLocation from './utils/getLocation';
+import { setupEnvForDirectory } from './utils/setupEnv';
 
 async function build(
   target: string,
@@ -13,6 +14,8 @@ async function build(
 ): Promise<void> {
   const modularRoot = getModularRoot();
   const targetPath = await getLocation(target);
+
+  await setupEnvForDirectory(targetPath);
 
   const targetName = toParamCase(target);
 

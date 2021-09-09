@@ -6,9 +6,13 @@ import execSync from './utils/execSync';
 import getLocation from './utils/getLocation';
 import stageView from './utils/stageView';
 import getModularRoot from './utils/getModularRoot';
+import { setupEnvForDirectory } from './utils/setupEnv';
 
 async function start(target: string): Promise<void> {
   const targetPath = await getLocation(target);
+
+  await setupEnvForDirectory(targetPath);
+
   if (isModularType(targetPath, 'package')) {
     throw new Error(
       `The package at ${targetPath} is not a valid modular app or view.`,
