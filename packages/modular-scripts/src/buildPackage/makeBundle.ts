@@ -297,7 +297,7 @@ export async function makeBundle(
     const binName = Object.keys(packageJson.bin)[0];
     const binPath = main
       .replace(/\.tsx?$/, '.js')
-      .replace(path.dirname(main) + '/', '');
+      .replace(path.posix.dirname(main) + '/', '');
 
     outputFilesPackageJson = {
       bin: {
@@ -308,24 +308,24 @@ export async function makeBundle(
     outputFilesPackageJson = {
       // TODO: what of 'bin' fields?
       main: preserveModules
-        ? path.join(
+        ? path.posix.join(
             `${outputDirectory}-cjs`,
             main
               .replace(/\.tsx?$/, '.js')
-              .replace(path.dirname(main) + '/', ''),
+              .replace(path.posix.dirname(main) + '/', ''),
           )
         : `${outputDirectory}-cjs/${paramCaseTarget + '.cjs.js'}`,
       module: preserveModules
-        ? path.join(
+        ? path.posix.join(
             `${outputDirectory}-es`,
             main
               .replace(/\.tsx?$/, '.js')
-              .replace(path.dirname(main) + '/', ''),
+              .replace(path.posix.dirname(main) + '/', ''),
           )
         : `${outputDirectory}-es/${paramCaseTarget + '.es.js'}`,
-      typings: path.join(
+      typings: path.posix.join(
         `${outputDirectory}-types`,
-        path.relative('src', main).replace(/\.tsx?$/, '.d.ts'),
+        path.posix.relative('src', main).replace(/\.tsx?$/, '.d.ts'),
       ),
     };
   }
