@@ -4,6 +4,7 @@ import rimraf from 'rimraf';
 import tree from 'tree-view-for-tests';
 import path from 'path';
 import fs from 'fs-extra';
+import prettier from 'prettier';
 
 import {
   getDocument,
@@ -54,13 +55,13 @@ describe('When working with a nested app', () => {
       'add scoped/sample-app --unstable-type app --unstable-name @scoped/sample-app',
       { stdio: 'inherit' },
     );
-  });
 
-  it('can build a nested app', async () => {
     await modular('build @scoped/sample-app', {
       stdio: 'inherit',
     });
+  });
 
+  it('can build a nested app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'scoped-sample-app')))
       .toMatchInlineSnapshot(`
       "scoped-sample-app
@@ -85,6 +86,46 @@ describe('When working with a nested app', () => {
             └─ runtime-main.90523c3e.js.map #stcog7"
     `);
   });
+
+  it('can generate a asset-manifest', async () => {
+    expect(
+      String(
+        await fs.readFile(
+          path.join(
+            modularRoot,
+            'dist',
+            'scoped-sample-app',
+            'asset-manifest.json',
+          ),
+        ),
+      ),
+    ).toMatchSnapshot();
+  });
+
+  it('can generate a manifest', async () => {
+    expect(
+      String(
+        await fs.readFile(
+          path.join(modularRoot, 'dist', 'scoped-sample-app', 'manifest.json'),
+        ),
+      ),
+    ).toMatchSnapshot();
+  });
+
+  it('can generate a index.html', async () => {
+    expect(
+      prettier.format(
+        String(
+          await fs.readFile(
+            path.join(modularRoot, 'dist', 'scoped-sample-app', 'index.html'),
+          ),
+        ),
+        {
+          filepath: 'index.html',
+        },
+      ),
+    ).toMatchSnapshot();
+  });
 });
 
 describe('when working with an app', () => {
@@ -100,6 +141,10 @@ describe('when working with an app', () => {
       path.join(__dirname, 'TestApp.test-tsx'),
       path.join(packagesPath, 'sample-app', 'src', 'App.tsx'),
     );
+
+    await modular('build sample-app', {
+      stdio: 'inherit',
+    });
   });
 
   it('can add an app', () => {
@@ -126,11 +171,7 @@ describe('when working with an app', () => {
       `);
   });
 
-  it('can build an app', async () => {
-    await modular('build sample-app', {
-      stdio: 'inherit',
-    });
-
+  it('can build an app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'sample-app')))
       .toMatchInlineSnapshot(`
       "sample-app
@@ -154,6 +195,41 @@ describe('when working with an app', () => {
             ├─ runtime-main.46d4e883.js #1tf2izh
             └─ runtime-main.46d4e883.js.map #e0v9b3"
     `);
+  });
+
+  it('can generate a asset-manifest', async () => {
+    expect(
+      String(
+        await fs.readFile(
+          path.join(modularRoot, 'dist', 'sample-app', 'asset-manifest.json'),
+        ),
+      ),
+    ).toMatchSnapshot();
+  });
+
+  it('can generate a manifest', async () => {
+    expect(
+      String(
+        await fs.readFile(
+          path.join(modularRoot, 'dist', 'sample-app', 'manifest.json'),
+        ),
+      ),
+    ).toMatchSnapshot();
+  });
+
+  it('can generate a index.html', async () => {
+    expect(
+      prettier.format(
+        String(
+          await fs.readFile(
+            path.join(modularRoot, 'dist', 'sample-app', 'index.html'),
+          ),
+        ),
+        {
+          filepath: 'index.html',
+        },
+      ),
+    ).toMatchSnapshot();
   });
 
   it('can execute tests', async () => {
