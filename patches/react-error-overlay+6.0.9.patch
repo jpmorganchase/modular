@@ -1,0 +1,36 @@
+diff --git a/node_modules/react-error-overlay/index.d.ts b/node_modules/react-error-overlay/index.d.ts
+new file mode 100644
+index 0000000..2904a53
+--- /dev/null
++++ b/node_modules/react-error-overlay/index.d.ts
+@@ -0,0 +1,29 @@
++export type ErrorLocation = {
++  fileName: string;
++  lineNumber: number;
++  colNumber?: number;
++};
++
++type RuntimeReportingOptions = {
++  onError?: () => void;
++  filename?: string;
++};
++
++type EditorHandler = (errorLoc: ErrorLocation) => void;
++
++interface ErrorOverlayImpl {
++  setEditorHandler(handler: EditorHandler | null): void,
++  reportBuildError(error: string): void,
++  reportRuntimeError(
++    error: Error,
++    options: RuntimeReportingOptions
++  ): void,
++  dismissBuildError(): void,
++  startReportingRuntimeErrors(options: RuntimeReportingOptions): void,
++  dismissRuntimeErrors(): void,
++  stopReportingRuntimeErrors(): void,
++}
++
++declare const ErrorOverlay: ErrorOverlayImpl;
++
++export default ErrorOverlay;
+\ No newline at end of file

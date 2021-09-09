@@ -39,3 +39,6 @@ yarn-error.log*
 # Used by typescript for incremental builds
 .tsbuildinfo
 *.tsbuildinfo
+
+# TODO LukeSheard
+packages/modular-scripts/src/esbuild-scripts/plugins/css-modules.tsx

@@ -59,7 +59,9 @@ async function addPackage(
   }
 
   fs.mkdirpSync(newPackagePath);
-  fs.copySync(packageTypePath, newPackagePath);
+  fs.copySync(packageTypePath, newPackagePath, {
+    recursive: true,
+  });
 
   const packageFilePaths = getAllFiles(newPackagePath);
 

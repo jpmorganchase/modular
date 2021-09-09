@@ -30,22 +30,30 @@ async function start(target: string): Promise<void> {
     startPath = targetPath;
   }
 
-  const startScript = require.resolve(
-    'modular-scripts/react-scripts/scripts/start.js',
-  );
-  const modularRoot = getModularRoot();
-  const targetName = toParamCase(target);
+  if (process.env.USE_MODULAR_ESBUILD) {
+    const { default: startEsbuildApp } = await import(
+      './esbuild-scripts/start'
+    );
+    await startEsbuildApp(targetPath);
+  } else {
+    const startScript = require.resolve(
+      'modular-scripts/react-scripts/scripts/start.js',
+    );
+    const modularRoot = getModularRoot();
+    const targetName = toParamCase(target);
 
-  execSync('node', [startScript], {
-    cwd: startPath,
-    log: false,
-    // @ts-ignore
-    env: {
-      MODULAR_ROOT: modularRoot,
-      MODULAR_PACKAGE: target,
-      MODULAR_PACKAGE_NAME: targetName,
-    },
-  });
+    execSync('node', [startScript], {
+      cwd: startPath,
+      log: false,
+      // @ts-ignore
+      env: {
+        MODULAR_ROOT: modularRoot,
+        MODULAR_PACKAGE: target,
+        MODULAR_PACKAGE_NAME: targetName,
+      },
+    });
+  }
+
   return Promise.resolve();
 }
 
