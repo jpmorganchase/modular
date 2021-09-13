@@ -8,35 +8,14 @@ process.on('unhandledRejection', (err) => {
 });
 
 const chalk = require('chalk');
-const fs = require('fs-extra');
 const bfj = require('bfj');
 const webpack = require('webpack');
 const configFactory = require('../config/webpack.config');
 const paths = require('../config/paths');
-const checkRequiredFiles = require('../../react-dev-utils/checkRequiredFiles');
 const formatWebpackMessages = require('../../react-dev-utils/formatWebpackMessages');
 const printBuildError = require('../../react-dev-utils/printBuildError');
 
-const isInteractive = process.stdout.isTTY;
-
-// Warn and crash if required files are missing
-if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
-  process.exit(1);
-}
-
-// Generate configuration
-const config = configFactory('production');
-
-// We require that you explicitly set browsers and do not fall back to
-// browserslist defaults.
-const { checkBrowsers } = require('../../react-dev-utils/browsersHelper');
-checkBrowsers(paths.appPath, isInteractive)
-  .then(() => {
-    // Merge with the public folder
-    copyPublicFolder();
-    // Start the webpack build
-    return build();
-  })
+build()
   .then(
     () => {
       // done...
@@ -66,7 +45,7 @@ checkBrowsers(paths.appPath, isInteractive)
 
 // Create the production build and print the deployment instructions.
 function build() {
-  const compiler = webpack(config);
+  const compiler = webpack(configFactory('production'));
   return new Promise((resolve, reject) => {
     compiler.run((err, stats) => {
       let messages;
@@ -121,12 +100,5 @@ function build() {
         .then(() => resolve())
         .catch((error) => reject(new Error(error)));
     });
-  });
-}
-
-function copyPublicFolder() {
-  fs.copySync(paths.appPublic, paths.appBuild, {
-    dereference: true,
-    filter: (file) => file !== paths.appHtml,
   });
 }

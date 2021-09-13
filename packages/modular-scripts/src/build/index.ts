@@ -14,6 +14,8 @@ import createPaths from '../utils/createPaths';
 import printHostingInstructions from './printHostingInstructions';
 import { measureFileSizesBeforeBuild, printFileSizesAfterBuild } from './fileSizeReporter';
 import type { Stats } from 'webpack';
+import { checkBrowsers } from '../utils/checkBrowsers';
+import checkRequiredFiles from '../utils/checkRequiredFiles';
 
 // These sizes are pretty large. We'll warn for bundles exceeding them.
 const WARN_AFTER_BUNDLE_GZIP_SIZE = 512 * 1024;
@@ -26,7 +28,20 @@ async function buildApp(target: string) {
   
   const paths = await createPaths(target);
 
-  const previousFileSizes = await measureFileSizesBeforeBuild(paths.appBuild);
+await checkBrowsers(targetDirectory);
+
+const previousFileSizes = await measureFileSizesBeforeBuild(paths.appBuild);
+
+// Warn and crash if required files are missing
+await checkRequiredFiles([paths.appHtml, paths.appIndexJs]);
+
+logger.log("Creating an optimized production build...");
+
+await fs.copy(paths.appPublic, paths.appBuild, {
+  dereference: true,
+  filter: (file) => file !== paths.appHtml,
+  overwrite: true,
+});
 
   logger.log("Creating an optimized production build...");
 
@@ -57,7 +72,7 @@ async function buildApp(target: string) {
     
     try {
       const stats: Stats.ToJsonOutput = await fs.readJson(statsFilePath);
-  
+
       if (stats.warnings.length) {
         logger.log(chalk.yellow('Compiled with warnings.\n'));
         logger.log(stats.warnings.join('\n\n'));

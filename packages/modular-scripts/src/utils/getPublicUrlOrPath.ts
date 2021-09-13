@@ -1,6 +1,6 @@
 import { URL } from 'url';
 
-const stubDomain = 'https://create-esbuild-app.dev';
+const stubDomain = 'https://create-modular-app.dev';
 
 export default function getPublicUrlOrPath(
   isEnvDevelopment: boolean,

@@ -2,7 +2,7 @@ import { paramCase as toParamCase } from 'change-case';
 import fs from 'fs-extra';
 import * as path from 'path';
 
-import getPublicUrlOrPath from '../esbuild-scripts/config/get-public-url-or-path';
+import getPublicUrlOrPath from './getPublicUrlOrPath';
 import getModularRoot from './getModularRoot';
 import getLocation from './getLocation';
 export interface Paths {
