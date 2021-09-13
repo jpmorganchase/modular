@@ -8,15 +8,12 @@ process.on('unhandledRejection', (err) => {
 });
 
 const chalk = require('chalk');
-const fs = require('fs-extra');
 const bfj = require('bfj');
 const webpack = require('webpack');
 const configFactory = require('../config/webpack.config');
 const paths = require('../config/paths');
 const formatWebpackMessages = require('../../react-dev-utils/formatWebpackMessages');
 const printBuildError = require('../../react-dev-utils/printBuildError');
-
-copyPublicFolder();
 
 build()
   .then(
@@ -103,12 +100,5 @@ function build() {
         .then(() => resolve())
         .catch((error) => reject(new Error(error)));
     });
-  });
-}
-
-function copyPublicFolder() {
-  fs.copySync(paths.appPublic, paths.appBuild, {
-    dereference: true,
-    filter: (file) => file !== paths.appHtml,
   });
 }

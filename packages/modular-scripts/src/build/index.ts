@@ -37,54 +37,60 @@ async function buildApp(target: string) {
 
   logger.log("Creating an optimized production build...");
 
+  await fs.copy(paths.appPublic, paths.appBuild, {
+    dereference: true,
+    filter: (file) => file !== paths.appHtml,
+    overwrite: true,
+  });
+
   // create-react-app doesn't support plain module outputs yet,
-    // so --preserve-modules has no effect here
+  // so --preserve-modules has no effect here
 
-    const buildScript = require.resolve(
-      'modular-scripts/react-scripts/scripts/build.js',
-    );
+  const buildScript = require.resolve(
+    'modular-scripts/react-scripts/scripts/build.js',
+  );
 
-    // TODO: this shouldn't be sync
-    execSync('node', [buildScript], {
-      cwd: targetDirectory,
-      log: false,
-      // @ts-ignore
-      env: {
-        MODULAR_ROOT: modularRoot,
-        MODULAR_PACKAGE: target,
-        MODULAR_PACKAGE_NAME: targetName,
-      },
-    });
+  // TODO: this shouldn't be sync
+  execSync('node', [buildScript], {
+    cwd: targetDirectory,
+    log: false,
+    // @ts-ignore
+    env: {
+      MODULAR_ROOT: modularRoot,
+      MODULAR_PACKAGE: target,
+      MODULAR_PACKAGE_NAME: targetName,
+    },
+  });
 
-    const statsFilePath = path.join(paths.appBuild, 'bundle-stats.json');
-    
-    try {
-      const stats: Stats.ToJsonOutput = await fs.readJson(statsFilePath);
+  const statsFilePath = path.join(paths.appBuild, 'bundle-stats.json');
   
-      if (stats.warnings.length) {
-        logger.log(chalk.yellow('Compiled with warnings.\n'));
-        logger.log(stats.warnings.join('\n\n'));
-        logger.log(
-          '\nSearch for the ' +
-            chalk.underline(chalk.yellow('keywords')) +
-            ' to learn more about each warning.',
-        );
-      } else {
-        logger.log(chalk.green('Compiled successfully.\n'));
-      }
+  try {
+    const stats: Stats.ToJsonOutput = await fs.readJson(statsFilePath);
 
-      logger.log('File sizes after gzip:\n');
-      printFileSizesAfterBuild(
-        stats,
-        previousFileSizes,
-        paths.appBuild,
-        WARN_AFTER_BUNDLE_GZIP_SIZE,
-        WARN_AFTER_CHUNK_GZIP_SIZE,
+    if (stats.warnings.length) {
+      logger.log(chalk.yellow('Compiled with warnings.\n'));
+      logger.log(stats.warnings.join('\n\n'));
+      logger.log(
+        '\nSearch for the ' +
+          chalk.underline(chalk.yellow('keywords')) +
+          ' to learn more about each warning.',
       );
-      logger.log();
-    } finally {
-      await fs.remove(statsFilePath)
+    } else {
+      logger.log(chalk.green('Compiled successfully.\n'));
     }
+
+    logger.log('File sizes after gzip:\n');
+    printFileSizesAfterBuild(
+      stats,
+      previousFileSizes,
+      paths.appBuild,
+      WARN_AFTER_BUNDLE_GZIP_SIZE,
+      WARN_AFTER_CHUNK_GZIP_SIZE,
+    );
+    logger.log();
+  } finally {
+    await fs.remove(statsFilePath)
+  }
 
 
   printHostingInstructions(
