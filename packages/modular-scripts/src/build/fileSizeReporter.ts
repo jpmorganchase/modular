@@ -4,7 +4,7 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 import chalk from 'chalk';
 import filesize from 'filesize';
-import recursive from 'recursive-readdir'
+import recursive from 'recursive-readdir';
 import stripAnsi from 'strip-ansi';
 import { sync as gzipSize } from 'gzip-size';
 import type { Stats } from 'webpack';
@@ -12,7 +12,7 @@ import * as logger from '../utils/logger';
 
 interface WebpackStat {
   root: string;
-  sizes: Record<string, number>
+  sizes: Record<string, number>;
 }
 
 function canReadAsset(asset: string) {
@@ -34,29 +34,32 @@ export function printFileSizesAfterBuild(
   const root = previousSizeMap.root;
   const sizes = previousSizeMap.sizes;
 
-  const assets = webpackStats.assets?.filter((asset: { name: string }) => canReadAsset(asset.name))
-  .map((asset: { name: string }) => {
-    const fileContents = fs.readFileSync(path.join(root, asset.name));
-    const size = gzipSize(fileContents);
-    const previousSize = sizes[removeFileNameHash(root, asset.name)];
-    const difference = getDifferenceLabel(size, previousSize);
-    return {
-      folder: path.join(
-        path.basename(buildFolder),
-        path.dirname(asset.name),
-      ),
-      name: path.basename(asset.name),
-      size: size,
-      sizeLabel:
-        filesize(size) + (difference ? ' (' + difference + ')' : ''),
-    };
-  }).sort((a, b) => b.size - a.size) || [];
+  const assets =
+    webpackStats.assets
+      ?.filter((asset: { name: string }) => canReadAsset(asset.name))
+      .map((asset: { name: string }) => {
+        const fileContents = fs.readFileSync(path.join(root, asset.name));
+        const size = gzipSize(fileContents);
+        const previousSize = sizes[removeFileNameHash(root, asset.name)];
+        const difference = getDifferenceLabel(size, previousSize);
+        return {
+          folder: path.join(
+            path.basename(buildFolder),
+            path.dirname(asset.name),
+          ),
+          name: path.basename(asset.name),
+          size: size,
+          sizeLabel:
+            filesize(size) + (difference ? ' (' + difference + ')' : ''),
+        };
+      })
+      .sort((a, b) => b.size - a.size) || [];
 
   const longestSizeLabelLength = Math.max.apply(
     null,
     assets.map((a) => stripAnsi(a.sizeLabel).length),
   );
-  
+
   let suggestBundleSplitting = false;
   assets.forEach((asset) => {
     let sizeLabel = asset.sizeLabel;
@@ -81,7 +84,7 @@ export function printFileSizesAfterBuild(
         chalk.cyan(asset.name),
     );
   });
-  
+
   if (suggestBundleSplitting) {
     logger.log();
     logger.log(
@@ -127,17 +130,21 @@ function getDifferenceLabel(currentSize: number, previousSize: number) {
   }
 }
 
-export function measureFileSizesBeforeBuild(buildFolder: string): Promise<WebpackStat> {
+export function measureFileSizesBeforeBuild(
+  buildFolder: string,
+): Promise<WebpackStat> {
   return new Promise<WebpackStat>((resolve) => {
     recursive(buildFolder, (err: Error, fileNames: string[]) => {
       let sizes: Record<string, number> = {};
       if (!err && fileNames) {
-        sizes = fileNames.filter(canReadAsset).reduce<Record<string, number>>((memo, fileName) => {
-          let contents = fs.readFileSync(fileName);
-          let key = removeFileNameHash(buildFolder, fileName);
-          memo[key] = gzipSize(contents);
-          return memo;
-        }, {});
+        sizes = fileNames
+          .filter(canReadAsset)
+          .reduce<Record<string, number>>((memo, fileName) => {
+            let contents = fs.readFileSync(fileName);
+            let key = removeFileNameHash(buildFolder, fileName);
+            memo[key] = gzipSize(contents);
+            return memo;
+          }, {});
       }
       resolve({
         root: buildFolder,

@@ -12,7 +12,10 @@ import getLocation from '../utils/getLocation';
 import { setupEnvForDirectory } from '../utils/setupEnv';
 import createPaths from '../utils/createPaths';
 import printHostingInstructions from './printHostingInstructions';
-import { measureFileSizesBeforeBuild, printFileSizesAfterBuild } from './fileSizeReporter';
+import {
+  measureFileSizesBeforeBuild,
+  printFileSizesAfterBuild,
+} from './fileSizeReporter';
 import type { Stats } from 'webpack';
 import { checkBrowsers } from '../utils/checkBrowsers';
 import checkRequiredFiles from '../utils/checkRequiredFiles';
@@ -25,7 +28,7 @@ async function buildApp(target: string) {
   const modularRoot = getModularRoot();
   const targetDirectory = await getLocation(target);
   const targetName = toParamCase(target);
-  
+
   const paths = await createPaths(target);
 
   await checkBrowsers(targetDirectory);
@@ -35,7 +38,7 @@ async function buildApp(target: string) {
   // Warn and crash if required files are missing
   await checkRequiredFiles([paths.appHtml, paths.appIndexJs]);
 
-  logger.log("Creating an optimized production build...");
+  logger.log('Creating an optimized production build...');
 
   await fs.copy(paths.appPublic, paths.appBuild, {
     dereference: true,
@@ -63,7 +66,7 @@ async function buildApp(target: string) {
   });
 
   const statsFilePath = path.join(paths.appBuild, 'bundle-stats.json');
-  
+
   try {
     const stats: Stats.ToJsonOutput = await fs.readJson(statsFilePath);
 
@@ -89,15 +92,14 @@ async function buildApp(target: string) {
     );
     logger.log();
   } finally {
-    await fs.remove(statsFilePath)
+    await fs.remove(statsFilePath);
   }
-
 
   printHostingInstructions(
     fs.readJSON(paths.appPackageJson),
     paths.publicUrlOrPath,
     paths.publicUrlOrPath,
-    paths.appBuild
+    paths.appBuild,
   );
 }
 
