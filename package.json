@@ -51,7 +51,7 @@
     "@types/tmp": "0.2.1",
     "@types/update-notifier": "5.1.0",
     "commander": "8.1.0",
-    "esbuild": "0.12.26",
+    "esbuild": "0.12.27",
     "eslint": "7.32.0",
     "execa": "5.1.1",
     "husky": "7.0.2",
@@ -65,7 +65,7 @@
     "react-dom": "17.0.2",
     "semver": "7.3.5",
     "ts-node": "10.2.1",
-    "typescript": "4.4.2"
+    "typescript": "4.4.3"
   },
   "modular": {
     "type": "root"
