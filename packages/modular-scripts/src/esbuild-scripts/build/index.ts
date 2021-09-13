@@ -4,7 +4,7 @@ import chalk from "chalk";
 import fs from "fs-extra";
 import * as minimize from "html-minifier-terser";
 import * as path from "path";
-import getClientEnvironment from "../config/get-client-environment";
+import getClientEnvironment from "../config/getClientEnvironment";
 
 import { Paths } from "../../utils/createPaths";
 import * as logger from "../../utils/logger";

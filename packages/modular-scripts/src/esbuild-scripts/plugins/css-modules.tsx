@@ -6,15 +6,17 @@ import postcss from 'postcss';
 import tmp from 'tmp';
 import crypto from 'crypto';
 
-const hash = crypto.createHash('sha256');
-
 const readFile = fs.readFile;
 const writeFile = fs.writeFile;
 const ensureDir = (dirname: string) => fs.mkdir(dirname, { recursive: true });
 
 const pluginNamespace = 'esbuild-css-modules-plugin-namespace';
 
-const buildCssModulesJS = async (cssFullPath: string, options: any) => {
+const buildCssModulesJS = async (
+  cssFullPath: string,
+  hash: crypto.Hash,
+  options: any,
+) => {
   const {
     localsConvention = 'camelCaseOnly',
     inject = true,
@@ -66,6 +68,7 @@ const CssModulesPlugin: (options?: any) => esbuild.Plugin = (options = {}) => {
   const plugin: esbuild.Plugin = {
     name: 'esbuild-css-modules-plugin',
     setup(build) {
+      const hash = crypto.createHash('sha256');
       const rootDir = process.cwd();
       const tmpDirPath = tmp.dirSync().name;
       const { outdir, bundle } = build.initialOptions;
@@ -82,7 +85,11 @@ const CssModulesPlugin: (options?: any) => esbuild.Plugin = (options = {}) => {
         await ensureDir(tmpDir);
         const tmpFilePath = path.resolve(tmpDir, `${sourceBaseName}.css`);
 
-        const jsContent = await buildCssModulesJS(sourceFullPath, options);
+        const jsContent = await buildCssModulesJS(
+          sourceFullPath,
+          hash,
+          options,
+        );
 
         await writeFile(`${tmpFilePath}.js`, jsContent);
 

@@ -14,7 +14,7 @@ import memoize from '../../utils/memoize';
 import createPaths, { Paths } from '../../utils/createPaths';
 import getClientEnvironment, {
   ClientEnvironment,
-} from '../config/get-client-environment';
+} from '../config/getClientEnvironment';
 
 import cssModulesPlugin from '../plugins/css-modules';
 import svgrPlugin from '../plugins/svgr';
