@@ -1,11 +1,11 @@
 import { paramCase as toParamCase } from 'change-case';
 
-import getModularRoot from './utils/getModularRoot';
-import actionPreflightCheck from './utils/actionPreflightCheck';
-import isModularType from './utils/isModularType';
-import execSync from './utils/execSync';
-import getLocation from './utils/getLocation';
-import { setupEnvForDirectory } from './utils/setupEnv';
+import getModularRoot from '../utils/getModularRoot';
+import actionPreflightCheck from '../utils/actionPreflightCheck';
+import isModularType from '../utils/isModularType';
+import execSync from '../utils/execSync';
+import getLocation from '../utils/getLocation';
+import { setupEnvForDirectory } from '../utils/setupEnv';
 
 async function build(
   target: string,
