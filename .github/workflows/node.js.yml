@@ -15,6 +15,7 @@ jobs:
     env:
       MODULAR_LOGGER_DEBUG: true
     strategy:
+      fail-fast: false
       matrix:
         command: ['prettier --check .', typecheck, lint]
     steps:
@@ -33,6 +34,7 @@ jobs:
       MODULAR_LOGGER_DEBUG: true
 
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest]
         node-version: [12.x, 14.x, 16.x]
