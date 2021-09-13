@@ -2,7 +2,7 @@ import * as fs from 'fs/promises';
 import * as parse5 from 'parse5';
 import escapeStringRegexp from 'escape-string-regexp';
 
-import { Paths } from './config/paths';
+import { Paths } from '../utils/createPaths';
 
 export async function createIndex(
   paths: Paths,

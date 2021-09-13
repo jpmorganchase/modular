@@ -11,7 +11,7 @@ import type { ServeStaticOptions } from 'serve-static';
 
 import memoize from '../../utils/memoize';
 
-import createPaths, { Paths } from '../config/paths';
+import createPaths, { Paths } from '../../utils/createPaths';
 import getClientEnvironment, {
   ClientEnvironment,
 } from '../config/get-client-environment';
@@ -22,8 +22,8 @@ import incrementalCompilePlugin from '../plugins/incremental-compile';
 import incrementalReporterPlugin from '../plugins/incremental-reporter';
 import websocketReloadPlugin from '../plugins/ws-reload';
 
-import choosePort from '../utils/choose-port';
-import openBrowser from '../utils/open-browser';
+import choosePort from '../utils/choosePort';
+import openBrowser from '../utils/openBrowser';
 import * as logger from '../../utils/logger';
 import prepareUrls, { InstructionURLS } from '../config/urls';
 import { createIndex } from '../api';
@@ -292,8 +292,8 @@ class DevServer {
   };
 }
 
-export default async function start(targetDirectory: string): Promise<void> {
-  const paths = createPaths(targetDirectory);
+export default async function start(target: string): Promise<void> {
+  const paths = await createPaths(target);
   const devServer = new DevServer(paths);
 
   const server = await devServer.start();

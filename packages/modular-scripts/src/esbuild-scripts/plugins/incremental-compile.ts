@@ -2,7 +2,7 @@ import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/pa
 import { Plugin } from 'esbuild';
 import chalk from 'chalk';
 import * as fs from 'fs/promises';
-import { Paths } from '../config/paths';
+import { Paths } from '../../utils/createPaths';
 import * as logger from '../../utils/logger';
 import { InstructionURLS } from '../config/urls';
 
@@ -20,8 +20,6 @@ function createPlugin(
   const plugin: Plugin = {
     name: 'incremental-logging',
     async setup(build) {
-      const useYarn = true;
-
       let isFirstCompile = true;
 
       const packageJsonText = await fs.readFile(paths.appPackageJson, {
@@ -76,7 +74,7 @@ function createPlugin(
           logger.log('Note that the development build is not optimized.');
           logger.log(
             `To create a production build, use ` +
-              `${chalk.cyan(`${useYarn ? 'yarn' : 'npm run'} build`)}.`,
+              `${chalk.cyan(`yarn build`)}.`,
           );
           logger.log();
         }

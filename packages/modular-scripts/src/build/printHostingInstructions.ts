@@ -4,14 +4,13 @@ import chalk from "chalk";
 import * as fs from "fs";
 import globalModules from "global-modules";
 
-import * as logger from "../../utils/logger";
+import * as logger from "../utils/logger";
 
 function printHostingInstructions(
   appPackage: PackageJson,
   publicUrl: string,
   publicPath: string,
-  buildFolder: string,
-  useYarn: boolean
+  buildFolder: string
 ): void {
   if (publicUrl && publicUrl.includes(".github.io/")) {
     // "homepage": "http://user.github.io/project"
@@ -21,7 +20,7 @@ function printHostingInstructions(
       typeof appPackage.scripts.deploy !== "undefined";
     printBaseMessage(buildFolder, publicPathname);
 
-    printDeployInstructions(publicUrl, hasDeployScript, useYarn);
+    printDeployInstructions(publicUrl, hasDeployScript);
   } else if (publicPath !== "/") {
     // "homepage": "http://mywebsite.com/project"
     printBaseMessage(buildFolder, publicPath);
@@ -30,7 +29,7 @@ function printHostingInstructions(
     //   or no homepage
     printBaseMessage(buildFolder, publicUrl);
 
-    printStaticServerInstructions(buildFolder, useYarn);
+    printStaticServerInstructions(buildFolder);
   }
   logger.log();
   logger.log("Find out more about deployment here:");
@@ -68,18 +67,13 @@ function printBaseMessage(buildFolder: string, hostingLocation: string) {
 function printDeployInstructions(
   publicUrl: string,
   hasDeployScript: boolean,
-  useYarn: boolean
 ) {
   logger.log(`To publish it at ${chalk.green(publicUrl)} , run:`);
   logger.log();
 
   // If script deploy has been added to package.json, skip the instructions
   if (!hasDeployScript) {
-    if (useYarn) {
-      logger.log(`  ${chalk.cyan("yarn")} add --dev gh-pages`);
-    } else {
-      logger.log(`  ${chalk.cyan("npm")} install --save-dev gh-pages`);
-    }
+    logger.log(`  ${chalk.cyan("yarn")} add --dev gh-pages`);
     logger.log();
 
     logger.log(
@@ -92,7 +86,7 @@ function printDeployInstructions(
     logger.log(`      ${chalk.dim("// ...")}`);
     logger.log(
       `      ${chalk.yellow('"predeploy"')}: ${chalk.yellow(
-        `"${useYarn ? "yarn" : "npm run"} build",`
+        `yarn build",`
       )}`
     );
     logger.log(
@@ -106,19 +100,15 @@ function printDeployInstructions(
     logger.log("Then run:");
     logger.log();
   }
-  logger.log(`  ${chalk.cyan(useYarn ? "yarn" : "npm")} run deploy`);
+  logger.log(`  ${chalk.cyan("yarn")} run deploy`);
 }
 
-function printStaticServerInstructions(buildFolder: string, useYarn: boolean) {
+function printStaticServerInstructions(buildFolder: string) {
   logger.log("You may serve it with a static server:");
   logger.log();
 
   if (!fs.existsSync(`${globalModules}/serve`)) {
-    if (useYarn) {
-      logger.log(`  ${chalk.cyan("yarn")} global add serve`);
-    } else {
-      logger.log(`  ${chalk.cyan("npm")} install -g serve`);
-    }
+    logger.log(`  ${chalk.cyan("yarn")} global add serve`);
   }
   logger.log(`  ${chalk.cyan("serve")} -s ${buildFolder}`);
 }

@@ -34,7 +34,7 @@ async function start(target: string): Promise<void> {
     const { default: startEsbuildApp } = await import(
       './esbuild-scripts/start'
     );
-    await startEsbuildApp(targetPath);
+    await startEsbuildApp(target);
   } else {
     const startScript = require.resolve(
       'modular-scripts/react-scripts/scripts/start.js',

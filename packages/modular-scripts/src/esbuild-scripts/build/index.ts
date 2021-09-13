@@ -6,25 +6,21 @@ import * as minimize from "html-minifier-terser";
 import * as path from "path";
 import getClientEnvironment from "../config/get-client-environment";
 
-import createPaths from "../config/paths";
+import { Paths } from "../../utils/createPaths";
 import * as logger from "../../utils/logger";
 import { formatError } from "../utils/format-error";
 
 import cssModulesPlugin from "../plugins/css-modules";
 import svgrPlugin from "../plugins/svgr";
-import checkRequiredFiles from "../utils/check-required-files";
-import printHostingInstructions from "./print-hosting-instructions";
+import checkRequiredFiles from "../utils/checkRequiredFiles";
 import { createIndex } from "../api";
 
 const plugins: esbuild.Plugin[] = [cssModulesPlugin, svgrPlugin()];
 
-export default async function build(targetDirectory: string) {
-  const paths = createPaths(targetDirectory);
+export default async function build(target: string, paths: Paths) {
   if (checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
     process.exit(1);
   }
-
-  logger.log("Creating an optimized production build...");
 
   const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
 
@@ -89,19 +85,6 @@ export default async function build(targetDirectory: string) {
       publicPath: paths.publicUrlOrPath,
       nodePaths: (process.env.NODE_PATH || "").split(path.delimiter)
     });
-
-    const buildFolder = path.relative(paths.appPath, paths.appBuild);
-    const useYarn = true;
-
-    printHostingInstructions(
-      fs.readJSON(paths.appPackageJson),
-      paths.publicUrlOrPath,
-      paths.publicUrlOrPath,
-      buildFolder,
-      useYarn
-    );
-
-    process.exit(0);
   } catch (e) {
     const result = e as esbuild.BuildFailure;
     logger.log(chalk.red("Failed to compile.\n"));
@@ -111,6 +94,6 @@ export default async function build(targetDirectory: string) {
 
     await Promise.all(logs);
 
-    throw new Error(`Failed to build ${targetDirectory}`);
+    throw new Error(`Failed to build ${target}`);
   }
 }

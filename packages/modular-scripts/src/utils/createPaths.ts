@@ -1,8 +1,10 @@
+import { paramCase as toParamCase } from 'change-case';
 import fs from 'fs-extra';
 import * as path from 'path';
 
-import getPublicUrlOrPath from './get-public-url-or-path';
-
+import getPublicUrlOrPath from '../esbuild-scripts/config/get-public-url-or-path';
+import getModularRoot from './getModularRoot';
+import getLocation from './getLocation';
 export interface Paths {
   publicUrlOrPath: string;
   dotenv: string;
@@ -24,7 +26,11 @@ export interface Paths {
   moduleFileExtensions: string[];
 }
 
-export default function createPaths(targetDirectory: string): Paths {
+export default async function createPaths(target: string): Promise<Paths> {
+  const modularRoot = getModularRoot();
+  const targetDirectory = await getLocation(target);
+  const targetName = toParamCase(target);
+
   // Make sure any symlinks in the project folder are resolved:
   // https://github.com/facebook/create-react-app/issues/637
   const appDirectory = fs.realpathSync(targetDirectory);
@@ -46,8 +52,6 @@ export default function createPaths(targetDirectory: string): Paths {
     (fs.readJSONSync(resolveApp('package.json')) as AppPackageJson).homepage,
     process.env.PUBLIC_URL,
   );
-
-  const buildPath = process.env.BUILD_PATH || 'build';
 
   const moduleFileExtensions = [
     'web.mjs',
@@ -86,7 +90,6 @@ export default function createPaths(targetDirectory: string): Paths {
 
   const dotenv = resolveApp('.env');
   const appPath = resolveApp('.');
-  const appBuild = resolveApp(buildPath);
   const appPublic = resolveApp('public');
   const appHtml = resolveApp('public/index.html');
   const appIndexJs = resolveModule(resolveApp, 'src/index');
@@ -100,6 +103,8 @@ export default function createPaths(targetDirectory: string): Paths {
   const ownNodeModules = resolveOwn('node_modules');
   const appTypeDeclarations = resolveApp('src/react-app-env.d.ts');
   const ownTypeDeclarations = resolveOwn('react-app.d.ts');
+
+  const appBuild = path.join(modularRoot, 'dist', targetName);
 
   const paths: Paths = {
     publicUrlOrPath,
