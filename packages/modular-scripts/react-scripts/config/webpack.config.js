@@ -1,5 +1,6 @@
 'use strict';
 
+const chalk = require('chalk');
 const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
@@ -710,7 +711,11 @@ module.exports = function (webpackEnv) {
         require.resolve(plugin.package);
       } catch (err) {
         console.info(
-          `It appears you're using ${dependency}. Run 'yarn add -D ${plugin.package}' to install`,
+          `${chalk.grey('[modular]')} It appears you're using ${chalk.cyan(
+            dependency,
+          )}. Run ${chalk.cyan.bold(
+            `yarn add -D ${plugin.package}`,
+          )} to install`,
         );
         throw err;
       }
