@@ -2593,6 +2593,11 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
+"@types/global-modules@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@types/global-modules/-/global-modules-2.0.0.tgz#5dcac13b7e0a167f792784f0c772e861543d51a5"
+  integrity sha512-AsEQE+Rhe82YGPmO2vpzhpdvsYwUbK9ev7ZhTY7QQBHuKeLxCr8K0K47HmlaVkuSe0YivNAjjEGoEnkGKhivMA==
+
 "@types/graceful-fs@^4.1.2":
   version "4.1.5"
   resolved "https://registry.yarnpkg.com/@types/graceful-fs/-/graceful-fs-4.1.5.tgz#21ffba0d98da4350db64891f92a9e5db3cdb4e15"
@@ -2745,6 +2750,13 @@
     "@types/scheduler" "*"
     csstype "^3.0.2"
 
+"@types/recursive-readdir@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@types/recursive-readdir/-/recursive-readdir-2.2.0.tgz#b39cd5474fd58ea727fe434d5c68b7a20ba9121c"
+  integrity sha512-HGk753KRu2N4mWduovY4BLjYq4jTOL29gV2OfGdGxHcPSWGFkC5RRIdk+VTs5XmYd7MVAD+JwKrcb5+5Y7FOCg==
+  dependencies:
+    "@types/node" "*"
+
 "@types/resolve@0.0.8":
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/@types/resolve/-/resolve-0.0.8.tgz#f26074d238e02659e323ce1a13d041eee280e194"
@@ -2772,7 +2784,7 @@
   resolved "https://registry.yarnpkg.com/@types/scheduler/-/scheduler-0.16.2.tgz#1a62f89525723dde24ba1b01b092bf5df8ad4d39"
   integrity sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==
 
-"@types/semver-regex@3.1.0":
+"@types/semver-regex@3.1.0", "@types/semver-regex@^3.1.0":
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/@types/semver-regex/-/semver-regex-3.1.0.tgz#76a753b94318df340e9468b0644a387cefcbb8a9"
   integrity sha512-dF4bvVQjiCd/No7udT/BfOTfBksT1HCUwIpthCjS4kQYTzeZNVx2EKRzk+sIP4OW4ShKVsMDL3V6RX+c7GKmEA==
@@ -7142,7 +7154,7 @@ global-dirs@^3.0.0:
   dependencies:
     ini "2.0.0"
 
-global-modules@2.0.0:
+global-modules@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/global-modules/-/global-modules-2.0.0.tgz#997605ad2345f27f51539bea26574421215c7780"
   integrity sha512-NGbfmJBp9x8IxyJSd1P+otYK8vonoJactOogrVfFRIAEY1ukil8RSKDz2Yo7wh1oihl51l/r6W4epkeKJHqL8A==
@@ -11790,7 +11802,7 @@ readdirp@~3.6.0:
   dependencies:
     picomatch "^2.2.1"
 
-recursive-readdir@2.2.2:
+recursive-readdir@^2.2.2:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/recursive-readdir/-/recursive-readdir-2.2.2.tgz#9946fb3274e1628de6e36b2f6714953b4845094f"
   integrity sha512-nRCcW9Sj7NuZwa2XvH9co8NPeXUBhZP7CRKJtU+cS6PW9FpCIFoI5ib0NT1ZrbNuPoRy0ylyCaUL8Gih4LSyFg==
