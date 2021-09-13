@@ -10,12 +10,11 @@ import { Paths } from "../../utils/createPaths";
 import * as logger from "../../utils/logger";
 import { formatError } from "../utils/format-error";
 
-import cssModulesPlugin from "../plugins/css-modules";
 import svgrPlugin from "../plugins/svgr";
 import checkRequiredFiles from "../utils/checkRequiredFiles";
 import { createIndex } from "../api";
 
-const plugins: esbuild.Plugin[] = [cssModulesPlugin, svgrPlugin()];
+const plugins: esbuild.Plugin[] = [svgrPlugin()];
 
 export default async function build(target: string, paths: Paths) {
   if (checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {

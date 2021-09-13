@@ -16,7 +16,6 @@ import getClientEnvironment, {
   ClientEnvironment,
 } from '../config/getClientEnvironment';
 
-import cssModulesPlugin from '../plugins/css-modules';
 import svgrPlugin from '../plugins/svgr';
 import incrementalCompilePlugin from '../plugins/incremental-compile';
 import incrementalReporterPlugin from '../plugins/incremental-reporter';
@@ -199,7 +198,6 @@ class DevServer {
 
   private runEsbuild = async (watch: boolean) => {
     const plugins: esbuild.Plugin[] = [
-      cssModulesPlugin,
       svgrPlugin(),
       incrementalReporterPlugin(),
     ];
