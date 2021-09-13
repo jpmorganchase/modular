@@ -6,10 +6,10 @@ import * as fse from 'fs-extra';
 import isCI from 'is-ci';
 
 import { getLogger } from './getLogger';
-import getModularRoot from '../utils/getModularRoot';
-import { reportTSDiagnostics } from '../utils/reportTSDiagnostics';
-import getPackageMetadata from '../utils/getPackageMetadata';
-import getRelativeLocation from '../utils/getRelativeLocation';
+import getModularRoot from '../../utils/getModularRoot';
+import { reportTSDiagnostics } from '../../utils/reportTSDiagnostics';
+import getPackageMetadata from '../../utils/getPackageMetadata';
+import getRelativeLocation from '../../utils/getRelativeLocation';
 
 const outputDirectory = 'dist';
 const typescriptConfigFilename = 'tsconfig.json';

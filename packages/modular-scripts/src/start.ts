@@ -7,6 +7,9 @@ import getLocation from './utils/getLocation';
 import stageView from './utils/stageView';
 import getModularRoot from './utils/getModularRoot';
 import { setupEnvForDirectory } from './utils/setupEnv';
+import { checkBrowsers } from './utils/checkBrowsers';
+import checkRequiredFiles from './utils/checkRequiredFiles';
+import createPaths from './utils/createPaths';
 
 async function start(target: string): Promise<void> {
   const targetPath = await getLocation(target);
@@ -28,7 +31,14 @@ async function start(target: string): Promise<void> {
     startPath = stageView(target);
   } else {
     startPath = targetPath;
+
+    // in the case we're an app then we need to make sure that users have no incorrectly
+    // setup their app folder.
+    const paths = await createPaths(target);
+    await checkRequiredFiles([paths.appHtml, paths.appIndexJs]);
   }
+
+  await checkBrowsers(startPath);
 
   const startScript = require.resolve(
     'modular-scripts/react-scripts/scripts/start.js',

@@ -13,10 +13,10 @@ import micromatch from 'micromatch';
 
 import { getLogger } from './getLogger';
 import { getPackageEntryPoints } from './getPackageEntryPoints';
-import getModularRoot from '../utils/getModularRoot';
+import getModularRoot from '../../utils/getModularRoot';
 import { makeBundle } from './makeBundle';
 import { makeTypings } from './makeTypings';
-import getRelativeLocation from '../utils/getRelativeLocation';
+import getRelativeLocation from '../../utils/getRelativeLocation';
 
 const outputDirectory = 'dist';
 
