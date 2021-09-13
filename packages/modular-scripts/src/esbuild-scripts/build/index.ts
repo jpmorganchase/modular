@@ -1,18 +1,18 @@
-import * as esbuild from "esbuild";
-import isCi from "is-ci";
-import chalk from "chalk";
-import fs from "fs-extra";
-import * as minimize from "html-minifier-terser";
-import * as path from "path";
-import getClientEnvironment from "../config/getClientEnvironment";
+import * as esbuild from 'esbuild';
+import isCi from 'is-ci';
+import chalk from 'chalk';
+import fs from 'fs-extra';
+import * as minimize from 'html-minifier-terser';
+import * as path from 'path';
+import getClientEnvironment from '../config/getClientEnvironment';
 
-import { Paths } from "../../utils/createPaths";
-import * as logger from "../../utils/logger";
-import { formatError } from "../utils/format-error";
+import { Paths } from '../../utils/createPaths';
+import * as logger from '../../utils/logger';
+import { formatError } from '../utils/format-error';
 
-import svgrPlugin from "../plugins/svgr";
-import checkRequiredFiles from "../utils/checkRequiredFiles";
-import { createIndex } from "../api";
+import svgrPlugin from '../plugins/svgr';
+import checkRequiredFiles from '../utils/checkRequiredFiles';
+import { createIndex } from '../api';
 
 const plugins: esbuild.Plugin[] = [svgrPlugin()];
 
@@ -32,7 +32,7 @@ export default async function build(target: string, paths: Paths) {
 
   const html = await createIndex(paths, env.raw, false);
   await fs.writeFile(
-    path.join(paths.appBuild, "index.html"),
+    path.join(paths.appBuild, 'index.html'),
     minimize.minify(html, {
       html5: true,
       collapseBooleanAttributes: true,
@@ -44,7 +44,7 @@ export default async function build(target: string, paths: Paths) {
       removeAttributeQuotes: true,
       removeComments: true,
       removeTagWhitespace: true,
-    })
+    }),
   );
 
   try {
@@ -54,39 +54,39 @@ export default async function build(target: string, paths: Paths) {
       bundle: true,
       watch: false,
       resolveExtensions: paths.moduleFileExtensions.map(
-        (extension) => `.${extension}`
+        (extension) => `.${extension}`,
       ),
       sourcemap: true,
       loader: {
         // loaders for images which are supported as files
-        ".avif": "file",
-        ".bmp": "file",
-        ".gif": "file",
-        ".jpg": "file",
-        ".jpeg": "file",
-        ".png": "file",
-        ".webp": "file",
+        '.avif': 'file',
+        '.bmp': 'file',
+        '.gif': 'file',
+        '.jpg': 'file',
+        '.jpeg': 'file',
+        '.png': 'file',
+        '.webp': 'file',
 
         // enable JSX in js files
-        ".js": "jsx",
+        '.js': 'jsx',
       },
-      logLevel: "silent",
-      target: "es2015",
+      logLevel: 'silent',
+      target: 'es2015',
       absWorkingDir: paths.appPath,
-      format: "esm",
+      format: 'esm',
       color: !isCi,
       define: getClientEnvironment(paths.publicUrlOrPath).stringified,
       metafile: true,
       tsconfig: paths.appTsConfig,
       minify: true,
-      outbase: "src",
+      outbase: 'src',
       outdir: paths.appBuild,
       publicPath: paths.publicUrlOrPath,
-      nodePaths: (process.env.NODE_PATH || "").split(path.delimiter)
+      nodePaths: (process.env.NODE_PATH || '').split(path.delimiter),
     });
   } catch (e) {
     const result = e as esbuild.BuildFailure;
-    logger.log(chalk.red("Failed to compile.\n"));
+    logger.log(chalk.red('Failed to compile.\n'));
     const logs = result.errors.map(async (m) => {
       logger.log(await formatError(m));
     });

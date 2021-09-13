@@ -12,7 +12,10 @@ import getLocation from '../utils/getLocation';
 import { setupEnvForDirectory } from '../utils/setupEnv';
 import createPaths from '../utils/createPaths';
 import printHostingInstructions from './printHostingInstructions';
-import { measureFileSizesBeforeBuild, printFileSizesAfterBuild } from './fileSizeReporter';
+import {
+  measureFileSizesBeforeBuild,
+  printFileSizesAfterBuild,
+} from './fileSizeReporter';
 import type { Stats } from 'webpack';
 import { checkBrowsers } from '../utils/checkBrowsers';
 import checkRequiredFiles from '../utils/checkRequiredFiles';
@@ -25,28 +28,30 @@ async function buildApp(target: string) {
   const modularRoot = getModularRoot();
   const targetDirectory = await getLocation(target);
   const targetName = toParamCase(target);
-  
+
   const paths = await createPaths(target);
 
-await checkBrowsers(targetDirectory);
+  await checkBrowsers(targetDirectory);
 
-const previousFileSizes = await measureFileSizesBeforeBuild(paths.appBuild);
+  const previousFileSizes = await measureFileSizesBeforeBuild(paths.appBuild);
 
-// Warn and crash if required files are missing
-await checkRequiredFiles([paths.appHtml, paths.appIndexJs]);
+  // Warn and crash if required files are missing
+  await checkRequiredFiles([paths.appHtml, paths.appIndexJs]);
 
-logger.log("Creating an optimized production build...");
+  logger.log('Creating an optimized production build...');
 
-await fs.copy(paths.appPublic, paths.appBuild, {
-  dereference: true,
-  filter: (file) => file !== paths.appHtml,
-  overwrite: true,
-});
+  await fs.copy(paths.appPublic, paths.appBuild, {
+    dereference: true,
+    filter: (file) => file !== paths.appHtml,
+    overwrite: true,
+  });
 
-  logger.log("Creating an optimized production build...");
+  logger.log('Creating an optimized production build...');
 
   if (process.env.USE_MODULAR_ESBUILD) {
-    const { default: buildEsbuildApp } = await import("../esbuild-scripts/build");
+    const { default: buildEsbuildApp } = await import(
+      '../esbuild-scripts/build'
+    );
     await buildEsbuildApp(target, paths);
   } else {
     // create-react-app doesn't support plain module outputs yet,
@@ -69,7 +74,7 @@ await fs.copy(paths.appPublic, paths.appBuild, {
     });
 
     const statsFilePath = path.join(paths.appBuild, 'bundle-stats.json');
-    
+
     try {
       const stats: Stats.ToJsonOutput = await fs.readJson(statsFilePath);
 
@@ -95,16 +100,15 @@ await fs.copy(paths.appPublic, paths.appBuild, {
       );
       logger.log();
     } finally {
-      await fs.remove(statsFilePath)
+      await fs.remove(statsFilePath);
     }
   }
-
 
   printHostingInstructions(
     fs.readJSON(paths.appPackageJson),
     paths.publicUrlOrPath,
     paths.publicUrlOrPath,
-    paths.appBuild
+    paths.appBuild,
   );
 }
 
