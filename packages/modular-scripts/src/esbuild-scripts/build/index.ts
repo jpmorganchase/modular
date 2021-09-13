@@ -17,18 +17,7 @@ import { createIndex } from '../api';
 const plugins: esbuild.Plugin[] = [svgrPlugin()];
 
 export default async function build(target: string, paths: Paths) {
-  if (checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
-    process.exit(1);
-  }
-
   const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
-
-  await fs.emptyDir(paths.appBuild);
-
-  await fs.copy(paths.appPublic, paths.appBuild, {
-    dereference: true,
-    filter: (file) => file !== paths.appHtml,
-  });
 
   const html = await createIndex(paths, env.raw, false);
   await fs.writeFile(

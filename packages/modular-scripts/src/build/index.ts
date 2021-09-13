@@ -33,12 +33,14 @@ async function buildApp(target: string) {
 
   await checkBrowsers(targetDirectory);
 
-  const previousFileSizes = await measureFileSizesBeforeBuild(paths.appBuild);
-
   // Warn and crash if required files are missing
   await checkRequiredFiles([paths.appHtml, paths.appIndexJs]);
 
+  const previousFileSizes = await measureFileSizesBeforeBuild(paths.appBuild);
+
   logger.log('Creating an optimized production build...');
+
+  await fs.emptyDir(paths.appBuild);
 
   await fs.copy(paths.appPublic, paths.appBuild, {
     dereference: true,
