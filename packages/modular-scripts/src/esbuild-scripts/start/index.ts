@@ -17,9 +17,9 @@ import getClientEnvironment, {
 } from '../config/getClientEnvironment';
 
 import svgrPlugin from '../plugins/svgr';
-import incrementalCompilePlugin from '../plugins/incremental-compile';
-import incrementalReporterPlugin from '../plugins/incremental-reporter';
-import websocketReloadPlugin from '../plugins/ws-reload';
+import incrementalCompilePlugin from '../plugins/incrementalCompile';
+import incrementalReporterPlugin from '../plugins/incrementalReporter';
+import websocketReloadPlugin from '../plugins/wsReload';
 
 import choosePort from '../utils/choosePort';
 import openBrowser from '../utils/openBrowser';
