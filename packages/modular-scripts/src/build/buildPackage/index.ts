@@ -11,7 +11,7 @@ import fs from 'fs-extra';
 import npmPacklist from 'npm-packlist';
 import micromatch from 'micromatch';
 
-import { getLogger } from './getLogger';
+import getPrefixedLogger from '../../utils/getPrefixedLogger';
 import { getPackageEntryPoints } from './getPackageEntryPoints';
 import getModularRoot from '../../utils/getModularRoot';
 import { makeBundle } from './makeBundle';
@@ -36,7 +36,7 @@ export async function buildPackage(
   const modularRoot = getModularRoot();
   const packagePath = await getRelativeLocation(target);
 
-  const logger = getLogger(packagePath);
+  const logger = getPrefixedLogger(target);
 
   const targetOutputDirectory = path.join(
     modularRoot,

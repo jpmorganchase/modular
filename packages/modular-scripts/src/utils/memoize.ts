@@ -1,18 +1,15 @@
-export default function memoize<T>(fn: () => T): () => T {
-  let called = false;
-  let result: T;
-  return () => {
-    if (called) {
-      return result;
-    } else {
-      try {
-        called = true;
-        result = fn();
-        return result;
-      } catch (e) {
-        called = false;
-        throw e;
-      }
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+export default function memoize<R, T extends (...args: any[]) => R>(f: T): T {
+  const memory = new Map<string, R>();
+
+  const g = (...args: any[]) => {
+    if (!memory.get(args.join())) {
+      memory.set(args.join(), f(...args));
     }
+
+    return memory.get(args.join());
   };
+
+  return g as T;
 }
