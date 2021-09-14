@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { ExecaError } from 'execa';
 import startupCheck from './utils/startupCheck';
 import setupEnv from './utils/setupEnv';
