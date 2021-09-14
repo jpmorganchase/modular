@@ -48,8 +48,6 @@ async function buildApp(target: string) {
     overwrite: true,
   });
 
-  logger.log('Creating an optimized production build...');
-
   if (process.env.USE_MODULAR_ESBUILD) {
     const { default: buildEsbuildApp } = await import(
       '../esbuild-scripts/build'
