@@ -1,6 +1,6 @@
 {
   "name": "modular-scripts",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "license": "Apache-2.0",
   "bin": {
     "modular": "dist-cjs/cli.js"
@@ -57,7 +57,7 @@
     "express": "^4.17.1",
     "express-ws": "^5.0.2",
     "file-loader": "6.2.0",
-    "filesize": "8.0.2",
+    "filesize": "8.0.3",
     "find-up": "5.0.0",
     "fork-ts-checker-webpack-plugin": "4.1.6",
     "fs-extra": "10.0.0",

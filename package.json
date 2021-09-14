@@ -32,7 +32,7 @@
     "@schemastore/tsconfig": "0.0.9",
     "@testing-library/dom": "8.5.0",
     "@testing-library/jest-dom": "5.14.1",
-    "@testing-library/react": "11.2.6",
+    "@testing-library/react": "12.1.0",
     "@testing-library/user-event": "13.2.1",
     "@types/babel-code-frame": "^6.20.5",
     "@types/babel-plugin-macros": "2.8.5",

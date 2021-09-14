@@ -1,5 +1,21 @@
 # modular-scripts
 
+## 1.2.4
+
+### Patch Changes
+
+- 86bd507: Bump esbuild from 0.12.26 to 0.12.27
+- 6dc551a: Bump semver-regex from 3.0.0 to 3.1.3
+- 52b9c67: Bump esbuild from 0.12.25 to 0.12.26
+- 265a99d: Bump @babel/preset-env from 7.15.4 to 7.15.6
+- bc0a6c4: Bump filesize from 8.0.0 to 8.0.2
+- a42c856: Support project configuration via root `.env` files as well as
+  workspace based files.
+- 0037835: Bump commander from 8.1.0 to 8.2.0
+- d83245f: Bump filesize from 8.0.2 to 8.0.3
+- d1008e9: Fix issue where subst file systems on windows would cause a mismatch
+  in modular root and process.cwd() results.
+
 ## 1.2.3
 
 ### Patch Changes
