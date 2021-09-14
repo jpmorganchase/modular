@@ -17,7 +17,8 @@
     "build": "yarn workspace create-modular-react-app build && yarn workspace modular-scripts build && yarn workspace modular-views.macro build",
     "release": "yarn build && changeset publish",
     "start": "yarn modular start modular-site",
-    "postinstall": "is-ci || husky install",
+    "prepare": "is-ci || husky install",
+    "postinstall": "patch-package",
     "typecheck": "yarn modular typecheck"
   },
   "dependencies": {
@@ -60,6 +61,7 @@
     "is-ci": "2.0.0",
     "lint-staged": "11.1.2",
     "micromatch": "4.0.4",
+    "patch-package": "^6.4.7",
     "pptr-testing-library": "0.6.5",
     "prettier": "2.4.0",
     "puppeteer": "10.2.0",
