@@ -27,7 +27,7 @@ describe('stageView', () => {
       "test-view
       ├─ package.json
       ├─ public
-      │  ├─ index.html #v0jjox
+      │  ├─ index.html #rm3xgn
       │  └─ manifest.json #kalmoq
       ├─ src
       │  ├─ index.tsx #1qbgs9s
