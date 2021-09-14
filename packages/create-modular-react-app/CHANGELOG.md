@@ -1,5 +1,11 @@
 # create-modular-react-app
 
+## 1.1.2
+
+### Patch Changes
+
+- 0037835: Bump commander from 8.1.0 to 8.2.0
+
 ## 1.1.1
 
 ### Patch Changes
