@@ -40,6 +40,8 @@ async function buildApp(target: string) {
 
   logger.log('Creating an optimized production build...');
 
+  await fs.emptyDir(paths.appBuild);
+
   await fs.copy(paths.appPublic, paths.appBuild, {
     dereference: true,
     filter: (file) => file !== paths.appHtml,
