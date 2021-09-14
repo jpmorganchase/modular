@@ -1,5 +1,11 @@
 # modular-scripts
 
+## 1.2.5
+
+### Patch Changes
+
+- cfbe3b4: Fix issue with node shebang in 1.2.4
+
 ## 1.2.4
 
 ### Patch Changes
