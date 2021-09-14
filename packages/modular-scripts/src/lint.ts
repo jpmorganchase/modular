@@ -5,7 +5,7 @@ import { ExecaError } from 'execa';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import { resolveAsBin } from './utils/resolveAsBin';
 import getModularRoot from './utils/getModularRoot';
-import execSync from './utils/execSync';
+import execAsync from './utils/execAsync';
 import { getDiffedFiles } from './utils/gitActions';
 import * as logger from './utils/logger';
 
@@ -62,7 +62,7 @@ async function lint(
   const testBin = await resolveAsBin('jest-cli');
 
   try {
-    execSync(testBin, testArgs, {
+    await execAsync(testBin, testArgs, {
       cwd: modularRoot,
       log: false,
       // @ts-ignore

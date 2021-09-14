@@ -11,7 +11,7 @@ import json from '@rollup/plugin-json';
 import postcss from 'rollup-plugin-postcss';
 import resolve from '@rollup/plugin-node-resolve';
 
-import { getLogger } from './getLogger';
+import getPrefixedLogger from '../../utils/getPrefixedLogger';
 import { getPackageEntryPoints } from './getPackageEntryPoints';
 import getPackageMetadata from '../../utils/getPackageMetadata';
 import getModularRoot from '../../utils/getModularRoot';
@@ -47,7 +47,7 @@ export async function makeBundle(
     paramCaseTarget,
   );
 
-  const logger = getLogger(packagePath);
+  const logger = getPrefixedLogger(target);
 
   const packageJson = packageJsonsByPackagePath[packagePath];
 

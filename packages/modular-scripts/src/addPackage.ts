@@ -6,7 +6,7 @@ import {
 } from 'change-case';
 import prompts from 'prompts';
 import getModularRoot from './utils/getModularRoot';
-import execSync from './utils/execSync';
+import execAsync from './utils/execAsync';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import getAllFiles from './utils/getAllFiles';
 
@@ -97,7 +97,7 @@ async function addPackage(
   if (preferOffline) {
     yarnArgs.push('--prefer-offline');
   }
-  execSync('yarnpkg', yarnArgs, { cwd: modularRoot });
+  await execAsync('yarnpkg', yarnArgs, { cwd: modularRoot });
 }
 
 export default actionPreflightCheck(addPackage);
