@@ -1,6 +1,6 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import execSync from './utils/execSync';
+import execAsync from './utils/execAsync';
 import { ModularPackageJson } from './utils/isModularType';
 import * as logger from './utils/logger';
 
@@ -41,7 +41,7 @@ export async function initModularFolder(
   if (initOverride) {
     args.push('-y');
   }
-  execSync('npm', args, {
+  await execAsync('npm', args, {
     cwd: folder,
   });
 
@@ -52,7 +52,7 @@ export async function initModularFolder(
   if (preferOffline) {
     yarnArgs.push('--prefer-offline');
   }
-  execSync('yarnpkg', yarnArgs, { cwd: folder });
+  await execAsync('yarnpkg', yarnArgs, { cwd: folder });
 
   logger.log('Modular repository initialized!');
 }

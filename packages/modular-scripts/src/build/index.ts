@@ -7,7 +7,7 @@ import * as logger from '../utils/logger';
 import getModularRoot from '../utils/getModularRoot';
 import actionPreflightCheck from '../utils/actionPreflightCheck';
 import isModularType from '../utils/isModularType';
-import execSync from '../utils/execSync';
+import execAsync from '../utils/execAsync';
 import getLocation from '../utils/getLocation';
 import { setupEnvForDirectory } from '../utils/setupEnv';
 import createPaths from '../utils/createPaths';
@@ -56,7 +56,7 @@ async function buildApp(target: string) {
   );
 
   // TODO: this shouldn't be sync
-  execSync('node', [buildScript], {
+  await execAsync('node', [buildScript], {
     cwd: targetDirectory,
     log: false,
     // @ts-ignore

@@ -2,7 +2,7 @@ import { paramCase as toParamCase } from 'change-case';
 
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import isModularType from './utils/isModularType';
-import execSync from './utils/execSync';
+import execAsync from './utils/execAsync';
 import getLocation from './utils/getLocation';
 import stageView from './utils/stageView';
 import getModularRoot from './utils/getModularRoot';
@@ -46,7 +46,7 @@ async function start(target: string): Promise<void> {
   const modularRoot = getModularRoot();
   const targetName = toParamCase(target);
 
-  execSync('node', [startScript], {
+  await execAsync('node', [startScript], {
     cwd: startPath,
     log: false,
     // @ts-ignore
@@ -56,7 +56,6 @@ async function start(target: string): Promise<void> {
       MODULAR_PACKAGE_NAME: targetName,
     },
   });
-  return Promise.resolve();
 }
 
 export default actionPreflightCheck(start);
