@@ -48,53 +48,72 @@ async function buildApp(target: string) {
     overwrite: true,
   });
 
-  // create-react-app doesn't support plain module outputs yet,
-  // so --preserve-modules has no effect here
+  // True if there's no preference set - or the preference is for webpack.
+  const useWebpack =
+    !process.env.USE_MODULAR_WEBPACK ||
+    process.env.USE_MODULAR_WEBPACK === 'true';
 
-  const buildScript = require.resolve(
-    'modular-scripts/react-scripts/scripts/build.js',
-  );
+  // True if the preferene IS set and the preference is esbuid.
+  const useEsbuild =
+    process.env.USE_MODULAR_ESBUILD &&
+    process.env.USE_MODULAR_ESBUILD === 'true';
 
-  // TODO: this shouldn't be sync
-  await execAsync('node', [buildScript], {
-    cwd: targetDirectory,
-    log: false,
-    // @ts-ignore
-    env: {
-      MODULAR_ROOT: modularRoot,
-      MODULAR_PACKAGE: target,
-      MODULAR_PACKAGE_NAME: targetName,
-    },
-  });
-
-  const statsFilePath = path.join(paths.appBuild, 'bundle-stats.json');
-
-  try {
-    const stats: Stats.ToJsonOutput = await fs.readJson(statsFilePath);
-
-    if (stats.warnings.length) {
-      logger.log(chalk.yellow('Compiled with warnings.\n'));
-      logger.log(stats.warnings.join('\n\n'));
-      logger.log(
-        '\nSearch for the ' +
-          chalk.underline(chalk.yellow('keywords')) +
-          ' to learn more about each warning.',
-      );
-    } else {
-      logger.log(chalk.green('Compiled successfully.\n'));
-    }
-
-    logger.log('File sizes after gzip:\n');
-    printFileSizesAfterBuild(
-      stats,
-      previousFileSizes,
-      paths.appBuild,
-      WARN_AFTER_BUNDLE_GZIP_SIZE,
-      WARN_AFTER_CHUNK_GZIP_SIZE,
+  // If you want to use webpack then we'll always use webpack. But if you've indicated
+  // you want esbuild - then we'll switch you to the new fancy world.
+  if (!useWebpack || useEsbuild) {
+    const { default: buildEsbuildApp } = await import(
+      '../esbuild-scripts/build'
     );
-    logger.log();
-  } finally {
-    await fs.remove(statsFilePath);
+    await buildEsbuildApp(target, paths);
+  } else {
+    // create-react-app doesn't support plain module outputs yet,
+    // so --preserve-modules has no effect here
+
+    const buildScript = require.resolve(
+      'modular-scripts/react-scripts/scripts/build.js',
+    );
+
+    // TODO: this shouldn't be sync
+    await execAsync('node', [buildScript], {
+      cwd: targetDirectory,
+      log: false,
+      // @ts-ignore
+      env: {
+        MODULAR_ROOT: modularRoot,
+        MODULAR_PACKAGE: target,
+        MODULAR_PACKAGE_NAME: targetName,
+      },
+    });
+
+    const statsFilePath = path.join(paths.appBuild, 'bundle-stats.json');
+
+    try {
+      const stats: Stats.ToJsonOutput = await fs.readJson(statsFilePath);
+
+      if (stats.warnings.length) {
+        logger.log(chalk.yellow('Compiled with warnings.\n'));
+        logger.log(stats.warnings.join('\n\n'));
+        logger.log(
+          '\nSearch for the ' +
+            chalk.underline(chalk.yellow('keywords')) +
+            ' to learn more about each warning.',
+        );
+      } else {
+        logger.log(chalk.green('Compiled successfully.\n'));
+      }
+
+      logger.log('File sizes after gzip:\n');
+      printFileSizesAfterBuild(
+        stats,
+        previousFileSizes,
+        paths.appBuild,
+        WARN_AFTER_BUNDLE_GZIP_SIZE,
+        WARN_AFTER_CHUNK_GZIP_SIZE,
+      );
+      logger.log();
+    } finally {
+      await fs.remove(statsFilePath);
+    }
   }
 
   printHostingInstructions(

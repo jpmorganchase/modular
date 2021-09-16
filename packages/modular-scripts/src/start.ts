@@ -40,22 +40,41 @@ async function start(target: string): Promise<void> {
 
   await checkBrowsers(startPath);
 
-  const startScript = require.resolve(
-    'modular-scripts/react-scripts/scripts/start.js',
-  );
-  const modularRoot = getModularRoot();
-  const targetName = toParamCase(target);
+  // True if there's no preference set - or the preference is for webpack.
+  const useWebpack =
+    !process.env.USE_MODULAR_WEBPACK ||
+    process.env.USE_MODULAR_WEBPACK === 'true';
 
-  await execAsync('node', [startScript], {
-    cwd: startPath,
-    log: false,
-    // @ts-ignore
-    env: {
-      MODULAR_ROOT: modularRoot,
-      MODULAR_PACKAGE: target,
-      MODULAR_PACKAGE_NAME: targetName,
-    },
-  });
+  // True if the preferene IS set and the preference is esbuid.
+  const useEsbuild =
+    process.env.USE_MODULAR_ESBUILD &&
+    process.env.USE_MODULAR_ESBUILD === 'true';
+
+  // If you want to use webpack then we'll always use webpack. But if you've indicated
+  // you want esbuild - then we'll switch you to the new fancy world.
+  if (!useWebpack || useEsbuild) {
+    const { default: startEsbuildApp } = await import(
+      './esbuild-scripts/start'
+    );
+    await startEsbuildApp(target);
+  } else {
+    const startScript = require.resolve(
+      'modular-scripts/react-scripts/scripts/start.js',
+    );
+    const modularRoot = getModularRoot();
+    const targetName = toParamCase(target);
+
+    await execAsync('node', [startScript], {
+      cwd: startPath,
+      log: false,
+      // @ts-ignore
+      env: {
+        MODULAR_ROOT: modularRoot,
+        MODULAR_PACKAGE: target,
+        MODULAR_PACKAGE_NAME: targetName,
+      },
+    });
+  }
 }
 
 export default actionPreflightCheck(start);
