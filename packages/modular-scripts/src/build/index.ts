@@ -47,15 +47,19 @@ async function buildApp(target: string) {
     filter: (file) => file !== paths.appHtml,
     overwrite: true,
   });
-  
+
   // True if there's no preference set - or the preference is for webpack.
-  const useWebpack = !process.env.USE_MODULAR_WEBPACK || process.env.USE_MODULAR_WEBPACK === "true";
-  
+  const useWebpack =
+    !process.env.USE_MODULAR_WEBPACK ||
+    process.env.USE_MODULAR_WEBPACK === 'true';
+
   // True if the preferene IS set and the preference is esbuid.
-  const useEsbuild = process.env.USE_MODULAR_ESBUILD && process.env.USE_MODULAR_ESBUILD === "true";
+  const useEsbuild =
+    process.env.USE_MODULAR_ESBUILD &&
+    process.env.USE_MODULAR_ESBUILD === 'true';
 
   // If you want to use webpack then we'll always use webpack. But if you've indicated
-  // you want esbuild - then we'll switch you to the new fancy world. 
+  // you want esbuild - then we'll switch you to the new fancy world.
   if (!useWebpack || useEsbuild) {
     const { default: buildEsbuildApp } = await import(
       '../esbuild-scripts/build'

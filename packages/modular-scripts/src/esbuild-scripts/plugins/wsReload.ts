@@ -1,6 +1,6 @@
 import esbuild from 'esbuild';
 import * as ws from 'ws';
-import { formatError } from '../utils/format-error';
+import { formatError } from '../utils/formatError';
 
 export default function createPlugin(
   name: string,

@@ -26,7 +26,7 @@ import openBrowser from '../utils/openBrowser';
 import * as logger from '../../utils/logger';
 import prepareUrls, { InstructionURLS } from '../config/urls';
 import { createIndex } from '../api';
-import { formatError } from '../utils/format-error';
+import { formatError } from '../utils/formatError';
 
 class DevServer {
   private paths: Paths;

@@ -8,10 +8,9 @@ import getClientEnvironment from '../config/getClientEnvironment';
 
 import { Paths } from '../../utils/createPaths';
 import * as logger from '../../utils/logger';
-import { formatError } from '../utils/format-error';
+import { formatError } from '../utils/formatError';
 
 import svgrPlugin from '../plugins/svgr';
-import checkRequiredFiles from '../utils/checkRequiredFiles';
 import { createIndex } from '../api';
 
 const plugins: esbuild.Plugin[] = [svgrPlugin()];

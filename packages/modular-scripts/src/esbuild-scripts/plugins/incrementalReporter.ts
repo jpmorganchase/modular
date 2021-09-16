@@ -1,7 +1,7 @@
 import { Plugin } from 'esbuild';
 import chalk from 'chalk';
 import * as logger from '../../utils/logger';
-import { formatError } from '../utils/format-error';
+import { formatError } from '../utils/formatError';
 
 function createPlugin(): Plugin {
   const plugin: Plugin = {
