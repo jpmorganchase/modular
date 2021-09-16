@@ -1,5 +1,16 @@
 # modular-scripts
 
+## 1.3.0
+
+### Minor Changes
+
+- 2dab338: Add unstable esbuild-scripts implementation via
+  `process.env.USE_MODULAR_ESBUILD`.
+
+### Patch Changes
+
+- 7e09ccf: Bump esbuild from 0.12.27 to 0.12.28
+
 ## 1.2.5
 
 ### Patch Changes

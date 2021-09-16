@@ -1,5 +1,11 @@
 # eslint-config-modular-app
 
+## 1.0.8
+
+### Patch Changes
+
+- 8e958aa: Bump eslint-plugin-flowtype from 5.9.2 to 5.10.0
+
 ## 1.0.7
 
 ### Patch Changes
