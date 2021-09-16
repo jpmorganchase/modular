@@ -63,8 +63,6 @@ async function start(target: string): Promise<void> {
       },
     });
   }
-
-  return Promise.resolve();
 }
 
 export default actionPreflightCheck(start);
