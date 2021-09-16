@@ -1,5 +1,14 @@
 # modular-scripts
 
+## 1.3.1
+
+### Patch Changes
+
+- de71866: Fix bug where jest-cli can not get hoisted and available for modular.
+- 6b1d627: Bump jest-cli from 26.6.0 to 26.6.3
+- 6b1d627: Bump jest-circus from 26.6.0 to 26.6.3
+- 6b1d627: Bump jest from 26.6.0 to 26.6.3
+
 ## 1.3.0
 
 ### Minor Changes
