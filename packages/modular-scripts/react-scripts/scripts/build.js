@@ -1,5 +1,7 @@
 'use strict';
 
+const isCi = require('is-ci');
+
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
 // terminate the Node.js process with a non-zero exit code.
@@ -18,7 +20,7 @@ const printBuildError = require('../../react-dev-utils/printBuildError');
 const compiler = webpack(configFactory('production'));
 
 compiler.run(async (err, stats) => {
-  console.log(chalk.grey('[modular] ') + 'Webpack Compiled.\n');
+  console.log(chalk.grey('[modular] ') + 'Webpack Compiled.');
   let messages;
   let statsJson;
   if (err) {
@@ -32,7 +34,7 @@ compiler.run(async (err, stats) => {
     // Add additional information for postcss errors
     if (Object.prototype.hasOwnProperty.call(err, 'postcssNode')) {
       errMessage +=
-        '\nCompileError: Begins at CSS selector ' + err['postcssNode'].selector;
+        'CompileError: Begins at CSS selector ' + err['postcssNode'].selector;
     }
 
     messages = formatWebpackMessages({
@@ -50,22 +52,14 @@ compiler.run(async (err, stats) => {
   if (messages.errors.length) {
     // Only keep the first error. Others are often indicative
     // of the same problem, but confuse the reader with noise.
-    if (messages.errors.length > 1) {
-      messages.errors.length = 1;
-    }
-    printBuildError(new Error(messages.errors.join('\n\n')));
+    printBuildError(new Error(messages.errors[0]));
     process.exit(1);
   }
 
-  if (
-    process.env.CI &&
-    (typeof process.env.CI !== 'string' ||
-      process.env.CI.toLowerCase() !== 'false') &&
-    messages.warnings.length
-  ) {
+  if (isCi && messages.warnings.length) {
     console.log(
       chalk.yellow(
-        '\nTreating warnings as errors because process.env.CI = true.\n' +
+        'Treating warnings as errors because process.env.CI = true.\n' +
           'Most CI servers set it automatically.\n',
       ),
     );
