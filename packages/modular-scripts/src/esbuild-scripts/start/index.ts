@@ -159,6 +159,10 @@ class DevServer {
     }
     const entryPoint = indexFiles[0];
 
+    const define = Object.assign({}, this.env.stringified, {
+      global: 'window',
+    });
+
     try {
       return await esbuild.build({
         entryPoints: [path.join(runtimeDir, entryPoint)],
@@ -172,7 +176,7 @@ class DevServer {
         target: 'es2015',
         logLevel: 'silent',
         color: !isCi,
-        define: this.env.stringified,
+        define,
         watch: true,
         write: true,
         plugins: [
@@ -214,6 +218,10 @@ class DevServer {
       resolveIntialBuild = Promise.resolve();
     }
 
+    const define = Object.assign({}, this.env.stringified, {
+      global: 'window',
+    });
+
     const result = await esbuild.build({
       entryPoints: [this.paths.appIndexJs],
       plugins,
@@ -241,7 +249,7 @@ class DevServer {
       absWorkingDir: this.paths.appPath,
       format: 'esm',
       color: !isCi,
-      define: this.env.stringified,
+      define,
       metafile: true,
       incremental: watch,
       // if we're not watching then we don't actually care about any output

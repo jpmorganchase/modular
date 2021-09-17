@@ -35,6 +35,14 @@ export default async function build(target: string, paths: Paths) {
     }),
   );
 
+  const define = Object.assign(
+    {},
+    getClientEnvironment(paths.publicUrlOrPath).stringified,
+    {
+      global: 'window',
+    },
+  );
+
   try {
     await esbuild.build({
       entryPoints: [paths.appIndexJs],
@@ -63,7 +71,7 @@ export default async function build(target: string, paths: Paths) {
       absWorkingDir: paths.appPath,
       format: 'esm',
       color: !isCi,
-      define: getClientEnvironment(paths.publicUrlOrPath).stringified,
+      define,
       metafile: true,
       tsconfig: paths.appTsConfig,
       minify: true,
