@@ -1,4 +1,4 @@
-import * as fs from 'fs/promises';
+import * as fs from 'fs-extra';
 import esbuild from 'esbuild';
 
 // @ts-ignore

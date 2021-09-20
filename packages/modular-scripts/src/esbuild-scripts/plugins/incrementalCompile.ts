@@ -1,7 +1,7 @@
 import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import { Plugin } from 'esbuild';
 import chalk from 'chalk';
-import * as fs from 'fs/promises';
+import * as fs from 'fs-extra';
 import { Paths } from '../../utils/createPaths';
 import * as logger from '../../utils/logger';
 import { InstructionURLS } from '../config/urls';

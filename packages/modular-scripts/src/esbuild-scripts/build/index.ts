@@ -29,7 +29,7 @@ export default async function build(target: string, paths: Paths) {
       decodeEntities: true,
       minifyCSS: true,
       minifyJS: true,
-      removeAttributeQuotes: true,
+      removeAttributeQuotes: false,
       removeComments: true,
       removeTagWhitespace: true,
     }),

@@ -24,6 +24,9 @@ module.exports = (api) => {
       ],
       '@babel/preset-react',
     ],
+    plugins: [
+      ['@babel/plugin-proposal-private-property-in-object', { loose: true }],
+    ],
     overrides: [
       {
         test: /\.tsx?$/,

@@ -101,7 +101,15 @@ export async function makeBundle(
           ],
           require.resolve('@babel/preset-react'),
         ],
-        plugins: [require.resolve('@babel/plugin-proposal-class-properties')],
+        plugins: [
+          require.resolve('@babel/plugin-proposal-class-properties'),
+          [
+            require.resolve(
+              '@babel/plugin-proposal-private-property-in-object',
+            ),
+            { loose: true },
+          ],
+        ],
         extensions,
         include: [`packages/**/*`],
         exclude: 'node_modules/**',

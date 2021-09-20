@@ -33,7 +33,7 @@ exports[`When working with a nested app can generate a index.html 1`] = `
     <meta name=\\"theme-color\\" content=\\"#000000\\" />
     <meta
       name=\\"description\\"
-      content=\\"Web site created using create-react-app\\"
+      content=\\"Web site created using create-modular-app\\"
     />
     <link rel=\\"apple-touch-icon\\" href=\\"/logo192.png\\" />
     <link rel=\\"manifest\\" href=\\"/manifest.json\\" />
@@ -16493,7 +16493,7 @@ exports[`when working with an app can generate a index.html 1`] = `
     <meta name=\\"theme-color\\" content=\\"#000000\\" />
     <meta
       name=\\"description\\"
-      content=\\"Web site created using create-react-app\\"
+      content=\\"Web site created using create-modular-app\\"
     />
     <link rel=\\"apple-touch-icon\\" href=\\"/logo192.png\\" />
     <link rel=\\"manifest\\" href=\\"/manifest.json\\" />
