@@ -22,7 +22,7 @@
     "typecheck": "yarn modular typecheck"
   },
   "dependencies": {
-    "@babel/cli": "7.15.4",
+    "@babel/cli": "7.15.7",
     "@babel/core": "7.15.5",
     "@babel/preset-env": "7.15.6",
     "@babel/preset-react": "7.14.5",
