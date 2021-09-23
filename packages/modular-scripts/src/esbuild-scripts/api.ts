@@ -1,4 +1,4 @@
-import * as fs from 'fs/promises';
+import * as fs from 'fs-extra';
 import * as parse5 from 'parse5';
 import escapeStringRegexp from 'escape-string-regexp';
 
