@@ -57,7 +57,7 @@ describe('when working with an app', () => {
       ├─ package.json
       ├─ public
       │  ├─ favicon.ico #6pu3rg
-      │  ├─ index.html #1wohq3p
+      │  ├─ index.html #1m6toxd
       │  ├─ logo192.png #1nez7vk
       │  ├─ logo512.png #1hwqvcc
       │  ├─ manifest.json #19gah8o
@@ -82,9 +82,9 @@ describe('when working with an app', () => {
       ├─ favicon.ico #6pu3rg
       ├─ index.css #1g5dmd3
       ├─ index.css.map #u2fo3e
-      ├─ index.html #1pinlfh
+      ├─ index.html #ojdrji
       ├─ index.js #1o0ba8n
-      ├─ index.js.map #ek9rs
+      ├─ index.js.map #k39kdb
       ├─ logo-PGX3QVVN.svg #1okqmlj
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
