@@ -107,4 +107,19 @@ describe('when working with an app', () => {
       ),
     ).toMatchSnapshot();
   });
+
+  it('can generate a index.js', async () => {
+    expect(
+      prettier.format(
+        String(
+          await fs.readFile(
+            path.join(modularRoot, 'dist', 'sample-esbuild-app', 'index.js'),
+          ),
+        ),
+        {
+          filepath: 'index.js',
+        },
+      ),
+    ).toMatchSnapshot();
+  });
 });
