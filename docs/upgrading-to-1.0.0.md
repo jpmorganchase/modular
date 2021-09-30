@@ -25,8 +25,8 @@ configuring the types of static assets which are imported in TypeScript files.
 When upgrading to `1.x` of `modular-scripts` this file must be updated.
 
 ```typescript
-- /// <reference types="react-scripts">
-+ /// <reference types="modular-scripts/react-app-env">
+- /// <reference types="react-scripts" />
++ /// <reference types="modular-scripts/react-app-env" />
 ```
 
 ### Eslint webpack plugin
