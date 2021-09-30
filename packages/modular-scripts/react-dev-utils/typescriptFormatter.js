@@ -13,7 +13,7 @@ const issueOrigins = {
 function formatter(issue) {
   const { origin, severity, file, line, message, code, character } = issue;
 
-  const colors = new chalk.constructor();
+  const colors = new chalk.Instance();
   const messageColor = severity === 'warning' ? colors.yellow : colors.red;
   const fileAndNumberColor = colors.bold.cyan;
 

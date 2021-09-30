@@ -95,8 +95,12 @@ function build() {
         return reject(new Error(messages.warnings.join('\n\n')));
       }
 
+      const { warnings, assets } = stats.toJson();
+
+      const bundleStats = { warnings, assets };
+
       return bfj
-        .write(paths.appBuild + '/bundle-stats.json', stats.toJson())
+        .write(paths.appBuild + '/bundle-stats.json', bundleStats)
         .then(() => resolve())
         .catch((error) => reject(new Error(error)));
     });

@@ -21,7 +21,7 @@ async function lint(
   const { all = false, fix = false } = options;
   const modularRoot = getModularRoot();
   const lintExtensions = ['.ts', '.tsx', '.js', '.jsx'];
-  let targetedFiles = ['<rootDir>/**/src/**/*.{js,jsx,ts,tsx}'];
+  let targetedFiles = ['<rootDir>/**/*.{js,jsx,ts,tsx}'];
 
   if (!all && !isCI && !regexes) {
     const diffedFiles = getDiffedFiles();
