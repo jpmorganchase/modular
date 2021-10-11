@@ -25,7 +25,6 @@ const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('../../react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const typescriptFormatter = require('../../react-dev-utils/typescriptFormatter');
-const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const postcssNormalize = require('postcss-normalize');
 const isCI = require('is-ci');
 
@@ -77,8 +76,6 @@ module.exports = function (webpackEnv) {
   // Omit trailing slash as %PUBLIC_URL%/xyz looks better than %PUBLIC_URL%xyz.
   // Get environment variables to inject into our app.
   const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
-
-  const shouldUseReactRefresh = env.raw.FAST_REFRESH;
 
   // common function to get style loaders
   const getStyleLoaders = (cssOptions, preProcessor) => {
@@ -153,31 +150,30 @@ module.exports = function (webpackEnv) {
       : isEnvDevelopment && 'cheap-module-source-map',
     // These are the "entry points" to our application.
     // This means they will be the "root" imports that are included in JS bundle.
-    entry:
-      isEnvDevelopment && !shouldUseReactRefresh
-        ? [
-            // Include an alternative client for WebpackDevServer. A client's job is to
-            // connect to WebpackDevServer by a socket and get notified about changes.
-            // When you save a file, the client will either apply hot updates (in case
-            // of CSS changes), or refresh the page (in case of JS changes). When you
-            // make a syntax error, this client will display a syntax error overlay.
-            // Note: instead of the default WebpackDevServer client, we use a custom one
-            // to bring better experience for Create React App users. You can replace
-            // the line below with these two lines if you prefer the stock client:
-            //
-            // require.resolve('webpack-dev-server/client') + '?/',
-            // require.resolve('webpack/hot/dev-server'),
-            //
-            // When using the experimental react-refresh integration,
-            // the webpack plugin takes care of injecting the dev client for us.
-            webpackDevClientEntry,
-            // Finally, this is your app's code:
-            paths.appIndexJs,
-            // We include the app code last so that if there is a runtime error during
-            // initialization, it doesn't blow up the WebpackDevServer client, and
-            // changing JS code would still trigger a refresh.
-          ]
-        : paths.appIndexJs,
+    entry: isEnvDevelopment
+      ? [
+          // Include an alternative client for WebpackDevServer. A client's job is to
+          // connect to WebpackDevServer by a socket and get notified about changes.
+          // When you save a file, the client will either apply hot updates (in case
+          // of CSS changes), or refresh the page (in case of JS changes). When you
+          // make a syntax error, this client will display a syntax error overlay.
+          // Note: instead of the default WebpackDevServer client, we use a custom one
+          // to bring better experience for Create React App users. You can replace
+          // the line below with these two lines if you prefer the stock client:
+          //
+          // require.resolve('webpack-dev-server/client') + '?/',
+          // require.resolve('webpack/hot/dev-server'),
+          //
+          // When using the experimental react-refresh integration,
+          // the webpack plugin takes care of injecting the dev client for us.
+          webpackDevClientEntry,
+          // Finally, this is your app's code:
+          paths.appIndexJs,
+          // We include the app code last so that if there is a runtime error during
+          // initialization, it doesn't blow up the WebpackDevServer client, and
+          // changing JS code would still trigger a refresh.
+        ]
+      : paths.appIndexJs,
     output: {
       // The build folder.
       path: isEnvProduction ? paths.appBuild : undefined,
@@ -560,21 +556,6 @@ module.exports = function (webpackEnv) {
       new webpack.DefinePlugin(env.stringified),
       // This is necessary to emit hot updates (CSS and Fast Refresh):
       isEnvDevelopment && new webpack.HotModuleReplacementPlugin(),
-      // Experimental hot reloading for React .
-      // https://github.com/facebook/react/tree/master/packages/react-refresh
-      isEnvDevelopment &&
-        shouldUseReactRefresh &&
-        new ReactRefreshWebpackPlugin({
-          overlay: {
-            entry: webpackDevClientEntry,
-            // The expected exports are slightly different from what the overlay exports,
-            // so an interop is included here to enable feedback on module-level errors.
-            module: reactRefreshOverlayEntry,
-            // Since we ship a custom dev client and overlay integration,
-            // the bundled socket handling logic can be eliminated.
-            sockIntegration: false,
-          },
-        }),
       // Watcher doesn't work well if you mistype casing in a path so we use
       // a plugin that prints an error when you attempt to do this.
       // See https://github.com/facebook/create-react-app/issues/240
