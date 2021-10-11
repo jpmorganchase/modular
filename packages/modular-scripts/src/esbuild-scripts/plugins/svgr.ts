@@ -10,8 +10,12 @@ function createPlugin(): esbuild.Plugin {
     name: 'svgr',
     setup(build) {
       build.onResolve({ filter: /@svgr:.*/ }, (args) => {
+        const pathName = path.join(
+          args.resolveDir,
+          args.path.slice('@svgr:'.length),
+        );
         return {
-          path: args.path.slice('@svgr:'.length),
+          path: pathName,
           namespace: 'svgr',
         };
       });
@@ -26,8 +30,12 @@ function createPlugin(): esbuild.Plugin {
       });
 
       build.onResolve({ filter: /@svgurl:.*/ }, (args) => {
+        const pathName = path.join(
+          args.resolveDir,
+          args.path.slice('@svgurl:'.length),
+        );
         return {
-          path: args.path.slice('@svgurl:'.length),
+          path: pathName,
           namespace: 'svgurl',
         };
       });
@@ -36,16 +44,18 @@ function createPlugin(): esbuild.Plugin {
         const contents = await fs.readFile(args.path, 'utf8');
         return {
           contents,
-          resolveDir: path.dirname(args.path),
           loader: 'file',
         };
       });
 
       build.onLoad({ filter: /\.svg$/, namespace: 'file' }, (args) => {
+        const resolveDir = path.dirname(args.path);
+        const relativePath = path.relative(resolveDir, args.path);
         return {
+          resolveDir,
           contents: `
-                        export { default } from "@svgurl:${args.path}";
-                        export { default as ReactComponent } from "@svgr:${args.path}";
+                        export { default } from "@svgurl:${relativePath}";
+                        export { default as ReactComponent } from "@svgr:${relativePath}";
                     `,
           loader: 'jsx',
         };

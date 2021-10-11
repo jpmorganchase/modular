@@ -81,10 +81,10 @@ describe('when working with an app', () => {
       "sample-esbuild-app
       ├─ favicon.ico #6pu3rg
       ├─ index.css #1g5dmd3
-      ├─ index.css.map #u2fo3e
+      ├─ index.css.map #nbn1cv
       ├─ index.html #ojdrji
       ├─ index.js #1o0ba8n
-      ├─ index.js.map #k39kdb
+      ├─ index.js.map #1y0dr65
       ├─ logo-PGX3QVVN.svg #1okqmlj
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
@@ -121,5 +121,39 @@ describe('when working with an app', () => {
         },
       ),
     ).toMatchSnapshot();
+  });
+
+  type SourceMap = Record<string, string | string[]>;
+
+  const normalizeSource = (pathName: string) => {
+    if (pathName.startsWith('svgr')) {
+      return `svgr:${path.relative(
+        getModularRoot(),
+        pathName.slice('svgr:'.length),
+      )}`;
+    } else {
+      return pathName;
+    }
+  };
+
+  const readSourceMap = (pathName: string) => {
+    const map = fs.readJsonSync(
+      path.join(modularRoot, 'dist', 'sample-esbuild-app', pathName),
+    ) as SourceMap;
+    return {
+      ...map,
+      // make the source root //modular so that it's the same
+      // across platforms
+      sourceRoot: '//modular',
+      sources: (map.sources as string[]).map(normalizeSource),
+    };
+  };
+
+  it('can generate a index.js.map', () => {
+    expect(readSourceMap('index.js.map')).toMatchSnapshot();
+  });
+
+  it('can generate a index.css.map', () => {
+    expect(readSourceMap('index.css.map')).toMatchSnapshot();
   });
 });

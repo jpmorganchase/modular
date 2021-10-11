@@ -70,6 +70,7 @@ export default async function build(target: string, paths: Paths) {
       outbase: 'src',
       outdir: paths.appBuild,
       publicPath: paths.publicUrlOrPath,
+      sourceRoot: paths.modularRoot,
       nodePaths: (process.env.NODE_PATH || '').split(path.delimiter),
     });
   } catch (e) {
