@@ -76,15 +76,18 @@ describe('when working with an app', () => {
   });
 
   it('can build an app', () => {
-    expect(tree(path.join(modularRoot, 'dist', 'sample-esbuild-app')))
-      .toMatchInlineSnapshot(`
+    expect(
+      tree(path.join(modularRoot, 'dist', 'sample-esbuild-app'), {
+        hashIgnores: ['index.js.map', 'index.css.map', 'package.json'],
+      }),
+    ).toMatchInlineSnapshot(`
       "sample-esbuild-app
       ├─ favicon.ico #6pu3rg
       ├─ index.css #1g5dmd3
-      ├─ index.css.map #nbn1cv
+      ├─ index.css.map
       ├─ index.html #ojdrji
       ├─ index.js #1o0ba8n
-      ├─ index.js.map #1y0dr65
+      ├─ index.js.map
       ├─ logo-PGX3QVVN.svg #1okqmlj
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc

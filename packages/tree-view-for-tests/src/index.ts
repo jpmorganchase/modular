@@ -25,13 +25,18 @@ const defaultHashIgnores = [
   'CHANGELOG.md',
 ];
 
+interface Options {
+  ignores?: string[];
+  hashIgnores?: string[];
+}
+
 function tree(
   _path: string,
-  level = 1,
-  options = {
+  options: Options = {
     ignores: defaultIgnores,
     hashIgnores: defaultHashIgnores,
   },
+  level = 1,
 ): string {
   const stat = fs.statSync(_path);
   if (stat.isDirectory()) {
@@ -40,13 +45,13 @@ function tree(
     const dir = dirArr[dirArr.length - 1];
     // todo - handle symlinks, etc
     return `${times('#', level)}${dir}\n${children
-      .filter((child: string) => !options.ignores.includes(child))
-      .map((child: string) => tree(path.join(_path, child), level + 1, options))
+      .filter((child: string) => !options.ignores?.includes(child))
+      .map((child: string) => tree(path.join(_path, child), options, level + 1))
       .join('\n')}`;
   } else {
     return [
       `${times('#', level)}${path.basename(_path)}`,
-      options.hashIgnores.includes(path.basename(_path))
+      options.hashIgnores?.includes(path.basename(_path))
         ? undefined
         : `#${hash(fs.readFileSync(_path, 'utf8').replace(/\r/gm, ''))}`,
     ]
@@ -55,6 +60,6 @@ function tree(
   }
 }
 
-export default function generate(_path: string): string {
-  return asciiTree.generate(tree(_path));
+export default function generate(_path: string, options?: Options): string {
+  return asciiTree.generate(tree(_path, options));
 }
