@@ -42,7 +42,12 @@ compiler.run(async (err, stats) => {
       warnings: [],
     });
   } else {
-    statsJson = stats.toJson();
+    statsJson = stats.toJson({
+      all: false,
+      assets: true,
+      warnings: true,
+      errors: true,
+    });
     messages = formatWebpackMessages({
       errors: statsJson.errors,
       warnings: statsJson.warnings,
