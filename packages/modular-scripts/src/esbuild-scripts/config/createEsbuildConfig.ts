@@ -51,6 +51,7 @@ export default function createEsbuildConfig(
     minify: true,
     outbase: 'src',
     outdir: paths.appBuild,
+    sourceRoot: paths.modularRoot,
     publicPath: paths.publicUrlOrPath,
     nodePaths: (process.env.NODE_PATH || '').split(path.delimiter),
     ...config,

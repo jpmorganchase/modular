@@ -1,4 +1,4 @@
-import * as fs from 'fs/promises';
+import * as fs from 'fs-extra';
 import * as parse5 from 'parse5';
 import escapeStringRegexp from 'escape-string-regexp';
 
@@ -18,7 +18,7 @@ export async function createIndex(
     (node) => node.nodeName === 'head',
   ) as parse5.Element;
   head.childNodes.push(
-    ...parse5.parse(
+    ...parse5.parseFragment(
       `<link rel="stylesheet" href="%PUBLIC_URL%/index.css"></script>`,
     ).childNodes,
   );
@@ -26,14 +26,14 @@ export async function createIndex(
     (node) => node.nodeName === 'body',
   ) as parse5.Element;
   body.childNodes.push(
-    ...parse5.parse(
+    ...parse5.parseFragment(
       `<script type="module" src="%PUBLIC_URL%/index.js"></script>`,
     ).childNodes,
   );
 
   if (includeRuntime) {
     body.childNodes.push(
-      ...parse5.parse(
+      ...parse5.parseFragment(
         `<script type="module" src="%PUBLIC_URL%/_runtime/index.js"></script>`,
       ).childNodes,
     );

@@ -13,9 +13,8 @@ const issueOrigins = {
 function formatter(issue) {
   const { origin, severity, file, line, message, code, character } = issue;
 
-  const colors = new chalk.constructor();
-  const messageColor = severity === 'warning' ? colors.yellow : colors.red;
-  const fileAndNumberColor = colors.bold.cyan;
+  const messageColor = severity === 'warning' ? chalk.yellow : chalk.red;
+  const fileAndNumberColor = chalk.bold.cyan;
 
   const source = file && fs.existsSync(file) && fs.readFileSync(file, 'utf-8');
   const frame = source

@@ -6,6 +6,7 @@ import getPublicUrlOrPath from './getPublicUrlOrPath';
 import getModularRoot from './getModularRoot';
 import getLocation from './getLocation';
 export interface Paths {
+  modularRoot: string;
   publicUrlOrPath: string;
   dotenv: string;
   appPath: string;
@@ -107,6 +108,7 @@ export default async function createPaths(target: string): Promise<Paths> {
   const appBuild = path.join(modularRoot, 'dist', targetName);
 
   const paths: Paths = {
+    modularRoot,
     publicUrlOrPath,
     dotenv,
     appPath,

@@ -2,7 +2,7 @@ import * as esbuild from 'esbuild';
 import chalk from 'chalk';
 import * as express from 'express';
 import ws from 'express-ws';
-import * as fs from 'fs/promises';
+import * as fs from 'fs-extra';
 import * as http from 'http';
 import * as path from 'path';
 import * as tmp from 'tmp';

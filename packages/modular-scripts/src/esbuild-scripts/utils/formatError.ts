@@ -1,6 +1,6 @@
 import { Message } from 'esbuild';
 import chalk from 'chalk';
-import * as fs from 'fs/promises';
+import * as fs from 'fs-extra';
 import codeFrame from 'babel-code-frame';
 
 export async function formatError(error: Message): Promise<string> {
