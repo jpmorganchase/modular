@@ -27,6 +27,7 @@ import * as logger from '../../utils/logger';
 import prepareUrls, { InstructionURLS } from '../config/urls';
 import { createIndex } from '../api';
 import { formatError } from '../utils/formatError';
+import createEsbuildConfig from '../config/createEsbuildConfig';
 
 class DevServer {
   private paths: Paths;
@@ -171,14 +172,13 @@ class DevServer {
         format: 'esm',
         target: 'es2015',
         logLevel: 'silent',
-        color: !isCi,
-        define: this.env.stringified,
+        color: true,
+        define: {
+          global: 'window',
+        },
         watch: true,
         write: true,
-        plugins: [
-          websocketReloadPlugin('runtime', this.ws.getWss()),
-          incrementalReporterPlugin(),
-        ],
+        plugins: [websocketReloadPlugin('runtime', this.ws.getWss())],
         outbase: runtimeDir,
         outdir: path.join(this.outdir, '_runtime'),
         publicPath: (await this.urls()).localUrlForBrowser,
@@ -214,46 +214,15 @@ class DevServer {
       resolveIntialBuild = Promise.resolve();
     }
 
-    const result = await esbuild.build({
-      entryPoints: [this.paths.appIndexJs],
-      plugins,
-      bundle: true,
-      watch,
-      resolveExtensions: this.paths.moduleFileExtensions.map(
-        (extension) => `.${extension}`,
-      ),
-      sourcemap: true,
-      target: 'es2015',
-      loader: {
-        // loaders for images which are supported as files
-        '.avif': 'file',
-        '.bmp': 'file',
-        '.gif': 'file',
-        '.jpg': 'file',
-        '.jpeg': 'file',
-        '.png': 'file',
-        '.webp': 'file',
-
-        // enable JSX in js files
-        '.js': 'jsx',
-      },
-      logLevel: 'silent',
-      absWorkingDir: this.paths.appPath,
-      format: 'esm',
-      color: !isCi,
-      define: this.env.stringified,
-      metafile: true,
-      incremental: watch,
-      // if we're not watching then we don't actually care about any output
-      // for now - we just want to make sure the build works initially.
-      write: watch,
-      tsconfig: this.paths.appTsConfig,
-      minify: false,
-      outbase: 'src',
-      outdir: this.outdir,
-      publicPath: (await this.urls()).localUrlForBrowser,
-      nodePaths: (process.env.NODE_PATH || '').split(path.delimiter),
-    });
+    const result = await esbuild.build(
+      createEsbuildConfig(this.paths, {
+        plugins,
+        watch,
+        metafile: true,
+        incremental: watch,
+        minify: false,
+      }),
+    );
 
     // wait for the initial build to complete
     await resolveIntialBuild;

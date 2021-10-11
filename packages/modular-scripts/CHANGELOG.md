@@ -1,5 +1,11 @@
 # modular-scripts
 
+## 1.3.2
+
+### Patch Changes
+
+- f6377a7: Fix release issue due to tsx file
+
 ## 1.3.1
 
 ### Patch Changes
