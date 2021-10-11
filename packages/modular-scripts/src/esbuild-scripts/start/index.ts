@@ -160,10 +160,6 @@ class DevServer {
     }
     const entryPoint = indexFiles[0];
 
-    const define = Object.assign({}, this.env.stringified, {
-      global: 'window',
-    });
-
     try {
       return await esbuild.build({
         entryPoints: [path.join(runtimeDir, entryPoint)],
@@ -176,14 +172,13 @@ class DevServer {
         format: 'esm',
         target: 'es2015',
         logLevel: 'silent',
-        color: !isCi,
-        define,
+        color: true,
+        define: {
+          global: 'window',
+        },
         watch: true,
         write: true,
-        plugins: [
-          websocketReloadPlugin('runtime', this.ws.getWss()),
-          incrementalReporterPlugin(),
-        ],
+        plugins: [websocketReloadPlugin('runtime', this.ws.getWss())],
         outbase: runtimeDir,
         outdir: path.join(this.outdir, '_runtime'),
         publicPath: (await this.urls()).localUrlForBrowser,
