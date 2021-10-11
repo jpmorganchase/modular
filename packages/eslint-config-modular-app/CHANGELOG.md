@@ -1,5 +1,14 @@
 # eslint-config-modular-app
 
+## 1.0.9
+
+### Patch Changes
+
+- 5fd4341: Bump eslint-plugin-react from 7.25.2 to 7.26.1
+- 25d3439: Bump @babel/eslint-parser from 7.15.4 to 7.15.8
+- c782290: Bump eslint-plugin-react from 7.25.1 to 7.25.2
+- da39007: Bump eslint-plugin-testing-library from 4.12.2 to 4.12.4
+
 ## 1.0.8
 
 ### Patch Changes
