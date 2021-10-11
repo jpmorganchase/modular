@@ -6520,10 +6520,10 @@ eslint-plugin-jest-dom@3.9.2:
     "@testing-library/dom" "^7.28.1"
     requireindex "^1.2.0"
 
-eslint-plugin-jest@24.4.0:
-  version "24.4.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-24.4.0.tgz#fa4b614dbd46a98b652d830377971f097bda9262"
-  integrity sha512-8qnt/hgtZ94E9dA6viqfViKBfkJwFHXgJmTWlMGDgunw1XJEGqm3eiPjDsTanM3/u/3Az82nyQM9GX7PM/QGmg==
+eslint-plugin-jest@25.0.2:
+  version "25.0.2"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-25.0.2.tgz#04504b3d1dc2f561508bf271b30e6e8dd1bcb397"
+  integrity sha512-/2kUmgMIqMrPmQOA86RdJocI+4Y1tBrJJHrtRL2UD20nWzh6A/PGUoKlhq9ANd+Hixs4rz/vPyDwyzNVQ3pMEg==
   dependencies:
     "@typescript-eslint/experimental-utils" "^4.0.1"
 
