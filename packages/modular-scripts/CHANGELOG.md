@@ -1,5 +1,17 @@
 # modular-scripts
 
+## 1.3.3
+
+### Patch Changes
+
+- 3b5f86a: Remove react-refresh given we don't use babel anymore for the plugin.
+- ef2ea2a: Simplify build script for webpack.
+- ef2ea2a: Set "global" to be "window" when building with esbuild to ensure
+  compatibility with NPM packages.
+- babcbbd: Bump esbuild from 0.12.28 to 0.13.4
+- 375bf8f: Remove references to fs/promises and add a snapshot for esbuild to
+  maintain compatibility
+
 ## 1.3.2
 
 ### Patch Changes
