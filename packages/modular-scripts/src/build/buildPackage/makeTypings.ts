@@ -5,11 +5,11 @@ import * as ts from 'typescript';
 import * as fse from 'fs-extra';
 import isCI from 'is-ci';
 
-import { getLogger } from './getLogger';
-import getModularRoot from '../utils/getModularRoot';
-import { reportTSDiagnostics } from '../utils/reportTSDiagnostics';
-import getPackageMetadata from '../utils/getPackageMetadata';
-import getRelativeLocation from '../utils/getRelativeLocation';
+import getPrefixedLogger from '../../utils/getPrefixedLogger';
+import getModularRoot from '../../utils/getModularRoot';
+import { reportTSDiagnostics } from '../../utils/reportTSDiagnostics';
+import getPackageMetadata from '../../utils/getPackageMetadata';
+import getRelativeLocation from '../../utils/getRelativeLocation';
 
 const outputDirectory = 'dist';
 const typescriptConfigFilename = 'tsconfig.json';
@@ -22,7 +22,7 @@ export async function makeTypings(target: string): Promise<void> {
     outputDirectory,
     toParamCase(target),
   );
-  const logger = getLogger(packagePath);
+  const logger = getPrefixedLogger(target);
 
   const { typescriptConfig } = await getPackageMetadata();
 

@@ -6,12 +6,12 @@ export default function execSync(
   file: string,
   args: string[],
   options: { log?: boolean } & execa.SyncOptions = { log: true },
-): execa.ExecaSyncReturnValue<string> {
+): Promise<execa.ExecaReturnValue<string>> {
   const { log, ...opts } = options;
   if (log) {
     logger.log(chalk.grey(`$ ${file} ${args.join(' ')}`));
   }
-  return execa.sync(file, args, {
+  return execa(file, args, {
     stdin: process.stdin,
     stderr: process.stderr,
     stdout: process.stdout,

@@ -1,7 +1,7 @@
 .changeset
 /dist
-packages/**/dist
-packages/**/build
-packages/**/public
-packages/**/dist-cjs
-packages/**/dist-types
+packages/*/dist
+packages/*/build
+packages/*/public
+packages/*/dist-cjs
+packages/*/dist-types

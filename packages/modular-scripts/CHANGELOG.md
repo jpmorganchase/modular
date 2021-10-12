@@ -1,5 +1,65 @@
 # modular-scripts
 
+## 1.3.3
+
+### Patch Changes
+
+- 3b5f86a: Remove react-refresh given we don't use babel anymore for the plugin.
+- ef2ea2a: Simplify build script for webpack.
+- ef2ea2a: Set "global" to be "window" when building with esbuild to ensure
+  compatibility with NPM packages.
+- babcbbd: Bump esbuild from 0.12.28 to 0.13.4
+- 375bf8f: Remove references to fs/promises and add a snapshot for esbuild to
+  maintain compatibility
+
+## 1.3.2
+
+### Patch Changes
+
+- f6377a7: Fix release issue due to tsx file
+
+## 1.3.1
+
+### Patch Changes
+
+- de71866: Fix bug where jest-cli can not get hoisted and available for modular.
+- 6b1d627: Bump jest-cli from 26.6.0 to 26.6.3
+- 6b1d627: Bump jest-circus from 26.6.0 to 26.6.3
+- 6b1d627: Bump jest from 26.6.0 to 26.6.3
+
+## 1.3.0
+
+### Minor Changes
+
+- 2dab338: Add unstable esbuild-scripts implementation via
+  `process.env.USE_MODULAR_ESBUILD`.
+
+### Patch Changes
+
+- 7e09ccf: Bump esbuild from 0.12.27 to 0.12.28
+
+## 1.2.5
+
+### Patch Changes
+
+- cfbe3b4: Fix issue with node shebang in 1.2.4
+
+## 1.2.4
+
+### Patch Changes
+
+- 86bd507: Bump esbuild from 0.12.26 to 0.12.27
+- 6dc551a: Bump semver-regex from 3.0.0 to 3.1.3
+- 52b9c67: Bump esbuild from 0.12.25 to 0.12.26
+- 265a99d: Bump @babel/preset-env from 7.15.4 to 7.15.6
+- bc0a6c4: Bump filesize from 8.0.0 to 8.0.2
+- a42c856: Support project configuration via root `.env` files as well as
+  workspace based files.
+- 0037835: Bump commander from 8.1.0 to 8.2.0
+- d83245f: Bump filesize from 8.0.2 to 8.0.3
+- d1008e9: Fix issue where subst file systems on windows would cause a mismatch
+  in modular root and process.cwd() results.
+
 ## 1.2.3
 
 ### Patch Changes

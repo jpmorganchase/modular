@@ -9,7 +9,11 @@ updates:
     directory: '/' # Location of package manifests
     schedule:
       interval: 'daily'
+    # Allow up to 10 open pull requests for NPM dependencies
+    open-pull-requests-limit: 100
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
       interval: 'daily'
+    # Allow up to 10 open pull requests for actions
+    open-pull-requests-limit: 10

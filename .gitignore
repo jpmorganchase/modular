@@ -5,6 +5,7 @@ node_modules
 
 # created by tests in modular-scripts
 packages/sample-app
+packages/sample-esbuild-app
 packages/sample-view
 packages/sample-package
 packages/nested

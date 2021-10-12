@@ -1,7 +1,7 @@
 import * as path from 'path';
 import resolve from 'resolve';
 import { ExecaError } from 'execa';
-import execSync from '../utils/execSync';
+import execAsync from '../utils/execAsync';
 import getModularRoot from '../utils/getModularRoot';
 import { resolveAsBin } from '../utils/resolveAsBin';
 import * as logger from '../utils/logger';
@@ -140,7 +140,7 @@ export default async function test(
   }
 
   try {
-    execSync(testBin, testArgs, {
+    await execAsync(testBin, testArgs, {
       cwd: getModularRoot(),
       log: false,
       // @ts-ignore

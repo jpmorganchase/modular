@@ -1,5 +1,5 @@
 import * as ts from 'typescript';
-import { getLogger } from '../buildPackage/getLogger';
+import getPrefixedLogger from './getPrefixedLogger';
 
 // from https://github.com/Microsoft/TypeScript/issues/6387
 // a helper to output a readable message from a ts diagnostics object
@@ -7,7 +7,7 @@ export function reportTSDiagnostics(
   packagePath: string,
   diagnostics: ts.Diagnostic[],
 ): void {
-  const logger = getLogger(packagePath);
+  const logger = getPrefixedLogger(packagePath);
 
   diagnostics.forEach((diagnostic) => {
     let message = `Error`;

@@ -15,12 +15,13 @@ jobs:
     env:
       MODULAR_LOGGER_DEBUG: true
     strategy:
+      fail-fast: false
       matrix:
         command: ['prettier --check .', typecheck, lint]
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js
-        uses: actions/setup-node@v2.4.0
+        uses: actions/setup-node@v2.4.1
         with:
           node-version: 14.x
           cache: 'yarn'
@@ -33,6 +34,7 @@ jobs:
       MODULAR_LOGGER_DEBUG: true
 
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-11, windows-2016]
         node-version: [12.x, 14.x, 16.x]
@@ -40,7 +42,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2.4.0
+        uses: actions/setup-node@v2.4.1
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
