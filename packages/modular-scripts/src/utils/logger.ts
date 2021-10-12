@@ -37,7 +37,7 @@ export function error(...x: string[]): void {
 
 export function debug(...x: string[]): void {
   if (DEBUG) {
-    printStdOut(x.join(' '), chalk.blue(' [debug] '));
+    printStdOut(x.join(' '), chalk.blue('[debug] '));
   }
 }
 

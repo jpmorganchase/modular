@@ -99,6 +99,18 @@ describe('create-modular-react-app', () => {
     ).toMatchInlineSnapshot(`
       Object {
         "author": "?",
+        "browserslist": Object {
+          "development": Array [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version",
+          ],
+          "production": Array [
+            ">0.2%",
+            "not dead",
+            "not op_mini all",
+          ],
+        },
         "dependencies": Object {
           "@testing-library/dom": "?",
           "@testing-library/jest-dom": "?",
@@ -220,6 +232,18 @@ describe('create-modular-react-app', () => {
     ).toMatchInlineSnapshot(`
       Object {
         "author": "?",
+        "browserslist": Object {
+          "development": Array [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version",
+          ],
+          "production": Array [
+            ">0.2%",
+            "not dead",
+            "not op_mini all",
+          ],
+        },
         "dependencies": Object {
           "@testing-library/dom": "?",
           "@testing-library/jest-dom": "?",

@@ -4,6 +4,8 @@ import * as esbuild from 'esbuild';
 import { Paths } from '../../utils/createPaths';
 import getClientEnvironment from './getClientEnvironment';
 import svgrPlugin from '../plugins/svgr';
+import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowserslistTarget';
+import * as logger from '../../utils/logger';
 
 export default function createEsbuildConfig(
   paths: Paths,
@@ -18,6 +20,10 @@ export default function createEsbuildConfig(
       global: 'window',
     },
   );
+
+  const target = createEsbuildBrowserslistTarget(paths.appPath);
+
+  logger.debug(`Using target: ${target.join(', ')}`);
 
   return {
     entryPoints: [paths.appIndexJs],
@@ -41,7 +47,7 @@ export default function createEsbuildConfig(
       '.js': 'jsx',
     },
     logLevel: 'silent',
-    target: 'es2015',
+    target,
     absWorkingDir: paths.appPath,
     format: 'esm',
     color: !isCi,

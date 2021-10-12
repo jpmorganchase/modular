@@ -177,7 +177,6 @@ class DevServer {
           global: 'window',
         },
         watch: true,
-        write: true,
         plugins: [websocketReloadPlugin('runtime', this.ws.getWss())],
         outbase: runtimeDir,
         outdir: path.join(this.outdir, '_runtime'),
@@ -221,6 +220,8 @@ class DevServer {
         metafile: true,
         incremental: watch,
         minify: false,
+        write: !watch,
+        outdir: this.outdir,
       }),
     );
 

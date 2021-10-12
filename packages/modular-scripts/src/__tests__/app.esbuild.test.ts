@@ -86,7 +86,7 @@ describe('when working with an app', () => {
       ├─ index.css #1g5dmd3
       ├─ index.css.map
       ├─ index.html #ojdrji
-      ├─ index.js #1a9ck58
+      ├─ index.js #4shvwd
       ├─ index.js.map
       ├─ logo-PGX3QVVN.svg #1okqmlj
       ├─ logo192.png #1nez7vk

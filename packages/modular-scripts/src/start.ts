@@ -10,6 +10,8 @@ import { setupEnvForDirectory } from './utils/setupEnv';
 import { checkBrowsers } from './utils/checkBrowsers';
 import checkRequiredFiles from './utils/checkRequiredFiles';
 import createPaths from './utils/createPaths';
+import * as logger from './utils/logger';
+import createEsbuildBrowserslistTarget from './utils/createEsbuildBrowserslistTarget';
 
 async function start(target: string): Promise<void> {
   const targetPath = await getLocation(target);
@@ -64,11 +66,16 @@ async function start(target: string): Promise<void> {
     const modularRoot = getModularRoot();
     const targetName = toParamCase(target);
 
+    const browserTarget = createEsbuildBrowserslistTarget(targetPath);
+
+    logger.debug(`Using target: ${browserTarget.join(', ')}`);
+
     await execAsync('node', [startScript], {
       cwd: startPath,
       log: false,
       // @ts-ignore
       env: {
+        ESBUILD_TARGET_FACTORY: JSON.stringify(browserTarget),
         MODULAR_ROOT: modularRoot,
         MODULAR_PACKAGE: target,
         MODULAR_PACKAGE_NAME: targetName,
