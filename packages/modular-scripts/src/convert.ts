@@ -56,7 +56,6 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
 
     // Bring key props from root package.json to new app
     newPackageJson.name = packageName;
-    newPackageJson.browserslist = rootPackageJson.browserslist;
     fs.writeJsonSync(
       path.join(newPackagePath, 'package.json'),
       newPackageJson,

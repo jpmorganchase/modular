@@ -156,15 +156,6 @@ describe('Converting a react app to modular app', () => {
     );
   });
 
-  it('should copy over root browserslist into app package.json', () => {
-    const newPackageJson = fs.readJsonSync(
-      path.join(tmpFolderPath, 'packages', tmpProjectName, 'package.json'),
-    ) as ModularPackageJson;
-    expect(newPackageJson.browserslist).toMatchObject(
-      rootPackageJson.browserslist as Record<string, string[]>,
-    );
-  });
-
   it('should add eslint-config-modular-app to the dependencies', () => {
     const updatedPackageJson = fs.readJsonSync(
       path.join(tmpFolderPath, 'package.json'),
