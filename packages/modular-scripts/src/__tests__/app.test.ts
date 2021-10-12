@@ -386,7 +386,8 @@ describe('when working with an app', () => {
     );
   });
 
-  it('can start an app', async () => {
+  // eslint-disable-next-line jest/no-done-callback
+  it('can start an app', async (done) => {
     let browser: puppeteer.Browser | undefined;
     let devServer: DevServer | undefined;
     let port: string;
@@ -435,8 +436,10 @@ describe('when working with an app', () => {
         (err) => {
           if (err) {
             console.log('err: ', err);
+          } else {
+            console.log(`Cleaned up processes on port ${port}`);
           }
-          console.log(`Cleaned up processes on port ${port}`);
+          done();
         },
       );
     }
