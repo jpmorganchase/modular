@@ -198,6 +198,7 @@ program
   .description(
     'Manually run modular checks against the current modular repository',
   )
+  .option('--verbose', 'Run yarn commands with --verbose set')
   .action(async () => {
     const { check } = await import('./check');
     await check();

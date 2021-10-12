@@ -1,7 +1,7 @@
 import isCI from 'is-ci';
 import chalk from 'chalk';
 
-const prefix = '[modular] ';
+const PREFIX = '[modular] ';
 
 const DEBUG =
   process.env.MODULAR_LOGGER_DEBUG || process.argv.includes('--verbose');
@@ -13,16 +13,16 @@ function printStdErr(x: string) {
     return;
   }
   x.split('\n').forEach((l) => {
-    process.stderr.write(chalk.dim(prefix) + l + '\n');
+    process.stderr.write(chalk.dim(PREFIX) + l + '\n');
   });
 }
 
-function printStdOut(x: string) {
+function printStdOut(x: string, prefix = '') {
   if (SILENT) {
     return;
   }
   x.split('\n').forEach((l) => {
-    process.stdout.write(chalk.dim(prefix) + l + '\n');
+    process.stdout.write(chalk.dim(PREFIX) + prefix + l + '\n');
   });
 }
 export function log(...x: string[]): void {
@@ -37,7 +37,7 @@ export function error(...x: string[]): void {
 
 export function debug(...x: string[]): void {
   if (DEBUG) {
-    log('[debug]', ...x);
+    printStdOut(x.join(' '), chalk.blue(' [debug] '));
   }
 }
 
