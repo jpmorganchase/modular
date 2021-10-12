@@ -1,5 +1,24 @@
 # modular-scripts
 
+## 1.3.4
+
+### Patch Changes
+
+- 812546b: Bump prompts from 2.4.1 to 2.4.2
+- 2747769: Bump jest-runner-eslint from 0.10.1 to 0.11.1
+- 9a85c7a: Bump browserslist from 4.17.0 to 4.17.3
+- 7caa5e6: Bump @rollup/plugin-node-resolve from 13.0.4 to 13.0.5
+- 860c9cd: Bump esbuild-loader from 2.15.1 to 2.16.0
+- 79b8de1: Bump rollup from 2.56.3 to 2.58.0
+- 53f53a8: Bump jest-watch-typeahead from 0.6.4 to 0.6.5
+- c24b187: Bump postcss from 8.3.6 to 8.3.9
+- 542f4b6: Bump @babel/preset-env from 7.15.6 to 7.15.8
+- a416334: Bump @rollup/plugin-commonjs from 20.0.0 to 21.0.0
+- 64bbb74: Bump open from 8.2.1 to 8.3.0
+- a0b5a84: Bump @babel/code-frame from 7.14.5 to 7.15.8
+- e508d7e: Bump react-native-web from 0.17.1 to 0.17.5
+- 195bac7: Bump @types/react 17.0.27 to 17.0.28
+
 ## 1.3.3
 
 ### Patch Changes
