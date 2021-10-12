@@ -36,6 +36,7 @@ export default function createEsbuildConfig(
       '.jpeg': 'file',
       '.png': 'file',
       '.webp': 'file',
+      '.ttf': 'file',
 
       // enable JSX in js files
       '.js': 'jsx',
