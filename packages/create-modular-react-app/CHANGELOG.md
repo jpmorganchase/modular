@@ -1,5 +1,11 @@
 # create-modular-react-app
 
+## 1.1.3
+
+### Patch Changes
+
+- e55b4f9: Browserlist cross-compatibility between webpack and esbuild.
+
 ## 1.1.2
 
 ### Patch Changes
