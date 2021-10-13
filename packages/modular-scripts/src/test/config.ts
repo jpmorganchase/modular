@@ -98,17 +98,13 @@ export function createJestConfig(
       '/node_modules/',
       'serviceWorker.ts',
     ],
-    setupFiles: defaults.setupFiles
-      .concat([
-        require.resolve('modular-scripts/react-scripts/config/setupEnv.js'),
-      ])
-      .concat(
-        globby
-          .sync(`setupEnvironment.{js,ts,tsx}`, {
-            cwd: absoluteModularGlobalConfigsPath,
-          })
-          .map((f) => path.join(absoluteModularGlobalConfigsPath, f)),
-      ),
+    setupFiles: defaults.setupFiles.concat(
+      globby
+        .sync(`setupEnvironment.{js,ts,tsx}`, {
+          cwd: absoluteModularGlobalConfigsPath,
+        })
+        .map((f) => path.join(absoluteModularGlobalConfigsPath, f)),
+    ),
     setupFilesAfterEnv: globby
       .sync(`setupTests.{js,ts,tsx}`, {
         cwd: absoluteModularGlobalConfigsPath,
