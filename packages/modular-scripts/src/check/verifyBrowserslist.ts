@@ -17,7 +17,7 @@ export default async function verifyPrivateModularRoot(): Promise<boolean> {
   )) as ModularPackageJson;
 
   if (rootPackageJson.browserslist) {
-    logger.debug(`Modular root has valid browserlist`);
+    logger.debug(`Modular root has valid browserslist`);
     return false;
   } else {
     const workspace = await getWorkspaceInfo();
@@ -29,7 +29,7 @@ export default async function verifyPrivateModularRoot(): Promise<boolean> {
         )) as ModularPackageJson;
 
         if (worktreePackageJson.browserslist) {
-          logger.debug(`${packageName} has valid browserlist`);
+          logger.debug(`${packageName} has valid browserslist`);
         } else {
           logger.error(`${packageName} does not have browserslist set.`);
           failed = true;

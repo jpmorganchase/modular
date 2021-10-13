@@ -22,7 +22,11 @@ export async function check(): Promise<void> {
       const { default: verifyCheck } = (await import(
         `./${checkName}`
       )) as Check;
-      failed = !(await verifyCheck()) || failed;
+
+      // if the check returns false then we fail and show the error.
+      if (!(await verifyCheck())) {
+        failed = true;
+      }
     } catch (e) {
       logger.error(String(e));
       failed = false;

@@ -47,13 +47,11 @@ export default async function verifyWorkspaceStructure(): Promise<boolean> {
       failed = true;
     }
 
-    if (packageInfo.type === 'app') {
-      if (packageInfo.public) {
-        logger.error(
-          `${packageName} is marked as "public" - Modular apps should be marked as private.`,
-        );
-        failed = true;
-      }
+    if (packageInfo.type === 'app' && packageInfo.public) {
+      logger.error(
+        `${packageName} is marked as "public" - Modular apps should be marked as private.`,
+      );
+      failed = true;
     }
 
     logger.debug(`${packageName} is valid.`);

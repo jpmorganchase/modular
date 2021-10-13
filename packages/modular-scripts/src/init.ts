@@ -1,5 +1,6 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
+import { defaultBrowsers } from './utils/checkBrowsers';
 import execAsync from './utils/execAsync';
 import { ModularPackageJson } from './utils/isModularType';
 import * as logger from './utils/logger';
@@ -28,6 +29,10 @@ export async function initModularFolder(
 
   if (!packageJson.workspaces) {
     packageJson.workspaces = ['packages/**'];
+  }
+
+  if (!packageJson.browserslist) {
+    packageJson.browserslist = defaultBrowsers;
   }
 
   await fs.writeJSON(packageJsonPath, packageJson, {
