@@ -19,6 +19,7 @@ import {
 import type { Stats } from 'webpack';
 import { checkBrowsers } from '../utils/checkBrowsers';
 import checkRequiredFiles from '../utils/checkRequiredFiles';
+import createEsbuildBrowserslistTarget from '../utils/createEsbuildBrowserslistTarget';
 
 // These sizes are pretty large. We'll warn for bundles exceeding them.
 const WARN_AFTER_BUNDLE_GZIP_SIZE = 512 * 1024;
@@ -73,12 +74,16 @@ async function buildApp(target: string) {
       'modular-scripts/react-scripts/scripts/build.js',
     );
 
+    const browserTarget = createEsbuildBrowserslistTarget(targetDirectory);
+    logger.debug(`Using target: ${browserTarget.join(', ')}`);
+
     // TODO: this shouldn't be sync
     await execAsync('node', [buildScript], {
       cwd: targetDirectory,
       log: false,
       // @ts-ignore
       env: {
+        ESBUILD_TARGET_FACTORY: JSON.stringify(browserTarget),
         MODULAR_ROOT: modularRoot,
         MODULAR_PACKAGE: target,
         MODULAR_PACKAGE_NAME: targetName,

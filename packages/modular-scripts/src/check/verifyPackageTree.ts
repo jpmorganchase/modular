@@ -14,7 +14,7 @@ import {
   Dependency,
   JSONSchemaForNPMPackageJsonFiles as PackageJson,
 } from '@schemastore/package';
-import * as logger from './logger';
+import * as logger from '../utils/logger';
 
 const DEPS_TO_CHECK = [
   // These are packages most likely to break in practice.
@@ -27,7 +27,7 @@ const DEPS_TO_CHECK = [
 // We assume that having wrong versions of these
 // in the tree will likely break your setup.
 // This is a relatively low-effort way to find common issues.
-export async function verifyPackageTree(): Promise<boolean> {
+export default async function verifyPackageTree(): Promise<boolean> {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const ownPackageJson = require('modular-scripts/package.json') as PackageJson;
   const dependencies: Dependency = ownPackageJson.dependencies || {};
@@ -153,9 +153,9 @@ export async function verifyPackageTree(): Promise<boolean> {
             ),
         );
 
-        return true;
+        return false;
       }
     }
   }
-  return false;
+  return true;
 }
