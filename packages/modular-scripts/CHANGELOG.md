@@ -1,5 +1,16 @@
 # modular-scripts
 
+## 1.4.0
+
+### Minor Changes
+
+- f496a72: Add support for .ttf files to esbuild build
+- e55b4f9: Browserlist cross-compatibility between webpack and esbuild.
+
+### Patch Changes
+
+- c825efb: Bump jest-runner-eslint from 0.11.1 to 1.0.0
+
 ## 1.3.4
 
 ### Patch Changes
