@@ -51,7 +51,7 @@ describe('Modular test', () => {
       } catch (error) {
         errorNumber = (error as ExecaError).exitCode;
       }
-      expect(errorNumber).toEqual(1);
+      expect(errorNumber).toBe(1);
     });
   });
 
@@ -66,7 +66,7 @@ describe('Modular test', () => {
       } catch (error) {
         errorNumber = (error as ExecaError).exitCode;
       }
-      expect(errorNumber).toEqual(0);
+      expect(errorNumber).toBe(0);
     });
   });
 });

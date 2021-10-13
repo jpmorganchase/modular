@@ -30,12 +30,12 @@ describe('Creating a new modular folder', () => {
   });
 
   it('should create a modular folder', async () => {
-    expect(fs.existsSync(path.join(folder, 'modular'))).toEqual(true);
+    expect(fs.existsSync(path.join(folder, 'modular'))).toBe(true);
     expect(await fs.readdir(path.join(folder, 'modular'))).toEqual([]);
   });
 
   it('should create a packages folder', async () => {
-    expect(fs.existsSync(path.join(folder, 'packages'))).toEqual(true);
+    expect(fs.existsSync(path.join(folder, 'packages'))).toBe(true);
     expect(await fs.readdir(path.join(folder, 'packages'))).toEqual([]);
   });
 

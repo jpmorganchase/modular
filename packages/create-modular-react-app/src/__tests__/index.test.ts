@@ -76,7 +76,7 @@ describe('create-modular-react-app', () => {
       │     ├─ package.json
       │     ├─ public
       │     │  ├─ favicon.ico #6pu3rg
-      │     │  ├─ index.html #1wohq3p
+      │     │  ├─ index.html #1m6toxd
       │     │  ├─ logo192.png #1nez7vk
       │     │  ├─ logo512.png #1hwqvcc
       │     │  ├─ manifest.json #19gah8o
@@ -197,7 +197,7 @@ describe('create-modular-react-app', () => {
       │     ├─ package.json
       │     ├─ public
       │     │  ├─ favicon.ico #6pu3rg
-      │     │  ├─ index.html #1wohq3p
+      │     │  ├─ index.html #1m6toxd
       │     │  ├─ logo192.png #1nez7vk
       │     │  ├─ logo512.png #1hwqvcc
       │     │  ├─ manifest.json #19gah8o
@@ -299,7 +299,7 @@ describe('create-modular-react-app', () => {
       name: destination,
       repo: false,
     });
-    expect(fs.existsSync(path.join(destination, '.git'))).toEqual(false);
+    expect(fs.existsSync(path.join(destination, '.git'))).toBe(false);
   });
   it('should create a project prefer offline without git metadata', async () => {
     await createModularApp({
@@ -307,6 +307,6 @@ describe('create-modular-react-app', () => {
       repo: false,
       preferOffline: true,
     });
-    expect(fs.existsSync(path.join(destination, '.git'))).toEqual(false);
+    expect(fs.existsSync(path.join(destination, '.git'))).toBe(false);
   });
 });
