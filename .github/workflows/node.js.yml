@@ -50,6 +50,12 @@ jobs:
         run: yarn --frozen-lockfile
       - name: Run Tests
         run: yarn test --coverage
+      - name: Coveralls Parallel
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.github_token }}
+          flag-name: run-${{ matrix.node-version }}
+          parallel: true
   finish:
     needs: test
     runs-on: ubuntu-latest
