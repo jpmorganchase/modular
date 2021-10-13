@@ -6,6 +6,13 @@
     "modular": "dist-cjs/cli.js"
   },
   "main": "./dist-cjs/index.js",
+  "exports": {
+    ".": "./dist-cjs/index.js",
+    "./jest-runner-eslint": "./jest-runner-eslint/index.js",
+    "./react-scripts/scripts/build.js": "./react-scripts/scripts/build.js",
+    "./react-scripts/scripts/start.js": "./react-scripts/scripts/start.js",
+    "./package.json": "./package.json"
+  },
   "types": "dist-types/index.d.ts",
   "engines": {
     "node": "^12.13.0 || ^14.15.0 || >=15.0.0"
