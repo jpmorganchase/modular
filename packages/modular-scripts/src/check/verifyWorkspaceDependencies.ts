@@ -5,7 +5,7 @@ import { getModularType, isValidModularType } from '../utils/isModularType';
 import * as logger from '../utils/logger';
 
 export default async function verifyWorkspaceStructure(): Promise<boolean> {
-  let failed = false;
+  let valid = true;
 
   const modularRoot = getModularRoot();
 
@@ -26,14 +26,14 @@ export default async function verifyWorkspaceStructure(): Promise<boolean> {
           ', ',
         )}`,
       );
-      failed = true;
+      valid = false;
     }
 
     if (!packageInfo.location.startsWith('packages')) {
       logger.error(
         `${packageName} is not located within the "/packages" directory in the repository, instead found "${packageInfo.location}"`,
       );
-      failed = true;
+      valid = false;
     }
 
     if (!isValidModularType(path.join(modularRoot, packageInfo.location))) {
@@ -44,18 +44,18 @@ export default async function verifyWorkspaceStructure(): Promise<boolean> {
           getModularType(packageInfo.location) as string
         }`,
       );
-      failed = true;
+      valid = false;
     }
 
     if (packageInfo.type === 'app' && packageInfo.public) {
       logger.error(
         `${packageName} is marked as "public" - Modular apps should be marked as private.`,
       );
-      failed = true;
+      valid = false;
     }
 
     logger.debug(`${packageName} is valid.`);
   }
 
-  return !failed;
+  return valid;
 }

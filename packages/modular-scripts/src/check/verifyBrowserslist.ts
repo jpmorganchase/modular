@@ -7,7 +7,7 @@ import getModularRoot from '../utils/getModularRoot';
 import getWorkspaceInfo from '../utils/getWorkspaceInfo';
 
 export default async function verifyPrivateModularRoot(): Promise<boolean> {
-  let failed = false;
+  let valid = true;
 
   const modularRoot = getModularRoot();
 
@@ -18,7 +18,6 @@ export default async function verifyPrivateModularRoot(): Promise<boolean> {
 
   if (rootPackageJson.browserslist) {
     logger.debug(`Modular root has valid browserslist`);
-    return false;
   } else {
     const workspace = await getWorkspaceInfo();
 
@@ -32,11 +31,11 @@ export default async function verifyPrivateModularRoot(): Promise<boolean> {
           logger.debug(`${packageName} has valid browserslist`);
         } else {
           logger.error(`${packageName} does not have browserslist set.`);
-          failed = true;
+          valid = false;
         }
       }
     }
   }
 
-  return !failed;
+  return valid;
 }

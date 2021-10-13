@@ -18,18 +18,13 @@ export async function check(): Promise<void> {
   for (const checkName of CHECKS) {
     logger.debug('');
     logger.debug(`===== Running ${checkName} =====`);
-    try {
-      const { default: verifyCheck } = (await import(
-        `./${checkName}`
-      )) as Check;
+    const { default: verifyCheck } = (await import(`./${checkName}`)) as Check;
 
-      // if the check returns false then we fail and show the error.
-      if (!(await verifyCheck())) {
-        failed = true;
-      }
-    } catch (e) {
-      logger.error(String(e));
-      failed = false;
+    // if the check returns false then we fail and show the error.
+    if (await verifyCheck()) {
+      continue;
+    } else {
+      failed = true;
     }
     logger.debug(`===== Finished ${checkName} =====`);
     logger.debug('');

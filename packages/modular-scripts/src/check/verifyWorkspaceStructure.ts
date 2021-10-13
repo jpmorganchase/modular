@@ -5,7 +5,7 @@ import getWorkspaceInfo from '../utils/getWorkspaceInfo';
 import * as logger from '../utils/logger';
 
 export default async function verifyWorkspaceStructure(): Promise<boolean> {
-  let failed = false;
+  let valid = true;
   const workspace = await getWorkspaceInfo();
   const modularRoot = getModularRoot();
 
@@ -36,11 +36,11 @@ export default async function verifyWorkspaceStructure(): Promise<boolean> {
           ', ',
         )} in your current worktree`,
       );
-      failed = true;
+      valid = false;
     } else {
       logger.debug(`${packageName} has valid dependencies`);
     }
   });
 
-  return !failed;
+  return valid;
 }
