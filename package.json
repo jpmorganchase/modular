@@ -50,7 +50,7 @@
     "@types/parse5": "^6.0.1",
     "@types/prompts": "2.0.14",
     "@types/puppeteer": "5.4.4",
-    "@types/react": "17.0.28",
+    "@types/react": "17.0.29",
     "@types/react-dom": "17.0.9",
     "@types/recursive-readdir": "^2.2.0",
     "@types/rimraf": "3.0.2",
@@ -74,7 +74,7 @@
     "react-dom": "17.0.2",
     "semver": "7.3.5",
     "ts-node": "10.3.0",
-    "typescript": "4.4.3"
+    "typescript": "4.4.4"
   },
   "resolutions": {
     "esbuild": "0.13.4"
