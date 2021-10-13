@@ -268,8 +268,8 @@ describe('modular-scripts', () => {
         "sample-view
         ├─ README.md #11adaka
         ├─ dist-cjs
-        │  ├─ index.js #l140cq
-        │  └─ index.js.map #b9qv26
+        │  ├─ index.js #1my609p
+        │  └─ index.js.map #szagbc
         ├─ dist-es
         │  ├─ index.js #bpsk7y
         │  └─ index.js.map #171l8pf
