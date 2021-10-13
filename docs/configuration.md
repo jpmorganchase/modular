@@ -3,16 +3,6 @@
 Modular has minimal configuration because of it's philosophy. However there is a
 set of minimum configuration required.
 
-## `modular/setupEnvironment.ts`
-
-This contains the setup for tests corresponding to
-[`jest.config.js#setupFiles`](https://jestjs.io/docs/en/configuration#setupfiles-array).
-
-## `modular/setupTests.ts`
-
-This contains the setup for tests corresponding to
-[`jest.config.js#setupFilesAfterEnv`](https://jestjs.io/docs/en/configuration#setupfilesafterenv-array).
-
 ## `package.json#modular`
 
 _NOTE: This property is created automatically and is described here for
