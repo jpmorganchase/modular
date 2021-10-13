@@ -153,9 +153,9 @@ export default async function verifyPackageTree(): Promise<boolean> {
             ),
         );
 
-        return true;
+        return false;
       }
     }
   }
-  return false;
+  return true;
 }

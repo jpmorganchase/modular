@@ -59,5 +59,5 @@ export default async function verifyWorkspaceStructure(): Promise<boolean> {
     logger.debug(`${packageName} is valid.`);
   }
 
-  return failed;
+  return !failed;
 }

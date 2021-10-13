@@ -38,5 +38,5 @@ export default async function verifyPrivateModularRoot(): Promise<boolean> {
     }
   }
 
-  return failed;
+  return !failed;
 }

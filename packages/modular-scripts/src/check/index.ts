@@ -19,11 +19,13 @@ export async function check(): Promise<void> {
     logger.debug('');
     logger.debug(`===== Running ${checkName} =====`);
     try {
-      const { default: check } = (await import(`./${checkName}`)) as Check;
-      failed = (await check()) || failed;
+      const { default: verifyCheck } = (await import(
+        `./${checkName}`
+      )) as Check;
+      failed = !(await verifyCheck()) || failed;
     } catch (e) {
       logger.error(String(e));
-      failed = true;
+      failed = false;
     }
     logger.debug(`===== Finished ${checkName} =====`);
     logger.debug('');

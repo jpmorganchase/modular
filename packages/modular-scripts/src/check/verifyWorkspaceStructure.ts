@@ -42,5 +42,5 @@ export default async function verifyWorkspaceStructure(): Promise<boolean> {
     }
   });
 
-  return failed;
+  return !failed;
 }

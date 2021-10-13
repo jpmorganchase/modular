@@ -14,17 +14,17 @@ export default async function verifyPrivateModularRoot(): Promise<boolean> {
   )) as ModularPackageJson;
   if (!rootPackageJson.private) {
     logger.error(`Modular workspace roots must be marked as private`);
-    return true;
+    return false;
   }
 
   if (!rootPackageJson?.workspaces?.includes('packages/**')) {
     logger.error(
       `Modular workspaces must include "packages/**" to pick up any modular packages in the worktree`,
     );
-    return true;
+    return false;
   }
 
   logger.debug('Modular root is valid.');
 
-  return false;
+  return true;
 }
