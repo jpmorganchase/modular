@@ -7,7 +7,9 @@
 ---
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?)](https://github.com/jpmorganchase/modular/blob/main/CONTRIBUTING.md)
-![Build](https://github.com/jpmorganchase/modular/actions/workflows/node.js.yml/badge.svg)
+![Static](https://github.com/jpmorganchase/modular/actions/workflows/static.yml/badge.svg)
+![Tests](https://github.com/jpmorganchase/modular/actions/workflows/test.yml/badge.svg)
+[![Coverage](https://coveralls.io/repos/github/jpmorganchase/modular/badge.svg?branch=main)](https://coveralls.io/github/jpmorganchase/modular?branch=main)
 
 `modular` is a collection of tools and guidance to enable UI development at
 scale. It is derived from work at JP Morgan to enable development in a single
@@ -58,7 +60,7 @@ It supports three flags:
 ## Commands
 
 More documentation about modular commands is
-[here](https://github.com/jpmorganchase/modular/tree/main/docs/commands.md).
+[here](https://github.com/jpmorganchase/modular/tree/main/docs/).
 
 ## Configuration
 
