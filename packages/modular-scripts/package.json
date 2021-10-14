@@ -5,18 +5,14 @@
   "bin": {
     "modular": "dist-cjs/cli.js"
   },
-  "main": "./dist-cjs/index.js",
-  "types": "dist-types/index.d.ts",
   "engines": {
     "node": "^12.13.0 || ^14.15.0 || >=15.0.0"
   },
   "scripts": {
     "modular": "ts-node src/cli.ts",
-    "clean": "rimraf build dist-cjs dist-types",
+    "clean": "rimraf build dist-cjs",
     "prebuild": "yarn clean",
-    "build": "yarn build:js && yarn build:ts",
-    "build:js": "babel --root-mode upward src --out-dir dist-cjs --extensions .ts --ignore 'src/**/*.test.ts'",
-    "build:ts": "tsc --project tsconfig.build.json"
+    "build": "babel --root-mode upward src --out-dir dist-cjs --extensions .ts --ignore 'src/**/*.test.ts'"
   },
   "dependencies": {
     "@babel/code-frame": "7.15.8",
@@ -119,7 +115,6 @@
   },
   "files": [
     "dist-cjs",
-    "dist-types",
     "react-app-env.d.ts",
     "react-scripts",
     "react-dev-utils",
