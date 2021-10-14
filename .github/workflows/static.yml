@@ -1,0 +1,36 @@
+name: Lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  Static:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    env:
+      MODULAR_LOGGER_DEBUG: true
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Prettier
+            command: 'prettier --check .'
+          - name: Typecheck
+            command: typecheck
+          - name: Lint
+            command: lint
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v2.4.1
+        with:
+          node-version: 14.x
+          cache: 'yarn'
+
+      - name: 'Install Dependencies'
+        run: yarn --frozen-lockfile
+      - name: ${{ matrix.name }}
+        run: yarn ${{ matrix.command }}
