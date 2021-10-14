@@ -1,5 +1,12 @@
 # modular-scripts
 
+## 1.4.1
+
+### Patch Changes
+
+- a7ef8d8: Bump browserslist from 4.17.3 to 4.17.4
+- 06326ba: Bump esbuild from 0.13.4 to 0.13.5
+
 ## 1.4.0
 
 ### Minor Changes
