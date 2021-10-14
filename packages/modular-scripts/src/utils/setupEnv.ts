@@ -62,5 +62,12 @@ export default async function setupEnv(
   process.env.NODE_ENV = env;
   process.env.BABEL_ENV = env;
 
+  // in the case that NODE_ENV is test then we actually will assume for browserslist
+  // that we're running production builds
+  // @ts-ignore
+  process.env.BROWSERSLIST_ENV =
+    process.env.BROWSERSLIST_ENV ||
+    (process.env.NODE_ENV === 'test' ? 'production' : process.env.NODE_ENV);
+
   await setupEnvForDirectory(getModularRoot());
 }
