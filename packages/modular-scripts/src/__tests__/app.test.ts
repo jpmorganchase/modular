@@ -21,8 +21,6 @@ const { getNodeText } = queries;
 
 const modularRoot = getModularRoot();
 
-// These tests must be executed sequentially with `--runInBand`.
-
 const packagesPath = path.join(getModularRoot(), 'packages');
 
 function modular(str: string, opts: Record<string, unknown> = {}) {
