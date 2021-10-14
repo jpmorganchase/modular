@@ -91,6 +91,13 @@
   "resolutions": {
     "esbuild": "0.13.4"
   },
+  "jest": {
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/modular-site/",
+      "modular-views.macro/"
+    ]
+  },
   "modular": {
     "type": "root"
   },
