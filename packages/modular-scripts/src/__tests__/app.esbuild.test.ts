@@ -4,26 +4,13 @@ import tree from 'tree-view-for-tests';
 import path from 'path';
 import fs from 'fs-extra';
 import prettier from 'prettier';
+import { program } from '../program';
 
 import getModularRoot from '../utils/getModularRoot';
 
 const modularRoot = getModularRoot();
 
-// These tests must be executed sequentially with `--runInBand`.
-
 const packagesPath = path.join(getModularRoot(), 'packages');
-
-function modular(str: string, opts: Record<string, unknown> = {}) {
-  return execa('yarnpkg', ['modular', ...str.split(' ')], {
-    cwd: modularRoot,
-    cleanup: true,
-    // @ts-ignore
-    env: {
-      USE_MODULAR_ESBUILD: 'true',
-    },
-    ...opts,
-  });
-}
 
 function cleanup() {
   rimraf.sync(path.join(packagesPath, 'sample-esbuild-app'));
@@ -40,14 +27,35 @@ afterAll(cleanup);
 
 describe('when working with an app', () => {
   beforeAll(async () => {
-    await modular(
-      'add sample-esbuild-app --unstable-type app --unstable-name sample-esbuild-app',
-      { stdio: 'inherit' },
-    );
+    await program.parseAsync([
+      'node',
+      'modular',
+      'add',
+      'sample-esbuild-app',
+      '--unstable-type',
+      'app',
+      '--unstable-name',
+      'sample-esbuild-app',
+    ]);
 
-    await modular('build sample-esbuild-app', {
-      stdio: 'inherit',
-    });
+    const env = process.env as Record<string, string>;
+    const esbuildValue = env.USE_MODULAR_ESBUILD;
+    const nodeEnv = env.NODE_ENV;
+    try {
+      env.MODULAR_NO_MEMOIZE = 'true';
+      env.NODE_ENV = 'production';
+      env.USE_MODULAR_ESBUILD = 'true';
+      await program.parseAsync([
+        'node',
+        'modular',
+        'build',
+        'sample-esbuild-app',
+      ]);
+    } finally {
+      delete env.MODULAR_NO_MEMOIZE;
+      env.USE_MODULAR_ESBUILD = esbuildValue;
+      env.NODE_ENV = nodeEnv;
+    }
   });
 
   it('can add an app', () => {
@@ -86,7 +94,7 @@ describe('when working with an app', () => {
       ├─ index.css #1g5dmd3
       ├─ index.css.map
       ├─ index.html #ojdrji
-      ├─ index.js #gjna5x
+      ├─ index.js #1775dyp
       ├─ index.js.map
       ├─ logo-PGX3QVVN.svg #1okqmlj
       ├─ logo192.png #1nez7vk

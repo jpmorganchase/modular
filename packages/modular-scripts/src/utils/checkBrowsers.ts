@@ -38,6 +38,8 @@ async function shouldSetBrowsers(): Promise<boolean> {
 }
 
 export async function checkBrowsers(dir: string, retry = true): Promise<void> {
+  browserslist.clearCaches();
+
   const current = browserslist.loadConfig({ path: dir });
   if (current != null) {
     return Promise.resolve();
@@ -54,8 +56,6 @@ export async function checkBrowsers(dir: string, retry = true): Promise<void> {
 
       await fs.writeJson(filePath, pkg, { spaces: 2 });
 
-      browserslist.clearCaches();
-
       logger.log();
       logger.log(
         `${chalk.green('Set target browsers:')} ${chalk.cyan(
@@ -63,9 +63,9 @@ export async function checkBrowsers(dir: string, retry = true): Promise<void> {
         )}`,
       );
       logger.log();
-    } else {
-      return checkBrowsers(dir, false);
     }
+
+    return checkBrowsers(dir, false);
   } else {
     return Promise.reject(
       new Error(
