@@ -200,10 +200,11 @@ program
   .description(
     'Manually run modular checks against the current modular repository',
   )
+  .option('--fix', 'Run autofixers which are available.')
   .option('--verbose', 'Run yarn commands with --verbose set')
-  .action(async () => {
+  .action(async ({ fix }: { fix: boolean }) => {
     const { check } = await import('./check');
-    await check();
+    await check(fix);
     logger.log(chalk.green('Success!'));
   });
 
