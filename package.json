@@ -95,7 +95,7 @@
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/modular-site/",
-      "modular-views.macro/"
+      "/modular-views.macro/"
     ]
   },
   "modular": {
