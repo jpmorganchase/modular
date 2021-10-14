@@ -1,5 +1,24 @@
 # modular-scripts
 
+## 1.4.1
+
+### Patch Changes
+
+- [#917](https://github.com/jpmorganchase/modular/pull/917)
+  [`87e589a`](https://github.com/jpmorganchase/modular/commit/87e589a75613f1b398f0601af4eaab0c9a668642)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump esbuild from
+  0.13.4 to 0.13.6
+
+* [#911](https://github.com/jpmorganchase/modular/pull/911)
+  [`a7ef8d8`](https://github.com/jpmorganchase/modular/commit/a7ef8d8e77e056cd1b545a80c4a1c7b8a9c9d0f8)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump browserslist
+  from 4.17.3 to 4.17.4
+
+- [#912](https://github.com/jpmorganchase/modular/pull/912)
+  [`06326ba`](https://github.com/jpmorganchase/modular/commit/06326ba4d3777b872cb4dad56661c6e741b9aa87)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump esbuild from
+  0.13.4 to 0.13.5
+
 ## 1.4.0
 
 ### Minor Changes
