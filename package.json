@@ -46,7 +46,7 @@
     "@testing-library/dom": "8.9.0",
     "@testing-library/jest-dom": "5.14.1",
     "@testing-library/react": "12.1.2",
-    "@testing-library/user-event": "13.3.0",
+    "@testing-library/user-event": "13.4.1",
     "@types/babel-code-frame": "^6.20.5",
     "@types/babel-plugin-macros": "2.8.5",
     "@types/cross-spawn": "^6.0.2",
