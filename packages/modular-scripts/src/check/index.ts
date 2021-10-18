@@ -9,19 +9,24 @@ const CHECKS = [
 ];
 
 interface Check {
-  default(this: void): Promise<boolean>;
+  check(this: void): Promise<boolean>;
+  fix?(this: void): Promise<void>;
 }
 
-export async function check(): Promise<void> {
+export async function check(fix = false): Promise<void> {
   let failed = false;
 
   for (const checkName of CHECKS) {
     logger.debug('');
     logger.debug(`===== Running ${checkName} =====`);
-    const { default: verifyCheck } = (await import(`./${checkName}`)) as Check;
+    const checkCls = (await import(`./${checkName}`)) as Check;
+
+    if (fix && checkCls.fix) {
+      await checkCls.fix();
+    }
 
     // if the check returns false then we fail and show the error.
-    if (await verifyCheck()) {
+    if (await checkCls.check()) {
       continue;
     } else {
       failed = true;

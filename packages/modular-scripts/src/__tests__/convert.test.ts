@@ -33,7 +33,7 @@ describe('Converting a react app to modular app', () => {
     },
   };
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     tmpFolder = tmp.dirSync({ unsafeCleanup: true });
     tmpFolderPath = path.join(tmpFolder.name, tmpProjectName);
     await fs.mkdir(tmpFolderPath);
@@ -58,13 +58,10 @@ describe('Converting a react app to modular app', () => {
     await convert(tmpFolderPath);
   });
 
-  afterEach(() => {
+  afterAll(() => {
     tmpFolder.removeCallback();
     tmpFolderPath = '';
     mockedModularRoot.mockClear();
-  });
-
-  afterAll(() => {
     jest.clearAllMocks();
   });
 

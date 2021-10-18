@@ -5,7 +5,7 @@ import * as logger from '../utils/logger';
 import { ModularPackageJson } from '../utils/isModularType';
 import getModularRoot from '../utils/getModularRoot';
 
-export default async function verifyPrivateModularRoot(): Promise<boolean> {
+export async function check(): Promise<boolean> {
   const modularRoot = getModularRoot();
 
   const rootPackageJsonPath = path.join(modularRoot, 'package.json');

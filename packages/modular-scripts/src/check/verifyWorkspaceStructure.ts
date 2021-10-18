@@ -4,7 +4,7 @@ import getModularRoot from '../utils/getModularRoot';
 import getWorkspaceInfo from '../utils/getWorkspaceInfo';
 import * as logger from '../utils/logger';
 
-export default async function verifyWorkspaceStructure(): Promise<boolean> {
+export async function check(): Promise<boolean> {
   let valid = true;
   const workspace = await getWorkspaceInfo();
   const modularRoot = getModularRoot();
