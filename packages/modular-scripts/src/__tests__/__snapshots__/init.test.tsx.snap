@@ -13,11 +13,13 @@ Object {
   "author": "",
   "browserslist": Object {
     "development": Array [
+      "supports es6-module",
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version",
     ],
     "production": Array [
+      "supports es6-module",
       ">0.2%",
       "not dead",
       "not op_mini all",
