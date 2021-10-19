@@ -3,8 +3,9 @@ import chalk from 'chalk';
 import * as os from 'os';
 
 export const defaultBrowsers = {
-  production: ['>0.2%', 'not dead', 'not op_mini all'],
+  production: ['supports es6-module', '>0.2%', 'not dead', 'not op_mini all'],
   development: [
+    'supports es6-module',
     'last 1 chrome version',
     'last 1 firefox version',
     'last 1 safari version',
