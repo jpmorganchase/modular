@@ -7,6 +7,7 @@
 ---
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?)](https://github.com/jpmorganchase/modular/blob/main/CONTRIBUTING.md)
+[![NPM version](https://img.shields.io/npm/v/cliui.svg)](https://www.npmjs.com/package/cliui)
 ![Static](https://github.com/jpmorganchase/modular/actions/workflows/static.yml/badge.svg)
 ![Tests](https://github.com/jpmorganchase/modular/actions/workflows/test.yml/badge.svg)
 [![Coverage](https://coveralls.io/repos/github/jpmorganchase/modular/badge.svg?branch=main)](https://coveralls.io/github/jpmorganchase/modular?branch=main)
