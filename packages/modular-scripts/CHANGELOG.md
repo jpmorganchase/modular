@@ -1,5 +1,36 @@
 # modular-scripts
 
+## 1.5.0
+
+### Minor Changes
+
+- [#922](https://github.com/jpmorganchase/modular/pull/922)
+  [`8e94a2f`](https://github.com/jpmorganchase/modular/commit/8e94a2f7ff955862deec74db37bdd13e97671d25)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Implement autofixers
+  for browserslist setup as part of `modular check` via a `--fix` argument.
+
+### Patch Changes
+
+- [#932](https://github.com/jpmorganchase/modular/pull/932)
+  [`3d274a8`](https://github.com/jpmorganchase/modular/commit/3d274a8ceedf55fd002c43837ec06982442b798f)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump esbuild from
+  0.13.6 to 0.13.8
+
+* [#945](https://github.com/jpmorganchase/modular/pull/945)
+  [`60f0e29`](https://github.com/jpmorganchase/modular/commit/60f0e2920e981abb6b4222bbfe07c6dd12451136)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  @rollup/plugin-commonjs from 21.0.0 to 21.0.1
+
+- [#942](https://github.com/jpmorganchase/modular/pull/942)
+  [`d8335b2`](https://github.com/jpmorganchase/modular/commit/d8335b2821666225751315e61f33245965eb638b)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  @rollup/plugin-node-resolve from 13.0.5 to 13.0.6
+
+* [#923](https://github.com/jpmorganchase/modular/pull/923)
+  [`eacf4bc`](https://github.com/jpmorganchase/modular/commit/eacf4bc545b4616e088ff37a81a65f608214778b)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Fix for defaultbrowser
+  lists to handle syntax which is not supported in webpack from esbuild.
+
 ## 1.4.1
 
 ### Patch Changes
