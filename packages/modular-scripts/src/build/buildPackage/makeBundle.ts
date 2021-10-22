@@ -254,7 +254,7 @@ export async function makeBundle(
 
   // now actually write the bundles to disk
   // TODO: write to disk in the above check itself to prevent this 2nd pass
-  await bundle.write({
+  const { output: buildOutput } = await bundle.write({
     ...outputOptions,
     ...(preserveModules
       ? {
@@ -305,27 +305,18 @@ export async function makeBundle(
       },
     };
   } else {
+    const outputPath = buildOutput[0].fileName;
     outputFilesPackageJson = {
       // TODO: what of 'bin' fields?
       main: preserveModules
-        ? path.join(
-            `${outputDirectory}-cjs`,
-            main
-              .replace(/\.tsx?$/, '.js')
-              .replace(path.dirname(main) + '/', ''),
-          )
+        ? path.posix.join(`${outputDirectory}-cjs`, outputPath)
         : `${outputDirectory}-cjs/${paramCaseTarget + '.cjs.js'}`,
       module: preserveModules
-        ? path.join(
-            `${outputDirectory}-es`,
-            main
-              .replace(/\.tsx?$/, '.js')
-              .replace(path.dirname(main) + '/', ''),
-          )
+        ? path.posix.join(`${outputDirectory}-es`, outputPath)
         : `${outputDirectory}-es/${paramCaseTarget + '.es.js'}`,
-      typings: path.join(
+      typings: path.posix.join(
         `${outputDirectory}-types`,
-        path.relative('src', main).replace(/\.tsx?$/, '.d.ts'),
+        path.posix.relative('src', main).replace(/\.tsx?$/, '.d.ts'),
       ),
     };
   }
