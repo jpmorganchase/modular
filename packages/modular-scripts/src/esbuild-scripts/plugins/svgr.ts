@@ -48,7 +48,33 @@ function createPlugin(): esbuild.Plugin {
         };
       });
 
-      build.onLoad({ filter: /\.svg$/, namespace: 'file' }, (args) => {
+      build.onResolve({ filter: /\.svg$/, namespace: 'file' }, (args) => {
+        const pathName = path.join(args.resolveDir, args.path);
+        if (args.kind === 'url-token') {
+          return {
+            path: pathName,
+            namespace: 'modular-svgurl',
+          };
+        }
+
+        return {
+          path: pathName,
+          namespace: 'modular-svgr',
+        };
+      });
+
+      build.onLoad(
+        { filter: /\.svg$/, namespace: 'modular-svgurl' },
+        async (args) => {
+          const contents = await fs.readFile(args.path, 'utf8');
+          return {
+            contents,
+            loader: 'dataurl',
+          };
+        },
+      );
+
+      build.onLoad({ filter: /\.svg$/, namespace: 'modular-svgr' }, (args) => {
         const resolveDir = path.dirname(args.path);
         const relativePath = path.relative(resolveDir, args.path);
         return {
