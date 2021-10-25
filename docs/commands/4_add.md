@@ -14,7 +14,7 @@ Packages can currently be one of 3 types:
 
 - A View, which is a package that exports a React component by default. Views
   are primary, top-level components in `modular`. Read more about Views in
-  [this explainer](./views.md).
+  [this explainer](../concepts/views.md).
 
 - A typical javascript package. You can use this to create any other kind of
   utility, tool, or whatever your needs require you to do. As an example, you
