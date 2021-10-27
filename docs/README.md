@@ -19,4 +19,5 @@ developing, building and testing UI applications.
 
 ## Concepts
 
-- [Views](./concepts/views.md)
+- [Views](./concepts/viewg)
+- [Linting](./concepts/linting)
