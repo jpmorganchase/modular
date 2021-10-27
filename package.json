@@ -90,7 +90,8 @@
     "typescript": "4.4.4"
   },
   "resolutions": {
-    "esbuild": "0.13.8"
+    "esbuild": "0.13.8",
+    "ua-parser-js": "0.7.28"
   },
   "jest": {
     "coveragePathIgnorePatterns": [
