@@ -5,7 +5,7 @@ whiteboard or graphics tool of choice, the rectangles that you draw define the
 visual and semantic boundaries of these components. They usually correspond to
 some equivalent in your UI framework (e.g - In
 [React](https://reactjs.org/docs/components-and-props.html), these are defined
-as classes that extend from React.Component, or regular functions that return
+as classes that extend from `React.Component`, or regular functions that return
 JSX. In [Flutter](https://flutter.dev/docs/development/ui/widgets), these are
 classes that extend from different types of Views. In
 [Jetpack Compose](https://developer.android.com/jetpack#foundation-components),
