@@ -1,6 +1,7 @@
 ---
 has_children: true
 title: Commands
+nav_order: 2
 ---
 
 # Commands

@@ -1,3 +1,8 @@
+---
+nav_order: 1000
+title: Modular
+---
+
 # Modular
 
 Modular is designed to emulate `react-scripts` with an opinionated way of

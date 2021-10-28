@@ -1,3 +1,8 @@
+---
+title: 'Upgrading to 1.0'
+nav_order: 1
+---
+
 # Upgrading to 1.0.0
 
 ## Worktree Structure

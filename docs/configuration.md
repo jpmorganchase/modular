@@ -1,3 +1,7 @@
+---
+nav_order: 5
+---
+
 # Configuration
 
 Modular has minimal configuration because of it's philosophy. However there is a
