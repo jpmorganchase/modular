@@ -55,7 +55,7 @@ describe('WHEN running esbuild with the svgrPlugin', () => {
 
     it('SHOULD ouput the correct index.js', () => {
       let content = String(fs.readFileSync(path.join(outdir, 'index.js')));
-      content = content.replace(getModularRoot(), '');
+      content = content.replaceAll(getModularRoot(), '');
       expect(content).toMatchSnapshot();
     });
 
@@ -63,7 +63,7 @@ describe('WHEN running esbuild with the svgrPlugin', () => {
       let content = String(
         fs.readFileSync(path.join(outdir, 'logo-5JCTDEME.svg')),
       );
-      content = content.replace(getModularRoot(), '');
+      content = content.replaceAll(getModularRoot(), '');
       expect(content).toMatchSnapshot();
     });
   });
@@ -111,7 +111,7 @@ describe('WHEN running esbuild with the svgrPlugin', () => {
 
     it('SHOULD ouput the correct index.js', () => {
       let content = String(fs.readFileSync(path.join(outdir, 'index.js')));
-      content = content.replace(getModularRoot(), '');
+      content = content.replaceAll(getModularRoot(), '');
       expect(content).toMatchSnapshot();
     });
   });
@@ -160,13 +160,13 @@ describe('WHEN running esbuild with the svgrPlugin', () => {
 
     it('SHOULD ouput the correct index.js', () => {
       let content = String(fs.readFileSync(path.join(outdir, 'index.js')));
-      content = content.replace(getModularRoot(), '');
+      content = content.replaceAll(getModularRoot(), '');
       expect(content).toMatchSnapshot();
     });
 
     it('SHOULD ouput the correct index.css', () => {
       let content = String(fs.readFileSync(path.join(outdir, 'index.css')));
-      content = content.replace(getModularRoot(), '');
+      content = content.replaceAll(getModularRoot(), '');
       expect(content).toMatchSnapshot();
     });
   });
