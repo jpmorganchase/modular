@@ -55,12 +55,12 @@ function createPlugin(): esbuild.Plugin {
             path: pathName,
             namespace: 'modular-svgurl',
           };
+        } else {
+          return {
+            path: pathName,
+            namespace: 'modular-svgr',
+          };
         }
-
-        return {
-          path: pathName,
-          namespace: 'modular-svgr',
-        };
       });
 
       build.onLoad(
