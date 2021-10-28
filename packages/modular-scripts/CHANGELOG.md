@@ -1,5 +1,21 @@
 # modular-scripts
 
+## 1.6.0
+
+### Minor Changes
+
+- [#963](https://github.com/jpmorganchase/modular/pull/963)
+  [`e44284a`](https://github.com/jpmorganchase/modular/commit/e44284a51ebf9038270d78fb339d45de58cb8254)
+  Thanks [@joshwooding](https://github.com/joshwooding)! - Support svg urls in
+  css files
+
+### Patch Changes
+
+- [#952](https://github.com/jpmorganchase/modular/pull/952)
+  [`ae85dc8`](https://github.com/jpmorganchase/modular/commit/ae85dc87bf5ecd2aed3ab2976a1abce71d890392)
+  Thanks [@joshwooding](https://github.com/joshwooding)! - Fix invalid
+  package.json main and module paths in library builds
+
 ## 1.5.0
 
 ### Minor Changes
