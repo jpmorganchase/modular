@@ -1,3 +1,7 @@
+---
+parent: Concepts
+---
+
 # Linting
 
 Projects created with

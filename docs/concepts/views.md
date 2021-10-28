@@ -1,3 +1,7 @@
+---
+parent: Concepts
+---
+
 ## Views
 
 User Interfaces are made of components. When you sketch a wireframe on a
