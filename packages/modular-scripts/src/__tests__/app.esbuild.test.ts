@@ -129,10 +129,10 @@ describe('when working with an app', () => {
   type SourceMap = Record<string, string | string[]>;
 
   const normalizeSource = (pathName: string) => {
-    if (pathName.startsWith('svgr')) {
-      return `svgr:${path.relative(
+    if (pathName.includes('svgr:')) {
+      return `${pathName.split(':')[0]}:${path.relative(
         getModularRoot(),
-        pathName.slice('svgr:'.length),
+        pathName.split(':')[1],
       )}`;
     } else {
       return pathName;

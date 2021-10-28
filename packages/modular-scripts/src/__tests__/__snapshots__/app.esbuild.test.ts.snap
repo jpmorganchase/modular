@@ -17420,7 +17420,7 @@ Object {
     "../../node_modules/react-dom/index.js",
     "../../packages/sample-esbuild-app/src/index.tsx",
     "../../packages/sample-esbuild-app/src/App.tsx",
-    "../../packages/sample-esbuild-app/src/logo.svg",
+    "modular-svgr:packages/sample-esbuild-app/src/logo.svg",
     "svgr:packages/sample-esbuild-app/src/logo.svg",
   ],
   "sourcesContent": Array [

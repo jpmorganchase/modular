@@ -1,0 +1,71 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WHEN running esbuild with the svgrPlugin WHEN there's a component import SHOULD ouput the correct index.js 1`] = `
+"// svgr:/packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-component/logo.svg
+import {
+  createElement
+} from \\"react\\";
+function SvgComponent(props) {
+  return /* @__PURE__ */ createElement(\\"svg\\", {
+    viewBox: \\"0 0 100 100\\",
+    xmlns: \\"http://www.w3.org/2000/svg\\",
+    ...props
+  }, /* @__PURE__ */ createElement(\\"circle\\", {
+    cx: 50,
+    cy: 50,
+    r: 50
+  }));
+}
+var logo_default = SvgComponent;
+
+// packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-component/index.tsx
+import React2 from \\"react\\";
+import ReactDOM from \\"react-dom\\";
+ReactDOM.render(/* @__PURE__ */ React2.createElement(logo_default, {
+  title: \\"logo\\"
+}), document.body);
+"
+`;
+
+exports[`WHEN running esbuild with the svgrPlugin WHEN there's a dataurl import SHOULD ouput the correct index.css 1`] = `
+"/* packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-dataurl/index.css */
+.app {
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI1MCIvPgo8L3N2Zz4=);
+}
+"
+`;
+
+exports[`WHEN running esbuild with the svgrPlugin WHEN there's a dataurl import SHOULD ouput the correct index.js 1`] = `
+"// packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-dataurl/index.tsx
+import React from \\"react\\";
+import ReactDOM from \\"react-dom\\";
+ReactDOM.render(/* @__PURE__ */ React.createElement(\\"div\\", {
+  className: \\"app\\"
+}), document.body);
+"
+`;
+
+exports[`WHEN running esbuild with the svgrPlugin WHEN there's a url import SHOULD ouput the correct index.js 1`] = `
+"// svgurl:/packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-url/logo.svg
+var logo_default = \\"./logo-5JCTDEME.svg\\";
+
+// svgr:/packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-url/logo.svg
+import {
+  createElement
+} from \\"react\\";
+
+// packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-url/index.tsx
+import React2 from \\"react\\";
+import ReactDOM from \\"react-dom\\";
+ReactDOM.render(/* @__PURE__ */ React2.createElement(\\"img\\", {
+  src: logo_default,
+  alt: \\"logo\\"
+}), document.body);
+"
+`;
+
+exports[`WHEN running esbuild with the svgrPlugin WHEN there's a url import SHOULD ouput the correct logo.svg 1`] = `
+"<svg viewBox=\\"0 0 100 100\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+  <circle cx=\\"50\\" cy=\\"50\\" r=\\"50\\"/>
+</svg>"
+`;
