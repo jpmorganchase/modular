@@ -1,6 +1,6 @@
 ---
 title: 'Upgrading to 1.0'
-nav_order: 1
+nav_order: 1000
 ---
 
 # Upgrading to 1.0.0
