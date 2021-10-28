@@ -5,19 +5,19 @@ developing, building and testing UI applications.
 
 ## Commands
 
-- [`init`](./commands/1_init)
-- [`workspace`](./commands/2_workspace)
-- [`check`](./commands/3_check)
-- [`add`](./commands/4_add)
-- [`start`](./commands/5_start)
-- [`test`](./commands/6_test)
-- [`build`](./commands/7_build)
-- [`convert`](./commands/8_convert)
-- [`port`](./commands/9_port)
-- [`typecheck`](./commands/10_typecheck)
-- [`lint`](./commands/11_lint)
+- [`init`](./commands/1_init.md)
+- [`workspace`](./commands/2_workspace.md)
+- [`check`](./commands/3_check.md)
+- [`add`](./commands/4_add.md)
+- [`start`](./commands/5_start.md)
+- [`test`](./commands/6_test.md)
+- [`build`](./commands/7_build.md)
+- [`convert`](./commands/8_convert.md)
+- [`port`](./commands/9_port.md)
+- [`typecheck`](./commands/10_typecheck.md)
+- [`lint`](./commands/11_lint.md)
 
 ## Concepts
 
-- [Views](./concepts/viewg)
-- [Linting](./concepts/linting)
+- [Views](./concepts/viewg.md)
+- [Linting](./concepts/linting.md)
