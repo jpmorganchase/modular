@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`When running a build with incremental compile WHEN the build is run SHOULD have logger buffer output 1`] = `
+Array [
+  "</CLEAR>",
+  "Compiling...",
+  "</CLEAR>",
+  "[32mCompiled successfully![39m [2m[249ms][22m",
+  "You can now view [1mmodular[22m in the browser.",
+  "  https://localhost:[1m8080[22m/",
+  "Note that the development build is not optimized.",
+  "To create a production build, use [36myarn build[39m.",
+]
+`;

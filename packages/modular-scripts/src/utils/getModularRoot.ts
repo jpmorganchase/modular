@@ -37,6 +37,7 @@ function getModularRoot(): string {
     logger.debug(`Located modular root ${modularRoot}`);
     return modularRoot;
   } catch (err) {
+    console.log(logger);
     throw new Error(err as string);
   }
 }
