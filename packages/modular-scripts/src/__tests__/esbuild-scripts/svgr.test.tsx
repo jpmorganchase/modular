@@ -45,9 +45,10 @@ describe('WHEN running esbuild with the svgrPlugin', () => {
     });
 
     it('SHOULD have the correct output structure', () => {
-      expect(tree(outdir)).toMatchInlineSnapshot(`
+      expect(tree(outdir, { hashIgnores: ['index.js'] }))
+        .toMatchInlineSnapshot(`
         "output
-        ├─ index.js #1v4fxps
+        ├─ index.js
         └─ logo-5JCTDEME.svg #lzkq0q"
       `);
     });
@@ -101,9 +102,10 @@ describe('WHEN running esbuild with the svgrPlugin', () => {
     });
 
     it('SHOULD have the correct output structure', () => {
-      expect(tree(outdir)).toMatchInlineSnapshot(`
+      expect(tree(outdir, { hashIgnores: ['index.js'] }))
+        .toMatchInlineSnapshot(`
         "output
-        └─ index.js #orofx7"
+        └─ index.js"
       `);
     });
 
@@ -148,10 +150,11 @@ describe('WHEN running esbuild with the svgrPlugin', () => {
     });
 
     it('SHOULD have the correct output structure', () => {
-      expect(tree(outdir)).toMatchInlineSnapshot(`
+      expect(tree(outdir, { hashIgnores: ['index.js'] }))
+        .toMatchInlineSnapshot(`
         "output
         ├─ index.css #5f8lem
-        └─ index.js #cwtmgr"
+        └─ index.js"
       `);
     });
 
