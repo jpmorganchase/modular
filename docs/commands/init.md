@@ -1,3 +1,7 @@
+---
+parent: Commands
+---
+
 # `modular init`
 
 Initializes a modular root type package.json in the current directory with

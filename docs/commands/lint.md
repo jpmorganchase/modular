@@ -1,3 +1,7 @@
+---
+parent: Commands
+---
+
 # `modular lint`
 
 `modular lint` will check the diff between the current branch and your remote

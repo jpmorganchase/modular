@@ -1,3 +1,7 @@
+---
+parent: Commands
+---
+
 # `modular check`
 
 Checks the modular root repo has yarn workspaces and modular packages are set up

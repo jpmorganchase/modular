@@ -1,3 +1,7 @@
+---
+parent: Commands
+---
+
 # `modular workspace`
 
 Prints an extension of `yarn workspaces info` to the console. Extended with

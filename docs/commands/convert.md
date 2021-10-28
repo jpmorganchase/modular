@@ -1,3 +1,7 @@
+---
+parent: Commands
+---
+
 # `modular convert`
 
 Converts the react app in the current directory into a modular project with a

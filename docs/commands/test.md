@@ -1,3 +1,7 @@
+---
+parent: Commands
+---
+
 # `modular test`
 
 `test` is an opionated wrapper around [`jest`](https://jestjs.io/) which runs

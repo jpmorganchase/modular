@@ -1,3 +1,7 @@
+---
+parent: Commands
+---
+
 # `modular add <packagePath>`
 
 Adds a new package by creating a new workspace at `packages/<packagePath>`

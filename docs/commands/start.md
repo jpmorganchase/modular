@@ -1,3 +1,7 @@
+---
+parent: Commands
+---
+
 # `modular start <packageName>`
 
 Runs

@@ -1,3 +1,7 @@
+---
+parent: Commands
+---
+
 # `modular build <packageName>`
 
 Searches by the name of the package indicated in the `package.json` file in the

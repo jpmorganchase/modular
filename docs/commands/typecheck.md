@@ -1,3 +1,7 @@
+---
+parent: Commands
+---
+
 # `modular typecheck`
 
 `modular typecheck` will programmatically report the semantic, syntactic, and
