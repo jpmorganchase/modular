@@ -27,12 +27,20 @@ export function esbuildMeasureFileSizesBeforeBuild(
         resolve(
           fileNames
             .filter(canReadAsset)
-            .reduce<Record<string, number>>((memo, fileName) => {
-              let contents = fs.readFileSync(fileName);
-              let key = removeFileNameHash(
-                path.relative(buildFolder, fileName),
+            .reduce<Record<string, number>>((memo, absoluteFilePath) => {
+              const filePath = path.relative(buildFolder, absoluteFilePath);
+
+              const contents = fs.readFileSync(absoluteFilePath);
+              const folder = path.join(
+                path.basename(buildFolder),
+                path.dirname(filePath),
               );
+              const name = path.basename(filePath);
+
+              const key = `${folder}/${removeFileNameHash(name)}`;
+
               memo[key] = gzipSize(contents);
+
               return memo;
             }, {}),
         );
@@ -47,18 +55,23 @@ export function createEsbuildAssets(
 ): Asset[] {
   const readableAssets = Object.keys(stats.outputs)
     .map((name) => {
-      return path.join(paths.appPath, name);
+      return path.relative(paths.appBuild, path.join(paths.appPath, name));
     })
     .filter(canReadAsset);
 
   return readableAssets
-    .map<Asset>((name) => {
-      const fileContents = fs.readFileSync(name);
+    .map<Asset>((filePath) => {
+      const fileContents = fs.readFileSync(path.join(paths.appBuild, filePath));
       const size = gzipSize(fileContents);
+      const folder = path.join(
+        path.basename(paths.appBuild),
+        path.dirname(filePath),
+      );
+      const name = path.basename(filePath);
       return {
-        folder: path.join(path.basename(paths.appBuild), path.dirname(name)),
-        name: path.basename(name),
-        normalizedName: removeFileNameHash(name),
+        folder,
+        name,
+        normalizedName: `${folder}/${removeFileNameHash(name)}`,
         size: size,
       };
     })
