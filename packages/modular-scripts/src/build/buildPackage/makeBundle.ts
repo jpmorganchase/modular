@@ -52,10 +52,7 @@ export async function makeBundle(
 
   const packageJson = packageJsonsByPackagePath[packagePath];
 
-  const { main, compilingBin } = await getPackageEntryPoints(
-    packagePath,
-    includePrivate,
-  );
+  const main = await getPackageEntryPoints(packagePath, includePrivate);
 
   logger.log(`building ${target}...`);
 
@@ -286,59 +283,39 @@ export async function makeBundle(
     exports: 'auto',
   });
 
-  if (!compilingBin) {
-    await bundle.write({
-      ...outputOptions,
-      ...(preserveModules
-        ? {
-            preserveModules: true,
-            dir: path.join(targetOutputDirectory, `${outputDirectory}-es`),
-          }
-        : {
-            file: path.join(
-              targetOutputDirectory,
-              `${outputDirectory}-es`,
-              paramCaseTarget + '.es.js',
-            ),
-          }),
-      format: 'es',
-      exports: 'auto',
-    });
-  }
+  await bundle.write({
+    ...outputOptions,
+    ...(preserveModules
+      ? {
+          preserveModules: true,
+          dir: path.join(targetOutputDirectory, `${outputDirectory}-es`),
+        }
+      : {
+          file: path.join(
+            targetOutputDirectory,
+            `${outputDirectory}-es`,
+            paramCaseTarget + '.es.js',
+          ),
+        }),
+    format: 'es',
+    exports: 'auto',
+  });
 
-  let outputFilesPackageJson: Partial<ModularPackageJson>;
-  if (compilingBin && packageJson.bin) {
-    const binName = Object.keys(packageJson.bin)[0];
-    const binPath = main
-      .replace(/\.tsx?$/, '.js')
-      .replace(path.dirname(main) + '/', '');
-
-    outputFilesPackageJson = {
-      bin: {
-        [binName]: binPath,
-      },
-    };
-  } else {
-    const outputPath = buildOutput[0].fileName;
-    outputFilesPackageJson = {
-      // TODO: what of 'bin' fields?
-      main: preserveModules
-        ? path.posix.join(`${outputDirectory}-cjs`, outputPath)
-        : `${outputDirectory}-cjs/${paramCaseTarget + '.cjs.js'}`,
-      module: preserveModules
-        ? path.posix.join(`${outputDirectory}-es`, outputPath)
-        : `${outputDirectory}-es/${paramCaseTarget + '.es.js'}`,
-      typings: path.posix.join(
-        `${outputDirectory}-types`,
-        path.posix.relative('src', main).replace(/\.tsx?$/, '.d.ts'),
-      ),
-    };
-  }
+  const outputPath = buildOutput[0].fileName;
 
   // return the public facing package.json that we'll write to disk later
   return {
     ...packageJson,
-    ...outputFilesPackageJson,
+    main: preserveModules
+      ? path.posix.join(`${outputDirectory}-cjs`, outputPath)
+      : `${outputDirectory}-cjs/${paramCaseTarget + '.cjs.js'}`,
+    module: preserveModules
+      ? path.posix.join(`${outputDirectory}-es`, outputPath)
+      : `${outputDirectory}-es/${paramCaseTarget + '.es.js'}`,
+    typings: path.posix.join(
+      `${outputDirectory}-types`,
+      path.posix.relative('src', main).replace(/\.tsx?$/, '.d.ts'),
+    ),
     dependencies: {
       ...packageJson.dependencies,
       ...localImports,
