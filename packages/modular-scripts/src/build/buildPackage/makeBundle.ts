@@ -11,8 +11,9 @@ import json from '@rollup/plugin-json';
 import postcss from 'rollup-plugin-postcss';
 import resolve from '@rollup/plugin-node-resolve';
 
-import getPrefixedLogger from '../../utils/getPrefixedLogger';
 import { getPackageEntryPoints } from './getPackageEntryPoints';
+
+import getPrefixedLogger from '../../utils/getPrefixedLogger';
 import getPackageMetadata from '../../utils/getPackageMetadata';
 import getModularRoot from '../../utils/getModularRoot';
 import { ModularPackageJson } from '../../utils/isModularType';
@@ -158,6 +159,12 @@ export async function makeBundle(
   // even in a patch, and it'll break your code and you wouldn't know why.
   const missingDependencies: Set<string> = new Set();
 
+  // get all the names of the files we outputted to make sure they're included
+  // in the missing dep check
+  const chunkOrAssetFileNames = new Set<string>(
+    output.map((chunkOfAsset) => chunkOfAsset.fileName),
+  );
+
   for (const chunkOrAsset of output) {
     if (chunkOrAsset.type === 'asset') {
       // TODO: what should happen here?
@@ -219,7 +226,15 @@ export async function makeBundle(
               // let's collect its name and throw an error later
               // TODO: if it's in root's dev dependencies, should throw a
               // different kind of error
-              if (!builtinModules.includes(importedPackage)) {
+              if (
+                !builtinModules.includes(importedPackage) &&
+                // In the case that the importedPackage is contained in the
+                // files outputted by the bundle write then the import name
+                // is a dynamic import which generated a file split. This is
+                // perfectly file since we know the file exists from the bundle
+                // write phase.
+                !chunkOrAssetFileNames.has(importedPackage)
+              ) {
                 // save filename to remove from missingDeps later
                 // if they exist there
                 localFileNames.add(chunkOrAsset.fileName);
@@ -245,11 +260,10 @@ export async function makeBundle(
   ].filter((dep) => !localFileNames.has(dep));
 
   if (missingDependenciesWithoutLocalFileNames.length > 0) {
-    throw new Error(
-      `Missing dependencies: ${missingDependenciesWithoutLocalFileNames.join(
-        ', ',
-      )};`,
-    );
+    missingDependenciesWithoutLocalFileNames.forEach((missingImport) => {
+      logger.error(`  ${missingImport}`);
+    });
+    throw new Error(`Missing dependencies found.`);
   }
 
   // now actually write the bundles to disk
