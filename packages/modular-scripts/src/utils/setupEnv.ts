@@ -43,6 +43,11 @@ export async function setupEnvForDirectory(dirName: string): Promise<void> {
 export default async function setupEnv(
   env: typeof process.env.NODE_ENV,
 ): Promise<void> {
+  // setup verbose Logging
+  // @ts-ignore
+  process.env.MODULAR_LOGGER_DEBUG =
+    process.env.MODULAR_LOGGER_DEBUG || process.argv.includes('--verbose');
+
   // We support resolving modules according to `NODE_PATH`.
   // This lets you use absolute paths in imports inside large monorepos:
   // https://github.com/facebook/create-react-app/issues/253.
@@ -61,6 +66,13 @@ export default async function setupEnv(
   // @ts-ignore
   process.env.NODE_ENV = env;
   process.env.BABEL_ENV = env;
+
+  // in the case that NODE_ENV is test then we actually will assume for browserslist
+  // that we're running production builds
+  // @ts-ignore
+  process.env.BROWSERSLIST_ENV =
+    process.env.BROWSERSLIST_ENV ||
+    (process.env.NODE_ENV === 'test' ? 'production' : process.env.NODE_ENV);
 
   await setupEnvForDirectory(getModularRoot());
 }

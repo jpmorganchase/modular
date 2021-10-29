@@ -1,5 +1,11 @@
 # eslint-config-modular-app
 
+## 1.0.11
+
+### Patch Changes
+
+- aea20e9: Bump eslint-plugin-import from 2.24.2 to 2.25.2
+
 ## 1.0.10
 
 ### Patch Changes

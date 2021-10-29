@@ -1,8 +1,25 @@
+---
+parent: Commands
+title: modular test
+---
+
 # `modular test`
 
 `test` is an opionated wrapper around [`jest`](https://jestjs.io/) which runs
 tests against the entire `modular` project. It comes with out-of-the-box
 configuration and opinionation.
+
+## Configuration
+
+### `modular/setupEnvironment.ts`
+
+This contains the setup for tests corresponding to
+[`jest.config.js#setupFiles`](https://jestjs.io/docs/en/configuration#setupfiles-array).
+
+### `modular/setupTests.ts`
+
+This contains the setup for tests corresponding to
+[`jest.config.js#setupFilesAfterEnv`](https://jestjs.io/docs/en/configuration#setupfilesafterenv-array).
 
 ## Escape Hatches
 

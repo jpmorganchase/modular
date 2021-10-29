@@ -28,6 +28,10 @@ const typescriptFormatter = require('../../react-dev-utils/typescriptFormatter')
 const postcssNormalize = require('postcss-normalize');
 const isCI = require('is-ci');
 
+const esbuildTargetFactory = process.env.ESBUILD_TARGET_FACTORY
+  ? JSON.parse(process.env.ESBUILD_TARGET_FACTORY)
+  : 'es2015';
+
 const appPackageJson = require(paths.appPackageJson);
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
@@ -387,7 +391,7 @@ module.exports = function (webpackEnv) {
               options: {
                 implementation: require('esbuild'),
                 loader: 'tsx',
-                target: 'es2015',
+                target: esbuildTargetFactory,
               },
             },
             {
@@ -397,7 +401,7 @@ module.exports = function (webpackEnv) {
               options: {
                 implementation: require('esbuild'),
                 loader: 'ts',
-                target: 'es2015',
+                target: esbuildTargetFactory,
               },
             },
             {
@@ -407,7 +411,7 @@ module.exports = function (webpackEnv) {
               options: {
                 implementation: require('esbuild'),
                 loader: 'tsx',
-                target: 'es2015',
+                target: esbuildTargetFactory,
               },
             },
             // "postcss" loader applies autoprefixer to our CSS.
@@ -692,7 +696,7 @@ module.exports = function (webpackEnv) {
         require.resolve(plugin.package);
       } catch (err) {
         console.info(
-          `${chalk.grey('[modular]')} It appears you're using ${chalk.cyan(
+          `${chalk.dim('[modular]')} It appears you're using ${chalk.cyan(
             dependency,
           )}. Run ${chalk.cyan.bold(
             `yarn add -D ${plugin.package}`,

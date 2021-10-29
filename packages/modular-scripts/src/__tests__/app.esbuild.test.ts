@@ -86,7 +86,7 @@ describe('when working with an app', () => {
       ├─ index.css #1g5dmd3
       ├─ index.css.map
       ├─ index.html #ojdrji
-      ├─ index.js #1a9ck58
+      ├─ index.js #gjna5x
       ├─ index.js.map
       ├─ logo-PGX3QVVN.svg #1okqmlj
       ├─ logo192.png #1nez7vk
@@ -129,10 +129,10 @@ describe('when working with an app', () => {
   type SourceMap = Record<string, string | string[]>;
 
   const normalizeSource = (pathName: string) => {
-    if (pathName.startsWith('svgr')) {
-      return `svgr:${path.relative(
+    if (pathName.includes('svgr:')) {
+      return `${pathName.split(':')[0]}:${path.relative(
         getModularRoot(),
-        pathName.slice('svgr:'.length),
+        pathName.split(':')[1],
       )}`;
     } else {
       return pathName;

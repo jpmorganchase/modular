@@ -21,19 +21,32 @@
     "postinstall": "patch-package",
     "typecheck": "yarn modular typecheck"
   },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "dependencies": {
     "@babel/cli": "7.15.7",
     "@babel/core": "7.15.8",
     "@babel/preset-env": "7.15.8",
     "@babel/preset-react": "7.14.5",
     "@babel/preset-typescript": "7.15.0",
+    "@changesets/changelog-github": "^0.4.1",
     "@changesets/cli": "2.17.0",
     "@schemastore/package": "0.0.6",
     "@schemastore/tsconfig": "0.0.9",
-    "@testing-library/dom": "8.7.2",
+    "@testing-library/dom": "8.10.1",
     "@testing-library/jest-dom": "5.14.1",
     "@testing-library/react": "12.1.2",
-    "@testing-library/user-event": "13.3.0",
+    "@testing-library/user-event": "13.5.0",
     "@types/babel-code-frame": "^6.20.5",
     "@types/babel-plugin-macros": "2.8.5",
     "@types/cross-spawn": "^6.0.2",
@@ -50,19 +63,19 @@
     "@types/parse5": "^6.0.1",
     "@types/prompts": "2.0.14",
     "@types/puppeteer": "5.4.4",
-    "@types/react": "17.0.28",
-    "@types/react-dom": "17.0.9",
+    "@types/react": "17.0.31",
+    "@types/react-dom": "17.0.10",
     "@types/recursive-readdir": "^2.2.0",
     "@types/rimraf": "3.0.2",
-    "@types/semver": "7.3.8",
+    "@types/semver": "7.3.9",
     "@types/semver-regex": "^3.1.0",
-    "@types/tmp": "0.2.1",
+    "@types/tmp": "0.2.2",
     "@types/update-notifier": "5.1.0",
     "commander": "8.2.0",
-    "esbuild": "0.13.4",
+    "esbuild": "0.13.8",
     "eslint": "7.32.0",
     "execa": "5.1.1",
-    "husky": "7.0.2",
+    "husky": "7.0.4",
     "is-ci": "2.0.0",
     "lint-staged": "11.2.3",
     "micromatch": "4.0.4",
@@ -73,11 +86,20 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "semver": "7.3.5",
-    "ts-node": "10.3.0",
-    "typescript": "4.4.3"
+    "string.prototype.replaceall": "^1.0.6",
+    "ts-node": "10.4.0",
+    "typescript": "4.4.4"
   },
   "resolutions": {
-    "esbuild": "0.13.4"
+    "esbuild": "0.13.8",
+    "ua-parser-js": "0.7.28"
+  },
+  "jest": {
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/modular-site/",
+      "/modular-views.macro/"
+    ]
   },
   "modular": {
     "type": "root"

@@ -99,6 +99,18 @@ describe('create-modular-react-app', () => {
     ).toMatchInlineSnapshot(`
       Object {
         "author": "?",
+        "browserslist": Object {
+          "development": Array [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version",
+          ],
+          "production": Array [
+            ">0.2%",
+            "not dead",
+            "not op_mini all",
+          ],
+        },
         "dependencies": Object {
           "@testing-library/dom": "?",
           "@testing-library/jest-dom": "?",
@@ -149,29 +161,17 @@ describe('create-modular-react-app', () => {
         path.join(destination, 'packages', 'app', 'package.json'),
       ),
     ).toMatchInlineSnapshot(`
-                  Object {
-                    "author": "?",
-                    "browserslist": Object {
-                      "development": Array [
-                        "last 1 chrome version",
-                        "last 1 firefox version",
-                        "last 1 safari version",
-                      ],
-                      "production": Array [
-                        ">0.2%",
-                        "not dead",
-                        "not op_mini all",
-                      ],
-                    },
-                    "dependencies": Object {},
-                    "modular": Object {
-                      "type": "app",
-                    },
-                    "name": "app",
-                    "private": true,
-                    "version": "0.1.0",
-                  }
-              `);
+      Object {
+        "author": "?",
+        "dependencies": Object {},
+        "modular": Object {
+          "type": "app",
+        },
+        "name": "app",
+        "private": true,
+        "version": "0.1.0",
+      }
+    `);
   });
   it('should create a project with prefer offline', async () => {
     await createModularApp({ name: destination, preferOffline: true });
@@ -220,6 +220,18 @@ describe('create-modular-react-app', () => {
     ).toMatchInlineSnapshot(`
       Object {
         "author": "?",
+        "browserslist": Object {
+          "development": Array [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version",
+          ],
+          "production": Array [
+            ">0.2%",
+            "not dead",
+            "not op_mini all",
+          ],
+        },
         "dependencies": Object {
           "@testing-library/dom": "?",
           "@testing-library/jest-dom": "?",
@@ -270,29 +282,17 @@ describe('create-modular-react-app', () => {
         path.join(destination, 'packages', 'app', 'package.json'),
       ),
     ).toMatchInlineSnapshot(`
-                  Object {
-                    "author": "?",
-                    "browserslist": Object {
-                      "development": Array [
-                        "last 1 chrome version",
-                        "last 1 firefox version",
-                        "last 1 safari version",
-                      ],
-                      "production": Array [
-                        ">0.2%",
-                        "not dead",
-                        "not op_mini all",
-                      ],
-                    },
-                    "dependencies": Object {},
-                    "modular": Object {
-                      "type": "app",
-                    },
-                    "name": "app",
-                    "private": true,
-                    "version": "0.1.0",
-                  }
-              `);
+      Object {
+        "author": "?",
+        "dependencies": Object {},
+        "modular": Object {
+          "type": "app",
+        },
+        "name": "app",
+        "private": true,
+        "version": "0.1.0",
+      }
+    `);
   });
   it('should create a project without git metadata', async () => {
     await createModularApp({

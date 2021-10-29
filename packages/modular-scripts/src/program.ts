@@ -65,6 +65,7 @@ program
     'Preserve module structure in generated modules',
     'true',
   )
+  .option('--verbose', 'Run yarn commands with --verbose set')
   .option('--private', 'Enable the building of private packages', false)
   .action(
     async (
@@ -154,6 +155,7 @@ program
   .description(
     `Start a dev-server for an app. Only available for modular 'app' types.`,
   )
+  .option('--verbose', 'Run yarn commands with --verbose set')
   .action(async (packageName: string) => {
     const { default: start } = await import('./start');
     return start(packageName);
@@ -198,9 +200,11 @@ program
   .description(
     'Manually run modular checks against the current modular repository',
   )
-  .action(async () => {
+  .option('--fix', 'Run autofixers which are available.')
+  .option('--verbose', 'Run yarn commands with --verbose set')
+  .action(async ({ fix }: { fix: boolean }) => {
     const { check } = await import('./check');
-    await check();
+    await check(fix);
     logger.log(chalk.green('Success!'));
   });
 

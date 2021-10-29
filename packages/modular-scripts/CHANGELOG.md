@@ -1,5 +1,82 @@
 # modular-scripts
 
+## 1.6.0
+
+### Minor Changes
+
+- [#963](https://github.com/jpmorganchase/modular/pull/963)
+  [`e44284a`](https://github.com/jpmorganchase/modular/commit/e44284a51ebf9038270d78fb339d45de58cb8254)
+  Thanks [@joshwooding](https://github.com/joshwooding)! - Support svg urls in
+  css files
+
+### Patch Changes
+
+- [#952](https://github.com/jpmorganchase/modular/pull/952)
+  [`ae85dc8`](https://github.com/jpmorganchase/modular/commit/ae85dc87bf5ecd2aed3ab2976a1abce71d890392)
+  Thanks [@joshwooding](https://github.com/joshwooding)! - Fix invalid
+  package.json main and module paths in library builds
+
+## 1.5.0
+
+### Minor Changes
+
+- [#922](https://github.com/jpmorganchase/modular/pull/922)
+  [`8e94a2f`](https://github.com/jpmorganchase/modular/commit/8e94a2f7ff955862deec74db37bdd13e97671d25)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Implement autofixers
+  for browserslist setup as part of `modular check` via a `--fix` argument.
+
+### Patch Changes
+
+- [#932](https://github.com/jpmorganchase/modular/pull/932)
+  [`3d274a8`](https://github.com/jpmorganchase/modular/commit/3d274a8ceedf55fd002c43837ec06982442b798f)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump esbuild from
+  0.13.6 to 0.13.8
+
+* [#945](https://github.com/jpmorganchase/modular/pull/945)
+  [`60f0e29`](https://github.com/jpmorganchase/modular/commit/60f0e2920e981abb6b4222bbfe07c6dd12451136)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  @rollup/plugin-commonjs from 21.0.0 to 21.0.1
+
+- [#942](https://github.com/jpmorganchase/modular/pull/942)
+  [`d8335b2`](https://github.com/jpmorganchase/modular/commit/d8335b2821666225751315e61f33245965eb638b)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  @rollup/plugin-node-resolve from 13.0.5 to 13.0.6
+
+* [#923](https://github.com/jpmorganchase/modular/pull/923)
+  [`eacf4bc`](https://github.com/jpmorganchase/modular/commit/eacf4bc545b4616e088ff37a81a65f608214778b)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Fix for defaultbrowser
+  lists to handle syntax which is not supported in webpack from esbuild.
+
+## 1.4.1
+
+### Patch Changes
+
+- [#917](https://github.com/jpmorganchase/modular/pull/917)
+  [`87e589a`](https://github.com/jpmorganchase/modular/commit/87e589a75613f1b398f0601af4eaab0c9a668642)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump esbuild from
+  0.13.4 to 0.13.6
+
+* [#911](https://github.com/jpmorganchase/modular/pull/911)
+  [`a7ef8d8`](https://github.com/jpmorganchase/modular/commit/a7ef8d8e77e056cd1b545a80c4a1c7b8a9c9d0f8)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump browserslist
+  from 4.17.3 to 4.17.4
+
+- [#912](https://github.com/jpmorganchase/modular/pull/912)
+  [`06326ba`](https://github.com/jpmorganchase/modular/commit/06326ba4d3777b872cb4dad56661c6e741b9aa87)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump esbuild from
+  0.13.4 to 0.13.5
+
+## 1.4.0
+
+### Minor Changes
+
+- f496a72: Add support for .ttf files to esbuild build
+- e55b4f9: Browserlist cross-compatibility between webpack and esbuild.
+
+### Patch Changes
+
+- c825efb: Bump jest-runner-eslint from 0.11.1 to 1.0.0
+
 ## 1.3.4
 
 ### Patch Changes
