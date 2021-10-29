@@ -48,7 +48,7 @@ export async function buildPackage(
   await fs.emptyDir(targetOutputDirectory);
 
   // Generate the typings for a package first so that we can do type checking and don't waste time bundling otherwise
-  await makeTypings(packagePath);
+  await makeTypings(target);
 
   // generate the js files now that we know we have a valid package
   const publicPackageJson = await makeBundle(
