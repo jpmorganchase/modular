@@ -1,5 +1,6 @@
 ---
 parent: Commands
+title: modular build
 ---
 
 # `modular build <packageName>`

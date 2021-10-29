@@ -1,5 +1,6 @@
 ---
 parent: Commands
+title: modular start
 ---
 
 # `modular start <packageName>`

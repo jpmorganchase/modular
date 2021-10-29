@@ -1,5 +1,6 @@
 ---
 parent: Commands
+title: modular init
 ---
 
 # `modular init`
