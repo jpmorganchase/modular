@@ -6,7 +6,6 @@ import path from 'path';
 import fs from 'fs-extra';
 
 import getModularRoot from '../utils/getModularRoot';
-import { ModularPackageJson } from '../utils/isModularType';
 
 const rimraf = promisify(_rimraf);
 
@@ -100,16 +99,16 @@ describe('WHEN building with preserve modules', () => {
       │  │  └─ _rollupPluginBabelHelpers.js.map #1a6wdsa
       │  ├─ index.js #sb8xfb
       │  ├─ index.js.map #r9dxe
-      │  ├─ runAsync.js #66wsvj
-      │  └─ runAsync.js.map #16teii4
+      │  ├─ runAsync.js #1vge02m
+      │  └─ runAsync.js.map #1thrwz0
       ├─ dist-es
       │  ├─ _virtual
       │  │  ├─ _rollupPluginBabelHelpers.js #14tvdhd
       │  │  └─ _rollupPluginBabelHelpers.js.map #4hotzf
       │  ├─ index.js #1lz39tw
       │  ├─ index.js.map #6hlu18
-      │  ├─ runAsync.js #17jkvoa
-      │  └─ runAsync.js.map #u7wk4r
+      │  ├─ runAsync.js #1xha07g
+      │  └─ runAsync.js.map #1u7bzfv
       ├─ dist-types
       │  ├─ index.d.ts #12l2tmi
       │  └─ runAsync.d.ts #1iek7az
@@ -117,20 +116,35 @@ describe('WHEN building with preserve modules', () => {
     `);
   });
 
-  it.each(['main', 'module', 'typings'])(
-    'THEN validates the typings file exists: %s',
-    async (key: keyof ModularPackageJson) => {
-      const packageJson = (await fs.readJSON(
-        path.join(modularRoot, 'dist', 'sample-async-package', 'package.json'),
-      )) as ModularPackageJson;
-      const value = packageJson[key] as string;
-      expect(
-        fs
-          .statSync(
-            path.join(modularRoot, 'dist', 'sample-async-package', value),
-          )
-          .isFile(),
-      ).toEqual(true);
-    },
-  );
+  it('SHOULD create the correct index.js', () => {
+    expect(
+      String(
+        fs.readFileSync(
+          path.join(
+            getModularRoot(),
+            'dist',
+            'sample-async-package',
+            'dist-es',
+            'index.js',
+          ),
+        ),
+      ),
+    ).toMatchSnapshot();
+  });
+
+  it('SHOULD create the correct runAsync.js', () => {
+    expect(
+      String(
+        fs.readFileSync(
+          path.join(
+            getModularRoot(),
+            'dist',
+            'sample-async-package',
+            'dist-es',
+            'runAsync.js',
+          ),
+        ),
+      ),
+    ).toMatchSnapshot();
+  });
 });
