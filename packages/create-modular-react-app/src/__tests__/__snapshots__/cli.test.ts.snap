@@ -40,3 +40,25 @@ exports[`Creating a new modular app via the CLI should create the right tree 1`]
 ├─ tsconfig.json #1h72lkd
 └─ yarn.lock"
 `;
+
+exports[`Creating a new modular app via the CLI with --empty should create the right tree 1`] = `
+"another-new-modular-app
+├─ .editorconfig #1p4gvuw
+├─ .eslintignore #1ot2bpo
+├─ .gitignore #175wbq
+├─ .prettierignore #10uqwgj
+├─ .vscode
+│  ├─ extensions.json #1i4584r
+│  ├─ launch.json #1kk1omt
+│  └─ settings.json #xes41c
+├─ .yarnrc #1orkcoz
+├─ README.md #1nksyzj
+├─ modular
+│  ├─ setupEnvironment.ts #m0s4vb
+│  └─ setupTests.ts #bnjknz
+├─ package.json
+├─ packages
+│  └─ README.md #14bthrh
+├─ tsconfig.json #1h72lkd
+└─ yarn.lock"
+`;

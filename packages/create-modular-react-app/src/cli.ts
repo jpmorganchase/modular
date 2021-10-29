@@ -11,8 +11,8 @@ const verbose = process.argv.includes('--verbose');
 interface Options {
   repo: string;
   preferOffline: string;
-  verbose: string;
-  empty: string;
+  verbose: boolean;
+  empty: boolean;
 }
 
 program.version(
@@ -27,27 +27,18 @@ program.arguments('<name>');
 program.option('--repo [value]', 'Should a repository be initialized', 'true');
 program.option('--prefer-offline [value]', 'Yarn --prefer-offline', 'true');
 program.option(
-  '--empty [value]',
+  '--empty',
   "Don't setup a modular app after creating the repository",
-  'false',
 );
-program.option(
-  '--verbose [value]',
-  'Run yarn commands with --verbose set',
-  'false',
-);
-program.option(
-  '--dir [value]',
-  'Run yarn commands with --verbose set',
-  process.cwd(),
-);
+program.option('--verbose', 'Run yarn commands with --verbose set', 'false');
+
 program.action(async (name: string, options: Options) => {
   await createModularApp({
     name,
     preferOffline: options.preferOffline !== 'false',
     repo: options.repo !== 'false',
-    verbose: options.verbose !== 'false',
-    empty: options.empty !== 'false',
+    verbose,
+    empty: options.empty,
   }).catch((err) => {
     if (verbose) {
       console.error(err);
