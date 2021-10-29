@@ -3,6 +3,7 @@ on: push
 
 jobs:
   check-yarn-lock-registry:
+    name: 'Validate yarn.lock'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
