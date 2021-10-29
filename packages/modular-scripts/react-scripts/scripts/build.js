@@ -20,7 +20,7 @@ const printBuildError = require('../../react-dev-utils/printBuildError');
 const compiler = webpack(configFactory('production'));
 
 compiler.run(async (err, stats) => {
-  console.log(chalk.grey('[modular] ') + 'Webpack Compiled.');
+  console.log(chalk.dim('[modular] ') + 'Webpack Compiled.');
   let messages;
   let statsJson;
   if (err) {
