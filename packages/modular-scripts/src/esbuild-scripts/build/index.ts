@@ -33,7 +33,7 @@ export default async function build(target: string, paths: Paths) {
   );
 
   try {
-    await esbuild.build(createEsbuildConfig(paths));
+    return esbuild.build(createEsbuildConfig(paths));
   } catch (e) {
     const result = e as esbuild.BuildFailure;
     logger.log(chalk.red('Failed to compile.\n'));

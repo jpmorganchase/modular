@@ -1,5 +1,6 @@
 import { paramCase as toParamCase } from 'change-case';
 import chalk from 'chalk';
+import type * as esbuild from 'esbuild';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 
@@ -12,20 +13,36 @@ import getLocation from '../utils/getLocation';
 import { setupEnvForDirectory } from '../utils/setupEnv';
 import createPaths from '../utils/createPaths';
 import printHostingInstructions from './printHostingInstructions';
-import {
-  measureFileSizesBeforeBuild,
-  printFileSizesAfterBuild,
-} from './fileSizeReporter';
+import { Asset, printFileSizesAfterBuild } from './fileSizeReporter';
 import type { Stats } from 'webpack';
 import { checkBrowsers } from '../utils/checkBrowsers';
 import checkRequiredFiles from '../utils/checkRequiredFiles';
 import createEsbuildBrowserslistTarget from '../utils/createEsbuildBrowserslistTarget';
-
-// These sizes are pretty large. We'll warn for bundles exceeding them.
-const WARN_AFTER_BUNDLE_GZIP_SIZE = 512 * 1024;
-const WARN_AFTER_CHUNK_GZIP_SIZE = 1024 * 1024;
+import {
+  webpackMeasureFileSizesBeforeBuild,
+  createWebpackAssets,
+} from './webpackFileSizeReporter';
+import {
+  createEsbuildAssets,
+  esbuildMeasureFileSizesBeforeBuild,
+} from './esbuildFileSizeReporter';
 
 async function buildApp(target: string) {
+  // True if there's no preference set - or the preference is for webpack.
+  const useWebpack =
+    !process.env.USE_MODULAR_WEBPACK ||
+    process.env.USE_MODULAR_WEBPACK === 'true';
+
+  // True if the preferene IS set and the preference is esbuid.
+  const useEsbuild =
+    process.env.USE_MODULAR_ESBUILD &&
+    process.env.USE_MODULAR_ESBUILD === 'true';
+
+  // If you want to use webpack then we'll always use webpack. But if you've indicated
+  // you want esbuild - then we'll switch you to the new fancy world.
+  const isEsbuild = !useWebpack || useEsbuild;
+
+  // Setup Paths
   const modularRoot = getModularRoot();
   const targetDirectory = await getLocation(target);
   const targetName = toParamCase(target);
@@ -34,7 +51,16 @@ async function buildApp(target: string) {
 
   await checkBrowsers(targetDirectory);
 
-  const previousFileSizes = await measureFileSizesBeforeBuild(paths.appBuild);
+  let previousFileSizes: Record<string, number>;
+  if (isEsbuild) {
+    previousFileSizes = await esbuildMeasureFileSizesBeforeBuild(
+      paths.appBuild,
+    );
+  } else {
+    previousFileSizes = await webpackMeasureFileSizesBeforeBuild(
+      paths.appBuild,
+    );
+  }
 
   // Warn and crash if required files are missing
   await checkRequiredFiles([paths.appHtml, paths.appIndexJs]);
@@ -49,23 +75,15 @@ async function buildApp(target: string) {
     overwrite: true,
   });
 
-  // True if there's no preference set - or the preference is for webpack.
-  const useWebpack =
-    !process.env.USE_MODULAR_WEBPACK ||
-    process.env.USE_MODULAR_WEBPACK === 'true';
+  let assets: Asset[];
 
-  // True if the preferene IS set and the preference is esbuid.
-  const useEsbuild =
-    process.env.USE_MODULAR_ESBUILD &&
-    process.env.USE_MODULAR_ESBUILD === 'true';
-
-  // If you want to use webpack then we'll always use webpack. But if you've indicated
-  // you want esbuild - then we'll switch you to the new fancy world.
-  if (!useWebpack || useEsbuild) {
+  if (isEsbuild) {
     const { default: buildEsbuildApp } = await import(
       '../esbuild-scripts/build'
     );
-    await buildEsbuildApp(target, paths);
+    const result = await buildEsbuildApp(target, paths);
+
+    assets = createEsbuildAssets(paths, result.metafile as esbuild.Metafile);
   } else {
     // create-react-app doesn't support plain module outputs yet,
     // so --preserve-modules has no effect here
@@ -107,19 +125,13 @@ async function buildApp(target: string) {
         logger.log(chalk.green('Compiled successfully.\n'));
       }
 
-      logger.log('File sizes after gzip:\n');
-      printFileSizesAfterBuild(
-        stats,
-        previousFileSizes,
-        paths.appBuild,
-        WARN_AFTER_BUNDLE_GZIP_SIZE,
-        WARN_AFTER_CHUNK_GZIP_SIZE,
-      );
-      logger.log();
+      assets = createWebpackAssets(paths, stats);
     } finally {
       await fs.remove(statsFilePath);
     }
   }
+
+  printFileSizesAfterBuild(assets, previousFileSizes);
 
   printHostingInstructions(
     fs.readJSON(paths.appPackageJson),
