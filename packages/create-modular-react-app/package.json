@@ -5,6 +5,11 @@
   "bin": {
     "create-modular-react-app": "build/cli.js"
   },
+  "main": "./build/index.js",
+  "exports": {
+    ".": "./build/index.js",
+    "./package.json": "./package.json"
+  },
   "engines": {
     "node": "^12.13.0 || ^14.15.0 || >=15.0.0"
   },
