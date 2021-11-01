@@ -10,17 +10,17 @@ developing, building and testing UI applications.
 
 ## Commands
 
-- [`init`](./commands/1_init.md)
-- [`workspace`](./commands/2_workspace.md)
-- [`check`](./commands/3_check.md)
-- [`add`](./commands/4_add.md)
-- [`start`](./commands/5_start.md)
-- [`test`](./commands/6_test.md)
-- [`build`](./commands/7_build.md)
-- [`convert`](./commands/8_convert.md)
-- [`port`](./commands/9_port.md)
-- [`typecheck`](./commands/10_typecheck.md)
-- [`lint`](./commands/11_lint.md)
+- [`init`](./commands/init.md)
+- [`workspace`](./commands/workspace.md)
+- [`check`](./commands/check.md)
+- [`add`](./commands/add.md)
+- [`start`](./commands/start.md)
+- [`test`](./commands/test.md)
+- [`build`](./commands/build.md)
+- [`convert`](./commands/convert.md)
+- [`port`](./commands/port.md)
+- [`typecheck`](./commands/typecheck.md)
+- [`lint`](./commands/lint.md)
 
 ## Concepts
 
