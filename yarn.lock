@@ -6255,7 +6255,7 @@ esbuild-windows-arm64@0.13.8:
   resolved "https://registry.yarnpkg.com/esbuild-windows-arm64/-/esbuild-windows-arm64-0.13.8.tgz#e59ae004496fd8a5ab67bfc7945a2e47480d6fb9"
   integrity sha512-HW6Mtq5eTudllxY2YgT62MrVcn7oq2o8TAoAvDUhyiEmRmDY8tPwAhb1vxw5/cdkbukM3KdMYtksnUhF/ekWeg==
 
-esbuild@0.13.8, esbuild@^0.13.4:
+esbuild@0.13.8, esbuild@^0.12.2, esbuild@^0.13.4:
   version "0.13.8"
   resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.13.8.tgz#bd7cc51b881ab067789f88e17baca74724c1ec4f"
   integrity sha512-A4af7G7YZLfG5OnARJRMtlpEsCkq/zHZQXewgPA864l9D6VjjbH1SuFYK/OSV6BtHwDGkdwyRrX0qQFLnMfUcw==
@@ -6277,11 +6277,6 @@ esbuild@0.13.8, esbuild@^0.13.4:
     esbuild-windows-32 "0.13.8"
     esbuild-windows-64 "0.13.8"
     esbuild-windows-arm64 "0.13.8"
-
-esbuild@^0.12.2:
-  version "0.12.29"
-  resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.12.29.tgz#be602db7c4dc78944a9dbde0d1ea19d36c1f882d"
-  integrity sha512-w/XuoBCSwepyiZtIRsKsetiLDUVGPVw1E/R3VTFSecIy8UR7Cq3SOtwKHJMFoVqqVG36aGkzh4e8BvpO1Fdc7g==
 
 escalade@^3.1.1:
   version "3.1.1"
@@ -13799,7 +13794,7 @@ typescript@4.4.4:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.4.4.tgz#2cd01a1a1f160704d3101fd5a58ff0f9fcb8030c"
   integrity sha512-DqGhF5IKoBl8WNf8C1gu8q0xZSInh9j1kJJMqT3a94w1JzVaBU4EXOSMrz9yDqMT0xt3selp83fuFMQ0uzv6qA==
 
-ua-parser-js@^0.7.18:
+ua-parser-js@0.7.28, ua-parser-js@^0.7.18:
   version "0.7.28"
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.28.tgz#8ba04e653f35ce210239c64661685bf9121dec31"
   integrity sha512-6Gurc1n//gjp9eQNXjD9O3M/sMwVtN5S8Lv9bvOYBfKfDNiIIhqiyi01vMBO45u4zkDE420w/e0se7Vs+sIg+g==
