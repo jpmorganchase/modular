@@ -3,10 +3,38 @@ nav_order: 1
 title: Modular
 ---
 
-# Modular
+<div align="center">
+  <h1><img height="38px" width="44px" style="height: 38px; max-width: 44px" src="https://raw.githubusercontent.com/jpmorganchase/modular/main/docs/img/modular-hero.svg"> &nbsp; Modular</h1>
 
-Modular is designed to emulate `react-scripts` with an opinionated way of
-developing, building and testing UI applications.
+  <p><strong>Scaled Web Engineering</strong>. Where Libraries, Views & apps coexist together and tooling is a first-class citizen.</p>
+</div>
+
+`modular` is a collection of tools and guidance to enable UI development at
+scale. It is derived from work at JP Morgan to enable development in a single
+repository by many teams.
+
+It provides a `modular` CLI to scaffold and develop a new application from
+scratch, as well as commands to add and manage further modules.
+
+## Getting Started
+
+```bash
+  yarn create modular-react-app my-new-modular-project [--verbose] [--prefer-offline] [--repo]
+```
+
+Bootstraps a new project, configured to use
+[Yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces/).
+
+This also creates a workspace named 'app' which is a new modular app written in
+[TypeScript](https://www.typescriptlang.org/).
+
+It supports three flags:
+
+- `--verbose` enables verbose `yarn` and `modular` logging.
+- `--prefer-offline` will prefer locally cached `node_modules` versions over
+  those from your remote registry.
+- `--repo <value>` will toggle whether a new `git` repo is created and the
+  initial files commited.
 
 ## Commands
 
