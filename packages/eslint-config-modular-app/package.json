@@ -13,7 +13,7 @@
     "@babel/eslint-parser": "7.16.0",
     "babel-eslint": "10.1.0",
     "eslint-config-react-app": "6.0.0",
-    "eslint-plugin-flowtype": "5.10.0",
+    "eslint-plugin-flowtype": "7.0.0",
     "eslint-plugin-import": "2.25.2",
     "eslint-plugin-jest": "24.4.0",
     "eslint-plugin-jest-dom": "3.9.2",
