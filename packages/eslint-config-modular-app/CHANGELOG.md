@@ -1,5 +1,21 @@
 # eslint-config-modular-app
 
+## 2.0.0
+
+### Major Changes
+
+- [#908](https://github.com/jpmorganchase/modular/pull/908)
+  [`226ad45`](https://github.com/jpmorganchase/modular/commit/226ad45251ab1955bd955fac97407e263af9de76)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Add exports fields to
+  all packages.
+
+### Patch Changes
+
+- [#994](https://github.com/jpmorganchase/modular/pull/994)
+  [`3b9af03`](https://github.com/jpmorganchase/modular/commit/3b9af03c54b3a9bb2a42434b0613ce9872c9e814)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  @babel/eslint-parser from 7.15.8 to 7.16.0
+
 ## 1.0.11
 
 ### Patch Changes
