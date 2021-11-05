@@ -5,19 +5,19 @@ import * as path from 'path';
 import chalk from 'chalk';
 import * as semver from 'semver';
 
-function exec(file: string, args: string[], cwd: string) {
+async function exec(file: string, args: string[], cwd: string) {
   console.log(chalk.grey(`$ ${file} ${args.join(' ')}`));
-  try {
-    return execa(file, args, {
-      stdin: process.stdin,
-      stderr: process.stderr,
-      stdout: process.stdout,
-      cwd,
-    });
-  } catch (e) {
+  return execa(file, args, {
+    stdin: process.stdin,
+    stderr: process.stderr,
+    stdout: process.stdout,
+    cwd,
+    cleanup: true,
+    reject: true,
+  }).catch((e) => {
     console.error(chalk.red(`$ FAILED ${file} ${args.join(' ')}`));
-    throw e;
-  }
+    throw new Error((e as Error).message);
+  });
 }
 
 function isYarnInstalled(): boolean {
@@ -34,6 +34,7 @@ export default async function createModularApp(argv: {
   repo?: boolean;
   preferOffline?: boolean;
   verbose?: boolean;
+  empty?: boolean;
 }): Promise<void> {
   const { engines } = fs.readJSONSync(
     require.resolve('create-modular-react-app/package.json'),
@@ -68,7 +69,7 @@ export default async function createModularApp(argv: {
   // CRA bails from creating a Git repository if it's run within one.
   //
   // See: https://github.com/facebook/create-react-app/blob/47e9e2c7a07bfe60b52011cf71de5ca33bdeb6e3/packages/react-scripts/scripts/init.js#L48-L50
-  if (argv.repo !== false) {
+  if (argv.repo) {
     await exec('git', ['init'], newModularRoot);
   }
 
@@ -132,35 +133,42 @@ export default async function createModularApp(argv: {
     newModularRoot,
   );
 
-  await fs.copy(templatePath, newModularRoot);
+  await fs.copy(templatePath, newModularRoot, { overwrite: true });
 
   // rename gitgnore to .gitgnore so it actually works
   await fs.move(
     path.join(newModularRoot, 'gitignore'),
     path.join(newModularRoot, '.gitignore'),
+    {
+      overwrite: true,
+    },
   );
 
   await fs.move(
     path.join(newModularRoot, 'yarnrc'),
     path.join(newModularRoot, '.yarnrc'),
+    {
+      overwrite: true,
+    },
   );
 
-  await exec(
-    'yarnpkg',
-    [
-      'modular',
-      'add',
-      'app',
-      '--unstable-type',
-      'app',
-      '--unstable-name',
-      'app',
-      ...verboseArgs,
-    ],
-    newModularRoot,
-  );
+  if (!argv.empty) {
+    await exec(
+      path.join(newModularRoot, 'node_modules', '.bin', 'modular'),
+      [
+        'add',
+        'app',
+        '--unstable-type',
+        'app',
+        '--unstable-name',
+        'app',
+        ...verboseArgs,
+      ],
+      newModularRoot,
+    );
+  }
 
-  if (argv.repo !== false) {
+  if (argv.repo) {
     await exec('git', ['add', '.'], newModularRoot);
 
     // don't try to commit in CI
