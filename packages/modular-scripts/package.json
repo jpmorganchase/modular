@@ -1,6 +1,6 @@
 {
   "name": "modular-scripts",
-  "version": "1.6.0",
+  "version": "2.0.0",
   "license": "Apache-2.0",
   "bin": {
     "modular": "dist-cjs/cli.js"
@@ -52,7 +52,7 @@
     "esbuild": "0.13.8",
     "esbuild-loader": "2.16.0",
     "escape-string-regexp": "2.0.0",
-    "eslint": "7.32.0",
+    "eslint": "8.2.0",
     "execa": "5.1.1",
     "express": "4.17.1",
     "express-ws": "5.0.2",
