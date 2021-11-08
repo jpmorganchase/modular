@@ -74,8 +74,8 @@ describe('When working with a nested app', () => {
       ├─ robots.txt #1sjb8b3
       └─ static
          ├─ css
-         │  ├─ main.a0f92c83.chunk.css #1mveji0
-         │  └─ main.a0f92c83.chunk.css.map #16pxtln
+         │  ├─ main.a0f92c83.chunk.css #16n5nfq
+         │  └─ main.a0f92c83.chunk.css.map #1l7oeeo
          └─ js
             ├─ 2.00d55a9b.chunk.js #16ph1qi
             ├─ 2.00d55a9b.chunk.js.LICENSE.txt #5bztxc
@@ -123,6 +123,47 @@ describe('When working with a nested app', () => {
         {
           filepath: 'index.html',
         },
+      ),
+    ).toMatchSnapshot();
+  });
+
+  it('can generate a css/main.a0f92c83.chunk.css', async () => {
+    expect(
+      prettier.format(
+        String(
+          await fs.readFile(
+            path.join(
+              modularRoot,
+              'dist',
+              'scoped-sample-app',
+              'static',
+              'css',
+              'main.a0f92c83.chunk.css',
+            ),
+          ),
+        ),
+        {
+          filepath: 'main.a0f92c83.chunk.css',
+        },
+      ),
+    ).toMatchSnapshot();
+  });
+
+  it('can generate a css/main.a0f92c83.chunk.css.map', async () => {
+    expect(
+      JSON.parse(
+        String(
+          await fs.readFile(
+            path.join(
+              modularRoot,
+              'dist',
+              'scoped-sample-app',
+              'static',
+              'css',
+              'main.a0f92c83.chunk.css.map',
+            ),
+          ),
+        ),
       ),
     ).toMatchSnapshot();
   });
@@ -250,8 +291,8 @@ describe('when working with an app', () => {
       ├─ robots.txt #1sjb8b3
       └─ static
          ├─ css
-         │  ├─ main.a0f92c83.chunk.css #1mveji0
-         │  └─ main.a0f92c83.chunk.css.map #16pxtln
+         │  ├─ main.a0f92c83.chunk.css #16n5nfq
+         │  └─ main.a0f92c83.chunk.css.map #1l7oeeo
          └─ js
             ├─ 2.a4a07acc.chunk.js #1bx67oj
             ├─ 2.a4a07acc.chunk.js.LICENSE.txt #5bztxc
