@@ -37,14 +37,14 @@ exports[`When working with a nested app can generate a css/main.a0f92c83.chunk.c
   }
 }
 .App-header {
+  align-items: center;
   background-color: #282c34;
-  min-height: 100vh;
+  color: #fff;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: #fff;
+  justify-content: center;
+  min-height: 100vh;
 }
 .App-link {
   color: #61dafb;
@@ -58,16 +58,14 @@ exports[`When working with a nested app can generate a css/main.a0f92c83.chunk.c
   }
 }
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, \\"Segoe UI\\", \\"Roboto\\", \\"Oxygen\\",
-    \\"Ubuntu\\", \\"Cantarell\\", \\"Fira Sans\\", \\"Droid Sans\\", \\"Helvetica Neue\\",
-    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  margin: 0;
 }
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, \\"Courier New\\",
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, Courier New, monospace;
 }
 /*# sourceMappingURL=main.a0f92c83.chunk.css.map */
 "
@@ -76,7 +74,7 @@ code {
 exports[`When working with a nested app can generate a css/main.a0f92c83.chunk.css.map 1`] = `
 Object {
   "file": "main.a0f92c83.chunk.css",
-  "mappings": "AAAA,KACE,iBACF,CAEA,UACE,aAAc,CACd,mBACF,CAEA,8CACE,UACE,2CACF,CACF,CAEA,YACE,wBAAyB,CACzB,gBAAiB,CACjB,YAAa,CACb,qBAAsB,CACtB,kBAAmB,CACnB,sBAAuB,CACvB,4BAA6B,CAC7B,UACF,CAEA,UACE,aACF,CAEA,yBACE,GACE,sBACF,CACA,GACE,uBACF,CACF,CCrCA,KACE,QAAS,CACT,mJAEY,CACZ,kCAAmC,CACnC,iCACF,CAEA,KACE,yEAEF",
+  "mappings": "AAAA,KACE,iBACF,CAEA,UACE,aAAc,CACd,mBACF,CAEA,8CACE,UACE,2CACF,CACF,CAEA,YAKE,kBAAmB,CAJnB,wBAAyB,CAOzB,UAAY,CALZ,YAAa,CACb,qBAAsB,CAGtB,4BAA6B,CAD7B,sBAAuB,CAJvB,gBAOF,CAEA,UACE,aACF,CAEA,yBACE,GACE,sBACF,CACA,GACE,uBACF,CACF,CCrCA,KAKE,kCAAmC,CACnC,iCAAkC,CAJlC,mIAEY,CAHZ,QAMF,CAEA,KACE,uEAEF",
   "names": Array [],
   "sources": Array [
     "webpack://src/App.css",
