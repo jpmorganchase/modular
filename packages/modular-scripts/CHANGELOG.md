@@ -1,5 +1,73 @@
 # modular-scripts
 
+## 2.0.0
+
+### Major Changes
+
+- [#609](https://github.com/jpmorganchase/modular/pull/609)
+  [`be2d35e`](https://github.com/jpmorganchase/modular/commit/be2d35e9b12a63783bee35a4cae1d3557d64b3ac)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Remove compiling
+  binaries from "bin" field in package.json.
+
+* [#918](https://github.com/jpmorganchase/modular/pull/918)
+  [`9d8c2f6`](https://github.com/jpmorganchase/modular/commit/9d8c2f62c3db319feac877f526fe37a46dfa8617)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Remove programatic API.
+
+- [#908](https://github.com/jpmorganchase/modular/pull/908)
+  [`226ad45`](https://github.com/jpmorganchase/modular/commit/226ad45251ab1955bd955fac97407e263af9de76)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Add exports fields to
+  all packages.
+
+### Minor Changes
+
+- [#986](https://github.com/jpmorganchase/modular/pull/986)
+  [`5a4c8e7`](https://github.com/jpmorganchase/modular/commit/5a4c8e7325e46565757669ae567c954c8b4885f5)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Parity of esbuild size
+  logging.
+
+* [#1004](https://github.com/jpmorganchase/modular/pull/1004)
+  [`5a0b10f`](https://github.com/jpmorganchase/modular/commit/5a0b10fd45be2478cb62e2a6a250fc691bf2b059)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Add support-map-support
+  for easier user debugging if there is an error.
+
+### Patch Changes
+
+- [#1001](https://github.com/jpmorganchase/modular/pull/1001)
+  [`f53384f`](https://github.com/jpmorganchase/modular/commit/f53384f41a17f960d27d1c71c448786a39df5f15)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  @babel/preset-env from 7.15.8 to 7.16.0
+
+* [#995](https://github.com/jpmorganchase/modular/pull/995)
+  [`d62f380`](https://github.com/jpmorganchase/modular/commit/d62f380d2870f1989b72547f29feb8b366b0012d)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  @babel/preset-typescript from 7.15.0 to 7.16.0
+
+- [#992](https://github.com/jpmorganchase/modular/pull/992)
+  [`df09756`](https://github.com/jpmorganchase/modular/commit/df0975699605a208abc769e2fd2b0c39a2dd520d)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  @babel/preset-react from 7.14.5 to 7.16.0
+
+* [#999](https://github.com/jpmorganchase/modular/pull/999)
+  [`ec78345`](https://github.com/jpmorganchase/modular/commit/ec78345b280733336deac62009d7d5060cc934b0)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  @babel/plugin-proposal-class-properties from 7.14.5 to 7.16.0
+
+- [#1000](https://github.com/jpmorganchase/modular/pull/1000)
+  [`3799d67`](https://github.com/jpmorganchase/modular/commit/3799d678870c6185949b59b8cb84a980fc281053)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  @babel/code-frame from 7.15.8 to 7.16.0
+
+* [#990](https://github.com/jpmorganchase/modular/pull/990)
+  [`8ae4bb4`](https://github.com/jpmorganchase/modular/commit/8ae4bb468d0774b1fdab4122d5d86b0e86fb3f9b)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Fix bug where async
+  imports in packages would mean that builds would fail to due not found in
+  chunk validations.
+
+- [#989](https://github.com/jpmorganchase/modular/pull/989)
+  [`2f0bd5b`](https://github.com/jpmorganchase/modular/commit/2f0bd5b3b091412c9dafb9a32f547ea5413db0a5)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Remove setupEnv when
+  running tests
+
 ## 1.6.0
 
 ### Minor Changes

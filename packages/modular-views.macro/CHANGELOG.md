@@ -1,5 +1,14 @@
 # modular-views.macro
 
+## 3.0.0
+
+### Major Changes
+
+- [#908](https://github.com/jpmorganchase/modular/pull/908)
+  [`226ad45`](https://github.com/jpmorganchase/modular/commit/226ad45251ab1955bd955fac97407e263af9de76)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Add exports fields to
+  all packages.
+
 ## 2.0.0
 
 ### Major Changes

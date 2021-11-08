@@ -1,5 +1,21 @@
 # create-modular-react-app
 
+## 2.0.0
+
+### Major Changes
+
+- [#908](https://github.com/jpmorganchase/modular/pull/908)
+  [`226ad45`](https://github.com/jpmorganchase/modular/commit/226ad45251ab1955bd955fac97407e263af9de76)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Add exports fields to
+  all packages.
+
+### Minor Changes
+
+- [#991](https://github.com/jpmorganchase/modular/pull/991)
+  [`82ff280`](https://github.com/jpmorganchase/modular/commit/82ff2806a7aeb426654793ce6b5fd98384e2ccd4)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Add --empty flag and
+  improve error handling.
+
 ## 1.1.3
 
 ### Patch Changes
