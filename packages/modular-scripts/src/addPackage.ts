@@ -100,11 +100,14 @@ async function addPackage(
   }
   const subprocess = execAsync('yarnpkg', yarnArgs, {
     cwd: modularRoot,
-    stderr: 'pipe',
+    stderr: verbose ? 'inherit' : 'pipe',
   });
-  subprocess.stderr
-    ?.pipe(new LineFilterOutStream(/.*warning.*/))
-    .pipe(process.stderr);
+  if (!verbose) {
+    // Remove warnings
+    subprocess.stderr
+      ?.pipe(new LineFilterOutStream(/.*warning.*/))
+      .pipe(process.stderr);
+  }
   await subprocess;
 }
 
