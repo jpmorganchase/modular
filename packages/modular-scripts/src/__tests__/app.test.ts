@@ -74,8 +74,8 @@ describe('When working with a nested app', () => {
       ├─ robots.txt #1sjb8b3
       └─ static
          ├─ css
-         │  ├─ main.a0f92c83.chunk.css #16n5nfq
-         │  └─ main.a0f92c83.chunk.css.map #1l7oeeo
+         │  ├─ main.a0f92c83.chunk.css #1mveji0
+         │  └─ main.a0f92c83.chunk.css.map #16pxtln
          └─ js
             ├─ 2.00d55a9b.chunk.js #16ph1qi
             ├─ 2.00d55a9b.chunk.js.LICENSE.txt #5bztxc
@@ -319,6 +319,47 @@ describe('when working with an app', () => {
       String(
         await fs.readFile(
           path.join(modularRoot, 'dist', 'sample-app', 'manifest.json'),
+        ),
+      ),
+    ).toMatchSnapshot();
+  });
+
+  it('can generate a css/main.a0f92c83.chunk.css', async () => {
+    expect(
+      prettier.format(
+        String(
+          await fs.readFile(
+            path.join(
+              modularRoot,
+              'dist',
+              'scoped-sample-app',
+              'static',
+              'css',
+              'main.a0f92c83.chunk.css',
+            ),
+          ),
+        ),
+        {
+          filepath: 'main.a0f92c83.chunk.css',
+        },
+      ),
+    ).toMatchSnapshot();
+  });
+
+  it('can generate a css/main.a0f92c83.chunk.css.map', async () => {
+    expect(
+      JSON.parse(
+        String(
+          await fs.readFile(
+            path.join(
+              modularRoot,
+              'dist',
+              'scoped-sample-app',
+              'static',
+              'css',
+              'main.a0f92c83.chunk.css.map',
+            ),
+          ),
         ),
       ),
     ).toMatchSnapshot();
