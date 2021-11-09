@@ -16577,6 +16577,124 @@ exports[`when working with an app can generate a asset-manifest 1`] = `
 }"
 `;
 
+exports[`when working with an app can generate a css/main.a0f92c83.chunk.css 1`] = `
+".App {
+  text-align: center;
+}
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin 20s linear infinite;
+  }
+}
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: #fff;
+}
+.App-link {
+  color: #61dafb;
+}
+@keyframes App-logo-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(1turn);
+  }
+}
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, \\"Segoe UI\\", \\"Roboto\\", \\"Oxygen\\",
+    \\"Ubuntu\\", \\"Cantarell\\", \\"Fira Sans\\", \\"Droid Sans\\", \\"Helvetica Neue\\",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, \\"Courier New\\",
+    monospace;
+}
+/*# sourceMappingURL=main.a0f92c83.chunk.css.map */
+"
+`;
+
+exports[`when working with an app can generate a css/main.a0f92c83.chunk.css.map 1`] = `
+Object {
+  "file": "main.a0f92c83.chunk.css",
+  "mappings": "AAAA,KACE,iBACF,CAEA,UACE,aAAc,CACd,mBACF,CAEA,8CACE,UACE,2CACF,CACF,CAEA,YACE,wBAAyB,CACzB,gBAAiB,CACjB,YAAa,CACb,qBAAsB,CACtB,kBAAmB,CACnB,sBAAuB,CACvB,4BAA6B,CAC7B,UACF,CAEA,UACE,aACF,CAEA,yBACE,GACE,sBACF,CACA,GACE,uBACF,CACF,CCrCA,KACE,QAAS,CACT,mJAEY,CACZ,kCAAmC,CACnC,iCACF,CAEA,KACE,yEAEF",
+  "names": Array [],
+  "sources": Array [
+    "webpack://src/App.css",
+    "webpack://src/index.css",
+  ],
+  "sourcesContent": Array [
+    ".App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+",
+    "body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+",
+  ],
+  "version": 3,
+}
+`;
+
 exports[`when working with an app can generate a index.html 1`] = `
 "<!DOCTYPE html>
 <html lang=\\"en\\">
