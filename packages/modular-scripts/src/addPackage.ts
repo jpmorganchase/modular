@@ -19,6 +19,8 @@ async function addPackage(
   preferOffline = true,
   verbose = false,
 ): Promise<void> {
+  const modularRoot = getModularRoot();
+
   const { type, name } =
     (typeArg && nameArg ? { type: typeArg, name: nameArg } : null) ||
     ((await prompts([
@@ -47,7 +49,6 @@ async function addPackage(
     );
   }
 
-  const modularRoot = getModularRoot();
   const newComponentName = toPascalCase(name);
 
   const newPackagePath = path.join(modularRoot, packagesRoot, destination);

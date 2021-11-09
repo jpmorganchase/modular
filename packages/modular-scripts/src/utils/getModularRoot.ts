@@ -11,10 +11,10 @@ function isModularRoot(packageJsonPath: string) {
   return packageJson?.modular?.type === 'root';
 }
 
-function getModularRoot(): string {
+export function findModularRoot(): string | undefined {
   try {
     logger.debug('Deferring to find-up to locate modular root');
-    let modularRoot = findUp.sync(
+    const modularRoot = findUp.sync(
       (directory: string) => {
         const packageJsonPath = path.join(directory, 'package.json');
         if (
@@ -28,17 +28,21 @@ function getModularRoot(): string {
       { type: 'file', allowSymlinks: false },
     );
 
-    if (modularRoot === undefined) {
-      throw new Error('Could not find modular root.');
-    }
-
-    modularRoot = path.normalize(path.dirname(modularRoot));
-
-    logger.debug(`Located modular root ${modularRoot}`);
-    return modularRoot;
+    return modularRoot ? path.normalize(path.dirname(modularRoot)) : undefined;
   } catch (err) {
     throw new Error(err as string);
   }
+}
+
+function getModularRoot(): string {
+  const modularRoot = findModularRoot();
+
+  if (modularRoot === undefined) {
+    throw new Error('Could not find modular root.');
+  }
+
+  logger.debug(`Located modular root ${modularRoot}`);
+  return modularRoot;
 }
 
 export default memoize(getModularRoot);
