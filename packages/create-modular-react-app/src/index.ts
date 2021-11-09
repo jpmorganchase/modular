@@ -176,7 +176,7 @@ export default async function createModularApp(argv: {
   );
 
   if (!argv.empty) {
-    const subprocess = exec(
+    await exec(
       path.join(newModularRoot, 'node_modules', '.bin', 'modular'),
       [
         'add',
@@ -190,10 +190,6 @@ export default async function createModularApp(argv: {
       newModularRoot,
       { stderr: 'pipe' },
     );
-    subprocess.stderr
-      ?.pipe(new LineFilterOutStream(/.*warning.*/))
-      .pipe(process.stderr);
-    await subprocess;
   }
 
   if (argv.repo) {

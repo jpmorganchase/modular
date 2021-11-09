@@ -9,6 +9,7 @@ import getModularRoot from './utils/getModularRoot';
 import execAsync from './utils/execAsync';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import getAllFiles from './utils/getAllFiles';
+import LineFilterOutStream from './utils/LineFilterOutStream';
 
 const packagesRoot = 'packages';
 
@@ -97,7 +98,14 @@ async function addPackage(
   if (preferOffline) {
     yarnArgs.push('--prefer-offline');
   }
-  await execAsync('yarnpkg', yarnArgs, { cwd: modularRoot });
+  const subprocess = execAsync('yarnpkg', yarnArgs, {
+    cwd: modularRoot,
+    stderr: 'pipe',
+  });
+  subprocess.stderr
+    ?.pipe(new LineFilterOutStream(/.*warning.*/))
+    .pipe(process.stderr);
+  await subprocess;
 }
 
 export default actionPreflightCheck(addPackage);
