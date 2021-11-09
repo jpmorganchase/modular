@@ -146,14 +146,17 @@ export default async function createModularApp(argv: {
     ],
     newModularRoot,
     // We can't pass a stream here if it's not backed by a fd. We need to set it to 'pipe', then pipe it from the ChildProcess to our transformer
-    { stderr: 'pipe' },
+    { stderr: argv.verbose ? 'inherit' : 'pipe' },
   );
 
-  // There is no way of suppressing warnings in Yarn Classic - https://github.com/yarnpkg/yarn/issues/6672
-  // Let's just filter out the stderr lines we don't want. We have color codes, so we can't really test for start of string (^)
-  subprocess.stderr
-    ?.pipe(new LineFilterOutStream(/.*warning.*/))
-    .pipe(process.stderr);
+  if (!argv.verbose) {
+    // There is no way of suppressing warnings in Yarn Classic - https://github.com/yarnpkg/yarn/issues/6672
+    // Let's just filter out the stderr lines we don't want. We have color codes, so we can't really test for start of string (^)
+    subprocess.stderr
+      ?.pipe(new LineFilterOutStream(/.*warning.*/))
+      .pipe(process.stderr);
+  }
+
   await subprocess;
 
   await fs.copy(templatePath, newModularRoot, { overwrite: true });
@@ -188,7 +191,6 @@ export default async function createModularApp(argv: {
         ...verboseArgs,
       ],
       newModularRoot,
-      { stderr: 'pipe' },
     );
   }
 
