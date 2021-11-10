@@ -6,7 +6,7 @@ export default function execSync(
   file: string,
   args: string[],
   options: { log?: boolean } & execa.SyncOptions = { log: true },
-): Promise<execa.ExecaReturnValue<string>> {
+): execa.ExecaChildProcess<string> {
   const { log, ...opts } = options;
   if (log) {
     logger.log(chalk.grey(`$ ${file} ${args.join(' ')}`));
