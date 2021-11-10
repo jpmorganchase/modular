@@ -11,7 +11,9 @@ function isModularRoot(packageJsonPath: string) {
   return packageJson?.modular?.type === 'root';
 }
 
-export function findModularRoot(): string | undefined {
+export const findModularRoot = memoize(function findModularRoot():
+  | string
+  | undefined {
   try {
     logger.debug('Deferring to find-up to locate modular root');
     const modularRoot = findUp.sync(
@@ -32,7 +34,7 @@ export function findModularRoot(): string | undefined {
   } catch (err) {
     throw new Error(err as string);
   }
-}
+});
 
 function getModularRoot(): string {
   const modularRoot = findModularRoot();

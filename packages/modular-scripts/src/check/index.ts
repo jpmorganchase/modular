@@ -1,4 +1,5 @@
 import * as logger from '../utils/logger';
+import getModularRoot from '../utils/getModularRoot';
 
 const CHECKS = [
   'verifyBrowserslist',
@@ -14,6 +15,8 @@ interface Check {
 }
 
 export async function check(fix = false): Promise<void> {
+  // This is to bail out early if there is no modular root to check.
+  getModularRoot();
   let failed = false;
 
   for (const checkName of CHECKS) {

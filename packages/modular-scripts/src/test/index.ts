@@ -58,6 +58,8 @@ export default async function test(
   options: TestOptions,
   regexes?: string[],
 ): Promise<void> {
+  const modularRoot = getModularRoot();
+
   const { debug, env, reporters, testResultsProcessor, ...jestOptions } =
     options;
 
@@ -141,14 +143,14 @@ export default async function test(
 
   try {
     await execAsync(testBin, testArgs, {
-      cwd: getModularRoot(),
+      cwd: modularRoot,
       log: false,
       // @ts-ignore
       env: {
         BABEL_ENV: 'test',
         NODE_ENV: 'test',
         PUBLIC_URL: '',
-        MODULAR_ROOT: getModularRoot(),
+        MODULAR_ROOT: modularRoot,
       },
     });
   } catch (err) {

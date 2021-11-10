@@ -28,6 +28,8 @@ import {
 } from './esbuildFileSizeReporter';
 
 async function buildApp(target: string) {
+  const modularRoot = getModularRoot();
+
   // True if there's no preference set - or the preference is for webpack.
   const useWebpack =
     !process.env.USE_MODULAR_WEBPACK ||
@@ -43,7 +45,6 @@ async function buildApp(target: string) {
   const isEsbuild = !useWebpack || useEsbuild;
 
   // Setup Paths
-  const modularRoot = getModularRoot();
   const targetDirectory = await getLocation(target);
   const targetName = toParamCase(target);
 
