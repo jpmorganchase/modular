@@ -64,7 +64,7 @@
     semver "^5.4.1"
     source-map "^0.5.0"
 
-"@babel/core@7.16.0", "@babel/core@^7.1.0", "@babel/core@^7.12.3", "@babel/core@^7.7.5", "@babel/core@^7.8.4":
+"@babel/core@7.16.0", "@babel/core@^7.1.0", "@babel/core@^7.12.3", "@babel/core@^7.16.0", "@babel/core@^7.7.5", "@babel/core@^7.8.4":
   version "7.16.0"
   resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.16.0.tgz#c4ff44046f5fe310525cc9eb4ef5147f0c5374d4"
   integrity sha512-mYZEvshBRHGsIAiyH5PzCFTCfbWfoYbO/jcSdXQSUQu1/pW0xDZAUP7KEc32heqWTAfAHhV9j1vH8Sav7l+JNQ==
@@ -1779,6 +1779,21 @@
     lit-html "^1.1.2"
     lodash "^4.17.4"
     mobile-drag-drop "^2.3.0-rc.2"
+
+"@finos/perspective@0.6.0":
+  version "0.6.0"
+  resolved "https://artifacts.jpmchase.net/artifactory/api/npm/npm/@finos/perspective/-/perspective-0.6.0.tgz#52dc2ba88b184094e0ee1d50d15b56a774ea76ce"
+  integrity sha1-UtwrqIsYQJTg7h1Q0VtWp3Tqds4=
+  dependencies:
+    "@babel/runtime" "^7.8.4"
+    core-js "^3.6.4"
+    d3-array "^1.2.1"
+    detectie "1.0.0"
+    flatbuffers "^1.10.2"
+    lodash "^4.17.4"
+    text-encoding-utf-8 "^1.0.2"
+    tslib "^1.9.3"
+    ws "^6.1.2"
 
 "@finos/perspective@^0.6.0", "@finos/perspective@^0.6.2":
   version "0.6.2"
@@ -13328,6 +13343,13 @@ tmp@^0.0.33:
   dependencies:
     os-tmpdir "~1.0.2"
 
+tmp@^0.2.1:
+  version "0.2.1"
+  resolved "https://artifacts.jpmchase.net/artifactory/api/npm/npm/tmp/-/tmp-0.2.1.tgz#8457fc3037dcf4719c251367a1af6500ee1ccf14"
+  integrity sha1-hFf8MDfc9HGcJRNnoa9lAO4czxQ=
+  dependencies:
+    rimraf "^3.0.0"
+
 tmpl@1.0.x:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/tmpl/-/tmpl-1.0.5.tgz#8683e0b902bb9c20c4f726e3c0b69f36518c07cc"
@@ -13575,8 +13597,8 @@ typescript@4.4.4:
 
 ua-parser-js@0.7.28, ua-parser-js@^0.7.18:
   version "0.7.28"
-  resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.28.tgz#8ba04e653f35ce210239c64661685bf9121dec31"
-  integrity sha512-6Gurc1n//gjp9eQNXjD9O3M/sMwVtN5S8Lv9bvOYBfKfDNiIIhqiyi01vMBO45u4zkDE420w/e0se7Vs+sIg+g==
+  resolved "https://artifacts.jpmchase.net/artifactory/api/npm/npm/ua-parser-js/-/ua-parser-js-0.7.28.tgz#8ba04e653f35ce210239c64661685bf9121dec31"
+  integrity sha1-i6BOZT81ziECOcZGYWhb+RId7DE=
 
 unbox-primitive@^1.0.1:
   version "1.0.1"

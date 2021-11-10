@@ -28,7 +28,7 @@ const DEPS_TO_CHECK = [
 // in the tree will likely break your setup.
 // This is a relatively low-effort way to find common issues.
 export async function check(): Promise<boolean> {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  // eslint-disable-next-line @typescript-eslint/no-var-requires,import/no-extraneous-dependencies
   const ownPackageJson = require('modular-scripts/package.json') as PackageJson;
   const dependencies: Dependency = ownPackageJson.dependencies || {};
   const expectedVersionsByDep: Record<string, string> = {};
