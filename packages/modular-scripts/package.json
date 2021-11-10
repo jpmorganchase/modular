@@ -9,7 +9,8 @@
     "./jest-runner-eslint": "./jest-runner-eslint/index.js",
     "./react-scripts/scripts/build.js": "./react-scripts/scripts/build.js",
     "./react-scripts/scripts/start.js": "./react-scripts/scripts/start.js",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./tsconfig.json": "./tsconfig.json"
   },
   "engines": {
     "node": "^12.13.0 || ^14.15.0 || >=15.0.0"
