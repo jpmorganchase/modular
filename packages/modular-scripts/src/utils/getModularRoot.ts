@@ -11,9 +11,13 @@ function isModularRoot(packageJsonPath: string) {
   return packageJson?.modular?.type === 'root';
 }
 
-export const findModularRoot = memoize(function findModularRoot():
-  | string
-  | undefined {
+// This function is not memoized and gets executed at most twice:
+// when it's accessed directly (at init time) and when it's accessed via getModularRoot
+// The reason for this is that we might want to refresh the modular root
+// in case run on a non-modular directory to upgrade to a modular one,
+// on which we need to do checks (see for example the "convert" command)
+
+export const findModularRoot = function findModularRoot(): string | undefined {
   try {
     logger.debug('Deferring to find-up to locate modular root');
     const modularRoot = findUp.sync(
@@ -34,7 +38,7 @@ export const findModularRoot = memoize(function findModularRoot():
   } catch (err) {
     throw new Error(err as string);
   }
-});
+};
 
 function getModularRoot(): string {
   const modularRoot = findModularRoot();
