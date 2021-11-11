@@ -12,10 +12,10 @@ function isModularRoot(packageJsonPath: string) {
 }
 
 // This function is not memoized and gets executed at most twice:
-// when it's accessed directly (at init time) and when it's accessed via getModularRoot
+// when it's accessed directly (at init time) and when it's accessed via getModularRoot (at command time)
 // The reason for this is that we might want to refresh the modular root
-// in case run on a non-modular directory to upgrade to a modular one,
-// on which we need to do checks (see for example the "convert" command)
+// in case we run on a non-modular directory to upgrade to a modular one,
+// on which we still need to do checks (see for example the "convert" command)
 
 export const findModularRoot = function findModularRoot(): string | undefined {
   try {
