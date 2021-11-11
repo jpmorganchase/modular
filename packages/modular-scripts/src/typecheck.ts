@@ -7,9 +7,6 @@ import getModularRoot from './utils/getModularRoot';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 
 async function typecheck(): Promise<void> {
-  // This is to bail out early if there is no modular root to typecheck.
-  getModularRoot();
-
   const { typescriptConfig } = await getPackageMetadata();
 
   const { _compilerOptions, ...rest } = typescriptConfig;

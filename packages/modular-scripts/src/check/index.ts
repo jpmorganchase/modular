@@ -15,7 +15,7 @@ interface Check {
 }
 
 export async function check(fix = false): Promise<void> {
-  // This is to bail out early if there is no modular root to check.
+  // Bail out early if there is no modular root.
   getModularRoot();
   let failed = false;
 

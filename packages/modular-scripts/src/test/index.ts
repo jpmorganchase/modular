@@ -1,4 +1,5 @@
 import * as path from 'path';
+import actionPreflightCheck from '../utils/actionPreflightCheck';
 import resolve from 'resolve';
 import { ExecaError } from 'execa';
 import execAsync from '../utils/execAsync';
@@ -54,12 +55,7 @@ function resolveJestDefaultEnvironment(name: string) {
   });
 }
 
-export default async function test(
-  options: TestOptions,
-  regexes?: string[],
-): Promise<void> {
-  const modularRoot = getModularRoot();
-
+async function test(options: TestOptions, regexes?: string[]): Promise<void> {
   const { debug, env, reporters, testResultsProcessor, ...jestOptions } =
     options;
 
@@ -143,14 +139,14 @@ export default async function test(
 
   try {
     await execAsync(testBin, testArgs, {
-      cwd: modularRoot,
+      cwd: getModularRoot(),
       log: false,
       // @ts-ignore
       env: {
         BABEL_ENV: 'test',
         NODE_ENV: 'test',
         PUBLIC_URL: '',
-        MODULAR_ROOT: modularRoot,
+        MODULAR_ROOT: getModularRoot(),
       },
     });
   } catch (err) {
@@ -159,3 +155,5 @@ export default async function test(
     throw new Error('\u2715 Modular test did not pass');
   }
 }
+
+export default actionPreflightCheck(test);

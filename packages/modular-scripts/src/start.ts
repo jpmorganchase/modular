@@ -14,7 +14,6 @@ import * as logger from './utils/logger';
 import createEsbuildBrowserslistTarget from './utils/createEsbuildBrowserslistTarget';
 
 async function start(target: string): Promise<void> {
-  const modularRoot = getModularRoot();
   const targetPath = await getLocation(target);
 
   await setupEnvForDirectory(targetPath);
@@ -64,6 +63,7 @@ async function start(target: string): Promise<void> {
     const startScript = require.resolve(
       'modular-scripts/react-scripts/scripts/start.js',
     );
+    const modularRoot = getModularRoot();
     const targetName = toParamCase(target);
 
     const browserTarget = createEsbuildBrowserslistTarget(targetPath);
