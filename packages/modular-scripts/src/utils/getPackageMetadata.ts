@@ -1,4 +1,6 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { JSONSchemaForTheTypeScriptCompilerSConfigurationFile as TSConfig } from '@schemastore/tsconfig';
 import * as path from 'path';
 import * as ts from 'typescript';

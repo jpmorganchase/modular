@@ -1,7 +1,6 @@
 import * as fs from 'fs-extra';
 import esbuild from 'esbuild';
 
-// eslint-disable-next-line import/no-extraneous-dependencies
 import svgr from '@svgr/core';
 import path from 'path';
 
