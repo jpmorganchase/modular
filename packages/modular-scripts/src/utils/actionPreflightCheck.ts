@@ -6,9 +6,9 @@ type ModularAction = (...args: any[]) => Promise<void>;
 
 function actionPreflightCheck(fn: ModularAction): ModularAction {
   const wrappedFn: ModularAction = async (...args) => {
+    // Bail out if there is no modular root
+    getModularRoot();
     if (process.env.SKIP_PREFLIGHT_CHECK !== 'true') {
-      // Bail out if there is no modular root
-      getModularRoot();
       const { check } = await import('../check');
       await check();
     } else {
