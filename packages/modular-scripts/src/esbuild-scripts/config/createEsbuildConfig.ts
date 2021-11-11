@@ -42,6 +42,9 @@ export default function createEsbuildConfig(
       '.jpeg': 'file',
       '.png': 'file',
       '.webp': 'file',
+
+      // font file format loaders
+      '.woff': 'file',
       '.ttf': 'file',
 
       // enable JSX in js files
