@@ -21,9 +21,9 @@ export async function getYarnWorkspaceInfo(
     cleanup: true,
   });
 
-  const { stdout, stderr } = result;
+  const { exitCode, stdout, stderr } = result;
 
-  if (stderr) {
+  if (stderr && !!exitCode) {
     logger.error(stderr);
     throw new Error(`Failed to lookup yarn workspace information`);
   }
