@@ -1,5 +1,15 @@
 # create-modular-react-app
 
+## 2.1.0
+
+### Minor Changes
+
+- [#1025](https://github.com/jpmorganchase/modular/pull/1025)
+  [`f30f7f4`](https://github.com/jpmorganchase/modular/commit/f30f7f49b0d25859e211e725aa66e2177753f00f)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Suppress
+  Yarn warnings by default when the `verbose` flag is not specified. This
+  changes the screen output of `create-modular-react-app` and `modular add`.
+
 ## 2.0.0
 
 ### Major Changes
