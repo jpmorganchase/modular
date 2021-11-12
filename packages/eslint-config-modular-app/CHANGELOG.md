@@ -1,5 +1,34 @@
 # eslint-config-modular-app
 
+## 2.0.1
+
+### Patch Changes
+
+- [#1034](https://github.com/jpmorganchase/modular/pull/1034)
+  [`51ddf73`](https://github.com/jpmorganchase/modular/commit/51ddf73c9e6a10f30077fed65da343ab49ef26fc)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  eslint-plugin-import from 2.25.2 to 2.25.3
+
+* [#1028](https://github.com/jpmorganchase/modular/pull/1028)
+  [`cfc537a`](https://github.com/jpmorganchase/modular/commit/cfc537a5ad6d5f5590d54d7d98a200a2e15067f3)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  eslint-plugin-react-hooks from 4.2.0 to 4.3.0
+
+- [#1027](https://github.com/jpmorganchase/modular/pull/1027)
+  [`919d34c`](https://github.com/jpmorganchase/modular/commit/919d34c6df58d61dfce2fc907b8db5bcb0b42988)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  @babel/eslint-parser from 7.16.0 to 7.16.3
+
+* [#1035](https://github.com/jpmorganchase/modular/pull/1035)
+  [`de004df`](https://github.com/jpmorganchase/modular/commit/de004df66e2d00960add70c4da89b148e5e9768a)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  eslint-plugin-jsx-a11y from 6.4.1 to 6.5.1
+
+- [#1036](https://github.com/jpmorganchase/modular/pull/1036)
+  [`0d7a6ef`](https://github.com/jpmorganchase/modular/commit/0d7a6ef4816e19be250252c45c424874973af163)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  eslint-plugin-react from 7.26.1 to 7.27.0
+
 ## 2.0.0
 
 ### Major Changes
