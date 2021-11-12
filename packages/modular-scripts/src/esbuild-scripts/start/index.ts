@@ -154,7 +154,11 @@ class DevServer {
     const runtimeDir = path.join(__dirname, '..', 'runtime');
 
     const runtimeDirFiles = await fs.readdir(runtimeDir);
-    const indexFiles = runtimeDirFiles.filter((p) => p.startsWith('index'));
+    const indexFiles = runtimeDirFiles.filter(
+      (p) =>
+        p.startsWith('index') &&
+        ['.js', '.ts'].some((extension) => p.endsWith(extension)),
+    );
     if (indexFiles.length !== 1) {
       throw new Error(`Found multiple possible entry files`);
     }
