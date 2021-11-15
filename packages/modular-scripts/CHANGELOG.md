@@ -1,5 +1,53 @@
 # modular-scripts
 
+## 2.1.0
+
+### Minor Changes
+
+- [#1026](https://github.com/jpmorganchase/modular/pull/1026)
+  [`a7b15f7`](https://github.com/jpmorganchase/modular/commit/a7b15f7b843064edad7b0afec2c59df1e56a3138)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Allow the
+  `--help` and `--version` flags and the `init`, `help` and `convert` commands
+  to work without necessarily being run inside a modular directory.
+
+* [#1025](https://github.com/jpmorganchase/modular/pull/1025)
+  [`f30f7f4`](https://github.com/jpmorganchase/modular/commit/f30f7f49b0d25859e211e725aa66e2177753f00f)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Suppress
+  Yarn warnings by default when the `verbose` flag is not specified. This
+  changes the screen output of `create-modular-react-app` and `modular add`.
+
+### Patch Changes
+
+- [#1038](https://github.com/jpmorganchase/modular/pull/1038)
+  [`f7fd2e0`](https://github.com/jpmorganchase/modular/commit/f7fd2e045866a851803cb5ad9d6b3389b00335f6)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Add support for loading
+  .woff font files.
+
+* [#1017](https://github.com/jpmorganchase/modular/pull/1017)
+  [`d5ec923`](https://github.com/jpmorganchase/modular/commit/d5ec923a76334b3087c2190542461ecd2a42db65)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Upgrade
+  optimize-css-assets-webpack-plugin 6.0.1
+
+- [#1039](https://github.com/jpmorganchase/modular/pull/1039)
+  [`c83e180`](https://github.com/jpmorganchase/modular/commit/c83e1801f6947b09656bb9c43c163a499104cf06)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Add missing
+  dependencies required for esbuild-scripts.
+
+* [#1032](https://github.com/jpmorganchase/modular/pull/1032)
+  [`e7e3dee`](https://github.com/jpmorganchase/modular/commit/e7e3dee120276b10ce86c854830ad11b23bbe6c7)
+  Thanks [@joshwooding](https://github.com/joshwooding)! - Export
+  `tsconfig.json`
+
+- [#1022](https://github.com/jpmorganchase/modular/pull/1022)
+  [`d670354`](https://github.com/jpmorganchase/modular/commit/d670354b081a2abd7533d1561afb5085b7769935)
+  Thanks [@steveukx](https://github.com/steveukx)! - Use non-zero exit codes to
+  determine child process failures.
+
+* [#1030](https://github.com/jpmorganchase/modular/pull/1030)
+  [`f7de18e`](https://github.com/jpmorganchase/modular/commit/f7de18ef6f949986f66ff36319bd2ef7eb5f71c8)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump esbuild from
+  0.13.8 to 0.13.13
+
 ## 2.0.0
 
 ### Major Changes
