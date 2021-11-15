@@ -39,6 +39,7 @@ export default function getTargets(dirName: string): string[] {
       const versionResult = VersionSchema.exec(rawVersionNormalized);
       if (!versionResult) {
         logger.error(`Could not find esbuild equivalent for ${entry}`);
+        return undefined;
       }
 
       const browserResult = FAMILY_MAPPING[rawBrowser];
