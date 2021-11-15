@@ -17,6 +17,6 @@ ${codeFrame(source, error.location.line, error.location.column, {
 })}
     `;
   } else {
-    return `This is a bad error ... lol\n`;
+    return `${chalk.red('Error:')} ${error.text}\n`;
   }
 }
