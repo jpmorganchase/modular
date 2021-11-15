@@ -10,7 +10,7 @@ import semver from 'semver';
 import * as path from 'path';
 import semverRegex from 'semver-regex';
 
-import {
+import type {
   Dependency,
   JSONSchemaForNPMPackageJsonFiles as PackageJson,
 } from '@schemastore/package';
