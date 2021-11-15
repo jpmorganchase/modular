@@ -238,20 +238,7 @@ class DevServer {
 
   private esbuildServer: () => Promise<esbuild.BuildResult> = memoize(
     async () => {
-      try {
-        await this.runEsbuild(false);
-      } catch (e) {
-        const result = e as esbuild.BuildFailure;
-        logger.log(chalk.red('Failed to compile.\n'));
-        const logs = result.errors.map(async (m) => {
-          logger.log(await formatError(m));
-        });
-
-        await Promise.all(logs);
-
-        throw new Error(`Failed to compile`);
-      }
-
+      await this.runEsbuild(false);
       // if the non-incremental succeeds then
       // we start a watching server
       return this.runEsbuild(true);

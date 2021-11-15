@@ -17,6 +17,6 @@ ${codeFrame(source, error.location.line, error.location.column, {
 })}
     `;
   } else {
-    return `${chalk.red('Error:')} ${error.text}`;
+    return `${chalk.red('Error:')} ${error.text}\n`;
   }
 }
