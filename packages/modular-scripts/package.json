@@ -122,8 +122,8 @@
     "ws": "7.4.6"
   },
   "peerDependencies": {
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
+    "react": "^16 || ^17",
+    "react-dom": "^16 || ^17",
     "typescript": "^4.3.5"
   },
   "files": [
