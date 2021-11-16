@@ -20,7 +20,6 @@
     "build": "babel --root-mode upward src --out-dir build --extensions .ts --ignore 'src/**/*.test.ts'"
   },
   "dependencies": {
-    "@schemastore/package": "0.0.6",
     "chalk": "4.1.2",
     "commander": "8.2.0",
     "execa": "5.1.1",

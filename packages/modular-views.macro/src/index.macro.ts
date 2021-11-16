@@ -1,4 +1,4 @@
-import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
+import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import * as path from 'path';
 import fs from 'fs-extra';
 import findUp from 'find-up';
