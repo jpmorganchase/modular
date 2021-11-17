@@ -1,5 +1,5 @@
 name: 'Validate'
-on: push
+on: [push, pull_request]
 
 jobs:
   check-yarn-lock-registry:
