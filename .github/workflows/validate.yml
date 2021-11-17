@@ -17,5 +17,7 @@ jobs:
         with:
           node-version: 14
           cache: 'yarn'
+      - name: Install Dependencies
+        run: yarn --frozen-lockfile
       - name: Check yarn.lock registry url
         run: yarn validate-lockfile
