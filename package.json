@@ -36,7 +36,7 @@
   "dependencies": {
     "@babel/cli": "7.16.0",
     "@babel/core": "7.16.0",
-    "@babel/preset-env": "7.16.0",
+    "@babel/preset-env": "7.16.4",
     "@babel/preset-react": "7.16.0",
     "@babel/preset-typescript": "7.16.0",
     "@changesets/changelog-github": "^0.4.1",
@@ -63,7 +63,7 @@
     "@types/parse5": "^6.0.2",
     "@types/prompts": "2.0.14",
     "@types/puppeteer": "5.4.4",
-    "@types/react": "17.0.34",
+    "@types/react": "17.0.35",
     "@types/react-dom": "17.0.11",
     "@types/recursive-readdir": "^2.2.0",
     "@types/rimraf": "3.0.2",
@@ -72,7 +72,7 @@
     "@types/tmp": "0.2.2",
     "@types/update-notifier": "5.1.0",
     "commander": "8.2.0",
-    "esbuild": "0.13.13",
+    "esbuild": "0.13.14",
     "eslint": "7.32.0",
     "execa": "5.1.1",
     "husky": "7.0.4",
@@ -91,7 +91,7 @@
     "typescript": "4.4.4"
   },
   "resolutions": {
-    "esbuild": "0.13.13",
+    "esbuild": "0.13.14",
     "ua-parser-js": "0.7.28"
   },
   "jest": {
