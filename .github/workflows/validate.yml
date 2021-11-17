@@ -9,4 +9,4 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Check yarn.lock registry url
-        run: bash scripts/validate-lockfile.sh
+        run: node scripts/validate-lockfile.mjs

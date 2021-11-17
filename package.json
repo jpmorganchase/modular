@@ -71,6 +71,7 @@
     "@types/semver-regex": "^3.1.0",
     "@types/tmp": "0.2.2",
     "@types/update-notifier": "5.1.0",
+    "@yarnpkg/lockfile": "^1.1.0",
     "commander": "8.2.0",
     "esbuild": "0.13.14",
     "eslint": "7.32.0",
@@ -105,8 +106,9 @@
     "type": "root"
   },
   "lint-staged": {
+    "*.{js,ts,tsx,mjs}": "yarn prettier --write",
     "*.{ts,tsx}": "yarn typecheck",
     "*.{js,ts,tsx}": "yarn lint",
-    "*.lock": "bash scripts/validate-lockfile.sh"
+    "*": "node scripts/validate-lockfile.mjs"
   }
 }
