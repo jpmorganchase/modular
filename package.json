@@ -19,7 +19,8 @@
     "start": "yarn modular start modular-site",
     "prepare": "is-ci || husky install",
     "postinstall": "patch-package",
-    "typecheck": "yarn modular typecheck"
+    "typecheck": "yarn modular typecheck",
+    "validate-lockfile": "node scripts/validate-lockfile.js"
   },
   "browserslist": {
     "production": [
@@ -107,8 +108,10 @@
   },
   "lint-staged": {
     "*.{js,ts,tsx,mjs,md,yml,json}": "yarn prettier --write -l",
-    "*.{ts,tsx}": "yarn typecheck",
-    "*.{ts,tsx}": "yarn lint",
+    "*.{ts,tsx}": [
+      "yarn typecheck",
+      "yarn lint"
+    ],
     "*": "node scripts/validate-lockfile.js"
   }
 }
