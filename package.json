@@ -106,7 +106,7 @@
     "type": "root"
   },
   "lint-staged": {
-    "*.{js,ts,tsx,mjs}": "yarn prettier --write",
+    "*.{js,ts,tsx,mjs,md,yml,json}": "yarn prettier --write -l",
     "*.{ts,tsx}": "yarn typecheck",
     "*.{js,ts,tsx}": "yarn lint",
     "*": "node scripts/validate-lockfile.mjs"
