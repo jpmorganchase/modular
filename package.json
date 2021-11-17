@@ -106,6 +106,7 @@
   },
   "lint-staged": {
     "*.{ts,tsx}": "yarn typecheck",
-    "*.{js,ts,tsx}": "yarn lint"
+    "*.{js,ts,tsx}": "yarn lint",
+    "*.lock": "bash scripts/validate-lockfile.sh"
   }
 }
