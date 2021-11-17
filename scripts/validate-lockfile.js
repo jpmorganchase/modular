@@ -1,9 +1,8 @@
-import lockfile from '@yarnpkg/lockfile';
-import fs from 'fs';
-import path from 'path';
-import { URL } from 'url';
+'use strict';
 
-const __dirname = new URL('.', import.meta.url).pathname;
+const lockfile = require('@yarnpkg/lockfile');
+const fs = require('fs');
+const path = require('path');
 
 const lockfilePath = path.join(__dirname, '..', 'yarn.lock');
 
