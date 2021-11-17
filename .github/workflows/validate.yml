@@ -12,5 +12,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Use Node.js 14
+        uses: actions/setup-node@v2.4.1
+        with:
+          node-version: 14
+          cache: 'yarn'
       - name: Check yarn.lock registry url
         run: yarn validate-lockfile
