@@ -1,4 +1,3 @@
-// @ts-ignore
 import detect from 'detect-port-alt';
 import isRoot from 'is-root';
 import prompts from 'prompts';
@@ -12,9 +11,7 @@ export default async function choosePort(
   host: string,
   defaultPort: number,
 ): Promise<number | undefined> {
-  const port = await (
-    detect as (start: number, host: string) => Promise<number>
-  )(defaultPort, host);
+  const port = await detect(defaultPort, host);
   if (port === defaultPort) {
     return port;
   }
