@@ -14,6 +14,7 @@ import * as logger from './utils/logger';
 import createEsbuildBrowserslistTarget from './utils/createEsbuildBrowserslistTarget';
 
 async function start(target: string): Promise<void> {
+  console.log(`starting 'start', with target ${target}`);
   const targetPath = await getLocation(target);
 
   await setupEnvForDirectory(targetPath);
