@@ -83,7 +83,7 @@ describe('when working with an app', () => {
     ).toMatchInlineSnapshot(`
       "sample-esbuild-app
       ├─ favicon.ico #6pu3rg
-      ├─ index.css #1g5dmd3
+      ├─ index.css #90bbzw
       ├─ index.css.map
       ├─ index.html #ojdrji
       ├─ index.js #gjna5x

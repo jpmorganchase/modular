@@ -2,7 +2,7 @@
 
 exports[`when working with an app can generate a index.css.map 1`] = `
 Object {
-  "mappings": "AAAA,KACE,kBAGF,UACE,cACA,oBAGF,+CACE,UACE,6CAIJ,YACE,yBACA,iBACA,aACA,sBACA,mBACA,uBACA,6BACA,WAGF,UACE,cAGF,4BAEI,uBAGA,0BCnCJ,cAEE,oJAGA,mCACA,kCAGF,KACE",
+  "mappings": "AAAA,KACE,kBAGF,UACE,cACA,oBAGF,+CACE,UACE,6CAIJ,YACE,yBACA,iBACA,aACA,sBACA,mBACA,uBACA,6BACA,WAGF,UACE,cAGF,4BAEI,uBAGA,0BCnCJ,cAEE,oIAGA,mCACA,kCAGF,KACE",
   "names": Array [],
   "sourceRoot": "//modular",
   "sources": Array [
