@@ -1,5 +1,51 @@
 # modular-scripts
 
+## 2.1.1
+
+### Patch Changes
+
+- [#1054](https://github.com/jpmorganchase/modular/pull/1054)
+  [`622e5a2`](https://github.com/jpmorganchase/modular/commit/622e5a25e65a23a1cdf9051f392609580fa2e713)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump browserslist
+  from 4.18.0 to 4.18.1
+
+* [#1055](https://github.com/jpmorganchase/modular/pull/1055)
+  [`fc096cc`](https://github.com/jpmorganchase/modular/commit/fc096cc6ab603640bbfc6ed1fa4e6fc0aace260b)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Fix
+  runtime entry point check to exclude sourcemap files (#1044)
+
+- [#1057](https://github.com/jpmorganchase/modular/pull/1057)
+  [`4c5c10c`](https://github.com/jpmorganchase/modular/commit/4c5c10c1d3e13b7a4dc25a8a4ee13c9fafd8eca0)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump esbuild from
+  0.13.13 to 0.13.14
+
+* [#1058](https://github.com/jpmorganchase/modular/pull/1058)
+  [`9b1d1b5`](https://github.com/jpmorganchase/modular/commit/9b1d1b58559d33c47b77d6663656b84b16b95537)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  @babel/preset-env from 7.16.0 to 7.16.4
+
+- [#1047](https://github.com/jpmorganchase/modular/pull/1047)
+  [`c182f56`](https://github.com/jpmorganchase/modular/commit/c182f568ff8a06bcfa6ad27c781b107d0a39afd4)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump browserslist
+  from 4.17.4 to 4.18.0
+
+* [#1046](https://github.com/jpmorganchase/modular/pull/1046)
+  [`dc3ad18`](https://github.com/jpmorganchase/modular/commit/dc3ad180a19364e06476d23d6ecceed19a00ee3f)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump rollup from
+  2.58.0 to 2.60.0
+
+- [#1055](https://github.com/jpmorganchase/modular/pull/1055)
+  [`fc096cc`](https://github.com/jpmorganchase/modular/commit/fc096cc6ab603640bbfc6ed1fa4e6fc0aace260b)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Fix
+  "modular start" build failure messaging when a browser version is not
+  supported in esbuild mode. Improve messaging around a "modular start failure"
+  (#1050)
+
+* [#1056](https://github.com/jpmorganchase/modular/pull/1056)
+  [`c6891df`](https://github.com/jpmorganchase/modular/commit/c6891df30e9ddef59b82bc1c22a9d1673b63f86d)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  postcss-preset-env from 6.7.0 to 7.0.0
+
 ## 2.1.0
 
 ### Minor Changes
