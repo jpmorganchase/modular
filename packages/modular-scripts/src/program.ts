@@ -56,7 +56,7 @@ program
   );
 
 program
-  .command('build <packages...>')
+  .command('build [packages...]')
   .description(
     'Build a list of packages (multiple package names can be supplied separated by space)',
   )
@@ -151,7 +151,7 @@ program
   });
 
 program
-  .command('start <packageName>')
+  .command('start [packageName]')
   .description(
     `Start a dev-server for an app. Only available for modular 'app' types.`,
   )

@@ -6,6 +6,7 @@ import execAsync from './utils/execAsync';
 import getLocation from './utils/getLocation';
 import stageView from './utils/stageView';
 import getModularRoot from './utils/getModularRoot';
+import getWorkspaceInfo from './utils/getWorkspaceInfo';
 import { setupEnvForDirectory } from './utils/setupEnv';
 import { checkBrowsers } from './utils/checkBrowsers';
 import checkRequiredFiles from './utils/checkRequiredFiles';
@@ -14,8 +15,14 @@ import * as logger from './utils/logger';
 import createEsbuildBrowserslistTarget from './utils/createEsbuildBrowserslistTarget';
 
 async function start(target: string): Promise<void> {
-  console.log(`starting 'start', with target ${target}`);
-  const targetPath = await getLocation(target);
+  let targetPath;
+  try {
+    targetPath = await getLocation(target);
+  } catch (e) {
+    const availablePackages = Object.keys(await getWorkspaceInfo());
+    console.log('available packages are:', availablePackages);
+    targetPath = ''; // remove me
+  }
 
   await setupEnvForDirectory(targetPath);
 
