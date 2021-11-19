@@ -1,5 +1,5 @@
-import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
-import { JSONSchemaForTheTypeScriptCompilerSConfigurationFile as TSConfig } from '@schemastore/tsconfig';
+import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
+import type { JSONSchemaForTheTypeScriptCompilerSConfigurationFile as TSConfig } from '@schemastore/tsconfig';
 import * as path from 'path';
 import * as ts from 'typescript';
 import * as fse from 'fs-extra';

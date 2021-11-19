@@ -1,7 +1,7 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import execa from 'execa';
-import { Dependency } from '@schemastore/package';
+import type { Dependency } from '@schemastore/package';
 import rimraf from 'rimraf';
 import chalk from 'chalk';
 import semver from 'semver';

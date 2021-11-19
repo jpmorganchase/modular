@@ -1,4 +1,4 @@
-import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
+import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import { Transform } from 'stream';
 import execa from 'execa';
 import * as fs from 'fs-extra';
@@ -97,8 +97,8 @@ export default async function createModularApp(argv: {
       type: 'root',
     },
     scripts: {
-      start: 'modular start app',
-      build: 'modular build app',
+      start: 'modular start',
+      build: 'modular build',
       test: 'modular test',
       lint: 'eslint . --ext .js,.ts,.tsx',
       prettier: 'prettier --write .',

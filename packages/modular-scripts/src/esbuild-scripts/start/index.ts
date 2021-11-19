@@ -142,12 +142,12 @@ class DevServer {
     });
   }
 
-  shudown = async () => {
+  shutdown = async () => {
     if (this.started) {
       this.server?.close();
     }
     const esbuildServer = await this.esbuildServer();
-    esbuildServer && esbuildServer.stop && esbuildServer.stop();
+    esbuildServer?.stop?.();
   };
 
   private hostRuntime = memoize(async () => {
@@ -259,14 +259,14 @@ export default async function start(target: string): Promise<void> {
 
   ['SIGINT', 'SIGTERM'].forEach((sig) => {
     process.on(sig, () => {
-      void server.shudown();
+      void server.shutdown();
     });
   });
 
   if (!isCi) {
     // Gracefully exit when stdin ends
     process.stdin.on('end', () => {
-      void server.shudown();
+      void server.shutdown();
     });
   }
 }

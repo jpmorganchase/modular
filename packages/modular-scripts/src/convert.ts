@@ -1,5 +1,5 @@
-import { IncludeDefinition as TSConfig } from '@schemastore/tsconfig';
-import { Dependency } from '@schemastore/package';
+import type { IncludeDefinition as TSConfig } from '@schemastore/tsconfig';
+import type { Dependency } from '@schemastore/package';
 import execa from 'execa';
 import * as fs from 'fs-extra';
 import * as path from 'path';
