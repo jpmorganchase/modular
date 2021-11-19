@@ -1,5 +1,21 @@
 # create-modular-react-app
 
+## 2.1.1
+
+### Patch Changes
+
+- [#1060](https://github.com/jpmorganchase/modular/pull/1060)
+  [`e525436`](https://github.com/jpmorganchase/modular/commit/e525436f7d451f5bc645997ad6a380acf32f9fac)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - - Root
+  yarn start/build aliases modular start/build in a CMRA repo
+  - If no argument given to `yarn / modular start`, provide the user with an
+    interactive selection
+
+* [#1033](https://github.com/jpmorganchase/modular/pull/1033)
+  [`d9f42fe`](https://github.com/jpmorganchase/modular/commit/d9f42fea338b0bf70968e4690bf2b5aa2ba108ff)
+  Thanks [@steveukx](https://github.com/steveukx)! - Add extraneous dependencies
+  and add lint rule to ensure dependencies always added
+
 ## 2.1.0
 
 ### Minor Changes
