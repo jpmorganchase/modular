@@ -1,20 +1,8 @@
-import reactErrorOverlay from 'react-error-overlay';
+import ErrorOverlay from 'react-error-overlay';
 import stripAnsi from 'strip-ansi';
 
 const isFirstCompilation: Record<string, boolean> = {};
 let hasCompileErrors = false;
-
-const ErrorOverlay = reactErrorOverlay as {
-  reportBuildError(error: string): void;
-  setEditorHandler(
-    handler: (location: {
-      fileName: string;
-      lineNumber: number;
-      colNumber?: number;
-    }) => void,
-  ): void;
-  startReportingRuntimeErrors(options: { filename: string }): void;
-};
 
 ErrorOverlay.setEditorHandler(function editorHandler(errorLocation) {
   // Keep this sync with errorOverlayMiddleware.js
