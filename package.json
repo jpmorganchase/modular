@@ -88,7 +88,7 @@
     "semver": "7.3.5",
     "string.prototype.replaceall": "^1.0.6",
     "ts-node": "10.4.0",
-    "typescript": "4.4.4"
+    "typescript": "4.5.2"
   },
   "resolutions": {
     "esbuild": "0.13.14",
