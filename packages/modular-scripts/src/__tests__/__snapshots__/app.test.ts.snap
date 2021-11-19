@@ -16552,6 +16552,22 @@ exports[`When working with a nested app can generate a manifest 1`] = `
 "
 `;
 
+exports[`when working with a NODE_ENV app can generate a js/main.f98447c8.chunk.js 1`] = `
+"(this[\\"webpackJsonpnode-env-app\\"] =
+  this[\\"webpackJsonpnode-env-app\\"] || []).push([
+  [0],
+  [
+    function (n, o, p) {
+      \\"use strict\\";
+      p.r(o), console.log(\\"production\\");
+    },
+  ],
+  [[0, 1]],
+]);
+//# sourceMappingURL=main.f98447c8.chunk.js.map
+"
+`;
+
 exports[`when working with an app can generate a asset-manifest 1`] = `
 "{
   \\"files\\": {

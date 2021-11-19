@@ -40,6 +40,9 @@ function cleanup() {
   rimraf.sync(path.join(packagesPath, 'scoped/sample-app'));
   rimraf.sync(path.join(modularRoot, 'dist/scoped-sample-app'));
 
+  rimraf.sync(path.join(packagesPath, 'node-env-app'));
+  rimraf.sync(path.join(modularRoot, 'dist/node-env-app'));
+
   // run yarn so yarn.lock gets reset
   return execa.sync('yarnpkg', ['--silent'], {
     cwd: modularRoot,
@@ -48,6 +51,70 @@ function cleanup() {
 
 beforeAll(cleanup);
 afterAll(cleanup);
+
+describe('when working with a NODE_ENV app', () => {
+  beforeAll(async () => {
+    await modular(
+      'add node-env-app --unstable-type app --unstable-name node-env-app',
+      { stdio: 'inherit' },
+    );
+
+    await fs.writeFile(
+      path.join(modularRoot, 'packages', 'node-env-app', 'src', 'index.ts'),
+      `
+      console.log(process.env.NODE_ENV);
+
+      export {};
+    `,
+    );
+
+    await modular('build node-env-app', {
+      stdio: 'inherit',
+    });
+  });
+
+  it('can build a app', () => {
+    expect(tree(path.join(modularRoot, 'dist', 'node-env-app')))
+      .toMatchInlineSnapshot(`
+      "node-env-app
+      ├─ asset-manifest.json #10qunpe
+      ├─ favicon.ico #6pu3rg
+      ├─ index.html #1yqd98l
+      ├─ logo192.png #1nez7vk
+      ├─ logo512.png #1hwqvcc
+      ├─ manifest.json #19gah8o
+      ├─ robots.txt #1sjb8b3
+      └─ static
+         └─ js
+            ├─ main.f98447c8.chunk.js #kuqe6a
+            ├─ main.f98447c8.chunk.js.map #kb5l30
+            ├─ runtime-main.b1272d20.js #15smdhy
+            └─ runtime-main.b1272d20.js.map #2away3"
+    `);
+  });
+
+  it('can generate a js/main.f98447c8.chunk.js', async () => {
+    expect(
+      prettier.format(
+        String(
+          await fs.readFile(
+            path.join(
+              modularRoot,
+              'dist',
+              'node-env-app',
+              'static',
+              'js',
+              'main.f98447c8.chunk.js',
+            ),
+          ),
+        ),
+        {
+          filepath: 'main.f98447c8.chunk.js',
+        },
+      ),
+    ).toMatchSnapshot();
+  });
+});
 
 describe('When working with a nested app', () => {
   beforeAll(async () => {

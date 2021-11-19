@@ -17,6 +17,7 @@ packages/esbuild-app
 packages/view-1
 packages/view-2
 packages/scoped
+packages/node-env-app
 
 
 # Build output
