@@ -1,5 +1,31 @@
 # modular-scripts
 
+## 2.1.2
+
+### Patch Changes
+
+- [#1060](https://github.com/jpmorganchase/modular/pull/1060)
+  [`e525436`](https://github.com/jpmorganchase/modular/commit/e525436f7d451f5bc645997ad6a380acf32f9fac)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - - Root
+  yarn start/build aliases modular start/build in a CMRA repo
+  - If no argument given to `yarn / modular start`, provide the user with an
+    interactive selection
+
+* [#1033](https://github.com/jpmorganchase/modular/pull/1033)
+  [`d9f42fe`](https://github.com/jpmorganchase/modular/commit/d9f42fea338b0bf70968e4690bf2b5aa2ba108ff)
+  Thanks [@steveukx](https://github.com/steveukx)! - Add extraneous dependencies
+  and add lint rule to ensure dependencies always added
+
+- [#1069](https://github.com/jpmorganchase/modular/pull/1069)
+  [`6cb56cc`](https://github.com/jpmorganchase/modular/commit/6cb56ccccbd643fae2f400714d0e90646b125ee3)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Fix bug with
+  --watchAll=true as a default when running modular tests
+
+* [#1068](https://github.com/jpmorganchase/modular/pull/1068)
+  [`c13d5a6`](https://github.com/jpmorganchase/modular/commit/c13d5a66ca9c79845e7784dd6ff53198b10f8a65)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Fix for command
+  environment setup
+
 ## 2.1.1
 
 ### Patch Changes
