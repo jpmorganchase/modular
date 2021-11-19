@@ -151,7 +151,7 @@ program
   });
 
 program
-  .command('start <packageName>')
+  .command('start [packageName]')
   .description(
     `Start a dev-server for an app. Only available for modular 'app' types.`,
   )

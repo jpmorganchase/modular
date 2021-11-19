@@ -6,14 +6,33 @@ import execAsync from './utils/execAsync';
 import getLocation from './utils/getLocation';
 import stageView from './utils/stageView';
 import getModularRoot from './utils/getModularRoot';
+import getWorkspaceInfo from './utils/getWorkspaceInfo';
 import { setupEnvForDirectory } from './utils/setupEnv';
 import { checkBrowsers } from './utils/checkBrowsers';
 import checkRequiredFiles from './utils/checkRequiredFiles';
 import createPaths from './utils/createPaths';
 import * as logger from './utils/logger';
 import createEsbuildBrowserslistTarget from './utils/createEsbuildBrowserslistTarget';
+import prompts from 'prompts';
 
-async function start(target: string): Promise<void> {
+async function start(packageName: string): Promise<void> {
+  let target = packageName;
+
+  if (!target) {
+    const availablePackages = Object.keys(await getWorkspaceInfo());
+    const chosenTarget = await prompts<string>({
+      type: 'select',
+      name: 'value',
+      message: 'Select a package to start',
+      choices: availablePackages.map((packageName) => ({
+        title: packageName,
+        value: packageName,
+      })),
+      initial: 0,
+    });
+    target = chosenTarget.value as string;
+  }
+
   const targetPath = await getLocation(target);
 
   await setupEnvForDirectory(targetPath);
