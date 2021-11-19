@@ -1,21 +1,25 @@
-import ErrorOverlay from 'react-error-overlay';
+// import {
+//   setEditorHandler,
+//   startReportingRuntimeErrors,
+//   reportBuildError,
+// } from 'react-error-overlay';
 import stripAnsi from 'strip-ansi';
 
 const isFirstCompilation: Record<string, boolean> = {};
 let hasCompileErrors = false;
 
-ErrorOverlay.setEditorHandler(function editorHandler(errorLocation) {
-  // Keep this sync with errorOverlayMiddleware.js
-  void fetch(
-    '/__open_editor' +
-      '?fileName=' +
-      window.encodeURIComponent(errorLocation.fileName) +
-      '&lineNumber=' +
-      window.encodeURIComponent(errorLocation.lineNumber || 1) +
-      '&colNumber=' +
-      window.encodeURIComponent(errorLocation.colNumber || 1),
-  );
-});
+// setEditorHandler(function editorHandler(errorLocation) {
+//   // Keep this sync with errorOverlayMiddleware.js
+//   void fetch(
+//     '/__open_editor' +
+//       '?fileName=' +
+//       window.encodeURIComponent(errorLocation.fileName) +
+//       '&lineNumber=' +
+//       window.encodeURIComponent(errorLocation.lineNumber || 1) +
+//       '&colNumber=' +
+//       window.encodeURIComponent(errorLocation.colNumber || 1),
+//   );
+// });
 
 function clearOutdatedErrors() {
   if (!isFirstCompilation.app) {
@@ -28,9 +32,9 @@ function clearOutdatedErrors() {
   }
 }
 
-ErrorOverlay.startReportingRuntimeErrors({
-  filename: '/index.js',
-});
+// startReportingRuntimeErrors({
+//   filename: '/index.js',
+// });
 
 const url = new URL('/_ws', window.location.href);
 url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -75,8 +79,7 @@ connection.onmessage = (m: MessageEvent) => {
     if (building) {
       clearOutdatedErrors();
     } else {
-      hasCompileErrors =
-        result && !result.errors.length && !result.warnings.length;
+      hasCompileErrors = !!(result?.errors.length || result?.warnings.length);
 
       if (!hasCompileErrors && !isFirstCompilation[name]) {
         window.location.reload();
@@ -110,7 +113,7 @@ connection.onmessage = (m: MessageEvent) => {
           }
         }
 
-        ErrorOverlay.reportBuildError(formatted.errors[0]);
+        // reportBuildError(formatted.errors[0]);
       }
     }
   }
