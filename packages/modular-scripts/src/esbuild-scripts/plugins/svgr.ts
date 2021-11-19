@@ -1,7 +1,6 @@
 import * as fs from 'fs-extra';
 import esbuild from 'esbuild';
 
-// @ts-ignore
 import svgr from '@svgr/core';
 import path from 'path';
 
@@ -21,7 +20,9 @@ function createPlugin(): esbuild.Plugin {
       });
 
       build.onLoad({ filter: /.*/, namespace: 'svgr' }, async (args) => {
-        const contents = await svgr(await fs.readFile(args.path, 'utf8'));
+        const contents: string = await svgr(
+          await fs.readFile(args.path, 'utf8'),
+        );
         return {
           contents,
           resolveDir: path.dirname(args.path),

@@ -4,7 +4,7 @@ import * as fs from 'fs-extra';
 import * as isCI from 'is-ci';
 import chalk from 'chalk';
 import commander from 'commander';
-import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
+import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import type { TestOptions } from './test';
 import type { LintOptions } from './lint';
 

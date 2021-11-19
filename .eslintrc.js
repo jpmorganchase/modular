@@ -13,8 +13,15 @@ module.exports = {
   extends: ['modular-app'],
   rules: {
     strict: [WARN, 'global'],
+    'import/no-extraneous-dependencies': ['error', { devDependencies: false }],
   },
   overrides: [
+    {
+      files: ['**/*.test.*', '**/__tests__/**'],
+      rules: {
+        'import/no-extraneous-dependencies': OFF,
+      },
+    },
     {
       files: 'packages/modular-scripts/types/**/*',
       rules: {

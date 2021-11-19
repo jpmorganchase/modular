@@ -4,11 +4,17 @@
   "license": "Apache-2.0",
   "private": true,
   "dependencies": {
+    "@finos/perspective": "0.6.2",
     "@finos/perspective-viewer": "0.6.0",
     "@finos/perspective-viewer-d3fc": "0.6.0",
     "@finos/perspective-viewer-datagrid": "0.6.0",
     "normalize.css": "8.0.1",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
     "superstore-arrow": "1.0.0"
+  },
+  "devDependencies": {
+    "@schemastore/package": "0.0.6"
   },
   "modular": {
     "type": "app"
