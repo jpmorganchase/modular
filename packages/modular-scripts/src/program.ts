@@ -56,7 +56,7 @@ program
   );
 
 program
-  .command('build [packages...]')
+  .command('build <packages...>')
   .description(
     'Build a list of packages (multiple package names can be supplied separated by space)',
   )
