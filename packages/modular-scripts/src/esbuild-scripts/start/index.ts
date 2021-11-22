@@ -224,7 +224,6 @@ class DevServer {
         metafile: true,
         incremental: watch,
         minify: false,
-        write: !watch,
         outdir: this.outdir,
       }),
     );
