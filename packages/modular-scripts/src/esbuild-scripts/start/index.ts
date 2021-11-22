@@ -5,7 +5,6 @@ import ws from 'express-ws';
 import * as fs from 'fs-extra';
 import * as http from 'http';
 import * as path from 'path';
-import * as tmp from 'tmp';
 import isCi from 'is-ci';
 import type { ServeStaticOptions } from 'serve-static';
 
@@ -48,7 +47,7 @@ class DevServer {
     this.env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
     this.protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
 
-    this.outdir = tmp.dirSync().name;
+    this.outdir = this.paths.appBuild;
     this.express = express.default();
     this.ws = ws(this.express);
 
