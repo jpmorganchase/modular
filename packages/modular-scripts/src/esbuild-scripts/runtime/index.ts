@@ -1,25 +1,25 @@
-// import {
-//   setEditorHandler,
-//   startReportingRuntimeErrors,
-//   reportBuildError,
-// } from 'react-error-overlay';
+import {
+  setEditorHandler,
+  startReportingRuntimeErrors,
+  reportBuildError,
+} from 'react-error-overlay';
 import stripAnsi from 'strip-ansi';
 
 const isFirstCompilation: Record<string, boolean> = {};
 let hasCompileErrors = false;
 
-// setEditorHandler(function editorHandler(errorLocation) {
-//   // Keep this sync with errorOverlayMiddleware.js
-//   void fetch(
-//     '/__open_editor' +
-//       '?fileName=' +
-//       window.encodeURIComponent(errorLocation.fileName) +
-//       '&lineNumber=' +
-//       window.encodeURIComponent(errorLocation.lineNumber || 1) +
-//       '&colNumber=' +
-//       window.encodeURIComponent(errorLocation.colNumber || 1),
-//   );
-// });
+setEditorHandler(function editorHandler(errorLocation) {
+  // Keep this sync with errorOverlayMiddleware.js
+  void fetch(
+    '/__open_editor' +
+      '?fileName=' +
+      window.encodeURIComponent(errorLocation.fileName) +
+      '&lineNumber=' +
+      window.encodeURIComponent(errorLocation.lineNumber || 1) +
+      '&colNumber=' +
+      window.encodeURIComponent(errorLocation.colNumber || 1),
+  );
+});
 
 function clearOutdatedErrors() {
   if (!isFirstCompilation.app) {
@@ -32,9 +32,9 @@ function clearOutdatedErrors() {
   }
 }
 
-// startReportingRuntimeErrors({
-//   filename: '/index.js',
-// });
+startReportingRuntimeErrors({
+  filename: '/index.js',
+});
 
 const url = new URL('/_ws', window.location.href);
 url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -113,7 +113,7 @@ connection.onmessage = (m: MessageEvent) => {
           }
         }
 
-        // reportBuildError(formatted.errors[0]);
+        reportBuildError(formatted.errors[0]);
       }
     }
   }
