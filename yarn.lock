@@ -1726,7 +1726,15 @@
     lodash "^4.17.4"
     mobile-drag-drop "^2.3.0-rc.2"
 
-"@finos/perspective@0.6.2", "@finos/perspective@^0.6.0", "@finos/perspective@^0.6.2":
+"@finos/perspective@1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@finos/perspective/-/perspective-1.0.2.tgz#e714b7e69f04975e3a5bf90f811c3631c40db4a5"
+  integrity sha512-keZPAX32bTvkVD1rj14/tcObEZ71cKu+efSvs1SJcb3O5UufAWSxh0AHGAFTJJ/fpM/y/9yx6J5Vbp7SG0jJgg==
+  dependencies:
+    tslib "^1.9.3"
+    ws "^6.1.2"
+
+"@finos/perspective@^0.6.0", "@finos/perspective@^0.6.2":
   version "0.6.2"
   resolved "https://registry.yarnpkg.com/@finos/perspective/-/perspective-0.6.2.tgz#ca256a615c42803766965049a93e9e55ba8de760"
   integrity sha512-Sm/+1+mBx18eIhhm4HrG/fa3Rx76L3ljjsMocFQKZ2rlBlIaQjDWloxWW3jVRFj9z0/XLy4gqiqXdnH6CDO5JA==
