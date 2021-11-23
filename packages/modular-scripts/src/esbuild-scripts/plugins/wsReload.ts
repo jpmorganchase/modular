@@ -5,6 +5,7 @@ import { formatError } from '../utils/formatError';
 export default function createPlugin(
   name: string,
   server: ws.Server,
+  baseDir: string,
 ): esbuild.Plugin {
   const plugin: esbuild.Plugin = {
     name: 'ws-reload',
@@ -20,8 +21,14 @@ export default function createPlugin(
               name,
               building,
               result: {
-                errors: await Promise.all(result.errors.map(formatError)),
-                warnings: await Promise.all(result.warnings.map(formatError)),
+                errors: await Promise.all(
+                  result.errors.map((error) => formatError(error, baseDir)),
+                ),
+                warnings: await Promise.all(
+                  result.warnings.map((warning) =>
+                    formatError(warning, baseDir),
+                  ),
+                ),
               },
             }),
           );

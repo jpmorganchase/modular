@@ -3,7 +3,7 @@ import chalk from 'chalk';
 import * as logger from '../../utils/logger';
 import { formatError } from '../utils/formatError';
 
-function createPlugin(): Plugin {
+function createPlugin(baseDir: string): Plugin {
   const plugin: Plugin = {
     name: 'incremental-errors',
     setup(build) {
@@ -20,7 +20,7 @@ function createPlugin(): Plugin {
         if (result.errors.length) {
           await Promise.all(
             result.errors.map(async (m) => {
-              logger.log(await formatError(m));
+              logger.log(await formatError(m, baseDir));
             }),
           );
         }
@@ -28,7 +28,7 @@ function createPlugin(): Plugin {
         if (result.warnings.length) {
           await Promise.all(
             result.warnings.map(async (m) => {
-              logger.log(await formatError(m));
+              logger.log(await formatError(m, baseDir));
             }),
           );
         }

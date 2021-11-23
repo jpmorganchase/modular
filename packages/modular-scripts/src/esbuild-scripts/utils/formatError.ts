@@ -1,11 +1,17 @@
 import { Message } from 'esbuild';
 import chalk from 'chalk';
 import * as fs from 'fs-extra';
+import * as path from 'path';
 import codeFrame from 'babel-code-frame';
 
-export async function formatError(error: Message): Promise<string> {
+export async function formatError(
+  error: Message,
+  baseDir: string = process.cwd(),
+): Promise<string> {
   if (error.location?.file) {
-    const source = await fs.readFile(error.location.file, {
+    const pathToFile = path.join(baseDir, error.location?.file);
+    console.log('Getting error from', pathToFile);
+    const source = await fs.readFile(pathToFile, {
       encoding: 'utf-8',
     });
     return `${chalk.red('Error:')}[${error.location.file}] ${error.text}

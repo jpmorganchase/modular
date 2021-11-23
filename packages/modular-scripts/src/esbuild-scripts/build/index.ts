@@ -5,7 +5,7 @@ import * as minimize from 'html-minifier-terser';
 import * as path from 'path';
 import getClientEnvironment from '../config/getClientEnvironment';
 
-import { Paths } from '../../utils/createPaths';
+import type { Paths } from '../../utils/createPaths';
 import * as logger from '../../utils/logger';
 import { formatError } from '../utils/formatError';
 
@@ -38,7 +38,7 @@ export default async function build(target: string, paths: Paths) {
     const result = e as esbuild.BuildFailure;
     logger.log(chalk.red('Failed to compile.\n'));
     const logs = result.errors.map(async (m) => {
-      logger.log(await formatError(m));
+      logger.log(await formatError(m, paths.appPath));
     });
 
     await Promise.all(logs);

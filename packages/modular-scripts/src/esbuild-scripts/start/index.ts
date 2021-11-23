@@ -186,7 +186,13 @@ class DevServer {
           global: 'window',
         },
         watch: true,
-        plugins: [websocketReloadPlugin('runtime', this.ws.getWss())],
+        plugins: [
+          websocketReloadPlugin(
+            'runtime',
+            this.ws.getWss(),
+            this.paths.appPath,
+          ),
+        ],
         outbase: runtimeDir,
         outdir: path.join(this.outdir, '_runtime'),
         publicPath: (await this.urls()).localUrlForBrowser,
@@ -195,7 +201,7 @@ class DevServer {
       const result = e as esbuild.BuildFailure;
       logger.log(chalk.red('Failed to compile runtime.\n'));
       const logs = result.errors.concat(result.warnings).map(async (m) => {
-        logger.log(await formatError(m));
+        logger.log(await formatError(m, this.paths.appPath));
       });
 
       await Promise.all(logs);
@@ -207,7 +213,7 @@ class DevServer {
   private runEsbuild = async (watch: boolean) => {
     const plugins: esbuild.Plugin[] = [
       svgrPlugin(),
-      incrementalReporterPlugin(),
+      incrementalReporterPlugin(this.paths.appPath),
     ];
     let resolveIntialBuild;
     if (watch) {
@@ -217,7 +223,9 @@ class DevServer {
       );
       resolveIntialBuild = initialBuildPromise;
       plugins.push(plugin);
-      plugins.push(websocketReloadPlugin('app', this.ws.getWss()));
+      plugins.push(
+        websocketReloadPlugin('app', this.ws.getWss(), this.paths.appPath),
+      );
     } else {
       resolveIntialBuild = Promise.resolve();
     }

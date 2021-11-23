@@ -4,7 +4,7 @@ import { sync as gzipSize } from 'gzip-size';
 import * as path from 'path';
 import recursive from 'recursive-readdir';
 
-import { Paths } from '../utils/createPaths';
+import type { Paths } from '../utils/createPaths';
 import { Asset, canReadAsset } from './fileSizeReporter';
 
 function removeFileNameHash(fileName: string): string {
