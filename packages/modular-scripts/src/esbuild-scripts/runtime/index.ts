@@ -34,6 +34,9 @@ function clearOutdatedErrors() {
 
 startReportingRuntimeErrors({
   filename: '/index.js',
+  onError() {
+    console.log('>>>>');
+  },
 });
 
 const url = new URL('/_ws', window.location.href);
