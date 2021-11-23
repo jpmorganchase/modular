@@ -11,6 +11,7 @@ export interface Paths {
   dotenv: string;
   appPath: string;
   appBuild: string;
+  appServe: string;
   appPublic: string;
   appHtml: string;
   appIndexJs: string;
@@ -106,6 +107,12 @@ export default async function createPaths(target: string): Promise<Paths> {
   const ownTypeDeclarations = resolveOwn('react-app.d.ts');
 
   const appBuild = path.join(modularRoot, 'dist', targetName);
+  const appServe = path.join(
+    modularRoot,
+    'node_modules',
+    '.modular',
+    targetName,
+  );
 
   const paths: Paths = {
     modularRoot,
@@ -113,6 +120,7 @@ export default async function createPaths(target: string): Promise<Paths> {
     dotenv,
     appPath,
     appBuild,
+    appServe,
     appPublic,
     appHtml,
     appIndexJs,

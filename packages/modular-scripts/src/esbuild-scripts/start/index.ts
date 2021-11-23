@@ -47,13 +47,13 @@ class DevServer {
     this.env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
     this.protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
 
-    const tempDir = path.join(paths.modularRoot, 'node_modules', '.modular');
-    if (fs.existsSync(tempDir)) {
-      fs.rmdirSync(tempDir, { recursive: true });
+    const { appServe } = paths;
+    if (fs.existsSync(appServe)) {
+      fs.rmdirSync(appServe, { recursive: true });
     }
-    fs.mkdirSync(tempDir);
+    fs.mkdirSync(appServe);
 
-    this.outdir = tempDir;
+    this.outdir = appServe;
     this.express = express.default();
     this.ws = ws(this.express);
 
