@@ -77,23 +77,23 @@ describe('when working with a NODE_ENV app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'node-env-app')))
       .toMatchInlineSnapshot(`
       "node-env-app
-      ├─ asset-manifest.json #10qunpe
+      ├─ asset-manifest.json #n1rvuh
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #1yqd98l
+      ├─ index.html #1yaenq4
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
       ├─ robots.txt #1sjb8b3
       └─ static
          └─ js
-            ├─ main.f98447c8.chunk.js #kuqe6a
-            ├─ main.f98447c8.chunk.js.map #kb5l30
-            ├─ runtime-main.b1272d20.js #15smdhy
-            └─ runtime-main.b1272d20.js.map #2away3"
+            ├─ main.3db228f9.chunk.js #20y3tb
+            ├─ main.3db228f9.chunk.js.map #131rxqt
+            ├─ runtime-main.a0dc6a9b.js #o5bsr9
+            └─ runtime-main.a0dc6a9b.js.map #10n4p35"
     `);
   });
 
-  it('can generate a js/main.f98447c8.chunk.js', async () => {
+  it('can generate a js/main.3db228f9.chunk.js', async () => {
     expect(
       prettier.format(
         String(
@@ -104,12 +104,12 @@ describe('when working with a NODE_ENV app', () => {
               'node-env-app',
               'static',
               'js',
-              'main.f98447c8.chunk.js',
+              'main.3db228f9.chunk.js',
             ),
           ),
         ),
         {
-          filepath: 'main.f98447c8.chunk.js',
+          filepath: 'main.3db228f9.chunk.js',
         },
       ),
     ).toMatchSnapshot();
@@ -132,9 +132,9 @@ describe('When working with a nested app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'scoped-sample-app')))
       .toMatchInlineSnapshot(`
       "scoped-sample-app
-      ├─ asset-manifest.json #cj9w5r
+      ├─ asset-manifest.json #fd251t
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #1c7owlz
+      ├─ index.html #saweoy
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -144,13 +144,13 @@ describe('When working with a nested app', () => {
          │  ├─ main.a0f92c83.chunk.css #16n5nfq
          │  └─ main.a0f92c83.chunk.css.map #1l7oeeo
          └─ js
-            ├─ 2.d529d098.chunk.js #3lq9ac
-            ├─ 2.d529d098.chunk.js.LICENSE.txt #eplx8h
-            ├─ 2.d529d098.chunk.js.map #dqporo
-            ├─ main.b00d6836.chunk.js #1sm17wh
-            ├─ main.b00d6836.chunk.js.map #4ybii5
-            ├─ runtime-main.40725930.js #g9u7z2
-            └─ runtime-main.40725930.js.map #u3ma7d"
+            ├─ 2.dd7fe2ee.chunk.js #1umsa1c
+            ├─ 2.dd7fe2ee.chunk.js.LICENSE.txt #eplx8h
+            ├─ 2.dd7fe2ee.chunk.js.map #f3ttow
+            ├─ main.8b9be32b.chunk.js #jou2ln
+            ├─ main.8b9be32b.chunk.js.map #q1dpnv
+            ├─ runtime-main.c80b6939.js #tnzlop
+            └─ runtime-main.c80b6939.js.map #14p9z3c"
     `);
   });
 
@@ -235,7 +235,7 @@ describe('When working with a nested app', () => {
     ).toMatchSnapshot();
   });
 
-  it('can generate a js/main.b00d6836.chunk.js', async () => {
+  it('can generate a js/main.8b9be32b.chunk.js', async () => {
     expect(
       prettier.format(
         String(
@@ -246,18 +246,18 @@ describe('When working with a nested app', () => {
               'scoped-sample-app',
               'static',
               'js',
-              'main.b00d6836.chunk.js',
+              'main.8b9be32b.chunk.js',
             ),
           ),
         ),
         {
-          filepath: 'main.b00d6836.chunk.js',
+          filepath: 'main.8b9be32b.chunk.js',
         },
       ),
     ).toMatchSnapshot();
   });
 
-  it('can generate a js/runtime-main.40725930.js', async () => {
+  it('can generate a js/runtime-main.c80b6939.js', async () => {
     expect(
       prettier.format(
         String(
@@ -268,18 +268,18 @@ describe('When working with a nested app', () => {
               'scoped-sample-app',
               'static',
               'js',
-              'runtime-main.40725930.js',
+              'runtime-main.c80b6939.js',
             ),
           ),
         ),
         {
-          filepath: 'runtime-main.40725930.js',
+          filepath: 'runtime-main.c80b6939.js',
         },
       ),
     ).toMatchSnapshot();
   });
 
-  it('can generate a js/2.d529d098.chunk.js', async () => {
+  it('can generate a js/2.dd7fe2ee.chunk.js', async () => {
     expect(
       prettier.format(
         String(
@@ -290,12 +290,12 @@ describe('When working with a nested app', () => {
               'scoped-sample-app',
               'static',
               'js',
-              '2.d529d098.chunk.js',
+              '2.dd7fe2ee.chunk.js',
             ),
           ),
         ),
         {
-          filepath: '2.d529d098.chunk.js',
+          filepath: '2.dd7fe2ee.chunk.js',
         },
       ),
     ).toMatchSnapshot();
@@ -349,9 +349,9 @@ describe('when working with an app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'sample-app')))
       .toMatchInlineSnapshot(`
       "sample-app
-      ├─ asset-manifest.json #s7h30f
+      ├─ asset-manifest.json #131f6kc
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #1wttsav
+      ├─ index.html #59u9a8
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -361,13 +361,13 @@ describe('when working with an app', () => {
          │  ├─ main.a0f92c83.chunk.css #16n5nfq
          │  └─ main.a0f92c83.chunk.css.map #1l7oeeo
          └─ js
-            ├─ 2.3eb78363.chunk.js #m3o0j4
-            ├─ 2.3eb78363.chunk.js.LICENSE.txt #eplx8h
-            ├─ 2.3eb78363.chunk.js.map #pqtx34
-            ├─ main.0e3605ac.chunk.js #1uj3prx
-            ├─ main.0e3605ac.chunk.js.map #45woji
-            ├─ runtime-main.c1e48d57.js #164st35
-            └─ runtime-main.c1e48d57.js.map #1ood2zi"
+            ├─ 2.42603bbe.chunk.js #1gybwlg
+            ├─ 2.42603bbe.chunk.js.LICENSE.txt #eplx8h
+            ├─ 2.42603bbe.chunk.js.map #164el3u
+            ├─ main.8247c019.chunk.js #iwnokm
+            ├─ main.8247c019.chunk.js.map #umebn0
+            ├─ runtime-main.dc96e42d.js #1xc8leb
+            └─ runtime-main.dc96e42d.js.map #xpqj11"
     `);
   });
 
@@ -406,7 +406,7 @@ describe('when working with an app', () => {
     ).toMatchSnapshot();
   });
 
-  it('can generate a js/main.0e3605ac.chunk.js', async () => {
+  it('can generate a js/main.8247c019.chunk.js', async () => {
     expect(
       prettier.format(
         String(
@@ -417,18 +417,18 @@ describe('when working with an app', () => {
               'sample-app',
               'static',
               'js',
-              'main.0e3605ac.chunk.js',
+              'main.8247c019.chunk.js',
             ),
           ),
         ),
         {
-          filepath: 'main.0e3605ac.chunk.js',
+          filepath: 'main.8247c019.chunk.js',
         },
       ),
     ).toMatchSnapshot();
   });
 
-  it('can generate a js/runtime-main.c1e48d57.js', async () => {
+  it('can generate a js/runtime-main.dc96e42d.js', async () => {
     expect(
       prettier.format(
         String(
@@ -439,12 +439,12 @@ describe('when working with an app', () => {
               'sample-app',
               'static',
               'js',
-              'runtime-main.c1e48d57.js',
+              'runtime-main.dc96e42d.js',
             ),
           ),
         ),
         {
-          filepath: 'runtime-main.c1e48d57.js',
+          filepath: 'runtime-main.dc96e42d.js',
         },
       ),
     ).toMatchSnapshot();
