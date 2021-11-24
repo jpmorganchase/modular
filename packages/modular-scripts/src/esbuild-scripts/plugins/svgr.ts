@@ -1,5 +1,6 @@
 import * as fs from 'fs-extra';
 import esbuild from 'esbuild';
+import { createRequire } from 'module';
 
 import svgr from '@svgr/core';
 import path from 'path';
@@ -65,14 +66,12 @@ function createPlugin(): esbuild.Plugin {
       });
 
       build.onResolve({ filter: /\.svg$/, namespace: 'file' }, (args) => {
-        const pathName = path.join(args.resolveDir, args.path);
-        const relativePath = path.relative(modularRoot, pathName);
         if (args.kind === 'url-token') {
           return {
             pluginData: {
               ...args,
             },
-            path: relativePath,
+            path: args.path,
             namespace: 'modular-svgurl',
           };
         } else {
@@ -80,7 +79,7 @@ function createPlugin(): esbuild.Plugin {
             pluginData: {
               ...args,
             },
-            path: relativePath,
+            path: args.path,
             namespace: 'modular-svgr',
           };
         }
@@ -91,7 +90,10 @@ function createPlugin(): esbuild.Plugin {
         async (args) => {
           const pluginData = args.pluginData as esbuild.OnResolveArgs;
 
-          const contents = await fs.readFile(pluginData.path, 'utf8');
+          const resolver = createRequire(pluginData.importer);
+          const pathName = resolver.resolve(pluginData.path);
+
+          const contents = await fs.readFile(pathName, 'utf8');
           return {
             contents,
             loader: 'dataurl',
@@ -102,7 +104,10 @@ function createPlugin(): esbuild.Plugin {
       build.onLoad({ filter: /\.svg$/, namespace: 'modular-svgr' }, (args) => {
         const pluginData = args.pluginData as esbuild.OnResolveArgs;
 
-        const relativePath = path.relative(pluginData.resolveDir, args.path);
+        const resolver = createRequire(pluginData.importer);
+        const pathName = resolver.resolve(pluginData.path);
+
+        const relativePath = path.relative(pluginData.resolveDir, pathName);
         return {
           resolveDir: pluginData.resolveDir,
           contents: `
