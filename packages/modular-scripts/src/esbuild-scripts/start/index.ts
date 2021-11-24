@@ -28,7 +28,6 @@ import prepareUrls, { InstructionURLS } from '../config/urls';
 import { createIndex } from '../api';
 import { formatError } from '../utils/formatError';
 import createEsbuildConfig from '../config/createEsbuildConfig';
-
 import { createAbsoluteSourceMapMiddleware } from '../utils/absoluteSourceMapsMiddleware';
 
 class DevServer {
@@ -54,10 +53,9 @@ class DevServer {
 
     this.express = express.default();
 
-    this.express.get(
-      /\.map$/,
-      createAbsoluteSourceMapMiddleware(paths, this.outdir),
-    );
+    // Apply middleware to sourcemaps, to correct relative sources
+    this.express.get(/\.map$/, createAbsoluteSourceMapMiddleware(this.outdir));
+
     this.ws = ws(this.express);
 
     const staticOptions: ServeStaticOptions = {
@@ -190,11 +188,7 @@ class DevServer {
         },
         watch: true,
         plugins: [
-          websocketReloadPlugin(
-            'runtime',
-            this.ws.getWss(),
-            this.paths.appPath,
-          ),
+          websocketReloadPlugin('runtime', this.ws.getWss(), this.paths),
         ],
         outbase: runtimeDir,
         outdir: path.join(this.outdir, '_runtime'),
@@ -216,7 +210,7 @@ class DevServer {
   private runEsbuild = async (watch: boolean) => {
     const plugins: esbuild.Plugin[] = [
       svgrPlugin(),
-      incrementalReporterPlugin(this.paths.appPath),
+      incrementalReporterPlugin(this.paths),
     ];
     let resolveIntialBuild;
     if (watch) {
@@ -226,9 +220,7 @@ class DevServer {
       );
       resolveIntialBuild = initialBuildPromise;
       plugins.push(plugin);
-      plugins.push(
-        websocketReloadPlugin('app', this.ws.getWss(), this.paths.appPath),
-      );
+      plugins.push(websocketReloadPlugin('app', this.ws.getWss(), this.paths));
     } else {
       resolveIntialBuild = Promise.resolve();
     }

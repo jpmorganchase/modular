@@ -2,8 +2,9 @@ import { Plugin } from 'esbuild';
 import chalk from 'chalk';
 import * as logger from '../../utils/logger';
 import { formatError } from '../utils/formatError';
+import type { Paths } from '../../utils/createPaths';
 
-function createPlugin(baseDir: string): Plugin {
+function createPlugin(paths: Paths): Plugin {
   const plugin: Plugin = {
     name: 'incremental-errors',
     setup(build) {
@@ -20,7 +21,7 @@ function createPlugin(baseDir: string): Plugin {
         if (result.errors.length) {
           await Promise.all(
             result.errors.map(async (m) => {
-              logger.log(await formatError(m, baseDir));
+              logger.log(await formatError(m, paths.appPath));
             }),
           );
         }
@@ -28,7 +29,7 @@ function createPlugin(baseDir: string): Plugin {
         if (result.warnings.length) {
           await Promise.all(
             result.warnings.map(async (m) => {
-              logger.log(await formatError(m, baseDir));
+              logger.log(await formatError(m, paths.appPath));
             }),
           );
         }

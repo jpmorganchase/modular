@@ -10,7 +10,6 @@ export async function formatError(
 ): Promise<string> {
   if (error.location?.file) {
     const pathToFile = path.join(baseDir, error.location?.file);
-    console.log('Getting error from', pathToFile);
     const source = await fs.readFile(pathToFile, {
       encoding: 'utf-8',
     });
