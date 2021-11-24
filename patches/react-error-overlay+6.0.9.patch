@@ -1,9 +1,9 @@
 diff --git a/node_modules/react-error-overlay/index.d.ts b/node_modules/react-error-overlay/index.d.ts
 new file mode 100644
-index 0000000..2904a53
+index 0000000..04929fb
 --- /dev/null
 +++ b/node_modules/react-error-overlay/index.d.ts
-@@ -0,0 +1,29 @@
+@@ -0,0 +1,20 @@
 +export type ErrorLocation = {
 +  fileName: string;
 +  lineNumber: number;
@@ -17,20 +17,10 @@ index 0000000..2904a53
 +
 +type EditorHandler = (errorLoc: ErrorLocation) => void;
 +
-+interface ErrorOverlayImpl {
-+  setEditorHandler(handler: EditorHandler | null): void,
-+  reportBuildError(error: string): void,
-+  reportRuntimeError(
-+    error: Error,
-+    options: RuntimeReportingOptions
-+  ): void,
-+  dismissBuildError(): void,
-+  startReportingRuntimeErrors(options: RuntimeReportingOptions): void,
-+  dismissRuntimeErrors(): void,
-+  stopReportingRuntimeErrors(): void,
-+}
-+
-+declare const ErrorOverlay: ErrorOverlayImpl;
-+
-+export default ErrorOverlay;
-\ No newline at end of file
++export const setEditorHandler: (handler: EditorHandler | null) => void;
++export const reportBuildError: (error: string) => void;
++export const reportRuntimeError: (error: Error, options: RuntimeReportingOptions) =>  void;
++export const dismissBuildError: () => void;
++export const startReportingRuntimeErrors: (options: RuntimeReportingOptions) => void;
++export const dismissRuntimeErrors: () => void;
++export const stopReportingRuntimeErrors: () => void;

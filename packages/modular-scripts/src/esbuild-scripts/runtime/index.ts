@@ -1,10 +1,14 @@
-import ErrorOverlay from 'react-error-overlay';
+import {
+  setEditorHandler,
+  startReportingRuntimeErrors,
+  reportBuildError,
+} from 'react-error-overlay';
 import stripAnsi from 'strip-ansi';
 
 const isFirstCompilation: Record<string, boolean> = {};
 let hasCompileErrors = false;
 
-ErrorOverlay.setEditorHandler(function editorHandler(errorLocation) {
+setEditorHandler(function editorHandler(errorLocation) {
   // Keep this sync with errorOverlayMiddleware.js
   void fetch(
     '/__open_editor' +
@@ -28,7 +32,7 @@ function clearOutdatedErrors() {
   }
 }
 
-ErrorOverlay.startReportingRuntimeErrors({
+startReportingRuntimeErrors({
   filename: '/index.js',
 });
 
@@ -75,8 +79,7 @@ connection.onmessage = (m: MessageEvent) => {
     if (building) {
       clearOutdatedErrors();
     } else {
-      hasCompileErrors =
-        result && !result.errors.length && !result.warnings.length;
+      hasCompileErrors = !!(result?.errors.length || result?.warnings.length);
 
       if (!hasCompileErrors && !isFirstCompilation[name]) {
         window.location.reload();
@@ -110,7 +113,7 @@ connection.onmessage = (m: MessageEvent) => {
           }
         }
 
-        ErrorOverlay.reportBuildError(formatted.errors[0]);
+        reportBuildError(formatted.errors[0]);
       }
     }
   }
