@@ -221,8 +221,6 @@ class DevServer {
         incremental: watch,
         minify: false,
         outdir: this.outdir,
-        sourceRoot: this.outdir,
-        sourcesContent: true,
       }),
     );
 
