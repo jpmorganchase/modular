@@ -19,7 +19,8 @@
     "start": "yarn modular start modular-site",
     "prepare": "is-ci || husky install",
     "postinstall": "patch-package",
-    "typecheck": "yarn modular typecheck"
+    "typecheck": "yarn modular typecheck",
+    "validate-lockfile": "node scripts/validate-lockfile.js"
   },
   "browserslist": {
     "production": [
@@ -71,13 +72,14 @@
     "@types/semver-regex": "^3.1.0",
     "@types/tmp": "0.2.2",
     "@types/update-notifier": "5.1.0",
+    "@yarnpkg/lockfile": "^1.1.0",
     "commander": "8.2.0",
     "esbuild": "0.13.14",
     "eslint": "7.32.0",
     "execa": "5.1.1",
     "husky": "7.0.4",
     "is-ci": "2.0.0",
-    "lint-staged": "12.0.3",
+    "lint-staged": "12.1.2",
     "micromatch": "4.0.4",
     "patch-package": "^6.4.7",
     "pptr-testing-library": "0.6.5",
@@ -105,7 +107,11 @@
     "type": "root"
   },
   "lint-staged": {
-    "*.{ts,tsx}": "yarn typecheck",
-    "*.{js,ts,tsx}": "yarn lint"
+    "*.{js,ts,tsx,mjs,md,yml,json}": "yarn prettier --write -l",
+    "*.{ts,tsx}": [
+      "yarn typecheck",
+      "yarn lint"
+    ],
+    "*": "node scripts/validate-lockfile.js"
   }
 }

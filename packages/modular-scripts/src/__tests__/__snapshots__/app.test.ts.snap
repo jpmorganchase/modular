@@ -4,21 +4,21 @@ exports[`When working with a nested app can generate a asset-manifest 1`] = `
 "{
   \\"files\\": {
     \\"main.css\\": \\"/static/css/main.a0f92c83.chunk.css\\",
-    \\"main.js\\": \\"/static/js/main.b00d6836.chunk.js\\",
-    \\"main.js.map\\": \\"/static/js/main.b00d6836.chunk.js.map\\",
-    \\"runtime-main.js\\": \\"/static/js/runtime-main.40725930.js\\",
-    \\"runtime-main.js.map\\": \\"/static/js/runtime-main.40725930.js.map\\",
-    \\"static/js/2.d529d098.chunk.js\\": \\"/static/js/2.d529d098.chunk.js\\",
-    \\"static/js/2.d529d098.chunk.js.map\\": \\"/static/js/2.d529d098.chunk.js.map\\",
+    \\"main.js\\": \\"/static/js/main.8b9be32b.chunk.js\\",
+    \\"main.js.map\\": \\"/static/js/main.8b9be32b.chunk.js.map\\",
+    \\"runtime-main.js\\": \\"/static/js/runtime-main.c80b6939.js\\",
+    \\"runtime-main.js.map\\": \\"/static/js/runtime-main.c80b6939.js.map\\",
+    \\"static/js/2.dd7fe2ee.chunk.js\\": \\"/static/js/2.dd7fe2ee.chunk.js\\",
+    \\"static/js/2.dd7fe2ee.chunk.js.map\\": \\"/static/js/2.dd7fe2ee.chunk.js.map\\",
     \\"index.html\\": \\"/index.html\\",
     \\"static/css/main.a0f92c83.chunk.css.map\\": \\"/static/css/main.a0f92c83.chunk.css.map\\",
-    \\"static/js/2.d529d098.chunk.js.LICENSE.txt\\": \\"/static/js/2.d529d098.chunk.js.LICENSE.txt\\"
+    \\"static/js/2.dd7fe2ee.chunk.js.LICENSE.txt\\": \\"/static/js/2.dd7fe2ee.chunk.js.LICENSE.txt\\"
   },
   \\"entrypoints\\": [
-    \\"static/js/runtime-main.40725930.js\\",
-    \\"static/js/2.d529d098.chunk.js\\",
+    \\"static/js/runtime-main.c80b6939.js\\",
+    \\"static/js/2.dd7fe2ee.chunk.js\\",
     \\"static/css/main.a0f92c83.chunk.css\\",
-    \\"static/js/main.b00d6836.chunk.js\\"
+    \\"static/js/main.8b9be32b.chunk.js\\"
   ]
 }"
 `;
@@ -250,15 +250,15 @@ exports[`When working with a nested app can generate a index.html 1`] = `
         t();
       })([]);
     </script>
-    <script src=\\"/static/js/2.d529d098.chunk.js\\"></script>
-    <script src=\\"/static/js/main.b00d6836.chunk.js\\"></script>
+    <script src=\\"/static/js/2.dd7fe2ee.chunk.js\\"></script>
+    <script src=\\"/static/js/main.8b9be32b.chunk.js\\"></script>
   </body>
 </html>
 "
 `;
 
-exports[`When working with a nested app can generate a js/2.d529d098.chunk.js 1`] = `
-"/*! For license information please see 2.d529d098.chunk.js.LICENSE.txt */
+exports[`When working with a nested app can generate a js/2.dd7fe2ee.chunk.js 1`] = `
+"/*! For license information please see 2.dd7fe2ee.chunk.js.LICENSE.txt */
 (this[\\"webpackJsonp@scoped/sample-app\\"] =
   this[\\"webpackJsonp@scoped/sample-app\\"] || []).push([
   [2],
@@ -3186,6 +3186,7 @@ exports[`When working with a nested app can generate a js/2.d529d098.chunk.js 1`
                         ? ((e = rn()), (nn = tn = en = null), (Hn = !1), e)
                         : null;
                     switch (e) {
+                      case \\"paste\\":
                       default:
                         return null;
                       case \\"keypress\\":
@@ -8595,11 +8596,11 @@ exports[`When working with a nested app can generate a js/2.d529d098.chunk.js 1`
     },
   ],
 ]);
-//# sourceMappingURL=2.d529d098.chunk.js.map
+//# sourceMappingURL=2.dd7fe2ee.chunk.js.map
 "
 `;
 
-exports[`When working with a nested app can generate a js/main.b00d6836.chunk.js 1`] = `
+exports[`When working with a nested app can generate a js/main.8b9be32b.chunk.js 1`] = `
 "(this[\\"webpackJsonp@scoped/sample-app\\"] =
   this[\\"webpackJsonp@scoped/sample-app\\"] || []).push([
   [0],
@@ -8653,11 +8654,11 @@ exports[`When working with a nested app can generate a js/main.b00d6836.chunk.js
   },
   [[9, 1, 2]],
 ]);
-//# sourceMappingURL=main.b00d6836.chunk.js.map
+//# sourceMappingURL=main.8b9be32b.chunk.js.map
 "
 `;
 
-exports[`When working with a nested app can generate a js/runtime-main.40725930.js 1`] = `
+exports[`When working with a nested app can generate a js/runtime-main.c80b6939.js 1`] = `
 "!(function (e) {
   function r(r) {
     for (
@@ -8743,7 +8744,7 @@ exports[`When working with a nested app can generate a js/runtime-main.40725930.
   var i = a;
   t();
 })([]);
-//# sourceMappingURL=runtime-main.40725930.js.map
+//# sourceMappingURL=runtime-main.c80b6939.js.map
 "
 `;
 
@@ -8776,7 +8777,7 @@ exports[`When working with a nested app can generate a manifest 1`] = `
 "
 `;
 
-exports[`when working with a NODE_ENV app can generate a js/main.f98447c8.chunk.js 1`] = `
+exports[`when working with a NODE_ENV app can generate a js/main.3db228f9.chunk.js 1`] = `
 "(this[\\"webpackJsonpnode-env-app\\"] =
   this[\\"webpackJsonpnode-env-app\\"] || []).push([
   [0],
@@ -8788,7 +8789,7 @@ exports[`when working with a NODE_ENV app can generate a js/main.f98447c8.chunk.
   ],
   [[0, 1]],
 ]);
-//# sourceMappingURL=main.f98447c8.chunk.js.map
+//# sourceMappingURL=main.3db228f9.chunk.js.map
 "
 `;
 
@@ -8796,21 +8797,21 @@ exports[`when working with an app can generate a asset-manifest 1`] = `
 "{
   \\"files\\": {
     \\"main.css\\": \\"/static/css/main.a0f92c83.chunk.css\\",
-    \\"main.js\\": \\"/static/js/main.0e3605ac.chunk.js\\",
-    \\"main.js.map\\": \\"/static/js/main.0e3605ac.chunk.js.map\\",
-    \\"runtime-main.js\\": \\"/static/js/runtime-main.c1e48d57.js\\",
-    \\"runtime-main.js.map\\": \\"/static/js/runtime-main.c1e48d57.js.map\\",
-    \\"static/js/2.3eb78363.chunk.js\\": \\"/static/js/2.3eb78363.chunk.js\\",
-    \\"static/js/2.3eb78363.chunk.js.map\\": \\"/static/js/2.3eb78363.chunk.js.map\\",
+    \\"main.js\\": \\"/static/js/main.8247c019.chunk.js\\",
+    \\"main.js.map\\": \\"/static/js/main.8247c019.chunk.js.map\\",
+    \\"runtime-main.js\\": \\"/static/js/runtime-main.dc96e42d.js\\",
+    \\"runtime-main.js.map\\": \\"/static/js/runtime-main.dc96e42d.js.map\\",
+    \\"static/js/2.42603bbe.chunk.js\\": \\"/static/js/2.42603bbe.chunk.js\\",
+    \\"static/js/2.42603bbe.chunk.js.map\\": \\"/static/js/2.42603bbe.chunk.js.map\\",
     \\"index.html\\": \\"/index.html\\",
     \\"static/css/main.a0f92c83.chunk.css.map\\": \\"/static/css/main.a0f92c83.chunk.css.map\\",
-    \\"static/js/2.3eb78363.chunk.js.LICENSE.txt\\": \\"/static/js/2.3eb78363.chunk.js.LICENSE.txt\\"
+    \\"static/js/2.42603bbe.chunk.js.LICENSE.txt\\": \\"/static/js/2.42603bbe.chunk.js.LICENSE.txt\\"
   },
   \\"entrypoints\\": [
-    \\"static/js/runtime-main.c1e48d57.js\\",
-    \\"static/js/2.3eb78363.chunk.js\\",
+    \\"static/js/runtime-main.dc96e42d.js\\",
+    \\"static/js/2.42603bbe.chunk.js\\",
     \\"static/css/main.a0f92c83.chunk.css\\",
-    \\"static/js/main.0e3605ac.chunk.js\\"
+    \\"static/js/main.8247c019.chunk.js\\"
   ]
 }"
 `;
@@ -8926,15 +8927,15 @@ exports[`when working with an app can generate a index.html 1`] = `
         t();
       })([]);
     </script>
-    <script src=\\"/static/js/2.3eb78363.chunk.js\\"></script>
-    <script src=\\"/static/js/main.0e3605ac.chunk.js\\"></script>
+    <script src=\\"/static/js/2.42603bbe.chunk.js\\"></script>
+    <script src=\\"/static/js/main.8247c019.chunk.js\\"></script>
   </body>
 </html>
 "
 `;
 
-exports[`when working with an app can generate a js/2.3eb78363.chunk.js 1`] = `
-"/*! For license information please see 2.3eb78363.chunk.js.LICENSE.txt */
+exports[`when working with an app can generate a js/2.42603bbe.chunk.js 1`] = `
+"/*! For license information please see 2.42603bbe.chunk.js.LICENSE.txt */
 (this[\\"webpackJsonpsample-app\\"] = this[\\"webpackJsonpsample-app\\"] || []).push([
   [2],
   [
@@ -11861,6 +11862,7 @@ exports[`when working with an app can generate a js/2.3eb78363.chunk.js 1`] = `
                         ? ((e = rn()), (nn = tn = en = null), (Hn = !1), e)
                         : null;
                     switch (e) {
+                      case \\"paste\\":
                       default:
                         return null;
                       case \\"keypress\\":
@@ -17270,11 +17272,11 @@ exports[`when working with an app can generate a js/2.3eb78363.chunk.js 1`] = `
     },
   ],
 ]);
-//# sourceMappingURL=2.3eb78363.chunk.js.map
+//# sourceMappingURL=2.42603bbe.chunk.js.map
 "
 `;
 
-exports[`when working with an app can generate a js/main.0e3605ac.chunk.js 1`] = `
+exports[`when working with an app can generate a js/main.8247c019.chunk.js 1`] = `
 "(this[\\"webpackJsonpsample-app\\"] = this[\\"webpackJsonpsample-app\\"] || []).push([
   [0],
   {
@@ -17332,11 +17334,11 @@ exports[`when working with an app can generate a js/main.0e3605ac.chunk.js 1`] =
   },
   [[9, 1, 2]],
 ]);
-//# sourceMappingURL=main.0e3605ac.chunk.js.map
+//# sourceMappingURL=main.8247c019.chunk.js.map
 "
 `;
 
-exports[`when working with an app can generate a js/runtime-main.c1e48d57.js 1`] = `
+exports[`when working with an app can generate a js/runtime-main.dc96e42d.js 1`] = `
 "!(function (e) {
   function r(r) {
     for (
@@ -17422,7 +17424,7 @@ exports[`when working with an app can generate a js/runtime-main.c1e48d57.js 1`]
   var i = a;
   t();
 })([]);
-//# sourceMappingURL=runtime-main.c1e48d57.js.map
+//# sourceMappingURL=runtime-main.dc96e42d.js.map
 "
 `;
 

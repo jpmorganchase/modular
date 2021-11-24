@@ -3,15 +3,21 @@ import * as path from 'path';
 import * as esbuild from 'esbuild';
 import type { Paths } from '../../utils/createPaths';
 import getClientEnvironment from './getClientEnvironment';
-import svgrPlugin from '../plugins/svgr';
 import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowserslistTarget';
 import * as logger from '../../utils/logger';
+
+import moduleScopePlugin from '../plugins/moduleScopePlugin';
+import svgrPlugin from '../plugins/svgr';
 
 export default function createEsbuildConfig(
   paths: Paths,
   config: Partial<esbuild.BuildOptions> = {},
 ): esbuild.BuildOptions {
-  const plugins: esbuild.Plugin[] = [svgrPlugin()];
+  const configPlugins = config.plugins || [];
+  const plugins: esbuild.Plugin[] = [
+    moduleScopePlugin(paths),
+    svgrPlugin(),
+  ].concat(configPlugins);
 
   const define = Object.assign(
     {},

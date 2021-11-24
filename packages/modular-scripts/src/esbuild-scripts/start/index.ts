@@ -16,7 +16,6 @@ import getClientEnvironment, {
   ClientEnvironment,
 } from '../config/getClientEnvironment';
 
-import svgrPlugin from '../plugins/svgr';
 import incrementalCompilePlugin from '../plugins/incrementalCompile';
 import incrementalReporterPlugin from '../plugins/incrementalReporter';
 import websocketReloadPlugin from '../plugins/wsReload';
@@ -208,10 +207,7 @@ class DevServer {
   });
 
   private runEsbuild = async (watch: boolean) => {
-    const plugins: esbuild.Plugin[] = [
-      svgrPlugin(),
-      incrementalReporterPlugin(this.paths),
-    ];
+    const plugins: esbuild.Plugin[] = [incrementalReporterPlugin(this.paths)];
     let resolveIntialBuild;
     if (watch) {
       const { plugin, initialBuildPromise } = incrementalCompilePlugin(
