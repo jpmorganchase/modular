@@ -274,7 +274,7 @@ describe('modular-scripts', () => {
         │  ├─ index.js #bpsk7y
         │  └─ index.js.map #171l8pf
         ├─ dist-types
-        │  └─ index.d.ts #1vloh7q
+        │  └─ index.d.ts #obuyms
         └─ package.json"
       `);
     });

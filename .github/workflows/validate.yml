@@ -1,5 +1,9 @@
 name: 'Validate'
-on: push
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   check-yarn-lock-registry:
@@ -8,12 +12,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Use Node.js 14
+        uses: actions/setup-node@v2.4.1
+        with:
+          node-version: 14
+          cache: 'yarn'
+      - name: Install Dependencies
+        run: yarn --frozen-lockfile
       - name: Check yarn.lock registry url
-        run: |
-          if grep -q jpmchase ./yarn.lock; then
-            # grep -q will return immediately if any match is found
-            # Print first 10 instances of the failure for easier debugging
-            grep -n -m 10 jpmchase ./yarn.lock
-            echo "::error file=yarn.lock::No 'jpmchase.net' is allowed, use 'yarnpkg.com' instead. Check your npm config if needed."
-            exit 1
-          fi
+        run: yarn validate-lockfile

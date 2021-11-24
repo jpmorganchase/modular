@@ -1,5 +1,3 @@
 #!/bin/sh
 
-yarn format 
-git add .
 yarn lint-staged
