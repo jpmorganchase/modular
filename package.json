@@ -75,7 +75,7 @@
     "@yarnpkg/lockfile": "^1.1.0",
     "commander": "8.2.0",
     "esbuild": "0.13.14",
-    "eslint": "7.32.0",
+    "eslint": "8.3.0",
     "execa": "5.1.1",
     "husky": "7.0.4",
     "is-ci": "2.0.0",
