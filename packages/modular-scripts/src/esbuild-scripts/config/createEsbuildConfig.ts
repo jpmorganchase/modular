@@ -1,7 +1,7 @@
 import isCi from 'is-ci';
 import * as path from 'path';
 import * as esbuild from 'esbuild';
-import { Paths } from '../../utils/createPaths';
+import type { Paths } from '../../utils/createPaths';
 import getClientEnvironment from './getClientEnvironment';
 import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowserslistTarget';
 import * as logger from '../../utils/logger';

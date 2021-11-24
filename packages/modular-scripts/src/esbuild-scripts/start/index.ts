@@ -27,6 +27,7 @@ import prepareUrls, { InstructionURLS } from '../config/urls';
 import { createIndex } from '../api';
 import { formatError } from '../utils/formatError';
 import createEsbuildConfig from '../config/createEsbuildConfig';
+import { createAbsoluteSourceMapMiddleware } from '../utils/absoluteSourceMapsMiddleware';
 
 class DevServer {
   private paths: Paths;
@@ -48,7 +49,12 @@ class DevServer {
     this.protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
 
     this.outdir = tmp.dirSync().name;
+
     this.express = express.default();
+
+    // Apply middleware to sourcemaps, to correct relative sources
+    this.express.get(/\.map$/, createAbsoluteSourceMapMiddleware(this.outdir));
+
     this.ws = ws(this.express);
 
     const staticOptions: ServeStaticOptions = {
@@ -180,7 +186,9 @@ class DevServer {
           global: 'window',
         },
         watch: true,
-        plugins: [websocketReloadPlugin('runtime', this.ws.getWss())],
+        plugins: [
+          websocketReloadPlugin('runtime', this.ws.getWss(), this.paths),
+        ],
         outbase: runtimeDir,
         outdir: path.join(this.outdir, '_runtime'),
         publicPath: (await this.urls()).localUrlForBrowser,
@@ -189,7 +197,7 @@ class DevServer {
       const result = e as esbuild.BuildFailure;
       logger.log(chalk.red('Failed to compile runtime.\n'));
       const logs = result.errors.concat(result.warnings).map(async (m) => {
-        logger.log(await formatError(m));
+        logger.log(await formatError(m, this.paths.appPath));
       });
 
       await Promise.all(logs);
@@ -199,7 +207,7 @@ class DevServer {
   });
 
   private runEsbuild = async (watch: boolean) => {
-    const plugins: esbuild.Plugin[] = [incrementalReporterPlugin()];
+    const plugins: esbuild.Plugin[] = [incrementalReporterPlugin(this.paths)];
     let resolveIntialBuild;
     if (watch) {
       const { plugin, initialBuildPromise } = incrementalCompilePlugin(
@@ -208,7 +216,7 @@ class DevServer {
       );
       resolveIntialBuild = initialBuildPromise;
       plugins.push(plugin);
-      plugins.push(websocketReloadPlugin('app', this.ws.getWss()));
+      plugins.push(websocketReloadPlugin('app', this.ws.getWss(), this.paths));
     } else {
       resolveIntialBuild = Promise.resolve();
     }
