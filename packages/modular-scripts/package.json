@@ -65,7 +65,7 @@
     "fs-extra": "10.0.0",
     "global-modules": "2.0.0",
     "globby": "11.0.4",
-    "gzip-size": "6.0.0",
+    "gzip-size": "7.0.0",
     "html-webpack-plugin": "4.5.2",
     "is-ci": "2.0.0",
     "is-root": "2.1.0",
