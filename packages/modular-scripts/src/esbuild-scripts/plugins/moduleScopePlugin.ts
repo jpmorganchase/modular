@@ -12,7 +12,7 @@ function createPlugin(paths: Paths): esbuild.Plugin {
       const relativeAppSrc = path.relative(getModularRoot(), appSrc);
       build.onResolve({ filter: /.*/, namespace: 'file' }, (args) => {
         if (!args.importer) {
-          return {};
+          return;
         }
 
         if (
@@ -20,7 +20,7 @@ function createPlugin(paths: Paths): esbuild.Plugin {
           args.importer.indexOf('/node_modules/') !== -1 ||
           args.importer.indexOf('\\node_modules\\') !== -1
         ) {
-          return {};
+          return;
         }
         const relative = path.relative(appSrc, args.importer);
 
@@ -29,7 +29,7 @@ function createPlugin(paths: Paths): esbuild.Plugin {
           relative.startsWith('../') ||
           relative.startsWith('..\\')
         ) {
-          return {};
+          return;
         }
 
         const requestFullPath = path.resolve(
@@ -60,7 +60,7 @@ You can either move it inside ${chalk.cyan(
             ],
           };
         } else {
-          return {};
+          return;
         }
       });
     },
