@@ -5,6 +5,7 @@ import ws from 'express-ws';
 import * as fs from 'fs-extra';
 import * as http from 'http';
 import * as path from 'path';
+import * as tmp from 'tmp';
 import isCi from 'is-ci';
 import type { ServeStaticOptions } from 'serve-static';
 
@@ -28,6 +29,8 @@ import { createIndex } from '../api';
 import { formatError } from '../utils/formatError';
 import createEsbuildConfig from '../config/createEsbuildConfig';
 
+import { createAbsoluteSourceMapMiddleware } from '../utils/absoluteSourceMapsMiddleware';
+
 class DevServer {
   private paths: Paths;
 
@@ -47,14 +50,14 @@ class DevServer {
     this.env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
     this.protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
 
-    const { appServe } = paths;
-    if (fs.existsSync(appServe)) {
-      fs.rmdirSync(appServe, { recursive: true });
-    }
-    fs.mkdirSync(appServe);
+    this.outdir = tmp.dirSync().name;
 
-    this.outdir = appServe;
     this.express = express.default();
+
+    this.express.get(
+      /\.map$/,
+      createAbsoluteSourceMapMiddleware(paths, this.outdir),
+    );
     this.ws = ws(this.express);
 
     const staticOptions: ServeStaticOptions = {
