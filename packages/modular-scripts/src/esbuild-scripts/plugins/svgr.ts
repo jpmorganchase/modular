@@ -66,12 +66,15 @@ function createPlugin(): esbuild.Plugin {
       });
 
       build.onResolve({ filter: /\.svg$/, namespace: 'file' }, (args) => {
+        const resolver = createRequire(args.importer);
+        const pathName = resolver.resolve(args.path);
+
         if (args.kind === 'url-token') {
           return {
             pluginData: {
               ...args,
             },
-            path: args.path,
+            path: path.relative(modularRoot, pathName),
             namespace: 'modular-svgurl',
           };
         } else {
@@ -79,7 +82,7 @@ function createPlugin(): esbuild.Plugin {
             pluginData: {
               ...args,
             },
-            path: args.path,
+            path: path.relative(modularRoot, pathName),
             namespace: 'modular-svgr',
           };
         }
@@ -88,12 +91,7 @@ function createPlugin(): esbuild.Plugin {
       build.onLoad(
         { filter: /\.svg$/, namespace: 'modular-svgurl' },
         async (args) => {
-          const pluginData = args.pluginData as esbuild.OnResolveArgs;
-
-          const resolver = createRequire(pluginData.importer);
-          const pathName = resolver.resolve(pluginData.path);
-
-          const contents = await fs.readFile(pathName, 'utf8');
+          const contents = await fs.readFile(args.path, 'utf8');
           return {
             contents,
             loader: 'dataurl',
@@ -104,15 +102,11 @@ function createPlugin(): esbuild.Plugin {
       build.onLoad({ filter: /\.svg$/, namespace: 'modular-svgr' }, (args) => {
         const pluginData = args.pluginData as esbuild.OnResolveArgs;
 
-        const resolver = createRequire(pluginData.importer);
-        const pathName = resolver.resolve(pluginData.path);
-
-        const relativePath = path.relative(pluginData.resolveDir, pathName);
         return {
           resolveDir: pluginData.resolveDir,
           contents: `
-                        export { default } from "@svgurl:${relativePath}";
-                        export { default as ReactComponent } from "@svgr:${relativePath}";
+                        export { default } from "@svgurl:${pluginData.path}";
+                        export { default as ReactComponent } from "@svgr:${pluginData.path}";
                     `,
           loader: 'jsx',
         };

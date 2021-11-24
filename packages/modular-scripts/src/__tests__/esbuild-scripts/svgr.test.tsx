@@ -27,6 +27,7 @@ describe('WHEN running esbuild with the svgrPlugin', () => {
         // so that we don't get huge output sizes...
         external: ['react', 'react-dom'],
         outdir,
+        sourceRoot: getModularRoot(),
         bundle: true,
         splitting: true,
         format: 'esm',
@@ -84,6 +85,7 @@ describe('WHEN running esbuild with the svgrPlugin', () => {
         // so that we don't get huge output sizes...
         external: ['react', 'react-dom'],
         outdir,
+        sourceRoot: getModularRoot(),
         bundle: true,
         splitting: true,
         format: 'esm',
@@ -132,6 +134,7 @@ describe('WHEN running esbuild with the svgrPlugin', () => {
         // so that we don't get huge output sizes...
         external: ['react', 'react-dom'],
         outdir,
+        sourceRoot: getModularRoot(),
         bundle: true,
         splitting: true,
         format: 'esm',

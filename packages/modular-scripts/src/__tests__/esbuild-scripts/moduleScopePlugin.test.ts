@@ -7,6 +7,7 @@ import * as tmp from 'tmp';
 import plugin from '../../esbuild-scripts/plugins/moduleScopePlugin';
 import type { Paths } from '../../utils/createPaths';
 import { formatError } from '../../esbuild-scripts/utils/formatError';
+import getModularRoot from '../../utils/getModularRoot';
 
 const emptyDir = async (dirName: string) => {
   await fs.emptyDir(dirName);
@@ -44,6 +45,7 @@ describe('WHEN running esbuild with the svgrPlugin', () => {
           ],
           logLevel: 'silent',
           outdir,
+          sourceRoot: getModularRoot(),
           bundle: true,
           splitting: true,
           format: 'esm',
