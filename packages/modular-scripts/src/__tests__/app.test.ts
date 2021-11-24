@@ -450,7 +450,7 @@ describe('when working with an app', () => {
     ).toMatchSnapshot();
   });
 
-  it('can generate a js/2.3eb78363.chunk.js', async () => {
+  it('can generate a js/2.42603bbe.chunk.js', async () => {
     expect(
       prettier.format(
         String(
@@ -461,12 +461,12 @@ describe('when working with an app', () => {
               'sample-app',
               'static',
               'js',
-              '2.3eb78363.chunk.js',
+              '2.42603bbe.chunk.js',
             ),
           ),
         ),
         {
-          filepath: '2.3eb78363.chunk.js',
+          filepath: '2.42603bbe.chunk.js',
         },
       ),
     ).toMatchSnapshot();
