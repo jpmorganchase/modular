@@ -8934,8 +8934,8 @@ exports[`when working with an app can generate a index.html 1`] = `
 "
 `;
 
-exports[`when working with an app can generate a js/2.3eb78363.chunk.js 1`] = `
-"/*! For license information please see 2.3eb78363.chunk.js.LICENSE.txt */
+exports[`when working with an app can generate a js/2.42603bbe.chunk.js 1`] = `
+"/*! For license information please see 2.42603bbe.chunk.js.LICENSE.txt */
 (this[\\"webpackJsonpsample-app\\"] = this[\\"webpackJsonpsample-app\\"] || []).push([
   [2],
   [
@@ -11862,6 +11862,7 @@ exports[`when working with an app can generate a js/2.3eb78363.chunk.js 1`] = `
                         ? ((e = rn()), (nn = tn = en = null), (Hn = !1), e)
                         : null;
                     switch (e) {
+                      case \\"paste\\":
                       default:
                         return null;
                       case \\"keypress\\":
@@ -17271,7 +17272,7 @@ exports[`when working with an app can generate a js/2.3eb78363.chunk.js 1`] = `
     },
   ],
 ]);
-//# sourceMappingURL=2.3eb78363.chunk.js.map
+//# sourceMappingURL=2.42603bbe.chunk.js.map
 "
 `;
 
