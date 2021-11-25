@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`WHEN running esbuild with the svgrPlugin WHEN there's a component import SHOULD ouput the correct index.js 1`] = `
-"// svgr:/packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-component/logo.svg
+"// svgr:packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-component/logo.svg
 import {
   createElement
 } from \\"react\\";
@@ -49,7 +49,7 @@ exports[`WHEN running esbuild with the svgrPlugin WHEN there's a url import SHOU
 "// svgurl:/packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-url/logo.svg
 var logo_default = \\"./logo-5JCTDEME.svg\\";
 
-// svgr:/packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-url/logo.svg
+// svgr:packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-url/logo.svg
 import {
   createElement
 } from \\"react\\";

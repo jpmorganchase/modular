@@ -128,17 +128,6 @@ describe('when working with an app', () => {
 
   type SourceMap = Record<string, string | string[]>;
 
-  const normalizeSource = (pathName: string) => {
-    if (pathName.includes('svgr:')) {
-      return `${pathName.split(':')[0]}:${path.relative(
-        getModularRoot(),
-        pathName.split(':')[1],
-      )}`;
-    } else {
-      return pathName;
-    }
-  };
-
   const readSourceMap = (pathName: string) => {
     const map = fs.readJsonSync(
       path.join(modularRoot, 'dist', 'sample-esbuild-app', pathName),
@@ -148,7 +137,6 @@ describe('when working with an app', () => {
       // make the source root //modular so that it's the same
       // across platforms
       sourceRoot: '//modular',
-      sources: (map.sources as string[]).map(normalizeSource),
     };
   };
 
