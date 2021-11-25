@@ -11,7 +11,7 @@ let hasCompileErrors = false;
 setEditorHandler(function editorHandler(errorLocation) {
   // Keep this sync with errorOverlayMiddleware.js
   void fetch(
-    '/__open_editor' +
+    '/__open-stack-frame-in-editor' +
       '?fileName=' +
       window.encodeURIComponent(errorLocation.fileName) +
       '&lineNumber=' +
