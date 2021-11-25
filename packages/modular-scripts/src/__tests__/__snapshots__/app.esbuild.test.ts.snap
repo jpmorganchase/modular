@@ -9115,8 +9115,8 @@ function App(): JSX.Element {
 export default App;
 ",
     "
-                        export { default } from \\"@svgurl:logo.svg\\";
-                        export { default as ReactComponent } from \\"@svgr:logo.svg\\";
+                        export { default } from \\"@svgurl:./logo.svg\\";
+                        export { default as ReactComponent } from \\"@svgr:./logo.svg\\";
                     ",
     "import * as React from \\"react\\";
 
