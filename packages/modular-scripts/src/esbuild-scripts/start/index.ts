@@ -28,6 +28,7 @@ import { createIndex } from '../api';
 import { formatError } from '../utils/formatError';
 import createEsbuildConfig from '../config/createEsbuildConfig';
 import { createAbsoluteSourceMapMiddleware } from '../utils/absoluteSourceMapsMiddleware';
+import createLaunchEditorMiddleware from '../../../react-dev-utils/errorOverlayMiddleware.js';
 
 class DevServer {
   private paths: Paths;
@@ -67,6 +68,8 @@ class DevServer {
 
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this.express.get('/', this.handleIndex);
+
+    this.express.use(createLaunchEditorMiddleware());
 
     this.ws.app.ws('/_ws', (ws, req) => {
       logger.debug('Connected');
