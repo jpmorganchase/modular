@@ -153,6 +153,7 @@ class DevServer {
   shutdown = async () => {
     if (this.started) {
       this.server?.close();
+      this.ws.getWss().close();
     }
     const esbuildServer = await this.esbuildServer();
     esbuildServer?.stop?.();
