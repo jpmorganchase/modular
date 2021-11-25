@@ -13,11 +13,11 @@ export default function createEsbuildConfig(
   paths: Paths,
   config: Partial<esbuild.BuildOptions> = {},
 ): esbuild.BuildOptions {
-  const configPlugins = config.plugins || [];
+  const { plugins: configPlugins, ...partialConfig } = config;
   const plugins: esbuild.Plugin[] = [
     moduleScopePlugin(paths),
     svgrPlugin(),
-  ].concat(configPlugins);
+  ].concat(configPlugins || []);
 
   const define = Object.assign(
     {},
@@ -70,6 +70,6 @@ export default function createEsbuildConfig(
     sourceRoot: paths.modularRoot,
     publicPath: paths.publicUrlOrPath,
     nodePaths: (process.env.NODE_PATH || '').split(path.delimiter),
-    ...config,
+    ...partialConfig,
   };
 }
