@@ -102,8 +102,8 @@ var qa = Object.getOwnPropertyNames;
 var ba = Object.getPrototypeOf,
   ef = Object.prototype.hasOwnProperty;
 var tf = (e) => cl(e, \\"__esModule\\", { value: !0 });
-var nf = (e, t) => () => e && (t = e((e = 0))), t;
-var qe = (e, t) => () => t || e((t = { exports: {} }).exports, t), t.exports;
+var nf = (e, t) => () => (e && (t = e((e = 0))), t);
+var qe = (e, t) => () => (t || e((t = { exports: {} }).exports, t), t.exports);
 var rf = (e, t, n) => {
     if ((t && typeof t == \\"object\\") || typeof t == \\"function\\")
       for (let r of qa(t))
