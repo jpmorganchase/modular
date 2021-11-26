@@ -8,6 +8,7 @@ import * as logger from '../../utils/logger';
 
 import moduleScopePlugin from '../plugins/moduleScopePlugin';
 import svgrPlugin from '../plugins/svgr';
+import workerFactoryPlugin from '../plugins/workerFactoryPlugin';
 
 export default function createEsbuildConfig(
   paths: Paths,
@@ -17,6 +18,7 @@ export default function createEsbuildConfig(
   const plugins: esbuild.Plugin[] = [
     moduleScopePlugin(paths),
     svgrPlugin(),
+    workerFactoryPlugin(paths),
   ].concat(configPlugins || []);
 
   const define = Object.assign(
