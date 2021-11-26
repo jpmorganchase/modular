@@ -3,13 +3,13 @@ import type { Paths } from '../../utils/createPaths';
 import path from 'path';
 
 /* This plugin builds workers on the fly and exports them like worker-loader for Webpack 4: https://v4.webpack.js.org/loaders/worker-loader/
-  The workers are not inlined, a new file is generated in the bundle. Only files with the *.worker.* pattern are matched.
+   The workers are not inlined, a new file is generated in the bundle. Only files with the *.worker.* pattern are matched.
    This will be deprecated in the future when esbuild supports the Worker signature: see https://github.com/evanw/esbuild/issues/312
    And will probably end up being compatible with Webpack 5 support https://webpack.js.org/guides/web-workers */
 
 type WorkerLoadArgs = Pick<esbuild.OnResolveArgs, 'importer'>;
 
-function createPlugin(paths: Paths): esbuild.Plugin {
+function createPlugin(paths: Paths, targetPath: string): esbuild.Plugin {
   const plugin: esbuild.Plugin = {
     name: 'worker-factory-plugin',
     setup(build) {
@@ -31,7 +31,7 @@ function createPlugin(paths: Paths): esbuild.Plugin {
         const outFileName = path.basename(workerPath).replace(/\.ts$/, '.js');
 
         const outFilePath = path.join(
-          paths.appBuild,
+          targetPath,
           relativeImporterDir,
           importedPath,
           outFileName,
@@ -46,6 +46,7 @@ function createPlugin(paths: Paths): esbuild.Plugin {
           workerPath,
           outFileName,
           outFilePath,
+          targetPath,
         });
 
         // Bundle as if it was a separate entry point, preserving directory structure.
