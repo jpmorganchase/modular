@@ -43,7 +43,7 @@ export default async function build(target: string, paths: Paths) {
   // move CSS files to their real location on disk... 
   for (const outputFileName of Object.keys(result.outputs)) {
     if ([".css", ".css.map"].includes(path.extname(outputFileName))) {
-      const cssFileToMove = outputFileName.replace("/css/", "/js");
+      const cssFileToMove = outputFileName.replace("/css/", "/js/");
       logger.debug(`Moving css ${cssFileToMove}, ${outputFileName}`);
       await fs.move(path.join(modularRoot, cssFileToMove), path.join(modularRoot, outputFileName));
     }
