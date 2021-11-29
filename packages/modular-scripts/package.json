@@ -75,6 +75,7 @@
     "jest-runner-eslint": "1.0.0",
     "jest-transform-stub": "2.0.0",
     "jest-watch-typeahead": "0.6.5",
+    "js-yaml": "^4.1.0",
     "loader-utils": "2.0.0",
     "micromatch": "4.0.4",
     "mime": "^3.0.0",
@@ -137,6 +138,7 @@
   "devDependencies": {
     "@schemastore/package": "0.0.6",
     "@schemastore/tsconfig": "0.0.9",
+    "@types/js-yaml": "^4.0.5",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "typescript": "4.4.4"
