@@ -1,5 +1,4 @@
 import * as esbuild from 'esbuild';
-import type { Paths } from '../../utils/createPaths';
 import path from 'path';
 
 /* This plugin builds workers on the fly and exports them like worker-loader for Webpack 4: https://v4.webpack.js.org/loaders/worker-loader/
@@ -9,13 +8,13 @@ import path from 'path';
 
 type WorkerLoadArgs = Pick<esbuild.OnResolveArgs, 'importer'>;
 
-function createPlugin(paths: Paths, targetPath: string): esbuild.Plugin {
+function createPlugin(): esbuild.Plugin {
   const plugin: esbuild.Plugin = {
     name: 'worker-factory-plugin',
     setup(build) {
-      build.onResolve({ filter: /\.worker\./ }, (args) => {
+      build.onResolve({ filter: /\.worker\.(js|ts|tsx)$/ }, (args) => {
         return {
-          path: args.path,
+          path: args.path.replace(/\.ts/, '.js'),
           namespace: 'web-worker',
           pluginData: { importer: args.importer },
         };
@@ -25,53 +24,36 @@ function createPlugin(paths: Paths, targetPath: string): esbuild.Plugin {
         const imported = args.path;
         const { importer } = args.pluginData as WorkerLoadArgs;
         const importerPath = path.dirname(importer);
-        const importedPath = path.dirname(imported);
-        const relativeImporterDir = path.relative(paths.appSrc, importerPath);
         const workerPath = path.join(importerPath, imported);
-        const outFileName = path.basename(workerPath).replace(/\.ts$/, '.js');
 
-        const outFilePath = path.join(
-          targetPath,
-          relativeImporterDir,
-          importedPath,
-          outFileName,
-        );
-
-        console.log({
-          importer,
-          imported,
-          importerPath,
-          importedPath,
-          relativeImporterDir,
-          workerPath,
-          outFileName,
-          outFilePath,
-          targetPath,
-        });
-
-        // Bundle as if it was a separate entry point, preserving directory structure.
-        // TODO pass the same build params here.
-        // TODO would it be possible to cache-break this with hashes?
+        let buildResult: esbuild.BuildResult;
         try {
-          await esbuild.build({
+          buildResult = await esbuild.build({
+            format: build.initialOptions.format,
+            target: build.initialOptions.target,
+            define: build.initialOptions.define,
             entryPoints: [workerPath],
-            outfile: outFilePath,
+            write: false,
             bundle: true,
           });
+          const builtSrc = buildResult.outputFiles?.[0].text as string;
           return {
-            contents: `
-                  // Web worker bundled by worker-factory-plugin, mimicking the Worker constructor
-                  export default class {
-                    constructor() {
-                      return new Worker('${imported}');
-                    }
-                  }
-                `,
+            contents: builtSrc,
+            loader: 'file',
+            namespace: 'post-build-web-worker',
           };
         } catch (e) {
           console.error('Error building worker script:', e);
         }
       });
+
+      build.onResolve(
+        { filter: /.*/, namespace: 'post-build-web-worker' },
+        (args) => {
+          console.log('I am executed for', args);
+          return undefined;
+        },
+      );
     },
   };
 

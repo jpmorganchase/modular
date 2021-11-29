@@ -15,11 +15,11 @@ export default function createEsbuildConfig(
   config: Partial<esbuild.BuildOptions> = {},
 ): esbuild.BuildOptions {
   const { plugins: configPlugins, ...partialConfig } = config;
-  const targetDirectory = partialConfig.outdir ?? paths.appBuild;
+
   const plugins: esbuild.Plugin[] = [
     moduleScopePlugin(paths),
     svgrPlugin(),
-    workerFactoryPlugin(paths, targetDirectory),
+    workerFactoryPlugin(),
   ].concat(configPlugins || []);
 
   const define = Object.assign(
