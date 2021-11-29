@@ -1,0 +1,1 @@
+self.postMessage('I\'m alive!');
