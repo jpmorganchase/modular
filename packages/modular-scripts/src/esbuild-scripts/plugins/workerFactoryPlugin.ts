@@ -36,10 +36,12 @@ function createPlugin(): esbuild.Plugin {
         // TODO pass the same build params here.
         try {
           const result = await esbuild.build({
+            format: build.initialOptions.format,
+            target: build.initialOptions.target,
+            define: build.initialOptions.define,
             entryPoints: [args.path],
             bundle: true,
             write: false,
-            format: 'esm',
           });
 
           workerFactory.set(relativePath, result);
@@ -101,7 +103,7 @@ function createPlugin(): esbuild.Plugin {
 }
 
 // Resolve worker against an array of possible extension,
-// since require.serolve.extensions is deprecated.
+// since require.resolve.extensions is deprecated.
 // This is asynchronous to not block the esbuild pipeline.
 
 async function resolveWorker(
