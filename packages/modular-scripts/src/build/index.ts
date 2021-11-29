@@ -1,6 +1,5 @@
 import { paramCase as toParamCase } from 'change-case';
 import chalk from 'chalk';
-import type * as esbuild from 'esbuild';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 
@@ -83,7 +82,7 @@ async function buildApp(target: string) {
     );
     const result = await buildEsbuildApp(target, paths);
 
-    assets = createEsbuildAssets(paths, result.metafile as esbuild.Metafile);
+    assets = createEsbuildAssets(paths, result);
   } else {
     // create-react-app doesn't support plain module outputs yet,
     // so --preserve-modules has no effect here
@@ -93,7 +92,6 @@ async function buildApp(target: string) {
     );
 
     const browserTarget = createEsbuildBrowserslistTarget(targetDirectory);
-    logger.debug(`Using target: ${browserTarget.join(', ')}`);
 
     // TODO: this shouldn't be sync
     await execAsync('node', [buildScript], {

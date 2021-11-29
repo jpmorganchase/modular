@@ -41,7 +41,10 @@ export async function choosePort(
 }
 
 const getPort = async (host: string) => {
-  const port = await choosePort(host, parseInt(process.env.PORT || '8000', 0));
+  const port = await choosePort(
+    host,
+    parseInt(process.env.PORT || '8000', 0),
+  );
   if (port) {
     return port;
   } else {

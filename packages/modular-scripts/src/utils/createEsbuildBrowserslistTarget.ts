@@ -26,29 +26,33 @@ export default function getTargets(dirName: string): string[] {
     throw new Error(`Could not find config in ${dirName}`);
   }
 
+  const failedBrowserTargets = new Set();
+
   const targets = config
     .map((entry) => {
       const [rawBrowser, rawVersionOrRange] = entry.split(' ');
 
+      const browserResult = FAMILY_MAPPING[rawBrowser];
+      if (!browserResult ) {
+        if (failedBrowserTargets.has(rawBrowser)) {
+          logger.debug(`Could not find esbuild equivalent for ${rawBrowser}`);
+        }
+        failedBrowserTargets.add(rawBrowser);
+        return undefined;
+      }
+      
       const rawVersionNormalized = rawVersionOrRange
-        // e.g. 13.4-13.7, take the lower range
-        ?.replace(/-[\d.]+$/, '')
-        // all => replace with 1
-        ?.replace('all', '1');
-
+      // e.g. 13.4-13.7, take the lower range
+      ?.replace(/-[\d.]+$/, '')
+      // all => replace with 1
+      ?.replace('all', '1');
+      
       const versionResult = VersionSchema.exec(rawVersionNormalized);
       if (!versionResult) {
-        logger.error(`Could not find esbuild equivalent for ${entry}`);
         return undefined;
       }
-
-      const browserResult = FAMILY_MAPPING[rawBrowser];
-      if (browserResult) {
-        return { target: browserResult, version: rawVersionNormalized };
-      } else {
-        logger.error(`Could not find esbuild equivalent for ${rawBrowser}`);
-        return undefined;
-      }
+  
+      return { target: browserResult, version: rawVersionNormalized };    
     })
     .filter((x): x is NonNullable<typeof x> => x != null);
 

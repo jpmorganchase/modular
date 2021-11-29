@@ -5,9 +5,8 @@ import ws from 'express-ws';
 import * as fs from 'fs-extra';
 import * as http from 'http';
 import * as path from 'path';
-import * as tmp from 'tmp';
+import { getType } from 'mime';
 import isCi from 'is-ci';
-import type { ServeStaticOptions } from 'serve-static';
 
 import memoize from '../../utils/memoize';
 
@@ -16,55 +15,72 @@ import getClientEnvironment, {
   ClientEnvironment,
 } from '../config/getClientEnvironment';
 
-import incrementalCompilePlugin from '../plugins/incrementalCompile';
-import incrementalReporterPlugin from '../plugins/incrementalReporter';
-import websocketReloadPlugin from '../plugins/wsReload';
+import incrementalCompilePlugin from './plugins/incrementalCompile';
+import incrementalReporterPlugin from './plugins/incrementalReporter';
+import websocketReloadPlugin from './plugins/wsReload';
+import metafileReporterPlugin from './plugins/metafileReporter';
+import firstCompilePlugin from './plugins/firstCompile';
 
-import choosePort from '../utils/choosePort';
 import openBrowser from '../utils/openBrowser';
 import * as logger from '../../utils/logger';
 import prepareUrls, { InstructionURLS } from '../config/urls';
 import { createIndex } from '../api';
-import { formatError } from '../utils/formatError';
 import createEsbuildConfig from '../config/createEsbuildConfig';
-import { createAbsoluteSourceMapMiddleware } from '../utils/absoluteSourceMapsMiddleware';
 import createLaunchEditorMiddleware from '../../../react-dev-utils/errorOverlayMiddleware.js';
+import getHost from './utils/getHost';
+import getPort from './utils/getPort';
+import sanitizeMetafile, { sanitizeFileName } from '../utils/sanitizeMetafile';
+import getModularRoot from '../../utils/getModularRoot';
 
+const RUNTIME_DIR = path.join(__dirname, 'runtime');
 class DevServer {
   private paths: Paths;
 
   private express: express.Express;
   private server?: http.Server;
-  private outdir: string;
-  private started = false;
 
   private env: ClientEnvironment;
-  private protocol: 'https' | 'http';
 
   private ws: ws.Instance;
 
-  constructor(paths: Paths) {
+  private watching = false;
+  private firstCompilePromise: Promise<void>;
+  private firstCompilePromiseResolve!: (
+    value: void | PromiseLike<void>,
+  ) => void;
+
+  private metafile!: esbuild.Metafile;
+
+  private esbuild!: esbuild.BuildResult;
+  private runtimeEsbuild!: esbuild.BuildResult;
+
+  private host: string;
+  private urls: InstructionURLS;
+  private port: number;
+
+  constructor(paths: Paths, urls: InstructionURLS, host: string, port: number) {
     this.paths = paths;
+    this.urls = urls;
+    this.host = host;
+    this.port = port;
+
+    this.firstCompilePromise = new Promise<void>((resolve) => {
+      this.firstCompilePromiseResolve = resolve;
+    });
 
     this.env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
-    this.protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
-
-    this.outdir = tmp.dirSync().name;
 
     this.express = express.default();
-
-    // Apply middleware to sourcemaps, to correct relative sources
-    this.express.get(/\.map$/, createAbsoluteSourceMapMiddleware(this.outdir));
-
     this.ws = ws(this.express);
 
-    const staticOptions: ServeStaticOptions = {
+    this.express.use(this.handleStaticAsset);
+    this.express.use("/static/js", this.handleStaticAsset);
+    this.express.use(this.handleRuntimeAsset);
+
+    this.express.use(express.static(paths.appPublic, {
       cacheControl: false,
       index: false,
-    };
-
-    this.express.use(express.static(this.outdir, staticOptions));
-    this.express.use(express.static(paths.appPublic, staticOptions));
+    }));
 
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this.express.get('/', this.handleIndex);
@@ -76,71 +92,21 @@ class DevServer {
     });
   }
 
-  _host = memoize(() => {
-    if (process.env.HOST) {
-      logger.log(
-        chalk.cyan(
-          `Attempting to bind to HOST environment variable: ${chalk.yellow(
-            chalk.bold(process.env.HOST),
-          )}`,
-        ),
-      );
-      logger.log(
-        `If this was unintentional, check that you haven't mistakenly set it in your shell.`,
-      );
-      logger.log(
-        `Learn more here: ${chalk.yellow('https://cra.link/advanced-config')}`,
-      );
-      logger.log();
-    }
-    return process.env.HOST || '0.0.0.0';
-  });
-
-  get host() {
-    // wrap memoized version to prevent multiple logging calls.
-    return this._host();
-  }
-
-  urls: () => Promise<InstructionURLS> = memoize(async () => {
-    return prepareUrls(
-      this.protocol,
-      this.host,
-      await this.port(),
-      this.paths.publicUrlOrPath.slice(0, -1),
-    );
-  });
-
-  private port: () => Promise<number> = memoize(async () => {
-    const port = await choosePort(
-      this.host,
-      parseInt(process.env.PORT || '8000', 0),
-    );
-    if (port) {
-      return port;
-    } else {
-      throw new Error(`Could not identify port to run against`);
-    }
-  });
-
   async start(): Promise<DevServer> {
-    const port = await this.port();
-
     // force clearing the terminal when we start a dev server process
     // unless we're in CI because we'll want to keep all logs
     logger.clear();
-    logger.debug(`Using ${this.outdir}`);
     logger.log(chalk.cyan('Starting the development server...\n'));
 
     // Start the esbuild before we startup the server
-    await this.esbuildServer();
+    await this.startEsbuildServer();
     await this.hostRuntime();
 
     return new Promise<DevServer>((resolve, reject) => {
       try {
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        this.server = this.express.listen(port, this.host, async () => {
-          await openBrowser((await this.urls()).localUrlForBrowser);
-          this.started = true;
+        this.server = this.express.listen(this.port, this.host, async () => {
+          await openBrowser(this.urls.localUrlForBrowser);
           resolve(this);
         });
       } catch (err) {
@@ -150,19 +116,14 @@ class DevServer {
     });
   }
 
-  shutdown = async () => {
-    if (this.started) {
-      this.server?.close();
-      this.ws.getWss().close();
-    }
-    const esbuildServer = await this.esbuildServer();
-    esbuildServer?.stop?.();
+  shutdown = () => {
+    this.server?.close();
+    this.ws.getWss().close();
+    this.esbuild?.stop?.();
   };
 
   private hostRuntime = memoize(async () => {
-    const runtimeDir = path.join(__dirname, '..', 'runtime');
-
-    const runtimeDirFiles = await fs.readdir(runtimeDir);
+    const runtimeDirFiles = await fs.readdir(RUNTIME_DIR);
     const indexFiles = runtimeDirFiles.filter(
       (p) =>
         p.startsWith('index') &&
@@ -173,94 +134,123 @@ class DevServer {
     }
     const entryPoint = indexFiles[0];
 
-    try {
-      return await esbuild.build({
-        entryPoints: [path.join(runtimeDir, entryPoint)],
-        bundle: true,
-        resolveExtensions: this.paths.moduleFileExtensions.map(
-          (extension) => `.${extension}`,
-        ),
-        sourcemap: 'inline',
-        absWorkingDir: this.paths.appPath,
-        format: 'esm',
-        target: 'es2015',
-        logLevel: 'silent',
-        color: true,
-        define: {
-          global: 'window',
-        },
-        watch: true,
-        plugins: [
-          websocketReloadPlugin('runtime', this.ws.getWss(), this.paths),
-        ],
-        outbase: runtimeDir,
-        outdir: path.join(this.outdir, '_runtime'),
-        publicPath: (await this.urls()).localUrlForBrowser,
-      });
-    } catch (e) {
-      const result = e as esbuild.BuildFailure;
-      logger.log(chalk.red('Failed to compile runtime.\n'));
-      const logs = result.errors.concat(result.warnings).map(async (m) => {
-        logger.log(await formatError(m, this.paths.appPath));
-      });
-
-      await Promise.all(logs);
-
-      throw new Error(`Failed to compile runtime`);
-    }
+    this.runtimeEsbuild = await esbuild.build({
+      entryPoints: [path.join(RUNTIME_DIR, entryPoint)],
+      bundle: true,
+      format: 'esm',
+      target: 'es2015',
+      logLevel: 'silent',
+      define: {
+        global: 'window',
+      },
+      write: false,
+      outbase: RUNTIME_DIR,
+      absWorkingDir: getModularRoot(),
+      outdir: path.join(RUNTIME_DIR, "_runtime"),
+    });
   });
 
-  private runEsbuild = async (watch: boolean) => {
-    const plugins: esbuild.Plugin[] = [incrementalReporterPlugin(this.paths)];
-    let resolveIntialBuild;
-    if (watch) {
-      const { plugin, initialBuildPromise } = incrementalCompilePlugin(
-        this.paths,
-        await this.urls(),
-      );
-      resolveIntialBuild = initialBuildPromise;
-      plugins.push(plugin);
-      plugins.push(websocketReloadPlugin('app', this.ws.getWss(), this.paths));
-    } else {
-      resolveIntialBuild = Promise.resolve();
-    }
+  baseEsbuildConfig = memoize(() => {
+    return createEsbuildConfig(this.paths, {
+      write: false,
+      minify: false,
+      entryNames: 'static/js/[name]',
+      chunkNames: 'static/js/[name]',
+      assetNames: 'static/media/[name]',
+    });
+  });
 
-    const result = await esbuild.build(
-      createEsbuildConfig(this.paths, {
-        plugins,
-        watch,
-        metafile: true,
-        incremental: watch,
-        minify: false,
-        outdir: this.outdir,
-      }),
+  private runEsbuild = async () => {
+    return esbuild.build(this.baseEsbuildConfig());
+  };
+
+  private metafileCallback = (metafile: esbuild.Metafile) => {
+    this.metafile = sanitizeMetafile(this.paths, metafile);
+  };
+
+  private firstCompilePluginCallback = () => {
+    this.firstCompilePromiseResolve?.();
+  };
+
+  private watchEsbuild = async () => {
+    const config = this.baseEsbuildConfig();
+
+    config.plugins?.push(incrementalReporterPlugin(this.paths));
+    config.plugins?.push(incrementalCompilePlugin(this.paths, this.urls));
+    config.plugins?.push(
+      websocketReloadPlugin('app', this.ws.getWss(), this.paths),
     );
+    config.plugins?.push(metafileReporterPlugin(this.metafileCallback));
+    config.plugins?.push(firstCompilePlugin(this.firstCompilePluginCallback));
 
-    // wait for the initial build to complete
-    await resolveIntialBuild;
-
-    // return the result of the build
-    return result;
+    this.esbuild = await esbuild.build({
+      ...config,
+      incremental: true,
+      watch: true,
+    });
   };
 
-  private esbuildServer: () => Promise<esbuild.BuildResult> = memoize(
-    async () => {
-      await this.runEsbuild(false);
-      // if the non-incremental succeeds then
-      // we start a watching server
-      return this.runEsbuild(true);
-    },
-  );
+  private startEsbuildServer: () => Promise<void> = async () => {
+    if (!this.watching) {
+      this.watching = true;
+    }
+    await this.runEsbuild();
 
-  handleIndex = async (req: http.IncomingMessage, res: http.ServerResponse) => {
+    // if the non-incremental succeeds then
+    // we start a watching server
+    await this.watchEsbuild();
+
+    return this.firstCompilePromise;
+  };
+
+  handleIndex = async (_: http.IncomingMessage, res: http.ServerResponse) => {
+    // wait until the first watch compile is complete
+    await this.firstCompilePromise;
+
     res.writeHead(200);
-    res.end(await createIndex(this.paths, this.env.raw, true));
+    res.end(await createIndex(this.paths, this.metafile, this.env.raw, true));
   };
+
+  private serveEsbuild = (outputDirectory: string, url: string, result: esbuild.BuildResult, res: http.ServerResponse, next: express.NextFunction) => {
+    const outputFiles = result.outputFiles || [];
+
+    for (const file of outputFiles) {
+      if (sanitizeFileName("/" + path.relative(outputDirectory, file.path)) === url) {
+        const type = getType(url) as string;
+
+      res.setHeader('Content-Type', type)
+
+        res.writeHead(200);
+        return res.end(file.text);
+      }
+    } 
+
+    next();
+  }
+
+  handleStaticAsset: express.RequestHandler = async (req: http.IncomingMessage, res: http.ServerResponse, next: express.NextFunction) => {
+    // wait until the first watch compile is complete
+    await this.firstCompilePromise;
+
+    this.serveEsbuild(this.baseEsbuildConfig().outdir as string, req.url as string, this.esbuild, res, next);
+  };
+  
+  handleRuntimeAsset: express.RequestHandler = async (req: http.IncomingMessage, res: http.ServerResponse, next: express.NextFunction) => {
+    this.serveEsbuild(RUNTIME_DIR, req.url as string, this.runtimeEsbuild, res, next);
+  }
 }
 
 export default async function start(target: string): Promise<void> {
   const paths = await createPaths(target);
-  const devServer = new DevServer(paths);
+  const host = getHost();
+  const port = await getPort(host);
+  const urls = prepareUrls(
+    process.env.HTTPS === 'true' ? 'https' : 'http',
+    host,
+    port,
+    paths.publicUrlOrPath.slice(0, -1),
+  );
+  const devServer = new DevServer(paths, urls, host, port);
 
   const server = await devServer.start();
 
