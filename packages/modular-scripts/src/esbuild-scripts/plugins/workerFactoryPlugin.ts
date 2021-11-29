@@ -12,9 +12,9 @@ function createPlugin(): esbuild.Plugin {
   const plugin: esbuild.Plugin = {
     name: 'worker-factory-plugin',
     setup(build) {
-      build.onResolve({ filter: /\.worker\.(js|ts|tsx)$/ }, (args) => {
+      build.onResolve({ filter: /\.worker\.(js|jsx|ts|tsx)$/ }, (args) => {
         return {
-          path: args.path.replace(/\.ts/, '.js'),
+          path: args.path.replace(/\.[jt]sx?$/, '.js'),
           namespace: 'web-worker',
           pluginData: { importer: args.importer },
         };
@@ -40,20 +40,11 @@ function createPlugin(): esbuild.Plugin {
           return {
             contents: builtSrc,
             loader: 'file',
-            namespace: 'post-build-web-worker',
           };
         } catch (e) {
           console.error('Error building worker script:', e);
         }
       });
-
-      build.onResolve(
-        { filter: /.*/, namespace: 'post-build-web-worker' },
-        (args) => {
-          console.log('I am executed for', args);
-          return undefined;
-        },
-      );
     },
   };
 
