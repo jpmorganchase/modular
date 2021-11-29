@@ -1267,13 +1267,13 @@
     "@manypkg/get-packages" "^1.1.3"
     semver "^5.4.1"
 
-"@changesets/changelog-github@^0.4.1":
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/@changesets/changelog-github/-/changelog-github-0.4.1.tgz#880cb624477972ea103abf6942cf4ee3106f682b"
-  integrity sha512-WK9DzS3i0wa2doEnOr4sm/FMnNtxzCCAKP7dEcWvhYkgXYX5R6jmfHAcDstmjAhiuvbhoHYom4MOC1tIzgwnfA==
+"@changesets/changelog-github@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@changesets/changelog-github/-/changelog-github-0.4.2.tgz#359eb4b7485eddc55855f8793811817d5124dfab"
+  integrity sha512-qq8lJcq91ki7UT0fIfIcn5Yy7GJj19TmkLmGZ24/wEfxcD/nHHoTNRoi6nPt+Htf7qEudKxXLzQLi41B7Mt2vg==
   dependencies:
     "@changesets/get-github-info" "^0.5.0"
-    "@changesets/types" "^4.0.1"
+    "@changesets/types" "^4.0.2"
     dotenv "^8.1.0"
 
 "@changesets/cli@2.18.1":
