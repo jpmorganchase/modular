@@ -11,6 +11,13 @@ declare namespace NodeJS {
   }
 }
 
+declare module "*.worker" {
+  class WebWorkerClass extends Worker {
+    
+  }
+  export default WebWorkerClass
+}
+
 declare module '*.avif' {
   const src: string;
   export default src;
