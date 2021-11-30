@@ -83,12 +83,12 @@ exports[`when working with an app can generate a index.html 1`] = `
     <link rel=\\"apple-touch-icon\\" href=\\"/logo192.png\\" />
     <link rel=\\"manifest\\" href=\\"/manifest.json\\" />
     <title>React App</title>
-    <link rel=\\"stylesheet\\" href=\\"/static/css/index-BHE4B3SI.css\\" />
+    <link rel=\\"stylesheet\\" href=\\"/static/css/index-OPRZV2UT.css\\" />
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id=\\"root\\"></div>
-    <script type=\\"module\\" src=\\"/static/js/index-BTRCLLUP.js\\"></script>
+    <script type=\\"module\\" src=\\"/static/js/index-SYRAECOS.js\\"></script>
   </body>
 </html>
 "

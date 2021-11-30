@@ -87,11 +87,11 @@ describe('when working with an app', () => {
       ├─ robots.txt #1sjb8b3
       └─ static
          ├─ css
-         │  ├─ index-BHE4B3SI.css #66eztv
-         │  └─ index-BHE4B3SI.css.map #18izw66
+         │  ├─ index-OPRZV2UT.css #66eztv
+         │  └─ index-OPRZV2UT.css.map #18izw66
          ├─ js
-         │  ├─ index-BTRCLLUP.js #c6l8qp
-         │  └─ index-BTRCLLUP.js.map #1w0g0ue
+         │  ├─ index-SYRAECOS.js #c6l8qp
+         │  └─ index-SYRAECOS.js.map #1w0g0ue
          └─ media
             └─ logo-PGX3QVVN.svg #1okqmlj"
     `);
