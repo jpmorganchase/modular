@@ -3,37 +3,43 @@ import * as path from 'path';
 import * as fs from 'fs-extra';
 import getModularRoot from '../../utils/getModularRoot';
 
-/* This plugin builds workers on the fly and exports them like worker-loader for Webpack 4: https://v4.webpack.js.org/loaders/worker-loader/
-   The workers are not inlined, a new file is generated in the bundle. Only files with the *.worker.* pattern are matched.
-   This will be deprecated in the future when esbuild supports the Worker signature: see https://github.com/evanw/esbuild/issues/312
-   And will probably end up being compatible with Webpack 5 support https://webpack.js.org/guides/web-workers */
+// This plugin builds Web Workers on the fly and exports them to use like worker-loader for Webpack 4: https://v4.webpack.js.org/loaders/worker-loader/
+// The workers are not inlined, a new file is generated in the bundle. Only files *imported* with the *.worker pattern are matched.
+// The workers are trampolined to avoid CORS errors.
+// This will be deprecated in the future when esbuild supports the Worker signature: see https://github.com/evanw/esbuild/issues/312
+// And will probably end up being compatible with Webpack 5 support https://webpack.js.org/guides/web-workers
 
 function createPlugin(): esbuild.Plugin {
   const plugin: esbuild.Plugin = {
     name: 'worker-factory-plugin',
     setup(build) {
-      const workerFactory: Map<string, esbuild.BuildResult> = new Map();
+      // This stores built workers for later use
+      const workerBuildCache: Map<string, esbuild.BuildResult> = new Map();
 
       build.onResolve({ filter: /.*\.worker$/ }, async (args) => {
-        let path: string;
+        let resolvedPath: string;
         try {
-          path = await resolveWorker(args.importer, args.path);
+          resolvedPath = await resolveWorker(args.importer, args.path);
         } catch (e) {
           throw new Error(`Could not resolve ${args.path}`);
         }
 
+        // Pin the file extension to .js
+        const workerPath = path.join(
+          path.dirname(resolvedPath),
+          path.basename(resolvedPath).replace(/\.[jt]sx?$/, '.js'),
+        );
+
         return {
-          path,
+          path: workerPath,
           namespace: 'web-worker',
         };
       });
 
       build.onLoad({ filter: /.*/, namespace: 'web-worker' }, async (args) => {
-        console.log('WORKER - ON LOAD', args.path);
         const relativePath = path.relative(getModularRoot(), args.path);
 
-        // Bundle as if it was a separate entry point, preserving directory structure.
-        // TODO pass the same build params here.
+        // Build the worker file with the same format, target and definitions of the bundle
         try {
           const result = await esbuild.build({
             format: build.initialOptions.format,
@@ -44,8 +50,10 @@ function createPlugin(): esbuild.Plugin {
             write: false,
           });
 
-          workerFactory.set(relativePath, result);
+          // Store the file in the build cache for later use, since we need to emit a file and trampoline it transparently to the user
+          workerBuildCache.set(relativePath, result);
 
+          // Trampoline the worker within the bundle, to avoid CORS errors
           return {
             contents: `
                   // Web worker bundled by worker-factory-plugin, mimicking the Worker constructor
@@ -71,7 +79,6 @@ function createPlugin(): esbuild.Plugin {
       });
 
       build.onResolve({ filter: /worker-url:.*/ }, (args) => {
-        console.log('WORKER-URL - ON RESOLVE', args.path);
         return {
           path: args.path.slice('worker-url:'.length),
           namespace: 'worker-url',
@@ -79,8 +86,7 @@ function createPlugin(): esbuild.Plugin {
       });
 
       build.onLoad({ filter: /.*/, namespace: 'worker-url' }, (args) => {
-        console.log('WORKER-URL - ON LOAD', args.path);
-        const result = workerFactory.get(args.path);
+        const result = workerBuildCache.get(args.path);
         if (result) {
           const { outputFiles } = result;
           if (outputFiles?.length === 1) {
@@ -102,8 +108,8 @@ function createPlugin(): esbuild.Plugin {
   return plugin;
 }
 
-// Resolve worker against an array of possible extension,
-// since require.resolve.extensions is deprecated.
+// Resolve worker against an array of possible extensions, since require.resolve.extensions is deprecated.
+// Will resolve plain files with the listed extensions, not index files inside a directory or read package.json.
 // This is asynchronous to not block the esbuild pipeline.
 
 async function resolveWorker(
@@ -122,7 +128,7 @@ async function resolveWorker(
   return promiseAny<string>(promiseList);
 }
 
-// Polyfill promise.any, since Node 14 doesn't support it.
+// Polyfill Promise.any, since Node 14 doesn't support it. This throws instead of resolving to short-circuit Promise.all.
 
 async function promiseAny<T>(
   iterable: Iterable<T | PromiseLike<T>>,
