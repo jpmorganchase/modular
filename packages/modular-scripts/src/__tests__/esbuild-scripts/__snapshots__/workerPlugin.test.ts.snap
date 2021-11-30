@@ -10,7 +10,7 @@ exports[`WHEN running esbuild with the workerFactoryPlugin WHEN there's a url im
 "// worker-url:packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/worker-plugin/alive.worker.js
 var alive_worker_default = \\"./alive.worker-T4TLN6IN.js\\";
 
-// web-worker:/packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/worker-plugin/alive.worker.js
+// web-worker:./packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/worker-plugin/alive.worker.js
 var workerPath = new URL(alive_worker_default, import.meta.url);
 var importSrc = 'import \\"' + workerPath + '\\";';
 var blob = new Blob([importSrc], {

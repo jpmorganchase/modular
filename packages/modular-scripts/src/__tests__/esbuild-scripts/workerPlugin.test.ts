@@ -47,7 +47,7 @@ describe('WHEN running esbuild with the workerFactoryPlugin', () => {
       expect(tree(outdir)).toMatchInlineSnapshot(`
         "output
         ├─ alive.worker-T4TLN6IN.js #y0mybi
-        └─ index.js #18u9kun"
+        └─ index.js #wd8ozp"
       `);
     });
 

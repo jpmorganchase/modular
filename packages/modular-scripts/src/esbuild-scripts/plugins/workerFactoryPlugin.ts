@@ -18,11 +18,8 @@ function createPlugin(): esbuild.Plugin {
       build.onResolve(
         { filter: /worker-loader:.*\.worker.[jt]sx?$/ },
         (args) => {
-          const importRelativePath = args.path.split('worker-loader:')[1];
-          const importAbsolutePath = path.join(
-            path.dirname(args.importer),
-            importRelativePath,
-          );
+          const importPath = args.path.split('worker-loader:')[1];
+          const importAbsolutePath = path.join(args.resolveDir, importPath);
 
           // Pin the file extension to .js
           const workerAbsolutePath = path.join(
@@ -30,8 +27,15 @@ function createPlugin(): esbuild.Plugin {
             path.basename(importAbsolutePath).replace(/\.[jt]sx?$/, '.js'),
           );
 
+          // Path passed to esbuild must be either absolute or fully relative.
+          // If it's absolute, snapshots will fail because the built file will contain an absolute (different) path
+          // We need to make it relative to the current working directory, and add './'
+          // because esbuild doesn't like paths like 'packages/appName/src/...'
+          const relativePath =
+            './' + path.relative(process.cwd(), workerAbsolutePath);
+
           return {
-            path: workerAbsolutePath,
+            path: relativePath,
             namespace: 'web-worker',
           };
         },
@@ -46,6 +50,7 @@ function createPlugin(): esbuild.Plugin {
             format: build.initialOptions.format,
             target: build.initialOptions.target,
             define: build.initialOptions.define,
+            minify: build.initialOptions.minify,
             entryPoints: [args.path],
             bundle: true,
             write: false,
