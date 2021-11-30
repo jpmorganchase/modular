@@ -6,10 +6,6 @@ import tree from 'tree-view-for-tests';
 import webworkerPlugin from '../../esbuild-scripts/plugins/workerFactoryPlugin';
 import getModularRoot from '../../utils/getModularRoot';
 
-const emptyDir = async (dirName: string) => {
-  await fs.emptyDir(dirName);
-};
-
 describe('WHEN running esbuild with the workerFactoryPlugin', () => {
   describe("WHEN there's a url import", () => {
     let tmpDir: tmp.DirResult;
@@ -34,7 +30,7 @@ describe('WHEN running esbuild with the workerFactoryPlugin', () => {
     });
 
     afterAll(async () => {
-      await emptyDir(tmpDir.name);
+      await fs.emptyDir(tmpDir.name);
       tmpDir.removeCallback();
     });
 
@@ -57,7 +53,7 @@ describe('WHEN running esbuild with the workerFactoryPlugin', () => {
       expect(content).toMatchSnapshot();
     });
 
-    it('SHOULD ouput the correct alive.worker-MLBJYZMX.ts', () => {
+    it('SHOULD ouput the correct alive.worker-[hash].ts file', () => {
       let content = String(
         fs.readFileSync(path.join(outdir, 'alive.worker-T4TLN6IN.js')),
       );

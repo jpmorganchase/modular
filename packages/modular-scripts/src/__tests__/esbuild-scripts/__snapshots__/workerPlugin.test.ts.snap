@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`WHEN running esbuild with the workerFactoryPlugin WHEN there's a url import SHOULD ouput the correct alive.worker-MLBJYZMX.ts 1`] = `
+exports[`WHEN running esbuild with the workerFactoryPlugin WHEN there's a url import SHOULD ouput the correct alive.worker-[hash].ts file 1`] = `
 "// packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/worker-plugin/alive.worker.ts
 globalThis.self.postMessage(\\"I'm alive!\\");
 "
