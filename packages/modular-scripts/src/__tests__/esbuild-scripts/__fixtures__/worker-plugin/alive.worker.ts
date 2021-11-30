@@ -1,3 +1,3 @@
-self.postMessage("I'm alive!");
+globalThis.self.postMessage("I'm alive!");
 
 export {};

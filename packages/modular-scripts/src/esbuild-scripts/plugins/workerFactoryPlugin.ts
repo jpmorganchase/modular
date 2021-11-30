@@ -1,6 +1,5 @@
 import * as esbuild from 'esbuild';
 import * as path from 'path';
-import * as fs from 'fs-extra';
 import getModularRoot from '../../utils/getModularRoot';
 
 // This plugin builds Web Workers on the fly and exports them to use like worker-loader for Webpack 4: https://v4.webpack.js.org/loaders/worker-loader/
@@ -31,8 +30,6 @@ function createPlugin(): esbuild.Plugin {
             path.basename(importAbsolutePath).replace(/\.[jt]sx?$/, '.js'),
           );
 
-          console.log('onResolve sends down a path of', workerAbsolutePath);
-
           return {
             path: workerAbsolutePath,
             namespace: 'web-worker',
@@ -42,12 +39,6 @@ function createPlugin(): esbuild.Plugin {
 
       build.onLoad({ filter: /.*/, namespace: 'web-worker' }, async (args) => {
         const relativePath = path.relative(getModularRoot(), args.path);
-
-        console.log(
-          'onLoad tries to build and trampoline:',
-          relativePath,
-          args.path,
-        );
 
         // Build the worker file with the same format, target and definitions of the bundle
         try {
@@ -116,43 +107,6 @@ function createPlugin(): esbuild.Plugin {
   };
 
   return plugin;
-}
-
-// Resolve worker against an array of possible extensions, since require.resolve.extensions is deprecated.
-// Will resolve plain files with the listed extensions, not index files inside a directory or read package.json.
-// This is asynchronous to not block the esbuild pipeline.
-
-async function resolveWorker(
-  importer: string,
-  imported: string,
-  validExtensions: string[] = ['.js', 'jsx', '.ts', '.tsx'],
-): Promise<string> {
-  const basefile = path.join(path.dirname(importer), imported);
-
-  const promiseList = validExtensions.map(async (ext) => {
-    const fileName = basefile + ext;
-    if (await fs.pathExists(fileName)) return fileName;
-    throw new Error('Not found');
-  });
-
-  return promiseAny<string>(promiseList);
-}
-
-// Polyfill Promise.any, since Node 14 doesn't support it. This throws instead of resolving to short-circuit Promise.all.
-
-async function promiseAny<T>(
-  iterable: Iterable<T | PromiseLike<T>>,
-): Promise<T> {
-  return Promise.all(
-    [...iterable].map((promise) => {
-      return new Promise((resolve, reject) => {
-        Promise.resolve(promise).then(reject, resolve);
-      });
-    }),
-  ).then(
-    (errors) => Promise.reject(errors),
-    (value) => Promise.resolve<T>(value),
-  );
 }
 
 export default createPlugin;
