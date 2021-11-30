@@ -19,10 +19,7 @@ function createPlugin(): esbuild.Plugin {
           return fileContent.get(pathName) as string;
         } else {
           const joinedPath = path.join(modularRoot, pathName);
-          const content = fs.readFileSync(
-            joinedPath,
-            'utf8',
-          );
+          const content = fs.readFileSync(joinedPath, 'utf8');
           fileContent.set(pathName, content);
           return Promise.resolve(content);
         }
@@ -34,7 +31,7 @@ function createPlugin(): esbuild.Plugin {
             ...args,
           },
           path: args.path.slice('@svgurl:'.length),
-          namespace: 'svgurl'
+          namespace: 'svgurl',
         };
       });
 
@@ -89,7 +86,6 @@ function createPlugin(): esbuild.Plugin {
       build.onLoad({ filter: /\.svg$/, namespace: 'file' }, async (args) => {
         const pluginData = args.pluginData as esbuild.OnResolveArgs;
         const pathName = path.relative(modularRoot, args.path);
-
 
         if (pluginData.kind === 'url-token') {
           const contents = await readModularContent(pathName);

@@ -74,13 +74,15 @@ class DevServer {
     this.ws = ws(this.express);
 
     this.express.use(this.handleStaticAsset);
-    this.express.use("/static/js", this.handleStaticAsset);
+    this.express.use('/static/js', this.handleStaticAsset);
     this.express.use(this.handleRuntimeAsset);
 
-    this.express.use(express.static(paths.appPublic, {
-      cacheControl: false,
-      index: false,
-    }));
+    this.express.use(
+      express.static(paths.appPublic, {
+        cacheControl: false,
+        index: false,
+      }),
+    );
 
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this.express.get('/', this.handleIndex);
@@ -146,7 +148,7 @@ class DevServer {
       write: false,
       outbase: RUNTIME_DIR,
       absWorkingDir: getModularRoot(),
-      outdir: path.join(RUNTIME_DIR, "_runtime"),
+      outdir: path.join(RUNTIME_DIR, '_runtime'),
     });
   });
 
@@ -211,33 +213,62 @@ class DevServer {
     res.end(await createIndex(this.paths, this.metafile, this.env.raw, true));
   };
 
-  private serveEsbuild = (outputDirectory: string, url: string, result: esbuild.BuildResult, res: http.ServerResponse, next: express.NextFunction) => {
+  private serveEsbuild = (
+    outputDirectory: string,
+    url: string,
+    result: esbuild.BuildResult,
+    res: http.ServerResponse,
+    next: express.NextFunction,
+  ) => {
     const outputFiles = result.outputFiles || [];
 
     for (const file of outputFiles) {
-      if (sanitizeFileName("/" + path.relative(outputDirectory, file.path)) === url) {
+      if (
+        sanitizeFileName('/' + path.relative(outputDirectory, file.path)) ===
+        url
+      ) {
         const type = getType(url) as string;
 
-      res.setHeader('Content-Type', type)
+        res.setHeader('Content-Type', type);
 
         res.writeHead(200);
         return res.end(file.text);
       }
-    } 
+    }
 
     next();
-  }
+  };
 
-  handleStaticAsset: express.RequestHandler = async (req: http.IncomingMessage, res: http.ServerResponse, next: express.NextFunction) => {
+  handleStaticAsset: express.RequestHandler = async (
+    req: http.IncomingMessage,
+    res: http.ServerResponse,
+    next: express.NextFunction,
+  ) => {
     // wait until the first watch compile is complete
     await this.firstCompilePromise;
 
-    this.serveEsbuild(this.baseEsbuildConfig().outdir as string, req.url as string, this.esbuild, res, next);
+    this.serveEsbuild(
+      this.baseEsbuildConfig().outdir as string,
+      req.url as string,
+      this.esbuild,
+      res,
+      next,
+    );
   };
-  
-  handleRuntimeAsset: express.RequestHandler = async (req: http.IncomingMessage, res: http.ServerResponse, next: express.NextFunction) => {
-    this.serveEsbuild(RUNTIME_DIR, req.url as string, this.runtimeEsbuild, res, next);
-  }
+
+  handleRuntimeAsset: express.RequestHandler = (
+    req: http.IncomingMessage,
+    res: http.ServerResponse,
+    next: express.NextFunction,
+  ) => {
+    this.serveEsbuild(
+      RUNTIME_DIR,
+      req.url as string,
+      this.runtimeEsbuild,
+      res,
+      next,
+    );
+  };
 }
 
 export default async function start(target: string): Promise<void> {

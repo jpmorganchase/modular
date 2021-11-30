@@ -7,19 +7,26 @@ import type { Paths } from '../utils/createPaths';
 import getModularRoot from '../utils/getModularRoot';
 import * as path from 'path';
 
-type FileType = ".css" | ".js";
+type FileType = '.css' | '.js';
 
-function getEntryPoint( paths: Paths, metafile: esbuild.Metafile, type: FileType): string | undefined {
+function getEntryPoint(
+  paths: Paths,
+  metafile: esbuild.Metafile,
+  type: FileType,
+): string | undefined {
   const result = Object.entries(metafile.outputs).find(([key, output]) => {
-    return output.entryPoint && path.extname(key) === type
+    return output.entryPoint && path.extname(key) === type;
   });
 
   const outputFileName = result?.[0];
 
   if (outputFileName) {
-    return path.relative(paths.appBuild, path.join(getModularRoot(), outputFileName))
+    return path.relative(
+      paths.appBuild,
+      path.join(getModularRoot(), outputFileName),
+    );
   } else {
-    return undefined
+    return undefined;
   }
 }
 
@@ -37,9 +44,9 @@ export async function createIndex(
   const head = html.childNodes.find(
     (node) => node.nodeName === 'head',
   ) as parse5.Element;
-  
-  const cssEntryPoint = getEntryPoint(paths, metafile, ".css");
-  const jsEntryPoint = getEntryPoint(paths, metafile, ".js");
+
+  const cssEntryPoint = getEntryPoint(paths, metafile, '.css');
+  const jsEntryPoint = getEntryPoint(paths, metafile, '.js');
 
   if (cssEntryPoint) {
     head.childNodes.push(

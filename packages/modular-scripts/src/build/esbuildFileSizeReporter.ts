@@ -34,7 +34,7 @@ export function esbuildMeasureFileSizesBeforeBuild(
               const filePath = path.relative(modularRoot, absoluteFilePath);
 
               const contents = fs.readFileSync(absoluteFilePath);
-              
+
               const folder = path.dirname(filePath);
               const name = path.basename(filePath);
 
@@ -63,7 +63,7 @@ export function createEsbuildAssets(
       const fileContents = fs.readFileSync(path.join(modularRoot, filePath));
       const size = gzipSize(fileContents);
       const folder = path.dirname(filePath);
-      
+
       const name = path.basename(filePath);
       return {
         folder,
