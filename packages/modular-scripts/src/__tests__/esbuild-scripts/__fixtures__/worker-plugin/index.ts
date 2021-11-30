@@ -1,4 +1,4 @@
-import WorkerCls from './alive.worker.ts';
+import WorkerCls from 'worker-loader:./alive.worker.ts';
 
 const worker = new WorkerCls();
 

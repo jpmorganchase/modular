@@ -1,16 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`WHEN running esbuild with the svgrPlugin WHEN there's a url import SHOULD ouput the correct alive.worker-MLBJYZMX.ts 1`] = `
+exports[`WHEN running esbuild with the workerFactoryPlugin WHEN there's a url import SHOULD ouput the correct alive.worker-MLBJYZMX.ts 1`] = `
 "// packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/worker-plugin/alive.worker.ts
-self.postMessage(\\"I'm alive!\\");
+globalThis.self.postMessage(\\"I'm alive!\\");
 "
 `;
 
-exports[`WHEN running esbuild with the svgrPlugin WHEN there's a url import SHOULD ouput the correct index.js 1`] = `
-"// worker-url:packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/worker-plugin/alive.worker.ts
-var alive_worker_default = \\"./alive.worker-MLBJYZMX.ts\\";
+exports[`WHEN running esbuild with the workerFactoryPlugin WHEN there's a url import SHOULD ouput the correct index.js 1`] = `
+"// worker-url:packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/worker-plugin/alive.worker.js
+var alive_worker_default = \\"./alive.worker-T4TLN6IN.js\\";
 
-// web-worker:/packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/worker-plugin/alive.worker.ts
+// web-worker:/packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/worker-plugin/alive.worker.js
 var workerPath = new URL(alive_worker_default, import.meta.url);
 var importSrc = 'import \\"' + workerPath + '\\";';
 var blob = new Blob([importSrc], {

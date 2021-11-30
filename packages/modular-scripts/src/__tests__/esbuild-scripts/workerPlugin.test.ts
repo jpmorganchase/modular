@@ -10,7 +10,7 @@ const emptyDir = async (dirName: string) => {
   await fs.emptyDir(dirName);
 };
 
-describe('WHEN running esbuild with the svgrPlugin', () => {
+describe('WHEN running esbuild with the workerFactoryPlugin', () => {
   describe("WHEN there's a url import", () => {
     let tmpDir: tmp.DirResult;
     let result: esbuild.BuildResult;
@@ -46,8 +46,8 @@ describe('WHEN running esbuild with the svgrPlugin', () => {
     it('SHOULD have the correct output structure', () => {
       expect(tree(outdir)).toMatchInlineSnapshot(`
         "output
-        ├─ alive.worker-MLBJYZMX.ts #1qkw5er
-        └─ index.js #co48du"
+        ├─ alive.worker-T4TLN6IN.js #y0mybi
+        └─ index.js #18u9kun"
       `);
     });
 
@@ -59,7 +59,7 @@ describe('WHEN running esbuild with the svgrPlugin', () => {
 
     it('SHOULD ouput the correct alive.worker-MLBJYZMX.ts', () => {
       let content = String(
-        fs.readFileSync(path.join(outdir, 'alive.worker-MLBJYZMX.ts')),
+        fs.readFileSync(path.join(outdir, 'alive.worker-T4TLN6IN.js')),
       );
       content = content.replaceAll(getModularRoot(), '');
       expect(content).toMatchSnapshot();
