@@ -37,7 +37,7 @@
     "@types/semver-regex": "3.1.0",
     "address": "1.1.2",
     "babel-code-frame": "6.26.0",
-    "babel-jest": "26.6.3",
+    "babel-jest": "27.4.0",
     "babel-preset-react-app": "10.0.0",
     "browserslist": "4.18.1",
     "builtin-modules": "3.2.0",
