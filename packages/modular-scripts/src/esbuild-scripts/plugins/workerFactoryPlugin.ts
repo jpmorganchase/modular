@@ -52,6 +52,7 @@ function createPlugin(): esbuild.Plugin {
             define: build.initialOptions.define,
             minify: build.initialOptions.minify,
             entryPoints: [args.path],
+            plugins: [createExtensionAllowlistPlugin()],
             bundle: true,
             write: false,
           });
@@ -112,6 +113,29 @@ function createPlugin(): esbuild.Plugin {
   };
 
   return plugin;
+}
+
+function createExtensionAllowlistPlugin(
+  allowedExtensions = ['.js', '.jsx', '.ts', '.tsx'],
+): esbuild.Plugin {
+  return {
+    name: 'worker-factory-plugin',
+    setup(build) {
+      // No lookbehind in Go regexp; need to look at all the files and do the check manually.
+      build.onResolve({ filter: /.*/ }, (args) => {
+        // Extract the extension; if not in the allow list, throw.
+        const extension = path.extname(args.path);
+        if (extension && !allowedExtensions.includes(extension)) {
+          throw new Error(
+            `Extension "${extension}" not allowed in web worker ${
+              args.importer
+            }. Permitted extensions are ${JSON.stringify(allowedExtensions)}`,
+          );
+        }
+        return undefined;
+      });
+    },
+  };
 }
 
 export default createPlugin;
