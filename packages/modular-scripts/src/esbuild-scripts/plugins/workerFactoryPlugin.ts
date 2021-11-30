@@ -16,28 +16,38 @@ function createPlugin(): esbuild.Plugin {
       // This stores built workers for later use
       const workerBuildCache: Map<string, esbuild.BuildResult> = new Map();
 
-      build.onResolve({ filter: /.*\.worker$/ }, async (args) => {
-        let resolvedPath: string;
-        try {
-          resolvedPath = await resolveWorker(args.importer, args.path);
-        } catch (e) {
-          throw new Error(`Could not resolve ${args.path}`);
-        }
+      build.onResolve(
+        { filter: /worker-loader:.*\.worker.[jt]sx?$/ },
+        (args) => {
+          const importRelativePath = args.path.split('worker-loader:')[1];
+          const importAbsolutePath = path.join(
+            path.dirname(args.importer),
+            importRelativePath,
+          );
 
-        // Pin the file extension to .js
-        const workerPath = path.join(
-          path.dirname(resolvedPath),
-          path.basename(resolvedPath).replace(/\.[jt]sx?$/, '.js'),
-        );
+          // Pin the file extension to .js
+          const workerAbsolutePath = path.join(
+            path.dirname(importAbsolutePath),
+            path.basename(importAbsolutePath).replace(/\.[jt]sx?$/, '.js'),
+          );
 
-        return {
-          path: workerPath,
-          namespace: 'web-worker',
-        };
-      });
+          console.log('onResolve sends down a path of', workerAbsolutePath);
+
+          return {
+            path: workerAbsolutePath,
+            namespace: 'web-worker',
+          };
+        },
+      );
 
       build.onLoad({ filter: /.*/, namespace: 'web-worker' }, async (args) => {
         const relativePath = path.relative(getModularRoot(), args.path);
+
+        console.log(
+          'onLoad tries to build and trampoline:',
+          relativePath,
+          args.path,
+        );
 
         // Build the worker file with the same format, target and definitions of the bundle
         try {

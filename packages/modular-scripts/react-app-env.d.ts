@@ -11,8 +11,11 @@ declare namespace NodeJS {
   }
 }
 
-declare module '*.worker' {
-  class WebWorkerClass extends Worker {}
+declare module '*.worker.ts' {
+  class WebWorkerClass extends Worker {
+    constructor();
+  }
+
   export default WebWorkerClass;
 }
 

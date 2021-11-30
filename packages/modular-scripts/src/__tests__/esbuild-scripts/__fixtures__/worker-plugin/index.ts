@@ -1,7 +1,7 @@
-import WorkerCls from './alive.worker';
+import WorkerCls from './alive.worker.ts';
 
 const worker = new WorkerCls();
 
-worker.addEventListener('message', (event) => {
-    console.log(`Received message from worker: ${event.data}`)
+worker.addEventListener('message', (event: MessageEvent<string>) => {
+  console.log(`Received message from worker: ${event.data}`);
 });

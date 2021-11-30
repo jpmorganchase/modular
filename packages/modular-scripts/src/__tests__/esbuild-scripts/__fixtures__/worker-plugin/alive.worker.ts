@@ -1,1 +1,3 @@
-self.postMessage('I\'m alive!');
+self.postMessage("I'm alive!");
+
+export {};
