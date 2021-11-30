@@ -92,6 +92,12 @@ class DevServer {
     this.ws.app.ws('/_ws', (ws, req) => {
       logger.debug('Connected');
     });
+
+    // This registers user provided middleware for proxy reasons
+    if (fs.existsSync(paths.proxySetup)) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-var-requires
+      require(paths.proxySetup)(this.express);
+    }
   }
 
   async start(): Promise<DevServer> {
