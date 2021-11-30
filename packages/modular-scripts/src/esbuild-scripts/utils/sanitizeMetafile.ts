@@ -5,7 +5,7 @@ import getModularRoot from '../../utils/getModularRoot';
 import type { Paths } from '../../utils/createPaths';
 
 export const sanitizeFileName = (pathName: string): string => {
-  if (['.css', '.css.map'].includes(path.extname(pathName))) {
+  if (['.css', '.css.map'].some((ext) => pathName.endsWith(ext))) {
     return pathName.replace('/js/', '/css/');
   } else {
     return pathName;
