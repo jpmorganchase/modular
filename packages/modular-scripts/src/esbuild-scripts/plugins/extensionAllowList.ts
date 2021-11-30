@@ -11,14 +11,16 @@ function createExtensionAllowlistPlugin(
     name: 'worker-factory-plugin',
     setup(build) {
       // No lookbehind in Go regexp; need to look at all the files and do the check manually.
-      build.onResolve({ filter: /.*/ }, (args) => {
+      build.onLoad({ filter: /.*/ }, (args) => {
         // Extract the extension; if not in the allow list, throw.
         const extension = path.extname(args.path);
-        if (extension && !allowedExtensions.includes(extension)) {
+        if (!allowedExtensions.includes(extension)) {
           throw new Error(
-            `Extension "${extension}" not allowed in web worker ${
-              args.importer
-            }. Permitted extensions are ${JSON.stringify(allowedExtensions)}`,
+            `Extension for file "${
+              args.path
+            }" not allowed in web worker. Permitted extensions are ${JSON.stringify(
+              allowedExtensions,
+            )}`,
           );
         }
         return undefined;
