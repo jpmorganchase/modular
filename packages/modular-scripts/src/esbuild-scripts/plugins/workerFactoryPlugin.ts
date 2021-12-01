@@ -88,6 +88,7 @@ function createPlugin(): esbuild.Plugin {
 
       build.onLoad({ filter: /.*/, namespace: 'worker-url' }, (args) => {
         const result = workerBuildCache.get(args.path);
+        workerBuildCache.delete(args.path);
         if (result) {
           const { outputFiles } = result;
           if (outputFiles?.length === 1) {
