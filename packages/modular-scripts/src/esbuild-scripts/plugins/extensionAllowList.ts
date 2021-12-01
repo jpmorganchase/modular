@@ -18,7 +18,7 @@ function createExtensionAllowlistPlugin({
     setup(build) {
       // No lookbehind in Go regexp; need to look at all the files and do the check manually.
       build.onResolve({ filter: /.*/ }, (args) => {
-        // Extract the extension; if not in the allow list, throw.
+        // Extract the extension; if not in the allow list, return an error.
         const extension = path.extname(args.path);
         if (extension && !allowedExtensions.includes(extension)) {
           const errorReason = reason ? ` Reason: ${reason}` : '';
@@ -29,7 +29,7 @@ function createExtensionAllowlistPlugin({
                 text: `Extension not allowed`,
                 detail: `Extension for file "${args.path}", imported by "${
                   args.importer
-                }" not allowed. Permitted extensions are ${JSON.stringify(
+                }", is not allowed. Permitted extensions are: ${JSON.stringify(
                   allowedExtensions,
                 )}.${errorReason}`,
               },
