@@ -18,7 +18,7 @@ function createExtensionAllowlistPlugin(
           throw new Error(
             `Extension for file "${
               args.path
-            }" not allowed in web worker. Permitted extensions are ${JSON.stringify(
+            }" not allowed. Permitted extensions are ${JSON.stringify(
               allowedExtensions,
             )}`,
           );
