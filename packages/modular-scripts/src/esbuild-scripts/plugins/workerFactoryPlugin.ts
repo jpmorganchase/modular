@@ -46,7 +46,11 @@ function createPlugin(): esbuild.Plugin {
             define: build.initialOptions.define,
             minify: build.initialOptions.minify,
             entryPoints: [path.join(getModularRoot(), args.path)],
-            plugins: [createExtensionAllowlistPlugin()],
+            plugins: [
+              createExtensionAllowlistPlugin({
+                reason: 'Web workers can only import other modules.',
+              }),
+            ],
             bundle: true,
             write: false,
           });
