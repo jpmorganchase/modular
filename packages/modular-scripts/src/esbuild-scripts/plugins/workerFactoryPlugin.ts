@@ -4,7 +4,7 @@ import getModularRoot from '../../utils/getModularRoot';
 import createExtensionAllowlistPlugin from './extensionAllowList';
 
 // This plugin builds Web Workers on the fly and exports them to use like worker-loader for Webpack 4: https://v4.webpack.js.org/loaders/worker-loader/
-// The workers are not inlined, a new file is generated in the bundle. Only files *imported* with the *.worker pattern are matched.
+// The workers are not inlined, a new file is generated in the bundle. Only files *imported* with the *.worker.[jt]sx pattern are matched.
 // The workers are trampolined to avoid CORS errors.
 // This will be deprecated in the future when esbuild supports the Worker signature: see https://github.com/evanw/esbuild/issues/312
 // And will probably end up being compatible with Webpack 5 support https://webpack.js.org/guides/web-workers
@@ -16,31 +16,28 @@ function createPlugin(): esbuild.Plugin {
       // This stores built workers for later use
       const workerBuildCache: Map<string, esbuild.BuildResult> = new Map();
 
-      build.onResolve(
-        { filter: /worker-loader:.*\.worker.[jt]sx?$/ },
-        (args) => {
-          const importPath = args.path.split('worker-loader:')[1];
-          const importAbsolutePath = path.join(args.resolveDir, importPath);
+      build.onResolve({ filter: /.*\.worker.[jt]sx?$/ }, (args) => {
+        const importPath = args.path;
+        const importAbsolutePath = path.join(args.resolveDir, importPath);
 
-          // Pin the file extension to .js
-          const workerAbsolutePath = path.join(
-            path.dirname(importAbsolutePath),
-            path.basename(importAbsolutePath).replace(/\.[jt]sx?$/, '.js'),
-          );
+        // Pin the file extension to .js
+        const workerAbsolutePath = path.join(
+          path.dirname(importAbsolutePath),
+          path.basename(importAbsolutePath).replace(/\.[jt]sx?$/, '.js'),
+        );
 
-          // Path passed to esbuild must be either absolute or fully relative.
-          // If it's absolute, snapshots will fail because the built file will contain an absolute (different) path
-          // We need to make it relative to the current working directory, and add './'
-          // because esbuild doesn't like paths like 'packages/appName/src/...'
-          const relativePath =
-            './' + path.relative(process.cwd(), workerAbsolutePath);
+        // Path passed to esbuild must be either absolute or fully relative.
+        // If it's absolute, snapshots will fail because the built file will contain an absolute (different) path
+        // We need to make it relative to the current working directory, and add './'
+        // because esbuild doesn't like paths like 'packages/appName/src/...'
+        const relativePath =
+          './' + path.relative(process.cwd(), workerAbsolutePath);
 
-          return {
-            path: relativePath,
-            namespace: 'web-worker',
-          };
-        },
-      );
+        return {
+          path: relativePath,
+          namespace: 'web-worker',
+        };
+      });
 
       build.onLoad({ filter: /.*/, namespace: 'web-worker' }, async (args) => {
         const relativePath = path.relative(getModularRoot(), args.path);
@@ -65,7 +62,7 @@ function createPlugin(): esbuild.Plugin {
           return {
             contents: `
                   // Web worker bundled by worker-factory-plugin, mimicking the Worker constructor
-                  import workerUrl from 'worker-url:${relativePath}';
+                  import workerUrl from '${relativePath}:__worker-url';
                   
                   const workerPath = new URL(workerUrl, import.meta.url);
                   const importSrc = 'import "' + workerPath + '";';
@@ -86,9 +83,9 @@ function createPlugin(): esbuild.Plugin {
         }
       });
 
-      build.onResolve({ filter: /worker-url:.*/ }, (args) => {
+      build.onResolve({ filter: /.*:__worker-url/ }, (args) => {
         return {
-          path: args.path.slice('worker-url:'.length),
+          path: args.path.split(':__worker-url')[0],
           namespace: 'worker-url',
         };
       });
