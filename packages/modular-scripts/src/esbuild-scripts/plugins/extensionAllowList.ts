@@ -8,7 +8,6 @@ interface ExtensionPluginConf {
   allowedExtensions?: string[];
   reason?: string;
 }
-type PluginData = Pick<esbuild.OnResolveArgs, 'importer'>;
 
 function createExtensionAllowlistPlugin({
   reason,
@@ -22,29 +21,23 @@ function createExtensionAllowlistPlugin({
         // Extract the extension; if not in the allow list, throw.
         const extension = path.extname(args.path);
         if (extension && !allowedExtensions.includes(extension)) {
+          const errorReason = reason ? ` Reason: ${reason}` : '';
           return {
-            namespace: 'extension-not-allowed-error',
-            pluginData: { importer: args.importer },
-            path: args.path,
+            errors: [
+              {
+                pluginName: 'extension-allow-list-plugin',
+                text: `Extension not allowed`,
+                detail: `Extension for file "${args.path}", imported by "${
+                  args.importer
+                }" not allowed. Permitted extensions are ${JSON.stringify(
+                  allowedExtensions,
+                )}.${errorReason}`,
+              },
+            ],
           };
         }
         return undefined;
       });
-
-      build.onLoad(
-        { filter: /.*/, namespace: 'extension-not-allowed-error' },
-        (args) => {
-          const pluginData = args.pluginData as PluginData;
-          const errorReason = reason ? ` Reason: ${reason}` : '';
-          throw new Error(
-            `Extension for file "${args.path}", imported by "${
-              pluginData.importer
-            }" not allowed. Permitted extensions are ${JSON.stringify(
-              allowedExtensions,
-            )}.${errorReason}`,
-          );
-        },
-      );
     },
   };
 }
