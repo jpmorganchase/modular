@@ -26,12 +26,10 @@ function createPlugin(): esbuild.Plugin {
           path.basename(importAbsolutePath).replace(/\.[jt]sx?$/, '.js'),
         );
 
-        // Path passed to esbuild must be either absolute or fully relative.
-        // If it's absolute, snapshots will fail because the built file will contain an absolute (different) path
-        // We need to make it relative to the current working directory, and add './'
-        // because esbuild doesn't like paths like 'packages/appName/src/...'
-        const relativePath =
-          './' + path.relative(process.cwd(), workerAbsolutePath);
+        const relativePath = path.relative(
+          getModularRoot(),
+          workerAbsolutePath,
+        );
 
         return {
           path: relativePath,
@@ -40,8 +38,6 @@ function createPlugin(): esbuild.Plugin {
       });
 
       build.onLoad({ filter: /.*/, namespace: 'web-worker' }, async (args) => {
-        const relativePath = path.relative(getModularRoot(), args.path);
-
         // Build the worker file with the same format, target and definitions of the bundle
         try {
           const result = await esbuild.build({
@@ -49,20 +45,20 @@ function createPlugin(): esbuild.Plugin {
             target: build.initialOptions.target,
             define: build.initialOptions.define,
             minify: build.initialOptions.minify,
-            entryPoints: [args.path],
+            entryPoints: [path.join(getModularRoot(), args.path)],
             plugins: [createExtensionAllowlistPlugin()],
             bundle: true,
             write: false,
           });
 
           // Store the file in the build cache for later use, since we need to emit a file and trampoline it transparently to the user
-          workerBuildCache.set(relativePath, result);
+          workerBuildCache.set(args.path, result);
 
           // Trampoline the worker within the bundle, to avoid CORS errors
           return {
             contents: `
                   // Web worker bundled by worker-factory-plugin, mimicking the Worker constructor
-                  import workerUrl from '${relativePath}:__worker-url';
+                  import workerUrl from '${args.path}:__worker-url';
                   
                   const workerPath = new URL(workerUrl, import.meta.url);
                   const importSrc = 'import "' + workerPath + '";';
