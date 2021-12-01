@@ -80,18 +80,18 @@ describe('when working with an app', () => {
       .toMatchInlineSnapshot(`
       "sample-esbuild-app
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #1kjpjf2
+      ├─ index.html #7q1ane
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
       ├─ robots.txt #1sjb8b3
       └─ static
          ├─ css
-         │  ├─ index-OPRZV2UT.css #66eztv
-         │  └─ index-OPRZV2UT.css.map #18izw66
+         │  ├─ index-OPRZV2UT.css #1ldttcq
+         │  └─ index-OPRZV2UT.css.map #za6yi0
          ├─ js
-         │  ├─ index-SYRAECOS.js #c6l8qp
-         │  └─ index-SYRAECOS.js.map #1w0g0ue
+         │  ├─ index-SYRAECOS.js #nswngj
+         │  └─ index-SYRAECOS.js.map #1yt4p38
          └─ media
             └─ logo-PGX3QVVN.svg #1okqmlj"
     `);
