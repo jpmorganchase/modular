@@ -5,11 +5,12 @@ simply
 [`eslint-config-react-app`](https://www.npmjs.com/package/eslint-config-react-app)
 with dependencies bundled in.
 
-If you want to extend the ESLint configuration in a modular repo, create a file
-named `.eslintrc.js` in your project's root folder with the following content:
+If you want to extend the ESLint configuration in a modular repo, add the
+following configuration in your project's root folder `package.json` with the
+following content:
 
-    module.exports = {
-      extends: "modular-app",
+    "eslintConfig": {
+      "extends": "modular-app"
     }
 
 That's it! Add your additional config to this file. Read more about
