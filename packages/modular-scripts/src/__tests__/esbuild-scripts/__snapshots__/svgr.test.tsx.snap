@@ -46,7 +46,7 @@ ReactDOM.render(/* @__PURE__ */ React.createElement(\\"div\\", {
 `;
 
 exports[`WHEN running esbuild with the svgrPlugin WHEN there's a url import SHOULD ouput the correct index.js 1`] = `
-"// svgurl:/packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-url/logo.svg
+"// svgurl:packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-url/logo.svg
 var logo_default = \\"./logo-5JCTDEME.svg\\";
 
 // svgr:packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-url/logo.svg

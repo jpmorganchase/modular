@@ -5,6 +5,7 @@ import * as path from 'path';
 import recursive from 'recursive-readdir';
 
 import type { Paths } from '../utils/createPaths';
+import getModularRoot from '../utils/getModularRoot';
 import { Asset, canReadAsset } from './fileSizeReporter';
 
 function removeFileNameHash(fileName: string): string {
@@ -19,6 +20,8 @@ function removeFileNameHash(fileName: string): string {
 export function esbuildMeasureFileSizesBeforeBuild(
   buildFolder: string,
 ): Promise<Record<string, number>> {
+  const modularRoot = getModularRoot();
+
   return new Promise<Record<string, number>>((resolve) => {
     recursive(buildFolder, (err: Error, fileNames: string[]) => {
       if (err) {
@@ -28,13 +31,11 @@ export function esbuildMeasureFileSizesBeforeBuild(
           fileNames
             .filter(canReadAsset)
             .reduce<Record<string, number>>((memo, absoluteFilePath) => {
-              const filePath = path.relative(buildFolder, absoluteFilePath);
+              const filePath = path.relative(modularRoot, absoluteFilePath);
 
               const contents = fs.readFileSync(absoluteFilePath);
-              const folder = path.join(
-                path.basename(buildFolder),
-                path.dirname(filePath),
-              );
+
+              const folder = path.dirname(filePath);
               const name = path.basename(filePath);
 
               const key = `${folder}/${removeFileNameHash(name)}`;
@@ -53,20 +54,16 @@ export function createEsbuildAssets(
   paths: Paths,
   stats: esbuild.Metafile,
 ): Asset[] {
-  const readableAssets = Object.keys(stats.outputs)
-    .map((name) => {
-      return path.relative(paths.appBuild, path.join(paths.appPath, name));
-    })
-    .filter(canReadAsset);
+  const modularRoot = getModularRoot();
+
+  const readableAssets = Object.keys(stats.outputs).filter(canReadAsset);
 
   return readableAssets
     .map<Asset>((filePath) => {
-      const fileContents = fs.readFileSync(path.join(paths.appBuild, filePath));
+      const fileContents = fs.readFileSync(path.join(modularRoot, filePath));
       const size = gzipSize(fileContents);
-      const folder = path.join(
-        path.basename(paths.appBuild),
-        path.dirname(filePath),
-      );
+      const folder = path.dirname(filePath);
+
       const name = path.basename(filePath);
       return {
         folder,

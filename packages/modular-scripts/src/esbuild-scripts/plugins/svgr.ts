@@ -12,104 +12,100 @@ function createPlugin(): esbuild.Plugin {
     setup(build) {
       const modularRoot = getModularRoot();
 
-      build.onResolve({ filter: /@svgr:.*/ }, (args) => {
-        const pathName = path.join(
-          args.resolveDir,
-          args.path.slice('@svgr:'.length),
-        );
-        const relativePath = path.relative(modularRoot, pathName);
+      const fileContent = new Map<string, string>();
 
+      function readModularContent(pathName: string) {
+        if (fileContent.has(pathName)) {
+          return fileContent.get(pathName) as string;
+        } else {
+          const joinedPath = path.join(modularRoot, pathName);
+          const content = fs.readFileSync(joinedPath, 'utf8');
+          fileContent.set(pathName, content);
+          return Promise.resolve(content);
+        }
+      }
+
+      build.onResolve({ filter: /@svgurl:.*/ }, (args) => {
         return {
           pluginData: {
             ...args,
           },
-          path: relativePath,
-          namespace: 'svgr',
-        };
-      });
-
-      build.onLoad({ filter: /.*/, namespace: 'svgr' }, async (args) => {
-        const pluginData = args.pluginData as esbuild.OnResolveArgs;
-
-        const pathName = path.join(
-          pluginData.resolveDir,
-          pluginData.path.slice('@svgr:'.length),
-        );
-
-        const contents: string = await svgr(
-          await fs.readFile(pathName, 'utf8'),
-        );
-        return {
-          contents,
-          resolveDir: pluginData.resolveDir,
-          loader: 'jsx',
-        };
-      });
-
-      build.onResolve({ filter: /@svgurl:.*/ }, (args) => {
-        const pathName = path.join(
-          args.resolveDir,
-          args.path.slice('@svgurl:'.length),
-        );
-        return {
-          path: pathName,
+          path: args.path.slice('@svgurl:'.length),
           namespace: 'svgurl',
         };
       });
 
       build.onLoad({ filter: /.*/, namespace: 'svgurl' }, async (args) => {
-        const contents = await fs.readFile(args.path, 'utf8');
+        const { resolveDir } = args.pluginData as esbuild.OnResolveArgs;
+
+        const contents = await readModularContent(args.path);
+
         return {
+          resolveDir,
           contents,
           loader: 'file',
         };
       });
 
-      build.onResolve({ filter: /\.svg$/, namespace: 'file' }, (args) => {
-        const resolver = createRequire(args.importer);
-        const pathName = resolver.resolve(args.path);
-
-        if (args.kind === 'url-token') {
-          return {
-            pluginData: {
-              ...args,
-            },
-            path: path.relative(modularRoot, pathName),
-            namespace: 'modular-svgurl',
-          };
-        } else {
-          return {
-            pluginData: {
-              ...args,
-            },
-            path: path.relative(modularRoot, pathName),
-            namespace: 'modular-svgr',
-          };
-        }
+      build.onResolve({ filter: /@svgr:.*/ }, (args) => {
+        return {
+          pluginData: {
+            ...args,
+          },
+          path: args.path.slice('@svgr:'.length),
+          namespace: 'svgr',
+        };
       });
 
-      build.onLoad(
-        { filter: /\.svg$/, namespace: 'modular-svgurl' },
-        async (args) => {
-          const contents = await fs.readFile(args.path, 'utf8');
+      build.onLoad({ filter: /.*/, namespace: 'svgr' }, async (args) => {
+        const contents = await readModularContent(args.path);
+
+        const transformedContents: string = await svgr(contents);
+
+        const { resolveDir } = args.pluginData as esbuild.OnResolveArgs;
+
+        return {
+          resolveDir,
+          contents: transformedContents,
+          loader: 'jsx',
+        };
+      });
+
+      build.onResolve({ filter: /\.svg$/, namespace: 'file' }, (args) => {
+        const resolver = createRequire(args.importer);
+        const resolvedPathName = resolver.resolve(args.path);
+
+        return {
+          pluginData: {
+            ...args,
+          },
+          path: resolvedPathName,
+        };
+      });
+
+      build.onLoad({ filter: /\.svg$/, namespace: 'file' }, async (args) => {
+        const pluginData = args.pluginData as esbuild.OnResolveArgs;
+        const pathName = path.relative(modularRoot, args.path);
+
+        if (pluginData.kind === 'url-token') {
+          const contents = await readModularContent(pathName);
+
           return {
+            resolveDir: pluginData.resolveDir,
             contents,
             loader: 'dataurl',
           };
-        },
-      );
-
-      build.onLoad({ filter: /\.svg$/, namespace: 'modular-svgr' }, (args) => {
-        const pluginData = args.pluginData as esbuild.OnResolveArgs;
-
-        return {
-          resolveDir: pluginData.resolveDir,
-          contents: `
-                        export { default } from "@svgurl:${pluginData.path}";
-                        export { default as ReactComponent } from "@svgr:${pluginData.path}";
-                    `,
-          loader: 'jsx',
-        };
+        } else {
+          const contents = `
+export { default } from "@svgurl:${pathName}";
+export { default as ReactComponent } from "@svgr:${pathName}";
+`;
+          return {
+            resolveDir: pluginData.resolveDir,
+            contents,
+            loader: 'jsx',
+          };
+        }
       });
     },
   };

@@ -1,7 +1,7 @@
 import esbuild from 'esbuild';
 import * as ws from 'ws';
-import { formatError } from '../utils/formatError';
-import type { Paths } from '../../utils/createPaths';
+import { formatError } from '../../utils/formatError';
+import type { Paths } from '../../../utils/createPaths';
 
 export default function createPlugin(
   name: string,

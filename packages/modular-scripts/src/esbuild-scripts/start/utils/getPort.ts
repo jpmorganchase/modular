@@ -3,11 +3,12 @@ import isRoot from 'is-root';
 import prompts from 'prompts';
 import chalk from 'chalk';
 
-import * as logger from '../../utils/logger';
+import * as logger from '../../../utils/logger';
+import memoize from '../../../utils/memoize';
 
 const isInteractive = process.stdout.isTTY;
 
-export default async function choosePort(
+export async function choosePort(
   host: string,
   defaultPort: number,
 ): Promise<number | undefined> {
@@ -38,3 +39,14 @@ export default async function choosePort(
     logger.error(message);
   }
 }
+
+const getPort = async (host: string) => {
+  const port = await choosePort(host, parseInt(process.env.PORT || '3000', 0));
+  if (port) {
+    return port;
+  } else {
+    throw new Error(`Could not identify port to run against`);
+  }
+};
+
+export default memoize(getPort);

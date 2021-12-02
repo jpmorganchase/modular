@@ -76,23 +76,24 @@ describe('when working with an app', () => {
   });
 
   it('can build an app', () => {
-    expect(
-      tree(path.join(modularRoot, 'dist', 'sample-esbuild-app'), {
-        hashIgnores: ['index.js.map', 'index.css.map', 'package.json'],
-      }),
-    ).toMatchInlineSnapshot(`
+    expect(tree(path.join(modularRoot, 'dist', 'sample-esbuild-app')))
+      .toMatchInlineSnapshot(`
       "sample-esbuild-app
       ├─ favicon.ico #6pu3rg
-      ├─ index.css #90bbzw
-      ├─ index.css.map
-      ├─ index.html #ojdrji
-      ├─ index.js #w0zp6v
-      ├─ index.js.map
-      ├─ logo-PGX3QVVN.svg #1okqmlj
+      ├─ index.html #7q1ane
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
-      └─ robots.txt #1sjb8b3"
+      ├─ robots.txt #1sjb8b3
+      └─ static
+         ├─ css
+         │  ├─ index-OPRZV2UT.css #1ldttcq
+         │  └─ index-OPRZV2UT.css.map #za6yi0
+         ├─ js
+         │  ├─ index-SYRAECOS.js #nswngj
+         │  └─ index-SYRAECOS.js.map #1yt4p38
+         └─ media
+            └─ logo-PGX3QVVN.svg #1okqmlj"
     `);
   });
 
@@ -116,7 +117,14 @@ describe('when working with an app', () => {
       prettier.format(
         String(
           await fs.readFile(
-            path.join(modularRoot, 'dist', 'sample-esbuild-app', 'index.js'),
+            path.join(
+              modularRoot,
+              'dist',
+              'sample-esbuild-app',
+              'static',
+              'js',
+              'index-SYRAECOS.js',
+            ),
           ),
         ),
         {
@@ -141,10 +149,12 @@ describe('when working with an app', () => {
   };
 
   it('can generate a index.js.map', () => {
-    expect(readSourceMap('index.js.map')).toMatchSnapshot();
+    expect(readSourceMap('static/js/index-SYRAECOS.js.map')).toMatchSnapshot();
   });
 
   it('can generate a index.css.map', () => {
-    expect(readSourceMap('index.css.map')).toMatchSnapshot();
+    expect(
+      readSourceMap('static/css/index-OPRZV2UT.css.map'),
+    ).toMatchSnapshot();
   });
 });
