@@ -689,7 +689,7 @@ module.exports = function (webpackEnv) {
         require.resolve(plugin.package);
       } catch (err) {
         info(
-          `${chalk.dim('[modular]')} It appears you're using ${chalk.cyan(
+          `It appears you're using ${chalk.cyan(
             dependency,
           )}. Run ${chalk.cyan.bold(
             `yarn add -D ${plugin.package}`,
