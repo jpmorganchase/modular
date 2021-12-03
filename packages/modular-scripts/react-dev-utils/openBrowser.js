@@ -4,6 +4,7 @@ var chalk = require('chalk');
 var execSync = require('child_process').execSync;
 var spawn = require('cross-spawn');
 var open = require('open');
+const console = require('./logger');
 
 // https://github.com/sindresorhus/open#app
 var OSX_CHROME = 'google chrome';

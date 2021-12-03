@@ -6,6 +6,7 @@ const child_process = require('child_process');
 const os = require('os');
 const chalk = require('chalk');
 const shellQuote = require('shell-quote');
+const console = require('./logger');
 
 function isTerminalEditor(editor) {
   switch (editor) {
