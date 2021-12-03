@@ -14,7 +14,7 @@ function printStdErr(x) {
   if (SILENT) {
     return;
   }
-  x.split('\n').forEach((l) => {
+  x.split(/\r?\n/).forEach((l) => {
     process.stderr.write(chalk.dim(PREFIX) + l + '\n');
   });
 }
