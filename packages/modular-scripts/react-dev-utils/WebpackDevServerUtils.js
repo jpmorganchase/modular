@@ -179,7 +179,7 @@ function createCompiler({
             'Files successfully emitted, waiting for typecheck results...',
           ),
         );
-      }, 0);
+      }, 100);
 
       const messages = await tsMessagesPromise;
       clearTimeout(delayedMsg);
