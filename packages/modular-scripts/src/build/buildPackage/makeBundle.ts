@@ -4,8 +4,8 @@ import builtinModules from 'builtin-modules';
 import chalk from 'chalk';
 
 import * as rollup from 'rollup';
-import { preserveShebangs } from 'rollup-plugin-preserve-shebangs';
-import babel from '@rollup/plugin-babel';
+import esbuild from 'rollup-plugin-esbuild';
+
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import postcss from 'rollup-plugin-postcss';
@@ -79,35 +79,14 @@ export async function makeBundle(
         mainFields: ['module', 'main', 'browser'],
       }),
       commonjs({ include: /\/node_modules\// }),
-      babel({
-        babelHelpers: 'bundled',
-        presets: [
-          // Preset orders matters, please see: https://github.com/babel/babel/issues/8752#issuecomment-486541662
-          [
-            require.resolve('@babel/preset-env'),
-            // TODO: why doesn't this read `targets` from package.json?
-            {
-              targets: {
-                // We should be building packages for environments which support esmodules given their wide support now.
-                esmodules: true,
-              },
-            },
-          ],
-          [
-            require.resolve('@babel/preset-typescript'),
-            { isTSX: true, allExtensions: true },
-          ],
-          require.resolve('@babel/preset-react'),
-        ],
-        plugins: [require.resolve('@babel/plugin-proposal-class-properties')],
-        extensions,
+      esbuild({
+        minify: false,
         include: [`packages/**/*`],
         exclude: 'node_modules/**',
       }),
       postcss({ extract: false }),
       // TODO: add sass, dotenv
       json(),
-      preserveShebangs(),
     ],
     // TODO: support for css modules, sass, dotenv,
     // and anything else create-react-app supports
