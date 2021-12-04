@@ -16,11 +16,12 @@ const configFactory = require('../config/webpack.config');
 const paths = require('../config/paths');
 const formatWebpackMessages = require('../../react-dev-utils/formatWebpackMessages');
 const printBuildError = require('../../react-dev-utils/printBuildError');
+const { log } = require('../../react-dev-utils/logger');
 
 const compiler = webpack(configFactory('production'));
 
 compiler.run(async (err, stats) => {
-  console.log(chalk.dim('[modular] ') + 'Webpack Compiled.');
+  log('Webpack Compiled.');
   let messages;
   let statsJson;
   if (err) {
@@ -62,7 +63,7 @@ compiler.run(async (err, stats) => {
   }
 
   if (isCi && messages.warnings.length) {
-    console.log(
+    log(
       chalk.yellow(
         'Treating warnings as errors because process.env.CI = true.\n' +
           'Most CI servers set it automatically.\n',

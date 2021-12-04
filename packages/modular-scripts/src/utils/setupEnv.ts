@@ -47,8 +47,10 @@ export default async function setupEnv(
 
   // setup verbose Logging
   // @ts-ignore
-  process.env.MODULAR_LOGGER_DEBUG =
-    process.env.MODULAR_LOGGER_DEBUG || process.argv.includes('--verbose');
+  if (process.env.MODULAR_LOGGER_DEBUG || process.argv.includes('--verbose')) {
+    // @ts-ignore
+    process.env.MODULAR_LOGGER_DEBUG = 'true';
+  }
 
   if (!modularRoot) {
     return;

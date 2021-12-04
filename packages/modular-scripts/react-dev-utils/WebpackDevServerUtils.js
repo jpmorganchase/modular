@@ -8,11 +8,13 @@ const chalk = require('chalk');
 const detect = require('detect-port-alt');
 const isRoot = require('is-root');
 const prompts = require('prompts');
-const clearConsole = require('./clearConsole');
+const forkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+
+const { clearConsole } = require('./logger');
 const formatWebpackMessages = require('./formatWebpackMessages');
 const getProcessForPort = require('./getProcessForPort');
 const typescriptFormatter = require('./typescriptFormatter');
-const forkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const console = require('./logger');
 
 const isInteractive = process.stdout.isTTY;
 
