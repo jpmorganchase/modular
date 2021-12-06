@@ -20,7 +20,6 @@ export interface Paths {
   testsSetup: string;
   proxySetup: string;
   appNodeModules: string;
-  swSrc: string;
   ownNodeModules: string;
   appTypeDeclarations: string;
   ownTypeDeclarations: string;
@@ -100,7 +99,6 @@ export default async function createPaths(target: string): Promise<Paths> {
   const testsSetup = resolveModule(resolveApp, 'src/setupTests');
   const proxySetup = resolveApp('src/setupProxy.js');
   const appNodeModules = resolveApp('node_modules');
-  const swSrc = resolveModule(resolveApp, 'src/service-worker');
   const ownNodeModules = resolveOwn('node_modules');
   const appTypeDeclarations = resolveApp('src/react-app-env.d.ts');
   const ownTypeDeclarations = resolveOwn('react-app.d.ts');
@@ -122,7 +120,6 @@ export default async function createPaths(target: string): Promise<Paths> {
     testsSetup,
     proxySetup,
     appNodeModules,
-    swSrc,
     ownNodeModules,
     appTypeDeclarations,
     ownTypeDeclarations,
