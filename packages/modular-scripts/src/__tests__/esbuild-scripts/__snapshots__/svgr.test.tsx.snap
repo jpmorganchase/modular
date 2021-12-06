@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`WHEN running esbuild with the svgrPlugin WHEN there's a component import SHOULD ouput the correct index.js 1`] = `
-"// svgr:packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-component/logo.svg
+"// packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-component/logo.svg
 import * as React from \\"react\\";
-function SvgComponent(props) {
+function ReactComponent(props) {
   return /* @__PURE__ */ React.createElement(\\"svg\\", {
     viewBox: \\"0 0 100 100\\",
     xmlns: \\"http://www.w3.org/2000/svg\\",
@@ -14,12 +14,11 @@ function SvgComponent(props) {
     r: 50
   }));
 }
-var logo_default = SvgComponent;
 
 // packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-component/index.tsx
 import React2 from \\"react\\";
 import ReactDOM from \\"react-dom\\";
-ReactDOM.render(/* @__PURE__ */ React2.createElement(logo_default, {
+ReactDOM.render(/* @__PURE__ */ React2.createElement(ReactComponent, {
   title: \\"logo\\"
 }), document.body);
 "
@@ -47,7 +46,7 @@ exports[`WHEN running esbuild with the svgrPlugin WHEN there's a url import SHOU
 "// svgurl:packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-url/logo.svg
 var logo_default = \\"./logo-5JCTDEME.svg\\";
 
-// svgr:packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-url/logo.svg
+// packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-url/logo.svg
 import * as React from \\"react\\";
 
 // packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-url/index.tsx
