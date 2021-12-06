@@ -2375,11 +2375,6 @@
   resolved "https://registry.yarnpkg.com/@types/aria-query/-/aria-query-4.2.2.tgz#ed4e0ad92306a704f9fb132a0cfcf77486dbe2bc"
   integrity sha512-HnYpAE1Y6kRyKM/XkEuiRQhTHvkzMBurTHnpFLYLBGPIylZNPs9jJcuOOYWxPLJCSEtmZT0Y8rHDokKN7rRTig==
 
-"@types/babel-code-frame@^6.20.5":
-  version "6.20.5"
-  resolved "https://registry.yarnpkg.com/@types/babel-code-frame/-/babel-code-frame-6.20.5.tgz#baf30fe92857b380552c79333ab958b0c4e28307"
-  integrity sha512-dDya2ZMwQVDAzJWleisLxo8mCWoItbr7f4PT7TJE9WCHjt5nqO1aeFHtz2pukkOK3SsCKQ2g/VgDb9ElQIiUUg==
-
 "@types/babel-plugin-macros@2.8.5":
   version "2.8.5"
   resolved "https://registry.yarnpkg.com/@types/babel-plugin-macros/-/babel-plugin-macros-2.8.5.tgz#04474f9898aa9112afc22fa0e7e53a898fcaba4c"
