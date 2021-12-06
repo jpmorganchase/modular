@@ -94,21 +94,15 @@ describe('WHEN building with preserve modules', () => {
       "sample-async-package
       ├─ README.md #1jv3l2q
       ├─ dist-cjs
-      │  ├─ _virtual
-      │  │  ├─ _rollupPluginBabelHelpers.js #8zp60f
-      │  │  └─ _rollupPluginBabelHelpers.js.map #1a6wdsa
-      │  ├─ index.js #sb8xfb
-      │  ├─ index.js.map #r9dxe
-      │  ├─ runAsync.js #1vge02m
-      │  └─ runAsync.js.map #1thrwz0
+      │  ├─ index.js #y5z0kw
+      │  ├─ index.js.map #1ppp712
+      │  ├─ runAsync.js #kr3qrh
+      │  └─ runAsync.js.map #18daxam
       ├─ dist-es
-      │  ├─ _virtual
-      │  │  ├─ _rollupPluginBabelHelpers.js #14tvdhd
-      │  │  └─ _rollupPluginBabelHelpers.js.map #4hotzf
-      │  ├─ index.js #1lz39tw
-      │  ├─ index.js.map #6hlu18
-      │  ├─ runAsync.js #1xha07g
-      │  └─ runAsync.js.map #1u7bzfv
+      │  ├─ index.js #7arwpf
+      │  ├─ index.js.map #1in842g
+      │  ├─ runAsync.js #1tt0e7o
+      │  └─ runAsync.js.map #1qvfs9
       ├─ dist-types
       │  ├─ index.d.ts #12l2tmi
       │  └─ runAsync.d.ts #1iek7az
