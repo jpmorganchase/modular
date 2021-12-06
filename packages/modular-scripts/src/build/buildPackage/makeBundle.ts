@@ -18,6 +18,7 @@ import getPackageMetadata from '../../utils/getPackageMetadata';
 import getModularRoot from '../../utils/getModularRoot';
 import { ModularPackageJson } from '../../utils/isModularType';
 import getRelativeLocation from '../../utils/getRelativeLocation';
+import createEsbuildBrowserslistTarget from '../../../dist-cjs/utils/createEsbuildBrowserslistTarget';
 
 const outputDirectory = 'dist';
 const extensions = ['.ts', '.tsx', '.js', '.jsx'];
@@ -27,7 +28,7 @@ function distinct<T>(arr: T[]): T[] {
 }
 
 export async function makeBundle(
-  target: string,
+  packageName: string,
   preserveModules: boolean,
   includePrivate: boolean,
 ): Promise<ModularPackageJson> {
@@ -40,21 +41,23 @@ export async function makeBundle(
     packageNames,
   } = metadata;
 
-  const paramCaseTarget = toParamCase(target);
-  const packagePath = await getRelativeLocation(target);
+  const paramCaseTarget = toParamCase(packageName);
+  const packagePath = await getRelativeLocation(packageName);
   const targetOutputDirectory = path.join(
     modularRoot,
     outputDirectory,
     paramCaseTarget,
   );
 
-  const logger = getPrefixedLogger(target);
+  const logger = getPrefixedLogger(packageName);
 
   const packageJson = packageJsonsByPackagePath[packagePath];
 
   const main = await getPackageEntryPoints(packagePath, includePrivate);
 
-  logger.log(`building ${target}...`);
+  logger.log(`building ${packageName}...`);
+
+  const target = createEsbuildBrowserslistTarget(packagePath);
 
   const bundle = await rollup.rollup({
     input: path.join(modularRoot, packagePath, main),
@@ -80,6 +83,7 @@ export async function makeBundle(
       }),
       commonjs({ include: /\/node_modules\// }),
       esbuild({
+        target,
         minify: false,
         include: [`packages/**/*`],
         exclude: 'node_modules/**',
