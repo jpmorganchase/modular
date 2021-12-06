@@ -32,7 +32,7 @@
     "@rollup/plugin-json": "4.1.0",
     "@rollup/plugin-node-resolve": "13.0.6",
     "@svgr/core": "5.5.0",
-    "@svgr/webpack": "5.5.0",
+    "@svgr/webpack": "6.1.1",
     "@types/micromatch": "4.0.2",
     "@types/semver-regex": "3.1.0",
     "address": "1.1.2",
