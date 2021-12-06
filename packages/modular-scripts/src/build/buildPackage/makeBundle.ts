@@ -18,7 +18,7 @@ import getPackageMetadata from '../../utils/getPackageMetadata';
 import getModularRoot from '../../utils/getModularRoot';
 import { ModularPackageJson } from '../../utils/isModularType';
 import getRelativeLocation from '../../utils/getRelativeLocation';
-import createEsbuildBrowserslistTarget from '../../../dist-cjs/utils/createEsbuildBrowserslistTarget';
+import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowserslistTarget';
 
 const outputDirectory = 'dist';
 const extensions = ['.ts', '.tsx', '.js', '.jsx'];
