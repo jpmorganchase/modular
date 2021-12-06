@@ -5,7 +5,7 @@ title: modular test
 
 # `modular test`
 
-`test` is an opionated wrapper around [`jest`](https://jestjs.io/) which runs
+`test` is an opinionated wrapper around [`jest`](https://jestjs.io/) which runs
 tests against the entire `modular` project. It comes with out-of-the-box
 configuration and opinionation.
 
