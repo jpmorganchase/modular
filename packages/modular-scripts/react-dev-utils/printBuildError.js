@@ -1,6 +1,7 @@
 'use strict';
 
 const chalk = require('chalk');
+const console = require('./logger');
 
 module.exports = function printBuildError(err) {
   const message = err != null && err.message;
