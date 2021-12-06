@@ -99,7 +99,9 @@ describe('WHEN running esbuild with the svgrPlugin', () => {
           
         > 1 | import { foo } from '../foo';
             |                    ^
-          2 | 
+          2 |
+          3 | foo();
+          4 |
             "
       `);
     });

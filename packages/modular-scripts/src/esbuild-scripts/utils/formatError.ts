@@ -2,7 +2,7 @@ import { Message } from 'esbuild';
 import chalk from 'chalk';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import codeFrame from 'babel-code-frame';
+import { codeFrameColumns } from '@babel/code-frame';
 
 export async function formatError(
   error: Message,
@@ -15,11 +15,13 @@ export async function formatError(
     });
     return `${chalk.red('Error:')}[${error.location.file}] ${error.text}
   
-${codeFrame(source, error.location.line, error.location.column, {
-  linesAbove: 1,
-  linesBelow: 1,
-  highlightCode: true,
-})}
+${codeFrameColumns(
+  source,
+  { start: { line: error.location.line, column: error.location.column } },
+  {
+    highlightCode: true,
+  },
+)}
     `;
   } else {
     return `${chalk.red('Error:')} ${error.text}\n`;
