@@ -7,7 +7,7 @@ title: modular port
 
 Takes a relative path from the modular root directory to the targeted
 create-react-app project and ports it over to the current modular project as a
-moudlar app.
+modular app.
 
 ```
 $ modular port ../another-react-app
