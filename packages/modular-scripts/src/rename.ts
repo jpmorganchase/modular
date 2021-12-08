@@ -4,11 +4,21 @@ import getWorkspaceInfo from './utils/getWorkspaceInfo';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 
-interface PackageJson {
+// Derive types from array; this is handy to iterate against it later
+const dependencyTypes = [
+  'dependencies',
+  'devDependencies',
+  'peerDependencies',
+] as const;
+
+type DependencyType = typeof dependencyTypes[number];
+
+type DependencyObject = {
+  [key in DependencyType]: Record<string, string>;
+};
+
+interface PackageJson extends Partial<DependencyObject> {
   name: string;
-  dependencies?: Record<string, string>;
-  devDependencies?: Record<string, string>;
-  peerDependencies?: Record<string, string>;
 }
 
 async function rename(
@@ -28,7 +38,7 @@ async function rename(
     throw new Error(`Package ${newPackageName} already exists.`);
   }
 
-  // Rename the directory
+  // Rename the directory. Do it first because this fails if there's a collision and we don't want to clean up later
   const newPackageLocation = path.join(
     getModularRoot(),
     path.join(oldPackage.location, '..'),
@@ -65,11 +75,33 @@ async function rename(
           )) as PackageJson,
         })),
     )
-  ).filter(
-    (pkgJsonInfo) =>
-      pkgJsonInfo.json.dependencies?.[oldPackageName] ||
-      pkgJsonInfo.json.devDependencies?.[oldPackageName] ||
-      pkgJsonInfo.json.peerDependencies?.[oldPackageName],
+  ).filter((pkgJsonInfo) =>
+    dependencyTypes.some(
+      (depField) => pkgJsonInfo.json[depField]?.[oldPackageName],
+    ),
+  );
+
+  // Change dependency name in those packages, mutating the package object.
+  await Promise.all(
+    dependingPackages.map(async (pkg) => {
+      let modified = false;
+      dependencyTypes.forEach((depField) => {
+        // Needs to be explicitly assigned, otherwise Typescript doesn't understand it's defined
+        const depObject = pkg.json[depField];
+        if (depObject?.[oldPackageName]) {
+          depObject[newPackageName] = depObject[oldPackageName];
+          delete pkg.json[depField]?.[oldPackageName];
+          modified = true;
+        }
+      });
+      if (modified) {
+        await fs.writeJson(
+          path.join(getModularRoot(), pkg.location, './package.json'),
+          pkg.json,
+          { spaces: 2 },
+        );
+      }
+    }),
   );
 
   console.log(dependingPackages);
