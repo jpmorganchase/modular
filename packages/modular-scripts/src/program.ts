@@ -253,4 +253,12 @@ program
     await typecheck();
   });
 
+program
+  .command('rename <old-package-name> <new-package-name>')
+  .description(`Rename a package.`)
+  .action(async (oldPackageName: string, newPackageName: string) => {
+    const { default: rename } = await import('./rename');
+    await rename(oldPackageName, newPackageName);
+  });
+
 export { program };
