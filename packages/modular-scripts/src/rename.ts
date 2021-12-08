@@ -28,20 +28,6 @@ async function rename(
     throw new Error(`Package ${newPackageName} already exists.`);
   }
 
-  // Change name in package.json
-  const oldPackageJsonLocation = path.join(
-    getModularRoot(),
-    oldPackage.location,
-    './package.json',
-  );
-  const packageJson = (await fs.readJson(
-    oldPackageJsonLocation,
-  )) as PackageJson;
-
-  packageJson.name = newPackageName;
-
-  await fs.writeJSON(oldPackageJsonLocation, packageJson, { spaces: 2 });
-
   // Rename the directory
   const newPackageLocation = path.join(
     getModularRoot(),
@@ -49,15 +35,44 @@ async function rename(
     newPackageName,
   );
 
-  console.log(
-    oldPackageJsonLocation,
-    newPackageLocation,
-    path.join(oldPackage.location, '..'),
-  );
-
   await fs.move(oldPackage.location, newPackageLocation);
 
-  console.log('Renaming', oldPackageName, 'to', newPackageName);
+  // Change name in package.json
+  const newPackageJsonLocation = path.join(
+    newPackageLocation,
+    './package.json',
+  );
+
+  const packageJson = (await fs.readJson(
+    newPackageJsonLocation,
+  )) as PackageJson;
+
+  packageJson.name = newPackageName;
+
+  await fs.writeJson(newPackageJsonLocation, packageJson, { spaces: 2 });
+
+  // Search for packages that depend on the renamed package
+  type PackageDepInfo = { location: string; json: PackageJson };
+
+  const dependingPackages: PackageDepInfo[] = (
+    await Promise.all(
+      workspace
+        .filter(([packageName]) => packageName !== oldPackageName)
+        .map(async ([_, packageData]) => ({
+          location: packageData.location,
+          json: (await fs.readJson(
+            path.join(getModularRoot(), packageData.location, './package.json'),
+          )) as PackageJson,
+        })),
+    )
+  ).filter(
+    (pkgJsonInfo) =>
+      pkgJsonInfo.json.dependencies?.[oldPackageName] ||
+      pkgJsonInfo.json.devDependencies?.[oldPackageName] ||
+      pkgJsonInfo.json.peerDependencies?.[oldPackageName],
+  );
+
+  console.log(dependingPackages);
 }
 
 export default actionPreflightCheck(rename);
