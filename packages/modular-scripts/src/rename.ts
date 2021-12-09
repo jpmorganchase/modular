@@ -1,6 +1,7 @@
+import { Project } from 'ts-morph';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import getModularRoot from './utils/getModularRoot';
-import getWorkspaceInfo from './utils/getWorkspaceInfo';
+import getWorkspaceInfo, { WorkSpaceRecord } from './utils/getWorkspaceInfo';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 
@@ -62,14 +63,14 @@ async function rename(
   await fs.writeJson(newPackageJsonLocation, packageJson, { spaces: 2 });
 
   // Search for packages that depend on the renamed package
-  type PackageDepInfo = { location: string; json: PackageJson };
+  type PackageDepInfo = { packageData: WorkSpaceRecord; json: PackageJson };
 
   const dependingPackages: PackageDepInfo[] = (
     await Promise.all(
       workspace
         .filter(([packageName]) => packageName !== oldPackageName)
         .map(async ([_, packageData]) => ({
-          location: packageData.location,
+          packageData,
           json: (await fs.readJson(
             path.join(getModularRoot(), packageData.location, './package.json'),
           )) as PackageJson,
@@ -81,7 +82,7 @@ async function rename(
     ),
   );
 
-  // Change dependency name in those packages, mutating the package object.
+  // Change dependency name in depending packages, mutating the package object.
   await Promise.all(
     dependingPackages.map(async (pkg) => {
       let modified = false;
@@ -96,7 +97,11 @@ async function rename(
       });
       if (modified) {
         await fs.writeJson(
-          path.join(getModularRoot(), pkg.location, './package.json'),
+          path.join(
+            getModularRoot(),
+            pkg.packageData.location,
+            './package.json',
+          ),
           pkg.json,
           { spaces: 2 },
         );
@@ -104,7 +109,29 @@ async function rename(
     }),
   );
 
-  console.log(dependingPackages);
+  // Change imports in depending packages
+  dependingPackages.map(async (pkg) => {
+    const project = new Project();
+    project.addSourceFilesAtPaths(
+      path.join(
+        getModularRoot(),
+        pkg.packageData.location,
+        'src/**/*{.d.ts,.ts,.tsx}',
+      ),
+    );
+    const sourceFiles = project.getSourceFiles();
+
+    sourceFiles.forEach((sourceFile) => {
+      const imports = sourceFile.getImportDeclarations();
+      imports.forEach((importDeclaration) => {
+        if (importDeclaration.getModuleSpecifierValue() === oldPackageName) {
+          console.log(importDeclaration.getModuleSpecifierValue());
+          importDeclaration.setModuleSpecifier(newPackageName);
+        }
+      });
+    });
+    await project.save();
+  });
 }
 
 export default actionPreflightCheck(rename);
