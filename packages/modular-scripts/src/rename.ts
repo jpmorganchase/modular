@@ -125,7 +125,6 @@ async function rename(
       const imports = sourceFile.getImportDeclarations();
       imports.forEach((importDeclaration) => {
         if (importDeclaration.getModuleSpecifierValue() === oldPackageName) {
-          console.log(importDeclaration.getModuleSpecifierValue());
           importDeclaration.setModuleSpecifier(newPackageName);
         }
       });
