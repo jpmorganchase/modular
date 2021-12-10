@@ -256,6 +256,7 @@ program
 program
   .command('rename <old-package-name> <new-package-name>')
   .description(`Rename a package.`)
+  .option('--verbose', 'Enables verbose logging within modular.')
   .action(async (oldPackageName: string, newPackageName: string) => {
     const { default: rename } = await import('./rename');
     await rename(oldPackageName, newPackageName);

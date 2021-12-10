@@ -4,6 +4,7 @@ import getModularRoot from './utils/getModularRoot';
 import getWorkspaceInfo, { WorkSpaceRecord } from './utils/getWorkspaceInfo';
 import * as fs from 'fs-extra';
 import * as path from 'path';
+import * as logger from './utils/logger';
 
 // Derive types from array; this is handy to iterate against it later
 const dependencyTypes = [
@@ -28,13 +29,14 @@ async function rename(
 ): Promise<void> {
   const workspace = Object.entries(await getWorkspaceInfo());
 
+  logger.debug(`Checking for existence of ${oldPackageName} in workspace.`);
   const oldPackage = workspace.find(
     ([packageName]) => packageName === oldPackageName,
   )?.[1];
   if (!oldPackage) {
     throw new Error(`Package ${oldPackageName} not found.`);
   }
-
+  logger.debug(`Checking for collision with ${newPackageName} in workspace.`);
   if (workspace.find(([packageName]) => packageName === newPackageName)) {
     throw new Error(`Package ${newPackageName} already exists.`);
   }
@@ -45,6 +47,8 @@ async function rename(
     path.join(oldPackage.location, '..'),
     newPackageName,
   );
+
+  logger.log(`Moving ${oldPackage.location} → ${newPackageLocation}`);
 
   await fs.move(oldPackage.location, newPackageLocation);
 
@@ -58,6 +62,7 @@ async function rename(
     newPackageJsonLocation,
   )) as PackageJson;
 
+  logger.log(`Changing package name ${packageJson.name} → ${newPackageName}`);
   packageJson.name = newPackageName;
 
   await fs.writeJson(newPackageJsonLocation, packageJson, { spaces: 2 });
@@ -65,6 +70,7 @@ async function rename(
   // Search for packages that depend on the renamed package
   type PackageDepInfo = { packageData: WorkSpaceRecord; json: PackageJson };
 
+  logger.log(`Searching for packages depending on ${oldPackageName}`);
   const dependingPackages: PackageDepInfo[] = (
     await Promise.all(
       workspace
@@ -82,7 +88,7 @@ async function rename(
     ),
   );
 
-  // Change dependency name in depending packages, mutating the package object.
+  logger.log(`Renaming dependencies in depending packages`);
   await Promise.all(
     dependingPackages.map(async (pkg) => {
       let modified = false;
@@ -90,6 +96,9 @@ async function rename(
         // This needs to be explicitly assigned, otherwise Typescript doesn't understand it's defined
         const depObject = pkg.json[depField];
         if (depObject?.[oldPackageName]) {
+          logger.debug(
+            `Renaming dependency ${oldPackageName} → ${newPackageName} in ${depField} / ${pkg.packageData.location}`,
+          );
           depObject[newPackageName] = depObject[oldPackageName];
           delete pkg.json[depField]?.[oldPackageName];
           modified = true;
@@ -109,7 +118,7 @@ async function rename(
     }),
   );
 
-  // Change imports in depending packages
+  logger.log(`Rewriting imports in depending packages`);
   await Promise.all(
     dependingPackages.map(async (pkg) => {
       const project = new Project();
@@ -126,6 +135,9 @@ async function rename(
         const imports = sourceFile.getImportDeclarations();
         imports.forEach((importDeclaration) => {
           if (importDeclaration.getModuleSpecifierValue() === oldPackageName) {
+            logger.debug(
+              `Rewriting \`${importDeclaration.getText()}\` in ${sourceFile.getFilePath()}`,
+            );
             importDeclaration.setModuleSpecifier(newPackageName);
           }
         });
