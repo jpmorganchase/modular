@@ -87,7 +87,7 @@ async function rename(
     dependingPackages.map(async (pkg) => {
       let modified = false;
       dependencyTypes.forEach((depField) => {
-        // Needs to be explicitly assigned, otherwise Typescript doesn't understand it's defined
+        // This needs to be explicitly assigned, otherwise Typescript doesn't understand it's defined
         const depObject = pkg.json[depField];
         if (depObject?.[oldPackageName]) {
           depObject[newPackageName] = depObject[oldPackageName];
@@ -110,27 +110,29 @@ async function rename(
   );
 
   // Change imports in depending packages
-  dependingPackages.map(async (pkg) => {
-    const project = new Project();
-    project.addSourceFilesAtPaths(
-      path.join(
-        getModularRoot(),
-        pkg.packageData.location,
-        'src/**/*{.d.ts,.ts,.tsx}',
-      ),
-    );
-    const sourceFiles = project.getSourceFiles();
+  await Promise.all(
+    dependingPackages.map(async (pkg) => {
+      const project = new Project();
+      project.addSourceFilesAtPaths(
+        path.join(
+          getModularRoot(),
+          pkg.packageData.location,
+          'src/**/*{.d.ts,.ts,.tsx}',
+        ),
+      );
+      const sourceFiles = project.getSourceFiles();
 
-    sourceFiles.forEach((sourceFile) => {
-      const imports = sourceFile.getImportDeclarations();
-      imports.forEach((importDeclaration) => {
-        if (importDeclaration.getModuleSpecifierValue() === oldPackageName) {
-          importDeclaration.setModuleSpecifier(newPackageName);
-        }
+      sourceFiles.forEach((sourceFile) => {
+        const imports = sourceFile.getImportDeclarations();
+        imports.forEach((importDeclaration) => {
+          if (importDeclaration.getModuleSpecifierValue() === oldPackageName) {
+            importDeclaration.setModuleSpecifier(newPackageName);
+          }
+        });
       });
-    });
-    await project.save();
-  });
+      await project.save();
+    }),
+  );
 }
 
 export default actionPreflightCheck(rename);
