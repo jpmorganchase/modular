@@ -11,8 +11,8 @@ Renames oldPackageName to newPackageName by:
 2. Re-writing the "name" field in the existing package.json to newPackageName
 3. Parsing all the package.json dev, peer and regular dependencies and rewriting
    all the occurrences of oldPackageName to newPackageName
-4. Parsing all the typescript sources in all the depending packages and
-   rewriting the imports to oldPackageName to import newPackageName
+4. Parsing all the sources in all the depending packages and rewriting the
+   imports to oldPackageName to import newPackageName
 
 ## Options:
 

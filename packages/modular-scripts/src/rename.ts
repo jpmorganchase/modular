@@ -126,7 +126,7 @@ async function rename(
         path.join(
           getModularRoot(),
           pkg.packageData.location,
-          'src/**/*{.d.ts,.ts,.tsx}',
+          'src/**/*{.d.ts,.ts,.js,.jsx,.tsx}',
         ),
       );
       const sourceFiles = project.getSourceFiles();
