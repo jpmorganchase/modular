@@ -3,7 +3,7 @@ parent: Commands
 title: modular rename
 ---
 
-# `modular build <oldPackageName> <newPackageName>`
+# `modular rename <oldPackageName> <newPackageName>`
 
 Renames oldPackageName to newPackageName by:
 
