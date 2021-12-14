@@ -20,7 +20,7 @@ import './App.css';
 const worker = perspective.shared_worker();
 
 async function getTable(): Promise<Table> {
-  const req = fetch(superstore);
+  const req = fetch(superstore as RequestInfo);
   const resp = await req;
   const buffer = await resp.arrayBuffer();
   return worker.table(buffer);

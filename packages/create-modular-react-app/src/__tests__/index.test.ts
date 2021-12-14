@@ -4,22 +4,30 @@ import path from 'path';
 import tree from 'tree-view-for-tests';
 import tmp from 'tmp';
 
+const DependencyTypes = [
+  'dependencies',
+  'devDependencies',
+  'peerDependencies',
+  'optionalDependencies',
+] as const;
+
+type DependencyString = typeof DependencyTypes[number];
+
+type DependencyObject = { [key in DependencyString]: Record<string, string> };
+interface PackageJson extends DependencyObject {
+  author: string;
+}
+
 // We want to omit any information that makes our snapshots
 // fragile and therefore censor the author and package versions
 // using `?`.
 async function readCensoredPackageJson(
   packageJsonPath: string,
 ): Promise<unknown> {
-  /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return */
-  function censorDiffering(packageJson: any): any {
+  function censorDiffering(packageJson: PackageJson): PackageJson {
     packageJson.author = '?';
 
-    for (const dependencyTypeProperty of [
-      'dependencies',
-      'devDependencies',
-      'peerDependencies',
-      'optionalDependencies',
-    ]) {
+    for (const dependencyTypeProperty of DependencyTypes) {
       if (packageJson[dependencyTypeProperty]) {
         // This replaces the version numbers of packages with `?`.
         packageJson[dependencyTypeProperty] = Object.fromEntries(
@@ -33,7 +41,7 @@ async function readCensoredPackageJson(
     return packageJson;
   }
 
-  return censorDiffering(await fs.readJson(packageJsonPath));
+  return censorDiffering((await fs.readJson(packageJsonPath)) as PackageJson);
   /* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return */
 }
 

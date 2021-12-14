@@ -58,7 +58,7 @@ interface WebSocketMessage {
   building: boolean;
 }
 
-connection.onmessage = (m: MessageEvent) => {
+connection.onmessage = (m: MessageEvent<string>) => {
   const message = JSON.parse(m.data) as WebSocketMessage;
   const { building, result } = message;
 

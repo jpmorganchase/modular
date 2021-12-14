@@ -16,7 +16,7 @@ function actionPreflightCheck(fn: ModularAction): ModularAction {
         'Preflight check is skipped. Modular repository may be invalid.',
       );
     }
-
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     return fn(...args);
   };
 

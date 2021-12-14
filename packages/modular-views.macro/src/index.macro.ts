@@ -42,8 +42,8 @@ const output = execa.sync('yarnpkg', ['workspaces', 'info'], {
   cleanup: true,
 });
 
-const workspaces: Array<[string, { location: string }]> = Object.entries(
-  JSON.parse(output.stdout),
+const workspaces = Object.entries(
+  JSON.parse(output.stdout) as { location: string }[],
 );
 
 for (const [name, { location }] of workspaces) {

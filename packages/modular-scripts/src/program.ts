@@ -190,7 +190,7 @@ program
     const { default: initWorkspace } = await import('./init');
     await initWorkspace(
       options.y,
-      JSON.parse(options.preferOffline),
+      JSON.parse(options.preferOffline) as boolean,
       options.verbose,
     );
   });
@@ -226,7 +226,7 @@ program
   .description(
     'Ports the react app in specified directory over into the current modular project as a modular app',
   )
-  .action(async (relativePath) => {
+  .action(async (relativePath: string) => {
     const { port } = await import('./port');
     await port(relativePath);
   });
