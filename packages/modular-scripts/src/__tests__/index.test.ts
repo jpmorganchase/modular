@@ -117,7 +117,7 @@ describe('modular-scripts', () => {
         ├─ package.json
         └─ src
            ├─ __tests__
-           │  ├─ index.test.ts #1qvvmz7
+           │  ├─ index.test.ts #1t39yxy
            │  └─ mock-util.tsx #rjzbd3
            └─ index.ts #1woe74n"
       `);
@@ -131,7 +131,7 @@ describe('modular-scripts', () => {
         ├─ package.json
         └─ src
            ├─ __tests__
-           │  └─ index.test.ts #1qvvmz7
+           │  └─ index.test.ts #1t39yxy
            └─ index.ts #1woe74n"
       `);
     });
@@ -371,7 +371,7 @@ describe('modular-scripts', () => {
           fs
             .statSync(path.join(modularRoot, 'dist', 'sample-package', value))
             .isFile(),
-        ).toEqual(true);
+        ).toBe(true);
       },
     );
   });
@@ -448,7 +448,7 @@ describe('modular-scripts', () => {
               path.join(modularRoot, 'dist', 'nested-sample-package', value),
             )
             .isFile(),
-        ).toEqual(true);
+        ).toBe(true);
       },
     );
   });

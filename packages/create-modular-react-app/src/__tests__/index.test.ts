@@ -307,7 +307,7 @@ describe('create-modular-react-app', () => {
       name: destination,
       repo: false,
     });
-    expect(fs.existsSync(path.join(destination, '.git'))).toEqual(false);
+    expect(fs.existsSync(path.join(destination, '.git'))).toBe(false);
   });
   it('should create a project prefer offline without git metadata', async () => {
     await createModularApp({
@@ -315,6 +315,6 @@ describe('create-modular-react-app', () => {
       repo: false,
       preferOffline: true,
     });
-    expect(fs.existsSync(path.join(destination, '.git'))).toEqual(false);
+    expect(fs.existsSync(path.join(destination, '.git'))).toBe(false);
   });
 });

@@ -76,7 +76,7 @@ describe('Modular lint', () => {
         modularLogs = (stderr as string).split('\n');
       }
       eslintLogs.forEach((el) => {
-        expect(modularLogs.find((ml) => el.includes(ml))).not.toBeUndefined();
+        expect(modularLogs.find((ml) => el.includes(ml))).toBeDefined();
       });
     });
     it('should not pass lint test', async () => {

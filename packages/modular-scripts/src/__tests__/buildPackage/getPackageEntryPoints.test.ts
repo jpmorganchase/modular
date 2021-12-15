@@ -37,7 +37,7 @@ describe('WHEN given a package.json which is private', () => {
         name: packagePath,
         version: '1.0.0',
       }),
-    ).toEqual('src/index.ts');
+    ).toBe('src/index.ts');
   });
 
   it('SHOULD give an error if the includePrivate flag is false', () => {

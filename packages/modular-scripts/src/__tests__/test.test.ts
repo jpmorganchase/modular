@@ -42,7 +42,7 @@ describe('Modular test', () => {
       try {
         await execa(
           'yarnpkg',
-          ['modular', 'test', 'test/InvalidTest.test.ts'],
+          ['modular', 'test', '--watchAll=false', 'test/InvalidTest.test.ts'],
           {
             all: true,
             cleanup: true,
@@ -51,7 +51,7 @@ describe('Modular test', () => {
       } catch (error) {
         errorNumber = (error as ExecaError).exitCode;
       }
-      expect(errorNumber).toEqual(1);
+      expect(errorNumber).toBe(1);
     });
   });
 
@@ -59,14 +59,18 @@ describe('Modular test', () => {
     it('should exit with no error', async () => {
       let errorNumber = 0;
       try {
-        await execa('yarnpkg', ['modular', 'test', 'test/ValidTest.test.ts'], {
-          all: true,
-          cleanup: true,
-        });
+        await execa(
+          'yarnpkg',
+          ['modular', 'test', '--watchAll=false', 'test/ValidTest.test.ts'],
+          {
+            all: true,
+            cleanup: true,
+          },
+        );
       } catch (error) {
         errorNumber = (error as ExecaError).exitCode;
       }
-      expect(errorNumber).toEqual(0);
+      expect(errorNumber).toBe(0);
     });
   });
 });
