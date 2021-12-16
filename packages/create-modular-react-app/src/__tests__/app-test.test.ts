@@ -12,7 +12,7 @@ function modular(str: string, cwd: string, opts: Record<string, unknown> = {}) {
 }
 
 describe('create-modular-react-app app build', () => {
-  const repoName = 'build-test-cra-repo';
+  const repoName = 'test-test-cra-repo';
   let destination: string;
   let tmpDirectory: tmp.DirResult;
   beforeAll(async () => {
@@ -26,20 +26,11 @@ describe('create-modular-react-app app build', () => {
     tmpDirectory.removeCallback();
   });
 
-  it('should create a CMRA project that can build its default app without errors with webpack', async () => {
-    const result = await modular(`build app`, destination, {
+  it('should create a CMRA project that can run tests and succeed', async () => {
+    const result = await modular('test --watchAll=false', destination, {
       stdio: 'inherit',
     });
-    expect(result.exitCode).toBe(0);
-  });
-
-  it('should create a CMRA project that can build its default app without errors with esbuild', async () => {
-    const result = await modular(`build app`, destination, {
-      stdio: 'inherit',
-      env: {
-        USE_MODULAR_ESBUILD: 'true',
-      },
-    });
+    console.log(result);
     expect(result.exitCode).toBe(0);
   });
 });
