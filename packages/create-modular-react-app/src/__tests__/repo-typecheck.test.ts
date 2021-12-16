@@ -1,4 +1,4 @@
-import createModularApp from '../';
+import createModularApp from '..';
 import execa from 'execa';
 import path from 'path';
 import tmp from 'tmp';
@@ -12,7 +12,7 @@ function modular(str: string, cwd: string, opts: Record<string, unknown> = {}) {
 }
 
 describe('create-modular-react-app app build', () => {
-  const repoName = 'test-test-cra-repo';
+  const repoName = 'build-test-cra-repo';
   let destination: string;
   let tmpDirectory: tmp.DirResult;
   beforeAll(async () => {
@@ -26,11 +26,9 @@ describe('create-modular-react-app app build', () => {
     tmpDirectory.removeCallback();
   });
 
-  it('should create a CMRA project that can run tests and succeed', async () => {
-    const result = await modular('test --watchAll=false', destination, {
-      stdio: 'inherit',
-    });
-    console.log(result);
+  it('should create a CMRA project that can typecheck without errors', async () => {
+    const result = await modular(`typecheck`, destination);
+    expect(result.stdout).toContain('✓ Typecheck passed');
     expect(result.exitCode).toBe(0);
   });
 });
