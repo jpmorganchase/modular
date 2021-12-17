@@ -27,19 +27,18 @@ describe('create-modular-react-app app build', () => {
   });
 
   it('should create a CMRA project that can build its default app without errors with webpack', async () => {
-    const result = await modular(`build app`, destination, {
-      stdio: 'inherit',
-    });
+    const result = await modular(`build app`, destination);
+    expect(result.stdout).toContain('Compiled successfully.');
     expect(result.exitCode).toBe(0);
   });
 
   it('should create a CMRA project that can build its default app without errors with esbuild', async () => {
     const result = await modular(`build app`, destination, {
-      stdio: 'inherit',
       env: {
         USE_MODULAR_ESBUILD: 'true',
       },
     });
+    expect(result.stdout).toContain('is ready to be deployed');
     expect(result.exitCode).toBe(0);
   });
 });
