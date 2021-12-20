@@ -1,7 +1,8 @@
 import { Project } from 'ts-morph';
+import execa from 'execa';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import getModularRoot from './utils/getModularRoot';
-import getWorkspaceInfo, { WorkSpaceRecord } from './utils/getWorkspaceInfo';
+import getWorkspaceInfo from './utils/getWorkspaceInfo';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as logger from './utils/logger';
@@ -11,6 +12,7 @@ const dependencyTypes = [
   'dependencies',
   'devDependencies',
   'peerDependencies',
+  'optionalDependencies',
 ] as const;
 
 type DependencyType = typeof dependencyTypes[number];
@@ -27,105 +29,73 @@ async function rename(
   oldPackageName: string,
   newPackageName: string,
 ): Promise<void> {
-  const workspace = Object.entries(await getWorkspaceInfo());
+  const workspace = await getWorkspaceInfo();
 
   logger.debug(`Checking for existence of ${oldPackageName} in workspace.`);
-  const oldPackage = workspace.find(
-    ([packageName]) => packageName === oldPackageName,
-  )?.[1];
-  if (!oldPackage) {
+  const workspacePackage = workspace[oldPackageName];
+  if (!workspacePackage) {
     throw new Error(`Package ${oldPackageName} not found.`);
   }
   logger.debug(`Checking for collision with ${newPackageName} in workspace.`);
-  if (workspace.find(([packageName]) => packageName === newPackageName)) {
+  if (workspace[newPackageName]) {
     throw new Error(`Package ${newPackageName} already exists.`);
   }
 
-  // Rename the directory. Do it first because this fails if there's a collision and we don't want to clean up later
-  const newPackageLocation = path.join(
-    getModularRoot(),
-    path.join(oldPackage.location, '..'),
-    newPackageName,
-  );
-
-  logger.log(`Moving ${oldPackage.location} → ${newPackageLocation}`);
-
-  await fs.move(oldPackage.location, newPackageLocation);
-
-  // Change name in package.json
-  const newPackageJsonLocation = path.join(
-    newPackageLocation,
+  const packageJsonLocation = path.join(
+    workspacePackage.location,
     './package.json',
   );
 
-  const packageJson = (await fs.readJson(
-    newPackageJsonLocation,
-  )) as PackageJson;
+  const packageJson = (await fs.readJson(packageJsonLocation)) as PackageJson;
 
   logger.log(`Changing package name ${packageJson.name} → ${newPackageName}`);
   packageJson.name = newPackageName;
 
-  await fs.writeJson(newPackageJsonLocation, packageJson, { spaces: 2 });
+  await fs.writeJson(packageJsonLocation, packageJson, { spaces: 2 });
 
-  // Search for packages that depend on the renamed package
-  type PackageDepInfo = { packageData: WorkSpaceRecord; json: PackageJson };
-
-  logger.log(`Searching for packages depending on ${oldPackageName}`);
-  const dependingPackages: PackageDepInfo[] = (
-    await Promise.all(
-      workspace
-        .filter(([packageName]) => packageName !== oldPackageName)
-        .map(async ([_, packageData]) => ({
-          packageData,
-          json: (await fs.readJson(
-            path.join(getModularRoot(), packageData.location, './package.json'),
-          )) as PackageJson,
-        })),
-    )
-  ).filter((pkgJsonInfo) =>
-    dependencyTypes.some(
-      (depField) => pkgJsonInfo.json[depField]?.[oldPackageName],
-    ),
+  logger.log(
+    `Renaming explicit dependencies to ${oldPackageName} in the workspace`,
   );
 
-  logger.log(`Renaming dependencies in depending packages`);
   await Promise.all(
-    dependingPackages.map(async (pkg) => {
-      let modified = false;
-      dependencyTypes.forEach((depField) => {
-        // This needs to be explicitly assigned, otherwise Typescript doesn't understand it's defined
-        const depObject = pkg.json[depField];
-        if (depObject?.[oldPackageName]) {
-          logger.debug(
-            `Renaming dependency ${oldPackageName} → ${newPackageName} in ${depField} / ${pkg.packageData.location}`,
-          );
-          depObject[newPackageName] = depObject[oldPackageName];
-          delete pkg.json[depField]?.[oldPackageName];
-          modified = true;
-        }
-      });
-      if (modified) {
-        await fs.writeJson(
-          path.join(
-            getModularRoot(),
-            pkg.packageData.location,
-            './package.json',
-          ),
-          pkg.json,
-          { spaces: 2 },
-        );
-      }
+    Object.values(workspace).map(async (packageData) => {
+      const packageJsonPath = path.join(
+        getModularRoot(),
+        packageData.location,
+        './package.json',
+      );
+      const packageJson = (await fs.readJson(packageJsonPath)) as PackageJson;
+
+      const isFileModified = dependencyTypes.reduce(
+        (changed, dependencyType) => {
+          const depObject = packageJson[dependencyType];
+          if (depObject?.[oldPackageName]) {
+            logger.debug(
+              `Renaming dependency ${oldPackageName} → ${newPackageName} in ${dependencyType} / ${packageData.location}`,
+            );
+            depObject[newPackageName] = depObject[oldPackageName];
+            delete packageJson[dependencyType]?.[oldPackageName];
+            return true;
+          }
+          return changed;
+        },
+        false,
+      );
+
+      return isFileModified
+        ? await fs.writeJson(packageJsonPath, packageJson, { spaces: 2 })
+        : null;
     }),
   );
 
-  logger.log(`Rewriting imports in depending packages`);
+  logger.log(`Rewriting imports in packages`);
   await Promise.all(
-    dependingPackages.map(async (pkg) => {
+    Object.values(workspace).map(async (packageData) => {
       const project = new Project();
       project.addSourceFilesAtPaths(
         path.join(
           getModularRoot(),
-          pkg.packageData.location,
+          packageData.location,
           'src/**/*{.d.ts,.ts,.js,.jsx,.tsx}',
         ),
       );
@@ -145,6 +115,9 @@ async function rename(
       await project.save();
     }),
   );
+
+  logger.log(`Refreshing packages`);
+  execa.sync('yarnpkg');
 }
 
 export default actionPreflightCheck(rename);
