@@ -87,53 +87,15 @@ describe('Rename command', () => {
       ),
       dependingPackageSrc,
     );
-
-    const dependingPackageJsonPath = path.join(
-      getModularRoot(),
-      'packages',
-      'sample-depending-package',
-      'package.json',
-    );
-
-    const packageJson = (await fs.readJson(dependingPackageJsonPath)) as {
-      dependencies: Record<string, string>;
-    };
-    packageJson.dependencies = Object.assign(packageJson.dependencies || {}, {
-      'sample-library-package': '1.0.0',
-    });
-    await fs.writeJson(dependingPackageJsonPath, packageJson, { spaces: 2 });
   });
 
-  it('expects package.json and file importing the dependency to refer to the renamed dep', async () => {
+  it('expects file importing the dependency to refer to the renamed dep', async () => {
     await modular(
       'rename sample-library-package sample-library-renamed-package',
       {
         stdio: 'inherit',
       },
     );
-    expect(
-      await fs.readJson(
-        path.join(
-          modularRoot,
-          'packages',
-          'sample-depending-package',
-          'package.json',
-        ),
-      ),
-    ).toMatchInlineSnapshot(`
-      Object {
-        "dependencies": Object {
-          "sample-library-renamed-package": "1.0.0",
-        },
-        "files": Array [
-          "README.md",
-        ],
-        "license": "UNLICENSED",
-        "main": "src/index.ts",
-        "name": "sample-depending-package",
-        "version": "1.0.0",
-      }
-    `);
 
     expect(
       await fs.readFile(
