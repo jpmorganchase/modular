@@ -74,7 +74,7 @@
     "@types/update-notifier": "5.1.0",
     "@yarnpkg/lockfile": "^1.1.0",
     "commander": "8.2.0",
-    "esbuild": "0.14.2",
+    "esbuild": "0.14.6",
     "eslint": "7.32.0",
     "execa": "5.1.1",
     "husky": "7.0.4",
@@ -93,7 +93,7 @@
     "typescript": "4.4.4"
   },
   "resolutions": {
-    "esbuild": "0.14.2",
+    "esbuild": "0.14.6",
     "ua-parser-js": "0.7.28"
   },
   "jest": {
