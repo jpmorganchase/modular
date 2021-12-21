@@ -66,7 +66,7 @@ async function rename(
 
     await fs.writeJson(packageJsonLocation, packageJson, { spaces: 2 });
 
-    logger.log(`Rewriting imports in packages`);
+    logger.log(`Rewriting imports in source files`);
     await Promise.all(
       Object.values(workspace).map(async (packageData) => {
         const project = new Project();
