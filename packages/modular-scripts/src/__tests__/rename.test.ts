@@ -87,6 +87,32 @@ describe('Rename command', () => {
       ),
       dependingPackageSrc,
     );
+
+    // Can't specify it in the fixtures, otherwise rename will rename the 'sample-library-package' dependency!
+    const app_tsx = `
+  import * as React from 'react';
+  import summer from 'sample-library-package';
+
+  declare function summer(a: number, b: number): number;
+  function App(): JSX.Element {
+    const result = summer(7, 7);
+    return (
+      <div className="App">
+        <header className="App-header">
+          <p>This is the result: {result}</p>
+        </header>
+      </div>
+    );
+  }
+
+  export default App;
+`;
+
+    await fs.writeFile(
+      path.join(dependingPackageSrc, 'App.tsx'),
+      app_tsx,
+      'utf8',
+    );
   });
 
   it('expects file importing the dependency to refer to the renamed dep', async () => {
@@ -109,23 +135,23 @@ describe('Rename command', () => {
         'utf8',
       ),
     ).toMatchInlineSnapshot(`
-      "import * as React from 'react';
-      // @ts-ignore
-      import summer from 'sample-library-renamed-package';
+      "
+        import * as React from 'react';
+        import summer from 'sample-library-renamed-package';
 
-      declare function summer(a: number, b: number): number;
-      function App(): JSX.Element {
-        const result = summer(7, 7);
-        return (
-          <div className=\\"App\\">
-            <header className=\\"App-header\\">
-              <p>This is the result: {result}</p>
-            </header>
-          </div>
-        );
-      }
+        declare function summer(a: number, b: number): number;
+        function App(): JSX.Element {
+          const result = summer(7, 7);
+          return (
+            <div className=\\"App\\">
+              <header className=\\"App-header\\">
+                <p>This is the result: {result}</p>
+              </header>
+            </div>
+          );
+        }
 
-      export default App;
+        export default App;
       "
     `);
   });
