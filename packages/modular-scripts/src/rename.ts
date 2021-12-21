@@ -53,41 +53,6 @@ async function rename(
 
   await fs.writeJson(packageJsonLocation, packageJson, { spaces: 2 });
 
-  logger.log(
-    `Renaming explicit dependencies to ${oldPackageName} in the workspace`,
-  );
-
-  await Promise.all(
-    Object.values(workspace).map(async (packageData) => {
-      const packageJsonPath = path.join(
-        getModularRoot(),
-        packageData.location,
-        './package.json',
-      );
-      const packageJson = (await fs.readJson(packageJsonPath)) as PackageJson;
-
-      const isFileModified = dependencyTypes.reduce(
-        (changed, dependencyType) => {
-          const depObject = packageJson[dependencyType];
-          if (depObject?.[oldPackageName]) {
-            logger.debug(
-              `Renaming dependency ${oldPackageName} → ${newPackageName} in ${dependencyType} / ${packageData.location}`,
-            );
-            depObject[newPackageName] = depObject[oldPackageName];
-            delete packageJson[dependencyType]?.[oldPackageName];
-            return true;
-          }
-          return changed;
-        },
-        false,
-      );
-
-      return isFileModified
-        ? await fs.writeJson(packageJsonPath, packageJson, { spaces: 2 })
-        : null;
-    }),
-  );
-
   logger.log(`Rewriting imports in packages`);
   await Promise.all(
     Object.values(workspace).map(async (packageData) => {
