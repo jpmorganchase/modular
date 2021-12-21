@@ -6,6 +6,12 @@ import getWorkspaceInfo from './utils/getWorkspaceInfo';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as logger from './utils/logger';
+import { cleanGit, stashChanges } from './utils/gitActions';
+
+process.on('SIGINT', () => {
+  stashChanges();
+  process.exit(1);
+});
 
 // Derive types from array; this is handy to iterate against it later
 const dependencyTypes = [
@@ -31,58 +37,71 @@ async function rename(
 ): Promise<void> {
   const workspace = await getWorkspaceInfo();
 
-  logger.debug(`Checking for existence of ${oldPackageName} in workspace.`);
-  const workspacePackage = workspace[oldPackageName];
-  if (!workspacePackage) {
-    throw new Error(`Package ${oldPackageName} not found.`);
-  }
-  logger.debug(`Checking for collision with ${newPackageName} in workspace.`);
-  if (workspace[newPackageName]) {
-    throw new Error(`Package ${newPackageName} already exists.`);
+  if (!cleanGit(process.cwd())) {
+    throw new Error(
+      'You have unsaved changes. Please save or stash them before we attempt to rename a package.',
+    );
   }
 
-  const packageJsonLocation = path.join(
-    workspacePackage.location,
-    './package.json',
-  );
+  try {
+    logger.debug(`Checking for existence of ${oldPackageName} in workspace.`);
+    const workspacePackage = workspace[oldPackageName];
+    if (!workspacePackage) {
+      throw new Error(`Package ${oldPackageName} not found.`);
+    }
+    logger.debug(`Checking for collision with ${newPackageName} in workspace.`);
+    if (workspace[newPackageName]) {
+      throw new Error(`Package ${newPackageName} already exists.`);
+    }
 
-  const packageJson = (await fs.readJson(packageJsonLocation)) as PackageJson;
+    const packageJsonLocation = path.join(
+      workspacePackage.location,
+      './package.json',
+    );
 
-  logger.log(`Changing package name ${packageJson.name} → ${newPackageName}`);
-  packageJson.name = newPackageName;
+    const packageJson = (await fs.readJson(packageJsonLocation)) as PackageJson;
 
-  await fs.writeJson(packageJsonLocation, packageJson, { spaces: 2 });
+    logger.log(`Changing package name ${packageJson.name} → ${newPackageName}`);
+    packageJson.name = newPackageName;
 
-  logger.log(`Rewriting imports in packages`);
-  await Promise.all(
-    Object.values(workspace).map(async (packageData) => {
-      const project = new Project();
-      project.addSourceFilesAtPaths(
-        path.join(
-          getModularRoot(),
-          packageData.location,
-          'src/**/*{.d.ts,.ts,.js,.jsx,.tsx}',
-        ),
-      );
-      const sourceFiles = project.getSourceFiles();
+    await fs.writeJson(packageJsonLocation, packageJson, { spaces: 2 });
 
-      sourceFiles.forEach((sourceFile) => {
-        const imports = sourceFile.getImportDeclarations();
-        imports.forEach((importDeclaration) => {
-          if (importDeclaration.getModuleSpecifierValue() === oldPackageName) {
-            logger.debug(
-              `Rewriting \`${importDeclaration.getText()}\` in ${sourceFile.getFilePath()}`,
-            );
-            importDeclaration.setModuleSpecifier(newPackageName);
-          }
+    logger.log(`Rewriting imports in packages`);
+    await Promise.all(
+      Object.values(workspace).map(async (packageData) => {
+        const project = new Project();
+        project.addSourceFilesAtPaths(
+          path.join(
+            getModularRoot(),
+            packageData.location,
+            'src/**/*{.d.ts,.ts,.js,.jsx,.tsx}',
+          ),
+        );
+        const sourceFiles = project.getSourceFiles();
+
+        sourceFiles.forEach((sourceFile) => {
+          const imports = sourceFile.getImportDeclarations();
+          imports.forEach((importDeclaration) => {
+            if (
+              importDeclaration.getModuleSpecifierValue() === oldPackageName
+            ) {
+              logger.debug(
+                `Rewriting \`${importDeclaration.getText()}\` in ${sourceFile.getFilePath()}`,
+              );
+              importDeclaration.setModuleSpecifier(newPackageName);
+            }
+          });
         });
-      });
-      await project.save();
-    }),
-  );
+        await project.save();
+      }),
+    );
 
-  logger.log(`Refreshing packages`);
-  execa.sync('yarnpkg');
+    logger.log(`Refreshing packages`);
+    execa.sync('yarnpkg');
+  } catch (err) {
+    logger.error(err as string);
+    stashChanges();
+  }
 }
 
 export default actionPreflightCheck(rename);
