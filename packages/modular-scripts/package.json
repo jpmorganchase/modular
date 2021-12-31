@@ -22,7 +22,7 @@
     "build": "babel --source-maps --root-mode upward src --out-dir dist-cjs --extensions .ts --ignore 'src/**/*.test.ts'"
   },
   "dependencies": {
-    "@babel/code-frame": "7.16.0",
+    "@babel/code-frame": "7.16.7",
     "@babel/plugin-proposal-class-properties": "7.16.0",
     "@babel/preset-env": "7.16.4",
     "@babel/preset-react": "7.16.0",
