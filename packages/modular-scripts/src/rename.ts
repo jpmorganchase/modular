@@ -20,6 +20,16 @@ async function rename(
 ): Promise<void> {
   const workspace = await getWorkspaceInfo();
 
+  logger.debug(`Checking for existence of ${oldPackageName} in workspace.`);
+  const workspacePackage = workspace[oldPackageName];
+  if (!workspacePackage) {
+    throw new Error(`Package ${oldPackageName} not found.`);
+  }
+  logger.debug(`Checking for collision with ${newPackageName} in workspace.`);
+  if (workspace[newPackageName]) {
+    throw new Error(`Package ${newPackageName} already exists.`);
+  }
+
   if (!cleanGit(process.cwd())) {
     throw new Error(
       'You have unsaved changes. Please save or stash them before we attempt to rename a package.',
@@ -27,16 +37,6 @@ async function rename(
   }
 
   try {
-    logger.debug(`Checking for existence of ${oldPackageName} in workspace.`);
-    const workspacePackage = workspace[oldPackageName];
-    if (!workspacePackage) {
-      throw new Error(`Package ${oldPackageName} not found.`);
-    }
-    logger.debug(`Checking for collision with ${newPackageName} in workspace.`);
-    if (workspace[newPackageName]) {
-      throw new Error(`Package ${newPackageName} already exists.`);
-    }
-
     const packageJsonLocation = path.join(
       workspacePackage.location,
       './package.json',
