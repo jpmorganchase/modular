@@ -254,7 +254,7 @@ program
   });
 
 program
-  .command('rename <old-package-name> <new-package-name>')
+  .command('rename <oldPackageName> <newPackageName>')
   .description(`Rename a package.`)
   .option('--verbose', 'Enables verbose logging within modular.')
   .action(async (oldPackageName: string, newPackageName: string) => {
