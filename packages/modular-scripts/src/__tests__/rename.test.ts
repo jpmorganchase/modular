@@ -23,7 +23,6 @@ async function cleanup() {
 
   await rimraf(path.join(packagesPath, 'sample-depending-package'));
   await rimraf(path.join(packagesPath, 'sample-library-package'));
-  await rimraf(path.join(packagesPath, 'sample-library-renamed-package'));
   // run yarn so yarn.lock gets reset
   await execa('yarnpkg', ['--silent'], {
     cwd: modularRoot,

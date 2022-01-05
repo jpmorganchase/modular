@@ -11,7 +11,6 @@ packages/sample-package
 packages/nested
 packages/sample-library-package
 packages/sample-depending-package
-packages/sample-library-renamed-package
 
 # example app
 packages/esbuild-app
