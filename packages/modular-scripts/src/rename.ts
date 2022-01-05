@@ -1,5 +1,6 @@
 import { Project } from 'ts-morph';
 import execa from 'execa';
+import type { CoreProperties } from '@schemastore/package';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import getModularRoot from './utils/getModularRoot';
 import getWorkspaceInfo from './utils/getWorkspaceInfo';
@@ -12,24 +13,6 @@ process.on('SIGINT', () => {
   stashChanges();
   process.exit(1);
 });
-
-// Derive types from array; this is handy to iterate against it later
-const dependencyTypes = [
-  'dependencies',
-  'devDependencies',
-  'peerDependencies',
-  'optionalDependencies',
-] as const;
-
-type DependencyType = typeof dependencyTypes[number];
-
-type DependencyObject = {
-  [key in DependencyType]: Record<string, string>;
-};
-
-interface PackageJson extends Partial<DependencyObject> {
-  name: string;
-}
 
 async function rename(
   oldPackageName: string,
@@ -59,9 +42,13 @@ async function rename(
       './package.json',
     );
 
-    const packageJson = (await fs.readJson(packageJsonLocation)) as PackageJson;
+    const packageJson = (await fs.readJson(
+      packageJsonLocation,
+    )) as CoreProperties;
 
-    logger.log(`Changing package name ${packageJson.name} → ${newPackageName}`);
+    logger.log(
+      `Changing package name ${packageJson.name as string} → ${newPackageName}`,
+    );
     packageJson.name = newPackageName;
 
     await fs.writeJson(packageJsonLocation, packageJson, { spaces: 2 });
