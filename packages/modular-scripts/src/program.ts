@@ -253,4 +253,13 @@ program
     await typecheck();
   });
 
+program
+  .command('rename <oldPackageName> <newPackageName>')
+  .description(`Rename a package.`)
+  .option('--verbose', 'Enables verbose logging within modular.')
+  .action(async (oldPackageName: string, newPackageName: string) => {
+    const { default: rename } = await import('./rename');
+    await rename(oldPackageName, newPackageName);
+  });
+
 export { program };
