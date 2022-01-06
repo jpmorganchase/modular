@@ -1718,7 +1718,15 @@
     lodash "^4.17.4"
     mobile-drag-drop "^2.3.0-rc.2"
 
-"@finos/perspective@0.6.2", "@finos/perspective@^0.6.0", "@finos/perspective@^0.6.2":
+"@finos/perspective@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@finos/perspective/-/perspective-1.1.0.tgz#e68c5b2527e9e3fe4ca1ddd197f50fb5fc819035"
+  integrity sha512-UHqkIKXmJ+q++hhVrVe9uFuNXifeyImHinUOi1Vyw172GpWZE1w8b53zRRk9P2U3WtYm7x7Jrhp1ILqkZ5F+aw==
+  dependencies:
+    fflate "^0.7.2"
+    ws "^6.1.2"
+
+"@finos/perspective@^0.6.0", "@finos/perspective@^0.6.2":
   version "0.6.2"
   resolved "https://registry.yarnpkg.com/@finos/perspective/-/perspective-0.6.2.tgz#ca256a615c42803766965049a93e9e55ba8de760"
   integrity sha512-Sm/+1+mBx18eIhhm4HrG/fa3Rx76L3ljjsMocFQKZ2rlBlIaQjDWloxWW3jVRFj9z0/XLy4gqiqXdnH6CDO5JA==
@@ -6721,6 +6729,11 @@ fd-slicer@~1.1.0:
   integrity sha1-JcfInLH5B3+IkbvmHY85Dq4lbx4=
   dependencies:
     pend "~1.2.0"
+
+fflate@^0.7.2:
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/fflate/-/fflate-0.7.2.tgz#1db42c416d7b2845d2883050aa4eef516c63f246"
+  integrity sha512-h/YiXnc37yYaGe61h3A4ZdsBzBqKG5hhrmopFizTru8xrfOiJuYX5oLnatBwNEpf9biOJrZVscuEQsUzIUAhpQ==
 
 figgy-pudding@^3.5.1:
   version "3.5.2"
@@ -13337,10 +13350,8 @@ watchpack@^1.7.4:
   resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-1.7.5.tgz#1267e6c55e0b9b5be44c2023aed5437a2c26c453"
   integrity sha512-9P3MWk6SrKjHsGkLT2KHXdQ/9SNkyoJbabxnKOoJepsvJjJG8uYTR3yTPxPQvNDI3w4Nz1xnE0TLHK4RIVe/MQ==
   dependencies:
-    chokidar "^3.4.1"
     graceful-fs "^4.1.2"
     neo-async "^2.5.0"
-    watchpack-chokidar2 "^2.0.1"
   optionalDependencies:
     chokidar "^3.4.1"
     watchpack-chokidar2 "^2.0.1"
