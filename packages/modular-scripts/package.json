@@ -99,7 +99,7 @@
     "resolve": "1.20.0",
     "resolve-url-loader": "5.0.0-beta.1",
     "rimraf": "3.0.2",
-    "rollup": "2.60.2",
+    "rollup": "2.63.0",
     "rollup-plugin-postcss": "4.0.2",
     "rollup-plugin-preserve-shebangs": "0.2.0",
     "sass-loader": "10.0.5",
