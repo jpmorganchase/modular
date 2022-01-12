@@ -25,6 +25,7 @@ import {
   createEsbuildAssets,
   esbuildMeasureFileSizesBeforeBuild,
 } from './esbuildFileSizeReporter';
+import { generateDependencyManifest } from './dependencyManifest';
 
 async function buildApp(target: string) {
   // True if there's no preference set - or the preference is for webpack.
@@ -157,6 +158,9 @@ async function build(
 
     await buildPackage(target, preserveModules, includePrivate);
   }
+
+  // TODO generate a dependency manifest
+  await generateDependencyManifest(target);
 }
 
 export default actionPreflightCheck(build);
