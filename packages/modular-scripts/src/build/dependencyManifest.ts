@@ -4,6 +4,9 @@ import { Project } from 'ts-morph';
 import getModularRoot from '../utils/getModularRoot';
 import getWorkspaceInfo from '../utils/getWorkspaceInfo';
 
+const packageNameMatcher =
+  /^(@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*/;
+
 // We need to get dependencies from source, since the package.json dependencies could be hosted
 function getDependenciesFromSource(workspaceLocation: string) {
   const project = new Project();
@@ -14,14 +17,17 @@ function getDependenciesFromSource(workspaceLocation: string) {
       'src/**/*{.d.ts,.ts,.js,.jsx,.tsx}',
     ),
   );
-  // TODO extract the dependency name without the path
   return new Set(
-    project.getSourceFiles().flatMap(
-      (sourceFile) =>
-        sourceFile
-          .getImportDeclarations()
-          .map((declaration) => declaration.getModuleSpecifierValue())
-          .filter((dep) => !dep.startsWith('.')), // no relative dependencies
+    project.getSourceFiles().flatMap((sourceFile) =>
+      sourceFile
+        .getImportDeclarations()
+        .map(
+          (declaration) =>
+            declaration
+              .getModuleSpecifierValue()
+              .match(packageNameMatcher)?.[0],
+        )
+        .filter(Boolean),
     ),
   );
 }
