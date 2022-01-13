@@ -28,8 +28,6 @@ function getDependenciesFromSource(workspaceLocation: string) {
     ),
   ) as Set<string>;
 
-  console.log(dependencySet);
-
   return Array.from(dependencySet);
 }
 
