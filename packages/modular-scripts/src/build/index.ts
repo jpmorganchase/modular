@@ -130,6 +130,12 @@ async function buildApp(target: string) {
     }
   }
 
+  const dependencyManifest = await generateDependencyManifest(target);
+  await fs.writeJSON(
+    path.join(paths.appBuild, 'dependency-manifest.json'),
+    dependencyManifest,
+  );
+
   printFileSizesAfterBuild(assets, previousFileSizes);
 
   printHostingInstructions(
@@ -158,9 +164,6 @@ async function build(
 
     await buildPackage(target, preserveModules, includePrivate);
   }
-
-  // TODO generate a dependency manifest
-  await generateDependencyManifest(target);
 }
 
 export default actionPreflightCheck(build);
