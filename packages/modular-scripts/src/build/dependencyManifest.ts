@@ -10,7 +10,7 @@ type DependencyManifest = Record<string, string>;
 const npmPackageMatcher =
   /^(@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*/;
 
-// We need to get dependencies from source, since the package.json dependencies could be hosted
+// Get dependencies from import / require declarations, since they could be hoisted to the root workspace
 function getDependenciesFromSource(workspaceLocation: string) {
   const project = new Project();
   project.addSourceFilesAtPaths(
@@ -32,7 +32,8 @@ function getDependenciesFromSource(workspaceLocation: string) {
 }
 
 export async function generateDependencyManifest(target: string) {
-  // This is based on the assumption that packages can be either contained in the current package.json or hoisted to the root one.
+  // This is based on the assumption that nested package are not supported, so dependencies can be either declared in the
+  // target's package.json or hoisted up to the workspace root.
   const targetLocation = await getLocation(target);
 
   const rootPackageJsonDependencies =
