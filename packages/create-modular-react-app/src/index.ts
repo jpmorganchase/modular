@@ -142,7 +142,7 @@ export default async function createModularApp(argv: {
       'prettier',
       'modular-scripts',
       'eslint-config-modular-app',
-      'typescript@^4.1.2',
+      'typescript@>=4.2.1 <4.5.0',
     ],
     newModularRoot,
     // We can't pass a stream here if it's not backed by a fd. We need to set it to 'pipe', then pipe it from the ChildProcess to our transformer

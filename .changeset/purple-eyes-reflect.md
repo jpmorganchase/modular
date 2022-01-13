@@ -2,4 +2,4 @@
 "modular-scripts": patch
 ---
 
-Bump rollup from 2.60.1 to 2.60.2
+Bump rollup from 2.60.2 to 2.63.0
