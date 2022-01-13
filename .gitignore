@@ -9,6 +9,8 @@ packages/sample-esbuild-app
 packages/sample-view
 packages/sample-package
 packages/nested
+packages/sample-library-package
+packages/sample-depending-package
 
 # example app
 packages/esbuild-app
