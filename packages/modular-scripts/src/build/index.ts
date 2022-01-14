@@ -25,7 +25,8 @@ import {
   createEsbuildAssets,
   esbuildMeasureFileSizesBeforeBuild,
 } from './esbuildFileSizeReporter';
-import { generateDependencyManifest } from './dependencyManifest';
+import { getPackageDependencies } from '../utils/getPackageDependencies';
+import type { CoreProperties } from '@schemastore/package';
 
 async function buildApp(target: string) {
   // True if there's no preference set - or the preference is for webpack.
@@ -130,10 +131,18 @@ async function buildApp(target: string) {
     }
   }
 
-  const dependencyManifest = await generateDependencyManifest(target);
+  // Add dependencies from source and bundled dependencies to target package.json
+  const packageDependencies = await getPackageDependencies(target);
+  const targetPackageJson = (await fs.readJSON(
+    path.join(targetDirectory, 'package.json'),
+  )) as CoreProperties;
+  targetPackageJson.dependencies = packageDependencies;
+  targetPackageJson.bundledDependencies = Object.keys(packageDependencies);
+  // Copy package.json over
   await fs.writeJSON(
-    path.join(paths.appBuild, 'dependency-manifest.json'),
-    dependencyManifest,
+    path.join(paths.appBuild, 'package.json'),
+    targetPackageJson,
+    { spaces: 2 },
   );
 
   printFileSizesAfterBuild(assets, previousFileSizes);
