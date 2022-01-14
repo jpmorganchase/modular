@@ -2,4 +2,4 @@
 "modular-scripts": patch
 ---
 
-Bump prettier from 2.4.0 to 2.5.1
+Bump rollup from 2.60.2 to 2.63.0
