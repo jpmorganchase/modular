@@ -1,5 +1,14 @@
 # create-modular-react-app
 
+## 2.1.2
+
+### Patch Changes
+
+- [#1166](https://github.com/jpmorganchase/modular/pull/1166)
+  [`2821fa2`](https://github.com/jpmorganchase/modular/commit/2821fa257d9c393ef6dd003ec14565d2f2ce075e)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Restrict
+  typescript range for better compatibility with typescript-eslint
+
 ## 2.1.1
 
 ### Patch Changes

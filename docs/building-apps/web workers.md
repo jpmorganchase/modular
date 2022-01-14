@@ -3,8 +3,6 @@ parent: Building your Apps
 title: Adding web workers
 ---
 
-esbuild {: .label .label-yellow }
-
 It is possible to add
 [web workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers)
 to your application just by writing them as normal typescript modules. There are
