@@ -80,7 +80,7 @@ describe('when working with an app', () => {
       .toMatchInlineSnapshot(`
       "sample-esbuild-app
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #vgai1i
+      ├─ index.html #3medfx
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -90,8 +90,8 @@ describe('when working with an app', () => {
          │  ├─ index-OPRZV2UT.css #1ldttcq
          │  └─ index-OPRZV2UT.css.map #za6yi0
          ├─ js
-         │  ├─ index-O635FKRG.js #1n2b5x2
-         │  └─ index-O635FKRG.js.map #cz8dcg
+         │  ├─ index-VHFPO43A.js #1kgihwh
+         │  └─ index-VHFPO43A.js.map #kat2rm
          └─ media
             └─ logo-PGX3QVVN.svg #1okqmlj"
     `);
@@ -123,7 +123,7 @@ describe('when working with an app', () => {
               'sample-esbuild-app',
               'static',
               'js',
-              'index-O635FKRG.js',
+              'index-VHFPO43A.js',
             ),
           ),
         ),
@@ -149,7 +149,7 @@ describe('when working with an app', () => {
   };
 
   it('can generate a index.js.map', () => {
-    expect(readSourceMap('static/js/index-O635FKRG.js.map')).toMatchSnapshot();
+    expect(readSourceMap('static/js/index-VHFPO43A.js.map')).toMatchSnapshot();
   });
 
   it('can generate a index.css.map', () => {
