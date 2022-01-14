@@ -4,7 +4,7 @@ import * as tmp from 'tmp';
 import * as fs from 'fs-extra';
 import { promisify } from 'util';
 import { ModularPackageJson } from '../utils/isModularType';
-import { getYarnWorkspaceInfo } from '../utils/getAllWorkspaces';
+import { getWorkspaceInfo } from '../utils/getAllWorkspaces';
 
 const mktempd = promisify(tmp.dir);
 
@@ -46,7 +46,7 @@ describe('Creating a new modular folder', () => {
   });
 
   it('should not have any workspace info', async () => {
-    const workspace = await getYarnWorkspaceInfo(folder);
+    const workspace = await getWorkspaceInfo(folder, 'yarn');
     expect(workspace).toEqual({});
   });
 });
