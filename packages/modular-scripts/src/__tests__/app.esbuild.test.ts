@@ -84,6 +84,7 @@ describe('when working with an app', () => {
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
+      ├─ package.json
       ├─ robots.txt #1sjb8b3
       └─ static
          ├─ css
