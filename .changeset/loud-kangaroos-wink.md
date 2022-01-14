@@ -2,4 +2,4 @@
 "modular-scripts": patch
 ---
 
-Bump rollup from 2.60.0 to 2.60.1
+Bump dotenv from 10.0.0 to 11.0.0

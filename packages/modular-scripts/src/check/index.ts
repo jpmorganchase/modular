@@ -6,6 +6,7 @@ const CHECKS = [
   'verifyPrivateModularRoot',
   'verifyWorkspaceDependencies',
   'verifyWorkspaceStructure',
+  'verifyYarnRcYml',
 ];
 
 interface Check {
