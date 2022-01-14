@@ -118,7 +118,7 @@
     "webpack": "4.46.0",
     "webpack-dev-server": "4.6.0",
     "webpack-manifest-plugin": "2.2.0",
-    "ws": "7.4.6"
+    "ws": "8.4.1"
   },
   "peerDependencies": {
     "react": "^16 || ^17",
