@@ -56,9 +56,12 @@ export async function generateDependencyManifest(target: string) {
     const depVersion =
       targetPackageJsonDependencies[depName] ??
       rootPackageJsonDependencies[depName];
-    if (depVersion) {
-      manifest[depName] = depVersion;
+    if (!depVersion) {
+      throw new Error(
+        `Package ${depName} imported in ${target} source but not found in package dependencies or hoisted dependencies`,
+      );
     }
+    manifest[depName] = depVersion;
     return manifest;
   }, {});
 
