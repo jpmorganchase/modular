@@ -13,16 +13,7 @@ async function typecheck(): Promise<void> {
 
   const tsConfig = {
     ...rest,
-    exclude: [
-      'node_modules',
-      'bower_components',
-      'jspm_packages',
-      'tmp',
-      '**/dist-types',
-      '**/dist-cjs',
-      '**/dist-es',
-      'dist',
-    ],
+    exclude: [...(rest.exclude as string[]), 'dist'],
     compilerOptions: {
       noEmit: true,
     },

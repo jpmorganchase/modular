@@ -68,11 +68,8 @@ async function getPackageMetadata() {
     throw new Error('Failed to load Typescript configuration');
   }
   Object.assign(typescriptConfig, configObject, {
-    // TODO: should probably include the original exclude in this
     exclude: distinct([
       // all TS test files, regardless whether co-located or in test/ etc
-      '**/*.stories.ts',
-      '**/*.stories.tsx',
       '**/*.spec.ts',
       '**/*.test.ts',
       '**/*.e2e.ts',
