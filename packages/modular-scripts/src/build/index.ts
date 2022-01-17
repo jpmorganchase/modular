@@ -83,7 +83,6 @@ async function buildApp(target: string) {
       '../esbuild-scripts/build'
     );
     const result = await buildEsbuildApp(target, paths);
-
     assets = createEsbuildAssets(paths, result);
   } else {
     // create-react-app doesn't support plain module outputs yet,
