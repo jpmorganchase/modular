@@ -48,7 +48,7 @@
     "css-loader": "4.3.0",
     "dedent": "0.7.0",
     "detect-port-alt": "1.1.6",
-    "dotenv": "11.0.0",
+    "dotenv": "13.0.1",
     "dotenv-expand": "5.1.0",
     "esbuild": "0.14.11",
     "esbuild-loader": "2.18.0",
