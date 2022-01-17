@@ -143,12 +143,9 @@ async function buildApp(target: string) {
     {
       name: targetPackageJson.name,
       version: targetPackageJson.version,
-      main: targetPackageJson.main,
       license: targetPackageJson.license,
       modular: targetPackageJson.modular,
-      files: targetPackageJson.files,
       module: targetPackageJson.module,
-      typings: targetPackageJson.typings,
       dependencies: targetPackageJson.dependencies,
     },
     { spaces: 2 },
