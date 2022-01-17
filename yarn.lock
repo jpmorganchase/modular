@@ -12884,7 +12884,7 @@ ts-jest@26.5.6:
     semver "7.x"
     yargs-parser "20.x"
 
-ts-morph@^13.0.1:
+ts-morph@^13.0.2:
   version "13.0.2"
   resolved "https://registry.yarnpkg.com/ts-morph/-/ts-morph-13.0.2.tgz#55546023493ef82389d9e4f28848a556c784bac4"
   integrity sha512-SjeeHaRf/mFsNeR3KTJnx39JyEOzT4e+DX28gQx5zjzEOuFs2eGrqeN2PLKs/+AibSxPmzV7RD8nJVKmFJqtLA==
