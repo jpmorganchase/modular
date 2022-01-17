@@ -138,10 +138,20 @@ async function buildApp(target: string) {
   )) as CoreProperties;
   targetPackageJson.dependencies = packageDependencies;
   targetPackageJson.bundledDependencies = Object.keys(packageDependencies);
-  // Copy package.json over
+  // Copy selected fields of package.json over
   await fs.writeJSON(
     path.join(paths.appBuild, 'package.json'),
-    targetPackageJson,
+    {
+      name: targetPackageJson.name,
+      version: targetPackageJson.version,
+      main: targetPackageJson.main,
+      license: targetPackageJson.license,
+      modular: targetPackageJson.modular,
+      files: targetPackageJson.files,
+      module: targetPackageJson.module,
+      typings: targetPackageJson.typings,
+      dependencies: targetPackageJson.dependencies,
+    },
     { spaces: 2 },
   );
 
