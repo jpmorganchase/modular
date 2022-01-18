@@ -15,6 +15,7 @@ import getModularRoot from '../utils/getModularRoot';
 import puppeteer from 'puppeteer';
 
 import { startApp, DevServer } from './start-app';
+import type { CoreProperties } from '@schemastore/package';
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
 const { getNodeText } = queries;
@@ -83,6 +84,7 @@ describe('when working with a NODE_ENV app', () => {
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
+      ├─ package.json
       ├─ robots.txt #1sjb8b3
       └─ static
          └─ js
@@ -138,6 +140,7 @@ describe('When working with a nested app', () => {
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
+      ├─ package.json
       ├─ robots.txt #1sjb8b3
       └─ static
          ├─ css
@@ -355,6 +358,7 @@ describe('when working with an app', () => {
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
+      ├─ package.json
       ├─ robots.txt #1sjb8b3
       └─ static
          ├─ css
@@ -389,6 +393,22 @@ describe('when working with an app', () => {
         ),
       ),
     ).toMatchSnapshot();
+  });
+
+  it('can generate a package.json', async () => {
+    const packageJson = JSON.parse(
+      String(
+        await fs.readFile(
+          path.join(modularRoot, 'dist', 'sample-app', 'package.json'),
+        ),
+      ),
+    ) as CoreProperties;
+
+    expect(packageJson.name).toBe('sample-app');
+    expect(packageJson.version).toBe('0.1.0');
+    expect(packageJson.modular).toStrictEqual({ type: 'app' });
+    expect(packageJson.dependencies?.react).toBeTruthy();
+    expect(packageJson.dependencies?.['react-dom']).toBeTruthy();
   });
 
   it('can generate a index.html', async () => {
