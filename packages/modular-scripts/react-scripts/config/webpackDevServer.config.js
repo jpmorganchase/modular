@@ -108,7 +108,7 @@ module.exports = function (port, proxy, allowedHost) {
         require(paths.proxySetup)(app);
       }
     },
-    onAfterSetupMiddleware(server) {
+    setupMiddlewares(middlewares, server) {
       const app = server.app;
       // Redirect to `PUBLIC_URL` or `homepage` from `package.json` if url not match
       app.use(redirectServedPath(paths.publicUrlOrPath));
@@ -119,6 +119,8 @@ module.exports = function (port, proxy, allowedHost) {
       // it used the same host and port.
       // https://github.com/facebook/create-react-app/issues/2272#issuecomment-302832432
       app.use(noopServiceWorkerMiddleware(paths.publicUrlOrPath));
+
+      return middlewares;
     },
   };
 };
