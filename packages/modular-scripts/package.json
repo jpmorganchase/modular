@@ -117,7 +117,7 @@
     "update-notifier": "5.1.0",
     "url-loader": "4.1.1",
     "webpack": "4.46.0",
-    "webpack-dev-server": "4.6.0",
+    "webpack-dev-server": "4.7.3",
     "webpack-manifest-plugin": "2.2.0",
     "ws": "7.4.6"
   },
