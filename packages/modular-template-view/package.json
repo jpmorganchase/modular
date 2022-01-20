@@ -1,9 +1,9 @@
 {
-  "name": "PackageName__",
+  "name": "modular-template-view",
   "version": "1.0.0",
-  "main": "src/index.tsx",
+  "main": "src/index.ts",
   "license": "UNLICENSED",
-  "modular": {
+  "modular" : { 
     "type": "view"
   },
   "files": [
