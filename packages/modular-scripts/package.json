@@ -97,7 +97,7 @@
     "react-native-web": "0.17.5",
     "react-refresh": "0.8.3",
     "recursive-readdir": "2.2.2",
-    "resolve": "1.21.0",
+    "resolve": "1.22.0",
     "resolve-url-loader": "5.0.0-beta.1",
     "rimraf": "3.0.2",
     "rollup": "2.63.0",
