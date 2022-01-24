@@ -268,11 +268,11 @@ describe('modular-scripts', () => {
         "sample-view
         ├─ README.md #11adaka
         ├─ dist-cjs
-        │  ├─ index.js #1my609p
-        │  └─ index.js.map #szagbc
+        │  ├─ index.js #a7k6ic
+        │  └─ index.js.map #1825qkv
         ├─ dist-es
-        │  ├─ index.js #bpsk7y
-        │  └─ index.js.map #171l8pf
+        │  ├─ index.js #1ymmv5l
+        │  └─ index.js.map #1kl5sc5
         ├─ dist-types
         │  └─ index.d.ts #obuyms
         └─ package.json"
@@ -350,10 +350,10 @@ describe('modular-scripts', () => {
         ├─ README.md #1jv3l2q
         ├─ dist-cjs
         │  ├─ index.js #rq9uxe
-        │  └─ index.js.map #ys8x0i
+        │  └─ index.js.map #17f4e4r
         ├─ dist-es
         │  ├─ index.js #3bszhr
-        │  └─ index.js.map #b17359
+        │  └─ index.js.map #8kaoa5
         ├─ dist-types
         │  └─ index.d.ts #f68aj
         └─ package.json"
@@ -420,10 +420,10 @@ describe('modular-scripts', () => {
         ├─ README.md #1jv3l2q
         ├─ dist-cjs
         │  ├─ nested-sample-package.cjs.js #kv2xzp
-        │  └─ nested-sample-package.cjs.js.map #j26x67
+        │  └─ nested-sample-package.cjs.js.map #wxcsbr
         ├─ dist-es
         │  ├─ nested-sample-package.es.js #11z6hlv
-        │  └─ nested-sample-package.es.js.map #11g8lh9
+        │  └─ nested-sample-package.es.js.map #12ht1cr
         ├─ dist-types
         │  └─ index.d.ts #f68aj
         └─ package.json"

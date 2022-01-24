@@ -26,7 +26,7 @@ function _interopNamespace(e) {
 var React__namespace = /*#__PURE__*/_interopNamespace(React);
 
 function SampleView() {
-  return /*#__PURE__*/React__namespace.createElement(\\"div\\", {
+  return /* @__PURE__ */ React__namespace.createElement(\\"div\\", {
     \\"data-testid\\": \\"test-this\\"
   }, \\"this is a modular view\\");
 }
@@ -39,11 +39,8 @@ module.exports = SampleView;
 exports[`modular-scripts WHEN building a view THEN outputs the correct output cjs map file 1`] = `
 Object {
   "file": "index.js",
-  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;AAEe,SAASA,UAAT,GAAmC;AAChD,sBAAOC;AAAK,mBAAY;AAAjB,8BAAP;AACD;;;;",
-  "names": Array [
-    "SampleView",
-    "React",
-  ],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;sBAEkD;AAChD,wDAAQ,OAAD;AAAA,IAAK,eAAY;AAAA,KAAY;AAAA;;;;",
+  "names": Array [],
   "sources": Array [
     "../src/index.tsx",
   ],
