@@ -4,8 +4,8 @@ import builtinModules from 'builtin-modules';
 import chalk from 'chalk';
 
 import * as rollup from 'rollup';
-import { preserveShebangs } from 'rollup-plugin-preserve-shebangs';
-import babel from '@rollup/plugin-babel';
+import esbuild from 'rollup-plugin-esbuild';
+
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import postcss from 'rollup-plugin-postcss';
@@ -18,6 +18,7 @@ import getPackageMetadata from '../../utils/getPackageMetadata';
 import getModularRoot from '../../utils/getModularRoot';
 import { ModularPackageJson } from '../../utils/isModularType';
 import getRelativeLocation from '../../utils/getRelativeLocation';
+import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowserslistTarget';
 
 const outputDirectory = 'dist';
 const extensions = ['.ts', '.tsx', '.js', '.jsx'];
@@ -27,7 +28,7 @@ function distinct<T>(arr: T[]): T[] {
 }
 
 export async function makeBundle(
-  target: string,
+  packageName: string,
   preserveModules: boolean,
   includePrivate: boolean,
 ): Promise<ModularPackageJson> {
@@ -40,21 +41,23 @@ export async function makeBundle(
     packageNames,
   } = metadata;
 
-  const paramCaseTarget = toParamCase(target);
-  const packagePath = await getRelativeLocation(target);
+  const paramCaseTarget = toParamCase(packageName);
+  const packagePath = await getRelativeLocation(packageName);
   const targetOutputDirectory = path.join(
     modularRoot,
     outputDirectory,
     paramCaseTarget,
   );
 
-  const logger = getPrefixedLogger(target);
+  const logger = getPrefixedLogger(packageName);
 
   const packageJson = packageJsonsByPackagePath[packagePath];
 
   const main = await getPackageEntryPoints(packagePath, includePrivate);
 
-  logger.log(`building ${target}...`);
+  logger.log(`building ${packageName}...`);
+
+  const target = createEsbuildBrowserslistTarget(packagePath);
 
   const bundle = await rollup.rollup({
     input: path.join(modularRoot, packagePath, main),
@@ -79,35 +82,15 @@ export async function makeBundle(
         mainFields: ['module', 'main', 'browser'],
       }),
       commonjs({ include: /\/node_modules\// }),
-      babel({
-        babelHelpers: 'bundled',
-        presets: [
-          // Preset orders matters, please see: https://github.com/babel/babel/issues/8752#issuecomment-486541662
-          [
-            require.resolve('@babel/preset-env'),
-            // TODO: why doesn't this read `targets` from package.json?
-            {
-              targets: {
-                // We should be building packages for environments which support esmodules given their wide support now.
-                esmodules: true,
-              },
-            },
-          ],
-          [
-            require.resolve('@babel/preset-typescript'),
-            { isTSX: true, allExtensions: true },
-          ],
-          require.resolve('@babel/preset-react'),
-        ],
-        plugins: [require.resolve('@babel/plugin-proposal-class-properties')],
-        extensions,
+      esbuild({
+        target,
+        minify: false,
         include: [`packages/**/*`],
         exclude: 'node_modules/**',
       }),
       postcss({ extract: false }),
       // TODO: add sass, dotenv
       json(),
-      preserveShebangs(),
     ],
     // TODO: support for css modules, sass, dotenv,
     // and anything else create-react-app supports

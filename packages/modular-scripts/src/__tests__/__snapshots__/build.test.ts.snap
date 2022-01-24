@@ -1,20 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`WHEN building with preserve modules SHOULD create the correct index.js 1`] = `
-"import { asyncToGenerator as _asyncToGenerator } from './_virtual/_rollupPluginBabelHelpers.js';
-
-function runInAsync() {
-  return _runInAsync.apply(this, arguments);
-}
-
-function _runInAsync() {
-  _runInAsync = _asyncToGenerator(function* () {
-    var {
-      runAsync
-    } = yield import('./runAsync.js');
-    return runAsync();
-  });
-  return _runInAsync.apply(this, arguments);
+"async function runInAsync() {
+  const { runAsync } = await import('./runAsync.js');
+  return runAsync();
 }
 
 export { runInAsync as default };
@@ -24,11 +13,11 @@ export { runInAsync as default };
 
 exports[`WHEN building with preserve modules SHOULD create the correct runAsync.js 1`] = `
 "function runAsync() {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setTimeout(() => {
-      console.log('done');
+      console.log(\\"done\\");
       resolve();
-    }, 1000);
+    }, 1e3);
   });
 }
 
