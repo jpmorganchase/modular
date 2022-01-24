@@ -1551,7 +1551,15 @@
     lodash "^4.17.4"
     mobile-drag-drop "^2.3.0-rc.2"
 
-"@finos/perspective@0.6.2", "@finos/perspective@^0.6.0", "@finos/perspective@^0.6.2":
+"@finos/perspective@1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@finos/perspective/-/perspective-1.1.1.tgz#fbcb85a959233dfb4402528fee96f3e0e3ad241b"
+  integrity sha512-wY2UbbDPIlHtpvbE97qdELiZepVc3wZLaV9gze9HNztXifoHx9nGWDJeVY1pNuqRxNT8Usrvjg37scwyQuOi7Q==
+  dependencies:
+    fflate "^0.7.2"
+    ws "^6.1.2"
+
+"@finos/perspective@^0.6.0", "@finos/perspective@^0.6.2":
   version "0.6.2"
   resolved "https://registry.yarnpkg.com/@finos/perspective/-/perspective-0.6.2.tgz#ca256a615c42803766965049a93e9e55ba8de760"
   integrity sha512-Sm/+1+mBx18eIhhm4HrG/fa3Rx76L3ljjsMocFQKZ2rlBlIaQjDWloxWW3jVRFj9z0/XLy4gqiqXdnH6CDO5JA==
@@ -6612,6 +6620,11 @@ fd-slicer@~1.1.0:
   integrity sha1-JcfInLH5B3+IkbvmHY85Dq4lbx4=
   dependencies:
     pend "~1.2.0"
+
+fflate@^0.7.2:
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/fflate/-/fflate-0.7.3.tgz#288b034ff0e9c380eaa2feff48c787b8371b7fa5"
+  integrity sha512-0Zz1jOzJWERhyhsimS54VTqOteCNwRtIlh8isdL0AXLo0g7xNTfTL7oWrkmCnPhZGocKIkWHBistBrrpoNH3aw==
 
 figgy-pudding@^3.5.1:
   version "3.5.2"
