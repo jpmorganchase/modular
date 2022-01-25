@@ -25,6 +25,8 @@ import {
   createEsbuildAssets,
   esbuildMeasureFileSizesBeforeBuild,
 } from './esbuildFileSizeReporter';
+import { getPackageDependencies } from '../utils/getPackageDependencies';
+import type { CoreProperties } from '@schemastore/package';
 
 async function buildApp(target: string) {
   // True if there's no preference set - or the preference is for webpack.
@@ -81,7 +83,6 @@ async function buildApp(target: string) {
       '../esbuild-scripts/build'
     );
     const result = await buildEsbuildApp(target, paths);
-
     assets = createEsbuildAssets(paths, result);
   } else {
     // create-react-app doesn't support plain module outputs yet,
@@ -128,6 +129,26 @@ async function buildApp(target: string) {
       await fs.remove(statsFilePath);
     }
   }
+
+  // Add dependencies from source and bundled dependencies to target package.json
+  const packageDependencies = await getPackageDependencies(target);
+  const targetPackageJson = (await fs.readJSON(
+    path.join(targetDirectory, 'package.json'),
+  )) as CoreProperties;
+  targetPackageJson.dependencies = packageDependencies;
+  targetPackageJson.bundledDependencies = Object.keys(packageDependencies);
+  // Copy selected fields of package.json over
+  await fs.writeJSON(
+    path.join(paths.appBuild, 'package.json'),
+    {
+      name: targetPackageJson.name,
+      version: targetPackageJson.version,
+      license: targetPackageJson.license,
+      modular: targetPackageJson.modular,
+      dependencies: targetPackageJson.dependencies,
+    },
+    { spaces: 2 },
+  );
 
   printFileSizesAfterBuild(assets, previousFileSizes);
 
