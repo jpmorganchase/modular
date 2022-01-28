@@ -27,6 +27,7 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const typescriptFormatter = require('../../react-dev-utils/typescriptFormatter');
 const postcssNormalize = require('postcss-normalize');
 const isCI = require('is-ci');
+const EsmWebpackPlugin = require('@purtuga/esm-webpack-plugin');
 
 const esbuildTargetFactory = process.env.ESBUILD_TARGET_FACTORY
   ? JSON.parse(process.env.ESBUILD_TARGET_FACTORY)
@@ -35,8 +36,7 @@ const esbuildTargetFactory = process.env.ESBUILD_TARGET_FACTORY
 const appPackageJson = require(paths.appPackageJson);
 
 // TODO maybe there's a better way to do this
-const isView = process.env.MODULAR_PACKAGE_TYPE === 'view';
-const isApp = !isView;
+const isApp = process.env.MODULAR_PACKAGE_TYPE === 'app';
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -51,6 +51,8 @@ const reactRefreshOverlayEntry = require.resolve(
 // Some apps do not need the benefits of saving a web request, so not inlining the chunk
 // makes for a smoother build process.
 const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false';
+
+console.log({ shouldInlineRuntimeChunk });
 
 const imageInlineSizeLimit = parseInt(
   process.env.IMAGE_INLINE_SIZE_LIMIT || '10000',
@@ -214,6 +216,8 @@ module.exports = function (webpackEnv) {
       // this defaults to 'window', but by setting it to 'this' then
       // module chunks which are built will work in web workers as well.
       globalObject: 'this',
+      library: isApp ? undefined : 'LIB',
+      libraryTarget: isApp ? undefined : 'var',
     },
     optimization: {
       minimize: isEnvProduction,
@@ -635,6 +639,7 @@ module.exports = function (webpackEnv) {
           // The formatter is invoked directly in WebpackDevServerUtils during development
           formatter: isEnvProduction ? typescriptFormatter : undefined,
         }),
+      isApp || new EsmWebpackPlugin(),
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.
     // Tell webpack to provide empty mocks for them so importing them works.
