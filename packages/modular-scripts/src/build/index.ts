@@ -6,7 +6,8 @@ import * as path from 'path';
 import * as logger from '../utils/logger';
 import getModularRoot from '../utils/getModularRoot';
 import actionPreflightCheck from '../utils/actionPreflightCheck';
-import isModularType from '../utils/isModularType';
+import { getModularType } from '../utils/isModularType';
+import type { ModularType } from '../utils/isModularType';
 import execAsync from '../utils/execAsync';
 import getLocation from '../utils/getLocation';
 import { setupEnvForDirectory } from '../utils/setupEnv';
@@ -28,7 +29,10 @@ import {
 import { getPackageDependencies } from '../utils/getPackageDependencies';
 import type { CoreProperties } from '@schemastore/package';
 
-async function buildApp(target: string) {
+async function buildAppOrView(
+  target: string,
+  type: Extract<ModularType, 'app' | 'view'>,
+) {
   // True if there's no preference set - or the preference is for webpack.
   const useWebpack =
     !process.env.USE_MODULAR_WEBPACK ||
@@ -50,6 +54,8 @@ async function buildApp(target: string) {
 
   const paths = await createPaths(target);
 
+  console.log(paths);
+
   await checkBrowsers(targetDirectory);
 
   let previousFileSizes: Record<string, number>;
@@ -64,17 +70,19 @@ async function buildApp(target: string) {
   }
 
   // Warn and crash if required files are missing
-  await checkRequiredFiles([paths.appHtml, paths.appIndexJs]);
+  await checkRequiredFiles([paths.appIndexJs]);
 
   logger.log('Creating an optimized production build...');
 
   await fs.emptyDir(paths.appBuild);
 
-  await fs.copy(paths.appPublic, paths.appBuild, {
-    dereference: true,
-    filter: (file) => file !== paths.appHtml,
-    overwrite: true,
-  });
+  if (type === 'app') {
+    await fs.copy(paths.appPublic, paths.appBuild, {
+      dereference: true,
+      filter: (file) => file !== paths.appHtml,
+      overwrite: true,
+    });
+  }
 
   let assets: Asset[];
 
@@ -104,6 +112,7 @@ async function buildApp(target: string) {
         MODULAR_ROOT: modularRoot,
         MODULAR_PACKAGE: target,
         MODULAR_PACKAGE_NAME: targetName,
+        MODULAR_PACKAGE_TYPE: type,
       },
     });
 
@@ -169,8 +178,9 @@ async function build(
 
   await setupEnvForDirectory(targetDirectory);
 
-  if (isModularType(targetDirectory, 'app')) {
-    await buildApp(target);
+  const targetType = getModularType(targetDirectory);
+  if (targetType === 'app' || targetType === 'view') {
+    await buildAppOrView(target, targetType);
   } else {
     const { buildPackage } = await import('./buildPackage');
     // ^ we do a dynamic import here to defer the module's initial side effects
