@@ -54,8 +54,6 @@ async function buildAppOrView(
 
   const paths = await createPaths(target);
 
-  console.log(paths);
-
   await checkBrowsers(targetDirectory);
 
   let previousFileSizes: Record<string, number>;
@@ -85,6 +83,9 @@ async function buildAppOrView(
   }
 
   let assets: Asset[];
+  // Retrieve dependencies for target to inform the build process
+  const packageDependencies = await getPackageDependencies(target);
+  console.log({ packageDependencies });
 
   if (isEsbuild) {
     const { default: buildEsbuildApp } = await import(
@@ -113,6 +114,9 @@ async function buildAppOrView(
         MODULAR_PACKAGE: target,
         MODULAR_PACKAGE_NAME: targetName,
         MODULAR_PACKAGE_TYPE: type,
+        MODULAR_PACKAGE_DEPENDENCIES: JSON.stringify(
+          Object.keys(packageDependencies),
+        ),
       },
     });
 
@@ -140,7 +144,6 @@ async function buildAppOrView(
   }
 
   // Add dependencies from source and bundled dependencies to target package.json
-  const packageDependencies = await getPackageDependencies(target);
   const targetPackageJson = (await fs.readJSON(
     path.join(targetDirectory, 'package.json'),
   )) as CoreProperties;

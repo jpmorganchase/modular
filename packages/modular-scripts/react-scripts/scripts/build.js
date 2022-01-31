@@ -18,8 +18,6 @@ const formatWebpackMessages = require('../../react-dev-utils/formatWebpackMessag
 const printBuildError = require('../../react-dev-utils/printBuildError');
 const { log } = require('../../react-dev-utils/logger');
 
-console.log(process.env.MODULAR_PACKAGE_TYPE);
-
 const compiler = webpack(configFactory('production'));
 
 compiler.run(async (err, stats) => {
