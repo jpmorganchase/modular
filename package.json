@@ -73,7 +73,7 @@
     "@types/tmp": "0.2.3",
     "@types/update-notifier": "5.1.0",
     "@yarnpkg/lockfile": "^1.1.0",
-    "commander": "8.2.0",
+    "commander": "9.0.0",
     "esbuild": "0.14.11",
     "eslint": "7.32.0",
     "execa": "5.1.1",
