@@ -14,19 +14,30 @@ import createEsbuildConfig from '../config/createEsbuildConfig';
 import getModularRoot from '../../utils/getModularRoot';
 import sanitizeMetafile from '../utils/sanitizeMetafile';
 
-export default async function build(target: string, paths: Paths) {
+export default async function build(
+  target: string,
+  paths: Paths,
+  externalDependencies: string[],
+  type: 'app' | 'view',
+) {
   const modularRoot = getModularRoot();
+  const isApp = type === 'app';
 
   const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
 
   let result: esbuild.Metafile;
   try {
     const buildResult = await esbuild.build(
-      createEsbuildConfig(paths, {
-        entryNames: 'static/js/[name]-[hash]',
-        chunkNames: 'static/js/[name]-[hash]',
-        assetNames: 'static/media/[name]-[hash]',
-      }),
+      createEsbuildConfig(
+        paths,
+        {
+          entryNames: isApp ? 'static/js/[name]-[hash]' : 'static/js/main',
+          chunkNames: 'static/js/[name]-[hash]',
+          assetNames: 'static/media/[name]-[hash]',
+          external: externalDependencies,
+        },
+        type,
+      ),
     );
 
     result = sanitizeMetafile(paths, buildResult.metafile as esbuild.Metafile);
@@ -54,22 +65,24 @@ export default async function build(target: string, paths: Paths) {
     }
   }
 
-  const html = await createIndex(paths, result, env.raw, false);
-  await fs.writeFile(
-    path.join(paths.appBuild, 'index.html'),
-    minimize.minify(html, {
-      html5: true,
-      collapseBooleanAttributes: true,
-      collapseWhitespace: true,
-      collapseInlineTagWhitespace: true,
-      decodeEntities: true,
-      minifyCSS: true,
-      minifyJS: true,
-      removeAttributeQuotes: false,
-      removeComments: true,
-      removeTagWhitespace: true,
-    }),
-  );
+  if (isApp) {
+    const html = await createIndex(paths, result, env.raw, false);
+    await fs.writeFile(
+      path.join(paths.appBuild, 'index.html'),
+      minimize.minify(html, {
+        html5: true,
+        collapseBooleanAttributes: true,
+        collapseWhitespace: true,
+        collapseInlineTagWhitespace: true,
+        decodeEntities: true,
+        minifyCSS: true,
+        minifyJS: true,
+        removeAttributeQuotes: false,
+        removeComments: true,
+        removeTagWhitespace: true,
+      }),
+    );
+  }
 
   return result;
 }

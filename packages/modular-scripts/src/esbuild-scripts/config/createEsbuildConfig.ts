@@ -13,8 +13,10 @@ import workerFactoryPlugin from '../plugins/workerFactoryPlugin';
 export default function createEsbuildConfig(
   paths: Paths,
   config: Partial<esbuild.BuildOptions> = {},
+  type: 'app' | 'view' = 'app',
 ): esbuild.BuildOptions {
   const { plugins: configPlugins, ...partialConfig } = config;
+  const isApp = type === 'app';
 
   const plugins: esbuild.Plugin[] = [
     moduleScopePlugin(paths),
@@ -65,7 +67,7 @@ export default function createEsbuildConfig(
     color: !isCi,
     define,
     metafile: true,
-    tsconfig: paths.appTsConfig,
+    tsconfig: isApp ? paths.appTsConfig : undefined,
     minify: true,
     outbase: paths.modularRoot,
     absWorkingDir: paths.modularRoot,

@@ -85,13 +85,28 @@ async function buildAppOrView(
   let assets: Asset[];
   // Retrieve dependencies for target to inform the build process
   const packageDependencies = await getPackageDependencies(target);
-  console.log({ packageDependencies });
+  const dependencyNames = Object.keys(packageDependencies);
+
+  // If we are building a view and MODULAR_EXTERNAL_VIEW_DEPENDENCIES is not "bundle",
+  // set all third-party dependencies as externals
+  const externalDependencies =
+    type === 'view' &&
+    process.env.MODULAR_EXTERNAL_VIEW_DEPENDENCIES !== 'bundle'
+      ? dependencyNames
+      : [];
+
+  console.log({ packageDependencies, dependencyNames, externalDependencies });
 
   if (isEsbuild) {
     const { default: buildEsbuildApp } = await import(
       '../esbuild-scripts/build'
     );
-    const result = await buildEsbuildApp(target, paths);
+    const result = await buildEsbuildApp(
+      target,
+      paths,
+      externalDependencies,
+      type,
+    );
     assets = createEsbuildAssets(paths, result);
   } else {
     // create-react-app doesn't support plain module outputs yet,
@@ -114,9 +129,8 @@ async function buildAppOrView(
         MODULAR_PACKAGE: target,
         MODULAR_PACKAGE_NAME: targetName,
         MODULAR_PACKAGE_TYPE: type,
-        MODULAR_PACKAGE_DEPENDENCIES: JSON.stringify(
-          Object.keys(packageDependencies),
-        ),
+        MODULAR_PACKAGE_EXTERNAL_DEPENDENCIES:
+          JSON.stringify(externalDependencies),
       },
     });
 
@@ -148,7 +162,10 @@ async function buildAppOrView(
     path.join(targetDirectory, 'package.json'),
   )) as CoreProperties;
   targetPackageJson.dependencies = packageDependencies;
-  targetPackageJson.bundledDependencies = Object.keys(packageDependencies);
+  // Set bundled dependencies based on the external dependencies calculated earlier
+  if (!externalDependencies.length) {
+    targetPackageJson.bundledDependencies = dependencyNames;
+  }
   // Copy selected fields of package.json over
   await fs.writeJSON(
     path.join(paths.appBuild, 'package.json'),

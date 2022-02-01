@@ -35,15 +35,8 @@ const esbuildTargetFactory = process.env.ESBUILD_TARGET_FACTORY
 
 const appPackageJson = require(paths.appPackageJson);
 
-// Are we building an app or a view?
 const isApp = process.env.MODULAR_PACKAGE_TYPE === 'app';
-
-// If we are building a view and MODULAR_EXTERNAL_VIEW_DEPENDENCIES is not "bundle",
-// take the dependencies from MODULAR_PACKAGE_DEPENDENCIES to use them as externals
-const externals =
-  !isApp && process.env.MODULAR_EXTERNAL_VIEW_DEPENDENCIES !== 'bundle'
-    ? JSON.parse(process.env.MODULAR_PACKAGE_DEPENDENCIES)
-    : [];
+const externals = JSON.parse(process.env.MODULAR_PACKAGE_EXTERNAL_DEPENDENCIES);
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
