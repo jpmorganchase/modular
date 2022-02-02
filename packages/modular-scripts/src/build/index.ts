@@ -53,6 +53,7 @@ async function buildAppOrView(
   const targetName = toParamCase(target);
 
   const paths = await createPaths(target);
+  const isApp = type === 'app';
 
   await checkBrowsers(targetDirectory);
 
@@ -68,13 +69,15 @@ async function buildAppOrView(
   }
 
   // Warn and crash if required files are missing
-  await checkRequiredFiles([paths.appIndexJs]);
+  isApp
+    ? await checkRequiredFiles([paths.appHtml, paths.appIndexJs])
+    : await checkRequiredFiles([paths.appIndexJs]);
 
   logger.log('Creating an optimized production build...');
 
   await fs.emptyDir(paths.appBuild);
 
-  if (type === 'app') {
+  if (isApp) {
     await fs.copy(paths.appPublic, paths.appBuild, {
       dereference: true,
       filter: (file) => file !== paths.appHtml,
@@ -90,8 +93,7 @@ async function buildAppOrView(
   // If we are building a view and MODULAR_EXTERNAL_VIEW_DEPENDENCIES is not "bundle",
   // set all third-party dependencies as externals
   const externalDependencies =
-    type === 'view' &&
-    process.env.MODULAR_EXTERNAL_VIEW_DEPENDENCIES !== 'bundle'
+    !isApp && process.env.MODULAR_EXTERNAL_VIEW_DEPENDENCIES !== 'bundle'
       ? dependencyNames
       : [];
 
