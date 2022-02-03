@@ -40,8 +40,6 @@ const externals = process.env.MODULAR_PACKAGE_EXTERNAL_DEPENDENCIES
   ? JSON.parse(process.env.MODULAR_PACKAGE_EXTERNAL_DEPENDENCIES)
   : [];
 
-console.log(process.env.MODULAR_PACKAGE_TYPE, { isApp, externals });
-
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
 
