@@ -35,10 +35,12 @@ const esbuildTargetFactory = process.env.ESBUILD_TARGET_FACTORY
 
 const appPackageJson = require(paths.appPackageJson);
 
-const isApp = process.env.MODULAR_PACKAGE_TYPE === 'app';
+const isApp = !(process.env.MODULAR_PACKAGE_TYPE === 'view');
 const externals = process.env.MODULAR_PACKAGE_EXTERNAL_DEPENDENCIES
   ? JSON.parse(process.env.MODULAR_PACKAGE_EXTERNAL_DEPENDENCIES)
   : [];
+
+console.log(process.env.MODULAR_PACKAGE_TYPE, { isApp, externals });
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -646,7 +648,7 @@ module.exports = function (webpackEnv) {
           // The formatter is invoked directly in WebpackDevServerUtils during development
           formatter: isEnvProduction ? typescriptFormatter : undefined,
         }),
-      isApp || new EsmWebpackPlugin(),
+      !isApp && new EsmWebpackPlugin(),
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.
     // Tell webpack to provide empty mocks for them so importing them works.
