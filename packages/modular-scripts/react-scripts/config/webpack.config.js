@@ -398,6 +398,9 @@ module.exports = function (webpackEnv) {
             // Process application JS with esbuild.
             {
               test: /\.(js|mjs|jsx)$/,
+              resolve: {
+                extensions: ['.js', '.mjs', 'jsx'],
+              },
               include: paths.modularSrc,
               loader: require.resolve('esbuild-loader'),
               options: {
@@ -408,6 +411,9 @@ module.exports = function (webpackEnv) {
             },
             {
               test: /\.ts$/,
+              resolve: {
+                extensions: ['.ts'],
+              },
               include: paths.modularSrc,
               loader: require.resolve('esbuild-loader'),
               options: {
@@ -418,6 +424,9 @@ module.exports = function (webpackEnv) {
             },
             {
               test: /\.tsx$/,
+              resolve: {
+                extensions: ['.tsx'],
+              },
               include: paths.modularSrc,
               loader: require.resolve('esbuild-loader'),
               options: {
