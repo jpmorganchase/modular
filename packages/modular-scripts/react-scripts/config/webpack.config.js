@@ -320,7 +320,7 @@ module.exports = function (webpackEnv) {
       // for React Native Web.
       extensions: paths.moduleFileExtensions
         .map((ext) => `.${ext}`)
-        .filter((ext) => useTypeScript || !ext.includes('ts')),
+        .filter((ext) => useTypeScript || !isApp || !ext.includes('ts')),
       alias: {
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
@@ -398,9 +398,6 @@ module.exports = function (webpackEnv) {
             // Process application JS with esbuild.
             {
               test: /\.(js|mjs|jsx)$/,
-              resolve: {
-                extensions: ['.js', '.mjs', 'jsx'],
-              },
               include: paths.modularSrc,
               loader: require.resolve('esbuild-loader'),
               options: {
@@ -411,9 +408,6 @@ module.exports = function (webpackEnv) {
             },
             {
               test: /\.ts$/,
-              resolve: {
-                extensions: ['.ts'],
-              },
               include: paths.modularSrc,
               loader: require.resolve('esbuild-loader'),
               options: {
@@ -424,9 +418,6 @@ module.exports = function (webpackEnv) {
             },
             {
               test: /\.tsx$/,
-              resolve: {
-                extensions: ['.tsx'],
-              },
               include: paths.modularSrc,
               loader: require.resolve('esbuild-loader'),
               options: {
