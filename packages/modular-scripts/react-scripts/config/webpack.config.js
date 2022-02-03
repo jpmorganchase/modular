@@ -36,7 +36,9 @@ const esbuildTargetFactory = process.env.ESBUILD_TARGET_FACTORY
 const appPackageJson = require(paths.appPackageJson);
 
 const isApp = process.env.MODULAR_PACKAGE_TYPE === 'app';
-const externals = JSON.parse(process.env.MODULAR_PACKAGE_EXTERNAL_DEPENDENCIES);
+const externals = process.env.MODULAR_PACKAGE_EXTERNAL_DEPENDENCIES
+  ? JSON.parse(process.env.MODULAR_PACKAGE_EXTERNAL_DEPENDENCIES)
+  : [];
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
