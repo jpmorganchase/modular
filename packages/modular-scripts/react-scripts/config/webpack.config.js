@@ -192,7 +192,7 @@ module.exports = function (webpackEnv) {
       filename: isEnvProduction
         ? isApp
           ? 'static/js/[name].[contenthash:8].js'
-          : 'static/js/[name].js' // This will create "main.js" for the unchunked view bundle.
+          : 'static/js/main.js' // Unchunked view bundle.
         : isEnvDevelopment && 'static/js/bundle.js',
       // TODO: remove this when upgrading to webpack 5
       futureEmitAssets: true,
