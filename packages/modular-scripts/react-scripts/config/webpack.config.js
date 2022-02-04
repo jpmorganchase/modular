@@ -58,8 +58,8 @@ const imageInlineSizeLimit = parseInt(
   process.env.IMAGE_INLINE_SIZE_LIMIT || '10000',
 );
 
-// Check if TypeScript is setup
-const useTypeScript = fs.existsSync(paths.appTsConfig);
+// Check if TypeScript is setup. Views don't have tsconfig but have typescript.
+const useTypeScript = fs.existsSync(paths.appTsConfig || !isApp);
 
 // style files regexes
 const cssRegex = /\.css$/;
@@ -320,7 +320,7 @@ module.exports = function (webpackEnv) {
       // for React Native Web.
       extensions: paths.moduleFileExtensions
         .map((ext) => `.${ext}`)
-        .filter((ext) => useTypeScript || !isApp || !ext.includes('ts')),
+        .filter((ext) => useTypeScript || !ext.includes('ts')),
       alias: {
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
