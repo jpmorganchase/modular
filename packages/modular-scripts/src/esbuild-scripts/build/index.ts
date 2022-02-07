@@ -31,7 +31,7 @@ export default async function build(
       createEsbuildConfig(
         paths,
         {
-          entryNames: isApp ? 'static/js/[name]-[hash]' : 'static/js/main',
+          entryNames: 'static/js/[name]-[hash]',
           chunkNames: 'static/js/[name]-[hash]',
           assetNames: 'static/media/[name]-[hash]',
           external: externalDependencies,
