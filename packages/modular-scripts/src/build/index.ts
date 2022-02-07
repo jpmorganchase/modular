@@ -90,10 +90,10 @@ async function buildAppOrView(
   const packageDependencies = await getPackageDependencies(target);
   const dependencyNames = Object.keys(packageDependencies);
 
-  // If we are building a view and MODULAR_EXTERNAL_VIEW_DEPENDENCIES is not "bundle",
+  // If we are building a view and MODULAR_VIEW_DEPENDENCIES_EXTERNAL is 'true',
   // set all third-party dependencies as externals
   const externalDependencies =
-    !isApp && process.env.MODULAR_EXTERNAL_VIEW_DEPENDENCIES !== 'bundle'
+    !isApp && process.env.MODULAR_VIEW_DEPENDENCIES_EXTERNAL === 'true'
       ? dependencyNames
       : [];
 
