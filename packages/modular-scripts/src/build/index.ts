@@ -28,6 +28,7 @@ import {
 } from './esbuildFileSizeReporter';
 import { getPackageDependencies } from '../utils/getPackageDependencies';
 import type { CoreProperties } from '@schemastore/package';
+import { createViewTrampoline } from './createViewTrampoline';
 
 async function buildAppOrView(
   target: string,
@@ -97,8 +98,6 @@ async function buildAppOrView(
       ? dependencyNames
       : [];
 
-  console.log({ packageDependencies, dependencyNames, externalDependencies });
-
   if (isEsbuild) {
     const { default: buildEsbuildApp } = await import(
       '../esbuild-scripts/build'
@@ -158,6 +157,12 @@ async function buildAppOrView(
       await fs.remove(statsFilePath);
     }
   }
+
+  if (!isApp) {
+    await createViewTrampoline(paths.appBuild, 'main.js');
+  }
+
+  // TODO add "main" field to package.json if view
 
   // Add dependencies from source and bundled dependencies to target package.json
   const targetPackageJson = (await fs.readJSON(
