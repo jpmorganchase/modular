@@ -150,14 +150,6 @@ async function buildAppOrView(
         logger.log(chalk.green('Compiled successfully.\n'));
       }
 
-      // Find the main asset from the stats as the only asset or as one of the main assets which is .js
-      jsEntrypointPath =
-        typeof stats.assetsByChunkName?.main === 'string'
-          ? stats.assetsByChunkName?.main
-          : stats.assetsByChunkName?.main.find((asset) =>
-              asset.endsWith('.js'),
-            );
-
       assets = createWebpackAssets(paths, stats);
     } finally {
       await fs.remove(statsFilePath);
@@ -194,8 +186,8 @@ async function buildAppOrView(
       license: targetPackageJson.license,
       modular: targetPackageJson.modular,
       dependencies: targetPackageJson.dependencies,
-      // Views are libraries with one only js entrypoint; add it to the "main" field
-      main:
+      // Views are ESM libraries with one only js entrypoint; add it to the "module" field
+      module:
         jsEntrypointPath && !isApp
           ? path.relative(paths.appBuild, jsEntrypointPath)
           : undefined,

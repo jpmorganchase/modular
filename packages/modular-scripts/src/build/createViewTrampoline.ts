@@ -1,7 +1,7 @@
-import { Dependency } from '@schemastore/package';
 import * as esbuild from 'esbuild';
 import * as fs from 'fs-extra';
 import { createRewriteDependenciesPlugin } from '../esbuild-scripts/plugins/rewriteDependenciesPlugin';
+import type { Dependency } from '@schemastore/package';
 
 export async function createViewTrampoline(
   outputPath: string,
