@@ -8,13 +8,13 @@ export function createRewriteDependenciesPlugin(
     process.env.EXTERNAL_CDN_TEMPLATE ??
     'https://cdn.skypack.dev/[name]@[version]';
 
-  const externalDenyList = process.env.EXTERNAL_DENY_LIST
-    ? process.env.EXTERNAL_DENY_LIST.split(',')
+  const externalBlockList = process.env.EXTERNAL_BLOCK_LIST
+    ? process.env.EXTERNAL_BLOCK_LIST.split(',')
     : [];
 
   const importMap: Record<string, string> = Object.entries(dependencies).reduce(
     (acc, [name, version]) => {
-      if (!externalDenyList.some((filter) => name.startsWith(filter))) {
+      if (!externalBlockList.some((filter) => name.startsWith(filter))) {
         return {
           ...acc,
           [name]: externalCdnTemplate
