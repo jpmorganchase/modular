@@ -95,7 +95,8 @@ async function buildAppOrView(
 
   const browserTarget = createEsbuildBrowserslistTarget(targetDirectory);
 
-  if (isEsbuild) {
+  // If not app, build a view as an ES module with esbuild for now
+  if (isEsbuild || !isApp) {
     const { default: buildEsbuildApp } = await import(
       '../esbuild-scripts/build'
     );
@@ -130,9 +131,6 @@ async function buildAppOrView(
         MODULAR_ROOT: modularRoot,
         MODULAR_PACKAGE: target,
         MODULAR_PACKAGE_NAME: targetName,
-        MODULAR_PACKAGE_TYPE: type,
-        // MODULAR_PACKAGE_EXTERNAL_DEPENDENCIES:
-        //   JSON.stringify(externalDependencies),
       },
     });
 

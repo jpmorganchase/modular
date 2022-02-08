@@ -27,18 +27,12 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const typescriptFormatter = require('../../react-dev-utils/typescriptFormatter');
 const postcssNormalize = require('postcss-normalize');
 const isCI = require('is-ci');
-const EsmWebpackPlugin = require('@purtuga/esm-webpack-plugin');
 
 const esbuildTargetFactory = process.env.ESBUILD_TARGET_FACTORY
   ? JSON.parse(process.env.ESBUILD_TARGET_FACTORY)
   : 'es2015';
 
 const appPackageJson = require(paths.appPackageJson);
-
-const isApp = !(process.env.MODULAR_PACKAGE_TYPE === 'view');
-const externals = process.env.MODULAR_PACKAGE_EXTERNAL_DEPENDENCIES
-  ? JSON.parse(process.env.MODULAR_PACKAGE_EXTERNAL_DEPENDENCIES)
-  : [];
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -148,7 +142,6 @@ module.exports = function (webpackEnv) {
 
   const webpackConfig = {
     mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
-    externals,
     // Stop compilation early in production
     bail: isEnvProduction,
     devtool: isEnvProduction
@@ -217,8 +210,6 @@ module.exports = function (webpackEnv) {
       // this defaults to 'window', but by setting it to 'this' then
       // module chunks which are built will work in web workers as well.
       globalObject: 'this',
-      library: isApp ? undefined : 'LIB',
-      libraryTarget: isApp ? undefined : 'var',
     },
     optimization: {
       minimize: isEnvProduction,
@@ -287,20 +278,16 @@ module.exports = function (webpackEnv) {
       // Automatically split vendor and commons
       // https://twitter.com/wSokra/status/969633336732905474
       // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
-      splitChunks: isApp
-        ? {
-            chunks: 'all',
-            name: isEnvDevelopment,
-          }
-        : undefined,
+      splitChunks: {
+        chunks: 'all',
+        name: isEnvDevelopment,
+      },
       // Keep the runtime chunk separated to enable long term caching
       // https://twitter.com/wSokra/status/969679223278505985
       // https://github.com/facebook/create-react-app/issues/5358
-      runtimeChunk: isApp
-        ? {
-            name: (entrypoint) => `runtime-${entrypoint.name}`,
-          }
-        : undefined,
+      runtimeChunk: {
+        name: (entrypoint) => `runtime-${entrypoint.name}`,
+      },
     },
     resolve: {
       // This allows you to set a fallback for where webpack should look for modules.
@@ -318,7 +305,7 @@ module.exports = function (webpackEnv) {
       // for React Native Web.
       extensions: paths.moduleFileExtensions
         .map((ext) => `.${ext}`)
-        .filter((ext) => useTypeScript || !isApp || !ext.includes('ts')),
+        .filter((ext) => useTypeScript || !ext.includes('ts')),
       alias: {
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
@@ -522,37 +509,35 @@ module.exports = function (webpackEnv) {
     },
     plugins: [
       // Generates an `index.html` file with the <script> injected.
-      isApp &&
-        new HtmlWebpackPlugin(
-          Object.assign(
-            {},
-            {
-              inject: true,
-              template: paths.appHtml,
-            },
-            isEnvProduction
-              ? {
-                  minify: {
-                    removeComments: true,
-                    collapseWhitespace: true,
-                    removeRedundantAttributes: true,
-                    useShortDoctype: true,
-                    removeEmptyAttributes: true,
-                    removeStyleLinkTypeAttributes: true,
-                    keepClosingSlash: true,
-                    minifyJS: true,
-                    minifyCSS: true,
-                    minifyURLs: true,
-                  },
-                }
-              : undefined,
-          ),
+      new HtmlWebpackPlugin(
+        Object.assign(
+          {},
+          {
+            inject: true,
+            template: paths.appHtml,
+          },
+          isEnvProduction
+            ? {
+                minify: {
+                  removeComments: true,
+                  collapseWhitespace: true,
+                  removeRedundantAttributes: true,
+                  useShortDoctype: true,
+                  removeEmptyAttributes: true,
+                  removeStyleLinkTypeAttributes: true,
+                  keepClosingSlash: true,
+                  minifyJS: true,
+                  minifyCSS: true,
+                  minifyURLs: true,
+                },
+              }
+            : undefined,
         ),
+      ),
       // Inlines the webpack runtime script. This script is too small to warrant
       // a network request.
       // https://github.com/facebook/create-react-app/issues/5358
-      isApp &&
-        isEnvProduction &&
+      isEnvProduction &&
         shouldInlineRuntimeChunk &&
         new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime-.+[.]js/]),
       // Makes some environment variables available in index.html.
@@ -560,7 +545,7 @@ module.exports = function (webpackEnv) {
       // <link rel="icon" href="%PUBLIC_URL%/favicon.ico">
       // It will be an empty string unless you specify "homepage"
       // in `package.json`, in which case it will be the pathname of that URL.
-      isApp && new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
+      new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
       // This gives some necessary context to module not found errors, such as
       // the requesting resource.
       new ModuleNotFoundPlugin(paths.appPath),
@@ -644,7 +629,6 @@ module.exports = function (webpackEnv) {
           // The formatter is invoked directly in WebpackDevServerUtils during development
           formatter: isEnvProduction ? typescriptFormatter : undefined,
         }),
-      !isApp && new EsmWebpackPlugin(),
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.
     // Tell webpack to provide empty mocks for them so importing them works.
