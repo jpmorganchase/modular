@@ -1,7 +1,7 @@
 import { Dependency } from '@schemastore/package';
 import * as esbuild from 'esbuild';
 import * as fs from 'fs-extra';
-import { createDependenciesRewritePlugin } from '../esbuild-scripts/plugins/rewriteDependenciesPlugin';
+import { createRewriteDependenciesPlugin } from '../esbuild-scripts/plugins/rewriteDependenciesPlugin';
 
 export async function createViewTrampoline(
   outputPath: string,
@@ -53,7 +53,7 @@ ReactDOM.render(<Component />, DOMRoot);`;
           });
         },
       },
-      createDependenciesRewritePlugin({
+      createRewriteDependenciesPlugin({
         ...dependencies,
         'react-dom': dependencies.react,
       }),

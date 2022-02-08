@@ -1,34 +1,36 @@
 import * as esbuild from 'esbuild';
 import type { Dependency } from '@schemastore/package';
 
-export function createDependenciesRewritePlugin(
+export function createRewriteDependenciesPlugin(
   dependencies: Dependency,
 ): esbuild.Plugin {
+  const externalCdnTemplate =
+    process.env.EXTERNAL_CDN_TEMPLATE ??
+    'https://cdn.skypack.dev/[name]@[version]';
+
+  const externalDenyList = process.env.EXTERNAL_DENY_LIST
+    ? process.env.EXTERNAL_DENY_LIST.split(',')
+    : [];
+
   const importMap: Record<string, string> = Object.entries(dependencies).reduce(
-    (agg, [dep, version]) => {
-      if (
-        !dep.startsWith('@cib') &&
-        !dep.startsWith('@wssdashboard') &&
-        !dep.startsWith('@uilogger')
-      ) {
+    (acc, [name, version]) => {
+      if (!externalDenyList.some((filter) => name.startsWith(filter))) {
         return {
-          ...agg,
-          [dep]: `https://cdn.skypack.dev/${dep}@${version}`,
+          ...acc,
+          [name]: externalCdnTemplate
+            .replace('[name]', name)
+            .replace('[version]', version),
         };
       }
-
-      return agg;
+      return acc;
     },
     {},
   );
-
-  console.log({ dependencies });
 
   const dependencyRewritePlugin: esbuild.Plugin = {
     name: 'dependency-rewrite',
     setup(build) {
       build.onResolve({ filter: /.*/, namespace: 'file' }, (args) => {
-        console.log({ onResolve: args.path });
         if (args.path in dependencies) {
           return {
             path: args.path,

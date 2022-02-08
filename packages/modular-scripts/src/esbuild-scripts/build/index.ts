@@ -14,7 +14,7 @@ import createEsbuildConfig from '../config/createEsbuildConfig';
 import getModularRoot from '../../utils/getModularRoot';
 import sanitizeMetafile from '../utils/sanitizeMetafile';
 import type { Dependency } from '@schemastore/package';
-import { createDependenciesRewritePlugin } from '../plugins/rewriteDependenciesPlugin';
+import { createRewriteDependenciesPlugin } from '../plugins/rewriteDependenciesPlugin';
 
 export default async function build(
   target: string,
@@ -38,7 +38,7 @@ export default async function build(
           assetNames: 'static/media/[name]-[hash]',
           plugins: isApp
             ? undefined
-            : [createDependenciesRewritePlugin(packageDependencies)],
+            : [createRewriteDependenciesPlugin(packageDependencies)],
         },
         type,
       ),

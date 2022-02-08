@@ -2,7 +2,6 @@ import { paramCase as toParamCase } from 'change-case';
 import chalk from 'chalk';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-
 import * as logger from '../utils/logger';
 import getModularRoot from '../utils/getModularRoot';
 import actionPreflightCheck from '../utils/actionPreflightCheck';
