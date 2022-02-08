@@ -91,14 +91,9 @@ async function buildAppOrView(
   const packageDependencies = await getPackageDependencies(target);
   const dependencyNames = Object.keys(packageDependencies);
 
-  // If we are building a view and MODULAR_VIEW_DEPENDENCIES_EXTERNAL is 'true',
-  // set all third-party dependencies as externals
-  const externalDependencies =
-    !isApp && process.env.MODULAR_VIEW_DEPENDENCIES_EXTERNAL === 'true'
-      ? dependencyNames
-      : [];
-
   let jsEntrypointPath;
+
+  const browserTarget = createEsbuildBrowserslistTarget(targetDirectory);
 
   if (isEsbuild) {
     const { default: buildEsbuildApp } = await import(
@@ -107,7 +102,7 @@ async function buildAppOrView(
     const result = await buildEsbuildApp(
       target,
       paths,
-      externalDependencies,
+      packageDependencies,
       type,
     );
 
@@ -125,8 +120,6 @@ async function buildAppOrView(
       'modular-scripts/react-scripts/scripts/build.js',
     );
 
-    const browserTarget = createEsbuildBrowserslistTarget(targetDirectory);
-
     // TODO: this shouldn't be sync
     await execAsync('node', [buildScript], {
       cwd: targetDirectory,
@@ -138,8 +131,8 @@ async function buildAppOrView(
         MODULAR_PACKAGE: target,
         MODULAR_PACKAGE_NAME: targetName,
         MODULAR_PACKAGE_TYPE: type,
-        MODULAR_PACKAGE_EXTERNAL_DEPENDENCIES:
-          JSON.stringify(externalDependencies),
+        // MODULAR_PACKAGE_EXTERNAL_DEPENDENCIES:
+        //   JSON.stringify(externalDependencies),
       },
     });
 
@@ -178,7 +171,13 @@ async function buildAppOrView(
     if (!jsEntrypointPath) {
       throw new Error("Couldn't identify the compiled main asset");
     }
-    await createViewTrampoline(paths.appBuild, path.basename(jsEntrypointPath));
+    await createViewTrampoline(
+      paths.appBuild,
+      path.basename(jsEntrypointPath),
+      paths.appSrc,
+      packageDependencies,
+      browserTarget,
+    );
   }
 
   // Add dependencies from source and bundled dependencies to target package.json
@@ -186,8 +185,7 @@ async function buildAppOrView(
     path.join(targetDirectory, 'package.json'),
   )) as CoreProperties;
   targetPackageJson.dependencies = packageDependencies;
-  // Set bundled dependencies based on the external dependencies calculated earlier
-  if (!externalDependencies.length) {
+  if (isApp) {
     targetPackageJson.bundledDependencies = dependencyNames;
   }
   // Copy selected fields of package.json over

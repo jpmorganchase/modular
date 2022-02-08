@@ -1,16 +1,24 @@
+import { Dependency } from '@schemastore/package';
 import * as esbuild from 'esbuild';
 import * as fs from 'fs-extra';
+import { createDependenciesRewritePlugin } from '../esbuild-scripts/plugins/rewriteDependenciesPlugin';
 
 export async function createViewTrampoline(
   outputPath: string,
   fileName: string,
+  srcPath: string,
+  dependencies: Dependency,
+  browserTarget: string[],
 ) {
   const fileRelativePath = `./${fileName}`;
+
   const trampolineTemplate = `
 import ReactDOM from 'react-dom'
+import React from 'react'
 import Component from '${fileRelativePath}'
 const DOMRoot = document.getElementById('root');
-ReactDOM.render(Component(), DOMRoot);`;
+ReactDOM.render(<Component />, DOMRoot);`;
+
   const indexTemplate = `
 <!DOCTYPE html>
 <html>
@@ -23,16 +31,20 @@ ReactDOM.render(Component(), DOMRoot);`;
   const trampolinePath = `${outputPath}/static/js/__trampoline.js`;
   const fileRegexp = new RegExp(String.raw`^${escapeRegex(fileRelativePath)}$`);
 
-  await fs.writeFile(trampolinePath, trampolineTemplate);
-  // Build the trampoline on the fly, in-place
+  // Build the trampoline on the fly, from stdin
   const buildResult = await esbuild.build({
-    entryPoints: [trampolinePath],
+    stdin: {
+      contents: trampolineTemplate,
+      resolveDir: srcPath,
+      sourcefile: '__trampoline.tsx',
+      loader: 'tsx',
+    },
     format: 'esm',
     bundle: true,
-    target: ['es2020'], // TODO
+    target: browserTarget,
     outfile: trampolinePath,
-    allowOverwrite: true,
     plugins: [
+      // See https://github.com/evanw/esbuild/issues/456
       {
         name: 'import-path',
         setup(build) {
@@ -41,6 +53,10 @@ ReactDOM.render(Component(), DOMRoot);`;
           });
         },
       },
+      createDependenciesRewritePlugin({
+        ...dependencies,
+        'react-dom': dependencies.react,
+      }),
     ],
   });
   await fs.writeFile(`${outputPath}/index.html`, indexTemplate);

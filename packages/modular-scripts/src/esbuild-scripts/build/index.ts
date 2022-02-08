@@ -13,11 +13,13 @@ import { createIndex } from '../api';
 import createEsbuildConfig from '../config/createEsbuildConfig';
 import getModularRoot from '../../utils/getModularRoot';
 import sanitizeMetafile from '../utils/sanitizeMetafile';
+import type { Dependency } from '@schemastore/package';
+import { createDependenciesRewritePlugin } from '../plugins/rewriteDependenciesPlugin';
 
 export default async function build(
   target: string,
   paths: Paths,
-  externalDependencies: string[],
+  packageDependencies: Dependency,
   type: 'app' | 'view',
 ) {
   const modularRoot = getModularRoot();
@@ -34,7 +36,9 @@ export default async function build(
           entryNames: 'static/js/[name]-[hash]',
           chunkNames: 'static/js/[name]-[hash]',
           assetNames: 'static/media/[name]-[hash]',
-          external: externalDependencies,
+          plugins: isApp
+            ? undefined
+            : [createDependenciesRewritePlugin(packageDependencies)],
         },
         type,
       ),
