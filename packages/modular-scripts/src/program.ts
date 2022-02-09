@@ -268,7 +268,7 @@ interface ServeOptions {
 
 program
   .command('serve <target>')
-  .description('Serves a pre-build modular app')
+  .description('Serves a pre-built modular app')
   .option('--port <value>', 'Port to serve on', '3000')
   .action(async (packageName: string, options: ServeOptions) => {
     const { default: serve } = await import('./serve');
