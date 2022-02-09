@@ -1,7 +1,7 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import { config as loadConfig } from 'dotenv';
-import dotenvExpand from 'dotenv-expand';
+import { expand } from 'dotenv-expand';
 
 import { findModularRoot } from './getModularRoot';
 
@@ -30,7 +30,7 @@ export async function setupEnvForDirectory(dirName: string): Promise<void> {
   await Promise.all(
     dotenvFiles.map(async (dotenvFile: string) => {
       if (await fs.pathExists(dotenvFile)) {
-        dotenvExpand(
+        expand(
           loadConfig({
             path: dotenvFile,
           }),

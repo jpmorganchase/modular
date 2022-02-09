@@ -34,8 +34,8 @@
     ]
   },
   "dependencies": {
-    "@babel/cli": "7.16.8",
-    "@babel/core": "7.16.7",
+    "@babel/cli": "7.17.0",
+    "@babel/core": "7.17.2",
     "@babel/preset-env": "7.16.10",
     "@babel/preset-react": "7.16.7",
     "@babel/preset-typescript": "7.16.7",
@@ -74,7 +74,7 @@
     "@types/update-notifier": "5.1.0",
     "@yarnpkg/lockfile": "^1.1.0",
     "commander": "8.2.0",
-    "esbuild": "0.14.11",
+    "esbuild": "0.14.21",
     "eslint": "7.32.0",
     "execa": "5.1.1",
     "husky": "7.0.4",
@@ -89,11 +89,11 @@
     "react-dom": "17.0.2",
     "semver": "7.3.5",
     "string.prototype.replaceall": "^1.0.6",
-    "ts-node": "10.4.0",
+    "ts-node": "10.5.0",
     "typescript": "4.4.4"
   },
   "resolutions": {
-    "esbuild": "0.14.11",
+    "esbuild": "0.14.21",
     "ua-parser-js": "0.7.28"
   },
   "jest": {
