@@ -1,11 +1,38 @@
+import type * as esbuild from 'esbuild';
 import * as fs from 'fs-extra';
 import * as parse5 from 'parse5';
 import escapeStringRegexp from 'escape-string-regexp';
 
-import { Paths } from '../utils/createPaths';
+import type { Paths } from '../utils/createPaths';
+import getModularRoot from '../utils/getModularRoot';
+import * as path from 'path';
+
+type FileType = '.css' | '.js';
+
+function getEntryPoint(
+  paths: Paths,
+  metafile: esbuild.Metafile,
+  type: FileType,
+): string | undefined {
+  const result = Object.entries(metafile.outputs).find(([key, output]) => {
+    return output.entryPoint && path.extname(key) === type;
+  });
+
+  const outputFileName = result?.[0];
+
+  if (outputFileName) {
+    return path.relative(
+      paths.appBuild,
+      path.join(getModularRoot(), outputFileName),
+    );
+  } else {
+    return undefined;
+  }
+}
 
 export async function createIndex(
   paths: Paths,
+  metafile: esbuild.Metafile,
   replacements: Record<string, string>,
   includeRuntime: boolean,
 ): Promise<string> {
@@ -17,19 +44,28 @@ export async function createIndex(
   const head = html.childNodes.find(
     (node) => node.nodeName === 'head',
   ) as parse5.Element;
-  head.childNodes.push(
-    ...parse5.parseFragment(
-      `<link rel="stylesheet" href="%PUBLIC_URL%/index.css"></script>`,
-    ).childNodes,
-  );
+
+  const cssEntryPoint = getEntryPoint(paths, metafile, '.css');
+  const jsEntryPoint = getEntryPoint(paths, metafile, '.js');
+
+  if (cssEntryPoint) {
+    head.childNodes.push(
+      ...parse5.parseFragment(
+        `<link rel="stylesheet" href="%PUBLIC_URL%/${cssEntryPoint}"></script>`,
+      ).childNodes,
+    );
+  }
   const body = html.childNodes.find(
     (node) => node.nodeName === 'body',
   ) as parse5.Element;
-  body.childNodes.push(
-    ...parse5.parseFragment(
-      `<script type="module" src="%PUBLIC_URL%/index.js"></script>`,
-    ).childNodes,
-  );
+
+  if (jsEntryPoint) {
+    body.childNodes.push(
+      ...parse5.parseFragment(
+        `<script type="module" src="%PUBLIC_URL%/${jsEntryPoint}"></script>`,
+      ).childNodes,
+    );
+  }
 
   if (includeRuntime) {
     body.childNodes.push(

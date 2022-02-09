@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 import * as fs from 'fs-extra';
-import * as isCI from 'is-ci';
+import isCI from 'is-ci';
 import chalk from 'chalk';
 import commander from 'commander';
-import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
+import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import type { TestOptions } from './test';
 import type { LintOptions } from './lint';
 
@@ -151,7 +151,7 @@ program
   });
 
 program
-  .command('start <packageName>')
+  .command('start [packageName]')
   .description(
     `Start a dev-server for an app. Only available for modular 'app' types.`,
   )
@@ -251,6 +251,15 @@ program
   .action(async () => {
     const { default: typecheck } = await import('./typecheck');
     await typecheck();
+  });
+
+program
+  .command('rename <oldPackageName> <newPackageName>')
+  .description(`Rename a package.`)
+  .option('--verbose', 'Enables verbose logging within modular.')
+  .action(async (oldPackageName: string, newPackageName: string) => {
+    const { default: rename } = await import('./rename');
+    await rename(oldPackageName, newPackageName);
   });
 
 export { program };

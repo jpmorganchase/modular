@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+import 'source-map-support/register';
+
 import { ExecaError } from 'execa';
 import startupCheck from './utils/startupCheck';
 import setupEnv from './utils/setupEnv';
@@ -20,7 +22,8 @@ async function startUp(env: typeof process.env.NODE_ENV) {
 }
 
 void (async () => {
-  switch (process.argv[1]) {
+  const command = process.argv[2];
+  switch (command) {
     // "build" is the only task which runs with NODE_ENV "production"
     case 'build': {
       await startUp('production');

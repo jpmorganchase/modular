@@ -25,3 +25,25 @@ describe('Creating a new modular app via the CLI', () => {
     expect(tree(cwd)).toMatchSnapshot();
   });
 });
+
+describe('Creating a new modular app via the CLI with --empty', () => {
+  let cwd: string;
+  beforeEach(async () => {
+    cwd = path.join(tmp.dirSync().name, 'another-new-modular-app');
+
+    await execa('yarnpkg', ['create-modular-react-app', cwd, '--empty'], {
+      cwd: __dirname,
+      cleanup: true,
+      stderr: process.stderr,
+      stdout: process.stdout,
+    });
+  });
+
+  afterEach(async () => {
+    await fs.remove(cwd);
+  });
+
+  it('should create the right tree', () => {
+    expect(tree(cwd)).toMatchSnapshot();
+  });
+});

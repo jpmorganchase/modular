@@ -94,7 +94,6 @@ module.exports = {
   appJsConfig: resolveApp('jsconfig.json'),
   proxySetup: resolveApp('src/setupProxy.js'),
   appNodeModules: resolveApp('node_modules'),
-  swSrc: resolveModule(resolveApp, 'src/service-worker'),
   publicUrlOrPath,
   modularRoot,
   modularPackage,

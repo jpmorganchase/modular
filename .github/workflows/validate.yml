@@ -1,0 +1,23 @@
+name: 'Validate'
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check-yarn-lock-registry:
+    name: 'Validate yarn.lock'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Node.js 14
+        uses: actions/setup-node@v2.5.1
+        with:
+          node-version: 14
+          cache: 'yarn'
+      - name: Install Dependencies
+        run: yarn --frozen-lockfile
+      - name: Check yarn.lock registry url
+        run: yarn validate-lockfile

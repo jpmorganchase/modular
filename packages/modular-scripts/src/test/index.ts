@@ -1,4 +1,5 @@
 import * as path from 'path';
+import actionPreflightCheck from '../utils/actionPreflightCheck';
 import resolve from 'resolve';
 import { ExecaError } from 'execa';
 import execAsync from '../utils/execAsync';
@@ -54,10 +55,7 @@ function resolveJestDefaultEnvironment(name: string) {
   });
 }
 
-export default async function test(
-  options: TestOptions,
-  regexes?: string[],
-): Promise<void> {
+async function test(options: TestOptions, regexes?: string[]): Promise<void> {
   const { debug, env, reporters, testResultsProcessor, ...jestOptions } =
     options;
 
@@ -157,3 +155,5 @@ export default async function test(
     throw new Error('\u2715 Modular test did not pass');
   }
 }
+
+export default actionPreflightCheck(test);

@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WHEN running esbuild with the workerFactoryPlugin WHEN there's a url import SHOULD ouput the correct alive.worker-[hash].ts file 1`] = `
+"// packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/worker-plugin/alive.worker.ts
+globalThis.self.postMessage(\\"I'm alive!\\");
+"
+`;
+
+exports[`WHEN running esbuild with the workerFactoryPlugin WHEN there's a url import SHOULD ouput the correct index.js 1`] = `
+"// worker-url:packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/worker-plugin/alive.worker.js
+var alive_worker_default = \\"./alive.worker-T4TLN6IN.js\\";
+
+// web-worker:packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/worker-plugin/alive.worker.js
+var workerPath = new URL(alive_worker_default, import.meta.url);
+var importSrc = 'import \\"' + workerPath + '\\";';
+var blob = new Blob([importSrc], {
+  type: \\"text/javascript\\"
+});
+var alive_worker_default2 = class {
+  constructor() {
+    return new Worker(URL.createObjectURL(blob), { type: \\"module\\" });
+  }
+};
+
+// packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/worker-plugin/index.ts
+var worker = new alive_worker_default2();
+worker.addEventListener(\\"message\\", (event) => {
+  console.log(\`Received message from worker: \${event.data}\`);
+});
+"
+`;

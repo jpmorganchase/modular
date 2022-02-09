@@ -76,23 +76,25 @@ describe('when working with an app', () => {
   });
 
   it('can build an app', () => {
-    expect(
-      tree(path.join(modularRoot, 'dist', 'sample-esbuild-app'), {
-        hashIgnores: ['index.js.map', 'index.css.map', 'package.json'],
-      }),
-    ).toMatchInlineSnapshot(`
+    expect(tree(path.join(modularRoot, 'dist', 'sample-esbuild-app')))
+      .toMatchInlineSnapshot(`
       "sample-esbuild-app
       ├─ favicon.ico #6pu3rg
-      ├─ index.css #1g5dmd3
-      ├─ index.css.map
-      ├─ index.html #ojdrji
-      ├─ index.js #gjna5x
-      ├─ index.js.map
-      ├─ logo-PGX3QVVN.svg #1okqmlj
+      ├─ index.html #3medfx
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
-      └─ robots.txt #1sjb8b3"
+      ├─ package.json
+      ├─ robots.txt #1sjb8b3
+      └─ static
+         ├─ css
+         │  ├─ index-OPRZV2UT.css #1ldttcq
+         │  └─ index-OPRZV2UT.css.map #za6yi0
+         ├─ js
+         │  ├─ index-VHFPO43A.js #1kgihwh
+         │  └─ index-VHFPO43A.js.map #kat2rm
+         └─ media
+            └─ logo-PGX3QVVN.svg #1okqmlj"
     `);
   });
 
@@ -116,7 +118,14 @@ describe('when working with an app', () => {
       prettier.format(
         String(
           await fs.readFile(
-            path.join(modularRoot, 'dist', 'sample-esbuild-app', 'index.js'),
+            path.join(
+              modularRoot,
+              'dist',
+              'sample-esbuild-app',
+              'static',
+              'js',
+              'index-VHFPO43A.js',
+            ),
           ),
         ),
         {
@@ -128,17 +137,6 @@ describe('when working with an app', () => {
 
   type SourceMap = Record<string, string | string[]>;
 
-  const normalizeSource = (pathName: string) => {
-    if (pathName.startsWith('svgr')) {
-      return `svgr:${path.relative(
-        getModularRoot(),
-        pathName.slice('svgr:'.length),
-      )}`;
-    } else {
-      return pathName;
-    }
-  };
-
   const readSourceMap = (pathName: string) => {
     const map = fs.readJsonSync(
       path.join(modularRoot, 'dist', 'sample-esbuild-app', pathName),
@@ -148,15 +146,16 @@ describe('when working with an app', () => {
       // make the source root //modular so that it's the same
       // across platforms
       sourceRoot: '//modular',
-      sources: (map.sources as string[]).map(normalizeSource),
     };
   };
 
   it('can generate a index.js.map', () => {
-    expect(readSourceMap('index.js.map')).toMatchSnapshot();
+    expect(readSourceMap('static/js/index-VHFPO43A.js.map')).toMatchSnapshot();
   });
 
   it('can generate a index.css.map', () => {
-    expect(readSourceMap('index.css.map')).toMatchSnapshot();
+    expect(
+      readSourceMap('static/css/index-OPRZV2UT.css.map'),
+    ).toMatchSnapshot();
   });
 });

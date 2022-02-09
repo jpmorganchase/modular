@@ -4,19 +4,21 @@ import builtinModules from 'builtin-modules';
 import chalk from 'chalk';
 
 import * as rollup from 'rollup';
-import { preserveShebangs } from 'rollup-plugin-preserve-shebangs';
-import babel from '@rollup/plugin-babel';
+import esbuild from 'rollup-plugin-esbuild';
+
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import postcss from 'rollup-plugin-postcss';
 import resolve from '@rollup/plugin-node-resolve';
 
-import getPrefixedLogger from '../../utils/getPrefixedLogger';
 import { getPackageEntryPoints } from './getPackageEntryPoints';
+
+import getPrefixedLogger from '../../utils/getPrefixedLogger';
 import getPackageMetadata from '../../utils/getPackageMetadata';
 import getModularRoot from '../../utils/getModularRoot';
 import { ModularPackageJson } from '../../utils/isModularType';
 import getRelativeLocation from '../../utils/getRelativeLocation';
+import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowserslistTarget';
 
 const outputDirectory = 'dist';
 const extensions = ['.ts', '.tsx', '.js', '.jsx'];
@@ -26,7 +28,7 @@ function distinct<T>(arr: T[]): T[] {
 }
 
 export async function makeBundle(
-  target: string,
+  packageName: string,
   preserveModules: boolean,
   includePrivate: boolean,
 ): Promise<ModularPackageJson> {
@@ -39,24 +41,23 @@ export async function makeBundle(
     packageNames,
   } = metadata;
 
-  const paramCaseTarget = toParamCase(target);
-  const packagePath = await getRelativeLocation(target);
+  const paramCaseTarget = toParamCase(packageName);
+  const packagePath = await getRelativeLocation(packageName);
   const targetOutputDirectory = path.join(
     modularRoot,
     outputDirectory,
     paramCaseTarget,
   );
 
-  const logger = getPrefixedLogger(target);
+  const logger = getPrefixedLogger(packageName);
 
   const packageJson = packageJsonsByPackagePath[packagePath];
 
-  const { main, compilingBin } = await getPackageEntryPoints(
-    packagePath,
-    includePrivate,
-  );
+  const main = await getPackageEntryPoints(packagePath, includePrivate);
 
-  logger.log(`building ${target}...`);
+  logger.log(`building ${packageName}...`);
+
+  const target = createEsbuildBrowserslistTarget(packagePath);
 
   const bundle = await rollup.rollup({
     input: path.join(modularRoot, packagePath, main),
@@ -81,35 +82,15 @@ export async function makeBundle(
         mainFields: ['module', 'main', 'browser'],
       }),
       commonjs({ include: /\/node_modules\// }),
-      babel({
-        babelHelpers: 'bundled',
-        presets: [
-          // Preset orders matters, please see: https://github.com/babel/babel/issues/8752#issuecomment-486541662
-          [
-            require.resolve('@babel/preset-env'),
-            // TODO: why doesn't this read `targets` from package.json?
-            {
-              targets: {
-                // We should be building packages for environments which support esmodules given their wide support now.
-                esmodules: true,
-              },
-            },
-          ],
-          [
-            require.resolve('@babel/preset-typescript'),
-            { isTSX: true, allExtensions: true },
-          ],
-          require.resolve('@babel/preset-react'),
-        ],
-        plugins: [require.resolve('@babel/plugin-proposal-class-properties')],
-        extensions,
+      esbuild({
+        target,
+        minify: false,
         include: [`packages/**/*`],
         exclude: 'node_modules/**',
       }),
       postcss({ extract: false }),
       // TODO: add sass, dotenv
       json(),
-      preserveShebangs(),
     ],
     // TODO: support for css modules, sass, dotenv,
     // and anything else create-react-app supports
@@ -157,6 +138,12 @@ export async function makeBundle(
   // but I think that's the right choice; a dependency might remove it,
   // even in a patch, and it'll break your code and you wouldn't know why.
   const missingDependencies: Set<string> = new Set();
+
+  // get all the names of the files we outputted to make sure they're included
+  // in the missing dep check
+  const chunkOrAssetFileNames = new Set<string>(
+    output.map((chunkOfAsset) => chunkOfAsset.fileName),
+  );
 
   for (const chunkOrAsset of output) {
     if (chunkOrAsset.type === 'asset') {
@@ -219,7 +206,15 @@ export async function makeBundle(
               // let's collect its name and throw an error later
               // TODO: if it's in root's dev dependencies, should throw a
               // different kind of error
-              if (!builtinModules.includes(importedPackage)) {
+              if (
+                !builtinModules.includes(importedPackage) &&
+                // In the case that the importedPackage is contained in the
+                // files outputted by the bundle write then the import name
+                // is a dynamic import which generated a file split. This is
+                // perfectly file since we know the file exists from the bundle
+                // write phase.
+                !chunkOrAssetFileNames.has(importedPackage)
+              ) {
                 // save filename to remove from missingDeps later
                 // if they exist there
                 localFileNames.add(chunkOrAsset.fileName);
@@ -245,16 +240,15 @@ export async function makeBundle(
   ].filter((dep) => !localFileNames.has(dep));
 
   if (missingDependenciesWithoutLocalFileNames.length > 0) {
-    throw new Error(
-      `Missing dependencies: ${missingDependenciesWithoutLocalFileNames.join(
-        ', ',
-      )};`,
-    );
+    missingDependenciesWithoutLocalFileNames.forEach((missingImport) => {
+      logger.error(`  ${missingImport}`);
+    });
+    throw new Error(`Missing dependencies found.`);
   }
 
   // now actually write the bundles to disk
   // TODO: write to disk in the above check itself to prevent this 2nd pass
-  await bundle.write({
+  const { output: buildOutput } = await bundle.write({
     ...outputOptions,
     ...(preserveModules
       ? {
@@ -272,68 +266,39 @@ export async function makeBundle(
     exports: 'auto',
   });
 
-  if (!compilingBin) {
-    await bundle.write({
-      ...outputOptions,
-      ...(preserveModules
-        ? {
-            preserveModules: true,
-            dir: path.join(targetOutputDirectory, `${outputDirectory}-es`),
-          }
-        : {
-            file: path.join(
-              targetOutputDirectory,
-              `${outputDirectory}-es`,
-              paramCaseTarget + '.es.js',
-            ),
-          }),
-      format: 'es',
-      exports: 'auto',
-    });
-  }
-
-  let outputFilesPackageJson: Partial<ModularPackageJson>;
-  if (compilingBin && packageJson.bin) {
-    const binName = Object.keys(packageJson.bin)[0];
-    const binPath = main
-      .replace(/\.tsx?$/, '.js')
-      .replace(path.dirname(main) + '/', '');
-
-    outputFilesPackageJson = {
-      bin: {
-        [binName]: binPath,
-      },
-    };
-  } else {
-    outputFilesPackageJson = {
-      // TODO: what of 'bin' fields?
-      main: preserveModules
-        ? path.join(
-            `${outputDirectory}-cjs`,
-            main
-              .replace(/\.tsx?$/, '.js')
-              .replace(path.dirname(main) + '/', ''),
-          )
-        : `${outputDirectory}-cjs/${paramCaseTarget + '.cjs.js'}`,
-      module: preserveModules
-        ? path.join(
+  await bundle.write({
+    ...outputOptions,
+    ...(preserveModules
+      ? {
+          preserveModules: true,
+          dir: path.join(targetOutputDirectory, `${outputDirectory}-es`),
+        }
+      : {
+          file: path.join(
+            targetOutputDirectory,
             `${outputDirectory}-es`,
-            main
-              .replace(/\.tsx?$/, '.js')
-              .replace(path.dirname(main) + '/', ''),
-          )
-        : `${outputDirectory}-es/${paramCaseTarget + '.es.js'}`,
-      typings: path.join(
-        `${outputDirectory}-types`,
-        path.relative('src', main).replace(/\.tsx?$/, '.d.ts'),
-      ),
-    };
-  }
+            paramCaseTarget + '.es.js',
+          ),
+        }),
+    format: 'es',
+    exports: 'auto',
+  });
+
+  const outputPath = buildOutput[0].fileName;
 
   // return the public facing package.json that we'll write to disk later
   return {
     ...packageJson,
-    ...outputFilesPackageJson,
+    main: preserveModules
+      ? path.posix.join(`${outputDirectory}-cjs`, outputPath)
+      : `${outputDirectory}-cjs/${paramCaseTarget + '.cjs.js'}`,
+    module: preserveModules
+      ? path.posix.join(`${outputDirectory}-es`, outputPath)
+      : `${outputDirectory}-es/${paramCaseTarget + '.es.js'}`,
+    typings: path.posix.join(
+      `${outputDirectory}-types`,
+      path.posix.relative('src', main).replace(/\.tsx?$/, '.d.ts'),
+    ),
     dependencies: {
       ...packageJson.dependencies,
       ...localImports,

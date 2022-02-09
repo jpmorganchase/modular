@@ -1,4 +1,4 @@
-import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
+import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import chalk from 'chalk';
 import execa from 'execa';
 import * as fs from 'fs-extra';

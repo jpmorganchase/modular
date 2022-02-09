@@ -1,22 +1,29 @@
 import { Message } from 'esbuild';
 import chalk from 'chalk';
 import * as fs from 'fs-extra';
-import codeFrame from 'babel-code-frame';
+import * as path from 'path';
+import { codeFrameColumns } from '@babel/code-frame';
 
-export async function formatError(error: Message): Promise<string> {
+export async function formatError(
+  error: Message,
+  baseDir: string = process.cwd(),
+): Promise<string> {
   if (error.location?.file) {
-    const source = await fs.readFile(error.location.file, {
+    const pathToFile = path.join(baseDir, error.location?.file);
+    const source = await fs.readFile(pathToFile, {
       encoding: 'utf-8',
     });
     return `${chalk.red('Error:')}[${error.location.file}] ${error.text}
   
-${codeFrame(source, error.location.line, error.location.column, {
-  linesAbove: 1,
-  linesBelow: 1,
-  highlightCode: true,
-})}
+${codeFrameColumns(
+  source,
+  { start: { line: error.location.line, column: error.location.column } },
+  {
+    highlightCode: true,
+  },
+)}
     `;
   } else {
-    return `This is a bad error ... lol\n`;
+    return `${chalk.red('Error:')} ${error.text}\n`;
   }
 }

@@ -1,54 +1,19 @@
-import getPackageMetadata from '../../utils/getPackageMetadata';
+import type { JSONSchemaForNPMPackageJsonFiles } from '@schemastore/package';
 import * as path from 'path';
 import * as fse from 'fs-extra';
-import getModularRoot from '../../utils/getModularRoot';
 
-export async function getPackageEntryPoints(
+import getModularRoot from '../../utils/getModularRoot';
+import getPackageMetadata from '../../utils/getPackageMetadata';
+
+export function getMain(
   packagePath: string,
   includePrivate: boolean,
-): Promise<{
-  main: string;
-  compilingBin: boolean;
-}> {
-  const modularRoot = getModularRoot();
-  const { packageJsonsByPackagePath } = await getPackageMetadata();
-
-  const packageJson = packageJsonsByPackagePath[packagePath];
-
-  let compilingBin = false;
+  packageJson: JSONSchemaForNPMPackageJsonFiles | undefined,
+): string {
   let main: string | undefined;
-
-  if (packageJson.main) {
-    main = packageJson.main;
-  } else {
-    if (packageJson.bin) {
-      const bins: string[] = Object.values(packageJson.bin) as string[];
-      if (bins.length === 1) {
-        compilingBin = true;
-        main = bins[0];
-      } else {
-        throw new Error(
-          `package.json contains multiple "bin" values, bailing...`,
-        );
-      }
-    } else {
-      throw new Error(
-        `package.json does not have a "main" or "bin" field, bailing...`,
-      );
-    }
-  }
 
   if (!packageJson) {
     throw new Error(`no package.json in ${packagePath}, bailing...`);
-  }
-  if (!includePrivate && packageJson.private === true) {
-    throw new Error(`${packagePath} is marked private, bailing...`);
-  }
-
-  if (!fse.existsSync(path.join(modularRoot, packagePath, main))) {
-    throw new Error(
-      `package.json does not have a main file that points to an existing source file, bailing...`,
-    );
   }
 
   if (!packageJson.name) {
@@ -69,5 +34,34 @@ export async function getPackageEntryPoints(
     );
   }
 
-  return { main, compilingBin };
+  if (!includePrivate && packageJson.private === true) {
+    throw new Error(`${packagePath} is marked private, bailing...`);
+  }
+
+  if (packageJson.main) {
+    main = packageJson.main;
+  } else {
+    throw new Error(
+      `package.json at ${packagePath} does not have a "main" field, bailing...`,
+    );
+  }
+
+  if (!fse.existsSync(path.join(getModularRoot(), packagePath, main))) {
+    throw new Error(
+      `package.json does not have a main file that points to an existing source file, bailing...`,
+    );
+  }
+
+  return main;
+}
+
+export async function getPackageEntryPoints(
+  packagePath: string,
+  includePrivate: boolean,
+): Promise<string> {
+  const { packageJsonsByPackagePath } = await getPackageMetadata();
+
+  const packageJson = packageJsonsByPackagePath[packagePath];
+
+  return getMain(packagePath, includePrivate, packageJson);
 }

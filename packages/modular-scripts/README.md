@@ -56,7 +56,7 @@ It supports three flags:
 - `--prefer-offline` will prefer locally cached `node_modules` versions over
   those from your remote registry.
 - `--repo <value>` will toggle whether a new `git` repo is created and the
-  initial files commited.
+  initial files committed.
 
 ## Commands
 

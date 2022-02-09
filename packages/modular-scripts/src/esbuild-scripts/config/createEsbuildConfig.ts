@@ -1,17 +1,26 @@
 import isCi from 'is-ci';
 import * as path from 'path';
 import * as esbuild from 'esbuild';
-import { Paths } from '../../utils/createPaths';
+import type { Paths } from '../../utils/createPaths';
 import getClientEnvironment from './getClientEnvironment';
-import svgrPlugin from '../plugins/svgr';
 import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowserslistTarget';
 import * as logger from '../../utils/logger';
+
+import moduleScopePlugin from '../plugins/moduleScopePlugin';
+import svgrPlugin from '../plugins/svgr';
+import workerFactoryPlugin from '../plugins/workerFactoryPlugin';
 
 export default function createEsbuildConfig(
   paths: Paths,
   config: Partial<esbuild.BuildOptions> = {},
 ): esbuild.BuildOptions {
-  const plugins: esbuild.Plugin[] = [svgrPlugin()];
+  const { plugins: configPlugins, ...partialConfig } = config;
+
+  const plugins: esbuild.Plugin[] = [
+    moduleScopePlugin(paths),
+    svgrPlugin(),
+    workerFactoryPlugin(),
+  ].concat(configPlugins || []);
 
   const define = Object.assign(
     {},
@@ -42,6 +51,9 @@ export default function createEsbuildConfig(
       '.jpeg': 'file',
       '.png': 'file',
       '.webp': 'file',
+
+      // font file format loaders
+      '.woff': 'file',
       '.ttf': 'file',
 
       // enable JSX in js files
@@ -49,18 +61,17 @@ export default function createEsbuildConfig(
     },
     logLevel: 'silent',
     target,
-    absWorkingDir: paths.appPath,
     format: 'esm',
     color: !isCi,
     define,
     metafile: true,
     tsconfig: paths.appTsConfig,
     minify: true,
-    outbase: 'src',
+    outbase: paths.modularRoot,
+    absWorkingDir: paths.modularRoot,
     outdir: paths.appBuild,
-    sourceRoot: paths.modularRoot,
     publicPath: paths.publicUrlOrPath,
     nodePaths: (process.env.NODE_PATH || '').split(path.delimiter),
-    ...config,
+    ...partialConfig,
   };
 }

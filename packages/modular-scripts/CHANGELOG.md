@@ -1,5 +1,350 @@
 # modular-scripts
 
+## 2.2.0
+
+### Minor Changes
+
+- [#1108](https://github.com/jpmorganchase/modular/pull/1108)
+  [`a4c0648`](https://github.com/jpmorganchase/modular/commit/a4c0648bfa4fe08d21d69ae18a85eff8b9ea5b74)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump esbuild from
+  0.13.14 to 0.14.0
+
+* [#1142](https://github.com/jpmorganchase/modular/pull/1142)
+  [`5e00a3b`](https://github.com/jpmorganchase/modular/commit/5e00a3b6240efb0b6d9a25b7f896513814affa94)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Upgrade to
+  webpack-dev-server 4.
+
+- [#1146](https://github.com/jpmorganchase/modular/pull/1146)
+  [`073fbb7`](https://github.com/jpmorganchase/modular/commit/073fbb7ee0f3866016429f55a3be2c359e80457e)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump @svgr/core
+  from 5.5.0 to 6.1.1
+
+* [#1103](https://github.com/jpmorganchase/modular/pull/1103)
+  [`7b2df4b`](https://github.com/jpmorganchase/modular/commit/7b2df4b5f1b822e943c6a9d9a36b67eff1ece641)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Web
+  Worker support and docs for esbuild.
+
+- [#1094](https://github.com/jpmorganchase/modular/pull/1094)
+  [`7ae50b3`](https://github.com/jpmorganchase/modular/commit/7ae50b32cdf4da21ad487295dea2448a0d0e0f0c)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Implement
+  ModuleScopePlugin equivalent for esbuild applications.
+
+* [#1113](https://github.com/jpmorganchase/modular/pull/1113)
+  [`ee44098`](https://github.com/jpmorganchase/modular/commit/ee44098b3c838faae080363c15ec140a4bfafa3d)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Output file structure
+  equivalent to webpack for esbuild files `/static/(js|css)/*`.
+
+- [#1154](https://github.com/jpmorganchase/modular/pull/1154)
+  [`b4b438c`](https://github.com/jpmorganchase/modular/commit/b4b438ce25c367a0e50f1131dfda375361548c61)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Bump `tsconfig.json`
+  value for `target` from `es5` to `es2106`.
+
+* [#1152](https://github.com/jpmorganchase/modular/pull/1152)
+  [`5c05494`](https://github.com/jpmorganchase/modular/commit/5c05494072a7109c73efa923008563d059c4c707)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Remove service worker
+  support for applications as we are focussed on client application frameworks.
+
+- [#1113](https://github.com/jpmorganchase/modular/pull/1113)
+  [`ee44098`](https://github.com/jpmorganchase/modular/commit/ee44098b3c838faae080363c15ec140a4bfafa3d)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Improve source map
+  asset paths to be relative to the modular root instead of application root.
+
+### Patch Changes
+
+- [#1099](https://github.com/jpmorganchase/modular/pull/1099)
+  [`71a31c6`](https://github.com/jpmorganchase/modular/commit/71a31c6043183361b07f4eb7c645ab4c0eae9613)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Fix
+  esbuild start hanging when ctrl-c is pressed to terminate it, due to
+  oustanding ws connection with the browser.
+
+* [#1096](https://github.com/jpmorganchase/modular/pull/1096)
+  [`7b8e03f`](https://github.com/jpmorganchase/modular/commit/7b8e03f8935a16e7197e180d1c402c3cd3284e33)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump postcss from
+  8.3.11 to 8.4.1
+
+- [#1085](https://github.com/jpmorganchase/modular/pull/1085)
+  [`ffc836e`](https://github.com/jpmorganchase/modular/commit/ffc836e6d2d58a10d16344c5bbb070879fa46771)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump rollup from
+  2.60.0 to 2.60.1
+
+* [#1151](https://github.com/jpmorganchase/modular/pull/1151)
+  [`d2b996b`](https://github.com/jpmorganchase/modular/commit/d2b996b23ee919a831d308c4ec09c39087a89235)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Replace
+  `babel-code-frame` with newer `@babel/code-frame` package.
+
+- [#1082](https://github.com/jpmorganchase/modular/pull/1082)
+  [`fa52a80`](https://github.com/jpmorganchase/modular/commit/fa52a80a251056cd04d863c49c13cf3f1875fe99)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - - Enable
+  CLI stack trace and build / runtime `react-error-overlay` on browser page in
+  esbuild mode.
+  - Locally serve sourcemaps with a middleware to correct
+    https://github.com/evanw/esbuild/pull/1234.
+
+* [#1080](https://github.com/jpmorganchase/modular/pull/1080)
+  [`4be2335`](https://github.com/jpmorganchase/modular/commit/4be2335a16297bef4ec84fa39422799b4c1a71d1)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Fix
+  `modular start` in ESBuild mode to reload local preview when code changes.
+
+- [#1083](https://github.com/jpmorganchase/modular/pull/1083)
+  [`dc462f6`](https://github.com/jpmorganchase/modular/commit/dc462f6ef12769240fc5310af41c1f2ea1cfdd86)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  rollup-plugin-postcss from 4.0.1 to 4.0.2
+
+* [#1113](https://github.com/jpmorganchase/modular/pull/1113)
+  [`ee44098`](https://github.com/jpmorganchase/modular/commit/ee44098b3c838faae080363c15ec140a4bfafa3d)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Reduced number of
+  plugin passes required to generate SVGs using SVGR in esbuild output.
+
+- [#1078](https://github.com/jpmorganchase/modular/pull/1078)
+  [`6764fe6`](https://github.com/jpmorganchase/modular/commit/6764fe68a7f61a23cc95a93fa525fec130cc330d)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  source-map-support from 0.5.20 to 0.5.21
+
+* [#1113](https://github.com/jpmorganchase/modular/pull/1113)
+  [`ee44098`](https://github.com/jpmorganchase/modular/commit/ee44098b3c838faae080363c15ec140a4bfafa3d)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Write files in memory
+  when running an esbuild server to fix issues with file paths outside of the
+  modular root.
+
+- [#1148](https://github.com/jpmorganchase/modular/pull/1148)
+  [`1deddf3`](https://github.com/jpmorganchase/modular/commit/1deddf3a5207e90e845a69b7d157276191bc4965)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump prettier from
+  2.4.0 to 2.5.1
+
+* [#1072](https://github.com/jpmorganchase/modular/pull/1072)
+  [`c6c418a`](https://github.com/jpmorganchase/modular/commit/c6c418a73befcb395f6e036402bfc75c0d7fd279)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  postcss-preset-env from 7.0.0 to 7.0.1
+
+- [#1126](https://github.com/jpmorganchase/modular/pull/1126)
+  [`11de5fd`](https://github.com/jpmorganchase/modular/commit/11de5fd697e7359606f95395c7fe2cb6961906a7)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump esbuild from
+  0.14.0 to 0.14.1
+
+* [#1124](https://github.com/jpmorganchase/modular/pull/1124)
+  [`1a26b8f`](https://github.com/jpmorganchase/modular/commit/1a26b8ffe7b13904661de6a4420d59e302c1c3ab)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump rollup from
+  2.60.1 to 2.60.2
+
+- [#1147](https://github.com/jpmorganchase/modular/pull/1147)
+  [`3303eb4`](https://github.com/jpmorganchase/modular/commit/3303eb47cf00afb2c6deadb4b77bd162b4e69160)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump esbuild from
+  0.14.1 to 0.14.2
+
+* [#1098](https://github.com/jpmorganchase/modular/pull/1098)
+  [`f6a7d8d`](https://github.com/jpmorganchase/modular/commit/f6a7d8da63a38e4ae4b0fbdb6947f6bb8b808933)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Open IDE
+  from React Error Overlay page links
+
+- [#1110](https://github.com/jpmorganchase/modular/pull/1110)
+  [`78e0aa8`](https://github.com/jpmorganchase/modular/commit/78e0aa8216d3ca3d9d1572369fb649bbbb418580)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump postcss from
+  8.4.1 to 8.4.4
+
+## 2.1.2
+
+### Patch Changes
+
+- [#1060](https://github.com/jpmorganchase/modular/pull/1060)
+  [`e525436`](https://github.com/jpmorganchase/modular/commit/e525436f7d451f5bc645997ad6a380acf32f9fac)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - - Root
+  yarn start/build aliases modular start/build in a CMRA repo
+  - If no argument given to `yarn / modular start`, provide the user with an
+    interactive selection
+
+* [#1033](https://github.com/jpmorganchase/modular/pull/1033)
+  [`d9f42fe`](https://github.com/jpmorganchase/modular/commit/d9f42fea338b0bf70968e4690bf2b5aa2ba108ff)
+  Thanks [@steveukx](https://github.com/steveukx)! - Add extraneous dependencies
+  and add lint rule to ensure dependencies always added
+
+- [#1069](https://github.com/jpmorganchase/modular/pull/1069)
+  [`6cb56cc`](https://github.com/jpmorganchase/modular/commit/6cb56ccccbd643fae2f400714d0e90646b125ee3)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Fix bug with
+  --watchAll=true as a default when running modular tests
+
+* [#1068](https://github.com/jpmorganchase/modular/pull/1068)
+  [`c13d5a6`](https://github.com/jpmorganchase/modular/commit/c13d5a66ca9c79845e7784dd6ff53198b10f8a65)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Fix for command
+  environment setup
+
+## 2.1.1
+
+### Patch Changes
+
+- [#1054](https://github.com/jpmorganchase/modular/pull/1054)
+  [`622e5a2`](https://github.com/jpmorganchase/modular/commit/622e5a25e65a23a1cdf9051f392609580fa2e713)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump browserslist
+  from 4.18.0 to 4.18.1
+
+* [#1055](https://github.com/jpmorganchase/modular/pull/1055)
+  [`fc096cc`](https://github.com/jpmorganchase/modular/commit/fc096cc6ab603640bbfc6ed1fa4e6fc0aace260b)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Fix
+  runtime entry point check to exclude sourcemap files (#1044)
+
+- [#1057](https://github.com/jpmorganchase/modular/pull/1057)
+  [`4c5c10c`](https://github.com/jpmorganchase/modular/commit/4c5c10c1d3e13b7a4dc25a8a4ee13c9fafd8eca0)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump esbuild from
+  0.13.13 to 0.13.14
+
+* [#1058](https://github.com/jpmorganchase/modular/pull/1058)
+  [`9b1d1b5`](https://github.com/jpmorganchase/modular/commit/9b1d1b58559d33c47b77d6663656b84b16b95537)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  @babel/preset-env from 7.16.0 to 7.16.4
+
+- [#1047](https://github.com/jpmorganchase/modular/pull/1047)
+  [`c182f56`](https://github.com/jpmorganchase/modular/commit/c182f568ff8a06bcfa6ad27c781b107d0a39afd4)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump browserslist
+  from 4.17.4 to 4.18.0
+
+* [#1046](https://github.com/jpmorganchase/modular/pull/1046)
+  [`dc3ad18`](https://github.com/jpmorganchase/modular/commit/dc3ad180a19364e06476d23d6ecceed19a00ee3f)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump rollup from
+  2.58.0 to 2.60.0
+
+- [#1055](https://github.com/jpmorganchase/modular/pull/1055)
+  [`fc096cc`](https://github.com/jpmorganchase/modular/commit/fc096cc6ab603640bbfc6ed1fa4e6fc0aace260b)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Fix
+  "modular start" build failure messaging when a browser version is not
+  supported in esbuild mode. Improve messaging around a "modular start failure"
+  (#1050)
+
+* [#1056](https://github.com/jpmorganchase/modular/pull/1056)
+  [`c6891df`](https://github.com/jpmorganchase/modular/commit/c6891df30e9ddef59b82bc1c22a9d1673b63f86d)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  postcss-preset-env from 6.7.0 to 7.0.0
+
+## 2.1.0
+
+### Minor Changes
+
+- [#1026](https://github.com/jpmorganchase/modular/pull/1026)
+  [`a7b15f7`](https://github.com/jpmorganchase/modular/commit/a7b15f7b843064edad7b0afec2c59df1e56a3138)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Allow the
+  `--help` and `--version` flags and the `init`, `help` and `convert` commands
+  to work without necessarily being run inside a modular directory.
+
+* [#1025](https://github.com/jpmorganchase/modular/pull/1025)
+  [`f30f7f4`](https://github.com/jpmorganchase/modular/commit/f30f7f49b0d25859e211e725aa66e2177753f00f)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Suppress
+  Yarn warnings by default when the `verbose` flag is not specified. This
+  changes the screen output of `create-modular-react-app` and `modular add`.
+
+### Patch Changes
+
+- [#1038](https://github.com/jpmorganchase/modular/pull/1038)
+  [`f7fd2e0`](https://github.com/jpmorganchase/modular/commit/f7fd2e045866a851803cb5ad9d6b3389b00335f6)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Add support for loading
+  .woff font files.
+
+* [#1017](https://github.com/jpmorganchase/modular/pull/1017)
+  [`d5ec923`](https://github.com/jpmorganchase/modular/commit/d5ec923a76334b3087c2190542461ecd2a42db65)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Upgrade
+  optimize-css-assets-webpack-plugin 6.0.1
+
+- [#1039](https://github.com/jpmorganchase/modular/pull/1039)
+  [`c83e180`](https://github.com/jpmorganchase/modular/commit/c83e1801f6947b09656bb9c43c163a499104cf06)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Add missing
+  dependencies required for esbuild-scripts.
+
+* [#1032](https://github.com/jpmorganchase/modular/pull/1032)
+  [`e7e3dee`](https://github.com/jpmorganchase/modular/commit/e7e3dee120276b10ce86c854830ad11b23bbe6c7)
+  Thanks [@joshwooding](https://github.com/joshwooding)! - Export
+  `tsconfig.json`
+
+- [#1022](https://github.com/jpmorganchase/modular/pull/1022)
+  [`d670354`](https://github.com/jpmorganchase/modular/commit/d670354b081a2abd7533d1561afb5085b7769935)
+  Thanks [@steveukx](https://github.com/steveukx)! - Use non-zero exit codes to
+  determine child process failures.
+
+* [#1030](https://github.com/jpmorganchase/modular/pull/1030)
+  [`f7de18e`](https://github.com/jpmorganchase/modular/commit/f7de18ef6f949986f66ff36319bd2ef7eb5f71c8)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump esbuild from
+  0.13.8 to 0.13.13
+
+## 2.0.0
+
+### Major Changes
+
+- [#609](https://github.com/jpmorganchase/modular/pull/609)
+  [`be2d35e`](https://github.com/jpmorganchase/modular/commit/be2d35e9b12a63783bee35a4cae1d3557d64b3ac)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Remove compiling
+  binaries from "bin" field in package.json.
+
+* [#918](https://github.com/jpmorganchase/modular/pull/918)
+  [`9d8c2f6`](https://github.com/jpmorganchase/modular/commit/9d8c2f62c3db319feac877f526fe37a46dfa8617)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Remove programatic API.
+
+- [#908](https://github.com/jpmorganchase/modular/pull/908)
+  [`226ad45`](https://github.com/jpmorganchase/modular/commit/226ad45251ab1955bd955fac97407e263af9de76)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Add exports fields to
+  all packages.
+
+### Minor Changes
+
+- [#986](https://github.com/jpmorganchase/modular/pull/986)
+  [`5a4c8e7`](https://github.com/jpmorganchase/modular/commit/5a4c8e7325e46565757669ae567c954c8b4885f5)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Parity of esbuild size
+  logging.
+
+* [#1004](https://github.com/jpmorganchase/modular/pull/1004)
+  [`5a0b10f`](https://github.com/jpmorganchase/modular/commit/5a0b10fd45be2478cb62e2a6a250fc691bf2b059)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Add support-map-support
+  for easier user debugging if there is an error.
+
+### Patch Changes
+
+- [#1001](https://github.com/jpmorganchase/modular/pull/1001)
+  [`f53384f`](https://github.com/jpmorganchase/modular/commit/f53384f41a17f960d27d1c71c448786a39df5f15)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  @babel/preset-env from 7.15.8 to 7.16.0
+
+* [#995](https://github.com/jpmorganchase/modular/pull/995)
+  [`d62f380`](https://github.com/jpmorganchase/modular/commit/d62f380d2870f1989b72547f29feb8b366b0012d)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  @babel/preset-typescript from 7.15.0 to 7.16.0
+
+- [#992](https://github.com/jpmorganchase/modular/pull/992)
+  [`df09756`](https://github.com/jpmorganchase/modular/commit/df0975699605a208abc769e2fd2b0c39a2dd520d)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  @babel/preset-react from 7.14.5 to 7.16.0
+
+* [#999](https://github.com/jpmorganchase/modular/pull/999)
+  [`ec78345`](https://github.com/jpmorganchase/modular/commit/ec78345b280733336deac62009d7d5060cc934b0)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  @babel/plugin-proposal-class-properties from 7.14.5 to 7.16.0
+
+- [#1000](https://github.com/jpmorganchase/modular/pull/1000)
+  [`3799d67`](https://github.com/jpmorganchase/modular/commit/3799d678870c6185949b59b8cb84a980fc281053)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  @babel/code-frame from 7.15.8 to 7.16.0
+
+* [#990](https://github.com/jpmorganchase/modular/pull/990)
+  [`8ae4bb4`](https://github.com/jpmorganchase/modular/commit/8ae4bb468d0774b1fdab4122d5d86b0e86fb3f9b)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Fix bug where async
+  imports in packages would mean that builds would fail to due not found in
+  chunk validations.
+
+- [#989](https://github.com/jpmorganchase/modular/pull/989)
+  [`2f0bd5b`](https://github.com/jpmorganchase/modular/commit/2f0bd5b3b091412c9dafb9a32f547ea5413db0a5)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Remove setupEnv when
+  running tests
+
+## 1.6.0
+
+### Minor Changes
+
+- [#963](https://github.com/jpmorganchase/modular/pull/963)
+  [`e44284a`](https://github.com/jpmorganchase/modular/commit/e44284a51ebf9038270d78fb339d45de58cb8254)
+  Thanks [@joshwooding](https://github.com/joshwooding)! - Support svg urls in
+  css files
+
+### Patch Changes
+
+- [#952](https://github.com/jpmorganchase/modular/pull/952)
+  [`ae85dc8`](https://github.com/jpmorganchase/modular/commit/ae85dc87bf5ecd2aed3ab2976a1abce71d890392)
+  Thanks [@joshwooding](https://github.com/joshwooding)! - Fix invalid
+  package.json main and module paths in library builds
+
 ## 1.5.0
 
 ### Minor Changes

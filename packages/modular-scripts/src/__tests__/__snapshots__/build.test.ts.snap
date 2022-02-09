@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WHEN building with preserve modules SHOULD create the correct index.js 1`] = `
+"async function runInAsync() {
+  const { runAsync } = await import('./runAsync.js');
+  return runAsync();
+}
+
+export { runInAsync as default };
+//# sourceMappingURL=index.js.map
+"
+`;
+
+exports[`WHEN building with preserve modules SHOULD create the correct runAsync.js 1`] = `
+"function runAsync() {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log(\\"done\\");
+      resolve();
+    }, 1e3);
+  });
+}
+
+export { runAsync };
+//# sourceMappingURL=runAsync.js.map
+"
+`;

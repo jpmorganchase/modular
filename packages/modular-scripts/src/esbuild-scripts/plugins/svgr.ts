@@ -1,64 +1,111 @@
 import * as fs from 'fs-extra';
 import esbuild from 'esbuild';
+import { createRequire } from 'module';
 
-// @ts-ignore
-import svgr from '@svgr/core';
+import * as svgr from '@svgr/core';
 import path from 'path';
+import getModularRoot from '../../utils/getModularRoot';
+
+const svgrOptions: svgr.Config = {
+  template(variables, { tpl }) {
+    return tpl`
+  ${variables.imports};
+  
+  ${variables.interfaces};
+  
+  export function ${variables.componentName}(${variables.props}) {
+    return (
+      ${variables.jsx}
+    );
+  }
+  `;
+  },
+};
 
 function createPlugin(): esbuild.Plugin {
   const plugin: esbuild.Plugin = {
     name: 'svgr',
     setup(build) {
-      build.onResolve({ filter: /@svgr:.*/ }, (args) => {
-        const pathName = path.join(
-          args.resolveDir,
-          args.path.slice('@svgr:'.length),
-        );
-        return {
-          path: pathName,
-          namespace: 'svgr',
-        };
-      });
+      const modularRoot = getModularRoot();
 
-      build.onLoad({ filter: /.*/, namespace: 'svgr' }, async (args) => {
-        const contents = await svgr(await fs.readFile(args.path, 'utf8'));
-        return {
-          contents,
-          resolveDir: path.dirname(args.path),
-          loader: 'jsx',
-        };
-      });
+      const fileContent = new Map<string, string>();
+
+      function readModularContent(pathName: string) {
+        if (fileContent.has(pathName)) {
+          return fileContent.get(pathName) as string;
+        } else {
+          const joinedPath = path.join(modularRoot, pathName);
+          const content = fs.readFileSync(joinedPath, 'utf8');
+          fileContent.set(pathName, content);
+          return Promise.resolve(content);
+        }
+      }
 
       build.onResolve({ filter: /@svgurl:.*/ }, (args) => {
-        const pathName = path.join(
-          args.resolveDir,
-          args.path.slice('@svgurl:'.length),
-        );
         return {
-          path: pathName,
+          pluginData: {
+            ...args,
+          },
+          path: args.path.slice('@svgurl:'.length),
           namespace: 'svgurl',
         };
       });
 
       build.onLoad({ filter: /.*/, namespace: 'svgurl' }, async (args) => {
-        const contents = await fs.readFile(args.path, 'utf8');
+        const { resolveDir } = args.pluginData as esbuild.OnResolveArgs;
+
+        const contents = await readModularContent(args.path);
+
         return {
+          resolveDir,
           contents,
           loader: 'file',
         };
       });
 
-      build.onLoad({ filter: /\.svg$/, namespace: 'file' }, (args) => {
-        const resolveDir = path.dirname(args.path);
-        const relativePath = path.relative(resolveDir, args.path);
+      build.onResolve({ filter: /\.svg$/, namespace: 'file' }, (args) => {
+        const resolver = createRequire(args.importer);
+        const resolvedPathName = resolver.resolve(args.path);
+
         return {
-          resolveDir,
-          contents: `
-                        export { default } from "@svgurl:${relativePath}";
-                        export { default as ReactComponent } from "@svgr:${relativePath}";
-                    `,
-          loader: 'jsx',
+          pluginData: {
+            ...args,
+          },
+          path: resolvedPathName,
         };
+      });
+
+      build.onLoad({ filter: /\.svg$/, namespace: 'file' }, async (args) => {
+        const pluginData = args.pluginData as esbuild.OnResolveArgs;
+        const pathName = path.relative(modularRoot, args.path);
+
+        const contents = await readModularContent(pathName);
+
+        if (pluginData.kind === 'url-token') {
+          return {
+            resolveDir: pluginData.resolveDir,
+            contents,
+            loader: 'dataurl',
+          };
+        } else {
+          const transformedContents: string = await svgr.transform(
+            contents,
+            svgrOptions,
+            {
+              componentName: 'ReactComponent',
+            },
+          );
+
+          return {
+            resolveDir: pluginData.resolveDir,
+            contents: `
+            export { default } from "@svgurl:${pathName}";
+            
+            ${transformedContents}
+            `,
+            loader: 'jsx',
+          };
+        }
       });
     },
   };

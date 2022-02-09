@@ -1,4 +1,4 @@
-import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
+import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import * as path from 'path';
 import fs from 'fs-extra';
 import findUp from 'find-up';
@@ -16,6 +16,46 @@ type ModularPackageJson = PackageJson & {
     type: PackageType;
   };
 };
+
+function getWorkspaces(): Array<[string, { location: string }]> {
+  const { stdout: yarnVersion } = execa.sync('yarnpkg', ['--version']);
+
+  if (yarnVersion.startsWith('1.')) {
+    const output = execa.sync('yarnpkg', ['workspaces', 'info'], {
+      all: true,
+      reject: false,
+      cwd: modularRootDir,
+      cleanup: true,
+    });
+
+    const workspaces: Array<[string, { location: string }]> = Object.entries(
+      JSON.parse(output.stdout),
+    );
+
+    return workspaces;
+  }
+
+  const output = execa.sync('yarnpkg', ['workspaces', 'list', '--json'], {
+    all: true,
+    reject: false,
+    cwd: modularRootDir,
+    cleanup: true,
+  });
+
+  const workspaces = output.stdout
+    .split(/\r?\n/)
+    .reduce((acc, workspaceString) => {
+      const workspaceObject = JSON.parse(workspaceString) as {
+        name: string;
+        location: string;
+      };
+      acc.push([workspaceObject.name, workspaceObject]);
+
+      return acc;
+    }, [] as Array<[string, { location: string }]>);
+
+  return workspaces;
+}
 
 const modularRoot = findUp.sync((directory) => {
   const packageJsonPath = path.join(directory, 'package.json');
@@ -35,16 +75,7 @@ if (!modularRoot) {
 const packageNames = [];
 
 const modularRootDir = path.dirname(modularRoot);
-const output = execa.sync('yarnpkg', ['workspaces', 'info'], {
-  all: true,
-  reject: false,
-  cwd: modularRootDir,
-  cleanup: true,
-});
-
-const workspaces: Array<[string, { location: string }]> = Object.entries(
-  JSON.parse(output.stdout),
-);
+const workspaces = getWorkspaces();
 
 for (const [name, { location }] of workspaces) {
   const pkgJson = fs.readJSONSync(

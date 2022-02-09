@@ -1,5 +1,59 @@
 # eslint-config-modular-app
 
+## 2.0.2
+
+### Patch Changes
+
+- [#1033](https://github.com/jpmorganchase/modular/pull/1033)
+  [`d9f42fe`](https://github.com/jpmorganchase/modular/commit/d9f42fea338b0bf70968e4690bf2b5aa2ba108ff)
+  Thanks [@steveukx](https://github.com/steveukx)! - Add extraneous dependencies
+  and add lint rule to ensure dependencies always added
+
+## 2.0.1
+
+### Patch Changes
+
+- [#1034](https://github.com/jpmorganchase/modular/pull/1034)
+  [`51ddf73`](https://github.com/jpmorganchase/modular/commit/51ddf73c9e6a10f30077fed65da343ab49ef26fc)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  eslint-plugin-import from 2.25.2 to 2.25.3
+
+* [#1028](https://github.com/jpmorganchase/modular/pull/1028)
+  [`cfc537a`](https://github.com/jpmorganchase/modular/commit/cfc537a5ad6d5f5590d54d7d98a200a2e15067f3)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  eslint-plugin-react-hooks from 4.2.0 to 4.3.0
+
+- [#1027](https://github.com/jpmorganchase/modular/pull/1027)
+  [`919d34c`](https://github.com/jpmorganchase/modular/commit/919d34c6df58d61dfce2fc907b8db5bcb0b42988)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  @babel/eslint-parser from 7.16.0 to 7.16.3
+
+* [#1035](https://github.com/jpmorganchase/modular/pull/1035)
+  [`de004df`](https://github.com/jpmorganchase/modular/commit/de004df66e2d00960add70c4da89b148e5e9768a)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  eslint-plugin-jsx-a11y from 6.4.1 to 6.5.1
+
+- [#1036](https://github.com/jpmorganchase/modular/pull/1036)
+  [`0d7a6ef`](https://github.com/jpmorganchase/modular/commit/0d7a6ef4816e19be250252c45c424874973af163)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  eslint-plugin-react from 7.26.1 to 7.27.0
+
+## 2.0.0
+
+### Major Changes
+
+- [#908](https://github.com/jpmorganchase/modular/pull/908)
+  [`226ad45`](https://github.com/jpmorganchase/modular/commit/226ad45251ab1955bd955fac97407e263af9de76)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Add exports fields to
+  all packages.
+
+### Patch Changes
+
+- [#994](https://github.com/jpmorganchase/modular/pull/994)
+  [`3b9af03`](https://github.com/jpmorganchase/modular/commit/3b9af03c54b3a9bb2a42434b0613ce9872c9e814)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  @babel/eslint-parser from 7.15.8 to 7.16.0
+
 ## 1.0.11
 
 ### Patch Changes

@@ -9,11 +9,17 @@ packages/sample-esbuild-app
 packages/sample-view
 packages/sample-package
 packages/nested
+packages/sample-library-package
+packages/sample-depending-package
+
+# example app
+packages/esbuild-app
 
 # created by tests in modular-views.macro
 packages/view-1
 packages/view-2
 packages/scoped
+packages/node-env-app
 
 
 # Build output

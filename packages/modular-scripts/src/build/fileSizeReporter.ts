@@ -1,89 +1,95 @@
-'use strict';
-
-import * as fs from 'fs-extra';
 import * as path from 'path';
 import chalk from 'chalk';
 import filesize from 'filesize';
-import recursive from 'recursive-readdir';
 import stripAnsi from 'strip-ansi';
-import { sync as gzipSize } from 'gzip-size';
-import type { Stats } from 'webpack';
 import * as logger from '../utils/logger';
 
-interface WebpackStat {
-  root: string;
-  sizes: Record<string, number>;
+export interface Asset {
+  folder: string;
+  name: string;
+  size: number;
+  normalizedName: string;
 }
 
-function canReadAsset(asset: string) {
-  return (
-    /\.(js|css)$/.test(asset) &&
-    !/service-worker\.js/.test(asset) &&
-    !/precache-manifest\.[0-9a-f]+\.js/.test(asset)
-  );
+interface LabelledAsset extends Asset {
+  sizeLabel: string;
+  differenceLabel: string;
 }
+
+// These sizes are pretty large. We'll warn for bundles exceeding them.
+const WARN_AFTER_BUNDLE_GZIP_SIZE = 512 * 1024;
+const WARN_AFTER_CHUNK_GZIP_SIZE = 1024 * 1024;
+
+// Input: 1024, 2048
+// Output: "(+1 KB)"
+const FIFTY_KILOBYTES = 1024 * 50;
 
 // Prints a detailed summary of build files.
 export function printFileSizesAfterBuild(
-  webpackStats: Stats.ToJsonOutput,
-  previousSizeMap: WebpackStat,
-  buildFolder: string,
-  maxBundleGzipSize: number,
-  maxChunkGzipSize: number,
+  assets: Asset[],
+  previousSizeMap: Record<string, number | undefined>,
 ) {
-  const root = previousSizeMap.root;
-  const sizes = previousSizeMap.sizes;
-
-  const assets =
-    webpackStats.assets
-      ?.filter((asset: { name: string }) => canReadAsset(asset.name))
-      .map((asset: { name: string }) => {
-        const fileContents = fs.readFileSync(path.join(root, asset.name));
-        const size = gzipSize(fileContents);
-        const previousSize = sizes[removeFileNameHash(root, asset.name)];
-        const difference = getDifferenceLabel(size, previousSize);
-        return {
-          folder: path.join(
-            path.basename(buildFolder),
-            path.dirname(asset.name),
-          ),
-          name: path.basename(asset.name),
-          size: size,
-          sizeLabel:
-            filesize(size) + (difference ? ' (' + difference + ')' : ''),
-        };
-      })
-      .sort((a, b) => b.size - a.size) || [];
+  const sizedAssets = assets
+    .sort((a, b) => b.size - a.size)
+    .map<LabelledAsset>((asset) => {
+      const previousSize = previousSizeMap[asset.normalizedName];
+      const differenceLabel = getDifferenceLabel(asset.size, previousSize);
+      return {
+        ...asset,
+        sizeLabel: filesize(asset.size),
+        differenceLabel,
+      };
+    });
 
   const longestSizeLabelLength = Math.max.apply(
     null,
-    assets.map((a) => stripAnsi(a.sizeLabel).length),
+    sizedAssets.map((a) => stripAnsi(a.sizeLabel).length),
+  );
+
+  const longestDifferenceLabelLength = Math.max.apply(
+    null,
+    sizedAssets.map((a) => stripAnsi(a.differenceLabel).length),
   );
 
   let suggestBundleSplitting = false;
-  assets.forEach((asset) => {
+
+  logger.log('File sizes after gzip:');
+  logger.log();
+  sizedAssets.forEach((asset) => {
     let sizeLabel = asset.sizeLabel;
-    let sizeLength = stripAnsi(sizeLabel).length;
+    const sizeLength = stripAnsi(sizeLabel).length;
     if (sizeLength < longestSizeLabelLength) {
-      let rightPadding = ' '.repeat(longestSizeLabelLength - sizeLength);
+      const rightPadding = ' '.repeat(longestSizeLabelLength - sizeLength);
       sizeLabel += rightPadding;
     }
-    let isMainBundle = asset.name.indexOf('main.') === 0;
-    let maxRecommendedSize = isMainBundle
-      ? maxBundleGzipSize
-      : maxChunkGzipSize;
-    let isLarge = maxRecommendedSize && asset.size > maxRecommendedSize;
-    if (isLarge && path.extname(asset.name) === '.js') {
-      suggestBundleSplitting = true;
+
+    let differenceLabel = asset.differenceLabel;
+    const differenceLength = stripAnsi(differenceLabel).length;
+    if (differenceLength < longestDifferenceLabelLength) {
+      const rightPadding = ' '.repeat(
+        longestDifferenceLabelLength - differenceLength,
+      );
+      differenceLabel += rightPadding;
     }
+
+    const isMainBundle = asset.name.indexOf('main.') === 0;
+    const maxRecommendedSize = isMainBundle
+      ? WARN_AFTER_BUNDLE_GZIP_SIZE
+      : WARN_AFTER_CHUNK_GZIP_SIZE;
+
+    const isLarge = maxRecommendedSize && asset.size > maxRecommendedSize;
+
     logger.log(
       '  ' +
         (isLarge ? chalk.yellow(sizeLabel) : sizeLabel) +
+        '  ' +
+        differenceLabel +
         '  ' +
         chalk.dim(asset.folder + path.sep) +
         chalk.cyan(asset.name),
     );
   });
+  logger.log();
 
   if (suggestBundleSplitting) {
     logger.log();
@@ -103,53 +109,31 @@ export function printFileSizesAfterBuild(
   }
 }
 
-function removeFileNameHash(buildFolder: string, fileName: string): string {
-  return fileName
-    .replace(buildFolder, '')
-    .replace(/\\/g, '/')
-    .replace(
-      /\/?(.*)(\.[0-9a-f]+)(\.chunk)?(\.js|\.css)/,
-      (match, p1, p2, p3, p4) => p1 + p4,
-    );
-}
-
-// Input: 1024, 2048
-// Output: "(+1 KB)"
-function getDifferenceLabel(currentSize: number, previousSize: number) {
-  let FIFTY_KILOBYTES = 1024 * 50;
-  let difference = currentSize - previousSize;
-  let fileSize = !Number.isNaN(difference) ? filesize(difference) : 0;
-  if (difference >= FIFTY_KILOBYTES) {
-    return chalk.red('+' + fileSize);
-  } else if (difference < FIFTY_KILOBYTES && difference > 0) {
-    return chalk.yellow('+' + fileSize);
-  } else if (difference < 0) {
-    return chalk.green(fileSize);
+function getDifferenceLabel(
+  currentSize: number,
+  previousSize: number | undefined,
+) {
+  if (previousSize) {
+    const difference = currentSize - previousSize;
+    const fileSize = !Number.isNaN(difference) ? filesize(difference) : 0;
+    if (difference >= FIFTY_KILOBYTES) {
+      return chalk.red('(+' + fileSize + ')');
+    } else if (difference < FIFTY_KILOBYTES && difference > 0) {
+      return chalk.yellow('(+' + fileSize + ')');
+    } else if (difference < 0) {
+      return chalk.green('(-' + fileSize + ')');
+    } else {
+      return chalk.dim.grey('(unchanged)');
+    }
   } else {
-    return '';
+    return chalk.dim.green('(new)');
   }
 }
 
-export function measureFileSizesBeforeBuild(
-  buildFolder: string,
-): Promise<WebpackStat> {
-  return new Promise<WebpackStat>((resolve) => {
-    recursive(buildFolder, (err: Error, fileNames: string[]) => {
-      let sizes: Record<string, number> = {};
-      if (!err && fileNames) {
-        sizes = fileNames
-          .filter(canReadAsset)
-          .reduce<Record<string, number>>((memo, fileName) => {
-            let contents = fs.readFileSync(fileName);
-            let key = removeFileNameHash(buildFolder, fileName);
-            memo[key] = gzipSize(contents);
-            return memo;
-          }, {});
-      }
-      resolve({
-        root: buildFolder,
-        sizes: sizes,
-      });
-    });
-  });
+export function canReadAsset(asset: string) {
+  return (
+    /\.(js|css)$/.test(asset) &&
+    !/service-worker\.js/.test(asset) &&
+    !/precache-manifest\.[0-9a-f]+\.js/.test(asset)
+  );
 }

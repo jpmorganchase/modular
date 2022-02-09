@@ -3,7 +3,7 @@ import * as path from 'path';
 import { config as loadConfig } from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
 
-import getModularRoot from './getModularRoot';
+import { findModularRoot } from './getModularRoot';
 
 export async function setupEnvForDirectory(dirName: string): Promise<void> {
   const resolveRelative = (relativePath: string) =>
@@ -43,10 +43,18 @@ export async function setupEnvForDirectory(dirName: string): Promise<void> {
 export default async function setupEnv(
   env: typeof process.env.NODE_ENV,
 ): Promise<void> {
+  const modularRoot = findModularRoot();
+
   // setup verbose Logging
   // @ts-ignore
-  process.env.MODULAR_LOGGER_DEBUG =
-    process.env.MODULAR_LOGGER_DEBUG || process.argv.includes('--verbose');
+  if (process.env.MODULAR_LOGGER_DEBUG || process.argv.includes('--verbose')) {
+    // @ts-ignore
+    process.env.MODULAR_LOGGER_DEBUG = 'true';
+  }
+
+  if (!modularRoot) {
+    return;
+  }
 
   // We support resolving modules according to `NODE_PATH`.
   // This lets you use absolute paths in imports inside large monorepos:
@@ -60,7 +68,7 @@ export default async function setupEnv(
   process.env.NODE_PATH = (process.env.NODE_PATH || '')
     .split(path.delimiter)
     .filter((folder) => folder && !path.isAbsolute(folder))
-    .map((folder) => path.resolve(getModularRoot(), folder))
+    .map((folder) => path.resolve(modularRoot, folder))
     .join(path.delimiter);
 
   // @ts-ignore
@@ -74,5 +82,5 @@ export default async function setupEnv(
     process.env.BROWSERSLIST_ENV ||
     (process.env.NODE_ENV === 'test' ? 'production' : process.env.NODE_ENV);
 
-  await setupEnvForDirectory(getModularRoot());
+  await setupEnvForDirectory(modularRoot);
 }

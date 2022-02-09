@@ -1,5 +1,56 @@
 # create-modular-react-app
 
+## 2.1.2
+
+### Patch Changes
+
+- [#1166](https://github.com/jpmorganchase/modular/pull/1166)
+  [`2821fa2`](https://github.com/jpmorganchase/modular/commit/2821fa257d9c393ef6dd003ec14565d2f2ce075e)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Restrict
+  typescript range for better compatibility with typescript-eslint
+
+## 2.1.1
+
+### Patch Changes
+
+- [#1060](https://github.com/jpmorganchase/modular/pull/1060)
+  [`e525436`](https://github.com/jpmorganchase/modular/commit/e525436f7d451f5bc645997ad6a380acf32f9fac)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - - Root
+  yarn start/build aliases modular start/build in a CMRA repo
+  - If no argument given to `yarn / modular start`, provide the user with an
+    interactive selection
+
+* [#1033](https://github.com/jpmorganchase/modular/pull/1033)
+  [`d9f42fe`](https://github.com/jpmorganchase/modular/commit/d9f42fea338b0bf70968e4690bf2b5aa2ba108ff)
+  Thanks [@steveukx](https://github.com/steveukx)! - Add extraneous dependencies
+  and add lint rule to ensure dependencies always added
+
+## 2.1.0
+
+### Minor Changes
+
+- [#1025](https://github.com/jpmorganchase/modular/pull/1025)
+  [`f30f7f4`](https://github.com/jpmorganchase/modular/commit/f30f7f49b0d25859e211e725aa66e2177753f00f)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Suppress
+  Yarn warnings by default when the `verbose` flag is not specified. This
+  changes the screen output of `create-modular-react-app` and `modular add`.
+
+## 2.0.0
+
+### Major Changes
+
+- [#908](https://github.com/jpmorganchase/modular/pull/908)
+  [`226ad45`](https://github.com/jpmorganchase/modular/commit/226ad45251ab1955bd955fac97407e263af9de76)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Add exports fields to
+  all packages.
+
+### Minor Changes
+
+- [#991](https://github.com/jpmorganchase/modular/pull/991)
+  [`82ff280`](https://github.com/jpmorganchase/modular/commit/82ff2806a7aeb426654793ce6b5fd98384e2ccd4)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Add --empty flag and
+  improve error handling.
+
 ## 1.1.3
 
 ### Patch Changes
