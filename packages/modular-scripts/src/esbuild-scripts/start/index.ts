@@ -31,6 +31,8 @@ import getHost from './utils/getHost';
 import getPort from './utils/getPort';
 import sanitizeMetafile, { sanitizeFileName } from '../utils/sanitizeMetafile';
 import getModularRoot from '../../utils/getModularRoot';
+import { createRewriteDependenciesPlugin } from '../plugins/rewriteDependenciesPlugin';
+import type { Dependency } from '@schemastore/package';
 
 const RUNTIME_DIR = path.join(__dirname, 'runtime');
 class DevServer {
@@ -58,11 +60,23 @@ class DevServer {
   private urls: InstructionURLS;
   private port: number;
 
-  constructor(paths: Paths, urls: InstructionURLS, host: string, port: number) {
+  private isApp: boolean; // TODO maybe it's better to pass the type here
+  private dependencies: Dependency;
+
+  constructor(
+    paths: Paths,
+    urls: InstructionURLS,
+    host: string,
+    port: number,
+    isApp: boolean,
+    dependencies: Dependency,
+  ) {
     this.paths = paths;
     this.urls = urls;
     this.host = host;
     this.port = port;
+    this.isApp = isApp;
+    this.dependencies = dependencies;
 
     this.firstCompilePromise = new Promise<void>((resolve) => {
       this.firstCompilePromiseResolve = resolve;
@@ -159,13 +173,20 @@ class DevServer {
   });
 
   baseEsbuildConfig = memoize(() => {
-    return createEsbuildConfig(this.paths, {
-      write: false,
-      minify: false,
-      entryNames: 'static/js/[name]',
-      chunkNames: 'static/js/[name]',
-      assetNames: 'static/media/[name]',
-    });
+    return createEsbuildConfig(
+      this.paths,
+      {
+        write: false,
+        minify: false,
+        entryNames: 'static/js/[name]',
+        chunkNames: 'static/js/[name]',
+        assetNames: 'static/media/[name]',
+        plugins: this.isApp
+          ? undefined
+          : [createRewriteDependenciesPlugin(this.dependencies)],
+      },
+      this.isApp ? 'app' : 'view',
+    );
   });
 
   private runEsbuild = async () => {
@@ -277,7 +298,11 @@ class DevServer {
   };
 }
 
-export default async function start(target: string): Promise<void> {
+export default async function start(
+  target: string,
+  isApp: boolean,
+  packageDependencies: Dependency,
+): Promise<void> {
   const paths = await createPaths(target);
   const host = getHost();
   const port = await getPort(host);
@@ -287,7 +312,14 @@ export default async function start(target: string): Promise<void> {
     port,
     paths.publicUrlOrPath.slice(0, -1),
   );
-  const devServer = new DevServer(paths, urls, host, port);
+  const devServer = new DevServer(
+    paths,
+    urls,
+    host,
+    port,
+    isApp,
+    packageDependencies,
+  );
 
   const server = await devServer.start();
 

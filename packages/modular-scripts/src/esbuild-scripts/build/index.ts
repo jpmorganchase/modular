@@ -13,8 +13,8 @@ import { createIndex } from '../api';
 import createEsbuildConfig from '../config/createEsbuildConfig';
 import getModularRoot from '../../utils/getModularRoot';
 import sanitizeMetafile from '../utils/sanitizeMetafile';
-import type { Dependency } from '@schemastore/package';
 import { createRewriteDependenciesPlugin } from '../plugins/rewriteDependenciesPlugin';
+import type { Dependency } from '@schemastore/package';
 
 export default async function build(
   target: string,
