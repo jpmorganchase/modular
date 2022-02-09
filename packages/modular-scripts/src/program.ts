@@ -262,4 +262,17 @@ program
     await rename(oldPackageName, newPackageName);
   });
 
+interface ServeOptions {
+  port: string;
+}
+
+program
+  .command('serve <target>')
+  .description('Serves a pre-build modular app')
+  .option('--port <value>', 'Port to serve on', '3000')
+  .action(async (packageName: string, options: ServeOptions) => {
+    const { default: serve } = await import('./serve');
+    await serve(packageName, parseInt(options.port, 10));
+  });
+
 export { program };

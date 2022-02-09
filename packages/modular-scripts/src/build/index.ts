@@ -153,7 +153,7 @@ async function buildApp(target: string) {
   printFileSizesAfterBuild(assets, previousFileSizes);
 
   printHostingInstructions(
-    fs.readJSON(paths.appPackageJson),
+    target,
     paths.publicUrlOrPath,
     paths.publicUrlOrPath,
     paths.appBuild,
