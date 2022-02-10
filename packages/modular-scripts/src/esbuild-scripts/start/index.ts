@@ -143,9 +143,14 @@ class DevServer {
   }
 
   shutdown = () => {
-    this.server?.close();
-    this.ws.getWss().close();
     this.esbuild?.stop?.();
+    this.ws.getWss().close();
+    this.server?.close();
+    process.nextTick(() => {
+      this.ws.getWss().clients.forEach((socket) => {
+        socket.terminate();
+      });
+    });
   };
 
   private hostRuntime = memoize(async () => {
@@ -246,7 +251,15 @@ class DevServer {
     if (this.isApp) {
       res.end(await createIndex(this.paths, this.metafile, this.env.raw, true));
     } else {
-      res.end(indexFile);
+      res.end(
+        await createIndex(
+          this.paths,
+          this.metafile,
+          this.env.raw,
+          true,
+          indexFile,
+        ),
+      );
     }
   };
 

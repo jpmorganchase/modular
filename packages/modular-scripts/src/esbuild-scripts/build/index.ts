@@ -9,7 +9,7 @@ import type { Paths } from '../../utils/createPaths';
 import * as logger from '../../utils/logger';
 import { formatError } from '../utils/formatError';
 
-import { createIndex } from '../api';
+import { createIndex, getEntryPoint } from '../api';
 import createEsbuildConfig from '../config/createEsbuildConfig';
 import getModularRoot from '../../utils/getModularRoot';
 import sanitizeMetafile from '../utils/sanitizeMetafile';
@@ -75,49 +75,46 @@ export default async function build(
     }
   }
 
-  if (isApp) {
-    // Create index from public directory
-    const html = await createIndex(paths, result, env.raw, false);
-    await fs.writeFile(
-      path.join(paths.appBuild, 'index.html'),
-      minimize.minify(html, {
-        html5: true,
-        collapseBooleanAttributes: true,
-        collapseWhitespace: true,
-        collapseInlineTagWhitespace: true,
-        decodeEntities: true,
-        minifyCSS: true,
-        minifyJS: true,
-        removeAttributeQuotes: false,
-        removeComments: true,
-        removeTagWhitespace: true,
-      }),
-    );
-  } else {
-    // Create synthetic index and trampoline esm
-    const jsEntrypointPath = Object.keys(result.outputs).find((assetName) =>
-      assetName.endsWith('.js'),
-    );
+  const html = await createIndex(
+    paths,
+    result,
+    env.raw,
+    false,
+    isApp ? undefined : indexFile,
+  );
+  await fs.writeFile(
+    path.join(paths.appBuild, 'index.html'),
+    minimize.minify(html, {
+      html5: true,
+      collapseBooleanAttributes: true,
+      collapseWhitespace: true,
+      collapseInlineTagWhitespace: true,
+      decodeEntities: true,
+      minifyCSS: true,
+      minifyJS: true,
+      removeAttributeQuotes: false,
+      removeComments: true,
+      removeTagWhitespace: true,
+    }),
+  );
 
-    if (!jsEntrypointPath) {
+  if (!isApp) {
+    // Create and write trampoline file
+    const jsEntryPoint = getEntryPoint(paths, result, '.js');
+    if (!jsEntryPoint) {
       throw new Error("Can't find main entrypoint after building");
     }
-
     const trampolineBuildResult = await createViewTrampoline(
-      path.basename(jsEntrypointPath),
+      path.basename(jsEntryPoint),
       paths.appSrc,
       packageDependencies,
       browserTarget,
     );
-
     const trampolinePath = `${paths.appBuild}/static/js/_trampoline.js`;
-    await Promise.all([
-      fs.writeFile(`${paths.appBuild}/index.html`, indexFile),
-      fs.writeFile(
-        trampolinePath,
-        trampolineBuildResult.outputFiles[0].contents,
-      ),
-    ]);
+    await fs.writeFile(
+      trampolinePath,
+      trampolineBuildResult.outputFiles[0].contents,
+    );
   }
 
   return result;
