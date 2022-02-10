@@ -1,13 +1,9 @@
-import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
-
 import chalk from 'chalk';
-import * as fs from 'fs';
-import globalModules from 'global-modules';
 
 import * as logger from '../utils/logger';
 
 function printHostingInstructions(
-  appPackage: PackageJson,
+  target: string,
   publicUrl: string,
   publicPath: string,
   buildFolder: string,
@@ -15,12 +11,7 @@ function printHostingInstructions(
   if (publicUrl && publicUrl.includes('.github.io/')) {
     // "homepage": "http://user.github.io/project"
     const publicPathname = new URL(publicPath).pathname;
-    const hasDeployScript =
-      typeof appPackage.scripts !== 'undefined' &&
-      typeof appPackage.scripts.deploy !== 'undefined';
     printBaseMessage(buildFolder, publicPathname);
-
-    printDeployInstructions(publicUrl, hasDeployScript);
   } else if (publicPath !== '/') {
     // "homepage": "http://mywebsite.com/project"
     printBaseMessage(buildFolder, publicPath);
@@ -29,7 +20,7 @@ function printHostingInstructions(
     //   or no homepage
     printBaseMessage(buildFolder, publicUrl);
 
-    printStaticServerInstructions(buildFolder);
+    printStaticServerInstructions(target);
   }
   logger.log();
   logger.log('Find out more about deployment here:');
@@ -64,48 +55,11 @@ function printBaseMessage(buildFolder: string, hostingLocation: string) {
   logger.log(`The ${chalk.cyan(buildFolder)} folder is ready to be deployed.`);
 }
 
-function printDeployInstructions(publicUrl: string, hasDeployScript: boolean) {
-  logger.log(`To publish it at ${chalk.green(publicUrl)} , run:`);
-  logger.log();
-
-  // If script deploy has been added to package.json, skip the instructions
-  if (!hasDeployScript) {
-    logger.log(`  ${chalk.cyan('yarn')} add --dev gh-pages`);
-    logger.log();
-
-    logger.log(
-      `Add the following script in your ${chalk.cyan('package.json')}.`,
-    );
-    logger.log();
-
-    logger.log(`    ${chalk.dim('// ...')}`);
-    logger.log(`    ${chalk.yellow('"scripts"')}: {`);
-    logger.log(`      ${chalk.dim('// ...')}`);
-    logger.log(
-      `      ${chalk.yellow('"predeploy"')}: ${chalk.yellow(`yarn build",`)}`,
-    );
-    logger.log(
-      `      ${chalk.yellow('"deploy"')}: ${chalk.yellow(
-        '"gh-pages -d build"',
-      )}`,
-    );
-    logger.log('    }');
-    logger.log();
-
-    logger.log('Then run:');
-    logger.log();
-  }
-  logger.log(`  ${chalk.cyan('yarn')} run deploy`);
-}
-
-function printStaticServerInstructions(buildFolder: string) {
+function printStaticServerInstructions(target: string) {
   logger.log('You may serve it with a static server:');
   logger.log();
 
-  if (!fs.existsSync(`${globalModules}/serve`)) {
-    logger.log(`  ${chalk.cyan('yarn')} global add serve`);
-  }
-  logger.log(`  ${chalk.cyan('serve')} -s ${buildFolder}`);
+  logger.log(`  ${chalk.cyan('modular serve')} ${target}`);
 }
 
 export default printHostingInstructions;
