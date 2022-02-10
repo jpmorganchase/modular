@@ -44,7 +44,7 @@
     "css-loader": "4.3.0",
     "dedent": "0.7.0",
     "detect-port-alt": "1.1.6",
-    "dotenv": "14.2.0",
+    "dotenv": "16.0.0",
     "dotenv-expand": "8.0.1",
     "esbuild": "0.14.21",
     "esbuild-loader": "2.18.0",
@@ -113,7 +113,7 @@
     "update-notifier": "5.1.0",
     "url-loader": "4.1.1",
     "webpack": "4.46.0",
-    "webpack-dev-server": "4.7.3",
+    "webpack-dev-server": "4.7.4",
     "webpack-manifest-plugin": "2.2.0",
     "ws": "8.5.0"
   },

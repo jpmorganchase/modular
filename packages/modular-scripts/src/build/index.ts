@@ -179,7 +179,7 @@ async function buildAppOrView(
   printFileSizesAfterBuild(assets, previousFileSizes);
 
   printHostingInstructions(
-    fs.readJSON(paths.appPackageJson),
+    target,
     paths.publicUrlOrPath,
     paths.publicUrlOrPath,
     paths.appBuild,
