@@ -14,7 +14,9 @@ import createEsbuildConfig from '../config/createEsbuildConfig';
 import getModularRoot from '../../utils/getModularRoot';
 import sanitizeMetafile from '../utils/sanitizeMetafile';
 import { createRewriteDependenciesPlugin } from '../plugins/rewriteDependenciesPlugin';
+import { createViewTrampoline } from '../utils/createViewTrampoline';
 import type { Dependency } from '@schemastore/package';
+import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowserslistTarget';
 
 export default async function build(
   target: string,
@@ -28,6 +30,9 @@ export default async function build(
   const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
 
   let result: esbuild.Metafile;
+
+  const browserTarget = createEsbuildBrowserslistTarget(paths.appPath);
+
   try {
     const buildResult = await esbuild.build(
       createEsbuildConfig(
@@ -36,6 +41,7 @@ export default async function build(
           entryNames: 'static/js/[name]-[hash]',
           chunkNames: 'static/js/[name]-[hash]',
           assetNames: 'static/media/[name]-[hash]',
+          target: browserTarget,
           plugins: isApp
             ? undefined
             : [createRewriteDependenciesPlugin(packageDependencies)],
@@ -85,6 +91,22 @@ export default async function build(
         removeComments: true,
         removeTagWhitespace: true,
       }),
+    );
+  } else {
+    const jsEntrypointPath = Object.keys(result.outputs).find((assetName) =>
+      assetName.endsWith('.js'),
+    );
+
+    if (!jsEntrypointPath) {
+      throw new Error("Can't find main entrypoint after building");
+    }
+
+    await createViewTrampoline(
+      paths.appBuild,
+      path.basename(jsEntrypointPath),
+      paths.appSrc,
+      packageDependencies,
+      browserTarget,
     );
   }
 

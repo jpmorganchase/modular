@@ -1,6 +1,6 @@
 import * as esbuild from 'esbuild';
 import * as fs from 'fs-extra';
-import { createRewriteDependenciesPlugin } from '../esbuild-scripts/plugins/rewriteDependenciesPlugin';
+import { createRewriteDependenciesPlugin } from '../plugins/rewriteDependenciesPlugin';
 import type { Dependency } from '@schemastore/package';
 
 export async function createViewTrampoline(
@@ -9,7 +9,7 @@ export async function createViewTrampoline(
   srcPath: string,
   dependencies: Dependency,
   browserTarget: string[],
-) {
+): Promise<void> {
   const fileRelativePath = `./${fileName}`;
 
   const trampolineTemplate = `
@@ -32,7 +32,7 @@ ReactDOM.render(<Component />, DOMRoot);`;
   const fileRegexp = new RegExp(String.raw`^${escapeRegex(fileRelativePath)}$`);
 
   // Build the trampoline on the fly, from stdin
-  const buildResult = await esbuild.build({
+  await esbuild.build({
     stdin: {
       contents: trampolineTemplate,
       resolveDir: srcPath,
@@ -63,5 +63,5 @@ ReactDOM.render(<Component />, DOMRoot);`;
 }
 
 function escapeRegex(s: string) {
-  return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+  return s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
 }

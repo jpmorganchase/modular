@@ -27,7 +27,6 @@ import {
 } from './esbuildFileSizeReporter';
 import { getPackageDependencies } from '../utils/getPackageDependencies';
 import type { CoreProperties } from '@schemastore/package';
-import { createViewTrampoline } from './createViewTrampoline';
 
 async function buildAppOrView(
   target: string,
@@ -90,8 +89,6 @@ async function buildAppOrView(
   const packageDependencies = await getPackageDependencies(target);
   const dependencyNames = Object.keys(packageDependencies);
 
-  let jsEntrypointPath;
-
   const browserTarget = createEsbuildBrowserslistTarget(targetDirectory);
 
   // If not app, build a view as an ES module with esbuild for now
@@ -107,9 +104,6 @@ async function buildAppOrView(
     );
 
     // Find the main asset as the only .js asset in the esbuild outputs
-    jsEntrypointPath = Object.keys(result.outputs).find((assetName) =>
-      assetName.endsWith('.js'),
-    );
 
     assets = createEsbuildAssets(paths, result);
   } else {
@@ -156,19 +150,6 @@ async function buildAppOrView(
     }
   }
 
-  if (!isApp) {
-    if (!jsEntrypointPath) {
-      throw new Error("Couldn't identify the compiled main asset");
-    }
-    await createViewTrampoline(
-      paths.appBuild,
-      path.basename(jsEntrypointPath),
-      paths.appSrc,
-      packageDependencies,
-      browserTarget,
-    );
-  }
-
   // Add dependencies from source and bundled dependencies to target package.json
   const targetPackageJson = (await fs.readJSON(
     path.join(targetDirectory, 'package.json'),
@@ -186,11 +167,11 @@ async function buildAppOrView(
       license: targetPackageJson.license,
       modular: targetPackageJson.modular,
       dependencies: targetPackageJson.dependencies,
-      // Views are ESM libraries with one only js entrypoint; add it to the "module" field
-      module:
-        jsEntrypointPath && !isApp
-          ? path.relative(paths.appBuild, jsEntrypointPath)
-          : undefined,
+      // Views are ESM libraries with one only js entrypoint; add it to the "module" field TODO
+      // module:
+      //   jsEntrypointPath && !isApp
+      //     ? path.relative(paths.appBuild, jsEntrypointPath)
+      //     : undefined,
     },
     { spaces: 2 },
   );
