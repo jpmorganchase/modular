@@ -254,6 +254,7 @@ class DevServer {
     _: http.IncomingMessage,
     res: http.ServerResponse,
   ) => {
+    res.setHeader('content-type', 'application/javascript');
     res.writeHead(200);
     const baseConfig = this.baseEsbuildConfig();
     const trampolineBuildResult = await createViewTrampoline(
