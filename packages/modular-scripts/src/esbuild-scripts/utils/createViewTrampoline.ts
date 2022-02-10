@@ -7,7 +7,7 @@ export const indexFile = `
 <html>
   <body>
     <div id="root"></div>
-    <script type="module" src="static/js/__trampoline.js"></script>
+    <script type="module" src="static/js/_trampoline.js"></script>
   </body>
 </html>
 `;
@@ -34,7 +34,7 @@ ReactDOM.render(<Component />, DOMRoot);`;
     stdin: {
       contents: trampolineTemplate,
       resolveDir: srcPath,
-      sourcefile: '__trampoline.tsx',
+      sourcefile: '_trampoline.tsx',
       loader: 'tsx',
     },
     format: 'esm',

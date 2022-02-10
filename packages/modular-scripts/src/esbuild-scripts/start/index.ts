@@ -33,6 +33,7 @@ import sanitizeMetafile, { sanitizeFileName } from '../utils/sanitizeMetafile';
 import getModularRoot from '../../utils/getModularRoot';
 import { createRewriteDependenciesPlugin } from '../plugins/rewriteDependenciesPlugin';
 import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowserslistTarget';
+import { indexFile, createViewTrampoline } from '../utils/createViewTrampoline';
 import type { Dependency } from '@schemastore/package';
 
 const RUNTIME_DIR = path.join(__dirname, 'runtime');
@@ -89,6 +90,8 @@ class DevServer {
     this.ws = ws(this.express);
 
     this.express.use(this.handleStaticAsset);
+    this.isApp || // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      this.express.get('/static/js/_trampoline.js', this.handleTrampoline);
     this.express.use('/static/js', this.handleStaticAsset);
     this.express.use(this.handleRuntimeAsset);
 
@@ -240,7 +243,30 @@ class DevServer {
     await this.firstCompilePromise;
 
     res.writeHead(200);
-    res.end(await createIndex(this.paths, this.metafile, this.env.raw, true));
+    if (this.isApp) {
+      res.end(await createIndex(this.paths, this.metafile, this.env.raw, true));
+    } else {
+      res.end(indexFile);
+    }
+  };
+
+  handleTrampoline = async (
+    _: http.IncomingMessage,
+    res: http.ServerResponse,
+  ) => {
+    res.writeHead(200);
+    const baseConfig = this.baseEsbuildConfig();
+    const trampolineBuildResult = await createViewTrampoline(
+      'index.js',
+      this.paths.appSrc,
+      this.dependencies,
+      baseConfig.target as string[],
+    );
+    res.end(
+      Buffer.from(
+        trampolineBuildResult.outputFiles[0].contents.buffer,
+      ).toString(),
+    );
   };
 
   private serveEsbuild = (

@@ -110,7 +110,7 @@ export default async function build(
       browserTarget,
     );
 
-    const trampolinePath = `${paths.appBuild}/static/js/__trampoline.js`;
+    const trampolinePath = `${paths.appBuild}/static/js/_trampoline.js`;
     await Promise.all([
       fs.writeFile(`${paths.appBuild}/index.html`, indexFile),
       fs.writeFile(
