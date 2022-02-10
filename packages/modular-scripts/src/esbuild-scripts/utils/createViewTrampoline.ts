@@ -1,15 +1,23 @@
 import * as esbuild from 'esbuild';
-import * as fs from 'fs-extra';
 import { createRewriteDependenciesPlugin } from '../plugins/rewriteDependenciesPlugin';
 import type { Dependency } from '@schemastore/package';
 
+export const indexFile = `
+<!DOCTYPE html>
+<html>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="static/js/__trampoline.js"></script>
+  </body>
+</html>
+`;
+
 export async function createViewTrampoline(
-  outputPath: string,
   fileName: string,
   srcPath: string,
   dependencies: Dependency,
   browserTarget: string[],
-): Promise<void> {
+): Promise<esbuild.BuildResult & { outputFiles: esbuild.OutputFile[] }> {
   const fileRelativePath = `./${fileName}`;
 
   const trampolineTemplate = `
@@ -19,20 +27,10 @@ import Component from '${fileRelativePath}'
 const DOMRoot = document.getElementById('root');
 ReactDOM.render(<Component />, DOMRoot);`;
 
-  const indexTemplate = `
-<!DOCTYPE html>
-<html>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="static/js/__trampoline.js"></script>
-  </body>
-</html>
-`;
-  const trampolinePath = `${outputPath}/static/js/__trampoline.js`;
   const fileRegexp = new RegExp(String.raw`^${escapeRegex(fileRelativePath)}$`);
 
   // Build the trampoline on the fly, from stdin
-  await esbuild.build({
+  const buildResult = await esbuild.build({
     stdin: {
       contents: trampolineTemplate,
       resolveDir: srcPath,
@@ -41,8 +39,8 @@ ReactDOM.render(<Component />, DOMRoot);`;
     },
     format: 'esm',
     bundle: true,
+    write: false,
     target: browserTarget,
-    outfile: trampolinePath,
     plugins: [
       // See https://github.com/evanw/esbuild/issues/456
       {
@@ -59,7 +57,8 @@ ReactDOM.render(<Component />, DOMRoot);`;
       }),
     ],
   });
-  await fs.writeFile(`${outputPath}/index.html`, indexTemplate);
+
+  return buildResult;
 }
 
 function escapeRegex(s: string) {

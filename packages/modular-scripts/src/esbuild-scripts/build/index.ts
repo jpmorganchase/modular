@@ -14,7 +14,7 @@ import createEsbuildConfig from '../config/createEsbuildConfig';
 import getModularRoot from '../../utils/getModularRoot';
 import sanitizeMetafile from '../utils/sanitizeMetafile';
 import { createRewriteDependenciesPlugin } from '../plugins/rewriteDependenciesPlugin';
-import { createViewTrampoline } from '../utils/createViewTrampoline';
+import { indexFile, createViewTrampoline } from '../utils/createViewTrampoline';
 import type { Dependency } from '@schemastore/package';
 import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowserslistTarget';
 
@@ -76,6 +76,7 @@ export default async function build(
   }
 
   if (isApp) {
+    // Create index from public directory
     const html = await createIndex(paths, result, env.raw, false);
     await fs.writeFile(
       path.join(paths.appBuild, 'index.html'),
@@ -93,6 +94,7 @@ export default async function build(
       }),
     );
   } else {
+    // Create synthetic index and trampoline esm
     const jsEntrypointPath = Object.keys(result.outputs).find((assetName) =>
       assetName.endsWith('.js'),
     );
@@ -101,13 +103,21 @@ export default async function build(
       throw new Error("Can't find main entrypoint after building");
     }
 
-    await createViewTrampoline(
-      paths.appBuild,
+    const trampolineBuildResult = await createViewTrampoline(
       path.basename(jsEntrypointPath),
       paths.appSrc,
       packageDependencies,
       browserTarget,
     );
+
+    const trampolinePath = `${paths.appBuild}/static/js/__trampoline.js`;
+    await Promise.all([
+      fs.writeFile(`${paths.appBuild}/index.html`, indexFile),
+      fs.writeFile(
+        trampolinePath,
+        trampolineBuildResult.outputFiles[0].contents,
+      ),
+    ]);
   }
 
   return result;

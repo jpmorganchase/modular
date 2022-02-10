@@ -32,6 +32,7 @@ import getPort from './utils/getPort';
 import sanitizeMetafile, { sanitizeFileName } from '../utils/sanitizeMetafile';
 import getModularRoot from '../../utils/getModularRoot';
 import { createRewriteDependenciesPlugin } from '../plugins/rewriteDependenciesPlugin';
+import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowserslistTarget';
 import type { Dependency } from '@schemastore/package';
 
 const RUNTIME_DIR = path.join(__dirname, 'runtime');
@@ -173,6 +174,7 @@ class DevServer {
   });
 
   baseEsbuildConfig = memoize(() => {
+    const browserTarget = createEsbuildBrowserslistTarget(this.paths.appPath);
     return createEsbuildConfig(
       this.paths,
       {
@@ -181,6 +183,7 @@ class DevServer {
         entryNames: 'static/js/[name]',
         chunkNames: 'static/js/[name]',
         assetNames: 'static/media/[name]',
+        target: browserTarget,
         plugins: this.isApp
           ? undefined
           : [createRewriteDependenciesPlugin(this.dependencies)],
