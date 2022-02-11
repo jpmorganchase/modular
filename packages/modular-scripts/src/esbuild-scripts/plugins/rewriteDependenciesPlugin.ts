@@ -34,13 +34,6 @@ export function createRewriteDependenciesPlugin(
       build.onResolve(
         { filter: /^[a-z0-9-~]|@/, namespace: 'file' },
         (args) => {
-          // If the dependency has been already rewritten (or it is already importing an absolute URL), ignore
-          if (
-            args.path.startsWith('http://') ||
-            args.path.startsWith('https://')
-          ) {
-            return {};
-          }
           // Get name and eventual submodule to construct the url
           const { dependencyName, submodule } = parsePackageName(args.path);
           // Find dependency name (no submodule) in the pre-built import map
