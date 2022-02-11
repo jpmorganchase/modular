@@ -5,7 +5,7 @@ import {
 } from 'react-error-overlay';
 import stripAnsi from 'strip-ansi';
 
-let isFirstCompilation = false;
+let isFirstCompilation = true;
 let hasCompileErrors = false;
 
 const url = new URL('/_ws', window.location.href);
@@ -35,11 +35,6 @@ interface WebSocketMessage {
 connection.onmessage = (m: MessageEvent) => {
   const message = JSON.parse(m.data) as WebSocketMessage;
   const { building, result } = message;
-
-  // set whether this is the first build of this bundle
-  if (!isFirstCompilation) {
-    isFirstCompilation = true;
-  }
 
   if (building) {
     clearOutdatedErrors();
@@ -80,6 +75,11 @@ connection.onmessage = (m: MessageEvent) => {
 
       reportBuildError(formatted.errors[0]);
     }
+  }
+
+  // set whether this is the first build of this bundle
+  if (isFirstCompilation) {
+    isFirstCompilation = false;
   }
 };
 
