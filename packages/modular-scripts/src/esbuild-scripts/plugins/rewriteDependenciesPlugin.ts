@@ -30,36 +30,37 @@ export function createRewriteDependenciesPlugin(
   const dependencyRewritePlugin: esbuild.Plugin = {
     name: 'dependency-rewrite',
     setup(build) {
-      build.onResolve({ filter: /.*/, namespace: 'file' }, (args) => {
-        if (args.path.startsWith('.')) {
-          return {};
-        }
-        const { dependencyName /*, scope, module, submodule */ } =
-          parsePackageName(args.path);
-        // TODO pass the rest as data
-        if (dependencyName in dependencies) {
-          return {
-            path: args.path,
-            namespace: 'rewrite-dependency',
-          } as esbuild.OnResolveResult;
-        } else {
-          return {};
-        }
-      });
-
-      build.onLoad(
-        { filter: /.*/, namespace: 'rewrite-dependency' },
+      // Filter on external dependencies
+      build.onResolve(
+        { filter: /^[a-z0-9-~]|@/, namespace: 'file' },
         (args) => {
-          return {
-            contents: `export * from "${
-              importMap[args.path]
-            }"; export {default} from "${importMap[args.path]}"`,
-          } as esbuild.OnLoadResult;
+          // If the dependency has been already rewritten (or it is already importing a URL), ignore
+          if (
+            args.path.startsWith('http://') ||
+            args.path.startsWith('https://')
+          ) {
+            return {};
+          }
+          // Get name and eventual submodule to construct the url
+          const { dependencyName, submodule } = parsePackageName(args.path);
+          // Compare on dependency name (no submodule)
+          if (dependencyName in dependencies) {
+            // Just rewrite and mark as external. It will be ignored the next resolve cycle
+            return {
+              // If there's a submodule, concatenate it in
+              path: `${importMap[dependencyName]}${
+                submodule ? `/${submodule}` : ''
+              }`,
+              external: true,
+            } as esbuild.OnResolveResult;
+          } else {
+            // Dependency has been filtered out: ignore and bundle
+            return {};
+          }
         },
       );
     },
   };
-
   return dependencyRewritePlugin;
 }
 
