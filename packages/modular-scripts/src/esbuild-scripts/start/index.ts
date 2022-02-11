@@ -151,6 +151,12 @@ class DevServer {
       define: {
         global: 'window',
       },
+      banner: {
+        js: `window.process = {
+          platform: '${process.platform}',
+          env: { NODE_ENV: 'developement' },
+        }`,
+      },
       write: false,
       outbase: RUNTIME_DIR,
       absWorkingDir: getModularRoot(),

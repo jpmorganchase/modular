@@ -8,32 +8,6 @@ import stripAnsi from 'strip-ansi';
 let isFirstCompilation = false;
 let hasCompileErrors = false;
 
-setEditorHandler(function editorHandler(errorLocation) {
-  // Keep this sync with errorOverlayMiddleware.js
-  void fetch(
-    '/__open-stack-frame-in-editor' +
-      '?fileName=' +
-      window.encodeURIComponent(errorLocation.fileName) +
-      '&lineNumber=' +
-      window.encodeURIComponent(errorLocation.lineNumber || 1) +
-      '&colNumber=' +
-      window.encodeURIComponent(errorLocation.colNumber || 1),
-  );
-});
-
-function clearOutdatedErrors() {
-  // Clean up outdated compile errors, if any.
-  if (typeof console !== 'undefined' && typeof console.clear === 'function') {
-    if (hasCompileErrors) {
-      console.clear();
-    }
-  }
-}
-
-startReportingRuntimeErrors({
-  filename: '/index.js',
-});
-
 const url = new URL('/_ws', window.location.href);
 url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:';
 const connection = new WebSocket(url.toString());
@@ -108,3 +82,29 @@ connection.onmessage = (m: MessageEvent) => {
     }
   }
 };
+
+setEditorHandler(function editorHandler(errorLocation) {
+  // Keep this sync with errorOverlayMiddleware.js
+  void fetch(
+    '/__open-stack-frame-in-editor' +
+      '?fileName=' +
+      window.encodeURIComponent(errorLocation.fileName) +
+      '&lineNumber=' +
+      window.encodeURIComponent(errorLocation.lineNumber || 1) +
+      '&colNumber=' +
+      window.encodeURIComponent(errorLocation.colNumber || 1),
+  );
+});
+
+function clearOutdatedErrors() {
+  // Clean up outdated compile errors, if any.
+  if (typeof console !== 'undefined' && typeof console.clear === 'function') {
+    if (hasCompileErrors) {
+      console.clear();
+    }
+  }
+}
+
+startReportingRuntimeErrors({
+  filename: '/index.js',
+});
