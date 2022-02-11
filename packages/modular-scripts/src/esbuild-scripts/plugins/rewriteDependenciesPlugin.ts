@@ -34,7 +34,7 @@ export function createRewriteDependenciesPlugin(
       build.onResolve(
         { filter: /^[a-z0-9-~]|@/, namespace: 'file' },
         (args) => {
-          // If the dependency has been already rewritten (or it is already importing a URL), ignore
+          // If the dependency has been already rewritten (or it is already importing an absolute URL), ignore
           if (
             args.path.startsWith('http://') ||
             args.path.startsWith('https://')
@@ -43,8 +43,8 @@ export function createRewriteDependenciesPlugin(
           }
           // Get name and eventual submodule to construct the url
           const { dependencyName, submodule } = parsePackageName(args.path);
-          // Compare on dependency name (no submodule)
-          if (dependencyName in dependencies) {
+          // Find dependency name (no submodule) in the pre-built import map
+          if (dependencyName in importMap) {
             // Just rewrite and mark as external. It will be ignored the next resolve cycle
             return {
               // If there's a submodule, concatenate it in
