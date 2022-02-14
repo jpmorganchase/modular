@@ -157,7 +157,7 @@ async function buildAppOrView(
     path.join(targetDirectory, 'package.json'),
   )) as CoreProperties;
   targetPackageJson.dependencies = packageDependencies;
-  targetPackageJson.bundledDependencies = bundledDependencies;
+  targetPackageJson.bundledDependencies = Object.keys(bundledDependencies);
 
   // Copy selected fields of package.json over
   await fs.writeJSON(
@@ -168,6 +168,7 @@ async function buildAppOrView(
       license: targetPackageJson.license,
       modular: targetPackageJson.modular,
       dependencies: targetPackageJson.dependencies,
+      bundledDependencies: targetPackageJson.bundledDependencies,
       module: moduleEntryPoint,
     },
     { spaces: 2 },
