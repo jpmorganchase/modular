@@ -211,7 +211,9 @@ class DevServer {
   };
 
   private metafileCallback = (metafile: esbuild.Metafile) => {
-    this.metafile = sanitizeMetafile(this.paths, metafile);
+    if (metafile) {
+      this.metafile = sanitizeMetafile(this.paths, metafile);
+    }
   };
 
   private firstCompilePluginCallback = () => {
@@ -233,9 +235,8 @@ class DevServer {
       ...config,
       incremental: true,
       watch: {
-        onRebuild: (error, result) => {
-          if (error || !result) console.error('watch build failed:', error);
-          else {
+        onRebuild: (_, result) => {
+          if (result) {
             this.esbuild = result;
           }
         },

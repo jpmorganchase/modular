@@ -13,7 +13,6 @@ export default function createPlugin(
     setup(build) {
       let building = false;
       let result: esbuild.BuildResult;
-      const { appPath } = paths;
 
       const publish = () => {
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -24,11 +23,13 @@ export default function createPlugin(
               building,
               result: {
                 errors: await Promise.all(
-                  result.errors.map((error) => formatError(error, appPath)),
+                  result.errors.map((error) =>
+                    formatError(error, paths.modularRoot),
+                  ),
                 ),
                 warnings: await Promise.all(
                   result.warnings.map((warning) =>
-                    formatError(warning, appPath),
+                    formatError(warning, paths.modularRoot),
                   ),
                 ),
               },

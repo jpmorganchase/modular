@@ -21,7 +21,7 @@ function createPlugin(paths: Paths): Plugin {
         if (result.errors.length) {
           await Promise.all(
             result.errors.map(async (m) => {
-              logger.log(await formatError(m, paths.appPath));
+              logger.log(await formatError(m, paths.modularRoot));
             }),
           );
         }
@@ -29,7 +29,7 @@ function createPlugin(paths: Paths): Plugin {
         if (result.warnings.length) {
           await Promise.all(
             result.warnings.map(async (m) => {
-              logger.log(await formatError(m, paths.appPath));
+              logger.log(await formatError(m, paths.modularRoot));
             }),
           );
         }
