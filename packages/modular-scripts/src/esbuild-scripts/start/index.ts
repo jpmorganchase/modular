@@ -189,21 +189,17 @@ class DevServer {
 
   baseEsbuildConfig = memoize(() => {
     const browserTarget = createEsbuildBrowserslistTarget(this.paths.appPath);
-    return createEsbuildConfig(
-      this.paths,
-      {
-        write: false,
-        minify: false,
-        entryNames: 'static/js/[name]',
-        chunkNames: 'static/js/[name]',
-        assetNames: 'static/media/[name]',
-        target: browserTarget,
-        plugins: this.isApp
-          ? undefined
-          : [createRewriteDependenciesPlugin(this.dependencies)],
-      },
-      this.isApp ? 'app' : 'view',
-    );
+    return createEsbuildConfig(this.paths, {
+      write: false,
+      minify: false,
+      entryNames: 'static/js/[name]',
+      chunkNames: 'static/js/[name]',
+      assetNames: 'static/media/[name]',
+      target: browserTarget,
+      plugins: this.isApp
+        ? undefined
+        : [createRewriteDependenciesPlugin(this.dependencies)],
+    });
   });
 
   private runEsbuild = async () => {

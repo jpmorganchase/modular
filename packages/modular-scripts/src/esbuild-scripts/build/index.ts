@@ -35,19 +35,15 @@ export default async function build(
 
   try {
     const buildResult = await esbuild.build(
-      createEsbuildConfig(
-        paths,
-        {
-          entryNames: 'static/js/[name]-[hash]',
-          chunkNames: 'static/js/[name]-[hash]',
-          assetNames: 'static/media/[name]-[hash]',
-          target: browserTarget,
-          plugins: isApp
-            ? undefined
-            : [createRewriteDependenciesPlugin(packageDependencies)],
-        },
-        type,
-      ),
+      createEsbuildConfig(paths, {
+        entryNames: 'static/js/[name]-[hash]',
+        chunkNames: 'static/js/[name]-[hash]',
+        assetNames: 'static/media/[name]-[hash]',
+        target: browserTarget,
+        plugins: isApp
+          ? undefined
+          : [createRewriteDependenciesPlugin(packageDependencies)],
+      }),
     );
 
     result = sanitizeMetafile(paths, buildResult.metafile as esbuild.Metafile);
