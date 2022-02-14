@@ -210,72 +210,32 @@ describe('modular-scripts', () => {
         ),
       ).toMatchInlineSnapshot(`
         Object {
+          "bundledDependencies": Array [],
           "dependencies": Object {
             "react": "17.0.2",
           },
-          "files": Array [
-            "README.md",
-            "dist-cjs",
-            "dist-es",
-            "dist-types",
-          ],
           "license": "UNLICENSED",
-          "main": "dist-cjs/index.js",
           "modular": Object {
             "type": "view",
           },
-          "module": "dist-es/index.js",
+          "module": "static/js/index-IC6FL6E2.js",
           "name": "sample-view",
-          "typings": "dist-types/index.d.ts",
           "version": "1.0.0",
         }
       `);
-    });
-
-    it('THEN outputs the correct output cjs file', () => {
-      expect(
-        String(
-          fs.readFileSync(
-            path.join(
-              modularRoot,
-              'dist',
-              'sample-view',
-              'dist-cjs',
-              'index.js',
-            ),
-          ),
-        ),
-      ).toMatchSnapshot();
-    });
-
-    it('THEN outputs the correct output cjs map file', () => {
-      expect(
-        fs.readJsonSync(
-          path.join(
-            modularRoot,
-            'dist',
-            'sample-view',
-            'dist-cjs',
-            'index.js.map',
-          ),
-        ),
-      ).toMatchSnapshot();
     });
 
     it('THEN outputs the correct directory structure', () => {
       expect(tree(path.join(modularRoot, 'dist', 'sample-view')))
         .toMatchInlineSnapshot(`
         "sample-view
-        ├─ README.md #11adaka
-        ├─ dist-cjs
-        │  ├─ index.js #a7k6ic
-        │  └─ index.js.map #1825qkv
-        ├─ dist-es
-        │  ├─ index.js #1ymmv5l
-        │  └─ index.js.map #1kl5sc5
-        ├─ dist-types
-        │  └─ index.d.ts #1vloh7q
-        └─ package.json"
+        ├─ index.html #1o286v3
+        ├─ package.json
+        └─ static
+           └─ js
+              ├─ _trampoline.js #1atamnv
+              ├─ index-IC6FL6E2.js #19sl0ps
+              └─ index-IC6FL6E2.js.map #1sysx0b"
       `);
     });
   });
