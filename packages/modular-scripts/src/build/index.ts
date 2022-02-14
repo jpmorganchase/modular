@@ -92,11 +92,10 @@ async function buildAppOrView(
   const { external: externalDependencies, bundled: bundledDependencies } =
     filterDependencies(packageDependencies, isApp);
 
-  const dependencyNames = Object.keys(packageDependencies);
-
   const browserTarget = createEsbuildBrowserslistTarget(targetDirectory);
 
-  // If not app, build a view as an ES module with esbuild for now
+  let moduleEntryPoint: string | undefined;
+  // Build views with esbuild
   if (isEsbuild || !isApp) {
     const { default: buildEsbuildApp } = await import(
       '../esbuild-scripts/build'
@@ -107,9 +106,7 @@ async function buildAppOrView(
       externalDependencies,
       type,
     );
-
-    // Find the main asset as the only .js asset in the esbuild outputs
-
+    moduleEntryPoint = result.moduleEntryPoint;
     assets = createEsbuildAssets(paths, result);
   } else {
     // create-react-app doesn't support plain module outputs yet,
@@ -171,11 +168,7 @@ async function buildAppOrView(
       license: targetPackageJson.license,
       modular: targetPackageJson.modular,
       dependencies: targetPackageJson.dependencies,
-      // Views are ESM libraries with one only js entrypoint; add it to the "module" field TODO
-      // module:
-      //   jsEntrypointPath && !isApp
-      //     ? path.relative(paths.appBuild, jsEntrypointPath)
-      //     : undefined,
+      module: moduleEntryPoint,
     },
     { spaces: 2 },
   );

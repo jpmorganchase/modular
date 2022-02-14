@@ -18,6 +18,10 @@ import { indexFile, createViewTrampoline } from '../utils/createViewTrampoline';
 import type { Dependency } from '@schemastore/package';
 import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowserslistTarget';
 
+interface Metafile extends esbuild.Metafile {
+  moduleEntryPoint?: string;
+}
+
 export default async function build(
   target: string,
   paths: Paths,
@@ -29,7 +33,7 @@ export default async function build(
 
   const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
 
-  let result: esbuild.Metafile;
+  let result: Metafile;
 
   const browserTarget = createEsbuildBrowserslistTarget(paths.appPath);
 
@@ -95,13 +99,14 @@ export default async function build(
   );
 
   if (!isApp) {
+    // Include js entry point in the result
+    result.moduleEntryPoint = getEntryPoint(paths, result, '.js');
     // Create and write trampoline file
-    const jsEntryPoint = getEntryPoint(paths, result, '.js');
-    if (!jsEntryPoint) {
+    if (!result.moduleEntryPoint) {
       throw new Error("Can't find main entrypoint after building");
     }
     const trampolineBuildResult = await createViewTrampoline(
-      path.basename(jsEntryPoint),
+      path.basename(result.moduleEntryPoint),
       paths.appSrc,
       externalDependencies,
       browserTarget,
