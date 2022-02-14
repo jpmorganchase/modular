@@ -14,7 +14,6 @@ export default function createPlugin(
     setup(build) {
       let building = false;
       let result: esbuild.BuildResult;
-      const { appPath } = paths;
 
       const publishClient = async (socket: Websocket) => {
         socket.send(
@@ -23,10 +22,14 @@ export default function createPlugin(
             building,
             result: {
               errors: await Promise.all(
-                result.errors.map((error) => formatError(error, appPath)),
+                result.errors.map((error) =>
+                  formatError(error, paths.modularRoot),
+                ),
               ),
               warnings: await Promise.all(
-                result.warnings.map((warning) => formatError(warning, appPath)),
+                result.warnings.map((warning) =>
+                  formatError(warning, paths.modularRoot),
+                ),
               ),
             },
           }),

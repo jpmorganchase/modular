@@ -34,7 +34,7 @@ export default async function build(target: string, paths: Paths) {
     const result = e as esbuild.BuildFailure;
     logger.log(chalk.red('Failed to compile.\n'));
     const logs = result.errors.map(async (m) => {
-      logger.log(await formatError(m, paths.appPath));
+      logger.log(await formatError(m, paths.modularRoot));
     });
 
     await Promise.all(logs);
