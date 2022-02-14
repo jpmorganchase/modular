@@ -2,28 +2,21 @@ import * as esbuild from 'esbuild';
 import type { Dependency } from '@schemastore/package';
 
 export function createRewriteDependenciesPlugin(
-  dependencies: Dependency,
+  externalDependencies: Dependency,
 ): esbuild.Plugin {
   const externalCdnTemplate =
     process.env.EXTERNAL_CDN_TEMPLATE ??
     'https://cdn.skypack.dev/[name]@[version]';
 
-  const externalBlockList = process.env.EXTERNAL_BLOCK_LIST
-    ? process.env.EXTERNAL_BLOCK_LIST.split(',')
-    : [];
-
-  const importMap: Record<string, string> = Object.entries(dependencies).reduce(
-    (acc, [name, version]) => {
-      if (!externalBlockList.some((filter) => name.startsWith(filter))) {
-        return {
-          ...acc,
-          [name]: externalCdnTemplate
-            .replace('[name]', name)
-            .replace('[version]', version),
-        };
-      }
-      return acc;
-    },
+  const importMap: Record<string, string> = Object.entries(
+    externalDependencies,
+  ).reduce(
+    (acc, [name, version]) => ({
+      ...acc,
+      [name]: externalCdnTemplate
+        .replace('[name]', name)
+        .replace('[version]', version),
+    }),
     {},
   );
 

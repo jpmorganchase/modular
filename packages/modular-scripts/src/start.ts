@@ -14,6 +14,7 @@ import * as logger from './utils/logger';
 import createEsbuildBrowserslistTarget from './utils/createEsbuildBrowserslistTarget';
 import prompts from 'prompts';
 import { getPackageDependencies } from './utils/getPackageDependencies';
+import { filterDependencies } from './utils/filterDependencies';
 
 async function start(packageName: string): Promise<void> {
   let target = packageName;
@@ -69,7 +70,11 @@ async function start(packageName: string): Promise<void> {
       './esbuild-scripts/start'
     );
     const packageDependencies = await getPackageDependencies(target);
-    await startEsbuildApp(target, !isView, packageDependencies);
+    const { external: externalDependencies } = filterDependencies(
+      packageDependencies,
+      !isView,
+    );
+    await startEsbuildApp(target, !isView, externalDependencies);
   } else {
     const startScript = require.resolve(
       'modular-scripts/react-scripts/scripts/start.js',

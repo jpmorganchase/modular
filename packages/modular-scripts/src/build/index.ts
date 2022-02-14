@@ -6,6 +6,7 @@ import * as logger from '../utils/logger';
 import getModularRoot from '../utils/getModularRoot';
 import actionPreflightCheck from '../utils/actionPreflightCheck';
 import { getModularType } from '../utils/isModularType';
+import { filterDependencies } from '../utils/filterDependencies';
 import type { ModularType } from '../utils/isModularType';
 import execAsync from '../utils/execAsync';
 import getLocation from '../utils/getLocation';
@@ -87,6 +88,10 @@ async function buildAppOrView(
   let assets: Asset[];
   // Retrieve dependencies for target to inform the build process
   const packageDependencies = await getPackageDependencies(target);
+  // Split dependencies between external and bundled
+  const { external: externalDependencies, bundled: bundledDependencies } =
+    filterDependencies(packageDependencies, isApp);
+
   const dependencyNames = Object.keys(packageDependencies);
 
   const browserTarget = createEsbuildBrowserslistTarget(targetDirectory);
@@ -99,7 +104,7 @@ async function buildAppOrView(
     const result = await buildEsbuildApp(
       target,
       paths,
-      packageDependencies,
+      externalDependencies,
       type,
     );
 
@@ -155,9 +160,8 @@ async function buildAppOrView(
     path.join(targetDirectory, 'package.json'),
   )) as CoreProperties;
   targetPackageJson.dependencies = packageDependencies;
-  if (isApp) {
-    targetPackageJson.bundledDependencies = dependencyNames;
-  }
+  targetPackageJson.bundledDependencies = bundledDependencies;
+
   // Copy selected fields of package.json over
   await fs.writeJSON(
     path.join(paths.appBuild, 'package.json'),

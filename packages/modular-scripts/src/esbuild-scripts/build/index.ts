@@ -21,7 +21,7 @@ import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowsersli
 export default async function build(
   target: string,
   paths: Paths,
-  packageDependencies: Dependency,
+  externalDependencies: Dependency,
   type: 'app' | 'view',
 ) {
   const modularRoot = getModularRoot();
@@ -42,7 +42,7 @@ export default async function build(
         target: browserTarget,
         plugins: isApp
           ? undefined
-          : [createRewriteDependenciesPlugin(packageDependencies)],
+          : [createRewriteDependenciesPlugin(externalDependencies)],
       }),
     );
 
@@ -103,7 +103,7 @@ export default async function build(
     const trampolineBuildResult = await createViewTrampoline(
       path.basename(jsEntryPoint),
       paths.appSrc,
-      packageDependencies,
+      externalDependencies,
       browserTarget,
     );
     const trampolinePath = `${paths.appBuild}/static/js/_trampoline.js`;
