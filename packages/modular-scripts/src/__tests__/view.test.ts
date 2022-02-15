@@ -1,15 +1,26 @@
 import execa from 'execa';
+import { exec } from 'child_process';
 import { promisify } from 'util';
 import _rimraf from 'rimraf';
 import tree from 'tree-view-for-tests';
 import path from 'path';
+import puppeteer from 'puppeteer';
+import {
+  getDocument,
+  getQueriesForElement,
+  queries,
+} from 'pptr-testing-library';
 import fs from 'fs-extra';
 
+import { startApp, DevServer } from './start-app';
 import getModularRoot from '../utils/getModularRoot';
 
 const rimraf = promisify(_rimraf);
 
 const modularRoot = getModularRoot();
+
+// eslint-disable-next-line @typescript-eslint/unbound-method
+const { getNodeText } = queries;
 
 // These tests must be executed sequentially with `--runInBand`.
 
@@ -109,6 +120,65 @@ describe('modular-scripts', () => {
               ├─ index-IC6FL6E2.js #19sl0ps
               └─ index-IC6FL6E2.js.map #1sysx0b"
       `);
+    });
+  });
+
+  describe('WHEN starting a view', () => {
+    let browser: puppeteer.Browser;
+    let devServer: DevServer;
+    let port: string;
+
+    beforeAll(async () => {
+      const launchArgs: puppeteer.LaunchOptions &
+        puppeteer.BrowserLaunchArgumentOptions = {
+        // always run in headless - if you want to debug this locally use the env var to
+        headless: !Boolean(process.env.NO_HEADLESS_TESTS),
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      };
+
+      browser = await puppeteer.launch(launchArgs);
+      port = '4000';
+      devServer = await startApp(targetedView, { env: { PORT: port } });
+    });
+
+    afterAll(async () => {
+      if (browser) {
+        await browser.close();
+      }
+      if (devServer) {
+        // this is the problematic bit, it leaves hanging node processes
+        // despite closing the parent process. Only happens in tests!
+        devServer.kill();
+      }
+      if (port) {
+        // kill all processes listening to the dev server port
+        exec(
+          `lsof -n -i4TCP:${port} | grep LISTEN | awk '{ print $2 }' | xargs kill`,
+          (err) => {
+            if (err) {
+              console.log('err: ', err);
+            }
+            console.log(`Cleaned up processes on port ${port}`);
+          },
+        );
+      }
+    });
+
+    it('THEN can start a view', async () => {
+      const page = await browser.newPage();
+      await page.goto(`http://localhost:${port}`, {});
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      const { getByTestId, findByTestId } = getQueriesForElement(
+        await getDocument(page),
+      );
+
+      await findByTestId('test-this');
+
+      // eslint-disable-next-line testing-library/no-await-sync-query
+      expect(await getNodeText(await getByTestId('test-this'))).toBe(
+        'this is a modular view',
+      );
     });
   });
 
