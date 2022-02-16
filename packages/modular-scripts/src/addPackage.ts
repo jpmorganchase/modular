@@ -109,9 +109,17 @@ async function addPackage(
   )) as ModularPackageJson;
 
   const modularType = modularTemplatePackageJson?.modular?.type as string;
-  if (!['app', 'view', 'package'].includes(modularType)) {
+  if (modularType !== 'template') {
     throw new Error(
-      `${templateName} has modular type: ${modularType}, which does not exist, please use update this template`,
+      `${templateName} is not marked as a "template". Check the package you are trying to install.`,
+    );
+  }
+
+  const modularTemplateType = modularTemplatePackageJson?.modular
+    ?.templateType as string;
+  if (!['app', 'view', 'package'].includes(modularTemplateType)) {
+    throw new Error(
+      `${templateName} has modular type: ${modularTemplateType}, which does not exist, please use update this template`,
     );
   }
 
@@ -141,7 +149,7 @@ async function addPackage(
     path.join(newPackagePath, 'package.json'),
     {
       name,
-      private: templateName === 'app',
+      private: modularTemplateType === 'app',
       modular: modularTemplatePackageJson.modular,
       version: '1.0.0',
     },
@@ -150,7 +158,7 @@ async function addPackage(
     },
   );
 
-  if (templateName === 'app') {
+  if (modularTemplateType === 'app') {
     // add a tsconfig, because CRA expects it
     await fs.writeJSON(
       path.join(newPackagePath, 'tsconfig.json'),

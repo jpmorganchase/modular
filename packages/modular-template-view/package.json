@@ -6,7 +6,8 @@
   },
   "license": "Apache-2.0",
   "modular": {
-    "type": "view"
+    "type": "template",
+    "templateType": "view"
   },
   "files": [
     "README.md"
