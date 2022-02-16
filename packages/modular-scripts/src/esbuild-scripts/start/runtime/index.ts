@@ -62,11 +62,6 @@ connection.onmessage = (m: MessageEvent) => {
   const message = JSON.parse(m.data) as WebSocketMessage;
   const { building, result } = message;
 
-  // set whether this is the first build of this bundle
-  if (!isFirstCompilation) {
-    isFirstCompilation = true;
-  }
-
   if (building) {
     clearOutdatedErrors();
   } else {
