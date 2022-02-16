@@ -35,7 +35,10 @@ function getBrowserEnv() {
     action = Actions.BROWSER;
   }
   // TODO remove
-  console.log('OPENBROWSER - WEBPACK - getBrowserEnv 1', process.env);
+  console.log(
+    'OPENBROWSER - WEBPACK - getBrowserEnv 1',
+    JSON.stringify(process.env, null, 2),
+  );
   console.log('OPENBROWSER - WEBPACK - getBrowserEnv', value, args);
   console.log({ action, value, args });
   // TODO /remove
