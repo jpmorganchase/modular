@@ -202,8 +202,7 @@ class DevServer {
       incremental: true,
       watch: {
         onRebuild: (error, result) => {
-          if (error || !result) console.error('watch build failed:', error);
-          else {
+          if (result) {
             this.esbuild = result;
           }
         },
