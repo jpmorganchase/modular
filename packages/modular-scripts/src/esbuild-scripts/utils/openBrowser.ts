@@ -47,7 +47,7 @@ function getBrowserEnv() {
     action = Actions.BROWSER;
   }
   // TODO remove
-  console.log('OPENBROWSER - ESBUILD - getBrowserEnv');
+  console.log('OPENBROWSER - ESBUILD - getBrowserEnv', value, args);
   console.log({ action, value, args });
   // TODO /remove
   return { action, value, args };

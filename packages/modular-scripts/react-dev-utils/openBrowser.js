@@ -35,10 +35,10 @@ function getBrowserEnv() {
     action = Actions.BROWSER;
   }
   // TODO remove
-  console.log('OPENBROWSER - WEBPACK - getBrowserEnv');
+  console.log('OPENBROWSER - WEBPACK - getBrowserEnv', value, args);
   console.log({ action, value, args });
   // TODO /remove
-  return { action, value, args };
+  return { value, args };
 }
 
 function executeNodeScript(scriptPath, url) {
