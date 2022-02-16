@@ -4,6 +4,7 @@
   "exports": {
     "./package.json": "./package.json"
   },
+  "main": "./src/index.ts",
   "modular": {
     "type": "template",
     "templateType": "package"

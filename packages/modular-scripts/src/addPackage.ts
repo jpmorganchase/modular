@@ -163,6 +163,7 @@ async function addPackage({
       modular: {
         type: modularTemplateType,
       },
+      main: modularTemplatePackageJson.main,
       dependencies: modularTemplatePackageJson.dependencies,
       version: '1.0.0',
     },
