@@ -111,7 +111,7 @@ describe('modular-scripts', () => {
       if (port) {
         // kill all processes listening to the dev server port
         exec(
-          `lsof -n -i4TCP:${port} | grep LISTEN | awk '{ print $2 }' | xargs kill`,
+          `lsof -n -i4TCP:${port} | grep LISTEN | awk '{ print $2 }' | xargs kill -9`,
           (err) => {
             if (err) {
               console.log('err: ', err);
