@@ -46,19 +46,11 @@ function getBrowserEnv() {
   } else {
     action = Actions.BROWSER;
   }
-  // TODO remove
-  console.log('OPENBROWSER - ESBUILD - getBrowserEnv', value, args);
-  console.log({ action, value, args });
-  // TODO /remove
   return { action, value, args };
 }
 
 function executeNodeScript(scriptPath: string, url: string) {
   const extraArgs = process.argv.slice(2);
-  // TODO remove
-  console.log('OPENBROWSER - ESBUILD - executeNodeScript');
-  console.log(process.execPath, scriptPath, extraArgs);
-  // TODO /remove
   const child = spawn(process.execPath, [scriptPath, ...extraArgs, url], {
     stdio: 'inherit',
   });
