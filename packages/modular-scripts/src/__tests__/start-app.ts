@@ -22,6 +22,8 @@ export async function startApp(
   appPath: string,
   opts: Record<string, unknown> = {},
 ): Promise<DevServer> {
+  console.log('Starting dev server at', appPath);
+
   const devServer = modular(`start ${appPath}`, {
     cleanup: true,
     ...opts,
@@ -64,6 +66,12 @@ export async function startApp(
     }, START_APP_TIMEOUT);
 
     devServer.stdout.on('data', (data: Buffer) => {
+      console.log(
+        'data from the dev server stdout',
+        completed,
+        data.toString(),
+      ); // TODO remove
+
       if (completed) return;
 
       const output = data.toString();
@@ -82,6 +90,12 @@ export async function startApp(
     });
 
     devServer.stderr.on('data', (data: Buffer) => {
+      console.log(
+        'data from the dev server stderr',
+        completed,
+        data.toString(),
+      ); // TODO remove
+
       if (completed) return;
 
       const output = data.toString();

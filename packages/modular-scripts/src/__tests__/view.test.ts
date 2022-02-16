@@ -93,8 +93,10 @@ describe('modular-scripts', () => {
       };
 
       browser = await puppeteer.launch(launchArgs);
-      port = '4000';
+      port = '3000';
       devServer = await startApp(targetedView, { env: { PORT: port } });
+
+      console.log({ devServer }); // TODO remove
     });
 
     afterAll(async () => {
