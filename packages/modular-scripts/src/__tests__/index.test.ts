@@ -150,7 +150,7 @@ describe('modular-scripts', () => {
       };
 
       browser = await puppeteer.launch(launchArgs);
-      port = '3000';
+      port = '4000';
       devServer = await startApp(targetedView, { env: { PORT: port } });
     });
 
