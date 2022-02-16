@@ -1,5 +1,5 @@
 import execa from 'execa';
-import { exec } from 'child_process';
+//import { exec } from 'child_process';
 import { promisify } from 'util';
 import _rimraf from 'rimraf';
 import tree from 'tree-view-for-tests';
@@ -150,18 +150,18 @@ describe('modular-scripts', () => {
         // despite closing the parent process. Only happens in tests!
         devServer.kill();
       }
-      if (port) {
-        // kill all processes listening to the dev server port
-        exec(
-          `lsof -n -i4TCP:${port} | grep LISTEN | awk '{ print $2 }' | xargs kill`,
-          (err) => {
-            if (err) {
-              console.log('err: ', err);
-            }
-            console.log(`Cleaned up processes on port ${port}`);
-          },
-        );
-      }
+      // if (port) {
+      //   // kill all processes listening to the dev server port
+      //   exec(
+      //     `lsof -n -i4TCP:${port} | grep LISTEN | awk '{ print $2 }' | xargs kill`,
+      //     (err) => {
+      //       if (err) {
+      //         console.log('err: ', err);
+      //       }
+      //       console.log(`Cleaned up processes on port ${port}`);
+      //     },
+      //   );
+      // }
     });
 
     it('THEN can start a view', async () => {
