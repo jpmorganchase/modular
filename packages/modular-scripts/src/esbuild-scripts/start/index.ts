@@ -125,9 +125,14 @@ class DevServer {
   }
 
   shutdown = () => {
-    this.server?.close();
-    this.ws.getWss().close();
     this.esbuild?.stop?.();
+    this.ws.getWss().close();
+    this.server?.close();
+    process.nextTick(() => {
+      this.ws.getWss().clients.forEach((socket) => {
+        socket.terminate();
+      });
+    });
   };
 
   private hostRuntime = memoize(async () => {
