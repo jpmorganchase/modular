@@ -1,9 +1,11 @@
 {
   "name": "modular-template-view",
   "version": "1.0.0",
-  "main": "src/index.ts",
+  "exports": {
+    "./package.json": "./package.json"
+  },
   "license": "UNLICENSED",
-  "modular" : { 
+  "modular": {
     "type": "view"
   },
   "files": [

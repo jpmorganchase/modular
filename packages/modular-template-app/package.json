@@ -1,7 +1,9 @@
 {
   "name": "modular-template-app",
   "version": "1.0.0",
-  "main": "src/index.ts",
+  "exports": {
+    "./package.json": "./package.json"
+  },
   "license": "UNLICENSED",
   "files": [
     "README.md"

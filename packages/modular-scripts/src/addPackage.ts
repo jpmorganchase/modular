@@ -52,16 +52,23 @@ async function addPackage(
   const newComponentName = toPascalCase(name);
 
   const newPackagePath = path.join(modularRoot, packagesRoot, destination);
-  const packageTypePath = path.join(__dirname, '../types', type);
 
-  // create a new package source folder
   if (fs.existsSync(newPackagePath)) {
     throw new Error(`A package already exists at ${destination}!`);
   }
 
+  const newModularPackageJsonPath = require.resolve(
+    `modular-template-${type}/package.json`,
+  );
+  const packageTypePath = path.dirname(newModularPackageJsonPath);
+
+  // create a new package source folder
   fs.mkdirpSync(newPackagePath);
   fs.copySync(packageTypePath, newPackagePath, {
     recursive: true,
+    filter(src) {
+      return !(path.basename(src) === 'package.json');
+    },
   });
 
   const packageFilePaths = getAllFiles(newPackagePath);
@@ -74,14 +81,22 @@ async function addPackage(
         .replace(/PackageName__/g, name)
         .replace(/ComponentName__/g, newComponentName),
     );
-    if (path.basename(packageFilePath) === 'packagejson') {
-      // we've named package.json as packagejson in these templates
-      fs.moveSync(
-        packageFilePath,
-        packageFilePath.replace('packagejson', 'package.json'),
-      );
-    }
   }
+
+  await fs.writeJson(
+    path.join(newPackagePath, 'package.json'),
+    {
+      name,
+      private: type === 'app',
+      modular: {
+        type,
+      },
+      version: '1.0.0',
+    },
+    {
+      spaces: 2,
+    },
+  );
 
   if (type === 'app') {
     // add a tsconfig, because CRA expects it
