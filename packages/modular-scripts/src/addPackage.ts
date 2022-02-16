@@ -7,9 +7,11 @@ import {
 import prompts from 'prompts';
 import getModularRoot from './utils/getModularRoot';
 import execAsync from './utils/execAsync';
+import * as logger from './utils/logger';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import getAllFiles from './utils/getAllFiles';
 import LineFilterOutStream from './utils/LineFilterOutStream';
+import { ModularPackageJson } from './utils/isModularType';
 
 const packagesRoot = 'packages';
 
@@ -20,7 +22,7 @@ async function addPackage(
   preferOffline = true,
   verbose = false,
 ): Promise<void> {
-  const { type, name } =
+  const { type: modularType, name } =
     (typeArg && nameArg ? { type: typeArg, name: nameArg } : null) ||
     ((await prompts([
       {
@@ -37,29 +39,74 @@ async function addPackage(
           { title: 'A plain package', value: 'package' },
           { title: 'A view within an application', value: 'view' },
           { title: 'A standalone application', value: 'app' },
+          { title: 'Choose my own template', value: '__CHOOSE_MY_OWN__' },
         ],
         initial: 0,
       },
     ])) as { type: string; name: string });
 
-  if (!['app', 'view', 'package'].includes(type)) {
-    throw new Error(
-      `Type ${type} does not exist, please use app, view or package`,
+  let type = modularType;
+  if (modularType === '__CHOOSE_MY_OWN__') {
+    logger.warn(
+      'You are choosing to install a template which is not maintained by the modular team.',
     );
+    const typeResponse = await prompts([
+      {
+        name: 'typeName',
+        type: 'text',
+        message: `Which modular template would you like to use.?`,
+      },
+    ]);
+    const typeName = typeResponse.typeName as string;
+    if (typeName[0] === '@') {
+      const [scope, typePackageName] = typeName.split('/');
+      type = `${scope}/modular-template-${typePackageName}`;
+    }
+  } else {
+    if (['app', 'view', 'package'].includes(modularType)) {
+      type = `modular-template-${type}`;
+    } else {
+      throw new Error(
+        `Type ${modularType} does not exist, please use app, view or package`,
+      );
+    }
   }
 
   const modularRoot = getModularRoot();
   const newComponentName = toPascalCase(name);
 
   const newPackagePath = path.join(modularRoot, packagesRoot, destination);
-
   if (fs.existsSync(newPackagePath)) {
     throw new Error(`A package already exists at ${destination}!`);
   }
 
-  const newModularPackageJsonPath = require.resolve(
-    `modular-template-${type}/package.json`,
-  );
+  // try and find the modular template packge, if it's already been installed
+  // in the project then continue without needing to do an install.
+  // else we will fetch it from the yarn registry.
+  try {
+    require.resolve(`${type}/package.json`);
+  } catch (e) {
+    const templateInstallSubprocess = execAsync(
+      'yarnpkg',
+      ['add', type, '--prefer-offline', '--silent', '-W'],
+      {
+        cwd: modularRoot,
+        stderr: 'pipe',
+      },
+    );
+
+    // Remove warnings
+    templateInstallSubprocess.stderr?.pipe(
+      new LineFilterOutStream(/.*warning.*/),
+    );
+    if (verbose) {
+      templateInstallSubprocess.stderr?.pipe(process.stderr);
+    }
+
+    await templateInstallSubprocess;
+  }
+
+  const newModularPackageJsonPath = require.resolve(`${type}/package.json`);
   const packageTypePath = path.dirname(newModularPackageJsonPath);
 
   // create a new package source folder
@@ -83,14 +130,16 @@ async function addPackage(
     );
   }
 
+  const modularTemplatePackageJson = (await fs.readJSON(
+    newModularPackageJsonPath,
+  )) as ModularPackageJson;
+
   await fs.writeJson(
     path.join(newPackagePath, 'package.json'),
     {
       name,
       private: type === 'app',
-      modular: {
-        type,
-      },
+      modular: modularTemplatePackageJson.modular,
       version: '1.0.0',
     },
     {
@@ -115,14 +164,15 @@ async function addPackage(
   }
   const subprocess = execAsync('yarnpkg', yarnArgs, {
     cwd: modularRoot,
-    stderr: verbose ? 'inherit' : 'pipe',
+    stderr: 'pipe',
   });
-  if (!verbose) {
-    // Remove warnings
-    subprocess.stderr
-      ?.pipe(new LineFilterOutStream(/.*warning.*/))
-      .pipe(process.stderr);
+
+  // Remove warnings
+  subprocess.stderr?.pipe(new LineFilterOutStream(/.*warning.*/));
+  if (verbose) {
+    subprocess.stderr?.pipe(process.stderr);
   }
+
   await subprocess;
 }
 
