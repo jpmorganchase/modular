@@ -14,7 +14,7 @@ enum Actions {
   SCRIPT = 'Script',
 }
 
-const DEFAULT_BROWSER = process.env.BROWSER || OSX_CHROME;
+const DEFAULT_BROWSER = process.env.BROWSER || '';
 const DEFAULT_BROWSER_ARGS = process.env.BROWSER_ARGS
   ? process.env.BROWSER_ARGS.split(' ')
   : [];
