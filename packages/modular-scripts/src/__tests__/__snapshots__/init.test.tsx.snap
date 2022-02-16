@@ -27,7 +27,7 @@ Object {
   },
   "description": "",
   "keywords": Array [],
-  "license": "MIT",
+  "license": "Apache-2.0",
   "main": "index.js",
   "modular": Object {
     "type": "root",

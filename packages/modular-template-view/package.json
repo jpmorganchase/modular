@@ -4,7 +4,7 @@
   "exports": {
     "./package.json": "./package.json"
   },
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "modular": {
     "type": "view"
   },

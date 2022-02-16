@@ -130,7 +130,7 @@ describe('create-modular-react-app', () => {
         "eslintConfig": Object {
           "extends": "modular-app",
         },
-        "license": "MIT",
+        "license": "Apache-2.0",
         "main": "index.js",
         "modular": Object {
           "type": "root",
@@ -251,7 +251,7 @@ describe('create-modular-react-app', () => {
         "eslintConfig": Object {
           "extends": "modular-app",
         },
-        "license": "MIT",
+        "license": "Apache-2.0",
         "main": "index.js",
         "modular": Object {
           "type": "root",

@@ -78,7 +78,7 @@ describe('WHEN building with preserve modules', () => {
           "dist-es",
           "dist-types",
         ],
-        "license": "UNLICENSED",
+        "license": "Apache-2.0",
         "main": "dist-cjs/index.js",
         "module": "dist-es/index.js",
         "name": "sample-async-package",
