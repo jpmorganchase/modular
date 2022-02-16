@@ -1,5 +1,6 @@
 import esbuild from 'esbuild';
 import * as ws from 'ws';
+import type Websocket from 'ws';
 import { formatError } from '../../utils/formatError';
 import type { Paths } from '../../../utils/createPaths';
 
@@ -15,41 +16,39 @@ export default function createPlugin(
       let result: esbuild.BuildResult;
       const { appPath } = paths;
 
-      const publish = () => {
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        server.clients.forEach(async (socket) => {
-          socket.send(
-            JSON.stringify({
-              name,
-              building,
-              result: {
-                errors: await Promise.all(
-                  result.errors.map((error) => formatError(error, appPath)),
-                ),
-                warnings: await Promise.all(
-                  result.warnings.map((warning) =>
-                    formatError(warning, appPath),
-                  ),
-                ),
-              },
-            }),
-          );
-        });
+      const publishClient = async (socket: Websocket) => {
+        socket.send(
+          JSON.stringify({
+            name,
+            building,
+            result: {
+              errors: await Promise.all(
+                result.errors.map((error) => formatError(error, appPath)),
+              ),
+              warnings: await Promise.all(
+                result.warnings.map((warning) => formatError(warning, appPath)),
+              ),
+            },
+          }),
+        );
       };
 
-      server.on('connection', () => {
-        publish();
-      });
+      const publishAll = () => {
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        server.clients.forEach(publishClient);
+      };
+
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      server.on('connection', publishClient);
 
       build.onStart(() => {
         building = true;
-        publish();
+        publishAll();
       });
       build.onEnd((_result) => {
         building = false;
         result = _result;
-
-        publish();
+        publishAll();
       });
     },
   };
