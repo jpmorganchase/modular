@@ -76,7 +76,6 @@ connection.onmessage = (m: MessageEvent) => {
       reportBuildError(formatted.errors[0]);
     }
   }
-
   // set whether this is the first build of this bundle
   if (isFirstCompilation) {
     isFirstCompilation = false;
