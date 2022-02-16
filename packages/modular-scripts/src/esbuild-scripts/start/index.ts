@@ -200,7 +200,14 @@ class DevServer {
     this.esbuild = await esbuild.build({
       ...config,
       incremental: true,
-      watch: true,
+      watch: {
+        onRebuild: (error, result) => {
+          if (error || !result) console.error('watch build failed:', error);
+          else {
+            this.esbuild = result;
+          }
+        },
+      },
     });
   };
 

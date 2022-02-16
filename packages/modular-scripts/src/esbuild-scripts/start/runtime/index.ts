@@ -5,7 +5,7 @@ import {
 } from 'react-error-overlay';
 import stripAnsi from 'strip-ansi';
 
-let isFirstCompilation = false;
+let isFirstCompilation = true;
 let hasCompileErrors = false;
 
 const url = new URL('/_ws', window.location.href);
@@ -80,6 +80,10 @@ connection.onmessage = (m: MessageEvent) => {
 
       reportBuildError(formatted.errors[0]);
     }
+  }
+  // set whether this is the first build of this bundle
+  if (isFirstCompilation) {
+    isFirstCompilation = false;
   }
 };
 
