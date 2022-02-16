@@ -337,7 +337,7 @@ describe('when working with an app', () => {
     ) as CoreProperties;
 
     expect(packageJson.name).toBe('sample-app');
-    expect(packageJson.version).toBe('0.1.0');
+    expect(packageJson.version).toBe('1.0.0');
     expect(packageJson.modular).toStrictEqual({ type: 'app' });
     expect(packageJson.dependencies?.react).toBeTruthy();
     expect(packageJson.dependencies?.['react-dom']).toBeTruthy();

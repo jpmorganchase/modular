@@ -59,6 +59,30 @@ describe('when working with a NODE_ENV app', () => {
     `);
   });
 
+  it('can add a node-env template package.json with the right content', () => {
+    expect(
+      JSON.parse(
+        String(
+          fs.readFileSync(
+            path.join(modularRoot, 'packages', 'node-env-app', 'package.json'),
+          ),
+        ),
+      ),
+    ).toMatchInlineSnapshot(`
+      Object {
+        "dependencies": Object {
+          "lodash": "^4.17.21",
+        },
+        "modular": Object {
+          "type": "app",
+        },
+        "name": "node-env-app",
+        "private": true,
+        "version": "1.0.0",
+      }
+    `);
+  });
+
   it('can build a app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'node-env-app')))
       .toMatchInlineSnapshot(`
