@@ -4,7 +4,7 @@
   "exports": {
     "./package.json": "./package.json"
   },
-  "main": "./src/index.ts",
+  "main": "./src/index.tsx",
   "license": "Apache-2.0",
   "modular": {
     "type": "template",
