@@ -22,7 +22,7 @@ async function addPackage(
   preferOffline = true,
   verbose = false,
 ): Promise<void> {
-  const { type: modularType, name } =
+  const { type: packageType, name } =
     (typeArg && nameArg ? { type: typeArg, name: nameArg } : null) ||
     ((await prompts([
       {
@@ -45,8 +45,8 @@ async function addPackage(
       },
     ])) as { type: string; name: string });
 
-  let type = modularType;
-  if (modularType === '__CHOOSE_MY_OWN__') {
+  let templateName = packageType;
+  if (packageType === '__CHOOSE_MY_OWN__') {
     logger.warn(
       'You are choosing to install a template which is not maintained by the modular team.',
     );
@@ -60,16 +60,10 @@ async function addPackage(
     const typeName = typeResponse.typeName as string;
     if (typeName[0] === '@') {
       const [scope, typePackageName] = typeName.split('/');
-      type = `${scope}/modular-template-${typePackageName}`;
+      templateName = `${scope}/modular-template-${typePackageName}`;
     }
   } else {
-    if (['app', 'view', 'package'].includes(modularType)) {
-      type = `modular-template-${type}`;
-    } else {
-      throw new Error(
-        `Type ${modularType} does not exist, please use app, view or package`,
-      );
-    }
+    templateName = `modular-template-${templateName}`;
   }
 
   const modularRoot = getModularRoot();
@@ -84,11 +78,11 @@ async function addPackage(
   // in the project then continue without needing to do an install.
   // else we will fetch it from the yarn registry.
   try {
-    require.resolve(`${type}/package.json`);
+    require.resolve(`${templateName}/package.json`);
   } catch (e) {
     const templateInstallSubprocess = execAsync(
       'yarnpkg',
-      ['add', type, '--prefer-offline', '--silent', '-W'],
+      ['add', templateName, '--prefer-offline', '--silent', '-W'],
       {
         cwd: modularRoot,
         stderr: 'pipe',
@@ -106,9 +100,22 @@ async function addPackage(
     await templateInstallSubprocess;
   }
 
-  const newModularPackageJsonPath = require.resolve(`${type}/package.json`);
-  const packageTypePath = path.dirname(newModularPackageJsonPath);
+  const newModularPackageJsonPath = require.resolve(
+    `${templateName}/package.json`,
+  );
 
+  const modularTemplatePackageJson = (await fs.readJSON(
+    newModularPackageJsonPath,
+  )) as ModularPackageJson;
+
+  const modularType = modularTemplatePackageJson?.modular?.type as string;
+  if (!['app', 'view', 'package'].includes(modularType)) {
+    throw new Error(
+      `${templateName} has modular type: ${modularType}, which does not exist, please use update this template`,
+    );
+  }
+
+  const packageTypePath = path.dirname(newModularPackageJsonPath);
   // create a new package source folder
   fs.mkdirpSync(newPackagePath);
   fs.copySync(packageTypePath, newPackagePath, {
@@ -130,15 +137,11 @@ async function addPackage(
     );
   }
 
-  const modularTemplatePackageJson = (await fs.readJSON(
-    newModularPackageJsonPath,
-  )) as ModularPackageJson;
-
   await fs.writeJson(
     path.join(newPackagePath, 'package.json'),
     {
       name,
-      private: type === 'app',
+      private: templateName === 'app',
       modular: modularTemplatePackageJson.modular,
       version: '1.0.0',
     },
@@ -147,7 +150,7 @@ async function addPackage(
     },
   );
 
-  if (type === 'app') {
+  if (templateName === 'app') {
     // add a tsconfig, because CRA expects it
     await fs.writeJSON(
       path.join(newPackagePath, 'tsconfig.json'),
