@@ -15,13 +15,23 @@ import { ModularPackageJson } from './utils/isModularType';
 
 const packagesRoot = 'packages';
 
-async function addPackage(
-  destination: string,
-  typeArg: string | void,
-  nameArg: string | void,
+interface AddOptions {
+  destination: string;
+  type: string | void;
+  name: string | void;
+  template: string | void;
+  preferOffline: boolean;
+  verbose: boolean;
+}
+
+async function addPackage({
+  destination,
+  type: typeArg,
+  name: nameArg,
+  template: templateNameArg,
   preferOffline = true,
   verbose = false,
-): Promise<void> {
+}: AddOptions): Promise<void> {
   const { type: packageType, name } =
     (typeArg && nameArg ? { type: typeArg, name: nameArg } : null) ||
     ((await prompts([
@@ -45,7 +55,7 @@ async function addPackage(
       },
     ])) as { type: string; name: string });
 
-  let templateName = packageType;
+  let templateName = templateNameArg || packageType;
   if (packageType === '__CHOOSE_MY_OWN__') {
     logger.warn(
       'You are choosing to install a template which is not maintained by the modular team.',
@@ -125,8 +135,8 @@ async function addPackage(
 
   const packageTypePath = path.dirname(newModularPackageJsonPath);
   // create a new package source folder
-  fs.mkdirpSync(newPackagePath);
-  fs.copySync(packageTypePath, newPackagePath, {
+  await fs.mkdirp(newPackagePath);
+  await fs.copy(packageTypePath, newPackagePath, {
     recursive: true,
     filter(src) {
       return !(path.basename(src) === 'package.json');
@@ -150,7 +160,10 @@ async function addPackage(
     {
       name,
       private: modularTemplateType === 'app',
-      modular: modularTemplatePackageJson.modular,
+      modular: {
+        type: modularTemplateType,
+      },
+      dependencies: modularTemplatePackageJson.dependencies,
       version: '1.0.0',
     },
     {
