@@ -36,22 +36,19 @@ export default function createPlugin(
         );
       };
 
-      const publishAll = () => {
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        server.clients.forEach(publishClient);
-      };
+      const publishAll = () =>
+        Promise.all(Array.from(server.clients).map(publishClient));
 
-      // eslint-disable-next-line @typescript-eslint/no-misused-promises
-      server.on('connection', publishClient);
+      server.on('connection', (s) => void publishClient(s));
 
       build.onStart(() => {
         building = true;
-        publishAll();
+        void publishAll();
       });
       build.onEnd((_result) => {
         building = false;
         result = _result;
-        publishAll();
+        void publishAll();
       });
     },
   };
