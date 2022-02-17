@@ -239,6 +239,57 @@ describe('modular-scripts', () => {
     });
   });
 
+  describe('WHEN building a view with a custom ESM CDN', () => {
+    beforeAll(async () => {
+      await modular('build sample-view', {
+        stdio: 'inherit',
+        env: {
+          EXTERNAL_CDN_TEMPLATE:
+            'https://mycustomcdn.net/[name]?version=[version]',
+        },
+      });
+    });
+
+    it('THEN outputs the correct directory structure', () => {
+      expect(tree(path.join(modularRoot, 'dist', 'sample-view')))
+        .toMatchInlineSnapshot(`
+        "sample-view
+        ├─ index.html #1iozhyg
+        ├─ package.json
+        └─ static
+           └─ js
+              ├─ _trampoline.js #9paktu
+              ├─ index-LUQBNEET.js #7c5l8d
+              └─ index-LUQBNEET.js.map #1bqa5dr"
+      `);
+    });
+
+    it('THEN rewrites the dependencies according to the template string', async () => {
+      const baseDir = path.join(
+        modularRoot,
+        'dist',
+        'sample-view',
+        'static',
+        'js',
+      );
+      const trampolineFile = (
+        await fs.readFile(path.join(baseDir, '_trampoline.js'))
+      ).toString();
+
+      const indexFile = (
+        await fs.readFile(path.join(baseDir, 'index-LUQBNEET.js'))
+      ).toString();
+
+      expect(trampolineFile).toContain(
+        `https://mycustomcdn.net/react?version=`,
+      );
+      expect(trampolineFile).toContain(
+        `https://mycustomcdn.net/react-dom?version=`,
+      );
+      expect(indexFile).toContain(`https://mycustomcdn.net/react?version=`);
+    });
+  });
+
   it('can execute tests', async () => {
     const output = await modular(
       'test sample-package sample-view sample-nested-package --watchAll false',
