@@ -86,7 +86,7 @@
     "postcss-flexbugs-fixes": "4.2.1",
     "postcss-loader": "4.2.0",
     "postcss-normalize": "8.0.1",
-    "postcss-preset-env": "7.3.1",
+    "postcss-preset-env": "7.4.0",
     "postcss-safe-parser": "5.0.2",
     "prompts": "2.4.2",
     "react-error-overlay": "6.0.10",
