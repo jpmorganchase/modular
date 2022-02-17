@@ -1,5 +1,6 @@
 import esbuild from 'esbuild';
 import * as ws from 'ws';
+import type Websocket from 'ws';
 import { formatError } from '../../utils/formatError';
 import type { Paths } from '../../../utils/createPaths';
 
@@ -13,43 +14,41 @@ export default function createPlugin(
     setup(build) {
       let building = false;
       let result: esbuild.BuildResult;
-      const { appPath } = paths;
 
-      const publish = () => {
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        server.clients.forEach(async (socket) => {
-          socket.send(
-            JSON.stringify({
-              name,
-              building,
-              result: {
-                errors: await Promise.all(
-                  result.errors.map((error) => formatError(error, appPath)),
+      const publishClient = async (socket: Websocket) => {
+        socket.send(
+          JSON.stringify({
+            name,
+            building,
+            result: {
+              errors: await Promise.all(
+                result.errors.map((error) =>
+                  formatError(error, paths.modularRoot),
                 ),
-                warnings: await Promise.all(
-                  result.warnings.map((warning) =>
-                    formatError(warning, appPath),
-                  ),
+              ),
+              warnings: await Promise.all(
+                result.warnings.map((warning) =>
+                  formatError(warning, paths.modularRoot),
                 ),
-              },
-            }),
-          );
-        });
+              ),
+            },
+          }),
+        );
       };
 
-      server.on('connection', () => {
-        publish();
-      });
+      const publishAll = () =>
+        Promise.all(Array.from(server.clients).map(publishClient));
+
+      server.on('connection', (s) => void publishClient(s));
 
       build.onStart(() => {
         building = true;
-        publish();
+        void publishAll();
       });
       build.onEnd((_result) => {
         building = false;
         result = _result;
-
-        publish();
+        void publishAll();
       });
     },
   };
