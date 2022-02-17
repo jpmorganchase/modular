@@ -15,6 +15,7 @@ import puppeteer from 'puppeteer';
 import getModularRoot from '../utils/getModularRoot';
 import { startApp, DevServer } from './start-app';
 import { ModularPackageJson } from '../utils/isModularType';
+import type { CoreProperties } from '@schemastore/package';
 
 const rimraf = promisify(_rimraf);
 
@@ -288,6 +289,140 @@ describe('modular-scripts', () => {
       );
       expect(indexFile).toContain(`https://mycustomcdn.net/react?version=`);
     });
+  });
+
+  describe('WHEN building a view with various kinds of package dependencies', () => {
+    beforeAll(async () => {
+      await fs.copyFile(
+        path.join(__dirname, 'TestViewPackages.test-tsx'),
+        path.join(packagesPath, targetedView, 'src', 'index.tsx'),
+      );
+
+      const packageJsonPath = path.join(
+        packagesPath,
+        targetedView,
+        'package.json',
+      );
+      const packageJson = (await fs.readJSON(
+        packageJsonPath,
+      )) as CoreProperties;
+
+      await fs.writeJSON(
+        packageJsonPath,
+        Object.assign(packageJson, {
+          dependencies: {
+            lodash: '^4.17.21',
+            'lodash.merge': '^4.6.2',
+          },
+        }),
+      );
+
+      await execa('yarnpkg', [], {
+        cwd: modularRoot,
+        cleanup: true,
+      });
+
+      await modular('build sample-view', {
+        stdio: 'inherit',
+        env: {
+          EXTERNAL_CDN_TEMPLATE:
+            'https://mycustomcdn.net/[name]?version=[version]',
+        },
+      });
+    });
+
+    it('THEN outputs the correct directory structure', () => {
+      expect(tree(path.join(modularRoot, 'dist', 'sample-view')))
+        .toMatchInlineSnapshot(`
+        "sample-view
+        ├─ index.html #1tkhgxi
+        ├─ package.json
+        └─ static
+           └─ js
+              ├─ _trampoline.js #1g4vig6
+              ├─ index-F6YQ237K.js #oj2dgc
+              └─ index-F6YQ237K.js.map #1yijvx1"
+      `);
+    });
+
+    it('THEN rewrites the dependencies', async () => {
+      const baseDir = path.join(
+        modularRoot,
+        'dist',
+        'sample-view',
+        'static',
+        'js',
+      );
+
+      const indexFile = (
+        await fs.readFile(path.join(baseDir, 'index-F6YQ237K.js'))
+      ).toString();
+      expect(indexFile).toContain(`https://mycustomcdn.net/react?version=`);
+      expect(indexFile).toContain(
+        `https://mycustomcdn.net/lodash?version=^4.17.21`,
+      );
+      expect(indexFile).toContain(
+        `https://mycustomcdn.net/lodash.merge?version=^4.6.2`,
+      );
+    });
+  });
+
+  describe('WHEN building a view specifying a dependency to not being rewritten', () => {
+    beforeAll(async () => {
+      await modular('build sample-view', {
+        stdio: 'inherit',
+        env: {
+          EXTERNAL_CDN_TEMPLATE:
+            'https://mycustomcdn.net/[name]?version=[version]',
+          EXTERNAL_BLOCK_LIST: 'lodash,lodash.merge',
+        },
+      });
+    });
+
+    it('THEN outputs the correct directory structure', () => {
+      expect(tree(path.join(modularRoot, 'dist', 'sample-view')))
+        .toMatchInlineSnapshot(`
+        "sample-view
+        ├─ index.html #1vkdpvs
+        ├─ package.json
+        └─ static
+           └─ js
+              ├─ _trampoline.js #9qjmtx
+              ├─ index-P6RWJ53F.js #1emvouy
+              └─ index-P6RWJ53F.js.map #1y2yxmy"
+      `);
+    });
+
+    it('THEN rewrites only the dependencies that are not specified in the blocklist', async () => {
+      const baseDir = path.join(
+        modularRoot,
+        'dist',
+        'sample-view',
+        'static',
+        'js',
+      );
+
+      const indexFile = (
+        await fs.readFile(path.join(baseDir, 'index-P6RWJ53F.js'))
+      ).toString();
+      expect(indexFile).toContain(`https://mycustomcdn.net/react?version=`);
+      expect(indexFile).not.toContain(
+        `https://mycustomcdn.net/lodash?version=`,
+      );
+      expect(indexFile).not.toContain(
+        `https://mycustomcdn.net/lodash.merge?version=`,
+      );
+    });
+  });
+
+  it('THEN expects the correct bundledDependencies in package.json', async () => {
+    expect(
+      (
+        (await fs.readJson(
+          path.join(modularRoot, 'dist', 'sample-view', 'package.json'),
+        )) as CoreProperties
+      ).bundledDependencies,
+    ).toEqual(['lodash', 'lodash.merge']);
   });
 
   it('can execute tests', async () => {
