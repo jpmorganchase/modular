@@ -14,7 +14,7 @@ enum Actions {
   SCRIPT = 'Script',
 }
 
-const DEFAULT_BROWSER = process.env.BROWSER || '';
+const DEFAULT_BROWSER = process.env.BROWSER;
 const DEFAULT_BROWSER_ARGS = process.env.BROWSER_ARGS
   ? process.env.BROWSER_ARGS.split(' ')
   : [];
@@ -143,7 +143,8 @@ export default async function openBrowser(url: string): Promise<boolean> {
       // Special case: BROWSER="none" will prevent opening completely.
       return false;
     case Actions.SCRIPT:
-      return executeNodeScript(value, url);
+      // Value will always be string if action is SCRIPT.
+      return executeNodeScript(value as string, url);
     case Actions.BROWSER:
       return startBrowserProcess(value, url, args);
     default:
