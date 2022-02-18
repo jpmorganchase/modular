@@ -1,6 +1,7 @@
 import * as esbuild from 'esbuild';
 import chalk from 'chalk';
 import * as express from 'express';
+import type { RequestHandler } from 'express';
 import ws from 'express-ws';
 import * as fs from 'fs-extra';
 import * as http from 'http';
@@ -90,8 +91,11 @@ class DevServer {
     this.ws = ws(this.express);
 
     this.express.use(this.handleStaticAsset);
-    this.isApp || // eslint-disable-next-line @typescript-eslint/no-misused-promises
-      this.express.get('/static/js/_trampoline.js', this.handleTrampoline);
+    this.isApp ||
+      this.express.get(
+        '/static/js/_trampoline.js',
+        this.handleTrampoline as RequestHandler,
+      );
     this.express.use('/static/js', this.handleStaticAsset);
     this.express.use(this.handleRuntimeAsset);
 
