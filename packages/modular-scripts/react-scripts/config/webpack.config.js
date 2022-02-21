@@ -32,8 +32,6 @@ const esbuildTargetFactory = process.env.ESBUILD_TARGET_FACTORY
   ? JSON.parse(process.env.ESBUILD_TARGET_FACTORY)
   : 'es2015';
 
-const appPackageJson = require(paths.appPackageJson);
-
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
 
@@ -202,9 +200,6 @@ module.exports = function (webpackEnv) {
         : isEnvDevelopment &&
           ((info) =>
             path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')),
-      // this defaults to 'window', but by setting it to 'this' then
-      // module chunks which are built will work in web workers as well.
-      globalObject: 'this',
     },
     optimization: {
       minimize: isEnvProduction,
