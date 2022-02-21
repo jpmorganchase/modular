@@ -96,7 +96,13 @@ async function buildAppOrView(
 
   let moduleEntryPoint: string | undefined;
   // Build views with esbuild
-  if (isEsbuild || !isApp) {
+  if (!isApp && !useEsbuild) {
+    throw new Error(
+      "Views can currently be built only with esbuild. Please set USE_MODULAR_ESBUILD='true' to build a view",
+    );
+  }
+
+  if (isEsbuild) {
     const { default: buildEsbuildApp } = await import(
       '../esbuild-scripts/build'
     );

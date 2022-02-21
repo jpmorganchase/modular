@@ -63,9 +63,15 @@ async function start(packageName: string): Promise<void> {
     process.env.USE_MODULAR_ESBUILD &&
     process.env.USE_MODULAR_ESBUILD === 'true';
 
+  if (isView && !useEsbuild) {
+    throw new Error(
+      "Views can currently be started only with esbuild. Please set USE_MODULAR_ESBUILD='true' to start a view",
+    );
+  }
+
   // If you want to use webpack then we'll always use webpack. But if you've indicated
   // you want esbuild - then we'll switch you to the new fancy world.
-  if (!useWebpack || useEsbuild || isView) {
+  if (!useWebpack || useEsbuild) {
     const { default: startEsbuildApp } = await import(
       './esbuild-scripts/start'
     );
