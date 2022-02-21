@@ -618,26 +618,44 @@ module.exports = function (webpackEnv) {
               syntactic: true,
               semantic: true,
             },
+            context: paths.appPath,
+            mode: 'write-references',
             typescriptPath: resolve.sync('typescript', {
               basedir: paths.appNodeModules,
             }),
+            configOverwrite: {
+              compilerOptions: {
+                sourceMap: isEnvProduction
+                  ? shouldUseSourceMap
+                  : isEnvDevelopment,
+                skipLibCheck: true,
+                inlineSourceMap: false,
+                declarationMap: false,
+                noEmit: true,
+                incremental: true,
+              },
+            },
           },
           async: isEnvDevelopment,
-          // see https://github.com/TypeStrong/fork-ts-checker-webpack-plugin/pull/179#issuecomment-949360807
-          // reportFiles: [
-          //   // This one is specifically to match during CI tests,
-          //   // as micromatch doesn't match
-          //   // '../cra-template-typescript/template/src/App.tsx'
-          //   // otherwise.
-          //   '../**/src/**/*.{ts,tsx}',
-          //   '**/src/**/*.{ts,tsx}',
-          //   '!**/src/**/__tests__/**',
-          //   '!**/src/**/?(*.)(spec|test).*',
-          //   '!**/src/setupProxy.*',
-          //   '!**/src/setupTests.*',
-          // ],
-          // The formatter is invoked directly in WebpackDevServerUtils during development
-          formatter: isEnvProduction ? typescriptFormatter : undefined,
+          issue: {
+            // This one is specifically to match during CI tests,
+            // as micromatch doesn't match
+            // '../cra-template-typescript/template/src/App.tsx'
+            // otherwise.
+            include: [
+              { file: '../**/src/**/*.{ts,tsx}' },
+              { file: '**/src/**/*.{ts,tsx}' },
+            ],
+            exclude: [
+              { file: '**/src/**/__tests__/**' },
+              { file: '**/src/**/?(*.){spec|test}.*' },
+              { file: '**/src/setupProxy.*' },
+              { file: '**/src/setupTests.*' },
+            ],
+          },
+          logger: {
+            infrastructure: 'silent',
+          },
         }),
     ].filter(Boolean),
     // Turn off performance processing because we utilize
