@@ -152,7 +152,9 @@ describe('modular-scripts', () => {
 
       browser = await puppeteer.launch(launchArgs);
       port = '4000';
-      devServer = await startApp(targetedView, { env: { PORT: port } });
+      devServer = await startApp(targetedView, {
+        env: { PORT: port, USE_MODULAR_ESBUILD: 'true' },
+      });
     });
 
     afterAll(async () => {
@@ -200,6 +202,9 @@ describe('modular-scripts', () => {
     beforeAll(async () => {
       await modular('build sample-view', {
         stdio: 'inherit',
+        env: {
+          USE_MODULAR_ESBUILD: 'true',
+        },
       });
     });
 
@@ -245,6 +250,7 @@ describe('modular-scripts', () => {
       await modular('build sample-view', {
         stdio: 'inherit',
         env: {
+          USE_MODULAR_ESBUILD: 'true',
           EXTERNAL_CDN_TEMPLATE:
             'https://mycustomcdn.net/[name]?version=[version]',
         },
@@ -325,6 +331,7 @@ describe('modular-scripts', () => {
       await modular('build sample-view', {
         stdio: 'inherit',
         env: {
+          USE_MODULAR_ESBUILD: 'true',
           EXTERNAL_CDN_TEMPLATE:
             'https://mycustomcdn.net/[name]?version=[version]',
         },
@@ -372,6 +379,7 @@ describe('modular-scripts', () => {
       await modular('build sample-view', {
         stdio: 'inherit',
         env: {
+          USE_MODULAR_ESBUILD: 'true',
           EXTERNAL_CDN_TEMPLATE:
             'https://mycustomcdn.net/[name]?version=[version]',
           EXTERNAL_BLOCK_LIST: 'lodash,lodash.merge',
