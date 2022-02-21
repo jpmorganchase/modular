@@ -13,7 +13,7 @@ import { setupEnvForDirectory } from '../utils/setupEnv';
 import createPaths from '../utils/createPaths';
 import printHostingInstructions from './printHostingInstructions';
 import { Asset, printFileSizesAfterBuild } from './fileSizeReporter';
-import type { Stats } from 'webpack';
+import type { StatsCompilation } from 'webpack';
 import { checkBrowsers } from '../utils/checkBrowsers';
 import checkRequiredFiles from '../utils/checkRequiredFiles';
 import createEsbuildBrowserslistTarget from '../utils/createEsbuildBrowserslistTarget';
@@ -110,9 +110,9 @@ async function buildApp(target: string) {
     const statsFilePath = path.join(paths.appBuild, 'bundle-stats.json');
 
     try {
-      const stats: Stats.ToJsonOutput = await fs.readJson(statsFilePath);
+      const stats: StatsCompilation = await fs.readJson(statsFilePath);
 
-      if (stats.warnings.length) {
+      if (stats?.warnings?.length) {
         logger.log(chalk.yellow('Compiled with warnings.\n'));
         logger.log(stats.warnings.join('\n\n'));
         logger.log(
