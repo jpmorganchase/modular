@@ -243,7 +243,6 @@ module.exports = function (webpackEnv) {
               ascii_only: true,
             },
           },
-          // sourceMap: shouldUseSourceMap,
         }),
         // This is only used in production mode
         new OptimizeCSSAssetsPlugin({
