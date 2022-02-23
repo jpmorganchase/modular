@@ -584,14 +584,9 @@ module.exports = function (webpackEnv) {
       useTypeScript &&
         !isCI &&
         new ForkTsCheckerWebpackPlugin({
+          async: isEnvDevelopment,
           typescript: {
-            configFile: paths.appTsConfig,
-            diagnosticOptions: {
-              syntactic: true,
-              semantic: true,
-            },
-            context: paths.appPath,
-            mode: 'write-references',
+            async: isEnvDevelopment,
             typescriptPath: resolve.sync('typescript', {
               basedir: paths.appNodeModules,
             }),
@@ -605,10 +600,16 @@ module.exports = function (webpackEnv) {
                 declarationMap: false,
                 noEmit: true,
                 incremental: true,
+                tsBuildInfoFile: paths.appTsBuildInfoFile,
               },
             },
+            context: paths.appPath,
+            diagnosticOptions: {
+              syntactic: true,
+              semantic: true,
+            },
+            mode: 'write-references',
           },
-          async: isEnvDevelopment,
           issue: {
             // This one is specifically to match during CI tests,
             // as micromatch doesn't match
