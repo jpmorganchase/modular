@@ -95,7 +95,7 @@ async function buildApp(target: string) {
     const browserTarget = createEsbuildBrowserslistTarget(targetDirectory);
 
     // TODO: this shouldn't be sync
-    await execAsync('node', [buildScript], {
+    await execAsync('node', ['--trace-deprecation', buildScript], {
       cwd: targetDirectory,
       log: false,
       // @ts-ignore
