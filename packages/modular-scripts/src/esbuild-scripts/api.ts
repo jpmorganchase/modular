@@ -9,7 +9,7 @@ import * as path from 'path';
 
 type FileType = '.css' | '.js';
 
-function getEntryPoint(
+export function getEntryPoint(
   paths: Paths,
   metafile: esbuild.Metafile,
   type: FileType,
@@ -35,8 +35,10 @@ export async function createIndex(
   metafile: esbuild.Metafile,
   replacements: Record<string, string>,
   includeRuntime: boolean,
+  indexContent?: string,
 ): Promise<string> {
-  const index = await fs.readFile(paths.appHtml, { encoding: 'utf-8' });
+  const index =
+    indexContent ?? (await fs.readFile(paths.appHtml, { encoding: 'utf-8' }));
   const page = parse5.parse(index);
   const html = page.childNodes.find(
     (node) => node.nodeName === 'html',

@@ -15,6 +15,7 @@ import puppeteer from 'puppeteer';
 import getModularRoot from '../utils/getModularRoot';
 import { startApp, DevServer } from './start-app';
 import { ModularPackageJson } from '../utils/isModularType';
+import type { CoreProperties } from '@schemastore/package';
 
 const rimraf = promisify(_rimraf);
 
@@ -53,7 +54,6 @@ const targetedView = 'sample-view';
 describe('modular-scripts', () => {
   beforeAll(async () => {
     await cleanup();
-
     await modular(
       'add sample-view --unstable-type view --unstable-name sample-view',
       { stdio: 'inherit' },
@@ -152,7 +152,9 @@ describe('modular-scripts', () => {
 
       browser = await puppeteer.launch(launchArgs);
       port = '4000';
-      devServer = await startApp(targetedView, { env: { PORT: port } });
+      devServer = await startApp(targetedView, {
+        env: { PORT: port, USE_MODULAR_ESBUILD: 'true' },
+      });
     });
 
     afterAll(async () => {
@@ -200,6 +202,9 @@ describe('modular-scripts', () => {
     beforeAll(async () => {
       await modular('build sample-view', {
         stdio: 'inherit',
+        env: {
+          USE_MODULAR_ESBUILD: 'true',
+        },
       });
     });
 
@@ -210,74 +215,222 @@ describe('modular-scripts', () => {
         ),
       ).toMatchInlineSnapshot(`
         Object {
+          "bundledDependencies": Array [],
           "dependencies": Object {
             "react": "17.0.2",
           },
-          "files": Array [
-            "README.md",
-            "dist-cjs",
-            "dist-es",
-            "dist-types",
-          ],
           "license": "UNLICENSED",
-          "main": "dist-cjs/index.js",
           "modular": Object {
             "type": "view",
           },
-          "module": "dist-es/index.js",
+          "module": "static/js/index-IC6FL6E2.js",
           "name": "sample-view",
-          "typings": "dist-types/index.d.ts",
           "version": "1.0.0",
         }
       `);
-    });
-
-    it('THEN outputs the correct output cjs file', () => {
-      expect(
-        String(
-          fs.readFileSync(
-            path.join(
-              modularRoot,
-              'dist',
-              'sample-view',
-              'dist-cjs',
-              'index.js',
-            ),
-          ),
-        ),
-      ).toMatchSnapshot();
-    });
-
-    it('THEN outputs the correct output cjs map file', () => {
-      expect(
-        fs.readJsonSync(
-          path.join(
-            modularRoot,
-            'dist',
-            'sample-view',
-            'dist-cjs',
-            'index.js.map',
-          ),
-        ),
-      ).toMatchSnapshot();
     });
 
     it('THEN outputs the correct directory structure', () => {
       expect(tree(path.join(modularRoot, 'dist', 'sample-view')))
         .toMatchInlineSnapshot(`
         "sample-view
-        ├─ README.md #11adaka
-        ├─ dist-cjs
-        │  ├─ index.js #a7k6ic
-        │  └─ index.js.map #1825qkv
-        ├─ dist-es
-        │  ├─ index.js #1ymmv5l
-        │  └─ index.js.map #1kl5sc5
-        ├─ dist-types
-        │  └─ index.d.ts #1vloh7q
-        └─ package.json"
+        ├─ index.html #1o286v3
+        ├─ package.json
+        └─ static
+           └─ js
+              ├─ _trampoline.js #1atamnv
+              ├─ index-IC6FL6E2.js #19sl0ps
+              └─ index-IC6FL6E2.js.map #1sysx0b"
       `);
     });
+  });
+
+  describe('WHEN building a view with a custom ESM CDN', () => {
+    beforeAll(async () => {
+      await modular('build sample-view', {
+        stdio: 'inherit',
+        env: {
+          USE_MODULAR_ESBUILD: 'true',
+          EXTERNAL_CDN_TEMPLATE:
+            'https://mycustomcdn.net/[name]?version=[version]',
+        },
+      });
+    });
+
+    it('THEN outputs the correct directory structure', () => {
+      expect(tree(path.join(modularRoot, 'dist', 'sample-view')))
+        .toMatchInlineSnapshot(`
+        "sample-view
+        ├─ index.html #1iozhyg
+        ├─ package.json
+        └─ static
+           └─ js
+              ├─ _trampoline.js #9paktu
+              ├─ index-LUQBNEET.js #7c5l8d
+              └─ index-LUQBNEET.js.map #1bqa5dr"
+      `);
+    });
+
+    it('THEN rewrites the dependencies according to the template string', async () => {
+      const baseDir = path.join(
+        modularRoot,
+        'dist',
+        'sample-view',
+        'static',
+        'js',
+      );
+      const trampolineFile = (
+        await fs.readFile(path.join(baseDir, '_trampoline.js'))
+      ).toString();
+
+      const indexFile = (
+        await fs.readFile(path.join(baseDir, 'index-LUQBNEET.js'))
+      ).toString();
+
+      expect(trampolineFile).toContain(
+        `https://mycustomcdn.net/react?version=`,
+      );
+      expect(trampolineFile).toContain(
+        `https://mycustomcdn.net/react-dom?version=`,
+      );
+      expect(indexFile).toContain(`https://mycustomcdn.net/react?version=`);
+    });
+  });
+
+  describe('WHEN building a view with various kinds of package dependencies', () => {
+    beforeAll(async () => {
+      await fs.copyFile(
+        path.join(__dirname, 'TestViewPackages.test-tsx'),
+        path.join(packagesPath, targetedView, 'src', 'index.tsx'),
+      );
+
+      const packageJsonPath = path.join(
+        packagesPath,
+        targetedView,
+        'package.json',
+      );
+      const packageJson = (await fs.readJSON(
+        packageJsonPath,
+      )) as CoreProperties;
+
+      await fs.writeJSON(
+        packageJsonPath,
+        Object.assign(packageJson, {
+          dependencies: {
+            lodash: '^4.17.21',
+            'lodash.merge': '^4.6.2',
+          },
+        }),
+      );
+
+      await execa('yarnpkg', [], {
+        cwd: modularRoot,
+        cleanup: true,
+      });
+
+      await modular('build sample-view', {
+        stdio: 'inherit',
+        env: {
+          USE_MODULAR_ESBUILD: 'true',
+          EXTERNAL_CDN_TEMPLATE:
+            'https://mycustomcdn.net/[name]?version=[version]',
+        },
+      });
+    });
+
+    it('THEN outputs the correct directory structure', () => {
+      expect(tree(path.join(modularRoot, 'dist', 'sample-view')))
+        .toMatchInlineSnapshot(`
+        "sample-view
+        ├─ index.html #1tkhgxi
+        ├─ package.json
+        └─ static
+           └─ js
+              ├─ _trampoline.js #1g4vig6
+              ├─ index-F6YQ237K.js #oj2dgc
+              └─ index-F6YQ237K.js.map #1yijvx1"
+      `);
+    });
+
+    it('THEN rewrites the dependencies', async () => {
+      const baseDir = path.join(
+        modularRoot,
+        'dist',
+        'sample-view',
+        'static',
+        'js',
+      );
+
+      const indexFile = (
+        await fs.readFile(path.join(baseDir, 'index-F6YQ237K.js'))
+      ).toString();
+      expect(indexFile).toContain(`https://mycustomcdn.net/react?version=`);
+      expect(indexFile).toContain(
+        `https://mycustomcdn.net/lodash?version=^4.17.21`,
+      );
+      expect(indexFile).toContain(
+        `https://mycustomcdn.net/lodash.merge?version=^4.6.2`,
+      );
+    });
+  });
+
+  describe('WHEN building a view specifying a dependency to not being rewritten', () => {
+    beforeAll(async () => {
+      await modular('build sample-view', {
+        stdio: 'inherit',
+        env: {
+          USE_MODULAR_ESBUILD: 'true',
+          EXTERNAL_CDN_TEMPLATE:
+            'https://mycustomcdn.net/[name]?version=[version]',
+          EXTERNAL_BLOCK_LIST: 'lodash,lodash.merge',
+        },
+      });
+    });
+
+    it('THEN outputs the correct directory structure', () => {
+      expect(tree(path.join(modularRoot, 'dist', 'sample-view')))
+        .toMatchInlineSnapshot(`
+        "sample-view
+        ├─ index.html #1vkdpvs
+        ├─ package.json
+        └─ static
+           └─ js
+              ├─ _trampoline.js #9qjmtx
+              ├─ index-P6RWJ53F.js #1emvouy
+              └─ index-P6RWJ53F.js.map #1y2yxmy"
+      `);
+    });
+
+    it('THEN rewrites only the dependencies that are not specified in the blocklist', async () => {
+      const baseDir = path.join(
+        modularRoot,
+        'dist',
+        'sample-view',
+        'static',
+        'js',
+      );
+
+      const indexFile = (
+        await fs.readFile(path.join(baseDir, 'index-P6RWJ53F.js'))
+      ).toString();
+      expect(indexFile).toContain(`https://mycustomcdn.net/react?version=`);
+      expect(indexFile).not.toContain(
+        `https://mycustomcdn.net/lodash?version=`,
+      );
+      expect(indexFile).not.toContain(
+        `https://mycustomcdn.net/lodash.merge?version=`,
+      );
+    });
+  });
+
+  it('THEN expects the correct bundledDependencies in package.json', async () => {
+    expect(
+      (
+        (await fs.readJson(
+          path.join(modularRoot, 'dist', 'sample-view', 'package.json'),
+        )) as CoreProperties
+      ).bundledDependencies,
+    ).toEqual(['lodash', 'lodash.merge']);
   });
 
   it('can execute tests', async () => {

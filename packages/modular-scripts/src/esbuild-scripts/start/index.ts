@@ -1,6 +1,7 @@
 import * as esbuild from 'esbuild';
 import chalk from 'chalk';
 import * as express from 'express';
+import type { RequestHandler } from 'express';
 import ws from 'express-ws';
 import * as fs from 'fs-extra';
 import * as http from 'http';
@@ -31,6 +32,10 @@ import getHost from './utils/getHost';
 import getPort from './utils/getPort';
 import sanitizeMetafile, { sanitizeFileName } from '../utils/sanitizeMetafile';
 import getModularRoot from '../../utils/getModularRoot';
+import { createRewriteDependenciesPlugin } from '../plugins/rewriteDependenciesPlugin';
+import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowserslistTarget';
+import { indexFile, createViewTrampoline } from '../utils/createViewTrampoline';
+import type { Dependency } from '@schemastore/package';
 
 const RUNTIME_DIR = path.join(__dirname, 'runtime');
 class DevServer {
@@ -58,11 +63,23 @@ class DevServer {
   private urls: InstructionURLS;
   private port: number;
 
-  constructor(paths: Paths, urls: InstructionURLS, host: string, port: number) {
+  private isApp: boolean; // TODO maybe it's better to pass the type here
+  private dependencies: Dependency;
+
+  constructor(
+    paths: Paths,
+    urls: InstructionURLS,
+    host: string,
+    port: number,
+    isApp: boolean,
+    dependencies: Dependency,
+  ) {
     this.paths = paths;
     this.urls = urls;
     this.host = host;
     this.port = port;
+    this.isApp = isApp;
+    this.dependencies = dependencies;
 
     this.firstCompilePromise = new Promise<void>((resolve) => {
       this.firstCompilePromiseResolve = resolve;
@@ -74,6 +91,11 @@ class DevServer {
     this.ws = ws(this.express);
 
     this.express.use(this.handleStaticAsset);
+    this.isApp ||
+      this.express.get(
+        '/static/js/_trampoline.js',
+        this.handleTrampoline as RequestHandler,
+      );
     this.express.use('/static/js', this.handleStaticAsset);
     this.express.use(this.handleRuntimeAsset);
 
@@ -170,12 +192,17 @@ class DevServer {
   });
 
   baseEsbuildConfig = memoize(() => {
+    const browserTarget = createEsbuildBrowserslistTarget(this.paths.appPath);
     return createEsbuildConfig(this.paths, {
       write: false,
       minify: false,
       entryNames: 'static/js/[name]',
       chunkNames: 'static/js/[name]',
       assetNames: 'static/media/[name]',
+      target: browserTarget,
+      plugins: this.isApp
+        ? undefined
+        : [createRewriteDependenciesPlugin(this.dependencies)],
     });
   });
 
@@ -235,7 +262,35 @@ class DevServer {
     await this.firstCompilePromise;
 
     res.writeHead(200);
-    res.end(await createIndex(this.paths, this.metafile, this.env.raw, true));
+    if (this.isApp) {
+      res.end(await createIndex(this.paths, this.metafile, this.env.raw, true));
+    } else {
+      res.end(
+        await createIndex(
+          this.paths,
+          this.metafile,
+          this.env.raw,
+          true,
+          indexFile,
+        ),
+      );
+    }
+  };
+
+  handleTrampoline = async (
+    _: http.IncomingMessage,
+    res: http.ServerResponse,
+  ) => {
+    res.setHeader('content-type', 'application/javascript');
+    res.writeHead(200);
+    const baseConfig = this.baseEsbuildConfig();
+    const trampolineBuildResult = await createViewTrampoline(
+      'index.js',
+      this.paths.appSrc,
+      this.dependencies,
+      baseConfig.target as string[],
+    );
+    res.end(trampolineBuildResult.outputFiles[0].text);
   };
 
   private serveEsbuild = (
@@ -296,7 +351,11 @@ class DevServer {
   };
 }
 
-export default async function start(target: string): Promise<void> {
+export default async function start(
+  target: string,
+  isApp: boolean,
+  packageDependencies: Dependency,
+): Promise<void> {
   const paths = await createPaths(target);
   const host = getHost();
   const port = await getPort(host);
@@ -306,7 +365,14 @@ export default async function start(target: string): Promise<void> {
     port,
     paths.publicUrlOrPath.slice(0, -1),
   );
-  const devServer = new DevServer(paths, urls, host, port);
+  const devServer = new DevServer(
+    paths,
+    urls,
+    host,
+    port,
+    isApp,
+    packageDependencies,
+  );
 
   const server = await devServer.start();
 

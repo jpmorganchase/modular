@@ -9,23 +9,44 @@ import type { Paths } from '../../utils/createPaths';
 import * as logger from '../../utils/logger';
 import { formatError } from '../utils/formatError';
 
-import { createIndex } from '../api';
+import { createIndex, getEntryPoint } from '../api';
 import createEsbuildConfig from '../config/createEsbuildConfig';
 import getModularRoot from '../../utils/getModularRoot';
 import sanitizeMetafile from '../utils/sanitizeMetafile';
+import { createRewriteDependenciesPlugin } from '../plugins/rewriteDependenciesPlugin';
+import { indexFile, createViewTrampoline } from '../utils/createViewTrampoline';
+import type { Dependency } from '@schemastore/package';
+import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowserslistTarget';
 
-export default async function build(target: string, paths: Paths) {
+interface Metafile extends esbuild.Metafile {
+  moduleEntryPoint?: string;
+}
+
+export default async function build(
+  target: string,
+  paths: Paths,
+  externalDependencies: Dependency,
+  type: 'app' | 'view',
+) {
   const modularRoot = getModularRoot();
+  const isApp = type === 'app';
 
   const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
 
-  let result: esbuild.Metafile;
+  let result: Metafile;
+
+  const browserTarget = createEsbuildBrowserslistTarget(paths.appPath);
+
   try {
     const buildResult = await esbuild.build(
       createEsbuildConfig(paths, {
         entryNames: 'static/js/[name]-[hash]',
         chunkNames: 'static/js/[name]-[hash]',
         assetNames: 'static/media/[name]-[hash]',
+        target: browserTarget,
+        plugins: isApp
+          ? undefined
+          : [createRewriteDependenciesPlugin(externalDependencies)],
       }),
     );
 
@@ -54,7 +75,13 @@ export default async function build(target: string, paths: Paths) {
     }
   }
 
-  const html = await createIndex(paths, result, env.raw, false);
+  const html = await createIndex(
+    paths,
+    result,
+    env.raw,
+    false,
+    isApp ? undefined : indexFile,
+  );
   await fs.writeFile(
     path.join(paths.appBuild, 'index.html'),
     await minimize.minify(html, {
@@ -70,6 +97,26 @@ export default async function build(target: string, paths: Paths) {
       removeTagWhitespace: true,
     }),
   );
+
+  if (!isApp) {
+    // Include js entry point in the result
+    result.moduleEntryPoint = getEntryPoint(paths, result, '.js');
+    // Create and write trampoline file
+    if (!result.moduleEntryPoint) {
+      throw new Error("Can't find main entrypoint after building");
+    }
+    const trampolineBuildResult = await createViewTrampoline(
+      path.basename(result.moduleEntryPoint),
+      paths.appSrc,
+      externalDependencies,
+      browserTarget,
+    );
+    const trampolinePath = `${paths.appBuild}/static/js/_trampoline.js`;
+    await fs.writeFile(
+      trampolinePath,
+      trampolineBuildResult.outputFiles[0].contents,
+    );
+  }
 
   return result;
 }

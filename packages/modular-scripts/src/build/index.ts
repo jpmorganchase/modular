@@ -2,11 +2,12 @@ import { paramCase as toParamCase } from 'change-case';
 import chalk from 'chalk';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-
 import * as logger from '../utils/logger';
 import getModularRoot from '../utils/getModularRoot';
 import actionPreflightCheck from '../utils/actionPreflightCheck';
-import isModularType from '../utils/isModularType';
+import { getModularType } from '../utils/isModularType';
+import { filterDependencies } from '../utils/filterDependencies';
+import type { ModularType } from '../utils/isModularType';
 import execAsync from '../utils/execAsync';
 import getLocation from '../utils/getLocation';
 import { setupEnvForDirectory } from '../utils/setupEnv';
@@ -28,7 +29,10 @@ import {
 import { getPackageDependencies } from '../utils/getPackageDependencies';
 import type { CoreProperties } from '@schemastore/package';
 
-async function buildApp(target: string) {
+async function buildAppOrView(
+  target: string,
+  type: Extract<ModularType, 'app' | 'view'>,
+) {
   // True if there's no preference set - or the preference is for webpack.
   const useWebpack =
     !process.env.USE_MODULAR_WEBPACK ||
@@ -49,6 +53,7 @@ async function buildApp(target: string) {
   const targetName = toParamCase(target);
 
   const paths = await createPaths(target);
+  const isApp = type === 'app';
 
   await checkBrowsers(targetDirectory);
 
@@ -64,25 +69,50 @@ async function buildApp(target: string) {
   }
 
   // Warn and crash if required files are missing
-  await checkRequiredFiles([paths.appHtml, paths.appIndexJs]);
+  isApp
+    ? await checkRequiredFiles([paths.appHtml, paths.appIndexJs])
+    : await checkRequiredFiles([paths.appIndexJs]);
 
   logger.log('Creating an optimized production build...');
 
   await fs.emptyDir(paths.appBuild);
 
-  await fs.copy(paths.appPublic, paths.appBuild, {
-    dereference: true,
-    filter: (file) => file !== paths.appHtml,
-    overwrite: true,
-  });
+  if (isApp) {
+    await fs.copy(paths.appPublic, paths.appBuild, {
+      dereference: true,
+      filter: (file) => file !== paths.appHtml,
+      overwrite: true,
+    });
+  }
 
   let assets: Asset[];
+  // Retrieve dependencies for target to inform the build process
+  const packageDependencies = await getPackageDependencies(target);
+  // Split dependencies between external and bundled
+  const { external: externalDependencies, bundled: bundledDependencies } =
+    filterDependencies(packageDependencies, isApp);
+
+  const browserTarget = createEsbuildBrowserslistTarget(targetDirectory);
+
+  let moduleEntryPoint: string | undefined;
+  // Build views with esbuild
+  if (!isApp && !useEsbuild) {
+    throw new Error(
+      "Views can currently be built only with esbuild. Please set USE_MODULAR_ESBUILD='true' to build a view",
+    );
+  }
 
   if (isEsbuild) {
     const { default: buildEsbuildApp } = await import(
       '../esbuild-scripts/build'
     );
-    const result = await buildEsbuildApp(target, paths);
+    const result = await buildEsbuildApp(
+      target,
+      paths,
+      externalDependencies,
+      type,
+    );
+    moduleEntryPoint = result.moduleEntryPoint;
     assets = createEsbuildAssets(paths, result);
   } else {
     // create-react-app doesn't support plain module outputs yet,
@@ -91,8 +121,6 @@ async function buildApp(target: string) {
     const buildScript = require.resolve(
       'modular-scripts/react-scripts/scripts/build.js',
     );
-
-    const browserTarget = createEsbuildBrowserslistTarget(targetDirectory);
 
     // TODO: this shouldn't be sync
     await execAsync('node', [buildScript], {
@@ -131,12 +159,12 @@ async function buildApp(target: string) {
   }
 
   // Add dependencies from source and bundled dependencies to target package.json
-  const packageDependencies = await getPackageDependencies(target);
   const targetPackageJson = (await fs.readJSON(
     path.join(targetDirectory, 'package.json'),
   )) as CoreProperties;
   targetPackageJson.dependencies = packageDependencies;
-  targetPackageJson.bundledDependencies = Object.keys(packageDependencies);
+  targetPackageJson.bundledDependencies = Object.keys(bundledDependencies);
+
   // Copy selected fields of package.json over
   await fs.writeJSON(
     path.join(paths.appBuild, 'package.json'),
@@ -146,6 +174,8 @@ async function buildApp(target: string) {
       license: targetPackageJson.license,
       modular: targetPackageJson.modular,
       dependencies: targetPackageJson.dependencies,
+      bundledDependencies: targetPackageJson.bundledDependencies,
+      module: moduleEntryPoint,
     },
     { spaces: 2 },
   );
@@ -169,8 +199,9 @@ async function build(
 
   await setupEnvForDirectory(targetDirectory);
 
-  if (isModularType(targetDirectory, 'app')) {
-    await buildApp(target);
+  const targetType = getModularType(targetDirectory);
+  if (targetType === 'app' || targetType === 'view') {
+    await buildAppOrView(target, targetType);
   } else {
     const { buildPackage } = await import('./buildPackage');
     // ^ we do a dynamic import here to defer the module's initial side effects
