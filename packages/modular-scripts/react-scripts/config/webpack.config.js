@@ -26,9 +26,19 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const postcssNormalize = require('postcss-normalize');
 const isCI = require('is-ci');
 
-const esbuildTargetFactory = process.env.ESBUILD_TARGET_FACTORY
-  ? JSON.parse(process.env.ESBUILD_TARGET_FACTORY)
-  : 'es2015';
+const isApp = process.env.MODULAR_IS_APP === 'true';
+const esbuildTargetFactory = isApp
+  ? process.env.ESBUILD_TARGET_FACTORY
+    ? JSON.parse(process.env.ESBUILD_TARGET_FACTORY)
+    : 'es2015'
+  : 'es2020';
+
+const { externalDependencies } = process.env.MODULAR_PACKAGE_DEPS
+  ? JSON.parse(process.env.MODULAR_PACKAGE_DEPS)
+  : {};
+
+const externals = createExternalDependenciesMap(externalDependencies);
+console.log({ externals, esbuildTargetFactory });
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -134,6 +144,12 @@ module.exports = function (webpackEnv) {
   };
 
   const webpackConfig = {
+    externals: isApp ? undefined : externals,
+    externalsType: isApp ? undefined : 'module',
+    experiments: {
+      outputModule: isApp ? undefined : true,
+    },
+    target: isApp ? undefined : 'es2020',
     mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
     // Stop compilation early in production
     bail: isEnvProduction,
@@ -146,6 +162,7 @@ module.exports = function (webpackEnv) {
     // This means they will be the "root" imports that are included in JS bundle.
     entry: paths.appIndexJs,
     output: {
+      module: isApp ? undefined : true,
       // The build folder.
       path: isEnvProduction ? paths.appBuild : undefined,
       // Add /* filename */ comments to generated require()s in the output.
@@ -222,15 +239,19 @@ module.exports = function (webpackEnv) {
       // Automatically split vendor and commons
       // https://twitter.com/wSokra/status/969633336732905474
       // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
-      splitChunks: {
-        chunks: 'all',
-      },
+      splitChunks: isApp
+        ? {
+            chunks: 'all',
+          }
+        : undefined,
       // Keep the runtime chunk separated to enable long term caching
       // https://twitter.com/wSokra/status/969679223278505985
       // https://github.com/facebook/create-react-app/issues/5358
-      runtimeChunk: {
-        name: (entrypoint) => `runtime-${entrypoint.name}`,
-      },
+      runtimeChunk: isApp
+        ? {
+            name: (entrypoint) => `runtime-${entrypoint.name}`,
+          }
+        : undefined,
     },
     resolve: {
       // This allows you to set a fallback for where webpack should look for modules.
@@ -248,7 +269,7 @@ module.exports = function (webpackEnv) {
       // for React Native Web.
       extensions: paths.moduleFileExtensions
         .map((ext) => `.${ext}`)
-        .filter((ext) => useTypeScript || !ext.includes('ts')),
+        .filter((ext) => useTypeScript || !isApp || !ext.includes('ts')),
       alias: {
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
@@ -465,35 +486,37 @@ module.exports = function (webpackEnv) {
     },
     plugins: [
       // Generates an `index.html` file with the <script> injected.
-      new HtmlWebpackPlugin(
-        Object.assign(
-          {},
-          {
-            inject: true,
-            template: paths.appHtml,
-          },
-          isEnvProduction
-            ? {
-                minify: {
-                  removeComments: true,
-                  collapseWhitespace: true,
-                  removeRedundantAttributes: true,
-                  useShortDoctype: true,
-                  removeEmptyAttributes: true,
-                  removeStyleLinkTypeAttributes: true,
-                  keepClosingSlash: true,
-                  minifyJS: true,
-                  minifyCSS: true,
-                  minifyURLs: true,
-                },
-              }
-            : undefined,
+      isApp &&
+        new HtmlWebpackPlugin(
+          Object.assign(
+            {},
+            {
+              inject: true,
+              template: paths.appHtml,
+            },
+            isEnvProduction
+              ? {
+                  minify: {
+                    removeComments: true,
+                    collapseWhitespace: true,
+                    removeRedundantAttributes: true,
+                    useShortDoctype: true,
+                    removeEmptyAttributes: true,
+                    removeStyleLinkTypeAttributes: true,
+                    keepClosingSlash: true,
+                    minifyJS: true,
+                    minifyCSS: true,
+                    minifyURLs: true,
+                  },
+                }
+              : undefined,
+          ),
         ),
-      ),
       // Inlines the webpack runtime script. This script is too small to warrant
       // a network request.
       // https://github.com/facebook/create-react-app/issues/5358
-      isEnvProduction &&
+      isApp &&
+        isEnvProduction &&
         shouldInlineRuntimeChunk &&
         new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime-.+[.]js/]),
       // Makes some environment variables available in index.html.
@@ -501,7 +524,7 @@ module.exports = function (webpackEnv) {
       // <link rel="icon" href="%PUBLIC_URL%/favicon.ico">
       // It will be an empty string unless you specify "homepage"
       // in `package.json`, in which case it will be the pathname of that URL.
-      new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
+      isApp && new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
       // This gives some necessary context to module not found errors, such as
       // the requesting resource.
       new ModuleNotFoundPlugin(paths.appPath),
@@ -663,3 +686,31 @@ module.exports = function (webpackEnv) {
 
   return webpackConfig;
 };
+
+function rewriteExternalDependency(dependency, externalDependencies) {
+  const externalCdnTemplate =
+    process.env.EXTERNAL_CDN_TEMPLATE ??
+    'https://cdn.skypack.dev/[name]@[version]';
+
+  const version = externalDependencies[dependency];
+
+  return externalCdnTemplate
+    .replace('[name]', dependency)
+    .replace('[version]', version);
+}
+
+function createExternalDependenciesMap(externalDependencies) {
+  const externalCdnTemplate =
+    process.env.EXTERNAL_CDN_TEMPLATE ??
+    'https://cdn.skypack.dev/[name]@[version]';
+
+  return Object.entries(externalDependencies).reduce(
+    (acc, [name, version]) => ({
+      ...acc,
+      [name]: externalCdnTemplate
+        .replace('[name]', name)
+        .replace('[version]', version),
+    }),
+    {},
+  );
+}

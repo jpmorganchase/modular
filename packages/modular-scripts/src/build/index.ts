@@ -95,12 +95,6 @@ async function buildAppOrView(
   const browserTarget = createEsbuildBrowserslistTarget(targetDirectory);
 
   let moduleEntryPoint: string | undefined;
-  // Build views with esbuild
-  if (!isApp && !useEsbuild) {
-    throw new Error(
-      "Views can currently be built only with esbuild. Please set USE_MODULAR_ESBUILD='true' to build a view",
-    );
-  }
 
   if (isEsbuild) {
     const { default: buildEsbuildApp } = await import(
@@ -132,6 +126,11 @@ async function buildAppOrView(
         MODULAR_ROOT: modularRoot,
         MODULAR_PACKAGE: target,
         MODULAR_PACKAGE_NAME: targetName,
+        MODULAR_IS_APP: JSON.stringify(isApp),
+        MODULAR_PACKAGE_DEPS: JSON.stringify({
+          externalDependencies,
+          bundledDependencies,
+        }),
       },
     });
 
