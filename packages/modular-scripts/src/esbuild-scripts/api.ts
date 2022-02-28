@@ -32,7 +32,7 @@ export function getEntryPoint(
 
 export async function createIndex(
   paths: Paths,
-  metafile: esbuild.Metafile,
+  metafile: esbuild.Metafile | undefined,
   replacements: Record<string, string>,
   includeRuntime: boolean,
   indexContent?: string,
@@ -47,8 +47,12 @@ export async function createIndex(
     (node) => node.nodeName === 'head',
   ) as parse5.Element;
 
-  const cssEntryPoint = getEntryPoint(paths, metafile, '.css');
-  const jsEntryPoint = getEntryPoint(paths, metafile, '.js');
+  const cssEntryPoint = metafile
+    ? getEntryPoint(paths, metafile, '.css')
+    : undefined;
+  const jsEntryPoint = metafile
+    ? getEntryPoint(paths, metafile, '.js')
+    : undefined;
 
   if (cssEntryPoint) {
     head.childNodes.push(

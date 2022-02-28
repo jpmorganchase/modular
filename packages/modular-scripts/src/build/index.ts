@@ -3,6 +3,7 @@ import chalk from 'chalk';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as logger from '../utils/logger';
+import * as minimize from 'html-minifier-terser';
 import getModularRoot from '../utils/getModularRoot';
 import actionPreflightCheck from '../utils/actionPreflightCheck';
 import { getModularType } from '../utils/isModularType';
@@ -19,6 +20,12 @@ import { checkBrowsers } from '../utils/checkBrowsers';
 import checkRequiredFiles from '../utils/checkRequiredFiles';
 import createEsbuildBrowserslistTarget from '../utils/createEsbuildBrowserslistTarget';
 import {
+  indexFile,
+  createViewTrampoline,
+} from '../esbuild-scripts/utils/createViewTrampoline';
+import getClientEnvironment from '../esbuild-scripts/config/getClientEnvironment';
+import { createIndex } from '../esbuild-scripts/api';
+import {
   webpackMeasureFileSizesBeforeBuild,
   createWebpackAssets,
 } from './webpackFileSizeReporter';
@@ -28,6 +35,7 @@ import {
 } from './esbuildFileSizeReporter';
 import { getPackageDependencies } from '../utils/getPackageDependencies';
 import type { CoreProperties } from '@schemastore/package';
+import type { Metafile } from '../esbuild-scripts/build';
 
 async function buildAppOrView(
   target: string,
@@ -95,18 +103,14 @@ async function buildAppOrView(
   const browserTarget = createEsbuildBrowserslistTarget(targetDirectory);
 
   let moduleEntryPoint: string | undefined;
+  let result: Metafile;
 
   if (isEsbuild) {
     const { default: buildEsbuildApp } = await import(
       '../esbuild-scripts/build'
     );
-    const result = await buildEsbuildApp(
-      target,
-      paths,
-      externalDependencies,
-      type,
-    );
-    moduleEntryPoint = result.moduleEntryPoint;
+    result = await buildEsbuildApp(target, paths, externalDependencies, type);
+    moduleEntryPoint = result?.moduleEntryPoint;
     assets = createEsbuildAssets(paths, result);
   } else {
     // create-react-app doesn't support plain module outputs yet,
@@ -139,6 +143,11 @@ async function buildAppOrView(
     try {
       const stats: StatsCompilation = await fs.readJson(statsFilePath);
 
+      const mainEntrypoint = stats?.assetsByChunkName?.main;
+      moduleEntryPoint = Array.isArray(mainEntrypoint)
+        ? mainEntrypoint[0]
+        : mainEntrypoint;
+
       if (stats?.warnings?.length) {
         logger.log(chalk.yellow('Compiled with warnings.\n'));
         logger.log(stats.warnings.join('\n\n'));
@@ -155,6 +164,50 @@ async function buildAppOrView(
     } finally {
       await fs.remove(statsFilePath);
     }
+  }
+
+  // If view, write the synthetic index.html and create a trampoline file pointing to the main entrypoint
+  if (!isApp) {
+    if (!moduleEntryPoint) {
+      throw new Error("Can't find main entrypoint after building");
+    }
+    // Create synthetic index
+    const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
+    const html = await createIndex(
+      paths,
+      undefined,
+      env.raw,
+      false,
+      isApp ? undefined : indexFile,
+    );
+    await fs.writeFile(
+      path.join(paths.appBuild, 'index.html'),
+      await minimize.minify(html, {
+        html5: true,
+        collapseBooleanAttributes: true,
+        collapseWhitespace: true,
+        collapseInlineTagWhitespace: true,
+        decodeEntities: true,
+        minifyCSS: true,
+        minifyJS: true,
+        removeAttributeQuotes: false,
+        removeComments: true,
+        removeTagWhitespace: true,
+      }),
+    );
+
+    // Create and write trampoline file
+    const trampolineBuildResult = await createViewTrampoline(
+      path.basename(moduleEntryPoint),
+      paths.appSrc,
+      externalDependencies,
+      browserTarget,
+    );
+    const trampolinePath = `${paths.appBuild}/static/js/_trampoline.js`;
+    await fs.writeFile(
+      trampolinePath,
+      trampolineBuildResult.outputFiles[0].contents,
+    );
   }
 
   // Add dependencies from source and bundled dependencies to target package.json

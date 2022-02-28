@@ -163,6 +163,11 @@ module.exports = function (webpackEnv) {
     entry: paths.appIndexJs,
     output: {
       module: isApp ? undefined : true,
+      library: isApp
+        ? undefined
+        : {
+            type: 'module',
+          },
       // The build folder.
       path: isEnvProduction ? paths.appBuild : undefined,
       // Add /* filename */ comments to generated require()s in the output.
