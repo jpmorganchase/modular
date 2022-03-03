@@ -59,6 +59,6 @@ function parsePackageName(name: string) {
   }
   /* eslint-disable @typescript-eslint/no-unused-vars */
   const [_, scope, module, submodule] = parsedName;
-  const dependencyName = scope ?? '' + module;
+  const dependencyName = (scope ? `${scope}/` : '') + module;
   return { dependencyName, scope, module, submodule };
 }
