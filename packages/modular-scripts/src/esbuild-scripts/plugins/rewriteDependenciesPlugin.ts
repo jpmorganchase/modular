@@ -85,6 +85,10 @@ export function createRewriteDependenciesPlugin(
           };
         },
       );
+      build.onStart(() => {
+        // Clear the map on start, for incremental mode
+        globalCSSMap.clear();
+      });
     },
   };
   return dependencyRewritePlugin;
