@@ -3,6 +3,7 @@ import type { Dependency } from '@schemastore/package';
 
 export function createRewriteDependenciesPlugin(
   externalDependencies: Dependency,
+  target?: string[],
 ): esbuild.Plugin {
   const externalCdnTemplate =
     process.env.EXTERNAL_CDN_TEMPLATE ??
@@ -39,6 +40,22 @@ export function createRewriteDependenciesPlugin(
             }`;
             if (submodule.endsWith('.css')) {
               // This is a global CSS import from the CDN.
+              if (target && target.every((target) => target === 'esnext')) {
+                // If target is esnext we can use CSS module scripts - https://web.dev/css-module-scripts/
+                // esbuild supports them only on an `esnext` target, otherwise the assertion is removed - https://github.com/evanw/esbuild/issues/1871
+                // We must create a variable name to not clash with anything else though
+                const variableName =
+                  `__sheet_${dependencyName}_${submodule}`.replace(
+                    /[\W_]+/g,
+                    '_',
+                  );
+                return {
+                  path,
+                  namespace: 'rewritable-css-import-css-module-scripts',
+                  pluginData: { variableName },
+                };
+              }
+              // Fall back to link injection if we don't support CSS module scripts
               // We want to ignore this import if it's been already imported before (no need to inject it twice into the HEAD)
               const namespace = globalCSSMap.get(path)
                 ? 'rewritable-css-import-ignore'
@@ -81,6 +98,21 @@ export function createRewriteDependenciesPlugin(
           return {
             contents: `
             /* Ignored CSS import at path ${args.path} */
+            `,
+          };
+        },
+      );
+      build.onLoad(
+        {
+          filter: /^[a-z0-9-~]|@/,
+          namespace: 'rewritable-css-import-css-module-scripts',
+        },
+        (args) => {
+          const { variableName } = args.pluginData as { variableName: string };
+          return {
+            contents: `
+            import ${variableName} from '${args.path}' assert { type: 'css' };
+            document.adoptedStyleSheets = [...document.adoptedStyleSheets, ${variableName}];
             `,
           };
         },
