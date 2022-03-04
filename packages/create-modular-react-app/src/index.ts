@@ -196,11 +196,6 @@ export default async function createModularApp(argv: {
 
   if (argv.repo) {
     await exec('git', ['add', '.'], newModularRoot);
-
-    // don't try to commit in CI
-    if (!process.env.CI) {
-      await exec('git', ['commit', '-m', 'Initial commit'], newModularRoot);
-    }
   }
 
   return Promise.resolve();
