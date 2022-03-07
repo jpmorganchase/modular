@@ -44,7 +44,12 @@ export default async function build(
         target: browserTarget,
         plugins: isApp
           ? undefined
-          : [createRewriteDependenciesPlugin(externalDependencies)],
+          : [
+              createRewriteDependenciesPlugin(
+                externalDependencies,
+                browserTarget,
+              ),
+            ],
       }),
     );
 

@@ -202,7 +202,7 @@ class DevServer {
       target: browserTarget,
       plugins: this.isApp
         ? undefined
-        : [createRewriteDependenciesPlugin(this.dependencies)],
+        : [createRewriteDependenciesPlugin(this.dependencies, browserTarget)],
     });
   });
 
