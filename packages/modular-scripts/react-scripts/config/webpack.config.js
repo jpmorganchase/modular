@@ -37,8 +37,8 @@ const { externalDependencies } = process.env.MODULAR_PACKAGE_DEPS
   ? JSON.parse(process.env.MODULAR_PACKAGE_DEPS)
   : {};
 
-const externals = createExternalDependenciesMap(externalDependencies);
-console.log({ externals, esbuildTargetFactory });
+const importMap = createExternalDependenciesMap(externalDependencies);
+console.log({ externals: importMap, esbuildTargetFactory });
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -144,7 +144,26 @@ module.exports = function (webpackEnv) {
   };
 
   const webpackConfig = {
-    externals: isApp ? undefined : externals,
+    externals: isApp
+      ? undefined
+      : function ({ request }, callback) {
+          const parsedModule = parsePackageName(request);
+
+          if (parsedModule) {
+            const { dependencyName, submodule } = parsedModule;
+
+            const toRewrite = `${importMap[dependencyName]}${
+              submodule ? `/${submodule}` : ''
+            }`;
+
+            // Externalize to a commonjs module using the request path
+            return callback(null, toRewrite);
+          }
+
+          // Continue without externalizing the import
+          callback();
+        },
+
     externalsType: isApp ? undefined : 'module',
     experiments: {
       outputModule: isApp ? undefined : true,
@@ -197,7 +216,7 @@ module.exports = function (webpackEnv) {
             path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')),
     },
     optimization: {
-      minimize: isEnvProduction,
+      minimize: false && isEnvProduction,
       minimizer: [
         // This is only used in production mode
         new TerserPlugin({
@@ -692,18 +711,6 @@ module.exports = function (webpackEnv) {
   return webpackConfig;
 };
 
-function rewriteExternalDependency(dependency, externalDependencies) {
-  const externalCdnTemplate =
-    process.env.EXTERNAL_CDN_TEMPLATE ??
-    'https://cdn.skypack.dev/[name]@[version]';
-
-  const version = externalDependencies[dependency];
-
-  return externalCdnTemplate
-    .replace('[name]', dependency)
-    .replace('[version]', version);
-}
-
 function createExternalDependenciesMap(externalDependencies) {
   const externalCdnTemplate =
     process.env.EXTERNAL_CDN_TEMPLATE ??
@@ -718,4 +725,16 @@ function createExternalDependenciesMap(externalDependencies) {
     }),
     {},
   );
+}
+
+const packageRegex =
+  /^(@[a-z0-9-~][a-z0-9-._~]*)?\/?([a-z0-9-~][a-z0-9-._~]*)\/?(.*)/;
+function parsePackageName(name) {
+  const parsedName = packageRegex.exec(name);
+  if (!parsedName) {
+    return;
+  }
+  const [_, scope, module, submodule] = parsedName;
+  const dependencyName = (scope ? `${scope}/` : '') + module;
+  return { dependencyName, scope, module, submodule };
 }
