@@ -1,7 +1,6 @@
 import * as esbuild from 'esbuild';
 import chalk from 'chalk';
 import fs from 'fs-extra';
-import * as minimize from 'html-minifier-terser';
 import * as path from 'path';
 import getClientEnvironment from '../config/getClientEnvironment';
 
@@ -16,10 +15,6 @@ import { createRewriteDependenciesPlugin } from '../plugins/rewriteDependenciesP
 import type { Dependency } from '@schemastore/package';
 import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowserslistTarget';
 
-export interface Metafile extends esbuild.Metafile {
-  moduleEntryPoint?: string;
-}
-
 export default async function build(
   target: string,
   paths: Paths,
@@ -31,7 +26,7 @@ export default async function build(
 
   const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
 
-  let result: Metafile;
+  let result: esbuild.Metafile;
 
   const browserTarget = createEsbuildBrowserslistTarget(paths.appPath);
 

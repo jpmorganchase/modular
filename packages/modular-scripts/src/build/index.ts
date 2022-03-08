@@ -20,11 +20,11 @@ import { checkBrowsers } from '../utils/checkBrowsers';
 import checkRequiredFiles from '../utils/checkRequiredFiles';
 import createEsbuildBrowserslistTarget from '../utils/createEsbuildBrowserslistTarget';
 import {
-  indexFile,
+  createIndex,
   createViewTrampoline,
 } from '../esbuild-scripts/utils/createViewTrampoline';
 import getClientEnvironment from '../esbuild-scripts/config/getClientEnvironment';
-import { createIndex } from '../esbuild-scripts/api';
+import { getEntryPoint } from '../esbuild-scripts/api';
 import {
   webpackMeasureFileSizesBeforeBuild,
   createWebpackAssets,
@@ -35,7 +35,6 @@ import {
 } from './esbuildFileSizeReporter';
 import { getPackageDependencies } from '../utils/getPackageDependencies';
 import type { CoreProperties } from '@schemastore/package';
-import type { Metafile } from '../esbuild-scripts/build';
 
 async function buildAppOrView(
   target: string,
@@ -102,15 +101,21 @@ async function buildAppOrView(
 
   const browserTarget = createEsbuildBrowserslistTarget(targetDirectory);
 
-  let moduleEntryPoint: string | undefined;
-  let result: Metafile;
+  let jsEntryPoint: string | undefined;
+  let cssEntryPoint: string | undefined;
 
   if (isEsbuild) {
     const { default: buildEsbuildApp } = await import(
       '../esbuild-scripts/build'
     );
-    result = await buildEsbuildApp(target, paths, externalDependencies, type);
-    moduleEntryPoint = result?.moduleEntryPoint;
+    const result = await buildEsbuildApp(
+      target,
+      paths,
+      externalDependencies,
+      type,
+    );
+    jsEntryPoint = getEntryPoint(paths, result, '.js');
+    cssEntryPoint = getEntryPoint(paths, result, '.css');
     assets = createEsbuildAssets(paths, result);
   } else {
     // create-react-app doesn't support plain module outputs yet,
@@ -144,9 +149,17 @@ async function buildAppOrView(
       const stats: StatsCompilation = await fs.readJson(statsFilePath);
 
       const mainEntrypoint = stats?.assetsByChunkName?.main;
-      moduleEntryPoint = Array.isArray(mainEntrypoint)
-        ? mainEntrypoint[0]
-        : mainEntrypoint;
+      jsEntryPoint = mainEntrypoint?.find((entryPoint) =>
+        entryPoint.endsWith('.js'),
+      );
+      cssEntryPoint = mainEntrypoint?.find((entryPoint) =>
+        entryPoint.endsWith('.css'),
+      );
+
+      console.log({
+        jsEntryPoint,
+        cssEntryPoint,
+      });
 
       if (stats?.warnings?.length) {
         logger.log(chalk.yellow('Compiled with warnings.\n'));
@@ -168,18 +181,12 @@ async function buildAppOrView(
 
   // If view, write the synthetic index.html and create a trampoline file pointing to the main entrypoint
   if (!isApp) {
-    if (!moduleEntryPoint) {
+    if (!jsEntryPoint) {
       throw new Error("Can't find main entrypoint after building");
     }
     // Create synthetic index
     const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
-    const html = await createIndex(
-      paths,
-      undefined,
-      env.raw,
-      false,
-      isApp ? undefined : indexFile,
-    );
+    const html = createIndex(cssEntryPoint, env.raw);
     await fs.writeFile(
       path.join(paths.appBuild, 'index.html'),
       await minimize.minify(html, {
@@ -198,7 +205,7 @@ async function buildAppOrView(
 
     // Create and write trampoline file
     const trampolineBuildResult = await createViewTrampoline(
-      path.basename(moduleEntryPoint),
+      path.basename(jsEntryPoint),
       paths.appSrc,
       externalDependencies,
       browserTarget,
@@ -227,7 +234,7 @@ async function buildAppOrView(
       modular: targetPackageJson.modular,
       dependencies: targetPackageJson.dependencies,
       bundledDependencies: targetPackageJson.bundledDependencies,
-      module: moduleEntryPoint,
+      module: jsEntryPoint,
     },
     { spaces: 2 },
   );
