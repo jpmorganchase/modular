@@ -330,26 +330,26 @@ describe('when working with an app', () => {
 
   it('can add an app', () => {
     expect(tree(path.join(packagesPath, 'sample-app'))).toMatchInlineSnapshot(`
-        "sample-app
-        ├─ package.json
-        ├─ public
-        │  ├─ favicon.ico #6pu3rg
-        │  ├─ index.html #1m6toxd
-        │  ├─ logo192.png #1nez7vk
-        │  ├─ logo512.png #1hwqvcc
-        │  ├─ manifest.json #19gah8o
-        │  └─ robots.txt #1sjb8b3
-        ├─ src
-        │  ├─ App.css #1o0zosm
-        │  ├─ App.tsx #igvgtx
-        │  ├─ __tests__
-        │  │  └─ App.test.tsx #16urcos
-        │  ├─ index.css #o7sk21
-        │  ├─ index.tsx #zdn6mw
-        │  ├─ logo.svg #1okqmlj
-        │  └─ react-app-env.d.ts #t4ygcy
-        └─ tsconfig.json #6rw46b"
-      `);
+      "sample-app
+      ├─ package.json
+      ├─ public
+      │  ├─ favicon.ico #6pu3rg
+      │  ├─ index.html #1m6toxd
+      │  ├─ logo192.png #1nez7vk
+      │  ├─ logo512.png #1hwqvcc
+      │  ├─ manifest.json #19gah8o
+      │  └─ robots.txt #1sjb8b3
+      ├─ src
+      │  ├─ App.css #1o0zosm
+      │  ├─ App.tsx #igvgtx
+      │  ├─ __tests__
+      │  │  └─ App.test.tsx #16urcos
+      │  ├─ index.css #o7sk21
+      │  ├─ index.tsx #zdn6mw
+      │  ├─ logo.svg #1okqmlj
+      │  └─ react-app-env.d.ts #t4ygcy
+      └─ tsconfig.json #6rw46b"
+    `);
   });
 
   it('can build an app', () => {
