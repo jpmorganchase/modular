@@ -19,12 +19,12 @@ import type { StatsCompilation } from 'webpack';
 import { checkBrowsers } from '../utils/checkBrowsers';
 import checkRequiredFiles from '../utils/checkRequiredFiles';
 import createEsbuildBrowserslistTarget from '../utils/createEsbuildBrowserslistTarget';
-import {
-  createIndex,
-  createViewTrampoline,
-} from '../esbuild-scripts/utils/createViewTrampoline';
 import getClientEnvironment from '../esbuild-scripts/config/getClientEnvironment';
-import { getEntryPoint } from '../esbuild-scripts/api';
+import {
+  createBuildIndex,
+  getEntryPoint,
+  createViewTrampoline,
+} from '../esbuild-scripts/api';
 import {
   webpackMeasureFileSizesBeforeBuild,
   createWebpackAssets,
@@ -186,7 +186,7 @@ async function buildAppOrView(
     }
     // Create synthetic index
     const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
-    const html = createIndex(cssEntryPoint, env.raw);
+    const html = createBuildIndex(cssEntryPoint, env.raw);
     await fs.writeFile(
       path.join(paths.appBuild, 'index.html'),
       await minimize.minify(html, {

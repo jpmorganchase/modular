@@ -25,7 +25,7 @@ import firstCompilePlugin from './plugins/firstCompile';
 import openBrowser from '../utils/openBrowser';
 import * as logger from '../../utils/logger';
 import prepareUrls, { InstructionURLS } from '../config/urls';
-import { createIndex } from '../api';
+import { createIndex, indexFile, createViewTrampoline } from '../api';
 import createEsbuildConfig from '../config/createEsbuildConfig';
 import createLaunchEditorMiddleware from '../../../react-dev-utils/errorOverlayMiddleware.js';
 import getHost from './utils/getHost';
@@ -34,7 +34,6 @@ import sanitizeMetafile, { sanitizeFileName } from '../utils/sanitizeMetafile';
 import getModularRoot from '../../utils/getModularRoot';
 import { createRewriteDependenciesPlugin } from '../plugins/rewriteDependenciesPlugin';
 import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowserslistTarget';
-import { indexFile, createViewTrampoline } from '../utils/createViewTrampoline';
 import type { Dependency } from '@schemastore/package';
 
 const RUNTIME_DIR = path.join(__dirname, 'runtime');
