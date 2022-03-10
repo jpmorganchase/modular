@@ -63,22 +63,15 @@ async function start(packageName: string): Promise<void> {
     process.env.USE_MODULAR_ESBUILD &&
     process.env.USE_MODULAR_ESBUILD === 'true';
 
-  if (isView && !useEsbuild) {
-    throw new Error(
-      "Views can currently be started only with esbuild. Please set USE_MODULAR_ESBUILD='true' to start a view",
-    );
-  }
+  const packageDependencies = await getPackageDependencies(target);
+  const { external: externalDependencies, bundled: bundledDependencies } =
+    filterDependencies(packageDependencies, !isView);
 
   // If you want to use webpack then we'll always use webpack. But if you've indicated
   // you want esbuild - then we'll switch you to the new fancy world.
   if (!useWebpack || useEsbuild) {
     const { default: startEsbuildApp } = await import(
       './esbuild-scripts/start'
-    );
-    const packageDependencies = await getPackageDependencies(target);
-    const { external: externalDependencies } = filterDependencies(
-      packageDependencies,
-      !isView,
     );
     await startEsbuildApp(target, !isView, externalDependencies);
   } else {
@@ -101,6 +94,11 @@ async function start(packageName: string): Promise<void> {
         MODULAR_ROOT: modularRoot,
         MODULAR_PACKAGE: target,
         MODULAR_PACKAGE_NAME: targetName,
+        MODULAR_IS_APP: JSON.stringify(!isView),
+        MODULAR_PACKAGE_DEPS: JSON.stringify({
+          externalDependencies,
+          bundledDependencies,
+        }),
       },
     });
   }

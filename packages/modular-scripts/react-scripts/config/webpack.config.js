@@ -27,6 +27,8 @@ const postcssNormalize = require('postcss-normalize');
 const isCI = require('is-ci');
 
 const isApp = process.env.MODULAR_IS_APP === 'true';
+const isView = !isApp;
+
 const esbuildTargetFactory = isApp
   ? process.env.ESBUILD_TARGET_FACTORY
     ? JSON.parse(process.env.ESBUILD_TARGET_FACTORY)
@@ -36,9 +38,6 @@ const esbuildTargetFactory = isApp
 const { externalDependencies } = process.env.MODULAR_PACKAGE_DEPS
   ? JSON.parse(process.env.MODULAR_PACKAGE_DEPS)
   : {};
-
-const importMap = createExternalDependenciesMap(externalDependencies);
-console.log({ externals: importMap, esbuildTargetFactory });
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -69,6 +68,17 @@ const sassModuleRegex = /\.module\.(scss|sass)$/;
 module.exports = function (webpackEnv) {
   const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
+  const isViewDevelopment = isView & isEnvDevelopment;
+
+  // This is needed if we're serving a view in development node, since it won't be defined in the view dependencies.
+  if (externalDependencies.react && isViewDevelopment) {
+    externalDependencies['react-dom'] = externalDependencies.react;
+  }
+
+  // Create an import map of external dependencies if we're building a view
+  const importMap = isView
+    ? createExternalDependenciesMap(externalDependencies)
+    : {};
 
   // Variable used for enabling profiling in Production
   // passed into alias object. Uses a flag if passed into the build command
@@ -149,26 +159,26 @@ module.exports = function (webpackEnv) {
       : function ({ request }, callback) {
           const parsedModule = parsePackageName(request);
 
-          if (parsedModule) {
+          // If the module is absolute and it is in the import map, we want to externalise it
+          if (importMap[parsedModule?.dependencyName]) {
             const { dependencyName, submodule } = parsedModule;
 
             const toRewrite = `${importMap[dependencyName]}${
               submodule ? `/${submodule}` : ''
             }`;
 
-            // Externalize to a commonjs module using the request path
             return callback(null, toRewrite);
           }
-
-          // Continue without externalizing the import
-          callback();
+          // Otherwise we just want to bundle it
+          return callback();
         },
 
     externalsType: isApp ? undefined : 'module',
     experiments: {
       outputModule: isApp ? undefined : true,
     },
-    target: isApp ? undefined : 'es2020',
+    // Workaround for this bug: https://stackoverflow.com/questions/53905253/cant-set-up-the-hmr-stuck-with-waiting-for-update-signal-from-wds-in-cons
+    target: 'web',
     mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
     // Stop compilation early in production
     bail: isEnvProduction,
@@ -179,7 +189,8 @@ module.exports = function (webpackEnv) {
       : isEnvDevelopment && 'cheap-module-source-map',
     // These are the "entry points" to our application.
     // This means they will be the "root" imports that are included in JS bundle.
-    entry: paths.appIndexJs,
+    // We bundle a virtual file to trampoline the view as an entry point if we're starting it (views have no ReactDOM.render)
+    entry: isViewDevelopment ? getVirtualTrampoline() : paths.appIndexJs,
     output: {
       module: isApp ? undefined : true,
       library: isApp
@@ -216,7 +227,7 @@ module.exports = function (webpackEnv) {
             path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')),
     },
     optimization: {
-      minimize: false && isEnvProduction,
+      minimize: isEnvProduction,
       minimizer: [
         // This is only used in production mode
         new TerserPlugin({
@@ -510,32 +521,51 @@ module.exports = function (webpackEnv) {
     },
     plugins: [
       // Generates an `index.html` file with the <script> injected.
-      isApp &&
-        new HtmlWebpackPlugin(
-          Object.assign(
-            {},
-            {
-              inject: true,
-              template: paths.appHtml,
-            },
-            isEnvProduction
-              ? {
-                  minify: {
-                    removeComments: true,
-                    collapseWhitespace: true,
-                    removeRedundantAttributes: true,
-                    useShortDoctype: true,
-                    removeEmptyAttributes: true,
-                    removeStyleLinkTypeAttributes: true,
-                    keepClosingSlash: true,
-                    minifyJS: true,
-                    minifyCSS: true,
-                    minifyURLs: true,
-                  },
-                }
-              : undefined,
-          ),
-        ),
+      isApp
+        ? new HtmlWebpackPlugin(
+            Object.assign(
+              {},
+              {
+                inject: true,
+                template: paths.appHtml,
+              },
+              isEnvProduction
+                ? {
+                    minify: {
+                      removeComments: true,
+                      collapseWhitespace: true,
+                      removeRedundantAttributes: true,
+                      useShortDoctype: true,
+                      removeEmptyAttributes: true,
+                      removeStyleLinkTypeAttributes: true,
+                      keepClosingSlash: true,
+                      minifyJS: true,
+                      minifyCSS: true,
+                      minifyURLs: true,
+                    },
+                  }
+                : undefined,
+            ),
+          )
+        : isViewDevelopment
+        ? // We need to provide a synthetic index.html in case we're starting a view
+          new HtmlWebpackPlugin(
+            Object.assign(
+              {},
+              {
+                inject: true,
+                templateContent: `
+                <html>
+                  <body>
+                    <div id="root"></div>
+                  </body>
+                </html>
+                `,
+                scriptLoading: 'module',
+              },
+            ),
+          )
+        : false,
       // Inlines the webpack runtime script. This script is too small to warrant
       // a network request.
       // https://github.com/facebook/create-react-app/issues/5358
@@ -737,4 +767,18 @@ function parsePackageName(name) {
   const [_, scope, module, submodule] = parsedName;
   const dependencyName = (scope ? `${scope}/` : '') + module;
   return { dependencyName, scope, module, submodule };
+}
+
+// Virtual entrypoint if we're starting a view - see https://github.com/webpack/webpack/issues/6437
+function getVirtualTrampoline() {
+  const string = `
+  import ReactDOM from 'react-dom'
+  import React from 'react';
+  import Component from './src/index.tsx';
+  const DOMRoot = document.getElementById('root');
+  ReactDOM.render(React.createElement(Component, null), DOMRoot);
+	`;
+
+  const base64 = Buffer.from(string).toString('base64');
+  return `./src/_trampoline.js!=!data:text/javascript;base64,${base64}`;
 }

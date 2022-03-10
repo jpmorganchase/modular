@@ -112,7 +112,7 @@
     "ts-morph": "^13.0.2",
     "update-notifier": "5.1.0",
     "url-loader": "4.1.1",
-    "webpack": "5.69.1",
+    "webpack": "5.70.0",
     "webpack-dev-server": "4.7.4",
     "webpack-manifest-plugin": "4.1.1",
     "ws": "8.5.0"
