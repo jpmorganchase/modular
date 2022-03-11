@@ -581,8 +581,6 @@ module.exports = function (webpackEnv) {
                 inlineSourceMap: false,
                 declarationMap: false,
                 noEmit: true,
-                incremental: true,
-                tsBuildInfoFile: paths.appTsBuildInfoFile,
               },
             },
             context: paths.appPath,

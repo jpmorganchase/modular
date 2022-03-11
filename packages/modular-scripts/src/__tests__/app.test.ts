@@ -344,8 +344,7 @@ describe('when working with an app', () => {
       │  ├─ index.tsx #zdn6mw
       │  ├─ logo.svg #1okqmlj
       │  └─ react-app-env.d.ts #t4ygcy
-      ├─ tsconfig.json #6rw46b
-      └─ tsconfig.tsbuildinfo #v0qc4l"
+      └─ tsconfig.json #6rw46b"
     `);
   });
 
