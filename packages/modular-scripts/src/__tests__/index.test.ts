@@ -234,7 +234,7 @@ describe('modular-scripts', () => {
       expect(tree(path.join(modularRoot, 'dist', 'sample-view')))
         .toMatchInlineSnapshot(`
         "sample-view
-        ├─ index.html #1o286v3
+        ├─ index.html #16orq8u
         ├─ package.json
         └─ static
            └─ js
@@ -261,7 +261,7 @@ describe('modular-scripts', () => {
       expect(tree(path.join(modularRoot, 'dist', 'sample-view')))
         .toMatchInlineSnapshot(`
         "sample-view
-        ├─ index.html #1iozhyg
+        ├─ index.html #16orq8u
         ├─ package.json
         └─ static
            └─ js
@@ -342,7 +342,7 @@ describe('modular-scripts', () => {
       expect(tree(path.join(modularRoot, 'dist', 'sample-view')))
         .toMatchInlineSnapshot(`
         "sample-view
-        ├─ index.html #1tkhgxi
+        ├─ index.html #16orq8u
         ├─ package.json
         └─ static
            └─ js
@@ -391,7 +391,7 @@ describe('modular-scripts', () => {
       expect(tree(path.join(modularRoot, 'dist', 'sample-view')))
         .toMatchInlineSnapshot(`
         "sample-view
-        ├─ index.html #1vkdpvs
+        ├─ index.html #16orq8u
         ├─ package.json
         └─ static
            └─ js

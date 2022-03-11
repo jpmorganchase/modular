@@ -4,21 +4,21 @@ exports[`When working with a nested app can generate a asset-manifest 1`] = `
 "{
   \\"files\\": {
     \\"main.css\\": \\"/static/css/main.1a7488ce.css\\",
-    \\"main.js\\": \\"/static/js/main.8c5bc4d2.js\\",
-    \\"runtime-main.js\\": \\"/static/js/runtime-main.83e93d07.js\\",
-    \\"static/js/788.78cfb599.js\\": \\"/static/js/788.78cfb599.js\\",
+    \\"main.js\\": \\"/static/js/main.f726ecf6.js\\",
+    \\"runtime-main.js\\": \\"/static/js/runtime-main.b18f5039.js\\",
+    \\"static/js/788.bbd34b33.js\\": \\"/static/js/788.bbd34b33.js\\",
     \\"index.html\\": \\"/index.html\\",
     \\"static/media/javascript,__webpack_public_path__ = __webpack_base_uri__ = htmlWebpackPluginPublicPath;\\": \\"/static/media/javascript,__webpack_public_path__ = __webpack_base_uri__ = htmlWebpackPluginPublicPath;.1feff74f.bin\\",
     \\"main.1a7488ce.css.map\\": \\"/static/css/main.1a7488ce.css.map\\",
-    \\"main.8c5bc4d2.js.map\\": \\"/static/js/main.8c5bc4d2.js.map\\",
-    \\"runtime-main.83e93d07.js.map\\": \\"/static/js/runtime-main.83e93d07.js.map\\",
-    \\"788.78cfb599.js.map\\": \\"/static/js/788.78cfb599.js.map\\"
+    \\"main.f726ecf6.js.map\\": \\"/static/js/main.f726ecf6.js.map\\",
+    \\"runtime-main.b18f5039.js.map\\": \\"/static/js/runtime-main.b18f5039.js.map\\",
+    \\"788.bbd34b33.js.map\\": \\"/static/js/788.bbd34b33.js.map\\"
   },
   \\"entrypoints\\": [
-    \\"static/js/runtime-main.83e93d07.js\\",
-    \\"static/js/788.78cfb599.js\\",
+    \\"static/js/runtime-main.b18f5039.js\\",
+    \\"static/js/788.bbd34b33.js\\",
     \\"static/css/main.1a7488ce.css\\",
-    \\"static/js/main.8c5bc4d2.js\\"
+    \\"static/js/main.f726ecf6.js\\"
   ]
 }"
 `;
@@ -209,14 +209,14 @@ exports[`When working with a nested app can generate a index.html 1`] = `
                   (t = n[i]), o.o(r, t) && r[t] && r[t][0](), (r[t] = 0);
                 return o.O(v);
               },
-              a = (globalThis.webpackChunk_scoped_sample_app =
-                globalThis.webpackChunk_scoped_sample_app || []);
+              a = (self.webpackChunk_scoped_sample_app =
+                self.webpackChunk_scoped_sample_app || []);
             a.forEach(e.bind(null, 0)), (a.push = e.bind(null, a.push.bind(a)));
           })();
       })();
     </script>
-    <script defer=\\"defer\\" src=\\"/static/js/788.78cfb599.js\\"></script>
-    <script defer=\\"defer\\" src=\\"/static/js/main.8c5bc4d2.js\\"></script>
+    <script defer=\\"defer\\" src=\\"/static/js/788.bbd34b33.js\\"></script>
+    <script defer=\\"defer\\" src=\\"/static/js/main.f726ecf6.js\\"></script>
     <link href=\\"/static/css/main.1a7488ce.css\\" rel=\\"stylesheet\\" />
   </head>
   <body>
@@ -8682,21 +8682,21 @@ exports[`when working with an app can generate a asset-manifest 1`] = `
 "{
   \\"files\\": {
     \\"main.css\\": \\"/static/css/main.1a7488ce.css\\",
-    \\"main.js\\": \\"/static/js/main.14cec3f9.js\\",
-    \\"runtime-main.js\\": \\"/static/js/runtime-main.de9fd74d.js\\",
-    \\"static/js/316.7a4d5eb7.js\\": \\"/static/js/316.7a4d5eb7.js\\",
+    \\"main.js\\": \\"/static/js/main.3251fbc2.js\\",
+    \\"runtime-main.js\\": \\"/static/js/runtime-main.7150bca8.js\\",
+    \\"static/js/316.394ef80b.js\\": \\"/static/js/316.394ef80b.js\\",
     \\"index.html\\": \\"/index.html\\",
     \\"static/media/javascript,__webpack_public_path__ = __webpack_base_uri__ = htmlWebpackPluginPublicPath;\\": \\"/static/media/javascript,__webpack_public_path__ = __webpack_base_uri__ = htmlWebpackPluginPublicPath;.1feff74f.bin\\",
     \\"main.1a7488ce.css.map\\": \\"/static/css/main.1a7488ce.css.map\\",
-    \\"main.14cec3f9.js.map\\": \\"/static/js/main.14cec3f9.js.map\\",
-    \\"runtime-main.de9fd74d.js.map\\": \\"/static/js/runtime-main.de9fd74d.js.map\\",
-    \\"316.7a4d5eb7.js.map\\": \\"/static/js/316.7a4d5eb7.js.map\\"
+    \\"main.3251fbc2.js.map\\": \\"/static/js/main.3251fbc2.js.map\\",
+    \\"runtime-main.7150bca8.js.map\\": \\"/static/js/runtime-main.7150bca8.js.map\\",
+    \\"316.394ef80b.js.map\\": \\"/static/js/316.394ef80b.js.map\\"
   },
   \\"entrypoints\\": [
-    \\"static/js/runtime-main.de9fd74d.js\\",
-    \\"static/js/316.7a4d5eb7.js\\",
+    \\"static/js/runtime-main.7150bca8.js\\",
+    \\"static/js/316.394ef80b.js\\",
     \\"static/css/main.1a7488ce.css\\",
-    \\"static/js/main.14cec3f9.js\\"
+    \\"static/js/main.3251fbc2.js\\"
   ]
 }"
 `;
@@ -8734,15 +8734,15 @@ exports[`when working with an app can generate a index.html 1`] = `
               if (!o) {
                 var p = 1 / 0;
                 for (v = 0; v < r.length; v++) {
-                  for (var [o, t, n] = r[v], l = !0, i = 0; i < o.length; i++)
+                  for (var [o, t, n] = r[v], s = !0, l = 0; l < o.length; l++)
                     (!1 & n || p >= n) &&
-                    Object.keys(a.O).every((r) => a.O[r](o[i]))
-                      ? o.splice(i--, 1)
-                      : ((l = !1), n < p && (p = n));
-                  if (l) {
+                    Object.keys(a.O).every((r) => a.O[r](o[l]))
+                      ? o.splice(l--, 1)
+                      : ((s = !1), n < p && (p = n));
+                  if (s) {
                     r.splice(v--, 1);
-                    var s = t();
-                    void 0 !== s && (e = s);
+                    var i = t();
+                    void 0 !== i && (e = i);
                   }
                 }
                 return e;
@@ -8760,24 +8760,24 @@ exports[`when working with an app can generate a index.html 1`] = `
             var e = (e, o) => {
                 var t,
                   n,
-                  [p, l, i] = o,
-                  s = 0;
+                  [p, s, l] = o,
+                  i = 0;
                 if (p.some((e) => 0 !== r[e])) {
-                  for (t in l) a.o(l, t) && (a.m[t] = l[t]);
-                  if (i) var v = i(a);
+                  for (t in s) a.o(s, t) && (a.m[t] = s[t]);
+                  if (l) var v = l(a);
                 }
-                for (e && e(o); s < p.length; s++)
-                  (n = p[s]), a.o(r, n) && r[n] && r[n][0](), (r[n] = 0);
+                for (e && e(o); i < p.length; i++)
+                  (n = p[i]), a.o(r, n) && r[n] && r[n][0](), (r[n] = 0);
                 return a.O(v);
               },
-              o = (globalThis.webpackChunksample_app =
-                globalThis.webpackChunksample_app || []);
+              o = (self.webpackChunksample_app =
+                self.webpackChunksample_app || []);
             o.forEach(e.bind(null, 0)), (o.push = e.bind(null, o.push.bind(o)));
           })();
       })();
     </script>
-    <script defer=\\"defer\\" src=\\"/static/js/316.7a4d5eb7.js\\"></script>
-    <script defer=\\"defer\\" src=\\"/static/js/main.14cec3f9.js\\"></script>
+    <script defer=\\"defer\\" src=\\"/static/js/316.394ef80b.js\\"></script>
+    <script defer=\\"defer\\" src=\\"/static/js/main.3251fbc2.js\\"></script>
     <link href=\\"/static/css/main.1a7488ce.css\\" rel=\\"stylesheet\\" />
   </head>
   <body>
