@@ -78,7 +78,7 @@ describe('when working with a NODE_ENV app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'node-env-app')))
       .toMatchInlineSnapshot(`
       "node-env-app
-      ├─ asset-manifest.json #1er5q9m
+      ├─ asset-manifest.json #u3l86j
       ├─ favicon.ico #6pu3rg
       ├─ index.html #18m4pzt
       ├─ logo192.png #1nez7vk
@@ -87,13 +87,11 @@ describe('when working with a NODE_ENV app', () => {
       ├─ package.json
       ├─ robots.txt #1sjb8b3
       └─ static
-         ├─ js
-         │  ├─ main.6b9113da.js #1jh9hcj
-         │  ├─ main.6b9113da.js.map #2l1ifi
-         │  ├─ runtime-main.182069c4.js #r0hm4v
-         │  └─ runtime-main.182069c4.js.map #ul1xez
-         └─ media
-            └─ javascript,__webpack_public_path__ = __webpack_base_uri__ = htmlWebpackPluginPublicPath;.1feff74f.bin #1327v5u"
+         └─ js
+            ├─ main.6b9113da.js #1jh9hcj
+            ├─ main.6b9113da.js.map #2l1ifi
+            ├─ runtime-main.182069c4.js #r0hm4v
+            └─ runtime-main.182069c4.js.map #ul1xez"
     `);
   });
 
@@ -136,7 +134,7 @@ describe('When working with a nested app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'scoped-sample-app')))
       .toMatchInlineSnapshot(`
       "scoped-sample-app
-      ├─ asset-manifest.json #7yy8px
+      ├─ asset-manifest.json #mfwa5x
       ├─ favicon.ico #6pu3rg
       ├─ index.html #m0ahw0
       ├─ logo192.png #1nez7vk
@@ -148,16 +146,14 @@ describe('When working with a nested app', () => {
          ├─ css
          │  ├─ main.1a7488ce.css #x701i6
          │  └─ main.1a7488ce.css.map #z36y5v
-         ├─ js
-         │  ├─ 788.78cfb599.js #1bgvsgc
-         │  ├─ 788.78cfb599.js.LICENSE.txt #eplx8h
-         │  ├─ 788.78cfb599.js.map #jf9876
-         │  ├─ main.8c5bc4d2.js #xquhbv
-         │  ├─ main.8c5bc4d2.js.map #t8irmb
-         │  ├─ runtime-main.83e93d07.js #1mo3tl5
-         │  └─ runtime-main.83e93d07.js.map #3ycdm3
-         └─ media
-            └─ javascript,__webpack_public_path__ = __webpack_base_uri__ = htmlWebpackPluginPublicPath;.1feff74f.bin #1327v5u"
+         └─ js
+            ├─ 788.78cfb599.js #1bgvsgc
+            ├─ 788.78cfb599.js.LICENSE.txt #eplx8h
+            ├─ 788.78cfb599.js.map #jf9876
+            ├─ main.8c5bc4d2.js #xquhbv
+            ├─ main.8c5bc4d2.js.map #t8irmb
+            ├─ runtime-main.83e93d07.js #1mo3tl5
+            └─ runtime-main.83e93d07.js.map #3ycdm3"
     `);
   });
 
@@ -348,7 +344,8 @@ describe('when working with an app', () => {
       │  ├─ index.tsx #zdn6mw
       │  ├─ logo.svg #1okqmlj
       │  └─ react-app-env.d.ts #t4ygcy
-      └─ tsconfig.json #6rw46b"
+      ├─ tsconfig.json #6rw46b
+      └─ tsconfig.tsbuildinfo #v0qc4l"
     `);
   });
 
@@ -356,7 +353,7 @@ describe('when working with an app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'sample-app')))
       .toMatchInlineSnapshot(`
       "sample-app
-      ├─ asset-manifest.json #1s87nvl
+      ├─ asset-manifest.json #nzl5za
       ├─ favicon.ico #6pu3rg
       ├─ index.html #11ep3dl
       ├─ logo192.png #1nez7vk
@@ -368,16 +365,14 @@ describe('when working with an app', () => {
          ├─ css
          │  ├─ main.1a7488ce.css #x701i6
          │  └─ main.1a7488ce.css.map #z36y5v
-         ├─ js
-         │  ├─ 316.7a4d5eb7.js #1yh1m0p
-         │  ├─ 316.7a4d5eb7.js.LICENSE.txt #eplx8h
-         │  ├─ 316.7a4d5eb7.js.map #1ib48x2
-         │  ├─ main.14cec3f9.js #12mskyj
-         │  ├─ main.14cec3f9.js.map #1x1swby
-         │  ├─ runtime-main.de9fd74d.js #1slkp3g
-         │  └─ runtime-main.de9fd74d.js.map #d7r4im
-         └─ media
-            └─ javascript,__webpack_public_path__ = __webpack_base_uri__ = htmlWebpackPluginPublicPath;.1feff74f.bin #1327v5u"
+         └─ js
+            ├─ 316.7a4d5eb7.js #1yh1m0p
+            ├─ 316.7a4d5eb7.js.LICENSE.txt #eplx8h
+            ├─ 316.7a4d5eb7.js.map #1ib48x2
+            ├─ main.14cec3f9.js #12mskyj
+            ├─ main.14cec3f9.js.map #1x1swby
+            ├─ runtime-main.de9fd74d.js #1slkp3g
+            └─ runtime-main.de9fd74d.js.map #d7r4im"
     `);
   });
 
