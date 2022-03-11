@@ -109,7 +109,7 @@
     "terser-webpack-plugin": "4.2.3",
     "tmp": "^0.2.1",
     "ts-jest": "26.5.6",
-    "ts-morph": "^13.0.2",
+    "ts-morph": "^14.0.0",
     "update-notifier": "5.1.0",
     "url-loader": "4.1.1",
     "webpack": "4.46.0",
