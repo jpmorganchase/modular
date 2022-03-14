@@ -160,7 +160,10 @@ module.exports = function (webpackEnv) {
           const parsedModule = parsePackageName(request);
 
           // If the module is absolute and it is in the import map, we want to externalise it
-          if (importMap[parsedModule?.dependencyName]) {
+          if (
+            parsedModule.dependencyName &&
+            importMap[parsedModule.dependencyName]
+          ) {
             const { dependencyName, submodule } = parsedModule;
 
             const toRewrite = `${importMap[dependencyName]}${
