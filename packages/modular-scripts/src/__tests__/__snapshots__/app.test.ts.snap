@@ -22,55 +22,7 @@ exports[`When working with a nested app can generate a asset-manifest 1`] = `
 }"
 `;
 
-exports[`When working with a nested app can generate a css/main.1a7488ce.css 1`] = `
-".App {
-  text-align: center;
-}
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin 20s linear infinite;
-  }
-}
-.App-header {
-  align-items: center;
-  background-color: #282c34;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  font-size: calc(10px + 2vmin);
-  justify-content: center;
-  min-height: 100vh;
-}
-.App-link {
-  color: #61dafb;
-}
-@keyframes App-logo-spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(1turn);
-  }
-}
-body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  margin: 0;
-}
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, Courier New, monospace;
-}
-/*# sourceMappingURL=main.1a7488ce.css.map*/
-"
-`;
-
-exports[`When working with a nested app can generate a css/main.1a7488ce.css.map 1`] = `
+exports[`When working with a nested app can generate a hashed css map in the css directory 1`] = `
 Object {
   "file": "static/css/main.1a7488ce.css",
   "mappings": "AAAA,KACE,iBACF,CAEA,UACE,aAAc,CACd,mBACF,CAEA,8CACE,UACE,2CACF,CACF,CAEA,YAKE,kBAAmB,CAJnB,wBAAyB,CAOzB,UAAY,CALZ,YAAa,CACb,qBAAsB,CAGtB,4BAA6B,CAD7B,sBAAuB,CAJvB,gBAOF,CAEA,UACE,aACF,CAEA,yBACE,GACE,sBACF,CACA,GACE,uBACF,CACF,CCrCA,KAKE,kCAAmC,CACnC,iCAAkC,CAJlC,mIAEY,CAHZ,QAMF,CAEA,KACE,uEAEF",
@@ -139,98 +91,179 @@ code {
 }
 `;
 
-exports[`When working with a nested app can generate a index.html 1`] = `
-"<!DOCTYPE html>
-<html lang=\\"en\\">
-  <head>
-    <meta charset=\\"utf-8\\" />
-    <link rel=\\"icon\\" href=\\"/favicon.ico\\" />
-    <meta name=\\"viewport\\" content=\\"width=device-width,initial-scale=1\\" />
-    <meta name=\\"theme-color\\" content=\\"#000000\\" />
-    <meta
-      name=\\"description\\"
-      content=\\"Web site created using create-modular-app\\"
-    />
-    <link rel=\\"apple-touch-icon\\" href=\\"/logo192.png\\" />
-    <link rel=\\"manifest\\" href=\\"/manifest.json\\" />
-    <title>React App</title>
-    <script>
-      (() => {
-        \\"use strict\\";
-        var r = {},
-          e = {};
-        function o(a) {
-          var p = e[a];
-          if (void 0 !== p) return p.exports;
-          var t = (e[a] = { exports: {} });
-          return r[a](t, t.exports, o), t.exports;
-        }
-        (o.m = r),
-          (() => {
-            var r = [];
-            o.O = (e, a, p, t) => {
-              if (!a) {
-                var n = 1 / 0;
-                for (v = 0; v < r.length; v++) {
-                  for (var [a, p, t] = r[v], s = !0, l = 0; l < a.length; l++)
-                    (!1 & t || n >= t) &&
-                    Object.keys(o.O).every((r) => o.O[r](a[l]))
-                      ? a.splice(l--, 1)
-                      : ((s = !1), t < n && (n = t));
-                  if (s) {
-                    r.splice(v--, 1);
-                    var i = p();
-                    void 0 !== i && (e = i);
-                  }
-                }
-                return e;
-              }
-              t = t || 0;
-              for (var v = r.length; v > 0 && r[v - 1][2] > t; v--)
-                r[v] = r[v - 1];
-              r[v] = [a, p, t];
-            };
-          })(),
-          (o.o = (r, e) => Object.prototype.hasOwnProperty.call(r, e)),
-          (() => {
-            var r = { 252: 0 };
-            o.O.j = (e) => 0 === r[e];
-            var e = (e, a) => {
-                var p,
-                  t,
-                  [n, s, l] = a,
-                  i = 0;
-                if (n.some((e) => 0 !== r[e])) {
-                  for (p in s) o.o(s, p) && (o.m[p] = s[p]);
-                  if (l) var v = l(o);
-                }
-                for (e && e(a); i < n.length; i++)
-                  (t = n[i]), o.o(r, t) && r[t] && r[t][0](), (r[t] = 0);
-                return o.O(v);
-              },
-              a = (self.webpackChunk_scoped_sample_app =
-                self.webpackChunk_scoped_sample_app || []);
-            a.forEach(e.bind(null, 0)), (a.push = e.bind(null, a.push.bind(a)));
-          })();
-      })();
-    </script>
-    <script defer=\\"defer\\" src=\\"/static/js/788.bbd34b33.js\\"></script>
-    <script defer=\\"defer\\" src=\\"/static/js/main.f726ecf6.js\\"></script>
-    <link href=\\"/static/css/main.1a7488ce.css\\" rel=\\"stylesheet\\" />
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id=\\"root\\"></div>
-  </body>
-</html>
+exports[`When working with a nested app can generate a hashed main css chunk in the css directory 1`] = `
+".App {
+  text-align: center;
+}
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin 20s linear infinite;
+  }
+}
+.App-header {
+  align-items: center;
+  background-color: #282c34;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  font-size: calc(10px + 2vmin);
+  justify-content: center;
+  min-height: 100vh;
+}
+.App-link {
+  color: #61dafb;
+}
+@keyframes App-logo-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(1turn);
+  }
+}
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  margin: 0;
+}
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, Courier New, monospace;
+}
+/*# sourceMappingURL=main.1a7488ce.css.map*/
 "
 `;
 
-exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = `
-"/*! For license information please see 788.78cfb599.js.LICENSE.txt */
+exports[`When working with a nested app can generate a hashed main js chunk in the js directory 1`] = `
+"\\"use strict\\";
+(self.webpackChunk_scoped_sample_app =
+  self.webpackChunk_scoped_sample_app || []).push([
+  [179],
+  {
+    831: (M, L, j) => {
+      var N = j(735),
+        I = j(788);
+      const u = function () {
+        return N.createElement(
+          \\"div\\",
+          { className: \\"App\\" },
+          N.createElement(
+            \\"header\\",
+            { className: \\"App-header\\" },
+            N.createElement(\\"img\\", {
+              src: \\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4NDEuOSA1OTUuMyI+CiAgICA8ZyBmaWxsPSIjNjFEQUZCIj4KICAgICAgICA8cGF0aCBkPSJNNjY2LjMgMjk2LjVjMC0zMi41LTQwLjctNjMuMy0xMDMuMS04Mi40IDE0LjQtNjMuNiA4LTExNC4yLTIwLjItMTMwLjQtNi41LTMuOC0xNC4xLTUuNi0yMi40LTUuNnYyMi4zYzQuNiAwIDguMy45IDExLjQgMi42IDEzLjYgNy44IDE5LjUgMzcuNSAxNC45IDc1LjctMS4xIDkuNC0yLjkgMTkuMy01LjEgMjkuNC0xOS42LTQuOC00MS04LjUtNjMuNS0xMC45LTEzLjUtMTguNS0yNy41LTM1LjMtNDEuNi01MCAzMi42LTMwLjMgNjMuMi00Ni45IDg0LTQ2LjlWNzhjLTI3LjUgMC02My41IDE5LjYtOTkuOSA1My42LTM2LjQtMzMuOC03Mi40LTUzLjItOTkuOS01My4ydjIyLjNjMjAuNyAwIDUxLjQgMTYuNSA4NCA0Ni42LTE0IDE0LjctMjggMzEuNC00MS4zIDQ5LjktMjIuNiAyLjQtNDQgNi4xLTYzLjYgMTEtMi4zLTEwLTQtMTkuNy01LjItMjktNC43LTM4LjIgMS4xLTY3LjkgMTQuNi03NS44IDMtMS44IDYuOS0yLjYgMTEuNS0yLjZWNzguNWMtOC40IDAtMTYgMS44LTIyLjYgNS42LTI4LjEgMTYuMi0zNC40IDY2LjctMTkuOSAxMzAuMS02Mi4yIDE5LjItMTAyLjcgNDkuOS0xMDIuNyA4Mi4zIDAgMzIuNSA0MC43IDYzLjMgMTAzLjEgODIuNC0xNC40IDYzLjYtOCAxMTQuMiAyMC4yIDEzMC40IDYuNSAzLjggMTQuMSA1LjYgMjIuNSA1LjYgMjcuNSAwIDYzLjUtMTkuNiA5OS45LTUzLjYgMzYuNCAzMy44IDcyLjQgNTMuMiA5OS45IDUzLjIgOC40IDAgMTYtMS44IDIyLjYtNS42IDI4LjEtMTYuMiAzNC40LTY2LjcgMTkuOS0xMzAuMSA2Mi0xOS4xIDEwMi41LTQ5LjkgMTAyLjUtODIuM3ptLTEzMC4yLTY2LjdjLTMuNyAxMi45LTguMyAyNi4yLTEzLjUgMzkuNS00LjEtOC04LjQtMTYtMTMuMS0yNC00LjYtOC05LjUtMTUuOC0xNC40LTIzLjQgMTQuMiAyLjEgMjcuOSA0LjcgNDEgNy45em0tNDUuOCAxMDYuNWMtNy44IDEzLjUtMTUuOCAyNi4zLTI0LjEgMzguMi0xNC45IDEuMy0zMCAyLTQ1LjIgMi0xNS4xIDAtMzAuMi0uNy00NS0xLjktOC4zLTExLjktMTYuNC0yNC42LTI0LjItMzgtNy42LTEzLjEtMTQuNS0yNi40LTIwLjgtMzkuOCA2LjItMTMuNCAxMy4yLTI2LjggMjAuNy0zOS45IDcuOC0xMy41IDE1LjgtMjYuMyAyNC4xLTM4LjIgMTQuOS0xLjMgMzAtMiA0NS4yLTIgMTUuMSAwIDMwLjIuNyA0NSAxLjkgOC4zIDExLjkgMTYuNCAyNC42IDI0LjIgMzggNy42IDEzLjEgMTQuNSAyNi40IDIwLjggMzkuOC02LjMgMTMuNC0xMy4yIDI2LjgtMjAuNyAzOS45em0zMi4zLTEzYzUuNCAxMy40IDEwIDI2LjggMTMuOCAzOS44LTEzLjEgMy4yLTI2LjkgNS45LTQxLjIgOCA0LjktNy43IDkuOC0xNS42IDE0LjQtMjMuNyA0LjYtOCA4LjktMTYuMSAxMy0yNC4xek00MjEuMiA0MzBjLTkuMy05LjYtMTguNi0yMC4zLTI3LjgtMzIgOSAuNCAxOC4yLjcgMjcuNS43IDkuNCAwIDE4LjctLjIgMjcuOC0uNy05IDExLjctMTguMyAyMi40LTI3LjUgMzJ6bS03NC40LTU4LjljLTE0LjItMi4xLTI3LjktNC43LTQxLTcuOSAzLjctMTIuOSA4LjMtMjYuMiAxMy41LTM5LjUgNC4xIDggOC40IDE2IDEzLjEgMjQgNC43IDggOS41IDE1LjggMTQuNCAyMy40ek00MjAuNyAxNjNjOS4zIDkuNiAxOC42IDIwLjMgMjcuOCAzMi05LS40LTE4LjItLjctMjcuNS0uNy05LjQgMC0xOC43LjItMjcuOC43IDktMTEuNyAxOC4zLTIyLjQgMjcuNS0zMnptLTc0IDU4LjljLTQuOSA3LjctOS44IDE1LjYtMTQuNCAyMy43LTQuNiA4LTguOSAxNi0xMyAyNC01LjQtMTMuNC0xMC0yNi44LTEzLjgtMzkuOCAxMy4xLTMuMSAyNi45LTUuOCA0MS4yLTcuOXptLTkwLjUgMTI1LjJjLTM1LjQtMTUuMS01OC4zLTM0LjktNTguMy01MC42IDAtMTUuNyAyMi45LTM1LjYgNTguMy01MC42IDguNi0zLjcgMTgtNyAyNy43LTEwLjEgNS43IDE5LjYgMTMuMiA0MCAyMi41IDYwLjktOS4yIDIwLjgtMTYuNiA0MS4xLTIyLjIgNjAuNi05LjktMy4xLTE5LjMtNi41LTI4LTEwLjJ6TTMxMCA0OTBjLTEzLjYtNy44LTE5LjUtMzcuNS0xNC45LTc1LjcgMS4xLTkuNCAyLjktMTkuMyA1LjEtMjkuNCAxOS42IDQuOCA0MSA4LjUgNjMuNSAxMC45IDEzLjUgMTguNSAyNy41IDM1LjMgNDEuNiA1MC0zMi42IDMwLjMtNjMuMiA0Ni45LTg0IDQ2LjktNC41LS4xLTguMy0xLTExLjMtMi43em0yMzcuMi03Ni4yYzQuNyAzOC4yLTEuMSA2Ny45LTE0LjYgNzUuOC0zIDEuOC02LjkgMi42LTExLjUgMi42LTIwLjcgMC01MS40LTE2LjUtODQtNDYuNiAxNC0xNC43IDI4LTMxLjQgNDEuMy00OS45IDIyLjYtMi40IDQ0LTYuMSA2My42LTExIDIuMyAxMC4xIDQuMSAxOS44IDUuMiAyOS4xem0zOC41LTY2LjdjLTguNiAzLjctMTggNy0yNy43IDEwLjEtNS43LTE5LjYtMTMuMi00MC0yMi41LTYwLjkgOS4yLTIwLjggMTYuNi00MS4xIDIyLjItNjAuNiA5LjkgMy4xIDE5LjMgNi41IDI4LjEgMTAuMiAzNS40IDE1LjEgNTguMyAzNC45IDU4LjMgNTAuNi0uMSAxNS43LTIzIDM1LjYtNTguNCA1MC42ek0zMjAuOCA3OC40eiIvPgogICAgICAgIDxjaXJjbGUgY3g9IjQyMC45IiBjeT0iMjk2LjUiIHI9IjQ1LjciLz4KICAgICAgICA8cGF0aCBkPSJNNTIwLjUgNzguMXoiLz4KICAgIDwvZz4KPC9zdmc+Cg==\\",
+              className: \\"App-logo\\",
+              alt: \\"logo\\",
+            }),
+            N.createElement(
+              \\"p\\",
+              null,
+              \\"Edit \\",
+              N.createElement(\\"code\\", null, \\"src/App.tsx\\"),
+              \\" and save to reload.\\"
+            ),
+            N.createElement(
+              \\"a\\",
+              {
+                className: \\"App-link\\",
+                href: \\"https://reactjs.org\\",
+                target: \\"_blank\\",
+                rel: \\"noopener noreferrer\\",
+              },
+              \\"Learn React\\"
+            )
+          )
+        );
+      };
+      I.render(
+        N.createElement(N.StrictMode, null, N.createElement(u, null)),
+        document.getElementById(\\"root\\")
+      );
+    },
+  },
+  (M) => {
+    M.O(0, [788], () => {
+      return (L = 831), M((M.s = L));
+      var L;
+    });
+    M.O();
+  },
+]);
+//# sourceMappingURL=main.f726ecf6.js.map
+"
+`;
+
+exports[`When working with a nested app can generate a hashed runtime chunk in the js directory 1`] = `
+"(() => {
+  \\"use strict\\";
+  var r = {},
+    e = {};
+  function o(a) {
+    var p = e[a];
+    if (void 0 !== p) return p.exports;
+    var t = (e[a] = { exports: {} });
+    return r[a](t, t.exports, o), t.exports;
+  }
+  (o.m = r),
+    (() => {
+      var r = [];
+      o.O = (e, a, p, t) => {
+        if (!a) {
+          var n = 1 / 0;
+          for (v = 0; v < r.length; v++) {
+            for (var [a, p, t] = r[v], s = !0, l = 0; l < a.length; l++)
+              (!1 & t || n >= t) && Object.keys(o.O).every((r) => o.O[r](a[l]))
+                ? a.splice(l--, 1)
+                : ((s = !1), t < n && (n = t));
+            if (s) {
+              r.splice(v--, 1);
+              var i = p();
+              void 0 !== i && (e = i);
+            }
+          }
+          return e;
+        }
+        t = t || 0;
+        for (var v = r.length; v > 0 && r[v - 1][2] > t; v--) r[v] = r[v - 1];
+        r[v] = [a, p, t];
+      };
+    })(),
+    (o.o = (r, e) => Object.prototype.hasOwnProperty.call(r, e)),
+    (() => {
+      var r = { 252: 0 };
+      o.O.j = (e) => 0 === r[e];
+      var e = (e, a) => {
+          var p,
+            t,
+            [n, s, l] = a,
+            i = 0;
+          if (n.some((e) => 0 !== r[e])) {
+            for (p in s) o.o(s, p) && (o.m[p] = s[p]);
+            if (l) var v = l(o);
+          }
+          for (e && e(a); i < n.length; i++)
+            (t = n[i]), o.o(r, t) && r[t] && r[t][0](), (r[t] = 0);
+          return o.O(v);
+        },
+        a = (self.webpackChunk_scoped_sample_app =
+          self.webpackChunk_scoped_sample_app || []);
+      a.forEach(e.bind(null, 0)), (a.push = e.bind(null, a.push.bind(a)));
+    })();
+})();
+//# sourceMappingURL=runtime-main.b18f5039.js.map
+"
+`;
+
+exports[`When working with a nested app can generate a hashed vendor chunk in the js directory 1`] = `
+"/*! For license information please see 788.bbd34b33.js.LICENSE.txt */
 \\"use strict\\";
-(globalThis.webpackChunk_scoped_sample_app =
-  globalThis.webpackChunk_scoped_sample_app || []).push([
+(self.webpackChunk_scoped_sample_app =
+  self.webpackChunk_scoped_sample_app || []).push([
   [788],
   {
     516: (e) => {
@@ -497,8 +530,8 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
         _ = 60114,
         P = 60109,
         N = 60110,
-        T = 60112,
-        z = 60113,
+        z = 60112,
+        T = 60113,
         L = 60120,
         O = 60115,
         M = 60116,
@@ -516,8 +549,8 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
           (_ = j(\\"react.profiler\\")),
           (P = j(\\"react.provider\\")),
           (N = j(\\"react.context\\")),
-          (T = j(\\"react.forward_ref\\")),
-          (z = j(\\"react.suspense\\")),
+          (z = j(\\"react.forward_ref\\")),
+          (T = j(\\"react.suspense\\")),
           (L = j(\\"react.suspense_list\\")),
           (O = j(\\"react.memo\\")),
           (M = j(\\"react.lazy\\")),
@@ -651,7 +684,7 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
             return \\"Profiler\\";
           case C:
             return \\"StrictMode\\";
-          case z:
+          case T:
             return \\"Suspense\\";
           case L:
             return \\"SuspenseList\\";
@@ -662,7 +695,7 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
               return (e.displayName || \\"Context\\") + \\".Consumer\\";
             case P:
               return (e._context.displayName || \\"Context\\") + \\".Provider\\";
-            case T:
+            case z:
               var t = e.render;
               return (
                 (t = t.displayName || t.name || \\"\\"),
@@ -1091,8 +1124,8 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
       }
       var Pe = null,
         Ne = null,
-        Te = null;
-      function ze(e) {
+        ze = null;
+      function Te(e) {
         if ((e = rl(e))) {
           if (\\"function\\" !== typeof Pe) throw Error(o(280));
           var t = e.stateNode;
@@ -1100,14 +1133,14 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
         }
       }
       function Le(e) {
-        Ne ? (Te ? Te.push(e) : (Te = [e])) : (Ne = e);
+        Ne ? (ze ? ze.push(e) : (ze = [e])) : (Ne = e);
       }
       function Oe() {
         if (Ne) {
           var e = Ne,
-            t = Te;
-          if (((Te = Ne = null), ze(e), t))
-            for (e = 0; e < t.length; e++) ze(t[e]);
+            t = ze;
+          if (((ze = Ne = null), Te(e), t))
+            for (e = 0; e < t.length; e++) Te(t[e]);
         }
       }
       function Me(e, t) {
@@ -1121,7 +1154,7 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
         Ie = !1,
         Ue = !1;
       function je() {
-        (null === Ne && null === Te) || (Fe(), Oe());
+        (null === Ne && null === ze) || (Fe(), Oe());
       }
       function Ae(e, t) {
         var n = e.stateNode;
@@ -1481,8 +1514,8 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
           delete xt.animationstart.animation),
         \\"TransitionEvent\\" in window || delete xt.transitionend.transition);
       var Nt = Pt(\\"animationend\\"),
-        Tt = Pt(\\"animationiteration\\"),
-        zt = Pt(\\"animationstart\\"),
+        zt = Pt(\\"animationiteration\\"),
+        Tt = Pt(\\"animationstart\\"),
         Lt = Pt(\\"transitionend\\"),
         Ot = new Map(),
         Mt = new Map(),
@@ -1491,9 +1524,9 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
           \\"abort\\",
           Nt,
           \\"animationEnd\\",
-          Tt,
-          \\"animationIteration\\",
           zt,
+          \\"animationIteration\\",
+          Tt,
           \\"animationStart\\",
           \\"canplay\\",
           \\"canPlay\\",
@@ -1955,7 +1988,7 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
       function Nn() {
         return Pn;
       }
-      var Tn = l({}, hn, {
+      var zn = l({}, hn, {
           key: function (e) {
             if (e.key) {
               var t = xn[e.key] || e.key;
@@ -1992,7 +2025,7 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
               : 0;
           },
         }),
-        zn = un(Tn),
+        Tn = un(zn),
         Ln = un(
           l({}, vn, {
             pointerId: 0,
@@ -2101,7 +2134,7 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
       var Yn = null,
         Xn = null;
       function Gn(e) {
-        Tr(e, 0);
+        zr(e, 0);
       }
       function Zn(e) {
         if (G(ll(e))) return e;
@@ -2355,7 +2388,7 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
           })(r, t, void 0, e),
           (e.currentTarget = null);
       }
-      function Tr(e, t) {
+      function zr(e, t) {
         t = 0 !== (4 & t);
         for (var n = 0; n < e.length; n++) {
           var r = e[n],
@@ -2387,7 +2420,7 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
         }
         if (Qe) throw ((e = qe), (Qe = !1), (qe = null), e);
       }
-      function zr(e, t) {
+      function Tr(e, t) {
         var n = ol(t),
           r = e + \\"__bubble\\";
         n.has(r) || (Rr(t, e, 2, !1), n.add(r));
@@ -2493,7 +2526,7 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
                   if (0 === ln(n)) break e;
                 case \\"keydown\\":
                 case \\"keyup\\":
-                  i = zn;
+                  i = Tn;
                   break;
                 case \\"focusin\\":
                   (s = \\"focus\\"), (i = bn);
@@ -2534,8 +2567,8 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
                   i = On;
                   break;
                 case Nt:
-                case Tt:
                 case zt:
+                case Tt:
                   i = wn;
                   break;
                 case Lt:
@@ -2772,7 +2805,7 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
                 o.push({ event: l, listeners: r }),
                 (l.data = y));
           }
-          Tr(o, t);
+          zr(o, t);
         });
       }
       function Dr(e, t, n) {
@@ -2991,8 +3024,8 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
         _l = a.unstable_scheduleCallback,
         Pl = a.unstable_cancelCallback,
         Nl = a.unstable_shouldYield,
-        Tl = a.unstable_requestPaint,
-        zl = a.unstable_now,
+        zl = a.unstable_requestPaint,
+        Tl = a.unstable_now,
         Ll = a.unstable_getCurrentPriorityLevel,
         Ol = a.unstable_ImmediatePriority,
         Ml = a.unstable_UserBlockingPriority,
@@ -3000,16 +3033,16 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
         Fl = a.unstable_LowPriority,
         Dl = a.unstable_IdlePriority,
         Il = {},
-        Ul = void 0 !== Tl ? Tl : function () {},
+        Ul = void 0 !== zl ? zl : function () {},
         jl = null,
         Al = null,
         Vl = !1,
-        Bl = zl(),
+        Bl = Tl(),
         $l =
           1e4 > Bl
-            ? zl
+            ? Tl
             : function () {
-                return zl() - Bl;
+                return Tl() - Bl;
               };
       function Wl() {
         switch (Ll()) {
@@ -3784,15 +3817,15 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
       var _a = Ca(!0),
         Pa = Ca(!1),
         Na = {},
-        Ta = sl(Na),
         za = sl(Na),
+        Ta = sl(Na),
         La = sl(Na);
       function Oa(e) {
         if (e === Na) throw Error(o(174));
         return e;
       }
       function Ma(e, t) {
-        switch ((fl(La, t), fl(za, e), fl(Ta, Na), (e = t.nodeType))) {
+        switch ((fl(La, t), fl(Ta, e), fl(za, Na), (e = t.nodeType))) {
           case 9:
           case 11:
             t = (t = t.documentElement) ? t.namespaceURI : he(null, \\"\\");
@@ -3803,19 +3836,19 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
               (e = e.tagName)
             );
         }
-        cl(Ta), fl(Ta, t);
+        cl(za), fl(za, t);
       }
       function Ra() {
-        cl(Ta), cl(za), cl(La);
+        cl(za), cl(Ta), cl(La);
       }
       function Fa(e) {
         Oa(La.current);
-        var t = Oa(Ta.current),
+        var t = Oa(za.current),
           n = he(t, e.type);
-        t !== n && (fl(za, e), fl(Ta, n));
+        t !== n && (fl(Ta, e), fl(za, n));
       }
       function Da(e) {
-        za.current === e && (cl(Ta), cl(za));
+        Ta.current === e && (cl(za), cl(Ta));
       }
       var Ia = sl(0);
       function Ua(e) {
@@ -4287,7 +4320,7 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
           ? r[0]
           : ((n.memoizedState = [e, t]), e);
       }
-      function To(e, t) {
+      function zo(e, t) {
         var n = io();
         t = void 0 === t ? null : t;
         var r = n.memoizedState;
@@ -4295,7 +4328,7 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
           ? r[0]
           : ((e = e()), (n.memoizedState = [e, t]), e);
       }
-      function zo(e, t) {
+      function To(e, t) {
         var n = Wl();
         Ql(98 > n ? 98 : n, function () {
           e(!0);
@@ -4427,7 +4460,7 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
           useTransition: function () {
             var e = vo(!1),
               t = e[0];
-            return yo((e = zo.bind(null, e[1]))), [e, t];
+            return yo((e = To.bind(null, e[1]))), [e, t];
           },
           useMutableSource: function (e, t, n) {
             var r = uo();
@@ -4477,7 +4510,7 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
           useEffect: Eo,
           useImperativeHandle: _o,
           useLayoutEffect: xo,
-          useMemo: To,
+          useMemo: zo,
           useReducer: co,
           useRef: bo,
           useState: function () {
@@ -4521,7 +4554,7 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
           useEffect: Eo,
           useImperativeHandle: _o,
           useLayoutEffect: xo,
-          useMemo: To,
+          useMemo: zo,
           useReducer: fo,
           useRef: bo,
           useState: function () {
@@ -5065,42 +5098,42 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
                 if (null === t.stateNode) throw Error(o(166));
                 return null;
               }
-              if (((e = Oa(Ta.current)), Qa(t))) {
+              if (((e = Oa(za.current)), Qa(t))) {
                 (r = t.stateNode), (n = t.type);
                 var u = t.memoizedProps;
                 switch (((r[Zr] = t), (r[Jr] = u), n)) {
                   case \\"dialog\\":
-                    zr(\\"cancel\\", r), zr(\\"close\\", r);
+                    Tr(\\"cancel\\", r), Tr(\\"close\\", r);
                     break;
                   case \\"iframe\\":
                   case \\"object\\":
                   case \\"embed\\":
-                    zr(\\"load\\", r);
+                    Tr(\\"load\\", r);
                     break;
                   case \\"video\\":
                   case \\"audio\\":
-                    for (e = 0; e < _r.length; e++) zr(_r[e], r);
+                    for (e = 0; e < _r.length; e++) Tr(_r[e], r);
                     break;
                   case \\"source\\":
-                    zr(\\"error\\", r);
+                    Tr(\\"error\\", r);
                     break;
                   case \\"img\\":
                   case \\"image\\":
                   case \\"link\\":
-                    zr(\\"error\\", r), zr(\\"load\\", r);
+                    Tr(\\"error\\", r), Tr(\\"load\\", r);
                     break;
                   case \\"details\\":
-                    zr(\\"toggle\\", r);
+                    Tr(\\"toggle\\", r);
                     break;
                   case \\"input\\":
-                    ee(r, u), zr(\\"invalid\\", r);
+                    ee(r, u), Tr(\\"invalid\\", r);
                     break;
                   case \\"select\\":
                     (r._wrapperState = { wasMultiple: !!u.multiple }),
-                      zr(\\"invalid\\", r);
+                      Tr(\\"invalid\\", r);
                     break;
                   case \\"textarea\\":
-                    ie(r, u), zr(\\"invalid\\", r);
+                    ie(r, u), Tr(\\"invalid\\", r);
                 }
                 for (var s in (xe(n, u), (e = null), u))
                   u.hasOwnProperty(s) &&
@@ -5114,7 +5147,7 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
                       : i.hasOwnProperty(s) &&
                         null != a &&
                         \\"onScroll\\" === s &&
-                        zr(\\"scroll\\", r));
+                        Tr(\\"scroll\\", r));
                 switch (n) {
                   case \\"input\\":
                     X(r), re(r, u, !0);
@@ -5155,31 +5188,31 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
                   n)
                 ) {
                   case \\"dialog\\":
-                    zr(\\"cancel\\", e), zr(\\"close\\", e), (a = r);
+                    Tr(\\"cancel\\", e), Tr(\\"close\\", e), (a = r);
                     break;
                   case \\"iframe\\":
                   case \\"object\\":
                   case \\"embed\\":
-                    zr(\\"load\\", e), (a = r);
+                    Tr(\\"load\\", e), (a = r);
                     break;
                   case \\"video\\":
                   case \\"audio\\":
-                    for (a = 0; a < _r.length; a++) zr(_r[a], e);
+                    for (a = 0; a < _r.length; a++) Tr(_r[a], e);
                     a = r;
                     break;
                   case \\"source\\":
-                    zr(\\"error\\", e), (a = r);
+                    Tr(\\"error\\", e), (a = r);
                     break;
                   case \\"img\\":
                   case \\"image\\":
                   case \\"link\\":
-                    zr(\\"error\\", e), zr(\\"load\\", e), (a = r);
+                    Tr(\\"error\\", e), Tr(\\"load\\", e), (a = r);
                     break;
                   case \\"details\\":
-                    zr(\\"toggle\\", e), (a = r);
+                    Tr(\\"toggle\\", e), (a = r);
                     break;
                   case \\"input\\":
-                    ee(e, r), (a = J(e, r)), zr(\\"invalid\\", e);
+                    ee(e, r), (a = J(e, r)), Tr(\\"invalid\\", e);
                     break;
                   case \\"option\\":
                     a = ae(e, r);
@@ -5187,10 +5220,10 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
                   case \\"select\\":
                     (e._wrapperState = { wasMultiple: !!r.multiple }),
                       (a = l({}, r, { value: void 0 })),
-                      zr(\\"invalid\\", e);
+                      Tr(\\"invalid\\", e);
                     break;
                   case \\"textarea\\":
-                    ie(e, r), (a = ue(e, r)), zr(\\"invalid\\", e);
+                    ie(e, r), (a = ue(e, r)), Tr(\\"invalid\\", e);
                     break;
                   default:
                     a = r;
@@ -5212,7 +5245,7 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
                         \\"suppressHydrationWarning\\" !== u &&
                         \\"autoFocus\\" !== u &&
                         (i.hasOwnProperty(u)
-                          ? null != f && \\"onScroll\\" === u && zr(\\"scroll\\", e)
+                          ? null != f && \\"onScroll\\" === u && Tr(\\"scroll\\", e)
                           : null != f && w(e, u, f, s));
                   }
                 switch (n) {
@@ -5246,7 +5279,7 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
               if (\\"string\\" !== typeof r && null === t.stateNode)
                 throw Error(o(166));
               (n = Oa(La.current)),
-                Oa(Ta.current),
+                Oa(za.current),
                 Qa(t)
                   ? ((r = t.stateNode),
                     (n = t.memoizedProps),
@@ -5470,7 +5503,7 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
         (Yo = function (e, t, n, r) {
           var a = e.memoizedProps;
           if (a !== r) {
-            (e = t.stateNode), Oa(Ta.current);
+            (e = t.stateNode), Oa(za.current);
             var o,
               u = null;
             switch (n) {
@@ -5536,7 +5569,7 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
                     : \\"suppressContentEditableWarning\\" !== f &&
                       \\"suppressHydrationWarning\\" !== f &&
                       (i.hasOwnProperty(f)
-                        ? (null != c && \\"onScroll\\" === f && zr(\\"scroll\\", e),
+                        ? (null != c && \\"onScroll\\" === f && Tr(\\"scroll\\", e),
                           u || s === c || (u = []))
                         : \\"object\\" === typeof c &&
                           null !== c &&
@@ -6061,8 +6094,8 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
           null === t.dehydrated
         );
       }
-      var Tu = Math.ceil,
-        zu = k.ReactCurrentDispatcher,
+      var zu = Math.ceil,
+        Tu = k.ReactCurrentDispatcher,
         Lu = k.ReactCurrentOwner,
         Ou = 0,
         Mu = null,
@@ -6248,14 +6281,14 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
         var a = _i();
         for ((Mu === e && Fu === r) || (qu(), xi(e, r)); ; )
           try {
-            Ti();
+            zi();
             break;
           } catch (i) {
             Ci(e, i);
           }
         if (
           (na(),
-          (zu.current = a),
+          (Tu.current = a),
           (Ou = l),
           null !== Ru ? (r = 0) : ((Mu = null), (Fu = 0), (r = Uu)),
           0 !== (Au & Bu))
@@ -6316,7 +6349,7 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
                       ? 3e3
                       : 4320 > n
                       ? 4320
-                      : 1960 * Tu(n / 1960)) - n))
+                      : 1960 * zu(n / 1960)) - n))
               ) {
                 e.timeoutHandle = Hr(Oi.bind(null, e), n);
                 break;
@@ -6574,8 +6607,8 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
         }
       }
       function _i() {
-        var e = zu.current;
-        return (zu.current = Oo), null === e ? Oo : e;
+        var e = Tu.current;
+        return (Tu.current = Oo), null === e ? Oo : e;
       }
       function Pi(e, t) {
         var n = Ou;
@@ -6588,17 +6621,17 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
           } catch (l) {
             Ci(e, l);
           }
-        if ((na(), (Ou = n), (zu.current = r), null !== Ru))
+        if ((na(), (Ou = n), (Tu.current = r), null !== Ru))
           throw Error(o(261));
         return (Mu = null), (Fu = 0), Uu;
       }
       function Ni() {
-        for (; null !== Ru; ) zi(Ru);
+        for (; null !== Ru; ) Ti(Ru);
       }
-      function Ti() {
-        for (; null !== Ru && !Nl(); ) zi(Ru);
+      function zi() {
+        for (; null !== Ru && !Nl(); ) Ti(Ru);
       }
-      function zi(e) {
+      function Ti(e) {
         var t = Ku(e.alternate, e, Du);
         (e.memoizedProps = e.pendingProps),
           null === t ? Li(e) : (Ru = t),
@@ -7109,10 +7142,10 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
                 (e.lanes = a),
                 e
               );
-            case z:
+            case T:
               return (
-                ((e = Wi(13, n, t, l)).type = z),
-                (e.elementType = z),
+                ((e = Wi(13, n, t, l)).type = T),
+                (e.elementType = T),
                 (e.lanes = a),
                 e
               );
@@ -7131,7 +7164,7 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
                   case N:
                     u = 9;
                     break e;
-                  case T:
+                  case z:
                     u = 11;
                     break e;
                   case O:
@@ -7456,7 +7489,7 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
                   (function (e) {
                     if (\\"function\\" === typeof e) return Hi(e) ? 1 : 0;
                     if (void 0 !== e && null !== e) {
-                      if ((e = e.$$typeof) === T) return 11;
+                      if ((e = e.$$typeof) === z) return 11;
                       if (e === O) return 14;
                     }
                     return 2;
@@ -8018,7 +8051,7 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
           r
         );
       }
-      function T(e) {
+      function z(e) {
         if (-1 === e._status) {
           var t = e._result;
           (t = t()),
@@ -8037,14 +8070,14 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
         if (1 === e._status) return e._result;
         throw e._result;
       }
-      var z = { current: null };
+      var T = { current: null };
       function L() {
-        var e = z.current;
+        var e = T.current;
         if (null === e) throw Error(p(321));
         return e;
       }
       var O = {
-        ReactCurrentDispatcher: z,
+        ReactCurrentDispatcher: T,
         ReactCurrentBatchConfig: { transition: 0 },
         ReactCurrentOwner: w,
         IsSomeRendererActing: { current: !1 },
@@ -8150,7 +8183,7 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
           return {
             $$typeof: c,
             _payload: { _status: -1, _result: e },
-            _init: T,
+            _init: z,
           };
         }),
         (t.memo = function (e, t) {
@@ -8334,8 +8367,8 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
       var _ = [],
         P = [],
         N = 1,
-        T = null,
-        z = 3,
+        z = null,
+        T = 3,
         L = !1,
         O = !1,
         M = !1;
@@ -8359,32 +8392,32 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
       }
       function D(e, n) {
         (O = !1), M && ((M = !1), l()), (L = !0);
-        var a = z;
+        var a = T;
         try {
           for (
-            R(n), T = E(_);
-            null !== T &&
-            (!(T.expirationTime > n) || (e && !t.unstable_shouldYield()));
+            R(n), z = E(_);
+            null !== z &&
+            (!(z.expirationTime > n) || (e && !t.unstable_shouldYield()));
 
           ) {
-            var o = T.callback;
+            var o = z.callback;
             if (\\"function\\" === typeof o) {
-              (T.callback = null), (z = T.priorityLevel);
-              var u = o(T.expirationTime <= n);
+              (z.callback = null), (T = z.priorityLevel);
+              var u = o(z.expirationTime <= n);
               (n = t.unstable_now()),
-                \\"function\\" === typeof u ? (T.callback = u) : T === E(_) && x(_),
+                \\"function\\" === typeof u ? (z.callback = u) : z === E(_) && x(_),
                 R(n);
             } else x(_);
-            T = E(_);
+            z = E(_);
           }
-          if (null !== T) var i = !0;
+          if (null !== z) var i = !0;
           else {
             var s = E(P);
             null !== s && r(F, s.startTime - n), (i = !1);
           }
           return i;
         } finally {
-          (T = null), (z = a), (L = !1);
+          (z = null), (T = a), (L = !1);
         }
       }
       var I = a;
@@ -8401,27 +8434,27 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
           O || L || ((O = !0), n(D));
         }),
         (t.unstable_getCurrentPriorityLevel = function () {
-          return z;
+          return T;
         }),
         (t.unstable_getFirstCallbackNode = function () {
           return E(_);
         }),
         (t.unstable_next = function (e) {
-          switch (z) {
+          switch (T) {
             case 1:
             case 2:
             case 3:
               var t = 3;
               break;
             default:
-              t = z;
+              t = T;
           }
-          var n = z;
-          z = t;
+          var n = T;
+          T = t;
           try {
             return e();
           } finally {
-            z = n;
+            T = n;
           }
         }),
         (t.unstable_pauseExecution = function () {}),
@@ -8437,12 +8470,12 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
             default:
               e = 3;
           }
-          var n = z;
-          z = e;
+          var n = T;
+          T = e;
           try {
             return t();
           } finally {
-            z = n;
+            T = n;
           }
         }),
         (t.unstable_scheduleCallback = function (e, a, o) {
@@ -8488,14 +8521,14 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
           );
         }),
         (t.unstable_wrapCallback = function (e) {
-          var t = z;
+          var t = T;
           return function () {
-            var n = z;
-            z = t;
+            var n = T;
+            T = t;
             try {
               return e.apply(this, arguments);
             } finally {
-              z = n;
+              T = n;
             }
           };
         });
@@ -8505,127 +8538,94 @@ exports[`When working with a nested app can generate a js/788.78cfb599.js 1`] = 
     },
   },
 ]);
-//# sourceMappingURL=788.78cfb599.js.map
+//# sourceMappingURL=788.bbd34b33.js.map
 "
 `;
 
-exports[`When working with a nested app can generate a js/main.8c5bc4d2.js 1`] = `
-"\\"use strict\\";
-(globalThis.webpackChunk_scoped_sample_app =
-  globalThis.webpackChunk_scoped_sample_app || []).push([
-  [179],
-  {
-    831: (M, L, j) => {
-      var N = j(735),
-        I = j(788);
-      const u = function () {
-        return N.createElement(
-          \\"div\\",
-          { className: \\"App\\" },
-          N.createElement(
-            \\"header\\",
-            { className: \\"App-header\\" },
-            N.createElement(\\"img\\", {
-              src: \\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4NDEuOSA1OTUuMyI+CiAgICA8ZyBmaWxsPSIjNjFEQUZCIj4KICAgICAgICA8cGF0aCBkPSJNNjY2LjMgMjk2LjVjMC0zMi41LTQwLjctNjMuMy0xMDMuMS04Mi40IDE0LjQtNjMuNiA4LTExNC4yLTIwLjItMTMwLjQtNi41LTMuOC0xNC4xLTUuNi0yMi40LTUuNnYyMi4zYzQuNiAwIDguMy45IDExLjQgMi42IDEzLjYgNy44IDE5LjUgMzcuNSAxNC45IDc1LjctMS4xIDkuNC0yLjkgMTkuMy01LjEgMjkuNC0xOS42LTQuOC00MS04LjUtNjMuNS0xMC45LTEzLjUtMTguNS0yNy41LTM1LjMtNDEuNi01MCAzMi42LTMwLjMgNjMuMi00Ni45IDg0LTQ2LjlWNzhjLTI3LjUgMC02My41IDE5LjYtOTkuOSA1My42LTM2LjQtMzMuOC03Mi40LTUzLjItOTkuOS01My4ydjIyLjNjMjAuNyAwIDUxLjQgMTYuNSA4NCA0Ni42LTE0IDE0LjctMjggMzEuNC00MS4zIDQ5LjktMjIuNiAyLjQtNDQgNi4xLTYzLjYgMTEtMi4zLTEwLTQtMTkuNy01LjItMjktNC43LTM4LjIgMS4xLTY3LjkgMTQuNi03NS44IDMtMS44IDYuOS0yLjYgMTEuNS0yLjZWNzguNWMtOC40IDAtMTYgMS44LTIyLjYgNS42LTI4LjEgMTYuMi0zNC40IDY2LjctMTkuOSAxMzAuMS02Mi4yIDE5LjItMTAyLjcgNDkuOS0xMDIuNyA4Mi4zIDAgMzIuNSA0MC43IDYzLjMgMTAzLjEgODIuNC0xNC40IDYzLjYtOCAxMTQuMiAyMC4yIDEzMC40IDYuNSAzLjggMTQuMSA1LjYgMjIuNSA1LjYgMjcuNSAwIDYzLjUtMTkuNiA5OS45LTUzLjYgMzYuNCAzMy44IDcyLjQgNTMuMiA5OS45IDUzLjIgOC40IDAgMTYtMS44IDIyLjYtNS42IDI4LjEtMTYuMiAzNC40LTY2LjcgMTkuOS0xMzAuMSA2Mi0xOS4xIDEwMi41LTQ5LjkgMTAyLjUtODIuM3ptLTEzMC4yLTY2LjdjLTMuNyAxMi45LTguMyAyNi4yLTEzLjUgMzkuNS00LjEtOC04LjQtMTYtMTMuMS0yNC00LjYtOC05LjUtMTUuOC0xNC40LTIzLjQgMTQuMiAyLjEgMjcuOSA0LjcgNDEgNy45em0tNDUuOCAxMDYuNWMtNy44IDEzLjUtMTUuOCAyNi4zLTI0LjEgMzguMi0xNC45IDEuMy0zMCAyLTQ1LjIgMi0xNS4xIDAtMzAuMi0uNy00NS0xLjktOC4zLTExLjktMTYuNC0yNC42LTI0LjItMzgtNy42LTEzLjEtMTQuNS0yNi40LTIwLjgtMzkuOCA2LjItMTMuNCAxMy4yLTI2LjggMjAuNy0zOS45IDcuOC0xMy41IDE1LjgtMjYuMyAyNC4xLTM4LjIgMTQuOS0xLjMgMzAtMiA0NS4yLTIgMTUuMSAwIDMwLjIuNyA0NSAxLjkgOC4zIDExLjkgMTYuNCAyNC42IDI0LjIgMzggNy42IDEzLjEgMTQuNSAyNi40IDIwLjggMzkuOC02LjMgMTMuNC0xMy4yIDI2LjgtMjAuNyAzOS45em0zMi4zLTEzYzUuNCAxMy40IDEwIDI2LjggMTMuOCAzOS44LTEzLjEgMy4yLTI2LjkgNS45LTQxLjIgOCA0LjktNy43IDkuOC0xNS42IDE0LjQtMjMuNyA0LjYtOCA4LjktMTYuMSAxMy0yNC4xek00MjEuMiA0MzBjLTkuMy05LjYtMTguNi0yMC4zLTI3LjgtMzIgOSAuNCAxOC4yLjcgMjcuNS43IDkuNCAwIDE4LjctLjIgMjcuOC0uNy05IDExLjctMTguMyAyMi40LTI3LjUgMzJ6bS03NC40LTU4LjljLTE0LjItMi4xLTI3LjktNC43LTQxLTcuOSAzLjctMTIuOSA4LjMtMjYuMiAxMy41LTM5LjUgNC4xIDggOC40IDE2IDEzLjEgMjQgNC43IDggOS41IDE1LjggMTQuNCAyMy40ek00MjAuNyAxNjNjOS4zIDkuNiAxOC42IDIwLjMgMjcuOCAzMi05LS40LTE4LjItLjctMjcuNS0uNy05LjQgMC0xOC43LjItMjcuOC43IDktMTEuNyAxOC4zLTIyLjQgMjcuNS0zMnptLTc0IDU4LjljLTQuOSA3LjctOS44IDE1LjYtMTQuNCAyMy43LTQuNiA4LTguOSAxNi0xMyAyNC01LjQtMTMuNC0xMC0yNi44LTEzLjgtMzkuOCAxMy4xLTMuMSAyNi45LTUuOCA0MS4yLTcuOXptLTkwLjUgMTI1LjJjLTM1LjQtMTUuMS01OC4zLTM0LjktNTguMy01MC42IDAtMTUuNyAyMi45LTM1LjYgNTguMy01MC42IDguNi0zLjcgMTgtNyAyNy43LTEwLjEgNS43IDE5LjYgMTMuMiA0MCAyMi41IDYwLjktOS4yIDIwLjgtMTYuNiA0MS4xLTIyLjIgNjAuNi05LjktMy4xLTE5LjMtNi41LTI4LTEwLjJ6TTMxMCA0OTBjLTEzLjYtNy44LTE5LjUtMzcuNS0xNC45LTc1LjcgMS4xLTkuNCAyLjktMTkuMyA1LjEtMjkuNCAxOS42IDQuOCA0MSA4LjUgNjMuNSAxMC45IDEzLjUgMTguNSAyNy41IDM1LjMgNDEuNiA1MC0zMi42IDMwLjMtNjMuMiA0Ni45LTg0IDQ2LjktNC41LS4xLTguMy0xLTExLjMtMi43em0yMzcuMi03Ni4yYzQuNyAzOC4yLTEuMSA2Ny45LTE0LjYgNzUuOC0zIDEuOC02LjkgMi42LTExLjUgMi42LTIwLjcgMC01MS40LTE2LjUtODQtNDYuNiAxNC0xNC43IDI4LTMxLjQgNDEuMy00OS45IDIyLjYtMi40IDQ0LTYuMSA2My42LTExIDIuMyAxMC4xIDQuMSAxOS44IDUuMiAyOS4xem0zOC41LTY2LjdjLTguNiAzLjctMTggNy0yNy43IDEwLjEtNS43LTE5LjYtMTMuMi00MC0yMi41LTYwLjkgOS4yLTIwLjggMTYuNi00MS4xIDIyLjItNjAuNiA5LjkgMy4xIDE5LjMgNi41IDI4LjEgMTAuMiAzNS40IDE1LjEgNTguMyAzNC45IDU4LjMgNTAuNi0uMSAxNS43LTIzIDM1LjYtNTguNCA1MC42ek0zMjAuOCA3OC40eiIvPgogICAgICAgIDxjaXJjbGUgY3g9IjQyMC45IiBjeT0iMjk2LjUiIHI9IjQ1LjciLz4KICAgICAgICA8cGF0aCBkPSJNNTIwLjUgNzguMXoiLz4KICAgIDwvZz4KPC9zdmc+Cg==\\",
-              className: \\"App-logo\\",
-              alt: \\"logo\\",
-            }),
-            N.createElement(
-              \\"p\\",
-              null,
-              \\"Edit \\",
-              N.createElement(\\"code\\", null, \\"src/App.tsx\\"),
-              \\" and save to reload.\\"
-            ),
-            N.createElement(
-              \\"a\\",
-              {
-                className: \\"App-link\\",
-                href: \\"https://reactjs.org\\",
-                target: \\"_blank\\",
-                rel: \\"noopener noreferrer\\",
-              },
-              \\"Learn React\\"
-            )
-          )
-        );
-      };
-      I.render(
-        N.createElement(N.StrictMode, null, N.createElement(u, null)),
-        document.getElementById(\\"root\\")
-      );
-    },
-  },
-  (M) => {
-    M.O(0, [788], () => {
-      return (L = 831), M((M.s = L));
-      var L;
-    });
-    M.O();
-  },
-]);
-//# sourceMappingURL=main.8c5bc4d2.js.map
-"
-`;
-
-exports[`When working with a nested app can generate a js/runtime-main.83e93d07.js 1`] = `
-"(() => {
-  \\"use strict\\";
-  var r = {},
-    e = {};
-  function o(a) {
-    var p = e[a];
-    if (void 0 !== p) return p.exports;
-    var t = (e[a] = { exports: {} });
-    return r[a](t, t.exports, o), t.exports;
-  }
-  (o.m = r),
-    (() => {
-      var r = [];
-      o.O = (e, a, p, t) => {
-        if (!a) {
-          var n = 1 / 0;
-          for (v = 0; v < r.length; v++) {
-            for (var [a, p, t] = r[v], s = !0, l = 0; l < a.length; l++)
-              (!1 & t || n >= t) && Object.keys(o.O).every((r) => o.O[r](a[l]))
-                ? a.splice(l--, 1)
-                : ((s = !1), t < n && (n = t));
-            if (s) {
-              r.splice(v--, 1);
-              var i = p();
-              void 0 !== i && (e = i);
-            }
-          }
-          return e;
+exports[`When working with a nested app can generate a index.html 1`] = `
+"<!DOCTYPE html>
+<html lang=\\"en\\">
+  <head>
+    <meta charset=\\"utf-8\\" />
+    <link rel=\\"icon\\" href=\\"/favicon.ico\\" />
+    <meta name=\\"viewport\\" content=\\"width=device-width,initial-scale=1\\" />
+    <meta name=\\"theme-color\\" content=\\"#000000\\" />
+    <meta
+      name=\\"description\\"
+      content=\\"Web site created using create-modular-app\\"
+    />
+    <link rel=\\"apple-touch-icon\\" href=\\"/logo192.png\\" />
+    <link rel=\\"manifest\\" href=\\"/manifest.json\\" />
+    <title>React App</title>
+    <script>
+      (() => {
+        \\"use strict\\";
+        var r = {},
+          e = {};
+        function o(a) {
+          var p = e[a];
+          if (void 0 !== p) return p.exports;
+          var t = (e[a] = { exports: {} });
+          return r[a](t, t.exports, o), t.exports;
         }
-        t = t || 0;
-        for (var v = r.length; v > 0 && r[v - 1][2] > t; v--) r[v] = r[v - 1];
-        r[v] = [a, p, t];
-      };
-    })(),
-    (o.o = (r, e) => Object.prototype.hasOwnProperty.call(r, e)),
-    (() => {
-      var r = { 252: 0 };
-      o.O.j = (e) => 0 === r[e];
-      var e = (e, a) => {
-          var p,
-            t,
-            [n, s, l] = a,
-            i = 0;
-          if (n.some((e) => 0 !== r[e])) {
-            for (p in s) o.o(s, p) && (o.m[p] = s[p]);
-            if (l) var v = l(o);
-          }
-          for (e && e(a); i < n.length; i++)
-            (t = n[i]), o.o(r, t) && r[t] && r[t][0](), (r[t] = 0);
-          return o.O(v);
-        },
-        a = (globalThis.webpackChunk_scoped_sample_app =
-          globalThis.webpackChunk_scoped_sample_app || []);
-      a.forEach(e.bind(null, 0)), (a.push = e.bind(null, a.push.bind(a)));
-    })();
-})();
-//# sourceMappingURL=runtime-main.83e93d07.js.map
+        (o.m = r),
+          (() => {
+            var r = [];
+            o.O = (e, a, p, t) => {
+              if (!a) {
+                var n = 1 / 0;
+                for (v = 0; v < r.length; v++) {
+                  for (var [a, p, t] = r[v], s = !0, l = 0; l < a.length; l++)
+                    (!1 & t || n >= t) &&
+                    Object.keys(o.O).every((r) => o.O[r](a[l]))
+                      ? a.splice(l--, 1)
+                      : ((s = !1), t < n && (n = t));
+                  if (s) {
+                    r.splice(v--, 1);
+                    var i = p();
+                    void 0 !== i && (e = i);
+                  }
+                }
+                return e;
+              }
+              t = t || 0;
+              for (var v = r.length; v > 0 && r[v - 1][2] > t; v--)
+                r[v] = r[v - 1];
+              r[v] = [a, p, t];
+            };
+          })(),
+          (o.o = (r, e) => Object.prototype.hasOwnProperty.call(r, e)),
+          (() => {
+            var r = { 252: 0 };
+            o.O.j = (e) => 0 === r[e];
+            var e = (e, a) => {
+                var p,
+                  t,
+                  [n, s, l] = a,
+                  i = 0;
+                if (n.some((e) => 0 !== r[e])) {
+                  for (p in s) o.o(s, p) && (o.m[p] = s[p]);
+                  if (l) var v = l(o);
+                }
+                for (e && e(a); i < n.length; i++)
+                  (t = n[i]), o.o(r, t) && r[t] && r[t][0](), (r[t] = 0);
+                return o.O(v);
+              },
+              a = (self.webpackChunk_scoped_sample_app =
+                self.webpackChunk_scoped_sample_app || []);
+            a.forEach(e.bind(null, 0)), (a.push = e.bind(null, a.push.bind(a)));
+          })();
+      })();
+    </script>
+    <script defer=\\"defer\\" src=\\"/static/js/788.bbd34b33.js\\"></script>
+    <script defer=\\"defer\\" src=\\"/static/js/main.f726ecf6.js\\"></script>
+    <link href=\\"/static/css/main.1a7488ce.css\\" rel=\\"stylesheet\\" />
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id=\\"root\\"></div>
+  </body>
+</html>
 "
 `;
 
@@ -8658,22 +8658,21 @@ exports[`When working with a nested app can generate a manifest 1`] = `
 "
 `;
 
-exports[`when working with a NODE_ENV app can generate a js/main.6b9113da.js 1`] = `
+exports[`when working with a NODE_ENV app can generate a hashed js chunk in the js directory 1`] = `
 "\\"use strict\\";
-(globalThis.webpackChunknode_env_app =
-  globalThis.webpackChunknode_env_app || []).push([
+(self.webpackChunknode_env_app = self.webpackChunknode_env_app || []).push([
   [179],
   {
     740: () => {
       console.log(\\"production\\");
     },
   },
-  (o) => {
-    var e;
-    (e = 740), o((o.s = e));
+  (e) => {
+    var n;
+    (n = 740), e((e.s = n));
   },
 ]);
-//# sourceMappingURL=main.6b9113da.js.map
+//# sourceMappingURL=main.707fd976.js.map
 "
 `;
 
@@ -8699,98 +8698,133 @@ exports[`when working with an app can generate a asset-manifest 1`] = `
 }"
 `;
 
-exports[`when working with an app can generate a index.html 1`] = `
-"<!DOCTYPE html>
-<html lang=\\"en\\">
-  <head>
-    <meta charset=\\"utf-8\\" />
-    <link rel=\\"icon\\" href=\\"/favicon.ico\\" />
-    <meta name=\\"viewport\\" content=\\"width=device-width,initial-scale=1\\" />
-    <meta name=\\"theme-color\\" content=\\"#000000\\" />
-    <meta
-      name=\\"description\\"
-      content=\\"Web site created using create-modular-app\\"
-    />
-    <link rel=\\"apple-touch-icon\\" href=\\"/logo192.png\\" />
-    <link rel=\\"manifest\\" href=\\"/manifest.json\\" />
-    <title>React App</title>
-    <script>
-      (() => {
-        \\"use strict\\";
-        var r = {},
-          e = {};
-        function a(o) {
-          var t = e[o];
-          if (void 0 !== t) return t.exports;
-          var n = (e[o] = { exports: {} });
-          return r[o](n, n.exports, a), n.exports;
-        }
-        (a.m = r),
-          (() => {
-            var r = [];
-            a.O = (e, o, t, n) => {
-              if (!o) {
-                var p = 1 / 0;
-                for (v = 0; v < r.length; v++) {
-                  for (var [o, t, n] = r[v], s = !0, l = 0; l < o.length; l++)
-                    (!1 & n || p >= n) &&
-                    Object.keys(a.O).every((r) => a.O[r](o[l]))
-                      ? o.splice(l--, 1)
-                      : ((s = !1), n < p && (p = n));
-                  if (s) {
-                    r.splice(v--, 1);
-                    var i = t();
-                    void 0 !== i && (e = i);
-                  }
-                }
-                return e;
-              }
-              n = n || 0;
-              for (var v = r.length; v > 0 && r[v - 1][2] > n; v--)
-                r[v] = r[v - 1];
-              r[v] = [o, t, n];
-            };
-          })(),
-          (a.o = (r, e) => Object.prototype.hasOwnProperty.call(r, e)),
-          (() => {
-            var r = { 252: 0 };
-            a.O.j = (e) => 0 === r[e];
-            var e = (e, o) => {
-                var t,
-                  n,
-                  [p, s, l] = o,
-                  i = 0;
-                if (p.some((e) => 0 !== r[e])) {
-                  for (t in s) a.o(s, t) && (a.m[t] = s[t]);
-                  if (l) var v = l(a);
-                }
-                for (e && e(o); i < p.length; i++)
-                  (n = p[i]), a.o(r, n) && r[n] && r[n][0](), (r[n] = 0);
-                return a.O(v);
+exports[`when working with an app can generate a hashed main js chunk in the js directory 1`] = `
+"\\"use strict\\";
+(self.webpackChunksample_app = self.webpackChunksample_app || []).push([
+  [179],
+  {
+    529: (M, L, j) => {
+      var N = j(784),
+        u = j(316);
+      const I = function () {
+        return N.createElement(
+          \\"div\\",
+          { className: \\"App\\" },
+          N.createElement(
+            \\"header\\",
+            { className: \\"App-header\\" },
+            N.createElement(\\"img\\", {
+              src: \\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4NDEuOSA1OTUuMyI+CiAgICA8ZyBmaWxsPSIjNjFEQUZCIj4KICAgICAgICA8cGF0aCBkPSJNNjY2LjMgMjk2LjVjMC0zMi41LTQwLjctNjMuMy0xMDMuMS04Mi40IDE0LjQtNjMuNiA4LTExNC4yLTIwLjItMTMwLjQtNi41LTMuOC0xNC4xLTUuNi0yMi40LTUuNnYyMi4zYzQuNiAwIDguMy45IDExLjQgMi42IDEzLjYgNy44IDE5LjUgMzcuNSAxNC45IDc1LjctMS4xIDkuNC0yLjkgMTkuMy01LjEgMjkuNC0xOS42LTQuOC00MS04LjUtNjMuNS0xMC45LTEzLjUtMTguNS0yNy41LTM1LjMtNDEuNi01MCAzMi42LTMwLjMgNjMuMi00Ni45IDg0LTQ2LjlWNzhjLTI3LjUgMC02My41IDE5LjYtOTkuOSA1My42LTM2LjQtMzMuOC03Mi40LTUzLjItOTkuOS01My4ydjIyLjNjMjAuNyAwIDUxLjQgMTYuNSA4NCA0Ni42LTE0IDE0LjctMjggMzEuNC00MS4zIDQ5LjktMjIuNiAyLjQtNDQgNi4xLTYzLjYgMTEtMi4zLTEwLTQtMTkuNy01LjItMjktNC43LTM4LjIgMS4xLTY3LjkgMTQuNi03NS44IDMtMS44IDYuOS0yLjYgMTEuNS0yLjZWNzguNWMtOC40IDAtMTYgMS44LTIyLjYgNS42LTI4LjEgMTYuMi0zNC40IDY2LjctMTkuOSAxMzAuMS02Mi4yIDE5LjItMTAyLjcgNDkuOS0xMDIuNyA4Mi4zIDAgMzIuNSA0MC43IDYzLjMgMTAzLjEgODIuNC0xNC40IDYzLjYtOCAxMTQuMiAyMC4yIDEzMC40IDYuNSAzLjggMTQuMSA1LjYgMjIuNSA1LjYgMjcuNSAwIDYzLjUtMTkuNiA5OS45LTUzLjYgMzYuNCAzMy44IDcyLjQgNTMuMiA5OS45IDUzLjIgOC40IDAgMTYtMS44IDIyLjYtNS42IDI4LjEtMTYuMiAzNC40LTY2LjcgMTkuOS0xMzAuMSA2Mi0xOS4xIDEwMi41LTQ5LjkgMTAyLjUtODIuM3ptLTEzMC4yLTY2LjdjLTMuNyAxMi45LTguMyAyNi4yLTEzLjUgMzkuNS00LjEtOC04LjQtMTYtMTMuMS0yNC00LjYtOC05LjUtMTUuOC0xNC40LTIzLjQgMTQuMiAyLjEgMjcuOSA0LjcgNDEgNy45em0tNDUuOCAxMDYuNWMtNy44IDEzLjUtMTUuOCAyNi4zLTI0LjEgMzguMi0xNC45IDEuMy0zMCAyLTQ1LjIgMi0xNS4xIDAtMzAuMi0uNy00NS0xLjktOC4zLTExLjktMTYuNC0yNC42LTI0LjItMzgtNy42LTEzLjEtMTQuNS0yNi40LTIwLjgtMzkuOCA2LjItMTMuNCAxMy4yLTI2LjggMjAuNy0zOS45IDcuOC0xMy41IDE1LjgtMjYuMyAyNC4xLTM4LjIgMTQuOS0xLjMgMzAtMiA0NS4yLTIgMTUuMSAwIDMwLjIuNyA0NSAxLjkgOC4zIDExLjkgMTYuNCAyNC42IDI0LjIgMzggNy42IDEzLjEgMTQuNSAyNi40IDIwLjggMzkuOC02LjMgMTMuNC0xMy4yIDI2LjgtMjAuNyAzOS45em0zMi4zLTEzYzUuNCAxMy40IDEwIDI2LjggMTMuOCAzOS44LTEzLjEgMy4yLTI2LjkgNS45LTQxLjIgOCA0LjktNy43IDkuOC0xNS42IDE0LjQtMjMuNyA0LjYtOCA4LjktMTYuMSAxMy0yNC4xek00MjEuMiA0MzBjLTkuMy05LjYtMTguNi0yMC4zLTI3LjgtMzIgOSAuNCAxOC4yLjcgMjcuNS43IDkuNCAwIDE4LjctLjIgMjcuOC0uNy05IDExLjctMTguMyAyMi40LTI3LjUgMzJ6bS03NC40LTU4LjljLTE0LjItMi4xLTI3LjktNC43LTQxLTcuOSAzLjctMTIuOSA4LjMtMjYuMiAxMy41LTM5LjUgNC4xIDggOC40IDE2IDEzLjEgMjQgNC43IDggOS41IDE1LjggMTQuNCAyMy40ek00MjAuNyAxNjNjOS4zIDkuNiAxOC42IDIwLjMgMjcuOCAzMi05LS40LTE4LjItLjctMjcuNS0uNy05LjQgMC0xOC43LjItMjcuOC43IDktMTEuNyAxOC4zLTIyLjQgMjcuNS0zMnptLTc0IDU4LjljLTQuOSA3LjctOS44IDE1LjYtMTQuNCAyMy43LTQuNiA4LTguOSAxNi0xMyAyNC01LjQtMTMuNC0xMC0yNi44LTEzLjgtMzkuOCAxMy4xLTMuMSAyNi45LTUuOCA0MS4yLTcuOXptLTkwLjUgMTI1LjJjLTM1LjQtMTUuMS01OC4zLTM0LjktNTguMy01MC42IDAtMTUuNyAyMi45LTM1LjYgNTguMy01MC42IDguNi0zLjcgMTgtNyAyNy43LTEwLjEgNS43IDE5LjYgMTMuMiA0MCAyMi41IDYwLjktOS4yIDIwLjgtMTYuNiA0MS4xLTIyLjIgNjAuNi05LjktMy4xLTE5LjMtNi41LTI4LTEwLjJ6TTMxMCA0OTBjLTEzLjYtNy44LTE5LjUtMzcuNS0xNC45LTc1LjcgMS4xLTkuNCAyLjktMTkuMyA1LjEtMjkuNCAxOS42IDQuOCA0MSA4LjUgNjMuNSAxMC45IDEzLjUgMTguNSAyNy41IDM1LjMgNDEuNiA1MC0zMi42IDMwLjMtNjMuMiA0Ni45LTg0IDQ2LjktNC41LS4xLTguMy0xLTExLjMtMi43em0yMzcuMi03Ni4yYzQuNyAzOC4yLTEuMSA2Ny45LTE0LjYgNzUuOC0zIDEuOC02LjkgMi42LTExLjUgMi42LTIwLjcgMC01MS40LTE2LjUtODQtNDYuNiAxNC0xNC43IDI4LTMxLjQgNDEuMy00OS45IDIyLjYtMi40IDQ0LTYuMSA2My42LTExIDIuMyAxMC4xIDQuMSAxOS44IDUuMiAyOS4xem0zOC41LTY2LjdjLTguNiAzLjctMTggNy0yNy43IDEwLjEtNS43LTE5LjYtMTMuMi00MC0yMi41LTYwLjkgOS4yLTIwLjggMTYuNi00MS4xIDIyLjItNjAuNiA5LjkgMy4xIDE5LjMgNi41IDI4LjEgMTAuMiAzNS40IDE1LjEgNTguMyAzNC45IDU4LjMgNTAuNi0uMSAxNS43LTIzIDM1LjYtNTguNCA1MC42ek0zMjAuOCA3OC40eiIvPgogICAgICAgIDxjaXJjbGUgY3g9IjQyMC45IiBjeT0iMjk2LjUiIHI9IjQ1LjciLz4KICAgICAgICA8cGF0aCBkPSJNNTIwLjUgNzguMXoiLz4KICAgIDwvZz4KPC9zdmc+Cg==\\",
+              className: \\"App-logo\\",
+              alt: \\"logo\\",
+            }),
+            N.createElement(
+              \\"p\\",
+              null,
+              \\"Edit \\",
+              N.createElement(\\"code\\", null, \\"src/App.tsx\\"),
+              \\" and save to reload.\\"
+            ),
+            N.createElement(
+              \\"a\\",
+              {
+                className: \\"App-link\\",
+                href: \\"https://reactjs.org\\",
+                target: \\"_blank\\",
+                rel: \\"noopener noreferrer\\",
               },
-              o = (self.webpackChunksample_app =
-                self.webpackChunksample_app || []);
-            o.forEach(e.bind(null, 0)), (o.push = e.bind(null, o.push.bind(o)));
-          })();
-      })();
-    </script>
-    <script defer=\\"defer\\" src=\\"/static/js/316.394ef80b.js\\"></script>
-    <script defer=\\"defer\\" src=\\"/static/js/main.3251fbc2.js\\"></script>
-    <link href=\\"/static/css/main.1a7488ce.css\\" rel=\\"stylesheet\\" />
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id=\\"root\\"></div>
-  </body>
-</html>
+              \\"Learn React\\"
+            )
+          ),
+          N.createElement(
+            \\"div\\",
+            { \\"data-testid\\": \\"test-this\\" },
+            \\"this is a modular app\\"
+          )
+        );
+      };
+      u.render(
+        N.createElement(N.StrictMode, null, N.createElement(I, null)),
+        document.getElementById(\\"root\\")
+      );
+    },
+  },
+  (M) => {
+    M.O(0, [316], () => {
+      return (L = 529), M((M.s = L));
+      var L;
+    });
+    M.O();
+  },
+]);
+//# sourceMappingURL=main.3251fbc2.js.map
 "
 `;
 
-exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
-"/*! For license information please see 316.7a4d5eb7.js.LICENSE.txt */
+exports[`when working with an app can generate a hashed runtime chunk in the js directory 1`] = `
+"(() => {
+  \\"use strict\\";
+  var r = {},
+    e = {};
+  function a(o) {
+    var t = e[o];
+    if (void 0 !== t) return t.exports;
+    var n = (e[o] = { exports: {} });
+    return r[o](n, n.exports, a), n.exports;
+  }
+  (a.m = r),
+    (() => {
+      var r = [];
+      a.O = (e, o, t, n) => {
+        if (!o) {
+          var p = 1 / 0;
+          for (v = 0; v < r.length; v++) {
+            for (var [o, t, n] = r[v], s = !0, l = 0; l < o.length; l++)
+              (!1 & n || p >= n) && Object.keys(a.O).every((r) => a.O[r](o[l]))
+                ? o.splice(l--, 1)
+                : ((s = !1), n < p && (p = n));
+            if (s) {
+              r.splice(v--, 1);
+              var i = t();
+              void 0 !== i && (e = i);
+            }
+          }
+          return e;
+        }
+        n = n || 0;
+        for (var v = r.length; v > 0 && r[v - 1][2] > n; v--) r[v] = r[v - 1];
+        r[v] = [o, t, n];
+      };
+    })(),
+    (a.o = (r, e) => Object.prototype.hasOwnProperty.call(r, e)),
+    (() => {
+      var r = { 252: 0 };
+      a.O.j = (e) => 0 === r[e];
+      var e = (e, o) => {
+          var t,
+            n,
+            [p, s, l] = o,
+            i = 0;
+          if (p.some((e) => 0 !== r[e])) {
+            for (t in s) a.o(s, t) && (a.m[t] = s[t]);
+            if (l) var v = l(a);
+          }
+          for (e && e(o); i < p.length; i++)
+            (n = p[i]), a.o(r, n) && r[n] && r[n][0](), (r[n] = 0);
+          return a.O(v);
+        },
+        o = (self.webpackChunksample_app = self.webpackChunksample_app || []);
+      o.forEach(e.bind(null, 0)), (o.push = e.bind(null, o.push.bind(o)));
+    })();
+})();
+//# sourceMappingURL=runtime-main.7150bca8.js.map
+"
+`;
+
+exports[`when working with an app can generate a hashed vendor chunk in the js directory 1`] = `
+"/*! For license information please see 316.394ef80b.js.LICENSE.txt */
 \\"use strict\\";
-(globalThis.webpackChunksample_app =
-  globalThis.webpackChunksample_app || []).push([
+(self.webpackChunksample_app = self.webpackChunksample_app || []).push([
   [316],
   {
     320: (e) => {
@@ -9057,8 +9091,8 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
         _ = 60114,
         P = 60109,
         N = 60110,
-        T = 60112,
-        z = 60113,
+        z = 60112,
+        T = 60113,
         L = 60120,
         O = 60115,
         M = 60116,
@@ -9076,8 +9110,8 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
           (_ = j(\\"react.profiler\\")),
           (P = j(\\"react.provider\\")),
           (N = j(\\"react.context\\")),
-          (T = j(\\"react.forward_ref\\")),
-          (z = j(\\"react.suspense\\")),
+          (z = j(\\"react.forward_ref\\")),
+          (T = j(\\"react.suspense\\")),
           (L = j(\\"react.suspense_list\\")),
           (O = j(\\"react.memo\\")),
           (M = j(\\"react.lazy\\")),
@@ -9211,7 +9245,7 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
             return \\"Profiler\\";
           case C:
             return \\"StrictMode\\";
-          case z:
+          case T:
             return \\"Suspense\\";
           case L:
             return \\"SuspenseList\\";
@@ -9222,7 +9256,7 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
               return (e.displayName || \\"Context\\") + \\".Consumer\\";
             case P:
               return (e._context.displayName || \\"Context\\") + \\".Provider\\";
-            case T:
+            case z:
               var t = e.render;
               return (
                 (t = t.displayName || t.name || \\"\\"),
@@ -9651,8 +9685,8 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
       }
       var Pe = null,
         Ne = null,
-        Te = null;
-      function ze(e) {
+        ze = null;
+      function Te(e) {
         if ((e = rl(e))) {
           if (\\"function\\" !== typeof Pe) throw Error(o(280));
           var t = e.stateNode;
@@ -9660,14 +9694,14 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
         }
       }
       function Le(e) {
-        Ne ? (Te ? Te.push(e) : (Te = [e])) : (Ne = e);
+        Ne ? (ze ? ze.push(e) : (ze = [e])) : (Ne = e);
       }
       function Oe() {
         if (Ne) {
           var e = Ne,
-            t = Te;
-          if (((Te = Ne = null), ze(e), t))
-            for (e = 0; e < t.length; e++) ze(t[e]);
+            t = ze;
+          if (((ze = Ne = null), Te(e), t))
+            for (e = 0; e < t.length; e++) Te(t[e]);
         }
       }
       function Me(e, t) {
@@ -9681,7 +9715,7 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
         Ie = !1,
         Ue = !1;
       function je() {
-        (null === Ne && null === Te) || (Fe(), Oe());
+        (null === Ne && null === ze) || (Fe(), Oe());
       }
       function Ae(e, t) {
         var n = e.stateNode;
@@ -10041,8 +10075,8 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
           delete xt.animationstart.animation),
         \\"TransitionEvent\\" in window || delete xt.transitionend.transition);
       var Nt = Pt(\\"animationend\\"),
-        Tt = Pt(\\"animationiteration\\"),
-        zt = Pt(\\"animationstart\\"),
+        zt = Pt(\\"animationiteration\\"),
+        Tt = Pt(\\"animationstart\\"),
         Lt = Pt(\\"transitionend\\"),
         Ot = new Map(),
         Mt = new Map(),
@@ -10051,9 +10085,9 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
           \\"abort\\",
           Nt,
           \\"animationEnd\\",
-          Tt,
-          \\"animationIteration\\",
           zt,
+          \\"animationIteration\\",
+          Tt,
           \\"animationStart\\",
           \\"canplay\\",
           \\"canPlay\\",
@@ -10515,7 +10549,7 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
       function Nn() {
         return Pn;
       }
-      var Tn = l({}, hn, {
+      var zn = l({}, hn, {
           key: function (e) {
             if (e.key) {
               var t = xn[e.key] || e.key;
@@ -10552,7 +10586,7 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
               : 0;
           },
         }),
-        zn = un(Tn),
+        Tn = un(zn),
         Ln = un(
           l({}, vn, {
             pointerId: 0,
@@ -10661,7 +10695,7 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
       var Yn = null,
         Xn = null;
       function Gn(e) {
-        Tr(e, 0);
+        zr(e, 0);
       }
       function Zn(e) {
         if (G(ll(e))) return e;
@@ -10915,7 +10949,7 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
           })(r, t, void 0, e),
           (e.currentTarget = null);
       }
-      function Tr(e, t) {
+      function zr(e, t) {
         t = 0 !== (4 & t);
         for (var n = 0; n < e.length; n++) {
           var r = e[n],
@@ -10947,7 +10981,7 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
         }
         if (Qe) throw ((e = qe), (Qe = !1), (qe = null), e);
       }
-      function zr(e, t) {
+      function Tr(e, t) {
         var n = ol(t),
           r = e + \\"__bubble\\";
         n.has(r) || (Rr(t, e, 2, !1), n.add(r));
@@ -11053,7 +11087,7 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
                   if (0 === ln(n)) break e;
                 case \\"keydown\\":
                 case \\"keyup\\":
-                  i = zn;
+                  i = Tn;
                   break;
                 case \\"focusin\\":
                   (s = \\"focus\\"), (i = bn);
@@ -11094,8 +11128,8 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
                   i = On;
                   break;
                 case Nt:
-                case Tt:
                 case zt:
+                case Tt:
                   i = wn;
                   break;
                 case Lt:
@@ -11332,7 +11366,7 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
                 o.push({ event: l, listeners: r }),
                 (l.data = y));
           }
-          Tr(o, t);
+          zr(o, t);
         });
       }
       function Dr(e, t, n) {
@@ -11551,8 +11585,8 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
         _l = a.unstable_scheduleCallback,
         Pl = a.unstable_cancelCallback,
         Nl = a.unstable_shouldYield,
-        Tl = a.unstable_requestPaint,
-        zl = a.unstable_now,
+        zl = a.unstable_requestPaint,
+        Tl = a.unstable_now,
         Ll = a.unstable_getCurrentPriorityLevel,
         Ol = a.unstable_ImmediatePriority,
         Ml = a.unstable_UserBlockingPriority,
@@ -11560,16 +11594,16 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
         Fl = a.unstable_LowPriority,
         Dl = a.unstable_IdlePriority,
         Il = {},
-        Ul = void 0 !== Tl ? Tl : function () {},
+        Ul = void 0 !== zl ? zl : function () {},
         jl = null,
         Al = null,
         Vl = !1,
-        Bl = zl(),
+        Bl = Tl(),
         $l =
           1e4 > Bl
-            ? zl
+            ? Tl
             : function () {
-                return zl() - Bl;
+                return Tl() - Bl;
               };
       function Wl() {
         switch (Ll()) {
@@ -12344,15 +12378,15 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
       var _a = Ca(!0),
         Pa = Ca(!1),
         Na = {},
-        Ta = sl(Na),
         za = sl(Na),
+        Ta = sl(Na),
         La = sl(Na);
       function Oa(e) {
         if (e === Na) throw Error(o(174));
         return e;
       }
       function Ma(e, t) {
-        switch ((fl(La, t), fl(za, e), fl(Ta, Na), (e = t.nodeType))) {
+        switch ((fl(La, t), fl(Ta, e), fl(za, Na), (e = t.nodeType))) {
           case 9:
           case 11:
             t = (t = t.documentElement) ? t.namespaceURI : he(null, \\"\\");
@@ -12363,19 +12397,19 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
               (e = e.tagName)
             );
         }
-        cl(Ta), fl(Ta, t);
+        cl(za), fl(za, t);
       }
       function Ra() {
-        cl(Ta), cl(za), cl(La);
+        cl(za), cl(Ta), cl(La);
       }
       function Fa(e) {
         Oa(La.current);
-        var t = Oa(Ta.current),
+        var t = Oa(za.current),
           n = he(t, e.type);
-        t !== n && (fl(za, e), fl(Ta, n));
+        t !== n && (fl(Ta, e), fl(za, n));
       }
       function Da(e) {
-        za.current === e && (cl(Ta), cl(za));
+        Ta.current === e && (cl(za), cl(Ta));
       }
       var Ia = sl(0);
       function Ua(e) {
@@ -12847,7 +12881,7 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
           ? r[0]
           : ((n.memoizedState = [e, t]), e);
       }
-      function To(e, t) {
+      function zo(e, t) {
         var n = io();
         t = void 0 === t ? null : t;
         var r = n.memoizedState;
@@ -12855,7 +12889,7 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
           ? r[0]
           : ((e = e()), (n.memoizedState = [e, t]), e);
       }
-      function zo(e, t) {
+      function To(e, t) {
         var n = Wl();
         Ql(98 > n ? 98 : n, function () {
           e(!0);
@@ -12987,7 +13021,7 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
           useTransition: function () {
             var e = vo(!1),
               t = e[0];
-            return yo((e = zo.bind(null, e[1]))), [e, t];
+            return yo((e = To.bind(null, e[1]))), [e, t];
           },
           useMutableSource: function (e, t, n) {
             var r = uo();
@@ -13037,7 +13071,7 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
           useEffect: Eo,
           useImperativeHandle: _o,
           useLayoutEffect: xo,
-          useMemo: To,
+          useMemo: zo,
           useReducer: co,
           useRef: bo,
           useState: function () {
@@ -13081,7 +13115,7 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
           useEffect: Eo,
           useImperativeHandle: _o,
           useLayoutEffect: xo,
-          useMemo: To,
+          useMemo: zo,
           useReducer: fo,
           useRef: bo,
           useState: function () {
@@ -13625,42 +13659,42 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
                 if (null === t.stateNode) throw Error(o(166));
                 return null;
               }
-              if (((e = Oa(Ta.current)), Qa(t))) {
+              if (((e = Oa(za.current)), Qa(t))) {
                 (r = t.stateNode), (n = t.type);
                 var u = t.memoizedProps;
                 switch (((r[Zr] = t), (r[Jr] = u), n)) {
                   case \\"dialog\\":
-                    zr(\\"cancel\\", r), zr(\\"close\\", r);
+                    Tr(\\"cancel\\", r), Tr(\\"close\\", r);
                     break;
                   case \\"iframe\\":
                   case \\"object\\":
                   case \\"embed\\":
-                    zr(\\"load\\", r);
+                    Tr(\\"load\\", r);
                     break;
                   case \\"video\\":
                   case \\"audio\\":
-                    for (e = 0; e < _r.length; e++) zr(_r[e], r);
+                    for (e = 0; e < _r.length; e++) Tr(_r[e], r);
                     break;
                   case \\"source\\":
-                    zr(\\"error\\", r);
+                    Tr(\\"error\\", r);
                     break;
                   case \\"img\\":
                   case \\"image\\":
                   case \\"link\\":
-                    zr(\\"error\\", r), zr(\\"load\\", r);
+                    Tr(\\"error\\", r), Tr(\\"load\\", r);
                     break;
                   case \\"details\\":
-                    zr(\\"toggle\\", r);
+                    Tr(\\"toggle\\", r);
                     break;
                   case \\"input\\":
-                    ee(r, u), zr(\\"invalid\\", r);
+                    ee(r, u), Tr(\\"invalid\\", r);
                     break;
                   case \\"select\\":
                     (r._wrapperState = { wasMultiple: !!u.multiple }),
-                      zr(\\"invalid\\", r);
+                      Tr(\\"invalid\\", r);
                     break;
                   case \\"textarea\\":
-                    ie(r, u), zr(\\"invalid\\", r);
+                    ie(r, u), Tr(\\"invalid\\", r);
                 }
                 for (var s in (xe(n, u), (e = null), u))
                   u.hasOwnProperty(s) &&
@@ -13674,7 +13708,7 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
                       : i.hasOwnProperty(s) &&
                         null != a &&
                         \\"onScroll\\" === s &&
-                        zr(\\"scroll\\", r));
+                        Tr(\\"scroll\\", r));
                 switch (n) {
                   case \\"input\\":
                     X(r), re(r, u, !0);
@@ -13715,31 +13749,31 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
                   n)
                 ) {
                   case \\"dialog\\":
-                    zr(\\"cancel\\", e), zr(\\"close\\", e), (a = r);
+                    Tr(\\"cancel\\", e), Tr(\\"close\\", e), (a = r);
                     break;
                   case \\"iframe\\":
                   case \\"object\\":
                   case \\"embed\\":
-                    zr(\\"load\\", e), (a = r);
+                    Tr(\\"load\\", e), (a = r);
                     break;
                   case \\"video\\":
                   case \\"audio\\":
-                    for (a = 0; a < _r.length; a++) zr(_r[a], e);
+                    for (a = 0; a < _r.length; a++) Tr(_r[a], e);
                     a = r;
                     break;
                   case \\"source\\":
-                    zr(\\"error\\", e), (a = r);
+                    Tr(\\"error\\", e), (a = r);
                     break;
                   case \\"img\\":
                   case \\"image\\":
                   case \\"link\\":
-                    zr(\\"error\\", e), zr(\\"load\\", e), (a = r);
+                    Tr(\\"error\\", e), Tr(\\"load\\", e), (a = r);
                     break;
                   case \\"details\\":
-                    zr(\\"toggle\\", e), (a = r);
+                    Tr(\\"toggle\\", e), (a = r);
                     break;
                   case \\"input\\":
-                    ee(e, r), (a = J(e, r)), zr(\\"invalid\\", e);
+                    ee(e, r), (a = J(e, r)), Tr(\\"invalid\\", e);
                     break;
                   case \\"option\\":
                     a = ae(e, r);
@@ -13747,10 +13781,10 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
                   case \\"select\\":
                     (e._wrapperState = { wasMultiple: !!r.multiple }),
                       (a = l({}, r, { value: void 0 })),
-                      zr(\\"invalid\\", e);
+                      Tr(\\"invalid\\", e);
                     break;
                   case \\"textarea\\":
-                    ie(e, r), (a = ue(e, r)), zr(\\"invalid\\", e);
+                    ie(e, r), (a = ue(e, r)), Tr(\\"invalid\\", e);
                     break;
                   default:
                     a = r;
@@ -13772,7 +13806,7 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
                         \\"suppressHydrationWarning\\" !== u &&
                         \\"autoFocus\\" !== u &&
                         (i.hasOwnProperty(u)
-                          ? null != f && \\"onScroll\\" === u && zr(\\"scroll\\", e)
+                          ? null != f && \\"onScroll\\" === u && Tr(\\"scroll\\", e)
                           : null != f && w(e, u, f, s));
                   }
                 switch (n) {
@@ -13806,7 +13840,7 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
               if (\\"string\\" !== typeof r && null === t.stateNode)
                 throw Error(o(166));
               (n = Oa(La.current)),
-                Oa(Ta.current),
+                Oa(za.current),
                 Qa(t)
                   ? ((r = t.stateNode),
                     (n = t.memoizedProps),
@@ -14030,7 +14064,7 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
         (Yo = function (e, t, n, r) {
           var a = e.memoizedProps;
           if (a !== r) {
-            (e = t.stateNode), Oa(Ta.current);
+            (e = t.stateNode), Oa(za.current);
             var o,
               u = null;
             switch (n) {
@@ -14096,7 +14130,7 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
                     : \\"suppressContentEditableWarning\\" !== f &&
                       \\"suppressHydrationWarning\\" !== f &&
                       (i.hasOwnProperty(f)
-                        ? (null != c && \\"onScroll\\" === f && zr(\\"scroll\\", e),
+                        ? (null != c && \\"onScroll\\" === f && Tr(\\"scroll\\", e),
                           u || s === c || (u = []))
                         : \\"object\\" === typeof c &&
                           null !== c &&
@@ -14621,8 +14655,8 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
           null === t.dehydrated
         );
       }
-      var Tu = Math.ceil,
-        zu = k.ReactCurrentDispatcher,
+      var zu = Math.ceil,
+        Tu = k.ReactCurrentDispatcher,
         Lu = k.ReactCurrentOwner,
         Ou = 0,
         Mu = null,
@@ -14808,14 +14842,14 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
         var a = _i();
         for ((Mu === e && Fu === r) || (qu(), xi(e, r)); ; )
           try {
-            Ti();
+            zi();
             break;
           } catch (i) {
             Ci(e, i);
           }
         if (
           (na(),
-          (zu.current = a),
+          (Tu.current = a),
           (Ou = l),
           null !== Ru ? (r = 0) : ((Mu = null), (Fu = 0), (r = Uu)),
           0 !== (Au & Bu))
@@ -14876,7 +14910,7 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
                       ? 3e3
                       : 4320 > n
                       ? 4320
-                      : 1960 * Tu(n / 1960)) - n))
+                      : 1960 * zu(n / 1960)) - n))
               ) {
                 e.timeoutHandle = Hr(Oi.bind(null, e), n);
                 break;
@@ -15134,8 +15168,8 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
         }
       }
       function _i() {
-        var e = zu.current;
-        return (zu.current = Oo), null === e ? Oo : e;
+        var e = Tu.current;
+        return (Tu.current = Oo), null === e ? Oo : e;
       }
       function Pi(e, t) {
         var n = Ou;
@@ -15148,17 +15182,17 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
           } catch (l) {
             Ci(e, l);
           }
-        if ((na(), (Ou = n), (zu.current = r), null !== Ru))
+        if ((na(), (Ou = n), (Tu.current = r), null !== Ru))
           throw Error(o(261));
         return (Mu = null), (Fu = 0), Uu;
       }
       function Ni() {
-        for (; null !== Ru; ) zi(Ru);
+        for (; null !== Ru; ) Ti(Ru);
       }
-      function Ti() {
-        for (; null !== Ru && !Nl(); ) zi(Ru);
+      function zi() {
+        for (; null !== Ru && !Nl(); ) Ti(Ru);
       }
-      function zi(e) {
+      function Ti(e) {
         var t = Ku(e.alternate, e, Du);
         (e.memoizedProps = e.pendingProps),
           null === t ? Li(e) : (Ru = t),
@@ -15669,10 +15703,10 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
                 (e.lanes = a),
                 e
               );
-            case z:
+            case T:
               return (
-                ((e = Wi(13, n, t, l)).type = z),
-                (e.elementType = z),
+                ((e = Wi(13, n, t, l)).type = T),
+                (e.elementType = T),
                 (e.lanes = a),
                 e
               );
@@ -15691,7 +15725,7 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
                   case N:
                     u = 9;
                     break e;
-                  case T:
+                  case z:
                     u = 11;
                     break e;
                   case O:
@@ -16016,7 +16050,7 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
                   (function (e) {
                     if (\\"function\\" === typeof e) return Hi(e) ? 1 : 0;
                     if (void 0 !== e && null !== e) {
-                      if ((e = e.$$typeof) === T) return 11;
+                      if ((e = e.$$typeof) === z) return 11;
                       if (e === O) return 14;
                     }
                     return 2;
@@ -16578,7 +16612,7 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
           r
         );
       }
-      function T(e) {
+      function z(e) {
         if (-1 === e._status) {
           var t = e._result;
           (t = t()),
@@ -16597,14 +16631,14 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
         if (1 === e._status) return e._result;
         throw e._result;
       }
-      var z = { current: null };
+      var T = { current: null };
       function L() {
-        var e = z.current;
+        var e = T.current;
         if (null === e) throw Error(p(321));
         return e;
       }
       var O = {
-        ReactCurrentDispatcher: z,
+        ReactCurrentDispatcher: T,
         ReactCurrentBatchConfig: { transition: 0 },
         ReactCurrentOwner: w,
         IsSomeRendererActing: { current: !1 },
@@ -16710,7 +16744,7 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
           return {
             $$typeof: c,
             _payload: { _status: -1, _result: e },
-            _init: T,
+            _init: z,
           };
         }),
         (t.memo = function (e, t) {
@@ -16894,8 +16928,8 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
       var _ = [],
         P = [],
         N = 1,
-        T = null,
-        z = 3,
+        z = null,
+        T = 3,
         L = !1,
         O = !1,
         M = !1;
@@ -16919,32 +16953,32 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
       }
       function D(e, n) {
         (O = !1), M && ((M = !1), l()), (L = !0);
-        var a = z;
+        var a = T;
         try {
           for (
-            R(n), T = E(_);
-            null !== T &&
-            (!(T.expirationTime > n) || (e && !t.unstable_shouldYield()));
+            R(n), z = E(_);
+            null !== z &&
+            (!(z.expirationTime > n) || (e && !t.unstable_shouldYield()));
 
           ) {
-            var o = T.callback;
+            var o = z.callback;
             if (\\"function\\" === typeof o) {
-              (T.callback = null), (z = T.priorityLevel);
-              var u = o(T.expirationTime <= n);
+              (z.callback = null), (T = z.priorityLevel);
+              var u = o(z.expirationTime <= n);
               (n = t.unstable_now()),
-                \\"function\\" === typeof u ? (T.callback = u) : T === E(_) && x(_),
+                \\"function\\" === typeof u ? (z.callback = u) : z === E(_) && x(_),
                 R(n);
             } else x(_);
-            T = E(_);
+            z = E(_);
           }
-          if (null !== T) var i = !0;
+          if (null !== z) var i = !0;
           else {
             var s = E(P);
             null !== s && r(F, s.startTime - n), (i = !1);
           }
           return i;
         } finally {
-          (T = null), (z = a), (L = !1);
+          (z = null), (T = a), (L = !1);
         }
       }
       var I = a;
@@ -16961,27 +16995,27 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
           O || L || ((O = !0), n(D));
         }),
         (t.unstable_getCurrentPriorityLevel = function () {
-          return z;
+          return T;
         }),
         (t.unstable_getFirstCallbackNode = function () {
           return E(_);
         }),
         (t.unstable_next = function (e) {
-          switch (z) {
+          switch (T) {
             case 1:
             case 2:
             case 3:
               var t = 3;
               break;
             default:
-              t = z;
+              t = T;
           }
-          var n = z;
-          z = t;
+          var n = T;
+          T = t;
           try {
             return e();
           } finally {
-            z = n;
+            T = n;
           }
         }),
         (t.unstable_pauseExecution = function () {}),
@@ -16997,12 +17031,12 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
             default:
               e = 3;
           }
-          var n = z;
-          z = e;
+          var n = T;
+          T = e;
           try {
             return t();
           } finally {
-            z = n;
+            T = n;
           }
         }),
         (t.unstable_scheduleCallback = function (e, a, o) {
@@ -17048,14 +17082,14 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
           );
         }),
         (t.unstable_wrapCallback = function (e) {
-          var t = z;
+          var t = T;
           return function () {
-            var n = z;
-            z = t;
+            var n = T;
+            T = t;
             try {
               return e.apply(this, arguments);
             } finally {
-              z = n;
+              T = n;
             }
           };
         });
@@ -17065,132 +17099,94 @@ exports[`when working with an app can generate a js/316.7a4d5eb7.js 1`] = `
     },
   },
 ]);
-//# sourceMappingURL=316.7a4d5eb7.js.map
+//# sourceMappingURL=316.394ef80b.js.map
 "
 `;
 
-exports[`when working with an app can generate a js/main.14cec3f9.js 1`] = `
-"\\"use strict\\";
-(globalThis.webpackChunksample_app =
-  globalThis.webpackChunksample_app || []).push([
-  [179],
-  {
-    529: (M, L, j) => {
-      var N = j(784),
-        u = j(316);
-      const I = function () {
-        return N.createElement(
-          \\"div\\",
-          { className: \\"App\\" },
-          N.createElement(
-            \\"header\\",
-            { className: \\"App-header\\" },
-            N.createElement(\\"img\\", {
-              src: \\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4NDEuOSA1OTUuMyI+CiAgICA8ZyBmaWxsPSIjNjFEQUZCIj4KICAgICAgICA8cGF0aCBkPSJNNjY2LjMgMjk2LjVjMC0zMi41LTQwLjctNjMuMy0xMDMuMS04Mi40IDE0LjQtNjMuNiA4LTExNC4yLTIwLjItMTMwLjQtNi41LTMuOC0xNC4xLTUuNi0yMi40LTUuNnYyMi4zYzQuNiAwIDguMy45IDExLjQgMi42IDEzLjYgNy44IDE5LjUgMzcuNSAxNC45IDc1LjctMS4xIDkuNC0yLjkgMTkuMy01LjEgMjkuNC0xOS42LTQuOC00MS04LjUtNjMuNS0xMC45LTEzLjUtMTguNS0yNy41LTM1LjMtNDEuNi01MCAzMi42LTMwLjMgNjMuMi00Ni45IDg0LTQ2LjlWNzhjLTI3LjUgMC02My41IDE5LjYtOTkuOSA1My42LTM2LjQtMzMuOC03Mi40LTUzLjItOTkuOS01My4ydjIyLjNjMjAuNyAwIDUxLjQgMTYuNSA4NCA0Ni42LTE0IDE0LjctMjggMzEuNC00MS4zIDQ5LjktMjIuNiAyLjQtNDQgNi4xLTYzLjYgMTEtMi4zLTEwLTQtMTkuNy01LjItMjktNC43LTM4LjIgMS4xLTY3LjkgMTQuNi03NS44IDMtMS44IDYuOS0yLjYgMTEuNS0yLjZWNzguNWMtOC40IDAtMTYgMS44LTIyLjYgNS42LTI4LjEgMTYuMi0zNC40IDY2LjctMTkuOSAxMzAuMS02Mi4yIDE5LjItMTAyLjcgNDkuOS0xMDIuNyA4Mi4zIDAgMzIuNSA0MC43IDYzLjMgMTAzLjEgODIuNC0xNC40IDYzLjYtOCAxMTQuMiAyMC4yIDEzMC40IDYuNSAzLjggMTQuMSA1LjYgMjIuNSA1LjYgMjcuNSAwIDYzLjUtMTkuNiA5OS45LTUzLjYgMzYuNCAzMy44IDcyLjQgNTMuMiA5OS45IDUzLjIgOC40IDAgMTYtMS44IDIyLjYtNS42IDI4LjEtMTYuMiAzNC40LTY2LjcgMTkuOS0xMzAuMSA2Mi0xOS4xIDEwMi41LTQ5LjkgMTAyLjUtODIuM3ptLTEzMC4yLTY2LjdjLTMuNyAxMi45LTguMyAyNi4yLTEzLjUgMzkuNS00LjEtOC04LjQtMTYtMTMuMS0yNC00LjYtOC05LjUtMTUuOC0xNC40LTIzLjQgMTQuMiAyLjEgMjcuOSA0LjcgNDEgNy45em0tNDUuOCAxMDYuNWMtNy44IDEzLjUtMTUuOCAyNi4zLTI0LjEgMzguMi0xNC45IDEuMy0zMCAyLTQ1LjIgMi0xNS4xIDAtMzAuMi0uNy00NS0xLjktOC4zLTExLjktMTYuNC0yNC42LTI0LjItMzgtNy42LTEzLjEtMTQuNS0yNi40LTIwLjgtMzkuOCA2LjItMTMuNCAxMy4yLTI2LjggMjAuNy0zOS45IDcuOC0xMy41IDE1LjgtMjYuMyAyNC4xLTM4LjIgMTQuOS0xLjMgMzAtMiA0NS4yLTIgMTUuMSAwIDMwLjIuNyA0NSAxLjkgOC4zIDExLjkgMTYuNCAyNC42IDI0LjIgMzggNy42IDEzLjEgMTQuNSAyNi40IDIwLjggMzkuOC02LjMgMTMuNC0xMy4yIDI2LjgtMjAuNyAzOS45em0zMi4zLTEzYzUuNCAxMy40IDEwIDI2LjggMTMuOCAzOS44LTEzLjEgMy4yLTI2LjkgNS45LTQxLjIgOCA0LjktNy43IDkuOC0xNS42IDE0LjQtMjMuNyA0LjYtOCA4LjktMTYuMSAxMy0yNC4xek00MjEuMiA0MzBjLTkuMy05LjYtMTguNi0yMC4zLTI3LjgtMzIgOSAuNCAxOC4yLjcgMjcuNS43IDkuNCAwIDE4LjctLjIgMjcuOC0uNy05IDExLjctMTguMyAyMi40LTI3LjUgMzJ6bS03NC40LTU4LjljLTE0LjItMi4xLTI3LjktNC43LTQxLTcuOSAzLjctMTIuOSA4LjMtMjYuMiAxMy41LTM5LjUgNC4xIDggOC40IDE2IDEzLjEgMjQgNC43IDggOS41IDE1LjggMTQuNCAyMy40ek00MjAuNyAxNjNjOS4zIDkuNiAxOC42IDIwLjMgMjcuOCAzMi05LS40LTE4LjItLjctMjcuNS0uNy05LjQgMC0xOC43LjItMjcuOC43IDktMTEuNyAxOC4zLTIyLjQgMjcuNS0zMnptLTc0IDU4LjljLTQuOSA3LjctOS44IDE1LjYtMTQuNCAyMy43LTQuNiA4LTguOSAxNi0xMyAyNC01LjQtMTMuNC0xMC0yNi44LTEzLjgtMzkuOCAxMy4xLTMuMSAyNi45LTUuOCA0MS4yLTcuOXptLTkwLjUgMTI1LjJjLTM1LjQtMTUuMS01OC4zLTM0LjktNTguMy01MC42IDAtMTUuNyAyMi45LTM1LjYgNTguMy01MC42IDguNi0zLjcgMTgtNyAyNy43LTEwLjEgNS43IDE5LjYgMTMuMiA0MCAyMi41IDYwLjktOS4yIDIwLjgtMTYuNiA0MS4xLTIyLjIgNjAuNi05LjktMy4xLTE5LjMtNi41LTI4LTEwLjJ6TTMxMCA0OTBjLTEzLjYtNy44LTE5LjUtMzcuNS0xNC45LTc1LjcgMS4xLTkuNCAyLjktMTkuMyA1LjEtMjkuNCAxOS42IDQuOCA0MSA4LjUgNjMuNSAxMC45IDEzLjUgMTguNSAyNy41IDM1LjMgNDEuNiA1MC0zMi42IDMwLjMtNjMuMiA0Ni45LTg0IDQ2LjktNC41LS4xLTguMy0xLTExLjMtMi43em0yMzcuMi03Ni4yYzQuNyAzOC4yLTEuMSA2Ny45LTE0LjYgNzUuOC0zIDEuOC02LjkgMi42LTExLjUgMi42LTIwLjcgMC01MS40LTE2LjUtODQtNDYuNiAxNC0xNC43IDI4LTMxLjQgNDEuMy00OS45IDIyLjYtMi40IDQ0LTYuMSA2My42LTExIDIuMyAxMC4xIDQuMSAxOS44IDUuMiAyOS4xem0zOC41LTY2LjdjLTguNiAzLjctMTggNy0yNy43IDEwLjEtNS43LTE5LjYtMTMuMi00MC0yMi41LTYwLjkgOS4yLTIwLjggMTYuNi00MS4xIDIyLjItNjAuNiA5LjkgMy4xIDE5LjMgNi41IDI4LjEgMTAuMiAzNS40IDE1LjEgNTguMyAzNC45IDU4LjMgNTAuNi0uMSAxNS43LTIzIDM1LjYtNTguNCA1MC42ek0zMjAuOCA3OC40eiIvPgogICAgICAgIDxjaXJjbGUgY3g9IjQyMC45IiBjeT0iMjk2LjUiIHI9IjQ1LjciLz4KICAgICAgICA8cGF0aCBkPSJNNTIwLjUgNzguMXoiLz4KICAgIDwvZz4KPC9zdmc+Cg==\\",
-              className: \\"App-logo\\",
-              alt: \\"logo\\",
-            }),
-            N.createElement(
-              \\"p\\",
-              null,
-              \\"Edit \\",
-              N.createElement(\\"code\\", null, \\"src/App.tsx\\"),
-              \\" and save to reload.\\"
-            ),
-            N.createElement(
-              \\"a\\",
-              {
-                className: \\"App-link\\",
-                href: \\"https://reactjs.org\\",
-                target: \\"_blank\\",
-                rel: \\"noopener noreferrer\\",
-              },
-              \\"Learn React\\"
-            )
-          ),
-          N.createElement(
-            \\"div\\",
-            { \\"data-testid\\": \\"test-this\\" },
-            \\"this is a modular app\\"
-          )
-        );
-      };
-      u.render(
-        N.createElement(N.StrictMode, null, N.createElement(I, null)),
-        document.getElementById(\\"root\\")
-      );
-    },
-  },
-  (M) => {
-    M.O(0, [316], () => {
-      return (L = 529), M((M.s = L));
-      var L;
-    });
-    M.O();
-  },
-]);
-//# sourceMappingURL=main.14cec3f9.js.map
-"
-`;
-
-exports[`when working with an app can generate a js/runtime-main.de9fd74d.js 1`] = `
-"(() => {
-  \\"use strict\\";
-  var r = {},
-    e = {};
-  function a(o) {
-    var t = e[o];
-    if (void 0 !== t) return t.exports;
-    var n = (e[o] = { exports: {} });
-    return r[o](n, n.exports, a), n.exports;
-  }
-  (a.m = r),
-    (() => {
-      var r = [];
-      a.O = (e, o, t, n) => {
-        if (!o) {
-          var p = 1 / 0;
-          for (v = 0; v < r.length; v++) {
-            for (var [o, t, n] = r[v], l = !0, i = 0; i < o.length; i++)
-              (!1 & n || p >= n) && Object.keys(a.O).every((r) => a.O[r](o[i]))
-                ? o.splice(i--, 1)
-                : ((l = !1), n < p && (p = n));
-            if (l) {
-              r.splice(v--, 1);
-              var s = t();
-              void 0 !== s && (e = s);
-            }
-          }
-          return e;
+exports[`when working with an app can generate a index.html 1`] = `
+"<!DOCTYPE html>
+<html lang=\\"en\\">
+  <head>
+    <meta charset=\\"utf-8\\" />
+    <link rel=\\"icon\\" href=\\"/favicon.ico\\" />
+    <meta name=\\"viewport\\" content=\\"width=device-width,initial-scale=1\\" />
+    <meta name=\\"theme-color\\" content=\\"#000000\\" />
+    <meta
+      name=\\"description\\"
+      content=\\"Web site created using create-modular-app\\"
+    />
+    <link rel=\\"apple-touch-icon\\" href=\\"/logo192.png\\" />
+    <link rel=\\"manifest\\" href=\\"/manifest.json\\" />
+    <title>React App</title>
+    <script>
+      (() => {
+        \\"use strict\\";
+        var r = {},
+          e = {};
+        function a(o) {
+          var t = e[o];
+          if (void 0 !== t) return t.exports;
+          var n = (e[o] = { exports: {} });
+          return r[o](n, n.exports, a), n.exports;
         }
-        n = n || 0;
-        for (var v = r.length; v > 0 && r[v - 1][2] > n; v--) r[v] = r[v - 1];
-        r[v] = [o, t, n];
-      };
-    })(),
-    (a.o = (r, e) => Object.prototype.hasOwnProperty.call(r, e)),
-    (() => {
-      var r = { 252: 0 };
-      a.O.j = (e) => 0 === r[e];
-      var e = (e, o) => {
-          var t,
-            n,
-            [p, l, i] = o,
-            s = 0;
-          if (p.some((e) => 0 !== r[e])) {
-            for (t in l) a.o(l, t) && (a.m[t] = l[t]);
-            if (i) var v = i(a);
-          }
-          for (e && e(o); s < p.length; s++)
-            (n = p[s]), a.o(r, n) && r[n] && r[n][0](), (r[n] = 0);
-          return a.O(v);
-        },
-        o = (globalThis.webpackChunksample_app =
-          globalThis.webpackChunksample_app || []);
-      o.forEach(e.bind(null, 0)), (o.push = e.bind(null, o.push.bind(o)));
-    })();
-})();
-//# sourceMappingURL=runtime-main.de9fd74d.js.map
+        (a.m = r),
+          (() => {
+            var r = [];
+            a.O = (e, o, t, n) => {
+              if (!o) {
+                var p = 1 / 0;
+                for (v = 0; v < r.length; v++) {
+                  for (var [o, t, n] = r[v], s = !0, l = 0; l < o.length; l++)
+                    (!1 & n || p >= n) &&
+                    Object.keys(a.O).every((r) => a.O[r](o[l]))
+                      ? o.splice(l--, 1)
+                      : ((s = !1), n < p && (p = n));
+                  if (s) {
+                    r.splice(v--, 1);
+                    var i = t();
+                    void 0 !== i && (e = i);
+                  }
+                }
+                return e;
+              }
+              n = n || 0;
+              for (var v = r.length; v > 0 && r[v - 1][2] > n; v--)
+                r[v] = r[v - 1];
+              r[v] = [o, t, n];
+            };
+          })(),
+          (a.o = (r, e) => Object.prototype.hasOwnProperty.call(r, e)),
+          (() => {
+            var r = { 252: 0 };
+            a.O.j = (e) => 0 === r[e];
+            var e = (e, o) => {
+                var t,
+                  n,
+                  [p, s, l] = o,
+                  i = 0;
+                if (p.some((e) => 0 !== r[e])) {
+                  for (t in s) a.o(s, t) && (a.m[t] = s[t]);
+                  if (l) var v = l(a);
+                }
+                for (e && e(o); i < p.length; i++)
+                  (n = p[i]), a.o(r, n) && r[n] && r[n][0](), (r[n] = 0);
+                return a.O(v);
+              },
+              o = (self.webpackChunksample_app =
+                self.webpackChunksample_app || []);
+            o.forEach(e.bind(null, 0)), (o.push = e.bind(null, o.push.bind(o)));
+          })();
+      })();
+    </script>
+    <script defer=\\"defer\\" src=\\"/static/js/316.394ef80b.js\\"></script>
+    <script defer=\\"defer\\" src=\\"/static/js/main.3251fbc2.js\\"></script>
+    <link href=\\"/static/css/main.1a7488ce.css\\" rel=\\"stylesheet\\" />
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id=\\"root\\"></div>
+  </body>
+</html>
 "
 `;
 

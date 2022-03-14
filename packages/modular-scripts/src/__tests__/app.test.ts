@@ -95,7 +95,7 @@ describe('when working with a NODE_ENV app', () => {
     `);
   });
 
-  it('can generate a js/main.6b9113da.js', async () => {
+  it('can generate a hashed js chunk in the js directory', async () => {
     expect(
       prettier.format(
         String(
@@ -106,12 +106,12 @@ describe('when working with a NODE_ENV app', () => {
               'node-env-app',
               'static',
               'js',
-              'main.6b9113da.js',
+              'main.707fd976.js',
             ),
           ),
         ),
         {
-          filepath: 'main.6b9113da.js',
+          filepath: 'main.707fd976.js',
         },
       ),
     ).toMatchSnapshot();
@@ -197,7 +197,7 @@ describe('When working with a nested app', () => {
     ).toMatchSnapshot();
   });
 
-  it('can generate a css/main.1a7488ce.css', async () => {
+  it('can generate a hashed main css chunk in the css directory', async () => {
     expect(
       prettier.format(
         String(
@@ -219,7 +219,7 @@ describe('When working with a nested app', () => {
     ).toMatchSnapshot();
   });
 
-  it('can generate a css/main.1a7488ce.css.map', async () => {
+  it('can generate a hashed css map in the css directory', async () => {
     expect(
       JSON.parse(
         String(
@@ -238,7 +238,7 @@ describe('When working with a nested app', () => {
     ).toMatchSnapshot();
   });
 
-  it('can generate a js/main.8c5bc4d2.js', async () => {
+  it('can generate a hashed main js chunk in the js directory', async () => {
     expect(
       prettier.format(
         String(
@@ -249,18 +249,18 @@ describe('When working with a nested app', () => {
               'scoped-sample-app',
               'static',
               'js',
-              'main.8c5bc4d2.js',
+              'main.f726ecf6.js',
             ),
           ),
         ),
         {
-          filepath: 'main.8c5bc4d2.js',
+          filepath: 'main.f726ecf6.js',
         },
       ),
     ).toMatchSnapshot();
   });
 
-  it('can generate a js/runtime-main.83e93d07.js', async () => {
+  it('can generate a hashed runtime chunk in the js directory', async () => {
     expect(
       prettier.format(
         String(
@@ -271,18 +271,18 @@ describe('When working with a nested app', () => {
               'scoped-sample-app',
               'static',
               'js',
-              'runtime-main.83e93d07.js',
+              'runtime-main.b18f5039.js',
             ),
           ),
         ),
         {
-          filepath: 'runtime-main.83e93d07.js',
+          filepath: 'runtime-main.b18f5039.js',
         },
       ),
     ).toMatchSnapshot();
   });
 
-  it('can generate a js/788.78cfb599.js', async () => {
+  it('can generate a hashed vendor chunk in the js directory', async () => {
     expect(
       prettier.format(
         String(
@@ -293,12 +293,12 @@ describe('When working with a nested app', () => {
               'scoped-sample-app',
               'static',
               'js',
-              '788.78cfb599.js',
+              '788.bbd34b33.js',
             ),
           ),
         ),
         {
-          filepath: '788.78cfb599.js',
+          filepath: '788.bbd34b33.js',
         },
       ),
     ).toMatchSnapshot();
@@ -426,7 +426,7 @@ describe('when working with an app', () => {
     ).toMatchSnapshot();
   });
 
-  it('can generate a js/main.14cec3f9.js', async () => {
+  it('can generate a hashed main js chunk in the js directory', async () => {
     expect(
       prettier.format(
         String(
@@ -437,18 +437,18 @@ describe('when working with an app', () => {
               'sample-app',
               'static',
               'js',
-              'main.14cec3f9.js',
+              'main.3251fbc2.js',
             ),
           ),
         ),
         {
-          filepath: 'main.14cec3f9.js',
+          filepath: 'main.3251fbc2.js',
         },
       ),
     ).toMatchSnapshot();
   });
 
-  it('can generate a js/runtime-main.de9fd74d.js', async () => {
+  it('can generate a hashed runtime chunk in the js directory', async () => {
     expect(
       prettier.format(
         String(
@@ -459,18 +459,18 @@ describe('when working with an app', () => {
               'sample-app',
               'static',
               'js',
-              'runtime-main.de9fd74d.js',
+              'runtime-main.7150bca8.js',
             ),
           ),
         ),
         {
-          filepath: 'runtime-main.de9fd74d.js',
+          filepath: 'runtime-main.7150bca8.js',
         },
       ),
     ).toMatchSnapshot();
   });
 
-  it('can generate a js/316.7a4d5eb7.js', async () => {
+  it('can generate a hashed vendor chunk in the js directory', async () => {
     expect(
       prettier.format(
         String(
@@ -481,12 +481,12 @@ describe('when working with an app', () => {
               'sample-app',
               'static',
               'js',
-              '316.7a4d5eb7.js',
+              '316.394ef80b.js',
             ),
           ),
         ),
         {
-          filepath: '316.7a4d5eb7.js',
+          filepath: '316.394ef80b.js',
         },
       ),
     ).toMatchSnapshot();
