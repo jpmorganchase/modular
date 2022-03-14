@@ -744,7 +744,7 @@ module.exports = function (webpackEnv) {
 
 function createExternalDependenciesMap(externalDependencies) {
   const externalCdnTemplate =
-    process.env.EXTERNAL_CDN_TEMPLATE ??
+    process.env.EXTERNAL_CDN_TEMPLATE ||
     'https://cdn.skypack.dev/[name]@[version]';
 
   return Object.entries(externalDependencies).reduce(
