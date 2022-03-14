@@ -1,6 +1,7 @@
 import * as esbuild from 'esbuild';
 import chalk from 'chalk';
 import fs from 'fs-extra';
+import * as minimize from 'html-minifier-terser';
 import * as path from 'path';
 import getClientEnvironment from '../config/getClientEnvironment';
 
@@ -8,6 +9,7 @@ import type { Paths } from '../../utils/createPaths';
 import * as logger from '../../utils/logger';
 import { formatError } from '../utils/formatError';
 
+import { createIndex } from '../api';
 import createEsbuildConfig from '../config/createEsbuildConfig';
 import getModularRoot from '../../utils/getModularRoot';
 import sanitizeMetafile from '../utils/sanitizeMetafile';
@@ -71,6 +73,26 @@ export default async function build(
         path.join(modularRoot, outputFileName),
       );
     }
+  }
+
+  // If it's view, the parent build function has already generated the index. But if app, we must generate it here.
+  if (isApp) {
+    const html = await createIndex(paths, result, env.raw, false);
+    await fs.writeFile(
+      path.join(paths.appBuild, 'index.html'),
+      await minimize.minify(html, {
+        html5: true,
+        collapseBooleanAttributes: true,
+        collapseWhitespace: true,
+        collapseInlineTagWhitespace: true,
+        decodeEntities: true,
+        minifyCSS: true,
+        minifyJS: true,
+        removeAttributeQuotes: false,
+        removeComments: true,
+        removeTagWhitespace: true,
+      }),
+    );
   }
 
   return result;
