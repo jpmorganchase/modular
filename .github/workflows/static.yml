@@ -24,6 +24,8 @@ jobs:
             command: lint
           - name: Build
             command: build
+          - name: No pre-release
+            command: '! test -f .changeset/pre.json'
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js
