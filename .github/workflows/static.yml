@@ -25,7 +25,7 @@ jobs:
           - name: Build
             command: build
           - name: No prerelease
-            command: '! test -f .changeset/pre.json'
+            command: check-prerelease
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js

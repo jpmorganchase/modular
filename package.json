@@ -11,6 +11,7 @@
     "format": "prettier --write .",
     "lint": "yarn modular lint",
     "lint:fix": "yarn lint --fix",
+    "check-prerelease": "! test -f .changeset/pre.json",
     "create-modular-react-app": "ts-node packages/create-modular-react-app/src/cli.ts",
     "modular": "ts-node packages/modular-scripts/src/cli.ts",
     "test": "yarn modular test --watchAll false --runInBand",
