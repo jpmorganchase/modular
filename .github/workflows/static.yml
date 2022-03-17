@@ -24,7 +24,7 @@ jobs:
             command: lint
           - name: Build
             command: build
-          - name: No pre-release
+          - name: No prerelease
             command: '! test -f .changeset/pre.json'
     steps:
       - uses: actions/checkout@v3
