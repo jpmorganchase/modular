@@ -24,8 +24,6 @@ jobs:
             command: lint
           - name: Build
             command: build
-          - name: No prerelease
-            command: check-prerelease
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js

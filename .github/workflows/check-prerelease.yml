@@ -1,0 +1,18 @@
+name: Check pre-release
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  Static:
+    name: 'Check pre-release job'
+    runs-on: ubuntu-latest
+    env:
+      MODULAR_LOGGER_DEBUG: true
+    steps:
+      - uses: actions/checkout@v3
+      - name: 'Check that changeset pre-release pre.json is not present'
+        run: '! test -f .changeset/pre.json'
