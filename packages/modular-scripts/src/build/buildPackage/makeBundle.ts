@@ -183,7 +183,10 @@ export async function makeBundle(
           // Let's collect the name and add it in the package.json
           // we publish to the registry
           // TODO: make sure local workspaces are NOT explicitly included in package.json
-          if (packageJsons[importedPackage].private !== true) {
+          if (
+            includePrivate ||
+            packageJsons[importedPackage].private !== true
+          ) {
             localImports[importedPackage] = packageJsons[importedPackage]
               .version as string;
           } else {
