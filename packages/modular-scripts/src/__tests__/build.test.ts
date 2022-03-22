@@ -1,73 +1,29 @@
-import execa from 'execa';
-import { promisify } from 'util';
-import _rimraf from 'rimraf';
 import tree from 'tree-view-for-tests';
 import path from 'path';
 import fs from 'fs-extra';
 
+import { addFixturePackage, cleanup, modular } from '../test/utils';
 import getModularRoot from '../utils/getModularRoot';
-
-const rimraf = promisify(_rimraf);
 
 const modularRoot = getModularRoot();
 
-function modular(str: string, opts: Record<string, unknown> = {}) {
-  return execa('yarnpkg', ['modular', ...str.split(' ')], {
-    cwd: modularRoot,
-    cleanup: true,
-    ...opts,
-  });
-}
-
-async function cleanup() {
-  const packagesPath = path.join(getModularRoot(), 'packages');
-
-  await rimraf(path.join(packagesPath, 'sample-async-package'));
-  // run yarn so yarn.lock gets reset
-  await execa('yarnpkg', ['--silent'], {
-    cwd: modularRoot,
-  });
-}
-
-beforeAll(async () => {
-  await cleanup();
-});
-
-afterAll(async () => {
-  await cleanup();
-});
-
 describe('WHEN building with preserve modules', () => {
+  const packageName = 'sample-async-package';
+
   beforeAll(async () => {
-    await modular(
-      'add sample-async-package --unstable-type package --unstable-name sample-async-package',
-      {
-        stdio: 'inherit',
-      },
-    );
-
-    const packageSrc = path.join(
-      getModularRoot(),
-      'packages',
-      'sample-async-package',
-      'src',
-    );
-    await fs.emptyDir(packageSrc);
-    await fs.copy(
-      path.join(__dirname, '__fixtures__', 'packages', 'sample-async-package'),
-      packageSrc,
-    );
-
-    // build a package too, but preserve modules
-    await modular('build sample-async-package --preserve-modules', {
+    await cleanup([packageName]);
+    await addFixturePackage(packageName);
+    await modular(`build ${packageName} --preserve-modules`, {
       stdio: 'inherit',
     });
   });
 
+  afterAll(async () => await cleanup([packageName]));
+
   it('THEN expects the correct output package.json', async () => {
     expect(
       await fs.readJson(
-        path.join(modularRoot, 'dist', 'sample-async-package', 'package.json'),
+        path.join(modularRoot, 'dist', packageName, 'package.json'),
       ),
     ).toMatchInlineSnapshot(`
       Object {
@@ -89,7 +45,7 @@ describe('WHEN building with preserve modules', () => {
   });
 
   it('THEN expects the correct output directory structure', () => {
-    expect(tree(path.join(modularRoot, 'dist', 'sample-async-package')))
+    expect(tree(path.join(modularRoot, 'dist', packageName)))
       .toMatchInlineSnapshot(`
       "sample-async-package
       ├─ README.md #1jv3l2q
@@ -117,7 +73,7 @@ describe('WHEN building with preserve modules', () => {
           path.join(
             getModularRoot(),
             'dist',
-            'sample-async-package',
+            packageName,
             'dist-es',
             'index.js',
           ),
@@ -133,12 +89,73 @@ describe('WHEN building with preserve modules', () => {
           path.join(
             getModularRoot(),
             'dist',
-            'sample-async-package',
+            packageName,
             'dist-es',
             'runAsync.js',
           ),
         ),
       ),
     ).toMatchSnapshot();
+  });
+});
+
+describe('WHEN building packages with private cross-package dependencies', () => {
+  const libraryPackage = 'sample-library-package';
+  const dependentPackage = 'sample-depending-package';
+
+  beforeAll(async () => {
+    await cleanup([libraryPackage, dependentPackage]);
+    await addFixturePackage(libraryPackage);
+    await addFixturePackage(dependentPackage);
+
+    // Can't specify it in the fixtures, as we can't nest package.json files in packages
+    const package_json = `{
+  "name": "${libraryPackage}",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "private": true,
+  "modular": {
+    "type": "package"
+  }
+}
+`;
+
+    await fs.writeFile(
+      path.join(getModularRoot(), 'packages', libraryPackage, 'package.json'),
+      package_json,
+      'utf8',
+    );
+  });
+
+  afterAll(async () => await cleanup([dependentPackage, libraryPackage]));
+
+  it('THEN the build fails by default', () => {
+    return expect(
+      async () =>
+        await modular(`build ${dependentPackage} --preserve-modules`, {
+          stdio: 'inherit',
+        }),
+    ).rejects.toThrow();
+  });
+
+  it('THEN the build passes if the --private option is used', async () => {
+    await modular(`build ${dependentPackage} --preserve-modules --private`, {
+      stdio: 'inherit',
+    });
+
+    expect(tree(path.join(modularRoot, 'dist', dependentPackage)))
+      .toMatchInlineSnapshot(`
+      "sample-depending-package
+      ├─ README.md #1jv3l2q
+      ├─ dist-cjs
+      │  ├─ index.js #1gj4b9h
+      │  └─ index.js.map #39c8bu
+      ├─ dist-es
+      │  ├─ index.js #xezjee
+      │  └─ index.js.map #89b1k5
+      ├─ dist-types
+      │  └─ index.d.ts #6hjmh9
+      └─ package.json"
+    `);
   });
 });
