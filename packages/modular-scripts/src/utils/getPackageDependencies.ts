@@ -5,6 +5,7 @@ import type { CoreProperties } from '@schemastore/package';
 import getModularRoot from './getModularRoot';
 import getLocation from './getLocation';
 import getWorkspaceInfo from './getWorkspaceInfo';
+import * as logger from './logger';
 
 type DependencyManifest = NonNullable<CoreProperties['dependencies']>;
 
@@ -46,19 +47,18 @@ export async function getPackageDependencies(
   const targetLocation = await getLocation(target);
   const workspaceInfo = getWorkspaceInfo();
 
-  const rootPackageJsonDependencies =
-    (
-      fs.readJSONSync(
-        path.join(getModularRoot(), 'package.json'),
-      ) as CoreProperties
-    ).dependencies || {};
+  const rootManifest = fs.readJSONSync(
+    path.join(getModularRoot(), 'package.json'),
+  ) as CoreProperties;
 
-  const targetPackageJsonDependencies =
-    (
-      fs.readJSONSync(
-        path.join(targetLocation, 'package.json'),
-      ) as CoreProperties
-    ).dependencies || {};
+  const targetManifest = fs.readJSONSync(
+    path.join(targetLocation, 'package.json'),
+  ) as CoreProperties;
+
+  const rootPackageJsonDependencies = rootManifest.dependencies || {};
+  const targetPackageJsonDependencies = targetManifest.dependencies || {};
+  const rootPackageJsonDevDependencies = rootManifest.devDependencies || {};
+  const targetPackageJsonDevDependencies = targetManifest.devDependencies || {};
 
   /* Get regular dependencies from package.json (regular) or root package.json (hoisted)
    * Exclude workspace dependencies. Error if a dependency is imported in the source code
@@ -69,9 +69,11 @@ export async function getPackageDependencies(
     .reduce<DependencyManifest>((manifest, depName) => {
       const depVersion =
         targetPackageJsonDependencies[depName] ??
-        rootPackageJsonDependencies[depName];
+        rootPackageJsonDependencies[depName] ??
+        targetPackageJsonDevDependencies[depName] ??
+        rootPackageJsonDevDependencies[depName];
       if (!depVersion) {
-        throw new Error(
+        logger.error(
           `Package ${depName} imported in ${target} source but not found in package dependencies or hoisted dependencies`,
         );
       }
