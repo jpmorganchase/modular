@@ -74,7 +74,7 @@ export async function getPackageDependencies(
         rootPackageJsonDevDependencies[depName];
       if (!depVersion) {
         logger.error(
-          `Package ${depName} imported in ${target} source but not found in package dependencies or hoisted dependencies - this will prevent you from continuing in the next release of modular`,
+          `Package ${depName} imported in ${target} source but not found in package dependencies or hoisted dependencies - this will prevent you from successfully build, start or move packages in the next release of modular`,
         );
       }
       manifest[depName] = depVersion;
