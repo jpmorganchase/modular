@@ -43,7 +43,7 @@
     "@changesets/cli": "2.21.1",
     "@schemastore/package": "0.0.6",
     "@schemastore/tsconfig": "0.0.9",
-    "@testing-library/dom": "8.11.2",
+    "@testing-library/dom": "8.11.4",
     "@testing-library/jest-dom": "5.16.2",
     "@testing-library/react": "12.1.4",
     "@testing-library/user-event": "13.5.0",
