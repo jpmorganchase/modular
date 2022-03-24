@@ -55,10 +55,12 @@ export async function getPackageDependencies(
     path.join(targetLocation, 'package.json'),
   ) as CoreProperties;
 
-  const rootPackageJsonDependencies = rootManifest.dependencies || {};
-  const targetPackageJsonDependencies = targetManifest.dependencies || {};
-  const rootPackageJsonDevDependencies = rootManifest.devDependencies || {};
-  const targetPackageJsonDevDependencies = targetManifest.devDependencies || {};
+  const deps = {
+    ...rootManifest.dependencies,
+    ...targetManifest.dependencies,
+    ...rootManifest.devDependencies,
+    ...targetManifest.devDependencies,
+  };
 
   /* Get regular dependencies from package.json (regular) or root package.json (hoisted)
    * Exclude workspace dependencies. Error if a dependency is imported in the source code
@@ -67,11 +69,7 @@ export async function getPackageDependencies(
   const manifest = getDependenciesFromSource(targetLocation)
     .filter((depName) => !(depName in workspaceInfo))
     .reduce<DependencyManifest>((manifest, depName) => {
-      const depVersion =
-        targetPackageJsonDependencies[depName] ??
-        rootPackageJsonDependencies[depName] ??
-        targetPackageJsonDevDependencies[depName] ??
-        rootPackageJsonDevDependencies[depName];
+      const depVersion = deps[depName];
       if (!depVersion) {
         logger.error(
           `Package ${depName} imported in ${target} source but not found in package dependencies or hoisted dependencies - this will prevent you from successfully build, start or move packages in the next release of modular`,
