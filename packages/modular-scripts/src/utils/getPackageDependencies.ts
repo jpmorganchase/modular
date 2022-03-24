@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
 import { Project } from 'ts-morph';
-import type { CoreProperties } from '@schemastore/package';
+import type { CoreProperties, Dependency } from '@schemastore/package';
 import getModularRoot from './getModularRoot';
 import getLocation from './getLocation';
 import getWorkspaceInfo from './getWorkspaceInfo';
@@ -55,12 +55,13 @@ export async function getPackageDependencies(
     path.join(targetLocation, 'package.json'),
   ) as CoreProperties;
 
-  const deps = {
-    ...rootManifest.dependencies,
-    ...targetManifest.dependencies,
-    ...rootManifest.devDependencies,
-    ...targetManifest.devDependencies,
-  };
+  const deps = Object.assign(
+    Object.create(null),
+    targetManifest.devDependencies,
+    rootManifest.devDependencies,
+    targetManifest.dependencies,
+    rootManifest.dependencies,
+  ) as Dependency;
 
   /* Get regular dependencies from package.json (regular) or root package.json (hoisted)
    * Exclude workspace dependencies. Error if a dependency is imported in the source code
