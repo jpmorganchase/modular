@@ -1,10 +1,11 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
 import { Project } from 'ts-morph';
-import type { CoreProperties } from '@schemastore/package';
+import type { CoreProperties, Dependency } from '@schemastore/package';
 import getModularRoot from './getModularRoot';
 import getLocation from './getLocation';
 import getWorkspaceInfo from './getWorkspaceInfo';
+import * as logger from './logger';
 
 type DependencyManifest = NonNullable<CoreProperties['dependencies']>;
 
@@ -46,19 +47,21 @@ export async function getPackageDependencies(
   const targetLocation = await getLocation(target);
   const workspaceInfo = getWorkspaceInfo();
 
-  const rootPackageJsonDependencies =
-    (
-      fs.readJSONSync(
-        path.join(getModularRoot(), 'package.json'),
-      ) as CoreProperties
-    ).dependencies || {};
+  const rootManifest = fs.readJSONSync(
+    path.join(getModularRoot(), 'package.json'),
+  ) as CoreProperties;
 
-  const targetPackageJsonDependencies =
-    (
-      fs.readJSONSync(
-        path.join(targetLocation, 'package.json'),
-      ) as CoreProperties
-    ).dependencies || {};
+  const targetManifest = fs.readJSONSync(
+    path.join(targetLocation, 'package.json'),
+  ) as CoreProperties;
+
+  const deps = Object.assign(
+    Object.create(null),
+    targetManifest.devDependencies,
+    rootManifest.devDependencies,
+    targetManifest.dependencies,
+    rootManifest.dependencies,
+  ) as Dependency;
 
   /* Get regular dependencies from package.json (regular) or root package.json (hoisted)
    * Exclude workspace dependencies. Error if a dependency is imported in the source code
@@ -67,12 +70,10 @@ export async function getPackageDependencies(
   const manifest = getDependenciesFromSource(targetLocation)
     .filter((depName) => !(depName in workspaceInfo))
     .reduce<DependencyManifest>((manifest, depName) => {
-      const depVersion =
-        targetPackageJsonDependencies[depName] ??
-        rootPackageJsonDependencies[depName];
+      const depVersion = deps[depName];
       if (!depVersion) {
-        throw new Error(
-          `Package ${depName} imported in ${target} source but not found in package dependencies or hoisted dependencies`,
+        logger.error(
+          `Package ${depName} imported in ${target} source but not found in package dependencies or hoisted dependencies - this will prevent you from successfully build, start or move packages in the next release of modular`,
         );
       }
       manifest[depName] = depVersion;

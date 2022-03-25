@@ -10,7 +10,10 @@ packages/sample-view
 packages/sample-package
 packages/nested
 packages/sample-library-package
+packages/sample-renamable-library-package
+packages/sample-renamed-library-package
 packages/sample-depending-package
+packages/sample-renamable-depending-package
 
 # example app
 packages/esbuild-app
