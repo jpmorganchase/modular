@@ -23,7 +23,7 @@ async function lint(
   const lintExtensions = ['.ts', '.tsx', '.js', '.jsx'];
   let targetedFiles = ['<rootDir>/**/src/**/*.{js,jsx,ts,tsx}'];
 
-  if (!all && !isCI && !regexes) {
+  if (!all && !isCI && regexes.length === 0) {
     const diffedFiles = getDiffedFiles();
     if (diffedFiles.length === 0) {
       logger.log(
