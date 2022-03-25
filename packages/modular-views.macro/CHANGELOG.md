@@ -1,5 +1,30 @@
 # modular-views.macro
 
+## 3.1.0
+
+### Minor Changes
+
+- [#1112](https://github.com/jpmorganchase/modular/pull/1112)
+  [`d08e4c2`](https://github.com/jpmorganchase/modular/commit/d08e4c2b15db93ef2adde961651254491db94140)
+  Thanks [@joshwooding](https://github.com/joshwooding)! - Support yarn v3
+
+### Patch Changes
+
+- [#1283](https://github.com/jpmorganchase/modular/pull/1283)
+  [`918d1f1`](https://github.com/jpmorganchase/modular/commit/918d1f15b7ae27141ad180ff634aade6ca524117)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Upgrade @babel scope
+  packages in modular.
+
+* [#1411](https://github.com/jpmorganchase/modular/pull/1411)
+  [`1fa4e8e`](https://github.com/jpmorganchase/modular/commit/1fa4e8ea3c21449328e1927561a31d6da438b058)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump @babel/core
+  from 7.17.4 to 7.17.5
+
+- [#1326](https://github.com/jpmorganchase/modular/pull/1326)
+  [`9c6cfe2`](https://github.com/jpmorganchase/modular/commit/9c6cfe2609f82d60d0237cdc110d9278526a27c1)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump @babel/core
+  from 7.16.7 to 7.16.12
+
 ## 3.0.1
 
 ### Patch Changes
