@@ -1,6 +1,6 @@
 {
   "name": "modular-views.macro",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "main": "build/index.macro.js",
   "exports": {
     ".": "./build/index.macro.js",

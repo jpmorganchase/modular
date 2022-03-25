@@ -1,5 +1,14 @@
 # eslint-config-modular-app
 
+## 2.0.3
+
+### Patch Changes
+
+- [#1283](https://github.com/jpmorganchase/modular/pull/1283)
+  [`918d1f1`](https://github.com/jpmorganchase/modular/commit/918d1f15b7ae27141ad180ff634aade6ca524117)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Upgrade @babel scope
+  packages in modular.
+
 ## 2.0.2
 
 ### Patch Changes
