@@ -1,12 +1,12 @@
 {
   "mode": "pre",
-  "tag": "next",
+  "tag": "alpha-webpack5",
   "initialVersions": {
-    "create-modular-react-app": "2.1.2",
-    "eslint-config-modular-app": "2.0.2",
-    "modular-scripts": "2.2.0",
+    "create-modular-react-app": "2.1.3",
+    "eslint-config-modular-app": "2.0.3",
+    "modular-scripts": "2.3.0",
     "modular-site": "1.0.1",
-    "modular-views.macro": "3.0.1",
+    "modular-views.macro": "3.1.0",
     "tree-view-for-tests": "2.0.0"
   },
   "changesets": []
