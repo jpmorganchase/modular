@@ -1,5 +1,14 @@
 # create-modular-react-app
 
+## 2.1.4
+
+### Patch Changes
+
+- [#1517](https://github.com/jpmorganchase/modular/pull/1517)
+  [`22c2114`](https://github.com/jpmorganchase/modular/commit/22c2114989001e732b87c34aad20729db676f216)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - fix node-12
+  incompatible javascript
+
 ## 2.1.3
 
 ### Patch Changes
