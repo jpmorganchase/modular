@@ -1,5 +1,19 @@
 # modular-scripts
 
+## 2.3.1
+
+### Patch Changes
+
+- [#1518](https://github.com/jpmorganchase/modular/pull/1518)
+  [`d896289`](https://github.com/jpmorganchase/modular/commit/d896289b7bda361676f643eba6c93f38ecc9afb3)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Revert
+  node engine range
+
+* [#1517](https://github.com/jpmorganchase/modular/pull/1517)
+  [`22c2114`](https://github.com/jpmorganchase/modular/commit/22c2114989001e732b87c34aad20729db676f216)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - fix node-12
+  incompatible javascript
+
 ## 2.3.0
 
 ### Minor Changes

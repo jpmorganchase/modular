@@ -1,6 +1,6 @@
 {
   "name": "modular-scripts",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "license": "Apache-2.0",
   "bin": {
     "modular": "dist-cjs/cli.js"
@@ -13,7 +13,7 @@
     "./tsconfig.json": "./tsconfig.json"
   },
   "engines": {
-    "node": "^12.22.0 || ^14.17.0 || >=16.0.0"
+    "node": "^12.13.0 || ^14.15.0 || >=15.0.0"
   },
   "scripts": {
     "modular": "ts-node src/cli.ts",
