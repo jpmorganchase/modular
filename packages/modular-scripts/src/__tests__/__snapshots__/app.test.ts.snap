@@ -4,12 +4,12 @@ exports[`When working with a nested app can generate a asset-manifest 1`] = `
 "{
   \\"files\\": {
     \\"main.css\\": \\"/static/css/main.1a7488ce.css\\",
-    \\"main.js\\": \\"/static/js/main.8c5bc4d2.js\\",
+    \\"main.js\\": \\"/static/js/main.3563e93f.js\\",
     \\"runtime-main.js\\": \\"/static/js/runtime-main.83e93d07.js\\",
     \\"static/js/788.78cfb599.js\\": \\"/static/js/788.78cfb599.js\\",
     \\"index.html\\": \\"/index.html\\",
     \\"main.1a7488ce.css.map\\": \\"/static/css/main.1a7488ce.css.map\\",
-    \\"main.8c5bc4d2.js.map\\": \\"/static/js/main.8c5bc4d2.js.map\\",
+    \\"main.3563e93f.js.map\\": \\"/static/js/main.3563e93f.js.map\\",
     \\"runtime-main.83e93d07.js.map\\": \\"/static/js/runtime-main.83e93d07.js.map\\",
     \\"788.78cfb599.js.map\\": \\"/static/js/788.78cfb599.js.map\\"
   },
@@ -17,7 +17,7 @@ exports[`When working with a nested app can generate a asset-manifest 1`] = `
     \\"static/js/runtime-main.83e93d07.js\\",
     \\"static/js/788.78cfb599.js\\",
     \\"static/css/main.1a7488ce.css\\",
-    \\"static/js/main.8c5bc4d2.js\\"
+    \\"static/js/main.3563e93f.js\\"
   ]
 }"
 `;
@@ -8428,7 +8428,7 @@ exports[`When working with a nested app can generate a hashed main js chunk in t
   globalThis.webpackChunk_scoped_sample_app || []).push([
   [179],
   {
-    831: (M, L, j) => {
+    591: (M, L, j) => {
       var N = j(735),
         I = j(788);
       const u = function () {
@@ -8471,13 +8471,13 @@ exports[`When working with a nested app can generate a hashed main js chunk in t
   },
   (M) => {
     M.O(0, [788], () => {
-      return (L = 831), M((M.s = L));
+      return (L = 591), M((M.s = L));
       var L;
     });
     M.O();
   },
 ]);
-//# sourceMappingURL=main.8c5bc4d2.js.map
+//# sourceMappingURL=main.3563e93f.js.map
 "
 `;
 
@@ -8618,7 +8618,7 @@ exports[`When working with a nested app can generate a index.html 1`] = `
       })();
     </script>
     <script defer=\\"defer\\" src=\\"/static/js/788.78cfb599.js\\"></script>
-    <script defer=\\"defer\\" src=\\"/static/js/main.8c5bc4d2.js\\"></script>
+    <script defer=\\"defer\\" src=\\"/static/js/main.3563e93f.js\\"></script>
     <link href=\\"/static/css/main.1a7488ce.css\\" rel=\\"stylesheet\\" />
   </head>
   <body>
@@ -8664,16 +8664,16 @@ exports[`when working with a NODE_ENV app can generate a hashed js chunk in the 
   globalThis.webpackChunknode_env_app || []).push([
   [179],
   {
-    740: () => {
+    908: () => {
       console.log(\\"production\\");
     },
   },
   (o) => {
     var e;
-    (e = 740), o((o.s = e));
+    (e = 908), o((o.s = e));
   },
 ]);
-//# sourceMappingURL=main.6b9113da.js.map
+//# sourceMappingURL=main.1c6de6d0.js.map
 "
 `;
 
@@ -8681,12 +8681,12 @@ exports[`when working with an app can generate a asset-manifest 1`] = `
 "{
   \\"files\\": {
     \\"main.css\\": \\"/static/css/main.1a7488ce.css\\",
-    \\"main.js\\": \\"/static/js/main.14cec3f9.js\\",
+    \\"main.js\\": \\"/static/js/main.97cda94b.js\\",
     \\"runtime-main.js\\": \\"/static/js/runtime-main.de9fd74d.js\\",
     \\"static/js/316.7a4d5eb7.js\\": \\"/static/js/316.7a4d5eb7.js\\",
     \\"index.html\\": \\"/index.html\\",
     \\"main.1a7488ce.css.map\\": \\"/static/css/main.1a7488ce.css.map\\",
-    \\"main.14cec3f9.js.map\\": \\"/static/js/main.14cec3f9.js.map\\",
+    \\"main.97cda94b.js.map\\": \\"/static/js/main.97cda94b.js.map\\",
     \\"runtime-main.de9fd74d.js.map\\": \\"/static/js/runtime-main.de9fd74d.js.map\\",
     \\"316.7a4d5eb7.js.map\\": \\"/static/js/316.7a4d5eb7.js.map\\"
   },
@@ -8694,7 +8694,7 @@ exports[`when working with an app can generate a asset-manifest 1`] = `
     \\"static/js/runtime-main.de9fd74d.js\\",
     \\"static/js/316.7a4d5eb7.js\\",
     \\"static/css/main.1a7488ce.css\\",
-    \\"static/js/main.14cec3f9.js\\"
+    \\"static/js/main.97cda94b.js\\"
   ]
 }"
 `;
@@ -8705,7 +8705,7 @@ exports[`when working with an app can generate a hashed main js chunk in the js 
   globalThis.webpackChunksample_app || []).push([
   [179],
   {
-    529: (M, L, j) => {
+    540: (M, L, j) => {
       var N = j(784),
         u = j(316);
       const I = function () {
@@ -8753,13 +8753,13 @@ exports[`when working with an app can generate a hashed main js chunk in the js 
   },
   (M) => {
     M.O(0, [316], () => {
-      return (L = 529), M((M.s = L));
+      return (L = 540), M((M.s = L));
       var L;
     });
     M.O();
   },
 ]);
-//# sourceMappingURL=main.14cec3f9.js.map
+//# sourceMappingURL=main.97cda94b.js.map
 "
 `;
 
@@ -17183,7 +17183,7 @@ exports[`when working with an app can generate a index.html 1`] = `
       })();
     </script>
     <script defer=\\"defer\\" src=\\"/static/js/316.7a4d5eb7.js\\"></script>
-    <script defer=\\"defer\\" src=\\"/static/js/main.14cec3f9.js\\"></script>
+    <script defer=\\"defer\\" src=\\"/static/js/main.97cda94b.js\\"></script>
     <link href=\\"/static/css/main.1a7488ce.css\\" rel=\\"stylesheet\\" />
   </head>
   <body>
