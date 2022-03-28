@@ -12,17 +12,13 @@ module.exports = (api) => {
         '@babel/preset-env',
         {
           targets: {
-            node: 'current',
+            // TODO: can we get this to read from package.json somehow..?
+            node: '12',
           },
         },
       ],
-      '@babel/preset-react',
+      '@babel/preset-typescript',
     ],
-    overrides: [
-      {
-        test: /\.tsx?$/,
-        presets: ['@babel/preset-typescript'],
-      },
-    ],
+    plugins: ['@babel/plugin-proposal-class-properties'],
   };
 };
