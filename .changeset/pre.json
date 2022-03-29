@@ -9,5 +9,8 @@
     "modular-views.macro": "3.1.0",
     "tree-view-for-tests": "2.0.0"
   },
-  "changesets": []
+  "changesets": [
+    "silver-dolphins-remember",
+    "twelve-days-mix"
+  ]
 }
