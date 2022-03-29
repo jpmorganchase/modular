@@ -1,5 +1,21 @@
 # modular-scripts
 
+## 3.0.0-alpha-webpack5.0
+
+### Major Changes
+
+- [#1421](https://github.com/jpmorganchase/modular/pull/1421)
+  [`e5d772f`](https://github.com/jpmorganchase/modular/commit/e5d772f1b956ea5d2f8c46457504ac1154c7c7f0)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Upgrade
+  to Webpack 5
+
+### Patch Changes
+
+- [#1510](https://github.com/jpmorganchase/modular/pull/1510)
+  [`4846d21`](https://github.com/jpmorganchase/modular/commit/4846d21db0d5aebff1a5041008bbf00e7986c036)
+  Thanks [@cheemcheem](https://github.com/cheemcheem)! - Fix bug that prevented
+  lint diff from running
+
 ## 2.3.2
 
 ### Patch Changes
@@ -30,9 +46,6 @@
   from 4.0.0 to 5.0.0
 
 * [#1510](https://github.com/jpmorganchase/modular/pull/1510)
-  [`4846d21`](https://github.com/jpmorganchase/modular/commit/4846d21db0d5aebff1a5041008bbf00e7986c036)
-  Thanks [@cheemcheem](https://github.com/cheemcheem)! - Fix bug that prevented
-  lint diff from running
 
 ## 2.3.1
 
