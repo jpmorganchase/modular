@@ -57,7 +57,7 @@ export default async function build(target: string, paths: Paths) {
   const html = await createIndex(paths, result, env.raw, false);
   await fs.writeFile(
     path.join(paths.appBuild, 'index.html'),
-    minimize.minify(html, {
+    await minimize.minify(html, {
       html5: true,
       collapseBooleanAttributes: true,
       collapseWhitespace: true,

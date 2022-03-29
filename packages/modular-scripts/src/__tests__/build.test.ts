@@ -51,14 +51,14 @@ describe('WHEN building with preserve modules', () => {
       ├─ README.md #1jv3l2q
       ├─ dist-cjs
       │  ├─ index.js #y5z0kw
-      │  ├─ index.js.map #1ppp712
+      │  ├─ index.js.map #1gofapj
       │  ├─ runAsync.js #kr3qrh
-      │  └─ runAsync.js.map #18daxam
+      │  └─ runAsync.js.map #19q2dqp
       ├─ dist-es
       │  ├─ index.js #7arwpf
-      │  ├─ index.js.map #1in842g
+      │  ├─ index.js.map #p3aqj2
       │  ├─ runAsync.js #1tt0e7o
-      │  └─ runAsync.js.map #1qvfs9
+      │  └─ runAsync.js.map #1tlnsv0
       ├─ dist-types
       │  ├─ index.d.ts #12l2tmi
       │  └─ runAsync.d.ts #1iek7az
@@ -149,10 +149,10 @@ describe('WHEN building packages with private cross-package dependencies', () =>
       ├─ README.md #1jv3l2q
       ├─ dist-cjs
       │  ├─ index.js #1gj4b9h
-      │  └─ index.js.map #39c8bu
+      │  └─ index.js.map #1v4zj6b
       ├─ dist-es
       │  ├─ index.js #xezjee
-      │  └─ index.js.map #89b1k5
+      │  └─ index.js.map #isxuu
       ├─ dist-types
       │  └─ index.d.ts #6hjmh9
       └─ package.json"
