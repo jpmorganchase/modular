@@ -78,9 +78,9 @@ describe('when working with a NODE_ENV app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'node-env-app')))
       .toMatchInlineSnapshot(`
       "node-env-app
-      ├─ asset-manifest.json #1vns284
+      ├─ asset-manifest.json #5npfrr
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #1ywtbgo
+      ├─ index.html #9j6678
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -88,8 +88,8 @@ describe('when working with a NODE_ENV app', () => {
       ├─ robots.txt #1sjb8b3
       └─ static
          └─ js
-            ├─ main.707fd976.js #74ab2u
-            ├─ main.707fd976.js.map #ew9uf1
+            ├─ main.a482480b.js #1xwb1v
+            ├─ main.a482480b.js.map #1vulei2
             ├─ runtime-main.97707f9d.js #15lezt9
             └─ runtime-main.97707f9d.js.map #12i5ddp"
     `);
@@ -106,12 +106,12 @@ describe('when working with a NODE_ENV app', () => {
               'node-env-app',
               'static',
               'js',
-              'main.707fd976.js',
+              'main.a482480b.js',
             ),
           ),
         ),
         {
-          filepath: 'main.707fd976.js',
+          filepath: 'main.a482480b.js',
         },
       ),
     ).toMatchSnapshot();
@@ -134,9 +134,9 @@ describe('When working with a nested app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'scoped-sample-app')))
       .toMatchInlineSnapshot(`
       "scoped-sample-app
-      ├─ asset-manifest.json #77lyd1
+      ├─ asset-manifest.json #1wkfjg2
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #c1pgqr
+      ├─ index.html #sphr07
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -150,8 +150,8 @@ describe('When working with a nested app', () => {
             ├─ 788.bbd34b33.js #33pg04
             ├─ 788.bbd34b33.js.LICENSE.txt #eplx8h
             ├─ 788.bbd34b33.js.map #1xdy7n0
-            ├─ main.f726ecf6.js #1q0vdig
-            ├─ main.f726ecf6.js.map #44oybo
+            ├─ main.c2bf6fcb.js #3w772b
+            ├─ main.c2bf6fcb.js.map #1rym0t9
             ├─ runtime-main.b18f5039.js #qy2lhb
             └─ runtime-main.b18f5039.js.map #1o0el5f"
     `);
@@ -249,12 +249,12 @@ describe('When working with a nested app', () => {
               'scoped-sample-app',
               'static',
               'js',
-              'main.f726ecf6.js',
+              'main.c2bf6fcb.js',
             ),
           ),
         ),
         {
-          filepath: 'main.f726ecf6.js',
+          filepath: 'main.c2bf6fcb.js',
         },
       ),
     ).toMatchSnapshot();
@@ -352,9 +352,9 @@ describe('when working with an app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'sample-app')))
       .toMatchInlineSnapshot(`
       "sample-app
-      ├─ asset-manifest.json #11gedf9
+      ├─ asset-manifest.json #4fw8y3
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #banez9
+      ├─ index.html #q5x53d
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -368,8 +368,8 @@ describe('when working with an app', () => {
             ├─ 316.394ef80b.js #1mv4xg9
             ├─ 316.394ef80b.js.LICENSE.txt #eplx8h
             ├─ 316.394ef80b.js.map #b33pzn
-            ├─ main.3251fbc2.js #1lpo2kh
-            ├─ main.3251fbc2.js.map #1w9mxrf
+            ├─ main.a7fe4bac.js #1ovpx07
+            ├─ main.a7fe4bac.js.map #1hjzrkt
             ├─ runtime-main.7150bca8.js #hhaxbg
             └─ runtime-main.7150bca8.js.map #1pmss5r"
     `);
@@ -437,12 +437,12 @@ describe('when working with an app', () => {
               'sample-app',
               'static',
               'js',
-              'main.3251fbc2.js',
+              'main.a7fe4bac.js',
             ),
           ),
         ),
         {
-          filepath: 'main.3251fbc2.js',
+          filepath: 'main.a7fe4bac.js',
         },
       ),
     ).toMatchSnapshot();
