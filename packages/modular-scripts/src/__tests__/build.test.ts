@@ -149,10 +149,10 @@ describe('WHEN building packages with private cross-package dependencies', () =>
       ├─ README.md #1jv3l2q
       ├─ dist-cjs
       │  ├─ index.js #1gj4b9h
-      │  └─ index.js.map #39c8bu
+      │  └─ index.js.map #1v4zj6b
       ├─ dist-es
       │  ├─ index.js #xezjee
-      │  └─ index.js.map #89b1k5
+      │  └─ index.js.map #isxuu
       ├─ dist-types
       │  └─ index.d.ts #6hjmh9
       └─ package.json"
