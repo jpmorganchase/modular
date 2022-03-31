@@ -503,10 +503,10 @@ describe('modular-scripts', () => {
         ├─ README.md #1jv3l2q
         ├─ dist-cjs
         │  ├─ index.js #rq9uxe
-        │  └─ index.js.map #17f4e4r
+        │  └─ index.js.map #1l2chuu
         ├─ dist-es
         │  ├─ index.js #3bszhr
-        │  └─ index.js.map #8kaoa5
+        │  └─ index.js.map #gt6dtg
         ├─ dist-types
         │  └─ index.d.ts #f68aj
         └─ package.json"
@@ -573,10 +573,10 @@ describe('modular-scripts', () => {
         ├─ README.md #1jv3l2q
         ├─ dist-cjs
         │  ├─ nested-sample-package.cjs.js #kv2xzp
-        │  └─ nested-sample-package.cjs.js.map #wxcsbr
+        │  └─ nested-sample-package.cjs.js.map #1s14uw6
         ├─ dist-es
         │  ├─ nested-sample-package.es.js #11z6hlv
-        │  └─ nested-sample-package.es.js.map #12ht1cr
+        │  └─ nested-sample-package.es.js.map #1t6z42y
         ├─ dist-types
         │  └─ index.d.ts #f68aj
         └─ package.json"

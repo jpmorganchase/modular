@@ -1,6 +1,6 @@
 {
   "name": "modular-scripts",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "license": "Apache-2.0",
   "bin": {
     "modular": "dist-cjs/cli.js"
@@ -13,7 +13,7 @@
     "./tsconfig.json": "./tsconfig.json"
   },
   "engines": {
-    "node": "^12.22.0 || ^14.17.0 || >=16.0.0"
+    "node": "^12.13.0 || ^14.15.0 || >=15.0.0"
   },
   "scripts": {
     "modular": "ts-node src/cli.ts",
@@ -39,7 +39,7 @@
     "case-sensitive-paths-webpack-plugin": "2.4.0",
     "chalk": "4.1.2",
     "change-case": "4.1.2",
-    "commander": "8.2.0",
+    "commander": "9.1.0",
     "cross-spawn": "7.0.3",
     "css-loader": "4.3.0",
     "dedent": "0.7.0",
@@ -96,7 +96,7 @@
     "resolve": "1.21.0",
     "resolve-url-loader": "5.0.0-beta.1",
     "rimraf": "3.0.2",
-    "rollup": "2.67.2",
+    "rollup": "2.70.1",
     "rollup-plugin-esbuild": "^4.7.2",
     "rollup-plugin-postcss": "4.0.2",
     "sass-loader": "10.0.5",
