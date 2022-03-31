@@ -1,6 +1,6 @@
 {
   "name": "eslint-config-modular-app",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "license": "Apache-2.0",
   "main": "index.js",
   "exports": {
@@ -20,7 +20,7 @@
     "eslint-plugin-jsx-a11y": "6.5.1",
     "eslint-plugin-react": "7.29.4",
     "eslint-plugin-react-hooks": "4.3.0",
-    "eslint-plugin-testing-library": "5.1.0"
+    "eslint-plugin-testing-library": "4.12.4"
   },
   "peerDependencies": {
     "typescript": "^4.3.5"

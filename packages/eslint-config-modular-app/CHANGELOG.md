@@ -1,5 +1,14 @@
 # eslint-config-modular-app
 
+## 2.0.4
+
+### Patch Changes
+
+- [#1518](https://github.com/jpmorganchase/modular/pull/1518)
+  [`d896289`](https://github.com/jpmorganchase/modular/commit/d896289b7bda361676f643eba6c93f38ecc9afb3)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Revert
+  node engine range
+
 ## 2.0.3
 
 ### Patch Changes
