@@ -161,6 +161,7 @@ module.exports = function (webpackEnv) {
 
           // If the module is absolute and it is in the import map, we want to externalise it
           if (
+            parsedModule &&
             parsedModule.dependencyName &&
             importMap[parsedModule.dependencyName]
           ) {
