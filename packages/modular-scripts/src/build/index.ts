@@ -182,8 +182,8 @@ async function buildAppOrView(
   // If view, write the synthetic index.html and create a trampoline file pointing to the main entrypoint
   // This is for both esbuild and webpack so it lives here. If app, instead, the public/index.html file is generated specifical in different ways.
   if (!isApp) {
-    if (!jsEntryPoint) {
-      throw new Error("Can't find main entrypoint after building");
+    if (!jsEntryPoint || !cssEntryPoint) {
+      throw new Error("Can't find entrypoints after building");
     }
     // Create synthetic index
     const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
@@ -236,6 +236,7 @@ async function buildAppOrView(
       dependencies: targetPackageJson.dependencies,
       bundledDependencies: targetPackageJson.bundledDependencies,
       module: jsEntryPoint,
+      style: cssEntryPoint,
     },
     { spaces: 2 },
   );
