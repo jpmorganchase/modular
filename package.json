@@ -80,7 +80,7 @@
     "husky": "7.0.4",
     "is-ci": "2.0.0",
     "lint-staged": "12.3.7",
-    "micromatch": "4.0.4",
+    "micromatch": "4.0.5",
     "patch-package": "^6.4.7",
     "pptr-testing-library": "0.7.0",
     "prettier": "2.6.0",
