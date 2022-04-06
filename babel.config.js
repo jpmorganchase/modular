@@ -12,7 +12,7 @@ module.exports = (api) => {
         '@babel/preset-env',
         {
           targets: {
-            node: 'current',
+            node: '14',
           },
         },
       ],
