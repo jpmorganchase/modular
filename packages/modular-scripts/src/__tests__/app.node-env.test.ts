@@ -31,7 +31,7 @@ function cleanup() {
 }
 
 beforeAll(cleanup);
-// afterAll(cleanup);
+afterAll(cleanup);
 
 describe('when working with a NODE_ENV app', () => {
   beforeAll(async () => {
