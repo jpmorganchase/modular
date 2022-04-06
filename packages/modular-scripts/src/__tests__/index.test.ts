@@ -112,7 +112,6 @@ describe('modular-scripts', () => {
       expect(tree(path.join(packagesPath, 'sample-package')))
         .toMatchInlineSnapshot(`
         "sample-package
-        ├─ README.md #1jv3l2q
         ├─ package.json
         └─ src
            ├─ __tests__
@@ -126,7 +125,6 @@ describe('modular-scripts', () => {
       expect(tree(path.join(packagesPath, 'nested/sample-nested-package')))
         .toMatchInlineSnapshot(`
         "sample-nested-package
-        ├─ README.md #1jv3l2q
         ├─ package.json
         └─ src
            ├─ __tests__
@@ -213,10 +211,10 @@ describe('modular-scripts', () => {
             "react": "17.0.2",
           },
           "files": Array [
-            "README.md",
             "dist-cjs",
             "dist-es",
             "dist-types",
+            "README.md",
           ],
           "license": "UNLICENSED",
           "main": "dist-cjs/index.js",
@@ -326,10 +324,10 @@ describe('modular-scripts', () => {
         Object {
           "dependencies": Object {},
           "files": Array [
-            "README.md",
             "dist-cjs",
             "dist-es",
             "dist-types",
+            "README.md",
           ],
           "license": "UNLICENSED",
           "main": "dist-cjs/index.js",
@@ -345,7 +343,6 @@ describe('modular-scripts', () => {
       expect(tree(path.join(modularRoot, 'dist', 'sample-package')))
         .toMatchInlineSnapshot(`
         "sample-package
-        ├─ README.md #1jv3l2q
         ├─ dist-cjs
         │  ├─ index.js #rq9uxe
         │  └─ index.js.map #1l2chuu
@@ -396,10 +393,10 @@ describe('modular-scripts', () => {
         Object {
           "dependencies": Object {},
           "files": Array [
-            "README.md",
             "dist-cjs",
             "dist-es",
             "dist-types",
+            "README.md",
           ],
           "license": "UNLICENSED",
           "main": "dist-cjs/nested-sample-package.cjs.js",
@@ -415,7 +412,6 @@ describe('modular-scripts', () => {
       expect(tree(path.join(modularRoot, 'dist', 'nested-sample-package')))
         .toMatchInlineSnapshot(`
         "nested-sample-package
-        ├─ README.md #1jv3l2q
         ├─ dist-cjs
         │  ├─ nested-sample-package.cjs.js #kv2xzp
         │  └─ nested-sample-package.cjs.js.map #1s14uw6
