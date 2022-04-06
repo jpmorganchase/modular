@@ -148,7 +148,6 @@ describe('WHEN building packages with private cross-package dependencies', () =>
     expect(tree(path.join(modularRoot, 'dist', dependentPackage)))
       .toMatchInlineSnapshot(`
       "sample-depending-package
-      ├─ README.md #1jv3l2q
       ├─ dist-cjs
       │  ├─ index.js #1gj4b9h
       │  └─ index.js.map #1j96nz6
