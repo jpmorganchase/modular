@@ -164,7 +164,7 @@ describe('modular-scripts', () => {
       if (port) {
         // kill all processes listening to the dev server port
         exec(
-          `lsof -n -i4TCP:${port} | grep LISTEN | awk '{ print $2 }' | xargs kill`,
+          `lsof -n -i4TCP:${port} | grep LISTEN | awk '{ print $2 }' | xargs kill -9`,
           (err) => {
             if (err) {
               console.log('err: ', err);
@@ -265,10 +265,10 @@ describe('modular-scripts', () => {
         "sample-view
         ├─ dist-cjs
         │  ├─ index.js #a7k6ic
-        │  └─ index.js.map #1825qkv
+        │  └─ index.js.map #1pwjhqx
         ├─ dist-es
         │  ├─ index.js #1ymmv5l
-        │  └─ index.js.map #1kl5sc5
+        │  └─ index.js.map #xpk3zp
         ├─ dist-types
         │  └─ index.d.ts #1vloh7q
         └─ package.json"
@@ -348,10 +348,10 @@ describe('modular-scripts', () => {
         "sample-package
         ├─ dist-cjs
         │  ├─ index.js #rq9uxe
-        │  └─ index.js.map #17f4e4r
+        │  └─ index.js.map #1l2chuu
         ├─ dist-es
         │  ├─ index.js #3bszhr
-        │  └─ index.js.map #8kaoa5
+        │  └─ index.js.map #gt6dtg
         ├─ dist-types
         │  └─ index.d.ts #f68aj
         └─ package.json"
@@ -420,10 +420,10 @@ describe('modular-scripts', () => {
         "nested-sample-package
         ├─ dist-cjs
         │  ├─ nested-sample-package.cjs.js #kv2xzp
-        │  └─ nested-sample-package.cjs.js.map #wxcsbr
+        │  └─ nested-sample-package.cjs.js.map #1s14uw6
         ├─ dist-es
         │  ├─ nested-sample-package.es.js #11z6hlv
-        │  └─ nested-sample-package.es.js.map #12ht1cr
+        │  └─ nested-sample-package.es.js.map #1t6z42y
         ├─ dist-types
         │  └─ index.d.ts #f68aj
         └─ package.json"

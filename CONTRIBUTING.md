@@ -43,12 +43,18 @@ git clone https://github.com/your-username/modular.git
 Running the `build`
 
 ```sh
-npm run build
+yarn build
 ```
 
-### Docs
+### Testing
 
-TBC
+Due to the parallization of tasks within the modular test suite tests must be
+run in a single process and can't be parallized. This setup is handled in the
+`test` command via
+
+```sh
+yarn test
+```
 
 ### Examples
 

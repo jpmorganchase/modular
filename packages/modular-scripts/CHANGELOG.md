@@ -1,5 +1,205 @@
 # modular-scripts
 
+## 2.3.1
+
+### Patch Changes
+
+- [#1518](https://github.com/jpmorganchase/modular/pull/1518)
+  [`d896289`](https://github.com/jpmorganchase/modular/commit/d896289b7bda361676f643eba6c93f38ecc9afb3)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Revert
+  node engine range
+
+* [#1517](https://github.com/jpmorganchase/modular/pull/1517)
+  [`22c2114`](https://github.com/jpmorganchase/modular/commit/22c2114989001e732b87c34aad20729db676f216)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - fix node-12
+  incompatible javascript
+
+## 2.3.0
+
+### Minor Changes
+
+- [#1112](https://github.com/jpmorganchase/modular/pull/1112)
+  [`d08e4c2`](https://github.com/jpmorganchase/modular/commit/d08e4c2b15db93ef2adde961651254491db94140)
+  Thanks [@joshwooding](https://github.com/joshwooding)! - Support yarn v3
+
+* [#1150](https://github.com/jpmorganchase/modular/pull/1150)
+  [`8b0826e`](https://github.com/jpmorganchase/modular/commit/8b0826e8cedf580bcf9c7a51866195e430ba3ddb)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Replace babel with
+  esbuild for package compilation
+
+- [#1163](https://github.com/jpmorganchase/modular/pull/1163)
+  [`e180686`](https://github.com/jpmorganchase/modular/commit/e18068668aa95e87fad66795ca7d48352b4e40cb)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Add
+  "modular rename" command, which re-writes the name of a package in its
+  package.json and its usages in the other packages.
+
+* [#1285](https://github.com/jpmorganchase/modular/pull/1285)
+  [`9582380`](https://github.com/jpmorganchase/modular/commit/958238088f1b043cfafc266a4ece497b63545120)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Generate
+  dependency manifest (package.json) for apps. This includes all the
+  dependencies, either installed via the package's `package.json` or hoisted to
+  the root's `package.json`. If a dependency is imported in code but not
+  specified in the `package.json`s, the app will not build anymore.
+
+### Patch Changes
+
+- [#954](https://github.com/jpmorganchase/modular/pull/954)
+  [`b5bfb91`](https://github.com/jpmorganchase/modular/commit/b5bfb910f68cafcd148063a5e4a40071df1e15cc)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump shell-quote
+  from 1.7.2 to 1.7.3
+
+* [#1283](https://github.com/jpmorganchase/modular/pull/1283)
+  [`918d1f1`](https://github.com/jpmorganchase/modular/commit/918d1f15b7ae27141ad180ff634aade6ca524117)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Upgrade @babel scope
+  packages in modular.
+
+- [#1362](https://github.com/jpmorganchase/modular/pull/1362)
+  [`05cecf2`](https://github.com/jpmorganchase/modular/commit/05cecf2aa52a75b78163390978700acece2aa78b)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump dotenv from
+  14.2.0 to 16.0.0
+
+* [#1447](https://github.com/jpmorganchase/modular/pull/1447)
+  [`a7e0b07`](https://github.com/jpmorganchase/modular/commit/a7e0b0749ad82783511cb92c77171995796465a4)
+  Thanks [@cangarugula](https://github.com/cangarugula)! - Removed initial git
+  commit of create-modular-react-app and upgraded node versions in
+  modular-scripts
+
+- [#1262](https://github.com/jpmorganchase/modular/pull/1262)
+  [`c36dfb5`](https://github.com/jpmorganchase/modular/commit/c36dfb5bc0cc89b2c9c8653f5edcc72b9e982302)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  @rollup/plugin-node-resolve from 13.0.6 to 13.1.3
+
+* [#1310](https://github.com/jpmorganchase/modular/pull/1310)
+  [`375a66d`](https://github.com/jpmorganchase/modular/commit/375a66d2c6260145c27d19c2a042ad0aa5a66ba4)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  @babel/preset-env from 7.16.8 to 7.16.10
+
+- [#1378](https://github.com/jpmorganchase/modular/pull/1378)
+  [`1548e65`](https://github.com/jpmorganchase/modular/commit/1548e6509328f305e3f52bd30a9a81ca9b521d05)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump rollup from
+  2.63.0 to 2.67.1
+
+* [#1467](https://github.com/jpmorganchase/modular/pull/1467)
+  [`50f7912`](https://github.com/jpmorganchase/modular/commit/50f79121f977a7bcee2eb8ce388dc803581da678)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump postcss from
+  8.4.7 to 8.4.8
+
+- [#1410](https://github.com/jpmorganchase/modular/pull/1410)
+  [`91d4781`](https://github.com/jpmorganchase/modular/commit/91d4781a6ef1f83cd0f91948106843a2ef0ec030)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump esbuild from
+  0.14.21 to 0.14.22
+
+* [#1346](https://github.com/jpmorganchase/modular/pull/1346)
+  [`61d60cf`](https://github.com/jpmorganchase/modular/commit/61d60cffe53354f7063e9cdba5eaef4157748c43)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump postcss from
+  8.4.5 to 8.4.6
+
+- [#1409](https://github.com/jpmorganchase/modular/pull/1409)
+  [`f5c1cb8`](https://github.com/jpmorganchase/modular/commit/f5c1cb81756893415d9f316787b59aff5dbb9ff3)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Fix
+  reload on code change when serving an esbuild app or view
+
+* [#1278](https://github.com/jpmorganchase/modular/pull/1278)
+  [`6baa4c7`](https://github.com/jpmorganchase/modular/commit/6baa4c7fcb7816234cbedb64067c762935cd35ed)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump dotenv from
+  10.0.0 to 11.0.0
+
+- [#1394](https://github.com/jpmorganchase/modular/pull/1394)
+  [`4b0cfda`](https://github.com/jpmorganchase/modular/commit/4b0cfda537962a9de6c9e840454f3f1e83c5b68e)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump rollup from
+  2.67.1 to 2.67.2
+
+* [#1433](https://github.com/jpmorganchase/modular/pull/1433)
+  [`7489071`](https://github.com/jpmorganchase/modular/commit/74890715ab578f6225e461be872531d8c37c8eca)
+  Thanks [@benpryke](https://github.com/benpryke)! - fix: package builds respect
+  --private option
+
+- [#1282](https://github.com/jpmorganchase/modular/pull/1282)
+  [`a8fdfd0`](https://github.com/jpmorganchase/modular/commit/a8fdfd07ab30b08687a8946191adab41a3776964)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump browserslist
+  from 4.18.1 to 4.19.1.
+
+* [#1413](https://github.com/jpmorganchase/modular/pull/1413)
+  [`7cca260`](https://github.com/jpmorganchase/modular/commit/7cca260b6a8ec08f71f4a15a7fde6556d7b31de8)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump express from
+  4.17.2 to 4.17.3
+
+- [#1260](https://github.com/jpmorganchase/modular/pull/1260)
+  [`3c0ffba`](https://github.com/jpmorganchase/modular/commit/3c0ffba2e732bddd7045928e54b2134dac4a175a)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump rollup from
+  2.60.2 to 2.63.0
+
+* [#1252](https://github.com/jpmorganchase/modular/pull/1252)
+  [`351d003`](https://github.com/jpmorganchase/modular/commit/351d003ad9fe9055ec17fd30be26a1112bade38f)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump resolve from
+  1.20.0 to 1.21.0
+
+- [#1271](https://github.com/jpmorganchase/modular/pull/1271)
+  [`bd8ed69`](https://github.com/jpmorganchase/modular/commit/bd8ed693ec79706b2a018ad1b12698da42b9e1a6)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump esbuild from
+  0.14.2 to 0.14.11
+
+* [#1173](https://github.com/jpmorganchase/modular/pull/1173)
+  [`af8a096`](https://github.com/jpmorganchase/modular/commit/af8a096d6149303316be83b8f714962369704890)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump @svgr/core
+  from 6.1.1 to 6.1.2
+
+- [#1282](https://github.com/jpmorganchase/modular/pull/1282)
+  [`a8fdfd0`](https://github.com/jpmorganchase/modular/commit/a8fdfd07ab30b08687a8946191adab41a3776964)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  postcss-preset-env from 7.0.1 to 7.2.3.
+
+* [#1207](https://github.com/jpmorganchase/modular/pull/1207)
+  [`b1f5fa4`](https://github.com/jpmorganchase/modular/commit/b1f5fa4539fa9c1359349c41c41edb99d89321be)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump express from
+  4.17.1 to 4.17.2
+
+- [#1365](https://github.com/jpmorganchase/modular/pull/1365)
+  [`d5767e1`](https://github.com/jpmorganchase/modular/commit/d5767e1c2f19f3533c2a565a01f419c244074df6)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  postcss-preset-env from 7.2.3 to 7.3.1
+
+* [#1407](https://github.com/jpmorganchase/modular/pull/1407)
+  [`f0e12ab`](https://github.com/jpmorganchase/modular/commit/f0e12abbd1fc6cd45901e2a1e6df8a691cc190a6)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  postcss-preset-env from 7.3.1 to 7.4.0
+
+- [#1409](https://github.com/jpmorganchase/modular/pull/1409)
+  [`f5c1cb8`](https://github.com/jpmorganchase/modular/commit/f5c1cb81756893415d9f316787b59aff5dbb9ff3)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Fix react
+  overlay to work with esbuild and not kill the server
+
+* [#1409](https://github.com/jpmorganchase/modular/pull/1409)
+  [`f5c1cb8`](https://github.com/jpmorganchase/modular/commit/f5c1cb81756893415d9f316787b59aff5dbb9ff3)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Stop
+  esbuild dev server from hanging when it's killed
+
+- [#1176](https://github.com/jpmorganchase/modular/pull/1176)
+  [`829c9f0`](https://github.com/jpmorganchase/modular/commit/829c9f03e67cd6e99c8eaedaaaa2afbc8a44e0ec)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump postcss from
+  8.4.4 to 8.4.5
+
+* [#1503](https://github.com/jpmorganchase/modular/pull/1503)
+  [`1a39571`](https://github.com/jpmorganchase/modular/commit/1a39571c455629063496bff1020eb949208e4e64)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Relax our
+  dependency discovery criteria to include dev dependencies and just warn when a
+  dependency is not found.
+
+- [#1171](https://github.com/jpmorganchase/modular/pull/1171)
+  [`4d22e75`](https://github.com/jpmorganchase/modular/commit/4d22e7593017b3e0fd62df14e70b86a4486e82ac)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  esbuild-loader from 2.16.0 to 2.17.0
+
+* [#1435](https://github.com/jpmorganchase/modular/pull/1435)
+  [`f423c00`](https://github.com/jpmorganchase/modular/commit/f423c00a81e276afa7bf602b9db75687b6a710c6)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump postcss from
+  8.4.6 to 8.4.7
+
+- [#1200](https://github.com/jpmorganchase/modular/pull/1200)
+  [`1acf385`](https://github.com/jpmorganchase/modular/commit/1acf385cd354fe1ea53398a6e4b82433bac50a36)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  babel-preset-react-app from 10.0.0 to 10.0.1
+
 ## 2.2.0
 
 ### Minor Changes

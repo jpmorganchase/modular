@@ -125,9 +125,14 @@ class DevServer {
   }
 
   shutdown = () => {
-    this.server?.close();
-    this.ws.getWss().close();
     this.esbuild?.stop?.();
+    this.ws.getWss().close();
+    this.server?.close();
+    process.nextTick(() => {
+      this.ws.getWss().clients.forEach((socket) => {
+        socket.terminate();
+      });
+    });
   };
 
   private hostRuntime = memoize(async () => {
@@ -151,6 +156,12 @@ class DevServer {
       define: {
         global: 'window',
       },
+      banner: {
+        js: `window.process = {
+          platform: '${process.platform}',
+          env: { NODE_ENV: 'developement' },
+        }`,
+      },
       write: false,
       outbase: RUNTIME_DIR,
       absWorkingDir: getModularRoot(),
@@ -173,7 +184,9 @@ class DevServer {
   };
 
   private metafileCallback = (metafile: esbuild.Metafile) => {
-    this.metafile = sanitizeMetafile(this.paths, metafile);
+    if (metafile) {
+      this.metafile = sanitizeMetafile(this.paths, metafile);
+    }
   };
 
   private firstCompilePluginCallback = () => {
@@ -194,7 +207,13 @@ class DevServer {
     this.esbuild = await esbuild.build({
       ...config,
       incremental: true,
-      watch: true,
+      watch: {
+        onRebuild: (_, result) => {
+          if (result) {
+            this.esbuild = result;
+          }
+        },
+      },
     });
   };
 

@@ -1,5 +1,23 @@
 # eslint-config-modular-app
 
+## 2.0.4
+
+### Patch Changes
+
+- [#1518](https://github.com/jpmorganchase/modular/pull/1518)
+  [`d896289`](https://github.com/jpmorganchase/modular/commit/d896289b7bda361676f643eba6c93f38ecc9afb3)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Revert
+  node engine range
+
+## 2.0.3
+
+### Patch Changes
+
+- [#1283](https://github.com/jpmorganchase/modular/pull/1283)
+  [`918d1f1`](https://github.com/jpmorganchase/modular/commit/918d1f15b7ae27141ad180ff634aade6ca524117)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Upgrade @babel scope
+  packages in modular.
+
 ## 2.0.2
 
 ### Patch Changes

@@ -65,7 +65,6 @@ export default function createEsbuildConfig(
     color: !isCi,
     define,
     metafile: true,
-    tsconfig: paths.appTsConfig,
     minify: true,
     outbase: paths.modularRoot,
     absWorkingDir: paths.modularRoot,

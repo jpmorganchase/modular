@@ -1,5 +1,24 @@
 # create-modular-react-app
 
+## 2.1.4
+
+### Patch Changes
+
+- [#1517](https://github.com/jpmorganchase/modular/pull/1517)
+  [`22c2114`](https://github.com/jpmorganchase/modular/commit/22c2114989001e732b87c34aad20729db676f216)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - fix node-12
+  incompatible javascript
+
+## 2.1.3
+
+### Patch Changes
+
+- [#1447](https://github.com/jpmorganchase/modular/pull/1447)
+  [`a7e0b07`](https://github.com/jpmorganchase/modular/commit/a7e0b0749ad82783511cb92c77171995796465a4)
+  Thanks [@cangarugula](https://github.com/cangarugula)! - Removed initial git
+  commit of create-modular-react-app and upgraded node versions in
+  modular-scripts
+
 ## 2.1.2
 
 ### Patch Changes
