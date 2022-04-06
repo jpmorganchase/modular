@@ -5779,10 +5779,10 @@ dot-prop@^5.2.0, dot-prop@^5.3.0:
   dependencies:
     is-obj "^2.0.0"
 
-dotenv-expand@8.0.2:
-  version "8.0.2"
-  resolved "https://registry.yarnpkg.com/dotenv-expand/-/dotenv-expand-8.0.2.tgz#c75c6f695cff061a9ed9a95a520c6cc84b912188"
-  integrity sha512-vKKAk+VOzAWOV/dPIeSYqhgC/TQY+6L6Ibkzfsr8xd1stdBsTuGu9asCOXgbYbBeS+f2Y6lqqEuw7riOA+xEUQ==
+dotenv-expand@8.0.3:
+  version "8.0.3"
+  resolved "https://registry.yarnpkg.com/dotenv-expand/-/dotenv-expand-8.0.3.tgz#29016757455bcc748469c83a19b36aaf2b83dd6e"
+  integrity sha512-SErOMvge0ZUyWd5B0NXMQlDkN+8r+HhVUsxgOO7IoPDOdDRD2JjExpN6y3KnFR66jsJMwSn1pqIivhU5rcJiNg==
 
 dotenv@16.0.0:
   version "16.0.0"
