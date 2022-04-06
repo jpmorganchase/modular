@@ -100,7 +100,6 @@ describe('modular-scripts', () => {
       expect(tree(path.join(packagesPath, 'sample-view')))
         .toMatchInlineSnapshot(`
         "sample-view
-        ├─ README.md #11adaka
         ├─ package.json
         └─ src
            ├─ __tests__
@@ -266,7 +265,6 @@ describe('modular-scripts', () => {
       expect(tree(path.join(modularRoot, 'dist', 'sample-view')))
         .toMatchInlineSnapshot(`
         "sample-view
-        ├─ README.md #11adaka
         ├─ dist-cjs
         │  ├─ index.js #a7k6ic
         │  └─ index.js.map #1pwjhqx

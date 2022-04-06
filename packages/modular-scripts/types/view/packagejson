@@ -5,8 +5,5 @@
   "license": "UNLICENSED",
   "modular": {
     "type": "view"
-  },
-  "files": [
-    "README.md"
-  ]
+  }
 }
