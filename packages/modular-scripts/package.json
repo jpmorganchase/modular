@@ -13,7 +13,7 @@
     "./tsconfig.json": "./tsconfig.json"
   },
   "engines": {
-    "node": "^12.20.0 || ^14.15.0 || >=15.0.0 || >=16.0.0"
+    "node": "^12.20.0 || ^14.15.0 || >=16.0.0"
   },
   "scripts": {
     "modular": "ts-node src/cli.ts",
