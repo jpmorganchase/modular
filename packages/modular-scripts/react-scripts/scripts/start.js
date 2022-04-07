@@ -64,30 +64,19 @@ choosePort(HOST, DEFAULT_PORT)
     const appName = require(paths.appPackageJson).name;
 
     const useTypeScript = !isCI && fs.existsSync(paths.appTsConfig);
-    const tscCompileOnError = process.env.TSC_COMPILE_ON_ERROR === 'true';
     const urls = prepareUrls(
       protocol,
       HOST,
       port,
       paths.publicUrlOrPath.slice(0, -1),
     );
-    const devSocket = {
-      warnings: (warnings) => {
-        devServer.sendMessage(devServer.sockets, 'warnings', warnings);
-      },
-      errors: (errors) => {
-        devServer.sendMessage(devServer.sockets, 'errors', errors);
-      },
-    };
     // Create a webpack compiler that is configured with custom messages.
     // Only run typecheck if not in CI env
     const compiler = createCompiler({
       appName,
       config,
-      devSocket,
       urls,
       useTypeScript,
-      tscCompileOnError,
       webpack,
     });
 

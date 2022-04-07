@@ -11,9 +11,8 @@ const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const InlineChunkHtmlPlugin = require('../../react-dev-utils/InlineChunkHtmlPlugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const safePostCssParser = require('postcss-safe-parser');
-const ManifestPlugin = require('webpack-manifest-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const { info } = require('../../react-dev-utils/logger');
 const InterpolateHtmlPlugin = require('../../react-dev-utils/InterpolateHtmlPlugin');
 const WatchMissingNodeModulesPlugin = require('../../react-dev-utils/WatchMissingNodeModulesPlugin');
@@ -24,22 +23,25 @@ const modules = require('./modules');
 const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('../../react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const typescriptFormatter = require('../../react-dev-utils/typescriptFormatter');
 const postcssNormalize = require('postcss-normalize');
 const isCI = require('is-ci');
 
-const esbuildTargetFactory = process.env.ESBUILD_TARGET_FACTORY
-  ? JSON.parse(process.env.ESBUILD_TARGET_FACTORY)
-  : 'es2015';
+const isApp = process.env.MODULAR_IS_APP === 'true';
+const isView = !isApp;
 
-const appPackageJson = require(paths.appPackageJson);
+const esbuildTargetFactory = isApp
+  ? process.env.ESBUILD_TARGET_FACTORY
+    ? JSON.parse(process.env.ESBUILD_TARGET_FACTORY)
+    : 'es2015'
+  : 'es2020';
+
+const { externalDependencies } = process.env.MODULAR_PACKAGE_DEPS
+  ? JSON.parse(process.env.MODULAR_PACKAGE_DEPS)
+  : {};
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
 
-const webpackDevClientEntry = require.resolve(
-  '../../react-dev-utils/webpackHotDevClient',
-);
 const reactRefreshOverlayEntry = require.resolve(
   '../../react-dev-utils/refreshOverlayInterop',
 );
@@ -66,6 +68,17 @@ const sassModuleRegex = /\.module\.(scss|sass)$/;
 module.exports = function (webpackEnv) {
   const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
+  const isViewDevelopment = isView & isEnvDevelopment;
+
+  // This is needed if we're serving a view in development node, since it won't be defined in the view dependencies.
+  if (externalDependencies.react && isViewDevelopment) {
+    externalDependencies['react-dom'] = externalDependencies.react;
+  }
+
+  // Create an import map of external dependencies if we're building a view
+  const importMap = isView
+    ? createExternalDependenciesMap(externalDependencies)
+    : {};
 
   // Variable used for enabling profiling in Production
   // passed into alias object. Uses a flag if passed into the build command
@@ -141,6 +154,35 @@ module.exports = function (webpackEnv) {
   };
 
   const webpackConfig = {
+    externals: isApp
+      ? undefined
+      : function ({ request }, callback) {
+          const parsedModule = parsePackageName(request);
+
+          // If the module is absolute and it is in the import map, we want to externalise it
+          if (
+            parsedModule &&
+            parsedModule.dependencyName &&
+            importMap[parsedModule.dependencyName]
+          ) {
+            const { dependencyName, submodule } = parsedModule;
+
+            const toRewrite = `${importMap[dependencyName]}${
+              submodule ? `/${submodule}` : ''
+            }`;
+
+            return callback(null, toRewrite);
+          }
+          // Otherwise we just want to bundle it
+          return callback();
+        },
+
+    externalsType: isApp ? undefined : 'module',
+    experiments: {
+      outputModule: isApp ? undefined : true,
+    },
+    // Workaround for this bug: https://stackoverflow.com/questions/53905253/cant-set-up-the-hmr-stuck-with-waiting-for-update-signal-from-wds-in-cons
+    target: 'web',
     mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
     // Stop compilation early in production
     bail: isEnvProduction,
@@ -151,31 +193,15 @@ module.exports = function (webpackEnv) {
       : isEnvDevelopment && 'cheap-module-source-map',
     // These are the "entry points" to our application.
     // This means they will be the "root" imports that are included in JS bundle.
-    entry: isEnvDevelopment
-      ? [
-          // Include an alternative client for WebpackDevServer. A client's job is to
-          // connect to WebpackDevServer by a socket and get notified about changes.
-          // When you save a file, the client will either apply hot updates (in case
-          // of CSS changes), or refresh the page (in case of JS changes). When you
-          // make a syntax error, this client will display a syntax error overlay.
-          // Note: instead of the default WebpackDevServer client, we use a custom one
-          // to bring better experience for Create React App users. You can replace
-          // the line below with these two lines if you prefer the stock client:
-          //
-          // require.resolve('webpack-dev-server/client') + '?/',
-          // require.resolve('webpack/hot/dev-server'),
-          //
-          // When using the experimental react-refresh integration,
-          // the webpack plugin takes care of injecting the dev client for us.
-          webpackDevClientEntry,
-          // Finally, this is your app's code:
-          paths.appIndexJs,
-          // We include the app code last so that if there is a runtime error during
-          // initialization, it doesn't blow up the WebpackDevServer client, and
-          // changing JS code would still trigger a refresh.
-        ]
-      : paths.appIndexJs,
+    // We bundle a virtual file to trampoline the view as an entry point if we're starting it (views have no ReactDOM.render)
+    entry: isViewDevelopment ? getVirtualTrampoline() : paths.appIndexJs,
     output: {
+      module: isApp ? undefined : true,
+      library: isApp
+        ? undefined
+        : {
+            type: 'module',
+          },
       // The build folder.
       path: isEnvProduction ? paths.appBuild : undefined,
       // Add /* filename */ comments to generated require()s in the output.
@@ -184,10 +210,9 @@ module.exports = function (webpackEnv) {
       // In development, it does not produce real files.
       filename: isEnvProduction
         ? 'static/js/[name].[contenthash:8].js'
-        : isEnvDevelopment && 'static/js/bundle.js',
-      // TODO: remove this when upgrading to webpack 5
-      futureEmitAssets: true,
+        : isEnvDevelopment && 'static/js/[name].js',
       // There are also additional JS chunk files if you use code splitting.
+      // Please remember that Webpack 5, unlike Webpack 4, controls "splitChunks" via fileName, not chunkFilename - https://stackoverflow.com/questions/66077740/webpack-5-output-chunkfilename-not-working
       chunkFilename: isEnvProduction
         ? 'static/js/[name].[contenthash:8].chunk.js'
         : isEnvDevelopment && 'static/js/[name].chunk.js',
@@ -204,12 +229,6 @@ module.exports = function (webpackEnv) {
         : isEnvDevelopment &&
           ((info) =>
             path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')),
-      // Prevents conflicts when multiple webpack runtimes (from different apps)
-      // are used on the same page.
-      jsonpFunction: `webpackJsonp${appPackageJson.name}`,
-      // this defaults to 'window', but by setting it to 'this' then
-      // module chunks which are built will work in web workers as well.
-      globalObject: 'this',
     },
     optimization: {
       minimize: isEnvProduction,
@@ -253,41 +272,25 @@ module.exports = function (webpackEnv) {
               ascii_only: true,
             },
           },
-          sourceMap: shouldUseSourceMap,
         }),
-        // This is only used in production mode
-        new OptimizeCSSAssetsPlugin({
-          cssProcessorOptions: {
-            parser: safePostCssParser,
-            map: shouldUseSourceMap
-              ? {
-                  // `inline: false` forces the sourcemap to be output into a
-                  // separate file
-                  inline: false,
-                  // `annotation: true` appends the sourceMappingURL to the end of
-                  // the css file, helping the browser find the sourcemap
-                  annotation: true,
-                }
-              : false,
-          },
-          cssProcessorPluginOptions: {
-            preset: ['default', { minifyFontValues: { removeQuotes: false } }],
-          },
-        }),
+        new CssMinimizerPlugin(),
       ],
       // Automatically split vendor and commons
       // https://twitter.com/wSokra/status/969633336732905474
       // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
-      splitChunks: {
-        chunks: 'all',
-        name: isEnvDevelopment,
-      },
+      splitChunks: isApp
+        ? {
+            chunks: 'all',
+          }
+        : undefined,
       // Keep the runtime chunk separated to enable long term caching
       // https://twitter.com/wSokra/status/969679223278505985
       // https://github.com/facebook/create-react-app/issues/5358
-      runtimeChunk: {
-        name: (entrypoint) => `runtime-${entrypoint.name}`,
-      },
+      runtimeChunk: isApp
+        ? {
+            name: (entrypoint) => `runtime-${entrypoint.name}`,
+          }
+        : undefined,
     },
     resolve: {
       // This allows you to set a fallback for where webpack should look for modules.
@@ -305,7 +308,7 @@ module.exports = function (webpackEnv) {
       // for React Native Web.
       extensions: paths.moduleFileExtensions
         .map((ext) => `.${ext}`)
-        .filter((ext) => useTypeScript || !ext.includes('ts')),
+        .filter((ext) => useTypeScript || !isApp || !ext.includes('ts')),
       alias: {
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
@@ -316,6 +319,19 @@ module.exports = function (webpackEnv) {
           'scheduler/tracing': 'scheduler/tracing-profiling',
         }),
         ...(modules.webpackAliases || {}),
+      },
+      // Some libraries import Node modules but don't use them in the browser.
+      // Tell webpack to provide empty mocks for them so importing them works.
+      // See https://github.com/webpack/webpack/issues/11649
+      fallback: {
+        module: false,
+        dgram: false,
+        dns: false,
+        fs: false,
+        http2: false,
+        net: false,
+        tls: false,
+        child_process: false,
       },
       plugins: [
         // Adds support for installing with Plug'n'Play, leading to faster installs and adding
@@ -342,8 +358,6 @@ module.exports = function (webpackEnv) {
     module: {
       strictExportPresence: true,
       rules: [
-        // Disable require.ensure as it's not a standard language feature.
-        { parser: { requireEnsure: false } },
         {
           // "oneOf" will traverse all following loaders until one will
           // match the requirements. When no loader matches it will fall
@@ -496,7 +510,7 @@ module.exports = function (webpackEnv) {
               // its runtime that would otherwise be processed through "file" loader.
               // Also exclude `html` and `json` extensions so they get processed
               // by webpacks internal loaders.
-              exclude: [/\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
+              exclude: [/(^|\.(js|mjs|jsx|ts|tsx|html|json))$/],
               options: {
                 name: 'static/media/[name].[hash:8].[ext]',
               },
@@ -509,35 +523,56 @@ module.exports = function (webpackEnv) {
     },
     plugins: [
       // Generates an `index.html` file with the <script> injected.
-      new HtmlWebpackPlugin(
-        Object.assign(
-          {},
-          {
-            inject: true,
-            template: paths.appHtml,
-          },
-          isEnvProduction
-            ? {
-                minify: {
-                  removeComments: true,
-                  collapseWhitespace: true,
-                  removeRedundantAttributes: true,
-                  useShortDoctype: true,
-                  removeEmptyAttributes: true,
-                  removeStyleLinkTypeAttributes: true,
-                  keepClosingSlash: true,
-                  minifyJS: true,
-                  minifyCSS: true,
-                  minifyURLs: true,
-                },
-              }
-            : undefined,
-        ),
-      ),
+      isApp
+        ? new HtmlWebpackPlugin(
+            Object.assign(
+              {},
+              {
+                inject: true,
+                template: paths.appHtml,
+              },
+              isEnvProduction
+                ? {
+                    minify: {
+                      removeComments: true,
+                      collapseWhitespace: true,
+                      removeRedundantAttributes: true,
+                      useShortDoctype: true,
+                      removeEmptyAttributes: true,
+                      removeStyleLinkTypeAttributes: true,
+                      keepClosingSlash: true,
+                      minifyJS: true,
+                      minifyCSS: true,
+                      minifyURLs: true,
+                    },
+                  }
+                : undefined,
+            ),
+          )
+        : isViewDevelopment
+        ? // We need to provide a synthetic index.html in case we're starting a view
+          new HtmlWebpackPlugin(
+            Object.assign(
+              {},
+              {
+                inject: true,
+                templateContent: `
+                <html>
+                  <body>
+                    <div id="root"></div>
+                  </body>
+                </html>
+                `,
+                scriptLoading: 'module',
+              },
+            ),
+          )
+        : false,
       // Inlines the webpack runtime script. This script is too small to warrant
       // a network request.
       // https://github.com/facebook/create-react-app/issues/5358
-      isEnvProduction &&
+      isApp &&
+        isEnvProduction &&
         shouldInlineRuntimeChunk &&
         new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime-.+[.]js/]),
       // Makes some environment variables available in index.html.
@@ -545,7 +580,7 @@ module.exports = function (webpackEnv) {
       // <link rel="icon" href="%PUBLIC_URL%/favicon.ico">
       // It will be an empty string unless you specify "homepage"
       // in `package.json`, in which case it will be the pathname of that URL.
-      new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
+      isApp && new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
       // This gives some necessary context to module not found errors, such as
       // the requesting resource.
       new ModuleNotFoundPlugin(paths.appPath),
@@ -578,7 +613,7 @@ module.exports = function (webpackEnv) {
       //   `index.html`
       // - "entrypoints" key: Array of files which are included in `index.html`,
       //   can be used to reconstruct the HTML if necessary
-      new ManifestPlugin({
+      new WebpackManifestPlugin({
         fileName: 'asset-manifest.json',
         publicPath: paths.publicUrlOrPath,
         generate: (seed, files, entrypoints) => {
@@ -601,47 +636,60 @@ module.exports = function (webpackEnv) {
       // solution that requires the user to opt into importing specific locales.
       // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
       // You can remove this if you don't use Moment.js:
-      new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+      new webpack.IgnorePlugin({
+        resourceRegExp: /^\.\/locale$/,
+        contextRegExp: /moment$/,
+      }),
       // TypeScript type checking turned off for CI envs
       // https://github.com/jpmorganchase/modular/issues/605
       useTypeScript &&
         !isCI &&
         new ForkTsCheckerWebpackPlugin({
-          typescript: resolve.sync('typescript', {
-            basedir: paths.appNodeModules,
-          }),
           async: isEnvDevelopment,
-          checkSyntacticErrors: true,
-          tsconfig: paths.appTsConfig,
-          reportFiles: [
+          typescript: {
+            async: isEnvDevelopment,
+            typescriptPath: resolve.sync('typescript', {
+              basedir: paths.appNodeModules,
+            }),
+            configOverwrite: {
+              compilerOptions: {
+                sourceMap: isEnvProduction
+                  ? shouldUseSourceMap
+                  : isEnvDevelopment,
+                skipLibCheck: true,
+                inlineSourceMap: false,
+                declarationMap: false,
+                noEmit: true,
+              },
+            },
+            context: paths.appPath,
+            diagnosticOptions: {
+              syntactic: true,
+              semantic: true,
+            },
+            mode: 'write-references',
+          },
+          issue: {
             // This one is specifically to match during CI tests,
             // as micromatch doesn't match
             // '../cra-template-typescript/template/src/App.tsx'
             // otherwise.
-            '../**/src/**/*.{ts,tsx}',
-            '**/src/**/*.{ts,tsx}',
-            '!**/src/**/__tests__/**',
-            '!**/src/**/?(*.)(spec|test).*',
-            '!**/src/setupProxy.*',
-            '!**/src/setupTests.*',
-          ],
-          silent: true,
-          // The formatter is invoked directly in WebpackDevServerUtils during development
-          formatter: isEnvProduction ? typescriptFormatter : undefined,
+            include: [
+              { file: '../**/src/**/*.{ts,tsx}' },
+              { file: '**/src/**/*.{ts,tsx}' },
+            ],
+            exclude: [
+              { file: '**/src/**/__tests__/**' },
+              { file: '**/src/**/?(*.){spec|test}.*' },
+              { file: '**/src/setupProxy.*' },
+              { file: '**/src/setupTests.*' },
+            ],
+          },
+          logger: {
+            infrastructure: 'silent',
+          },
         }),
     ].filter(Boolean),
-    // Some libraries import Node modules but don't use them in the browser.
-    // Tell webpack to provide empty mocks for them so importing them works.
-    node: {
-      module: 'empty',
-      dgram: 'empty',
-      dns: 'mock',
-      fs: 'empty',
-      http2: 'empty',
-      net: 'empty',
-      tls: 'empty',
-      child_process: 'empty',
-    },
     // Turn off performance processing because we utilize
     // our own hints via the FileSizeReporter
     performance: false,
@@ -692,3 +740,45 @@ module.exports = function (webpackEnv) {
 
   return webpackConfig;
 };
+
+function createExternalDependenciesMap(externalDependencies) {
+  const externalCdnTemplate =
+    process.env.EXTERNAL_CDN_TEMPLATE ||
+    'https://cdn.skypack.dev/[name]@[version]';
+
+  return Object.entries(externalDependencies).reduce(
+    (acc, [name, version]) => ({
+      ...acc,
+      [name]: externalCdnTemplate
+        .replace('[name]', name)
+        .replace('[version]', version),
+    }),
+    {},
+  );
+}
+
+const packageRegex =
+  /^(@[a-z0-9-~][a-z0-9-._~]*)?\/?([a-z0-9-~][a-z0-9-._~]*)\/?(.*)/;
+function parsePackageName(name) {
+  const parsedName = packageRegex.exec(name);
+  if (!parsedName) {
+    return;
+  }
+  const [_, scope, module, submodule] = parsedName;
+  const dependencyName = (scope ? `${scope}/` : '') + module;
+  return { dependencyName, scope, module, submodule };
+}
+
+// Virtual entrypoint if we're starting a view - see https://github.com/webpack/webpack/issues/6437
+function getVirtualTrampoline() {
+  const string = `
+  import ReactDOM from 'react-dom'
+  import React from 'react';
+  import Component from './src/index.tsx';
+  const DOMRoot = document.getElementById('root');
+  ReactDOM.render(React.createElement(Component, null), DOMRoot);
+	`;
+
+  const base64 = Buffer.from(string).toString('base64');
+  return `./src/_trampoline.js!=!data:text/javascript;base64,${base64}`;
+}
