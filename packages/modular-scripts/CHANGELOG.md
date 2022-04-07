@@ -1,5 +1,31 @@
 # modular-scripts
 
+## 3.0.0
+
+### Major Changes
+
+- [#1421](https://github.com/jpmorganchase/modular/pull/1421)
+  [`e5d772f`](https://github.com/jpmorganchase/modular/commit/e5d772f1b956ea5d2f8c46457504ac1154c7c7f0)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Upgrade
+  to Webpack 5
+
+### Patch Changes
+
+- [#1478](https://github.com/jpmorganchase/modular/pull/1478)
+  [`bec55a5`](https://github.com/jpmorganchase/modular/commit/bec55a52a673f9d8d0edb17c9271e01e29c373a8)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump rollup from
+  2.67.2 to 2.70.1
+
+* [#1492](https://github.com/jpmorganchase/modular/pull/1492)
+  [`810934b`](https://github.com/jpmorganchase/modular/commit/810934b5a15480a2423339c49fcc3d2f77a23a22)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump commander
+  from 8.2.0 to 9.1.0
+
+- [#1510](https://github.com/jpmorganchase/modular/pull/1510)
+  [`4846d21`](https://github.com/jpmorganchase/modular/commit/4846d21db0d5aebff1a5041008bbf00e7986c036)
+  Thanks [@cheemcheem](https://github.com/cheemcheem)! - Fix bug that prevented
+  lint diff from running
+
 ## 2.3.1
 
 ### Patch Changes
