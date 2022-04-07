@@ -5,7 +5,7 @@
     "packages/**"
   ],
   "engines": {
-    "node": "^14.15.0 || >=15.0.0"
+    "node": "^14.15.0 || >=16.0.0"
   },
   "scripts": {
     "format": "prettier --write .",
@@ -39,8 +39,8 @@
     "@babel/preset-env": "7.16.10",
     "@babel/preset-react": "7.16.7",
     "@babel/preset-typescript": "7.16.7",
-    "@changesets/changelog-github": "^0.4.3",
-    "@changesets/cli": "2.21.1",
+    "@changesets/changelog-github": "^0.4.4",
+    "@changesets/cli": "2.22.0",
     "@schemastore/package": "0.0.6",
     "@schemastore/tsconfig": "0.0.9",
     "@testing-library/dom": "8.11.4",
@@ -64,7 +64,7 @@
     "@types/parse5": "^6.0.3",
     "@types/prompts": "2.0.14",
     "@types/puppeteer": "5.4.5",
-    "@types/react": "17.0.42",
+    "@types/react": "17.0.43",
     "@types/react-dom": "17.0.14",
     "@types/recursive-readdir": "^2.2.0",
     "@types/rimraf": "3.0.2",
@@ -73,14 +73,14 @@
     "@types/tmp": "0.2.3",
     "@types/update-notifier": "5.1.0",
     "@yarnpkg/lockfile": "^1.1.0",
-    "commander": "8.2.0",
+    "commander": "9.1.0",
     "esbuild": "0.14.22",
     "eslint": "7.32.0",
     "execa": "5.1.1",
     "husky": "7.0.4",
     "is-ci": "2.0.0",
     "lint-staged": "12.3.7",
-    "micromatch": "4.0.4",
+    "micromatch": "4.0.5",
     "patch-package": "^6.4.7",
     "pptr-testing-library": "0.7.0",
     "prettier": "2.6.0",
