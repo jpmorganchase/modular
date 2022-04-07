@@ -10,6 +10,10 @@
     "tree-view-for-tests": "2.0.0"
   },
   "changesets": [
+    "dirty-mugs-double",
+    "hip-bees-act",
+    "rotten-sloths-travel",
+    "silent-donkeys-peel",
     "silver-dolphins-remember",
     "twelve-days-mix"
   ]
