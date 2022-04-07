@@ -90,7 +90,7 @@
     "semver": "7.3.6",
     "string.prototype.replaceall": "^1.0.6",
     "ts-node": "10.7.0",
-    "typescript": "4.6.2"
+    "typescript": "4.6.3"
   },
   "resolutions": {
     "esbuild": "0.14.22",
