@@ -68,7 +68,7 @@ describe('when working with a NODE_ENV app', () => {
       └─ static
          └─ js
             ├─ main.3db228f9.chunk.js #20y3tb
-            ├─ main.3db228f9.chunk.js.map #131rxqt
+            ├─ main.3db228f9.chunk.js.map #qfcqz7
             ├─ runtime-main.a0dc6a9b.js #o5bsr9
             └─ runtime-main.a0dc6a9b.js.map #10n4p35"
     `);
