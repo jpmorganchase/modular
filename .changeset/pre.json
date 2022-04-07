@@ -10,6 +10,8 @@
     "tree-view-for-tests": "2.0.0"
   },
   "changesets": [
+    "dirty-mugs-double",
+    "hip-bees-act",
     "silver-dolphins-remember"
   ]
 }
