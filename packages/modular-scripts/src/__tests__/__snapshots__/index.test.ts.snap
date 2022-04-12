@@ -39,8 +39,10 @@ module.exports = SampleView;
 exports[`modular-scripts WHEN building a view THEN outputs the correct output cjs map file 1`] = `
 Object {
   "file": "index.js",
-  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;AAEkD,SAAA,UAAA,GAAA;AAChD,EAAA,sDAAQ,KAAD,EAAA;AAAA,IAAK,aAAY,EAAA,WAAA;AAAA,GAAY,EAAA,wBAAA,CAAA,CAAA;AAAA;;;;",
-  "names": Array [],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;AAEkD,SAAA,UAAA,GAAA;AAChD,EAAA,uBAAQA,gBAAA,CAAA,aAAA,CAAA,KAAA,EAAA;AAAA,IAAI,aAAY,EAAA,WAAA;AAAA,GAAA,EAAY,wBAAsB,CAAA,CAAA;AAC5D;;;;",
+  "names": Array [
+    "React",
+  ],
   "sources": Array [
     "../src/index.tsx",
   ],

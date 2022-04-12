@@ -50,14 +50,14 @@ describe('WHEN building with preserve modules', () => {
       "sample-async-package
       ├─ dist-cjs
       │  ├─ index.js #y5z0kw
-      │  ├─ index.js.map #16xad8o
+      │  ├─ index.js.map #9gwbxv
       │  ├─ runAsync.js #kr3qrh
-      │  └─ runAsync.js.map #130u3kt
+      │  └─ runAsync.js.map #8mj5cr
       ├─ dist-es
       │  ├─ index.js #7arwpf
-      │  ├─ index.js.map #n6rb69
+      │  ├─ index.js.map #1u5sgs8
       │  ├─ runAsync.js #1tt0e7o
-      │  └─ runAsync.js.map #r9z8sx
+      │  └─ runAsync.js.map #1b108ot
       ├─ dist-types
       │  ├─ index.d.ts #12l2tmi
       │  └─ runAsync.d.ts #1iek7az
@@ -147,10 +147,10 @@ describe('WHEN building packages with private cross-package dependencies', () =>
       "sample-depending-package
       ├─ dist-cjs
       │  ├─ index.js #1gj4b9h
-      │  └─ index.js.map #1j96nz6
+      │  └─ index.js.map #1ek1e5y
       ├─ dist-es
       │  ├─ index.js #xezjee
-      │  └─ index.js.map #12d2mbd
+      │  └─ index.js.map #1jddgm7
       ├─ dist-types
       │  └─ index.d.ts #6hjmh9
       └─ package.json"
