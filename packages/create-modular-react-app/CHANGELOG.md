@@ -1,5 +1,19 @@
 # create-modular-react-app
 
+## 2.1.5
+
+### Patch Changes
+
+- [#1550](https://github.com/jpmorganchase/modular/pull/1550)
+  [`b570845`](https://github.com/jpmorganchase/modular/commit/b570845737cdedcac8e3f43cd54955db8f1dbf91)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump semver from
+  7.3.5 to 7.3.6
+
+* [#1492](https://github.com/jpmorganchase/modular/pull/1492)
+  [`810934b`](https://github.com/jpmorganchase/modular/commit/810934b5a15480a2423339c49fcc3d2f77a23a22)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump commander
+  from 8.2.0 to 9.1.0
+
 ## 2.1.4
 
 ### Patch Changes

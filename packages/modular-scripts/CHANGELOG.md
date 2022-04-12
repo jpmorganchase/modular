@@ -1,5 +1,39 @@
 # modular-scripts
 
+## 2.3.2
+
+### Patch Changes
+
+- [#1550](https://github.com/jpmorganchase/modular/pull/1550)
+  [`b570845`](https://github.com/jpmorganchase/modular/commit/b570845737cdedcac8e3f43cd54955db8f1dbf91)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump semver from
+  7.3.5 to 7.3.6
+
+* [#1551](https://github.com/jpmorganchase/modular/pull/1551)
+  [`ec2c7c6`](https://github.com/jpmorganchase/modular/commit/ec2c7c609c205112c161a99a26e560beaec22247)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  webpack-dev-server from 4.8.0 to 4.8.1
+
+- [#1478](https://github.com/jpmorganchase/modular/pull/1478)
+  [`bec55a5`](https://github.com/jpmorganchase/modular/commit/bec55a52a673f9d8d0edb17c9271e01e29c373a8)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump rollup from
+  2.67.2 to 2.70.1
+
+* [#1492](https://github.com/jpmorganchase/modular/pull/1492)
+  [`810934b`](https://github.com/jpmorganchase/modular/commit/810934b5a15480a2423339c49fcc3d2f77a23a22)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump commander
+  from 8.2.0 to 9.1.0
+
+- [#1552](https://github.com/jpmorganchase/modular/pull/1552)
+  [`d5a899e`](https://github.com/jpmorganchase/modular/commit/d5a899e73e1b9bf3d1df30b596480fea01d50cc4)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump npm-packlist
+  from 4.0.0 to 5.0.0
+
+* [#1510](https://github.com/jpmorganchase/modular/pull/1510)
+  [`4846d21`](https://github.com/jpmorganchase/modular/commit/4846d21db0d5aebff1a5041008bbf00e7986c036)
+  Thanks [@cheemcheem](https://github.com/cheemcheem)! - Fix bug that prevented
+  lint diff from running
+
 ## 2.3.1
 
 ### Patch Changes
