@@ -36,88 +36,122 @@ afterAll(cleanup);
 describe('when working with a NODE_ENV app', () => {
   beforeAll(async () => {
     await modular(
-      'add node-env-app --unstable-type app --unstable-name node-env-app --template node-env-app',
+      'add node-env-app --unstable-type app --unstable-name node-env-app',
       { stdio: 'inherit' },
     );
 
-    await modular('build node-env-app', {
-      stdio: 'inherit',
+    await fs.writeFile(
+      path.join(modularRoot, 'packages', 'node-env-app', 'src', 'index.ts'),
+      `
+      console.log(process.env.NODE_ENV);
+      export {};
+    `,
+    );
+  });
+
+  describe('WHEN building with webpack', () => {
+    beforeAll(async () => {
+      rimraf.sync(path.join(modularRoot, 'dist/node-env-app'));
+
+      await modular('build node-env-app', {
+        stdio: 'inherit',
+      });
+    });
+
+    it('can build a app', () => {
+      expect(tree(path.join(modularRoot, 'dist', 'node-env-app')))
+        .toMatchInlineSnapshot(`
+        "node-env-app
+        ├─ asset-manifest.json #n1rvuh
+        ├─ favicon.ico #6pu3rg
+        ├─ index.html #1yaenq4
+        ├─ logo192.png #1nez7vk
+        ├─ logo512.png #1hwqvcc
+        ├─ manifest.json #19gah8o
+        ├─ package.json
+        ├─ robots.txt #1sjb8b3
+        └─ static
+           └─ js
+              ├─ main.3db228f9.chunk.js #20y3tb
+              ├─ main.3db228f9.chunk.js.map #qfcqz7
+              ├─ runtime-main.a0dc6a9b.js #o5bsr9
+              └─ runtime-main.a0dc6a9b.js.map #10n4p35"
+      `);
+    });
+
+    it('can generate a js/main.3db228f9.chunk.js', async () => {
+      expect(
+        prettier.format(
+          String(
+            await fs.readFile(
+              path.join(
+                modularRoot,
+                'dist',
+                'node-env-app',
+                'static',
+                'js',
+                'main.3db228f9.chunk.js',
+              ),
+            ),
+          ),
+          {
+            filepath: 'main.3db228f9.chunk.js',
+          },
+        ),
+      ).toMatchSnapshot();
     });
   });
 
-  it('can add a node-env template with the right content', () => {
-    expect(tree(path.join(modularRoot, 'packages', 'node-env-app')))
-      .toMatchInlineSnapshot(`
-      "node-env-app
-      ├─ package.json
-      ├─ public
-      │  └─ index.html #1m6toxd
-      ├─ src
-      │  ├─ index.tsx #1rpotzc
-      │  └─ react-app-env.d.ts #t4ygcy
-      └─ tsconfig.json #6rw46b"
-    `);
-  });
+  describe('WHEN building with esbuild', () => {
+    beforeAll(async () => {
+      rimraf.sync(path.join(modularRoot, 'dist/node-env-app'));
 
-  it('can add a node-env template package.json with the right content', () => {
-    expect(
-      JSON.parse(
-        String(
-          fs.readFileSync(
-            path.join(modularRoot, 'packages', 'node-env-app', 'package.json'),
-          ),
-        ),
-      ),
-    ).toMatchInlineSnapshot(`
-      Object {
-        "dependencies": Object {
-          "lodash": "^4.17.21",
+      await modular('build node-env-app', {
+        stdio: 'inherit',
+        env: {
+          USE_MODULAR_ESBUILD: 'true',
         },
-        "modular": Object {
-          "type": "app",
-        },
-        "name": "node-env-app",
-        "private": true,
-        "version": "1.0.0",
-      }
-    `);
-  });
+      });
+    });
 
-  it('can build a app', () => {
-    expect(tree(path.join(modularRoot, 'dist', 'node-env-app')))
-      .toMatchInlineSnapshot(`
-      "node-env-app
-      ├─ asset-manifest.json #n1rvuh
-      ├─ index.html #1yaenq4
-      ├─ package.json
-      └─ static
-         └─ js
-            ├─ main.3db228f9.chunk.js #20y3tb
-            ├─ main.3db228f9.chunk.js.map #1apl3
-            ├─ runtime-main.a0dc6a9b.js #o5bsr9
-            └─ runtime-main.a0dc6a9b.js.map #10n4p35"
-    `);
-  });
+    it('can build a app', () => {
+      expect(tree(path.join(modularRoot, 'dist', 'node-env-app')))
+        .toMatchInlineSnapshot(`
+        "node-env-app
+        ├─ favicon.ico #6pu3rg
+        ├─ index.html #yth8pd
+        ├─ logo192.png #1nez7vk
+        ├─ logo512.png #1hwqvcc
+        ├─ manifest.json #19gah8o
+        ├─ package.json
+        ├─ robots.txt #1sjb8b3
+        └─ static
+           └─ js
+              ├─ index-FG4XHKNZ.js #449tgl
+              └─ index-FG4XHKNZ.js.map #j51j3v"
+      `);
+    });
 
-  it('can generate a js/main.3db228f9.chunk.js', async () => {
-    expect(
-      prettier.format(
-        String(
-          await fs.readFile(
-            path.join(
-              modularRoot,
-              'dist',
-              'node-env-app',
-              'static',
-              'js',
-              'main.3db228f9.chunk.js',
+    it('can generate a js/index-FG4XHKNZ.js', async () => {
+      expect(
+        prettier.format(
+          String(
+            await fs.readFile(
+              path.join(
+                modularRoot,
+                'dist',
+                'node-env-app',
+                'static',
+                'js',
+                'index-FG4XHKNZ.js',
+              ),
             ),
           ),
+          {
+            filepath: 'index-FG4XHKNZ.js',
+          },
         ),
-        {
-          filepath: 'main.3db228f9.chunk.js',
-        },
-      ),
-    ).toMatchSnapshot();
+      ).toMatchSnapshot();
+    });
   });
 });
