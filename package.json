@@ -45,7 +45,7 @@
     "@schemastore/tsconfig": "0.0.9",
     "@testing-library/dom": "8.11.4",
     "@testing-library/jest-dom": "5.16.2",
-    "@testing-library/react": "12.1.4",
+    "@testing-library/react": "12.1.5",
     "@testing-library/user-event": "13.5.0",
     "@types/babel-plugin-macros": "2.8.5",
     "@types/babel__code-frame": "^7.0.3",
@@ -64,7 +64,7 @@
     "@types/parse5": "^6.0.3",
     "@types/prompts": "2.0.14",
     "@types/puppeteer": "5.4.5",
-    "@types/react": "17.0.43",
+    "@types/react": "18.0.1",
     "@types/react-dom": "17.0.14",
     "@types/recursive-readdir": "^2.2.0",
     "@types/rimraf": "3.0.2",
@@ -74,7 +74,7 @@
     "@types/update-notifier": "5.1.0",
     "@yarnpkg/lockfile": "^1.1.0",
     "commander": "9.1.0",
-    "esbuild": "0.14.22",
+    "esbuild": "0.14.34",
     "eslint": "7.32.0",
     "execa": "5.1.1",
     "husky": "7.0.4",
@@ -83,17 +83,17 @@
     "micromatch": "4.0.5",
     "patch-package": "^6.4.7",
     "pptr-testing-library": "0.7.0",
-    "prettier": "2.6.0",
+    "prettier": "2.6.2",
     "puppeteer": "13.5.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "semver": "7.3.6",
     "string.prototype.replaceall": "^1.0.6",
     "ts-node": "10.7.0",
-    "typescript": "4.6.2"
+    "typescript": "4.6.3"
   },
   "resolutions": {
-    "esbuild": "0.14.22",
+    "esbuild": "0.14.34",
     "ua-parser-js": "0.7.28"
   },
   "jest": {

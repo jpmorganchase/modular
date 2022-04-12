@@ -1,6 +1,6 @@
 {
   "name": "modular-scripts",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "license": "Apache-2.0",
   "bin": {
     "modular": "dist-cjs/cli.js"
@@ -46,7 +46,7 @@
     "detect-port-alt": "1.1.6",
     "dotenv": "16.0.0",
     "dotenv-expand": "8.0.3",
-    "esbuild": "0.14.22",
+    "esbuild": "0.14.34",
     "esbuild-loader": "2.18.0",
     "escape-string-regexp": "2.0.0",
     "eslint": "7.32.0",
@@ -76,7 +76,7 @@
     "micromatch": "4.0.5",
     "mime": "^3.0.0",
     "mini-css-extract-plugin": "0.11.3",
-    "npm-packlist": "4.0.0",
+    "npm-packlist": "5.0.0",
     "open": "8.3.0",
     "optimize-css-assets-webpack-plugin": "6.0.1",
     "parse5": "6.0.1",
@@ -138,6 +138,6 @@
     "@types/js-yaml": "^4.0.5",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "typescript": "4.6.2"
+    "typescript": "4.6.3"
   }
 }

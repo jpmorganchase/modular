@@ -151,7 +151,7 @@ describe('When working with a nested app', () => {
             ├─ 2.dd7fe2ee.chunk.js.LICENSE.txt #eplx8h
             ├─ 2.dd7fe2ee.chunk.js.map #f3ttow
             ├─ main.8b9be32b.chunk.js #jou2ln
-            ├─ main.8b9be32b.chunk.js.map #q1dpnv
+            ├─ main.8b9be32b.chunk.js.map #fmhede
             ├─ runtime-main.c80b6939.js #tnzlop
             └─ runtime-main.c80b6939.js.map #14p9z3c"
     `);
@@ -369,7 +369,7 @@ describe('when working with an app', () => {
             ├─ 2.42603bbe.chunk.js.LICENSE.txt #eplx8h
             ├─ 2.42603bbe.chunk.js.map #164el3u
             ├─ main.8247c019.chunk.js #iwnokm
-            ├─ main.8247c019.chunk.js.map #umebn0
+            ├─ main.8247c019.chunk.js.map #1tgfyn5
             ├─ runtime-main.dc96e42d.js #1xc8leb
             └─ runtime-main.dc96e42d.js.map #xpqj11"
     `);
