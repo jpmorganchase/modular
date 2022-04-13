@@ -216,13 +216,13 @@ describe('modular-scripts', () => {
             "dist-types",
             "README.md",
           ],
-          "license": "UNLICENSED",
           "main": "dist-cjs/index.js",
           "modular": Object {
             "type": "view",
           },
           "module": "dist-es/index.js",
           "name": "sample-view",
+          "private": false,
           "typings": "dist-types/index.d.ts",
           "version": "1.0.0",
         }
@@ -329,10 +329,13 @@ describe('modular-scripts', () => {
             "dist-types",
             "README.md",
           ],
-          "license": "UNLICENSED",
           "main": "dist-cjs/index.js",
+          "modular": Object {
+            "type": "package",
+          },
           "module": "dist-es/index.js",
           "name": "sample-package",
+          "private": false,
           "typings": "dist-types/index.d.ts",
           "version": "1.0.0",
         }
@@ -398,10 +401,13 @@ describe('modular-scripts', () => {
             "dist-types",
             "README.md",
           ],
-          "license": "UNLICENSED",
           "main": "dist-cjs/nested-sample-package.cjs.js",
+          "modular": Object {
+            "type": "package",
+          },
           "module": "dist-es/nested-sample-package.es.js",
           "name": "@nested/sample-package",
+          "private": false,
           "typings": "dist-types/index.d.ts",
           "version": "1.0.0",
         }

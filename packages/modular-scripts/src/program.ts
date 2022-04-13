@@ -28,6 +28,7 @@ program
     "Type of the folder ('app', 'view', 'package')",
   )
   .option('--unstable-name <name>', 'Package name for the package.json')
+  .option('--template <name>', 'Package name for the package.json')
   .option(
     '--prefer-offline',
     'Equivalent of --prefer-offline for yarn installations',
@@ -40,18 +41,20 @@ program
       addOptions: {
         unstableType?: string;
         unstableName?: string;
+        template?: string;
         preferOffline?: boolean;
         verbose?: boolean;
       },
     ) => {
       const { default: addPackage } = await import('./addPackage');
-      return addPackage(
-        packageName,
-        addOptions.unstableType,
-        addOptions.unstableName,
-        addOptions.preferOffline,
-        addOptions.verbose,
-      );
+      return addPackage({
+        destination: packageName,
+        type: addOptions.unstableType,
+        name: addOptions.unstableName,
+        template: addOptions.template,
+        preferOffline: addOptions.preferOffline,
+        verbose: addOptions.verbose,
+      });
     },
   );
 

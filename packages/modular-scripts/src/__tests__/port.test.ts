@@ -29,7 +29,6 @@ async function setupTempModularRoot() {
   mockedModularRoot.mockImplementation(() => tmpRootPath);
 }
 
-const starterTempType = 'app';
 const appPackageJson: ModularPackageJson = {
   name: tmpProjectName,
   browserslist: {
@@ -56,9 +55,14 @@ async function setUpTempApp() {
   const starterFolder = ['src', 'public'];
   starterFolder.forEach((dir) => {
     fs.copySync(
-      path.join(__dirname, '..', '..', 'types', starterTempType, dir),
+      path.join(__dirname, '..', '..', '..', 'modular-template-app', dir),
       path.join(tmpAppPath, dir),
-      { overwrite: true },
+      {
+        overwrite: true,
+        filter(src) {
+          return !(path.basename(src) === 'package.json');
+        },
+      },
     );
   });
   fs.writeJSONSync(path.join(tmpAppPath, 'package.json'), appPackageJson, {

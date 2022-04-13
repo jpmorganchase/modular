@@ -2,13 +2,19 @@ import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemasto
 import * as path from 'path';
 import * as fs from 'fs-extra';
 
-export const packageTypes: PackageType[] = ['app', 'view', 'package'];
+export const packageTypes: PackageType[] = [
+  'app',
+  'view',
+  'package',
+  'template',
+];
 
 export const ModularTypes: ModularType[] = (
   packageTypes as ModularType[]
 ).concat(['root']);
 
-export type PackageType = 'app' | 'view' | 'package';
+export type ModularTemplateType = 'app' | 'view' | 'package';
+export type PackageType = ModularTemplateType | 'template';
 
 export type ModularType = PackageType | 'root';
 
@@ -16,6 +22,7 @@ export type ModularPackageJson = PackageJson & {
   browserslist?: Record<string, string[]>;
   modular?: {
     type: ModularType;
+    templateType?: ModularTemplateType;
   };
 };
 

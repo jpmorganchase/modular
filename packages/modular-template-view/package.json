@@ -1,0 +1,16 @@
+{
+  "name": "modular-template-view",
+  "version": "1.0.0",
+  "exports": {
+    "./package.json": "./package.json"
+  },
+  "main": "./src/index.tsx",
+  "license": "Apache-2.0",
+  "modular": {
+    "type": "template",
+    "templateType": "view"
+  },
+  "files": [
+    "README.md"
+  ]
+}

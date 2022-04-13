@@ -34,10 +34,13 @@ describe('WHEN building with preserve modules', () => {
           "dist-types",
           "README.md",
         ],
-        "license": "UNLICENSED",
         "main": "dist-cjs/index.js",
+        "modular": Object {
+          "type": "package",
+        },
         "module": "dist-es/index.js",
         "name": "sample-async-package",
+        "private": false,
         "typings": "dist-types/index.d.ts",
         "version": "1.0.0",
       }

@@ -38,7 +38,7 @@ function cleanup() {
   rimraf.sync(path.join(packagesPath, 'sample-app'));
   rimraf.sync(path.join(modularRoot, 'dist/sample-app'));
 
-  rimraf.sync(path.join(packagesPath, 'scoped/sample-app'));
+  rimraf.sync(path.join(packagesPath, 'scoped'));
   rimraf.sync(path.join(modularRoot, 'dist/scoped-sample-app'));
 
   // run yarn so yarn.lock gets reset
@@ -337,7 +337,7 @@ describe('when working with an app', () => {
     ) as CoreProperties;
 
     expect(packageJson.name).toBe('sample-app');
-    expect(packageJson.version).toBe('0.1.0');
+    expect(packageJson.version).toBe('1.0.0');
     expect(packageJson.modular).toStrictEqual({ type: 'app' });
     expect(packageJson.dependencies?.react).toBeTruthy();
     expect(packageJson.dependencies?.['react-dom']).toBeTruthy();

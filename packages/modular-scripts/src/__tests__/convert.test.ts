@@ -17,7 +17,6 @@ const mockedModularRoot = getModularRoot.default as jest.MockedFunction<
 describe('Converting a react app to modular app', () => {
   let tmpFolder: tmp.DirResult;
   let tmpFolderPath: string;
-  const starterTempType = 'app';
   const tmpProjectName = 'test-modular-convert';
   const rootPackageJson: ModularPackageJson = {
     name: tmpProjectName,
@@ -42,9 +41,14 @@ describe('Converting a react app to modular app', () => {
     const starterFolder = ['src', 'public'];
     starterFolder.forEach((dir) => {
       fs.copySync(
-        path.join(__dirname, '..', '..', 'types', starterTempType, dir),
+        path.join(__dirname, '..', '..', '..', 'modular-template-app', dir),
         path.join(tmpFolderPath, dir),
-        { overwrite: true },
+        {
+          overwrite: true,
+          filter(src) {
+            return !(path.basename(src) === 'package.json');
+          },
+        },
       );
     });
     fs.writeJSONSync(
