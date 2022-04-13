@@ -30,7 +30,8 @@ default behaviour when building a view is:
 5. The `dist` directory is generated, containing:
    - the js bundle
    - the css bundle
-   - a package manifest (`package.json`) file containing:
+   - a package manifest (`package.json`) file containing
+     ([see also below](#package-manifest)):
      - the location of the js bundle (`"module"` field)
      - the location of the css bundle (`"style"` field)
      - an object with the whole set of dependencies and their version ranges
