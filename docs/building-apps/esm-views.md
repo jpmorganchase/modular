@@ -31,11 +31,11 @@ default behaviour when building a view is:
    - the js bundle
    - the css bundle
    - a package manifest (`package.json`) file containing:
-     - the location of the js bundle
-     - (`"module"` field), the location of the css bundle (`"style"` field), all
-     - the package dependencies (including the hoisted ones - `"dependencies"`
-       field) and an array of eventual bundled dependencies
-     - (`bundledDependencies`, see below)
+     - the location of the js bundle (`"module"` field)
+     - the location of the css bundle (`"style"` field)
+     - an object with the whole set of dependencies and their version ranges
+       (`"dependencies"` field)
+     - an array of bundled dependencies (`bundledDependencies` field)
    - a synthetically generated `index.html` file, linking the trampoline file
      and the css bundle
    - a synthetically generated trampoline file, dynamically `import`ing the js
@@ -63,10 +63,10 @@ For example:
 - A valid template to work with the esm.sh public CDN can be specified with
   `EXTERNAL_CDN_TEMPLATE="https://esm.sh/[name]@[version]"`
 
-## Customise the bundled packages
+## Customise bundling / rewriting strategy
 
-By default, all external dependencies are rewritten to a CDN address and none
-are bundled. This logic can be controlled using two environment variables:
+By default, all external dependencies are rewritten to a CDN url and none are
+bundled. This logic can be controlled using two environment variables:
 
 - `EXTERNAL_ALLOW_LIST` is a comma-separated string that specifies which
   dependencies are allowed to be rewritten to CDN; if not specified, its default
@@ -94,4 +94,37 @@ It is possible to specify wildcards in the block and allow list.
 
 ## Package manifest
 
+Every build of a view will generate a package manifest (`package.json`) in the
+`dist` directory, which will contain a selection of the original `package.json`
+fields, plus a set of added / modified fields:
+
+- [`style`](https://jaketrent.com/post/package-json-style-attribute): the
+  location of the js bundle (example:
+  `"style": "static/css/main.c6ac0a5c.css"`), useful for an host to dynamically
+  load the styles and add them to the page `<head>` or the
+  [adopted stylesheet](https://wicg.github.io/construct-stylesheets/#using-constructed-stylesheets).
+- [`module`](https://github.com/dherman/defense-of-dot-js/blob/f31319be735b21739756b87d551f6711bd7aa283/proposal.md):
+  the location of the js bundle (example:
+  `"module": "static/js/main.5077b483.js"`), useful for an host to dynamically
+  load the view and render it in a React tree.
+- [`dependencies`](https://docs.npmjs.com/cli/v8/configuring-npm/package-json#dependencies):
+  an object containing all the dependencies imported in the package source
+  (including the hoisted ones) and their correspondent version ranges.
+- [`bundledDependencies`](https://docs.npmjs.com/cli/v8/configuring-npm/package-json#bundleddependencies):
+  an array of bundled dependencies. Since `dependencies` contains all the
+  dependencies (bundled and not bundled), it is always possible to know which
+  dependencies were rewritten and which were bundled.
+
 ## External CSS imports
+
+CSS imports pointing to an external package (for example:
+[`import 'regular-table/dist/css/material.css'`](https://www.npmjs.com/package/regular-table)
+) will be rewritten to a CDN url as normal packages (for example, using skypack,
+`https://cdn.skypack.dev/regular-table@[version]/dist/css/material.css`). The
+only difference is that they will be rewritten in the bundle as code that
+applies the CSS into the page, either by simply adding it to the `head` or,
+depending on the build `target`, using
+[CSS Module scripts](https://web.dev/css-module-scripts/) and adding the script
+to the
+[adopted stylesheet](https://wicg.github.io/construct-stylesheets/#using-constructed-stylesheets).
+This feature is experimental and feedback is appreciated.
