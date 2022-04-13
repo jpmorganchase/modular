@@ -17,11 +17,11 @@ Packages can currently be one of 3 types:
   other workspaces freely, and features like jsx and typechecking work out of
   the box.
 
-- A View, which is a package that exports a React component by default. Views
-  are built as ESM modules that can be `import`ed at runtime by an host to
-  implement a [micro frontend](../concepts/microfrontends.md) architecture or
-  started as a normal standalone applicatin, thanks to an automatically
-  generated `index.html` file. See also
+- A View, which is a package that typically exports a React component by
+  default. Views are built as ESM modules that can be `import`ed at runtime by
+  an host to implement a [micro frontend](../concepts/microfrontends.md)
+  architecture or started as a normal standalone applicatin, thanks to an
+  automatically generated `index.html` file. See also
   [the view building reference](../building-apps/esm-views.md)
 
 - A typical javascript package. You can use this to create any other kind of
