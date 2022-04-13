@@ -10,6 +10,7 @@ import {
   getQueriesForElement,
   queries,
 } from 'pptr-testing-library';
+import prettier from 'prettier';
 import puppeteer from 'puppeteer';
 
 import getModularRoot from '../utils/getModularRoot';
@@ -286,7 +287,11 @@ describe('modular-scripts', () => {
       const indexFile = (
         await fs.readFile(path.join(baseDir, 'index-LUQBNEET.js'))
       ).toString();
-
+      expect(
+        prettier.format(indexFile, {
+          filepath: 'index-F6YQ237K.js',
+        }),
+      ).toMatchSnapshot();
       expect(trampolineFile).toContain(
         `https://mycustomcdn.net/react?version=`,
       );
@@ -364,6 +369,11 @@ describe('modular-scripts', () => {
       const indexFile = (
         await fs.readFile(path.join(baseDir, 'index-F6YQ237K.js'))
       ).toString();
+      expect(
+        prettier.format(indexFile, {
+          filepath: 'index-F6YQ237K.js',
+        }),
+      ).toMatchSnapshot();
       expect(indexFile).toContain(`https://mycustomcdn.net/react?version=`);
       expect(indexFile).toContain(
         `https://mycustomcdn.net/lodash?version=^4.17.21`,
@@ -413,6 +423,11 @@ describe('modular-scripts', () => {
       const indexFile = (
         await fs.readFile(path.join(baseDir, 'index-P6RWJ53F.js'))
       ).toString();
+      expect(
+        prettier.format(indexFile, {
+          filepath: 'index-F6YQ237K.js',
+        }),
+      ).toMatchSnapshot();
       expect(indexFile).toContain(`https://mycustomcdn.net/react?version=`);
       expect(indexFile).not.toContain(
         `https://mycustomcdn.net/lodash?version=`,
@@ -421,16 +436,139 @@ describe('modular-scripts', () => {
         `https://mycustomcdn.net/lodash.merge?version=`,
       );
     });
+
+    it('THEN expects the correct bundledDependencies in package.json', async () => {
+      expect(
+        (
+          (await fs.readJson(
+            path.join(modularRoot, 'dist', 'sample-view', 'package.json'),
+          )) as CoreProperties
+        ).bundledDependencies,
+      ).toEqual(['lodash', 'lodash.merge']);
+    });
   });
 
-  it('THEN expects the correct bundledDependencies in package.json', async () => {
-    expect(
-      (
-        (await fs.readJson(
-          path.join(modularRoot, 'dist', 'sample-view', 'package.json'),
-        )) as CoreProperties
-      ).bundledDependencies,
-    ).toEqual(['lodash', 'lodash.merge']);
+  describe('WHEN building a view specifying a dependency to not being rewritten using wildcards', () => {
+    beforeAll(async () => {
+      await modular('build sample-view', {
+        stdio: 'inherit',
+        env: {
+          USE_MODULAR_ESBUILD: 'true',
+          EXTERNAL_CDN_TEMPLATE:
+            'https://mycustomcdn.net/[name]?version=[version]',
+          EXTERNAL_BLOCK_LIST: 'lodash*',
+        },
+      });
+    });
+
+    it('THEN outputs the correct directory structure', () => {
+      expect(tree(path.join(modularRoot, 'dist', 'sample-view')))
+        .toMatchInlineSnapshot(`
+        "sample-view
+        ├─ index.html #16orq8u
+        ├─ package.json
+        └─ static
+           └─ js
+              ├─ _trampoline.js #9qjmtx
+              ├─ index-P6RWJ53F.js #1emvouy
+              └─ index-P6RWJ53F.js.map #1y2yxmy"
+      `);
+    });
+
+    it('THEN rewrites only the dependencies that are not specified in the blocklist', async () => {
+      const baseDir = path.join(
+        modularRoot,
+        'dist',
+        'sample-view',
+        'static',
+        'js',
+      );
+
+      const indexFile = (
+        await fs.readFile(path.join(baseDir, 'index-P6RWJ53F.js'))
+      ).toString();
+      expect(
+        prettier.format(indexFile, {
+          filepath: 'index-F6YQ237K.js',
+        }),
+      ).toMatchSnapshot();
+      expect(indexFile).toContain(`https://mycustomcdn.net/react?version=`);
+      expect(indexFile).not.toContain(
+        `https://mycustomcdn.net/lodash?version=`,
+      );
+      expect(indexFile).not.toContain(
+        `https://mycustomcdn.net/lodash.merge?version=`,
+      );
+    });
+
+    it('THEN expects the correct bundledDependencies in package.json', async () => {
+      expect(
+        (
+          (await fs.readJson(
+            path.join(modularRoot, 'dist', 'sample-view', 'package.json'),
+          )) as CoreProperties
+        ).bundledDependencies,
+      ).toEqual(['lodash', 'lodash.merge']);
+    });
+  });
+
+  describe('WHEN building a view specifying a dependency to not being rewritten using allow list and wildcards', () => {
+    beforeAll(async () => {
+      await modular('build sample-view', {
+        stdio: 'inherit',
+        env: {
+          USE_MODULAR_ESBUILD: 'true',
+          EXTERNAL_CDN_TEMPLATE:
+            'https://mycustomcdn.net/[name]?version=[version]',
+          EXTERNAL_ALLOW_LIST: 'react*',
+        },
+      });
+    });
+
+    it('THEN outputs the correct directory structure', () => {
+      expect(tree(path.join(modularRoot, 'dist', 'sample-view')))
+        .toMatchInlineSnapshot(`
+        "sample-view
+        ├─ index.html #16orq8u
+        ├─ package.json
+        └─ static
+           └─ js
+              ├─ _trampoline.js #9qjmtx
+              ├─ index-P6RWJ53F.js #1emvouy
+              └─ index-P6RWJ53F.js.map #1y2yxmy"
+      `);
+    });
+
+    it('THEN rewrites only the dependencies that are not specified in the blocklist', async () => {
+      const baseDir = path.join(
+        modularRoot,
+        'dist',
+        'sample-view',
+        'static',
+        'js',
+      );
+
+      const indexFile = (
+        await fs.readFile(path.join(baseDir, 'index-P6RWJ53F.js'))
+      ).toString();
+      expect(indexFile).toContain(`https://mycustomcdn.net/react?version=`);
+      expect(indexFile).not.toContain(
+        `https://mycustomcdn.net/lodash?version=`,
+      );
+      expect(indexFile).not.toContain(
+        `https://mycustomcdn.net/lodash.merge?version=`,
+      );
+    });
+
+    it('THEN expects the correct bundledDependencies in package.json', async () => {
+      expect(
+        (
+          (await fs.readJson(
+            path.join(modularRoot, 'dist', 'sample-view', 'package.json'),
+          )) as CoreProperties
+        ).bundledDependencies,
+      ).toEqual(['lodash', 'lodash.merge']);
+    });
   });
 
   it('can execute tests', async () => {

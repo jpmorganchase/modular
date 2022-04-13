@@ -1,3 +1,4 @@
+import micromatch from 'micromatch';
 import type { Dependency } from '@schemastore/package';
 
 interface FilteredDependencies {
@@ -16,16 +17,29 @@ export function filterDependencies(
       external: {},
     };
   }
+
+  // By default, nothing is in blocklist
   const externalBlockList =
     process.env.EXTERNAL_BLOCK_LIST && !isApp
       ? process.env.EXTERNAL_BLOCK_LIST.split(',')
       : [];
+
+  // By default, everything in allow list
+  const externalAllowList =
+    process.env.EXTERNAL_ALLOW_LIST && !isApp
+      ? process.env.EXTERNAL_ALLOW_LIST.split(',')
+      : ['*'];
+
   return Object.entries(packageDependencies).reduce<FilteredDependencies>(
     (acc, [name, version]) => {
-      if (externalBlockList.includes(name)) {
-        acc.bundled[name] = version;
-      } else {
+      const isBlocked = micromatch.isMatch(name, externalBlockList);
+      const isAllowed = micromatch.isMatch(name, externalAllowList);
+
+      // It's not enough to be in allow list, the dependency should also not be in block list to be rewritten
+      if (isAllowed && !isBlocked) {
         acc.external[name] = version;
+      } else {
+        acc.bundled[name] = version;
       }
       return acc;
     },
