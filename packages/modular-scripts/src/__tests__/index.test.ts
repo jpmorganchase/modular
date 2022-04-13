@@ -286,7 +286,7 @@ describe('modular-scripts', () => {
       const indexFile = (
         await fs.readFile(path.join(baseDir, 'index-LUQBNEET.js'))
       ).toString();
-
+      expect(indexFile).toMatchSnapshot();
       expect(trampolineFile).toContain(
         `https://mycustomcdn.net/react?version=`,
       );
@@ -364,6 +364,7 @@ describe('modular-scripts', () => {
       const indexFile = (
         await fs.readFile(path.join(baseDir, 'index-F6YQ237K.js'))
       ).toString();
+      expect(indexFile).toMatchSnapshot();
       expect(indexFile).toContain(`https://mycustomcdn.net/react?version=`);
       expect(indexFile).toContain(
         `https://mycustomcdn.net/lodash?version=^4.17.21`,
@@ -413,6 +414,7 @@ describe('modular-scripts', () => {
       const indexFile = (
         await fs.readFile(path.join(baseDir, 'index-P6RWJ53F.js'))
       ).toString();
+      expect(indexFile).toMatchSnapshot();
       expect(indexFile).toContain(`https://mycustomcdn.net/react?version=`);
       expect(indexFile).not.toContain(
         `https://mycustomcdn.net/lodash?version=`,
@@ -472,6 +474,7 @@ describe('modular-scripts', () => {
       const indexFile = (
         await fs.readFile(path.join(baseDir, 'index-P6RWJ53F.js'))
       ).toString();
+      expect(indexFile).toMatchSnapshot();
       expect(indexFile).toContain(`https://mycustomcdn.net/react?version=`);
       expect(indexFile).not.toContain(
         `https://mycustomcdn.net/lodash?version=`,
