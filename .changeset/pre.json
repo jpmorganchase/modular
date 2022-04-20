@@ -1,0 +1,17 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "create-modular-react-app": "2.1.6",
+    "eslint-config-modular-app": "2.0.5",
+    "modular-scripts": "2.4.0",
+    "modular-site": "1.0.1",
+    "modular-template-app": "1.0.0",
+    "modular-template-node-env-app": "0.1.0",
+    "modular-template-package": "1.0.0",
+    "modular-template-view": "1.0.0",
+    "modular-views.macro": "3.1.1",
+    "tree-view-for-tests": "2.0.0"
+  },
+  "changesets": []
+}
