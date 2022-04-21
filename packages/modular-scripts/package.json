@@ -76,7 +76,7 @@
     "micromatch": "4.0.5",
     "mime": "^3.0.0",
     "mini-css-extract-plugin": "0.11.3",
-    "npm-packlist": "5.0.0",
+    "npm-packlist": "5.0.1",
     "open": "8.3.0",
     "optimize-css-assets-webpack-plugin": "6.0.1",
     "parse5": "6.0.1",
