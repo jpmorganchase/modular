@@ -24,6 +24,7 @@ const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('../../react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const postcssNormalize = require('postcss-normalize');
+const CDNCSSPlugin = require('./CDNCSSPlugin');
 const isCI = require('is-ci');
 
 const isApp = process.env.MODULAR_IS_APP === 'true';
@@ -418,12 +419,19 @@ module.exports = function (webpackEnv) {
             {
               test: /\.tsx$/,
               include: paths.modularSrc,
-              loader: require.resolve('esbuild-loader'),
-              options: {
-                implementation: require('esbuild'),
-                loader: 'tsx',
-                target: esbuildTargetFactory,
-              },
+              use: [
+                {
+                  loader: require.resolve('./CDNCSSLoader.js'),
+                },
+                {
+                  loader: require.resolve('esbuild-loader'),
+                  options: {
+                    implementation: require('esbuild'),
+                    loader: 'tsx',
+                    target: esbuildTargetFactory,
+                  },
+                },
+              ],
             },
             // "postcss" loader applies autoprefixer to our CSS.
             // "css" loader resolves paths in CSS and adds assets as dependencies.
@@ -689,6 +697,7 @@ module.exports = function (webpackEnv) {
             infrastructure: 'silent',
           },
         }),
+      isView && new CDNCSSPlugin(),
     ].filter(Boolean),
     // Turn off performance processing because we utilize
     // our own hints via the FileSizeReporter
