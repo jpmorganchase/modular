@@ -8,7 +8,7 @@ export const ModularTypes: ModularType[] = (
   packageTypes as ModularType[]
 ).concat(['root']);
 
-export type PackageType = 'app' | 'view' | 'package';
+export type PackageType = 'app' | 'esm-view' | 'view' | 'package';
 
 export type ModularType = PackageType | 'root';
 
