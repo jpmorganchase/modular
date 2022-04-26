@@ -74,22 +74,6 @@ describe('create-modular-react-app', () => {
       │  ├─ README.md #14bthrh
       │  └─ app
       │     ├─ package.json
-      │     ├─ public
-      │     │  ├─ favicon.ico #6pu3rg
-      │     │  ├─ index.html #1m6toxd
-      │     │  ├─ logo192.png #1nez7vk
-      │     │  ├─ logo512.png #1hwqvcc
-      │     │  ├─ manifest.json #19gah8o
-      │     │  └─ robots.txt #1sjb8b3
-      │     ├─ src
-      │     │  ├─ App.css #1o0zosm
-      │     │  ├─ App.tsx #c80ven
-      │     │  ├─ __tests__
-      │     │  │  └─ App.test.tsx #16urcos
-      │     │  ├─ index.css #o7sk21
-      │     │  ├─ index.tsx #zdn6mw
-      │     │  ├─ logo.svg #1okqmlj
-      │     │  └─ react-app-env.d.ts #t4ygcy
       │     └─ tsconfig.json #6rw46b
       ├─ tsconfig.json #1h72lkd
       └─ yarn.lock"
@@ -122,6 +106,7 @@ describe('create-modular-react-app', () => {
           "@types/react-dom": "?",
           "eslint-config-modular-app": "?",
           "modular-scripts": "?",
+          "modular-template-app": "?",
           "prettier": "?",
           "react": "?",
           "react-dom": "?",
@@ -163,13 +148,12 @@ describe('create-modular-react-app', () => {
     ).toMatchInlineSnapshot(`
       Object {
         "author": "?",
-        "dependencies": Object {},
         "modular": Object {
           "type": "app",
         },
         "name": "app",
         "private": true,
-        "version": "0.1.0",
+        "version": "1.0.0",
       }
     `);
   });
@@ -195,22 +179,6 @@ describe('create-modular-react-app', () => {
       │  ├─ README.md #14bthrh
       │  └─ app
       │     ├─ package.json
-      │     ├─ public
-      │     │  ├─ favicon.ico #6pu3rg
-      │     │  ├─ index.html #1m6toxd
-      │     │  ├─ logo192.png #1nez7vk
-      │     │  ├─ logo512.png #1hwqvcc
-      │     │  ├─ manifest.json #19gah8o
-      │     │  └─ robots.txt #1sjb8b3
-      │     ├─ src
-      │     │  ├─ App.css #1o0zosm
-      │     │  ├─ App.tsx #c80ven
-      │     │  ├─ __tests__
-      │     │  │  └─ App.test.tsx #16urcos
-      │     │  ├─ index.css #o7sk21
-      │     │  ├─ index.tsx #zdn6mw
-      │     │  ├─ logo.svg #1okqmlj
-      │     │  └─ react-app-env.d.ts #t4ygcy
       │     └─ tsconfig.json #6rw46b
       ├─ tsconfig.json #1h72lkd
       └─ yarn.lock"
@@ -243,6 +211,7 @@ describe('create-modular-react-app', () => {
           "@types/react-dom": "?",
           "eslint-config-modular-app": "?",
           "modular-scripts": "?",
+          "modular-template-app": "?",
           "prettier": "?",
           "react": "?",
           "react-dom": "?",
@@ -284,13 +253,12 @@ describe('create-modular-react-app', () => {
     ).toMatchInlineSnapshot(`
       Object {
         "author": "?",
-        "dependencies": Object {},
         "modular": Object {
           "type": "app",
         },
         "name": "app",
         "private": true,
-        "version": "0.1.0",
+        "version": "1.0.0",
       }
     `);
   });
