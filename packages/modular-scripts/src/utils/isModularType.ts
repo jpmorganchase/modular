@@ -2,7 +2,12 @@ import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemasto
 import * as path from 'path';
 import * as fs from 'fs-extra';
 
-export const packageTypes: PackageType[] = ['app', 'view', 'package'];
+export const packageTypes: PackageType[] = [
+  'app',
+  'esm-view',
+  'view',
+  'package',
+];
 
 export const ModularTypes: ModularType[] = (
   packageTypes as ModularType[]
