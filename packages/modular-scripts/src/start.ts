@@ -4,6 +4,7 @@ import actionPreflightCheck from './utils/actionPreflightCheck';
 import isModularType from './utils/isModularType';
 import execAsync from './utils/execAsync';
 import getLocation from './utils/getLocation';
+import stageView from './utils/stageView';
 import getModularRoot from './utils/getModularRoot';
 import getWorkspaceInfo from './utils/getWorkspaceInfo';
 import { setupEnvForDirectory } from './utils/setupEnv';
@@ -34,7 +35,7 @@ async function start(packageName: string): Promise<void> {
     target = chosenTarget.value as string;
   }
 
-  const targetPath = await getLocation(target);
+  let targetPath = await getLocation(target);
 
   await setupEnvForDirectory(targetPath);
 
@@ -45,11 +46,17 @@ async function start(packageName: string): Promise<void> {
   }
 
   const isEsmView = isModularType(targetPath, 'esm-view');
-
-  const paths = await createPaths(target);
-  isEsmView
-    ? await checkRequiredFiles([paths.appIndexJs])
-    : await checkRequiredFiles([paths.appHtml, paths.appIndexJs]);
+  const isView = isModularType(targetPath, 'view');
+  if (isView) {
+    targetPath = stageView(target);
+  } else {
+    // in the case we're an app then we need to make sure that users have no incorrectly
+    // setup their app folder.
+    const paths = await createPaths(target);
+    isEsmView
+      ? await checkRequiredFiles([paths.appIndexJs])
+      : await checkRequiredFiles([paths.appHtml, paths.appIndexJs]);
+  }
 
   await checkBrowsers(targetPath);
 
@@ -58,7 +65,7 @@ async function start(packageName: string): Promise<void> {
     !process.env.USE_MODULAR_WEBPACK ||
     process.env.USE_MODULAR_WEBPACK === 'true';
 
-  // True if the preferene IS set and the preference is esbuid.
+  // True if the preference IS set and the preference is esbuild.
   const useEsbuild =
     process.env.USE_MODULAR_ESBUILD &&
     process.env.USE_MODULAR_ESBUILD === 'true';

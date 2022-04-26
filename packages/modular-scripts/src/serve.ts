@@ -12,7 +12,7 @@ async function serve(target: string, port = 3000): Promise<void> {
 
   if (
     isModularType(targetLocation, 'app') ||
-    isModularType(targetLocation, 'view')
+    isModularType(targetLocation, 'esm-view')
   ) {
     const paths = await createPaths(target);
 
@@ -28,7 +28,7 @@ async function serve(target: string, port = 3000): Promise<void> {
       );
     }
   } else {
-    throw new Error(`Modular can only serve an app or a view.`);
+    throw new Error(`Modular can only serve an app or a esm-view.`);
   }
 }
 
