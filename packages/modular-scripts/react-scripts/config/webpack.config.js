@@ -29,6 +29,8 @@ const isCI = require('is-ci');
 const isApp = process.env.MODULAR_IS_APP === 'true';
 const isEsmView = !isApp;
 
+// If it's an app, set it at ESBUILD_TARGET_FACTORY or default to es2015
+// If it's not an app it's an ESM view, then we need es2020
 const esbuildTargetFactory = isApp
   ? process.env.ESBUILD_TARGET_FACTORY
     ? JSON.parse(process.env.ESBUILD_TARGET_FACTORY)
@@ -70,13 +72,13 @@ module.exports = function (webpackEnv) {
   const isEnvProduction = webpackEnv === 'production';
   const isEsmViewDevelopment = isEsmView & isEnvDevelopment;
 
-  // This is needed if we're serving a view in development node, since it won't be defined in the view dependencies.
+  // This is needed if we're serving a ESM view in development node, since it won't be defined in the view dependencies.
   if (externalDependencies.react && isEsmViewDevelopment) {
     externalDependencies['react-dom'] = externalDependencies.react;
   }
 
-  // Create an import map of external dependencies if we're building a view
-  const importMap = isEsmView
+  // Create a map of external dependencies if we're building a ESM view
+  const dependencyMap = isEsmView
     ? createExternalDependenciesMap(externalDependencies)
     : {};
 
@@ -163,11 +165,11 @@ module.exports = function (webpackEnv) {
           if (
             parsedModule &&
             parsedModule.dependencyName &&
-            importMap[parsedModule.dependencyName]
+            dependencyMap[parsedModule.dependencyName]
           ) {
             const { dependencyName, submodule } = parsedModule;
 
-            const toRewrite = `${importMap[dependencyName]}${
+            const toRewrite = `${dependencyMap[dependencyName]}${
               submodule ? `/${submodule}` : ''
             }`;
 
@@ -193,7 +195,7 @@ module.exports = function (webpackEnv) {
       : isEnvDevelopment && 'cheap-module-source-map',
     // These are the "entry points" to our application.
     // This means they will be the "root" imports that are included in JS bundle.
-    // We bundle a virtual file to trampoline the view as an entry point if we're starting it (views have no ReactDOM.render)
+    // We bundle a virtual file to trampoline the ESM view as an entry point if we're starting it (ESM views have no ReactDOM.render)
     entry: isEsmViewDevelopment ? getVirtualTrampoline() : paths.appIndexJs,
     output: {
       module: isApp ? undefined : true,
@@ -550,7 +552,7 @@ module.exports = function (webpackEnv) {
             ),
           )
         : isEsmViewDevelopment
-        ? // We need to provide a synthetic index.html in case we're starting a view
+        ? // We need to provide a synthetic index.html in case we're starting a ESM view
           new HtmlWebpackPlugin(
             Object.assign(
               {},
@@ -769,7 +771,7 @@ function parsePackageName(name) {
   return { dependencyName, scope, module, submodule };
 }
 
-// Virtual entrypoint if we're starting a view - see https://github.com/webpack/webpack/issues/6437
+// Virtual entrypoint if we're starting a ESM view - see https://github.com/webpack/webpack/issues/6437
 function getVirtualTrampoline() {
   const string = `
   import ReactDOM from 'react-dom'
