@@ -36,15 +36,16 @@ async function addPackage(
         choices: [
           { title: 'A plain package', value: 'package' },
           { title: 'A view within an application', value: 'view' },
+          { title: 'A ESM view', value: 'esm-view' },
           { title: 'A standalone application', value: 'app' },
         ],
         initial: 0,
       },
     ])) as { type: string; name: string });
 
-  if (!['app', 'view', 'package'].includes(type)) {
+  if (!['app', 'esm-view', 'view', 'package'].includes(type)) {
     throw new Error(
-      `Type ${type} does not exist, please use app, view or package`,
+      `Type ${type} does not exist, please use app, esm-view, view or package`,
     );
   }
 
