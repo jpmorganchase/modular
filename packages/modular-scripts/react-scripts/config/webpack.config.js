@@ -27,7 +27,7 @@ const postcssNormalize = require('postcss-normalize');
 const isCI = require('is-ci');
 
 const isApp = process.env.MODULAR_IS_APP === 'true';
-const isView = !isApp;
+const isEsmView = !isApp;
 
 const esbuildTargetFactory = isApp
   ? process.env.ESBUILD_TARGET_FACTORY
@@ -68,15 +68,15 @@ const sassModuleRegex = /\.module\.(scss|sass)$/;
 module.exports = function (webpackEnv) {
   const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
-  const isViewDevelopment = isView & isEnvDevelopment;
+  const isEsmViewDevelopment = isEsmView & isEnvDevelopment;
 
   // This is needed if we're serving a view in development node, since it won't be defined in the view dependencies.
-  if (externalDependencies.react && isViewDevelopment) {
+  if (externalDependencies.react && isEsmViewDevelopment) {
     externalDependencies['react-dom'] = externalDependencies.react;
   }
 
   // Create an import map of external dependencies if we're building a view
-  const importMap = isView
+  const importMap = isEsmView
     ? createExternalDependenciesMap(externalDependencies)
     : {};
 
@@ -194,7 +194,7 @@ module.exports = function (webpackEnv) {
     // These are the "entry points" to our application.
     // This means they will be the "root" imports that are included in JS bundle.
     // We bundle a virtual file to trampoline the view as an entry point if we're starting it (views have no ReactDOM.render)
-    entry: isViewDevelopment ? getVirtualTrampoline() : paths.appIndexJs,
+    entry: isEsmViewDevelopment ? getVirtualTrampoline() : paths.appIndexJs,
     output: {
       module: isApp ? undefined : true,
       library: isApp
@@ -549,7 +549,7 @@ module.exports = function (webpackEnv) {
                 : undefined,
             ),
           )
-        : isViewDevelopment
+        : isEsmViewDevelopment
         ? // We need to provide a synthetic index.html in case we're starting a view
           new HtmlWebpackPlugin(
             Object.assign(

@@ -44,10 +44,10 @@ async function start(packageName: string): Promise<void> {
     );
   }
 
-  const isView = isModularType(targetPath, 'view');
+  const isEsmView = isModularType(targetPath, 'esm-view');
 
   const paths = await createPaths(target);
-  isView
+  isEsmView
     ? await checkRequiredFiles([paths.appIndexJs])
     : await checkRequiredFiles([paths.appHtml, paths.appIndexJs]);
 
@@ -65,7 +65,7 @@ async function start(packageName: string): Promise<void> {
 
   const packageDependencies = await getPackageDependencies(target);
   const { external: externalDependencies, bundled: bundledDependencies } =
-    filterDependencies(packageDependencies, !isView);
+    filterDependencies(packageDependencies, !isEsmView);
 
   // If you want to use webpack then we'll always use webpack. But if you've indicated
   // you want esbuild - then we'll switch you to the new fancy world.
@@ -73,7 +73,7 @@ async function start(packageName: string): Promise<void> {
     const { default: startEsbuildApp } = await import(
       './esbuild-scripts/start'
     );
-    await startEsbuildApp(target, !isView, externalDependencies);
+    await startEsbuildApp(target, !isEsmView, externalDependencies);
   } else {
     const startScript = require.resolve(
       'modular-scripts/react-scripts/scripts/start.js',
@@ -94,7 +94,7 @@ async function start(packageName: string): Promise<void> {
         MODULAR_ROOT: modularRoot,
         MODULAR_PACKAGE: target,
         MODULAR_PACKAGE_NAME: targetName,
-        MODULAR_IS_APP: JSON.stringify(!isView),
+        MODULAR_IS_APP: JSON.stringify(!isEsmView),
         MODULAR_PACKAGE_DEPS: JSON.stringify({
           externalDependencies,
           bundledDependencies,
