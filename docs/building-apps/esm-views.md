@@ -5,13 +5,13 @@ title: ESM Views (micro frontends)
 
 modular builds packages of `"type": "view"` as
 [ES Modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules),
-rewriting all of a subset of their imports to make use of a configurable
-[ESM](https://www.skypack.dev/) [CDN](https://esm.sh/). This allows users to
+rewriting all of a subset of their imports to make use of a configurable esm cdn (e.g. 
+[Skypack](https://www.skypack.dev) or [esm.sh](https://esm.sh/)). This allows users to
 implement the [microfrontend pattern](../concepts/microfrontends.md), by
 creating an artefact that can be
 [`import`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#dynamic_imports)ed
 at runtime by an host application, or loaded stand-alone thanks to the automatic
-generation of a index and trampoline file.
+generation of a index.html and trampoline file.
 
 ## How to build
 
@@ -28,8 +28,8 @@ default behaviour when building a view is:
    using the versions extracted in step 1
 4. All the local CSS is bundled in a single file
 5. The `dist` directory is generated, containing:
-   - the js bundle
-   - the css bundle
+   - the js file
+   - the css file
    - a package manifest (`package.json`) file containing
      ([see also below](#package-manifest)):
      - the location of the js bundle (`"module"` field)
