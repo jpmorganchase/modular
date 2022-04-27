@@ -11,6 +11,7 @@
   },
   "license": "Apache-2.0",
   "files": [
-    "README.md"
+    "README.md",
+    "src"
   ]
 }
