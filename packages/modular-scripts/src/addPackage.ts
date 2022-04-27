@@ -89,7 +89,6 @@ async function addPackage({
   // try and find the modular template packge, if it's already been installed
   // in the project then continue without needing to do an install.
   // else we will fetch it from the yarn registry.
-  let fromRegistry = false;
   try {
     require.resolve(`${templateName}/package.json`);
   } catch (e) {
@@ -111,7 +110,6 @@ async function addPackage({
     }
 
     await templateInstallSubprocess;
-    fromRegistry = true;
   }
 
   const newModularPackageJsonPath = require.resolve(
@@ -147,22 +145,28 @@ async function addPackage({
     },
   });
 
-  const packageFilePaths = fromRegistry
-    ? getAllFiles(newPackagePath)
-    : // If we get our package locally we need to whitelist files like yarn publish does
-      globby.sync(modularTemplatePackageJson.files || ['*'], {
-        cwd: newPackagePath,
-        absolute: true,
-      });
+  const packageFilePaths = getAllFiles(newPackagePath);
 
+  // If we get our package locally we need to whitelist files like yarn publish does
+  const packageWhitelist = globby.sync(
+    modularTemplatePackageJson.files || ['*'],
+    {
+      cwd: newPackagePath,
+      absolute: true,
+    },
+  );
   for (const packageFilePath of packageFilePaths) {
-    fs.writeFileSync(
-      packageFilePath,
-      fs
-        .readFileSync(packageFilePath, 'utf8')
-        .replace(/PackageName__/g, name)
-        .replace(/ComponentName__/g, newComponentName),
-    );
+    if (!packageWhitelist.includes(packageFilePath)) {
+      fs.removeSync(packageFilePath);
+    } else {
+      fs.writeFileSync(
+        packageFilePath,
+        fs
+          .readFileSync(packageFilePath, 'utf8')
+          .replace(/PackageName__/g, name)
+          .replace(/ComponentName__/g, newComponentName),
+      );
+    }
   }
 
   await fs.writeJson(
