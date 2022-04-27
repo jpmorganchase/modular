@@ -1,5 +1,7 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
+import globby from 'globby';
+
 import {
   pascalCase as toPascalCase,
   paramCase as toParamCase,
@@ -145,14 +147,26 @@ async function addPackage({
 
   const packageFilePaths = getAllFiles(newPackagePath);
 
+  // If we get our package locally we need to whitelist files like yarn publish does
+  const packageWhitelist = globby.sync(
+    modularTemplatePackageJson.files || ['*'],
+    {
+      cwd: newPackagePath,
+      absolute: true,
+    },
+  );
   for (const packageFilePath of packageFilePaths) {
-    fs.writeFileSync(
-      packageFilePath,
-      fs
-        .readFileSync(packageFilePath, 'utf8')
-        .replace(/PackageName__/g, name)
-        .replace(/ComponentName__/g, newComponentName),
-    );
+    if (!packageWhitelist.includes(packageFilePath)) {
+      fs.removeSync(packageFilePath);
+    } else {
+      fs.writeFileSync(
+        packageFilePath,
+        fs
+          .readFileSync(packageFilePath, 'utf8')
+          .replace(/PackageName__/g, name)
+          .replace(/ComponentName__/g, newComponentName),
+      );
+    }
   }
 
   await fs.writeJson(

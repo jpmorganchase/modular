@@ -11,6 +11,7 @@
     "templateType": "view"
   },
   "files": [
-    "README.md"
+    "README.md",
+    "src"
   ]
 }
