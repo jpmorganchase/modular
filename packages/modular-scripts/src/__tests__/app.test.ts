@@ -83,7 +83,7 @@ describe('When working with a nested app', () => {
             ├─ 788.78cfb599.js.LICENSE.txt #eplx8h
             ├─ 788.78cfb599.js.map #jf9876
             ├─ main.3563e93f.js #32b8p3
-            ├─ main.3563e93f.js.map #2eqhpp
+            ├─ main.3563e93f.js.map #1rftojn
             ├─ runtime-main.83e93d07.js #1mo3tl5
             └─ runtime-main.83e93d07.js.map #3ycdm3"
     `);
@@ -301,7 +301,7 @@ describe('when working with an app', () => {
             ├─ 316.7a4d5eb7.js.LICENSE.txt #eplx8h
             ├─ 316.7a4d5eb7.js.map #1ib48x2
             ├─ main.97cda94b.js #19zv1xf
-            ├─ main.97cda94b.js.map #1gxllbt
+            ├─ main.97cda94b.js.map #omkf7l
             ├─ runtime-main.de9fd74d.js #1slkp3g
             └─ runtime-main.de9fd74d.js.map #d7r4im"
     `);
