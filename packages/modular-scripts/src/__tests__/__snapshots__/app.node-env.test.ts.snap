@@ -6,18 +6,21 @@ exports[`when working with a NODE_ENV app WHEN building with esbuild can generat
 "
 `;
 
-exports[`when working with a NODE_ENV app WHEN building with webpack can generate a js/main.3db228f9.chunk.js 1`] = `
-"(this[\\"webpackJsonpnode-env-app\\"] =
-  this[\\"webpackJsonpnode-env-app\\"] || []).push([
-  [0],
-  [
-    function (n, o, p) {
-      \\"use strict\\";
-      p.r(o), console.log(\\"production\\");
+exports[`when working with a NODE_ENV app WHEN building with webpack can generate a js/main.1c6de6d0.js 1`] = `
+"\\"use strict\\";
+(globalThis.webpackChunknode_env_app =
+  globalThis.webpackChunknode_env_app || []).push([
+  [179],
+  {
+    908: () => {
+      console.log(\\"production\\");
     },
-  ],
-  [[0, 1]],
+  },
+  (o) => {
+    var e;
+    (e = 908), o((o.s = e));
+  },
 ]);
-//# sourceMappingURL=main.3db228f9.chunk.js.map
+//# sourceMappingURL=main.1c6de6d0.js.map
 "
 `;

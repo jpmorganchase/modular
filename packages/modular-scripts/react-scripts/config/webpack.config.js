@@ -12,9 +12,8 @@ const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const InlineChunkHtmlPlugin = require('../../react-dev-utils/InlineChunkHtmlPlugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const safePostCssParser = require('postcss-safe-parser');
-const ManifestPlugin = require('webpack-manifest-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const { info } = require('../../react-dev-utils/logger');
 const InterpolateHtmlPlugin = require('../../react-dev-utils/InterpolateHtmlPlugin');
 const WatchMissingNodeModulesPlugin = require('../../react-dev-utils/WatchMissingNodeModulesPlugin');
@@ -25,7 +24,6 @@ const modules = require('./modules');
 const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('../../react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const typescriptFormatter = require('../../react-dev-utils/typescriptFormatter');
 const postcssNormalize = require('postcss-normalize');
 const isCI = require('is-ci');
 
@@ -33,14 +31,9 @@ const esbuildTargetFactory = process.env.ESBUILD_TARGET_FACTORY
   ? JSON.parse(process.env.ESBUILD_TARGET_FACTORY)
   : 'es2015';
 
-const appPackageJson = require(paths.appPackageJson);
-
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
 
-const webpackDevClientEntry = require.resolve(
-  '../../react-dev-utils/webpackHotDevClient',
-);
 const reactRefreshOverlayEntry = require.resolve(
   '../../react-dev-utils/refreshOverlayInterop',
 );
@@ -152,30 +145,7 @@ module.exports = function (webpackEnv) {
       : isEnvDevelopment && 'cheap-module-source-map',
     // These are the "entry points" to our application.
     // This means they will be the "root" imports that are included in JS bundle.
-    entry: isEnvDevelopment
-      ? [
-          // Include an alternative client for WebpackDevServer. A client's job is to
-          // connect to WebpackDevServer by a socket and get notified about changes.
-          // When you save a file, the client will either apply hot updates (in case
-          // of CSS changes), or refresh the page (in case of JS changes). When you
-          // make a syntax error, this client will display a syntax error overlay.
-          // Note: instead of the default WebpackDevServer client, we use a custom one
-          // to bring better experience for Create React App users. You can replace
-          // the line below with these two lines if you prefer the stock client:
-          //
-          // require.resolve('webpack-dev-server/client') + '?/',
-          // require.resolve('webpack/hot/dev-server'),
-          //
-          // When using the experimental react-refresh integration,
-          // the webpack plugin takes care of injecting the dev client for us.
-          webpackDevClientEntry,
-          // Finally, this is your app's code:
-          paths.appIndexJs,
-          // We include the app code last so that if there is a runtime error during
-          // initialization, it doesn't blow up the WebpackDevServer client, and
-          // changing JS code would still trigger a refresh.
-        ]
-      : paths.appIndexJs,
+    entry: paths.appIndexJs,
     output: {
       // The build folder.
       path: isEnvProduction ? paths.appBuild : undefined,
@@ -185,10 +155,9 @@ module.exports = function (webpackEnv) {
       // In development, it does not produce real files.
       filename: isEnvProduction
         ? 'static/js/[name].[contenthash:8].js'
-        : isEnvDevelopment && 'static/js/bundle.js',
-      // TODO: remove this when upgrading to webpack 5
-      futureEmitAssets: true,
+        : isEnvDevelopment && 'static/js/[name].js',
       // There are also additional JS chunk files if you use code splitting.
+      // Please remember that Webpack 5, unlike Webpack 4, controls "splitChunks" via fileName, not chunkFilename - https://stackoverflow.com/questions/66077740/webpack-5-output-chunkfilename-not-working
       chunkFilename: isEnvProduction
         ? 'static/js/[name].[contenthash:8].chunk.js'
         : isEnvDevelopment && 'static/js/[name].chunk.js',
@@ -205,12 +174,6 @@ module.exports = function (webpackEnv) {
         : isEnvDevelopment &&
           ((info) =>
             path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')),
-      // Prevents conflicts when multiple webpack runtimes (from different apps)
-      // are used on the same page.
-      jsonpFunction: `webpackJsonp${appPackageJson.name}`,
-      // this defaults to 'window', but by setting it to 'this' then
-      // module chunks which are built will work in web workers as well.
-      globalObject: 'this',
     },
     optimization: {
       minimize: isEnvProduction,
@@ -254,34 +217,14 @@ module.exports = function (webpackEnv) {
               ascii_only: true,
             },
           },
-          sourceMap: shouldUseSourceMap,
         }),
-        // This is only used in production mode
-        new OptimizeCSSAssetsPlugin({
-          cssProcessorOptions: {
-            parser: safePostCssParser,
-            map: shouldUseSourceMap
-              ? {
-                  // `inline: false` forces the sourcemap to be output into a
-                  // separate file
-                  inline: false,
-                  // `annotation: true` appends the sourceMappingURL to the end of
-                  // the css file, helping the browser find the sourcemap
-                  annotation: true,
-                }
-              : false,
-          },
-          cssProcessorPluginOptions: {
-            preset: ['default', { minifyFontValues: { removeQuotes: false } }],
-          },
-        }),
+        new CssMinimizerPlugin(),
       ],
       // Automatically split vendor and commons
       // https://twitter.com/wSokra/status/969633336732905474
       // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
       splitChunks: {
         chunks: 'all',
-        name: isEnvDevelopment,
       },
       // Keep the runtime chunk separated to enable long term caching
       // https://twitter.com/wSokra/status/969679223278505985
@@ -318,6 +261,13 @@ module.exports = function (webpackEnv) {
         }),
         ...(modules.webpackAliases || {}),
       },
+      // Some libraries import Node modules but don't use them in the browser.
+      // Tell webpack to provide empty mocks for them so importing them works.
+      // See https://github.com/webpack/webpack/issues/11649
+      fallback: builtinModules.reduce((acc, next) => {
+        acc[next] = false;
+        return acc;
+      }, {}),
       plugins: [
         // Adds support for installing with Plug'n'Play, leading to faster installs and adding
         // guards against forgotten dependencies and such.
@@ -343,8 +293,6 @@ module.exports = function (webpackEnv) {
     module: {
       strictExportPresence: true,
       rules: [
-        // Disable require.ensure as it's not a standard language feature.
-        { parser: { requireEnsure: false } },
         {
           // "oneOf" will traverse all following loaders until one will
           // match the requirements. When no loader matches it will fall
@@ -497,7 +445,7 @@ module.exports = function (webpackEnv) {
               // its runtime that would otherwise be processed through "file" loader.
               // Also exclude `html` and `json` extensions so they get processed
               // by webpacks internal loaders.
-              exclude: [/\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
+              exclude: [/(^|\.(js|mjs|jsx|ts|tsx|html|json))$/],
               options: {
                 name: 'static/media/[name].[hash:8].[ext]',
               },
@@ -579,7 +527,7 @@ module.exports = function (webpackEnv) {
       //   `index.html`
       // - "entrypoints" key: Array of files which are included in `index.html`,
       //   can be used to reconstruct the HTML if necessary
-      new ManifestPlugin({
+      new WebpackManifestPlugin({
         fileName: 'asset-manifest.json',
         publicPath: paths.publicUrlOrPath,
         generate: (seed, files, entrypoints) => {
@@ -602,41 +550,60 @@ module.exports = function (webpackEnv) {
       // solution that requires the user to opt into importing specific locales.
       // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
       // You can remove this if you don't use Moment.js:
-      new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+      new webpack.IgnorePlugin({
+        resourceRegExp: /^\.\/locale$/,
+        contextRegExp: /moment$/,
+      }),
       // TypeScript type checking turned off for CI envs
       // https://github.com/jpmorganchase/modular/issues/605
       useTypeScript &&
         !isCI &&
         new ForkTsCheckerWebpackPlugin({
-          typescript: resolve.sync('typescript', {
-            basedir: paths.appNodeModules,
-          }),
           async: isEnvDevelopment,
-          checkSyntacticErrors: true,
-          tsconfig: paths.appTsConfig,
-          reportFiles: [
+          typescript: {
+            async: isEnvDevelopment,
+            typescriptPath: resolve.sync('typescript', {
+              basedir: paths.appNodeModules,
+            }),
+            configOverwrite: {
+              compilerOptions: {
+                sourceMap: isEnvProduction
+                  ? shouldUseSourceMap
+                  : isEnvDevelopment,
+                skipLibCheck: true,
+                inlineSourceMap: false,
+                declarationMap: false,
+                noEmit: true,
+              },
+            },
+            context: paths.appPath,
+            diagnosticOptions: {
+              syntactic: true,
+              semantic: true,
+            },
+            mode: 'write-references',
+          },
+          issue: {
             // This one is specifically to match during CI tests,
             // as micromatch doesn't match
             // '../cra-template-typescript/template/src/App.tsx'
             // otherwise.
-            '../**/src/**/*.{ts,tsx}',
-            '**/src/**/*.{ts,tsx}',
-            '!**/src/**/__tests__/**',
-            '!**/src/**/?(*.)(spec|test).*',
-            '!**/src/setupProxy.*',
-            '!**/src/setupTests.*',
-          ],
-          silent: true,
-          // The formatter is invoked directly in WebpackDevServerUtils during development
-          formatter: isEnvProduction ? typescriptFormatter : undefined,
+            include: [
+              { file: '../**/src/**/*.{ts,tsx}' },
+              { file: '**/src/**/*.{ts,tsx}' },
+            ],
+            exclude: [
+              { file: '**/src/**/__tests__/**' },
+              { file: '**/src/**/?(*.){spec|test}.*' },
+              { file: '**/src/setupProxy.*' },
+              { file: '**/src/setupTests.*' },
+            ],
+          },
+          logger: {
+            infrastructure: 'silent',
+          },
         }),
     ].filter(Boolean),
-    // Some libraries import Node modules but don't use them in the browser.
-    // Tell webpack to provide empty mocks for them so importing them works.
-    node: builtinModules.reduce((acc, next) => {
-      acc[next] = false;
-      return acc;
-    }, {}),
     // Turn off performance processing because we utilize
     // our own hints via the FileSizeReporter
     performance: false,

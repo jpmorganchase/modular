@@ -99,6 +99,7 @@
   },
   "jest": {
     "coveragePathIgnorePatterns": [
+      "/__fixtures__/",
       "/node_modules/",
       "/modular-site/",
       "/modular-views.macro/"
