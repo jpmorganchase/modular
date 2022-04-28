@@ -1,3 +1,4 @@
+/* eslint-disable jest/no-disabled-tests */
 import createModularApp from '..';
 import execa from 'execa';
 import path from 'path';
@@ -11,7 +12,7 @@ function modular(str: string, cwd: string, opts: Record<string, unknown> = {}) {
   });
 }
 
-describe('Newly created create-modular-react-app repo', () => {
+describe.skip('Newly created create-modular-react-app repo', () => {
   const repoName = 'test-integrity-cra-repo';
   let destination: string;
   let tmpDirectory: tmp.DirResult;
