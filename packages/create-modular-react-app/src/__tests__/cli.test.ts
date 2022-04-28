@@ -1,10 +1,11 @@
+/* eslint-disable jest/no-disabled-tests */
 import execa from 'execa';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as tmp from 'tmp';
 import tree from 'tree-view-for-tests';
 
-describe('Creating a new modular app via the CLI', () => {
+describe.skip('Creating a new modular app via the CLI', () => {
   let cwd: string;
   beforeEach(async () => {
     cwd = path.join(tmp.dirSync().name, 'new-modular-app');
@@ -26,7 +27,7 @@ describe('Creating a new modular app via the CLI', () => {
   });
 });
 
-describe('Creating a new modular app via the CLI with --empty', () => {
+describe.skip('Creating a new modular app via the CLI with --empty', () => {
   let cwd: string;
   beforeEach(async () => {
     cwd = path.join(tmp.dirSync().name, 'another-new-modular-app');

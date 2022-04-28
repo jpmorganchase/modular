@@ -1,6 +1,6 @@
 {
   "name": "modular-template-view",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "exports": {
     "./package.json": "./package.json"
   },
@@ -11,6 +11,7 @@
     "templateType": "view"
   },
   "files": [
-    "README.md"
+    "README.md",
+    "src"
   ]
 }
