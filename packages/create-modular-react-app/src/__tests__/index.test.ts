@@ -39,274 +39,325 @@ async function readCensoredPackageJson(
 
 describe('create-modular-react-app', () => {
   const repoName = 'test-repo';
-  let destination: string;
-  let tmpDirectory: tmp.DirResult;
-  beforeEach(() => {
-    tmpDirectory = tmp.dirSync({ unsafeCleanup: true });
-    destination = path.join(tmpDirectory.name, repoName);
+  const tmpDirectories: tmp.DirResult[] = [];
+
+  function createTempDirectory(): string {
+    const tmpDirectory = tmp.dirSync({ unsafeCleanup: true });
+    tmpDirectories.push(tmpDirectory);
+
+    return path.join(tmpDirectory.name, repoName);
+  }
+
+  afterAll(() => {
+    tmpDirectories.forEach((tmpDirectory) => {
+      //remove project
+      tmpDirectory.removeCallback();
+    });
   });
 
-  afterEach(() => {
-    //remove project
-    tmpDirectory.removeCallback();
-    // @ts-ignore
-    destination = undefined;
-  });
-  it('should create a project with defaults', async () => {
-    await createModularApp({ name: destination });
-    expect(tree(destination)).toMatchInlineSnapshot(`
-      "test-repo
-      ├─ .editorconfig #1p4gvuw
-      ├─ .eslintignore #1ot2bpo
-      ├─ .gitignore #175wbq
-      ├─ .prettierignore #10uqwgj
-      ├─ .vscode
-      │  ├─ extensions.json #1i4584r
-      │  ├─ launch.json #1kk1omt
-      │  └─ settings.json #xes41c
-      ├─ .yarnrc #1orkcoz
-      ├─ README.md #1nksyzj
-      ├─ modular
-      │  ├─ setupEnvironment.ts #m0s4vb
-      │  └─ setupTests.ts #bnjknz
-      ├─ package.json
-      ├─ packages
-      │  ├─ README.md #14bthrh
-      │  └─ app
-      │     ├─ package.json
-      │     ├─ public
-      │     │  ├─ favicon.ico #6pu3rg
-      │     │  ├─ index.html #1m6toxd
-      │     │  ├─ logo192.png #1nez7vk
-      │     │  ├─ logo512.png #1hwqvcc
-      │     │  ├─ manifest.json #19gah8o
-      │     │  └─ robots.txt #1sjb8b3
-      │     ├─ src
-      │     │  ├─ App.css #1o0zosm
-      │     │  ├─ App.tsx #c80ven
-      │     │  ├─ __tests__
-      │     │  │  └─ App.test.tsx #16urcos
-      │     │  ├─ index.css #o7sk21
-      │     │  ├─ index.tsx #zdn6mw
-      │     │  ├─ logo.svg #1okqmlj
-      │     │  └─ react-app-env.d.ts #t4ygcy
-      │     └─ tsconfig.json #6rw46b
-      ├─ tsconfig.json #1h72lkd
-      └─ yarn.lock"
-    `);
-    expect(
-      await readCensoredPackageJson(path.join(destination, 'package.json')),
-    ).toMatchInlineSnapshot(`
-      Object {
-        "author": "?",
-        "browserslist": Object {
-          "development": Array [
-            "last 1 chrome version",
-            "last 1 firefox version",
-            "last 1 safari version",
-          ],
-          "production": Array [
-            ">0.2%",
-            "not dead",
-            "not op_mini all",
-          ],
-        },
-        "dependencies": Object {
-          "@testing-library/dom": "?",
-          "@testing-library/jest-dom": "?",
-          "@testing-library/react": "?",
-          "@testing-library/user-event": "?",
-          "@types/jest": "?",
-          "@types/node": "?",
-          "@types/react": "?",
-          "@types/react-dom": "?",
-          "eslint-config-modular-app": "?",
-          "modular-scripts": "?",
-          "prettier": "?",
-          "react": "?",
-          "react-dom": "?",
-          "typescript": "?",
-        },
-        "eslintConfig": Object {
-          "extends": "modular-app",
-        },
-        "license": "MIT",
-        "main": "index.js",
-        "modular": Object {
-          "type": "root",
-        },
-        "name": "test-repo",
-        "prettier": Object {
-          "printWidth": 80,
-          "proseWrap": "always",
-          "singleQuote": true,
-          "trailingComma": "all",
-        },
-        "private": true,
-        "scripts": Object {
-          "build": "modular build",
-          "lint": "eslint . --ext .js,.ts,.tsx",
-          "prettier": "prettier --write .",
-          "start": "modular start",
-          "test": "modular test",
-        },
-        "version": "1.0.0",
-        "workspaces": Array [
-          "packages/**",
-        ],
-      }
-    `);
-    expect(
-      await readCensoredPackageJson(
-        path.join(destination, 'packages', 'app', 'package.json'),
-      ),
-    ).toMatchInlineSnapshot(`
-      Object {
-        "author": "?",
-        "dependencies": Object {},
-        "modular": Object {
-          "type": "app",
-        },
-        "name": "app",
-        "private": true,
-        "version": "0.1.0",
-      }
-    `);
-  });
-  it('should create a project with prefer offline', async () => {
-    await createModularApp({ name: destination, preferOffline: true });
-    expect(tree(destination)).toMatchInlineSnapshot(`
-      "test-repo
-      ├─ .editorconfig #1p4gvuw
-      ├─ .eslintignore #1ot2bpo
-      ├─ .gitignore #175wbq
-      ├─ .prettierignore #10uqwgj
-      ├─ .vscode
-      │  ├─ extensions.json #1i4584r
-      │  ├─ launch.json #1kk1omt
-      │  └─ settings.json #xes41c
-      ├─ .yarnrc #1orkcoz
-      ├─ README.md #1nksyzj
-      ├─ modular
-      │  ├─ setupEnvironment.ts #m0s4vb
-      │  └─ setupTests.ts #bnjknz
-      ├─ package.json
-      ├─ packages
-      │  ├─ README.md #14bthrh
-      │  └─ app
-      │     ├─ package.json
-      │     ├─ public
-      │     │  ├─ favicon.ico #6pu3rg
-      │     │  ├─ index.html #1m6toxd
-      │     │  ├─ logo192.png #1nez7vk
-      │     │  ├─ logo512.png #1hwqvcc
-      │     │  ├─ manifest.json #19gah8o
-      │     │  └─ robots.txt #1sjb8b3
-      │     ├─ src
-      │     │  ├─ App.css #1o0zosm
-      │     │  ├─ App.tsx #c80ven
-      │     │  ├─ __tests__
-      │     │  │  └─ App.test.tsx #16urcos
-      │     │  ├─ index.css #o7sk21
-      │     │  ├─ index.tsx #zdn6mw
-      │     │  ├─ logo.svg #1okqmlj
-      │     │  └─ react-app-env.d.ts #t4ygcy
-      │     └─ tsconfig.json #6rw46b
-      ├─ tsconfig.json #1h72lkd
-      └─ yarn.lock"
-    `);
-    expect(
-      await readCensoredPackageJson(path.join(destination, 'package.json')),
-    ).toMatchInlineSnapshot(`
-      Object {
-        "author": "?",
-        "browserslist": Object {
-          "development": Array [
-            "last 1 chrome version",
-            "last 1 firefox version",
-            "last 1 safari version",
-          ],
-          "production": Array [
-            ">0.2%",
-            "not dead",
-            "not op_mini all",
-          ],
-        },
-        "dependencies": Object {
-          "@testing-library/dom": "?",
-          "@testing-library/jest-dom": "?",
-          "@testing-library/react": "?",
-          "@testing-library/user-event": "?",
-          "@types/jest": "?",
-          "@types/node": "?",
-          "@types/react": "?",
-          "@types/react-dom": "?",
-          "eslint-config-modular-app": "?",
-          "modular-scripts": "?",
-          "prettier": "?",
-          "react": "?",
-          "react-dom": "?",
-          "typescript": "?",
-        },
-        "eslintConfig": Object {
-          "extends": "modular-app",
-        },
-        "license": "MIT",
-        "main": "index.js",
-        "modular": Object {
-          "type": "root",
-        },
-        "name": "test-repo",
-        "prettier": Object {
-          "printWidth": 80,
-          "proseWrap": "always",
-          "singleQuote": true,
-          "trailingComma": "all",
-        },
-        "private": true,
-        "scripts": Object {
-          "build": "modular build",
-          "lint": "eslint . --ext .js,.ts,.tsx",
-          "prettier": "prettier --write .",
-          "start": "modular start",
-          "test": "modular test",
-        },
-        "version": "1.0.0",
-        "workspaces": Array [
-          "packages/**",
-        ],
-      }
-    `);
-    expect(
-      await readCensoredPackageJson(
-        path.join(destination, 'packages', 'app', 'package.json'),
-      ),
-    ).toMatchInlineSnapshot(`
-      Object {
-        "author": "?",
-        "dependencies": Object {},
-        "modular": Object {
-          "type": "app",
-        },
-        "name": "app",
-        "private": true,
-        "version": "0.1.0",
-      }
-    `);
-  });
-  it('should create a project without git metadata', async () => {
-    await createModularApp({
-      name: destination,
-      repo: false,
+  describe('WHEN setting a project with defaults', () => {
+    let destination: string;
+
+    beforeAll(async () => {
+      destination = createTempDirectory();
+      await createModularApp({ name: destination });
     });
-    expect(fs.existsSync(path.join(destination, '.git'))).toEqual(false);
-  });
-  it('should create a project prefer offline without git metadata', async () => {
-    await createModularApp({
-      name: destination,
-      repo: false,
-      preferOffline: true,
+
+    it('should create a project with defaults', () => {
+      expect(tree(destination)).toMatchSnapshot(`
+          "test-repo
+          ├─ .editorconfig #1p4gvuw
+          ├─ .eslintignore #1ot2bpo
+          ├─ .gitignore #175wbq
+          ├─ .prettierignore #10uqwgj
+          ├─ .vscode
+          │  ├─ extensions.json #1i4584r
+          │  ├─ launch.json #1kk1omt
+          │  └─ settings.json #xes41c
+          ├─ .yarnrc #1orkcoz
+          ├─ README.md #1nksyzj
+          ├─ modular
+          │  ├─ setupEnvironment.ts #m0s4vb
+          │  └─ setupTests.ts #bnjknz
+          ├─ package.json
+          ├─ packages
+          │  ├─ README.md #14bthrh
+          │  └─ app
+          │     ├─ package.json
+          │     ├─ public
+          │     │  ├─ favicon.ico #6pu3rg
+          │     │  ├─ index.html #1m6toxd
+          │     │  ├─ logo192.png #1nez7vk
+          │     │  ├─ logo512.png #1hwqvcc
+          │     │  ├─ manifest.json #19gah8o
+          │     │  └─ robots.txt #1sjb8b3
+          │     ├─ src
+          │     │  ├─ App.css #1o0zosm
+          │     │  ├─ App.tsx #c80ven
+          │     │  ├─ __tests__
+          │     │  │  └─ App.test.tsx #16urcos
+          │     │  ├─ index.css #o7sk21
+          │     │  ├─ index.tsx #zdn6mw
+          │     │  ├─ logo.svg #1okqmlj
+          │     │  └─ react-app-env.d.ts #t4ygcy
+          │     └─ tsconfig.json #6rw46b
+          ├─ tsconfig.json #1h72lkd
+          └─ yarn.lock"
+        `);
     });
-    expect(fs.existsSync(path.join(destination, '.git'))).toEqual(false);
+
+    it('Sets up the package.json correctly', async () => {
+      expect(
+        await readCensoredPackageJson(path.join(destination, 'package.json')),
+      ).toMatchSnapshot(`
+          Object {
+            "author": "?",
+            "browserslist": Object {
+              "development": Array [
+                "last 1 chrome version",
+                "last 1 firefox version",
+                "last 1 safari version",
+              ],
+              "production": Array [
+                ">0.2%",
+                "not dead",
+                "not op_mini all",
+              ],
+            },
+            "dependencies": Object {
+              "@testing-library/dom": "?",
+              "@testing-library/jest-dom": "?",
+              "@testing-library/react": "?",
+              "@testing-library/user-event": "?",
+              "@types/jest": "?",
+              "@types/node": "?",
+              "@types/react": "?",
+              "@types/react-dom": "?",
+              "eslint-config-modular-app": "?",
+              "modular-scripts": "?",
+              "prettier": "?",
+              "react": "?",
+              "react-dom": "?",
+              "typescript": "?",
+            },
+            "eslintConfig": Object {
+              "extends": "modular-app",
+            },
+            "license": "MIT",
+            "main": "index.js",
+            "modular": Object {
+              "type": "root",
+            },
+            "name": "test-repo",
+            "prettier": Object {
+              "printWidth": 80,
+              "proseWrap": "always",
+              "singleQuote": true,
+              "trailingComma": "all",
+            },
+            "private": true,
+            "scripts": Object {
+              "build": "modular build",
+              "lint": "eslint . --ext .js,.ts,.tsx",
+              "prettier": "prettier --write .",
+              "start": "modular start",
+              "test": "modular test",
+            },
+            "version": "1.0.0",
+            "workspaces": Array [
+              "packages/**",
+            ],
+          }
+        `);
+    });
+
+    it('Sets up an app package.json correctly', async () => {
+      expect(
+        await readCensoredPackageJson(
+          path.join(destination, 'packages', 'app', 'package.json'),
+        ),
+      ).toMatchSnapshot(`
+          Object {
+            "author": "?",
+            "dependencies": Object {},
+            "modular": Object {
+              "type": "app",
+            },
+            "name": "app",
+            "private": true,
+            "version": "0.1.0",
+          }
+        `);
+    });
+  });
+
+  describe('WHEN it sets up a project with prefer Offline', () => {
+    let destination: string;
+    beforeAll(async () => {
+      destination = createTempDirectory();
+      await createModularApp({
+        name: destination,
+        preferOffline: true,
+      });
+    });
+    it('should create a project with prefer offline', () => {
+      expect(tree(destination)).toMatchSnapshot(`
+        "test-repo
+        ├─ .editorconfig #1p4gvuw
+        ├─ .eslintignore #1ot2bpo
+        ├─ .gitignore #175wbq
+        ├─ .prettierignore #10uqwgj
+        ├─ .vscode
+        │  ├─ extensions.json #1i4584r
+        │  ├─ launch.json #1kk1omt
+        │  └─ settings.json #xes41c
+        ├─ .yarnrc #1orkcoz
+        ├─ README.md #1nksyzj
+        ├─ modular
+        │  ├─ setupEnvironment.ts #m0s4vb
+        │  └─ setupTests.ts #bnjknz
+        ├─ package.json
+        ├─ packages
+        │  ├─ README.md #14bthrh
+        │  └─ app
+        │     ├─ package.json
+        │     ├─ public
+        │     │  ├─ favicon.ico #6pu3rg
+        │     │  ├─ index.html #1m6toxd
+        │     │  ├─ logo192.png #1nez7vk
+        │     │  ├─ logo512.png #1hwqvcc
+        │     │  ├─ manifest.json #19gah8o
+        │     │  └─ robots.txt #1sjb8b3
+        │     ├─ src
+        │     │  ├─ App.css #1o0zosm
+        │     │  ├─ App.tsx #c80ven
+        │     │  ├─ __tests__
+        │     │  │  └─ App.test.tsx #16urcos
+        │     │  ├─ index.css #o7sk21
+        │     │  ├─ index.tsx #zdn6mw
+        │     │  ├─ logo.svg #1okqmlj
+        │     │  └─ react-app-env.d.ts #t4ygcy
+        │     └─ tsconfig.json #6rw46b
+        ├─ tsconfig.json #1h72lkd
+        └─ yarn.lock"
+      `);
+    });
+
+    it('SHOULD setup an package.json correctly', async () => {
+      expect(
+        await readCensoredPackageJson(path.join(destination, 'package.json')),
+      ).toMatchSnapshot(`
+        Object {
+          "author": "?",
+          "browserslist": Object {
+            "development": Array [
+              "last 1 chrome version",
+              "last 1 firefox version",
+              "last 1 safari version",
+            ],
+            "production": Array [
+              ">0.2%",
+              "not dead",
+              "not op_mini all",
+            ],
+          },
+          "dependencies": Object {
+            "@testing-library/dom": "?",
+            "@testing-library/jest-dom": "?",
+            "@testing-library/react": "?",
+            "@testing-library/user-event": "?",
+            "@types/jest": "?",
+            "@types/node": "?",
+            "@types/react": "?",
+            "@types/react-dom": "?",
+            "eslint-config-modular-app": "?",
+            "modular-scripts": "?",
+            "prettier": "?",
+            "react": "?",
+            "react-dom": "?",
+            "typescript": "?",
+          },
+          "eslintConfig": Object {
+            "extends": "modular-app",
+          },
+          "license": "MIT",
+          "main": "index.js",
+          "modular": Object {
+            "type": "root",
+          },
+          "name": "test-repo",
+          "prettier": Object {
+            "printWidth": 80,
+            "proseWrap": "always",
+            "singleQuote": true,
+            "trailingComma": "all",
+          },
+          "private": true,
+          "scripts": Object {
+            "build": "modular build",
+            "lint": "eslint . --ext .js,.ts,.tsx",
+            "prettier": "prettier --write .",
+            "start": "modular start",
+            "test": "modular test",
+          },
+          "version": "1.0.0",
+          "workspaces": Array [
+            "packages/**",
+          ],
+        }
+      `);
+    });
+
+    it('SHOULD setup an app package.json correctly', async () => {
+      expect(
+        await readCensoredPackageJson(
+          path.join(destination, 'packages', 'app', 'package.json'),
+        ),
+      ).toMatchSnapshot(`
+        Object {
+          "author": "?",
+          "dependencies": Object {},
+          "modular": Object {
+            "type": "app",
+          },
+          "name": "app",
+          "private": true,
+          "version": "0.1.0",
+        }
+      `);
+    });
+  });
+
+  describe('WHEN it sets up a project without a repo', () => {
+    let destination: string;
+    beforeAll(async () => {
+      destination = createTempDirectory();
+
+      await createModularApp({
+        name: destination,
+        repo: false,
+      });
+    });
+
+    it('should create a project without git metadata', () => {
+      expect(fs.existsSync(path.join(destination, '.git'))).toEqual(false);
+    });
+  });
+
+  describe('WHEN it sets up a project without a repo and prefer-offline', () => {
+    let destination: string;
+    beforeAll(async () => {
+      destination = createTempDirectory();
+
+      await createModularApp({
+        name: destination,
+        repo: false,
+        preferOffline: true,
+      });
+    });
+
+    it('SHOULD create a project prefer offline without git metadata', () => {
+      expect(fs.existsSync(path.join(destination, '.git'))).toEqual(false);
+    });
   });
 });
