@@ -6,6 +6,7 @@ import * as fs from 'fs-extra';
 import { ModularPackageJson } from '../utils/isModularType';
 import * as getModularRoot from '../utils/getModularRoot';
 import { convert } from '../convert';
+import tree from 'tree-view-for-tests';
 
 jest.mock('../utils/getModularRoot');
 
@@ -16,7 +17,6 @@ const mockedModularRoot = getModularRoot.default as jest.MockedFunction<
 describe('Converting a react app to modular app', () => {
   let tmpFolder: tmp.DirResult;
   let tmpFolderPath: string;
-  const starterTempType = 'app';
   const tmpProjectName = 'test-modular-convert';
   const rootPackageJson: ModularPackageJson = {
     name: tmpProjectName,
@@ -41,9 +41,14 @@ describe('Converting a react app to modular app', () => {
     const starterFolder = ['src', 'public'];
     starterFolder.forEach((dir) => {
       fs.copySync(
-        path.join(__dirname, '..', '..', 'types', starterTempType, dir),
+        path.join(__dirname, '..', '..', '..', 'modular-template-app', dir),
         path.join(tmpFolderPath, dir),
-        { overwrite: true },
+        {
+          overwrite: true,
+          filter(src) {
+            return !(path.basename(src) === 'package.json');
+          },
+        },
       );
     });
     fs.writeJSONSync(
@@ -77,27 +82,31 @@ describe('Converting a react app to modular app', () => {
   });
 
   it('should move the starting src folder into the modular app src folder', () => {
-    expect(
-      fs.readdirSync(
-        path.join(tmpFolderPath, 'packages', tmpProjectName, 'src'),
-      ),
-    ).toEqual(
-      fs.readdirSync(
-        path.join(__dirname, '..', '..', 'types', starterTempType, 'src'),
-      ),
-    );
+    expect(tree(path.join(tmpFolderPath, 'packages', tmpProjectName, 'src')))
+      .toMatchInlineSnapshot(`
+      "src
+      ├─ App.css #1o0zosm
+      ├─ App.tsx #c80ven
+      ├─ __tests__
+      │  └─ App.test.tsx #16urcos
+      ├─ index.css #o7sk21
+      ├─ index.tsx #zdn6mw
+      ├─ logo.svg #1okqmlj
+      └─ react-app-env.d.ts #t4ygcy"
+    `);
   });
 
   it('should move the starting public folder into the modular app public folder', () => {
-    expect(
-      fs.readdirSync(
-        path.join(tmpFolderPath, 'packages', tmpProjectName, 'public'),
-      ),
-    ).toEqual(
-      fs.readdirSync(
-        path.join(__dirname, '..', '..', 'types', starterTempType, 'public'),
-      ),
-    );
+    expect(tree(path.join(tmpFolderPath, 'packages', tmpProjectName, 'public')))
+      .toMatchInlineSnapshot(`
+      "public
+      ├─ favicon.ico #6pu3rg
+      ├─ index.html #1m6toxd
+      ├─ logo192.png #1nez7vk
+      ├─ logo512.png #1hwqvcc
+      ├─ manifest.json #19gah8o
+      └─ robots.txt #1sjb8b3"
+    `);
   });
 
   it('should update tsconfig.json', () => {

@@ -1,6 +1,6 @@
 {
   "name": "modular-views.macro",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "main": "build/index.macro.js",
   "exports": {
     ".": "./build/index.macro.js",
@@ -9,13 +9,13 @@
   "typings": "build/index.macro.d.ts",
   "license": "Apache-2.0",
   "dependencies": {
-    "@babel/core": "^7.17.8",
+    "@babel/core": "^7.17.9",
     "@babel/template": "^7.16.7",
     "@babel/types": "^7.16.8",
     "babel-plugin-macros": "3.1.0",
     "execa": "5.1.1",
     "find-up": "5.0.0",
-    "fs-extra": "10.0.1",
+    "fs-extra": "10.1.0",
     "react": "17.0.2"
   },
   "devDependencies": {

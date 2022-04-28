@@ -50,12 +50,15 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
     const newPackagePath = path.join(cwd, 'packages', toParamCase(packageName));
     fs.mkdirpSync(newPackagePath);
 
-    const newPackageJson = fs.readJsonSync(
-      path.join(packageTypePath, 'packagejson'),
-    ) as ModularPackageJson;
+    const newPackageJson: ModularPackageJson = {
+      name: packageName,
+      version: '1.1.0',
+      private: true,
+      modular: {
+        type: 'app',
+      },
+    };
 
-    // Bring key props from root package.json to new app
-    newPackageJson.name = packageName;
     fs.writeJsonSync(
       path.join(newPackagePath, 'package.json'),
       newPackageJson,

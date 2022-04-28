@@ -29,15 +29,18 @@ describe('WHEN building with preserve modules', () => {
       Object {
         "dependencies": Object {},
         "files": Array [
-          "README.md",
           "dist-cjs",
           "dist-es",
           "dist-types",
+          "README.md",
         ],
-        "license": "UNLICENSED",
         "main": "dist-cjs/index.js",
+        "modular": Object {
+          "type": "package",
+        },
         "module": "dist-es/index.js",
         "name": "sample-async-package",
+        "private": false,
         "typings": "dist-types/index.d.ts",
         "version": "1.0.0",
       }
@@ -48,7 +51,6 @@ describe('WHEN building with preserve modules', () => {
     expect(tree(path.join(modularRoot, 'dist', packageName)))
       .toMatchInlineSnapshot(`
       "sample-async-package
-      ├─ README.md #1jv3l2q
       ├─ dist-cjs
       │  ├─ index.js #y5z0kw
       │  ├─ index.js.map #1gofapj
@@ -146,7 +148,6 @@ describe('WHEN building packages with private cross-package dependencies', () =>
     expect(tree(path.join(modularRoot, 'dist', dependentPackage)))
       .toMatchInlineSnapshot(`
       "sample-depending-package
-      ├─ README.md #1jv3l2q
       ├─ dist-cjs
       │  ├─ index.js #1gj4b9h
       │  └─ index.js.map #1v4zj6b
