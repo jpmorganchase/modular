@@ -7,14 +7,17 @@
     "modular-scripts": "2.3.1",
     "modular-site": "1.0.1",
     "modular-views.macro": "3.1.0",
-    "tree-view-for-tests": "2.0.0"
+    "tree-view-for-tests": "2.0.0",
+    "modular-template-app": "1.1.0",
+    "modular-template-node-env-app": "0.2.0",
+    "modular-template-package": "1.1.0",
+    "modular-template-view": "1.1.0"
   },
   "changesets": [
     "dirty-mugs-double",
     "hip-bees-act",
-    "rotten-sloths-travel",
-    "silent-donkeys-peel",
+    "new-avocados-chew",
     "silver-dolphins-remember",
-    "twelve-days-mix"
+    "wild-kings-invent"
   ]
 }

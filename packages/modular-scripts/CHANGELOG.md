@@ -1,5 +1,19 @@
 # modular-scripts
 
+## 3.0.0-alpha-webpack5.2
+
+### Major Changes
+
+- [#1597](https://github.com/jpmorganchase/modular/pull/1597)
+  [`dda3c93`](https://github.com/jpmorganchase/modular/commit/dda3c938b28a3586c68a52736cf726b38a5f0504)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Upgrade
+  html-minifier-terset to v6.
+
+* [#1599](https://github.com/jpmorganchase/modular/pull/1599)
+  [`6d118fc`](https://github.com/jpmorganchase/modular/commit/6d118fcb4c0a558788909459e1aed1b6fc37110f)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Drop support for node
+  12 in favor of LTS versions `^14.17.0 || >=16.0.0`.
+
 ## 3.0.0-alpha-webpack5.1
 
 ### Major Changes
