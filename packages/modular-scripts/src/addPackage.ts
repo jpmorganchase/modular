@@ -16,6 +16,7 @@ import LineFilterOutStream from './utils/LineFilterOutStream';
 import { ModularPackageJson } from './utils/isModularType';
 
 const packagesRoot = 'packages';
+const EXCLUDED_FILENAMES = ['changelog.md', 'package.json'];
 
 interface AddOptions {
   destination: string;
@@ -141,7 +142,7 @@ async function addPackage({
   await fs.copy(packageTypePath, newPackagePath, {
     recursive: true,
     filter(src) {
-      return !(path.basename(src) === 'package.json');
+      return !EXCLUDED_FILENAMES.includes(path.basename(src).toLowerCase());
     },
   });
 
