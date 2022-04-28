@@ -79,7 +79,7 @@ describe('when working with a NODE_ENV app', () => {
       `);
     });
 
-    it('can generate a js/main.3db228f9.chunk.js', async () => {
+    it('can generate a js/main.1c6de6d0.js', async () => {
       expect(
         prettier.format(
           String(
@@ -90,12 +90,12 @@ describe('when working with a NODE_ENV app', () => {
                 'node-env-app',
                 'static',
                 'js',
-                'main.3db228f9.chunk.js',
+                'main.1c6de6d0.js',
               ),
             ),
           ),
           {
-            filepath: 'main.3db228f9.chunk.js',
+            filepath: 'main.1c6de6d0.js',
           },
         ),
       ).toMatchSnapshot();
