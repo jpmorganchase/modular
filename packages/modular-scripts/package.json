@@ -80,7 +80,7 @@
     "mini-css-extract-plugin": "2.5.3",
     "npm-packlist": "5.0.0",
     "open": "8.3.0",
-    "parse5": "6.0.1",
+    "parse5": "7.0.0",
     "pkg-up": "3.1.0",
     "pnp-webpack-plugin": "1.7.0",
     "postcss": "8.4.12",
