@@ -12,6 +12,7 @@ module.exports = (api) => {
         '@babel/preset-env',
         {
           targets: {
+            // TODO: can we get this to read from package.json somehow..?
             node: '14',
           },
         },

@@ -16,6 +16,34 @@
   Thanks [@LukeSheard](https://github.com/LukeSheard)! - support node 16
   explicitly and run test workflow against target node
 
+## 2.1.6
+
+### Patch Changes
+
+- [#1587](https://github.com/jpmorganchase/modular/pull/1587)
+  [`27a1d1a`](https://github.com/jpmorganchase/modular/commit/27a1d1a22bae9de87a8fef3fce86c71465a80d6d)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump commander
+  from 9.1.0 to 9.2.0
+
+* [#1590](https://github.com/jpmorganchase/modular/pull/1590)
+  [`f1e352e`](https://github.com/jpmorganchase/modular/commit/f1e352e70a1f61f20918538c36f7c1d9a97ec9cd)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump fs-extra from
+  10.0.1 to 10.1.0
+
+- [#1576](https://github.com/jpmorganchase/modular/pull/1576)
+  [`9849f80`](https://github.com/jpmorganchase/modular/commit/9849f808a200bdc7a3a9bd85fc2cc9793e67e525)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump semver from
+  7.3.6 to 7.3.7
+
+## 2.1.5
+
+### Patch Changes
+
+- [#1550](https://github.com/jpmorganchase/modular/pull/1550)
+  [`b570845`](https://github.com/jpmorganchase/modular/commit/b570845737cdedcac8e3f43cd54955db8f1dbf91)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump semver from
+  7.3.5 to 7.3.6
+
 * [#1492](https://github.com/jpmorganchase/modular/pull/1492)
   [`810934b`](https://github.com/jpmorganchase/modular/commit/810934b5a15480a2423339c49fcc3d2f77a23a22)
   Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump commander
