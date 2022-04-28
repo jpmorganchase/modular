@@ -1,23 +1,5 @@
 # modular-scripts
 
-## 3.0.0-alpha-webpack5.1
-
-### Major Changes
-
-- [#1538](https://github.com/jpmorganchase/modular/pull/1538)
-  [`69da976`](https://github.com/jpmorganchase/modular/commit/69da9762d6a749ddc78e2fd16ecd088c5e75f714)
-  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Drop
-  support for node 12
-
-### Patch Changes
-
-- [#1546](https://github.com/jpmorganchase/modular/pull/1546)
-  [`8b3f1f5`](https://github.com/jpmorganchase/modular/commit/8b3f1f5cb9f38ef35302a7cb4ca777f64cf8f1e7)
-  Thanks [@LukeSheard](https://github.com/LukeSheard)! - support node 16
-  explicitly and run test workflow against target node
-
-* [#1478](https://github.com/jpmorganchase/modular/pull/1478)
-
 ## 2.4.0
 
 ### Minor Changes
@@ -103,40 +85,20 @@
   Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump rollup from
   2.67.2 to 2.70.1
 
-<<<<<<< HEAD
-
-- # [#1492](https://github.com/jpmorganchase/modular/pull/1492)
-
 * [#1492](https://github.com/jpmorganchase/modular/pull/1492)
-  > > > > > > > main
-  > > > > > > > [`810934b`](https://github.com/jpmorganchase/modular/commit/810934b5a15480a2423339c49fcc3d2f77a23a22)
-  > > > > > > > Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
-  > > > > > > > commander from 8.2.0 to 9.1.0
+  [`810934b`](https://github.com/jpmorganchase/modular/commit/810934b5a15480a2423339c49fcc3d2f77a23a22)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump commander
+  from 8.2.0 to 9.1.0
 
-<<<<<<< HEAD
-
-## 3.0.0-alpha-webpack5.0
-
-### Major Changes
-
-- [#1421](https://github.com/jpmorganchase/modular/pull/1421)
-  [`e5d772f`](https://github.com/jpmorganchase/modular/commit/e5d772f1b956ea5d2f8c46457504ac1154c7c7f0)
-  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Upgrade
-  to Webpack 5
-
-### Patch Changes
-
-- # [#1510](https://github.com/jpmorganchase/modular/pull/1510)
 - [#1552](https://github.com/jpmorganchase/modular/pull/1552)
   [`d5a899e`](https://github.com/jpmorganchase/modular/commit/d5a899e73e1b9bf3d1df30b596480fea01d50cc4)
   Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump npm-packlist
   from 4.0.0 to 5.0.0
 
 * [#1510](https://github.com/jpmorganchase/modular/pull/1510)
-  > > > > > > > main
-  > > > > > > > [`4846d21`](https://github.com/jpmorganchase/modular/commit/4846d21db0d5aebff1a5041008bbf00e7986c036)
-  > > > > > > > Thanks [@cheemcheem](https://github.com/cheemcheem)! - Fix bug
-  > > > > > > > that prevented lint diff from running
+  [`4846d21`](https://github.com/jpmorganchase/modular/commit/4846d21db0d5aebff1a5041008bbf00e7986c036)
+  Thanks [@cheemcheem](https://github.com/cheemcheem)! - Fix bug that prevented
+  lint diff from running
 
 ## 2.3.1
 

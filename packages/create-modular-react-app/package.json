@@ -1,6 +1,6 @@
 {
   "name": "create-modular-react-app",
-  "version": "3.0.0-alpha-webpack5.0",
+  "version": "2.1.6",
   "license": "Apache-2.0",
   "bin": {
     "create-modular-react-app": "build/cli.js"

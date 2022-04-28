@@ -1,6 +1,6 @@
 {
   "name": "modular-scripts",
-  "version": "3.0.0-alpha-webpack5.1",
+  "version": "2.4.0",
   "license": "Apache-2.0",
   "bin": {
     "modular": "dist-cjs/cli.js"

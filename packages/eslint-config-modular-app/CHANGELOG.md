@@ -1,14 +1,5 @@
 # eslint-config-modular-app
 
-## 2.1.0-alpha-webpack5.0
-
-### Minor Changes
-
-- [#1538](https://github.com/jpmorganchase/modular/pull/1538)
-  [`69da976`](https://github.com/jpmorganchase/modular/commit/69da9762d6a749ddc78e2fd16ecd088c5e75f714)
-  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Drop
-  support for node 12
-
 ## 2.0.5
 
 ### Patch Changes

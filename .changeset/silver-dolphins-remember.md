@@ -2,4 +2,4 @@
 "modular-scripts": major
 ---
 
-Upgrade to Webpack 5
+Upgrade webpack implementation to use webpack 5 + associated loader / plugin dependencies.
