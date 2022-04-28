@@ -55,21 +55,21 @@ export default async function build(target: string, paths: Paths) {
   }
 
   const html = await createIndex(paths, result, env.raw, false);
-  await fs.writeFile(
-    path.join(paths.appBuild, 'index.html'),
-    minimize.minify(html, {
-      html5: true,
-      collapseBooleanAttributes: true,
-      collapseWhitespace: true,
-      collapseInlineTagWhitespace: true,
-      decodeEntities: true,
-      minifyCSS: true,
-      minifyJS: true,
-      removeAttributeQuotes: false,
-      removeComments: true,
-      removeTagWhitespace: true,
-    }),
-  );
+
+  const minifiedCode = await minimize.minify(html, {
+    html5: true,
+    collapseBooleanAttributes: true,
+    collapseWhitespace: true,
+    collapseInlineTagWhitespace: true,
+    decodeEntities: true,
+    minifyCSS: true,
+    minifyJS: true,
+    removeAttributeQuotes: false,
+    removeComments: true,
+    removeTagWhitespace: true,
+  });
+
+  await fs.writeFile(path.join(paths.appBuild, 'index.html'), minifiedCode);
 
   return result;
 }
