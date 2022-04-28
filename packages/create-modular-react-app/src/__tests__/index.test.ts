@@ -1,4 +1,3 @@
-/* eslint-disable jest/no-disabled-tests */
 import createModularApp from '../';
 import fs from 'fs-extra';
 import path from 'path';
@@ -38,7 +37,7 @@ async function readCensoredPackageJson(
   /* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return */
 }
 
-describe.skip('create-modular-react-app', () => {
+describe('create-modular-react-app', () => {
   const repoName = 'test-repo';
   let destination: string;
   let tmpDirectory: tmp.DirResult;
