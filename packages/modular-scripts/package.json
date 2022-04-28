@@ -62,6 +62,7 @@
     "globby": "11.0.4",
     "gzip-size": "6.0.0",
     "html-webpack-plugin": "4.5.2",
+    "html-minifier-terser": "6.1.0",
     "is-ci": "2.0.0",
     "is-root": "2.1.0",
     "jest": "26.6.3",
