@@ -38,11 +38,8 @@ function cleanup() {
   rimraf.sync(path.join(packagesPath, 'sample-app'));
   rimraf.sync(path.join(modularRoot, 'dist/sample-app'));
 
-  rimraf.sync(path.join(packagesPath, 'scoped/sample-app'));
+  rimraf.sync(path.join(packagesPath, 'scoped'));
   rimraf.sync(path.join(modularRoot, 'dist/scoped-sample-app'));
-
-  rimraf.sync(path.join(packagesPath, 'node-env-app'));
-  rimraf.sync(path.join(modularRoot, 'dist/node-env-app'));
 
   // run yarn so yarn.lock gets reset
   return execa.sync('yarnpkg', ['--silent'], {
@@ -52,71 +49,6 @@ function cleanup() {
 
 beforeAll(cleanup);
 afterAll(cleanup);
-
-describe('when working with a NODE_ENV app', () => {
-  beforeAll(async () => {
-    await modular(
-      'add node-env-app --unstable-type app --unstable-name node-env-app',
-      { stdio: 'inherit' },
-    );
-
-    await fs.writeFile(
-      path.join(modularRoot, 'packages', 'node-env-app', 'src', 'index.ts'),
-      `
-      console.log(process.env.NODE_ENV);
-
-      export {};
-    `,
-    );
-
-    await modular('build node-env-app', {
-      stdio: 'inherit',
-    });
-  });
-
-  it('can build a app', () => {
-    expect(tree(path.join(modularRoot, 'dist', 'node-env-app')))
-      .toMatchInlineSnapshot(`
-      "node-env-app
-      ├─ asset-manifest.json #n1rvuh
-      ├─ favicon.ico #6pu3rg
-      ├─ index.html #1yaenq4
-      ├─ logo192.png #1nez7vk
-      ├─ logo512.png #1hwqvcc
-      ├─ manifest.json #19gah8o
-      ├─ package.json
-      ├─ robots.txt #1sjb8b3
-      └─ static
-         └─ js
-            ├─ main.3db228f9.chunk.js #20y3tb
-            ├─ main.3db228f9.chunk.js.map #131rxqt
-            ├─ runtime-main.a0dc6a9b.js #o5bsr9
-            └─ runtime-main.a0dc6a9b.js.map #10n4p35"
-    `);
-  });
-
-  it('can generate a js/main.3db228f9.chunk.js', async () => {
-    expect(
-      prettier.format(
-        String(
-          await fs.readFile(
-            path.join(
-              modularRoot,
-              'dist',
-              'node-env-app',
-              'static',
-              'js',
-              'main.3db228f9.chunk.js',
-            ),
-          ),
-        ),
-        {
-          filepath: 'main.3db228f9.chunk.js',
-        },
-      ),
-    ).toMatchSnapshot();
-  });
-});
 
 describe('When working with a nested app', () => {
   beforeAll(async () => {
@@ -151,7 +83,7 @@ describe('When working with a nested app', () => {
             ├─ 2.dd7fe2ee.chunk.js.LICENSE.txt #eplx8h
             ├─ 2.dd7fe2ee.chunk.js.map #f3ttow
             ├─ main.8b9be32b.chunk.js #jou2ln
-            ├─ main.8b9be32b.chunk.js.map #q1dpnv
+            ├─ main.8b9be32b.chunk.js.map #fmhede
             ├─ runtime-main.c80b6939.js #tnzlop
             └─ runtime-main.c80b6939.js.map #14p9z3c"
     `);
@@ -369,7 +301,7 @@ describe('when working with an app', () => {
             ├─ 2.42603bbe.chunk.js.LICENSE.txt #eplx8h
             ├─ 2.42603bbe.chunk.js.map #164el3u
             ├─ main.8247c019.chunk.js #iwnokm
-            ├─ main.8247c019.chunk.js.map #umebn0
+            ├─ main.8247c019.chunk.js.map #1tgfyn5
             ├─ runtime-main.dc96e42d.js #1xc8leb
             └─ runtime-main.dc96e42d.js.map #xpqj11"
     `);
@@ -405,7 +337,7 @@ describe('when working with an app', () => {
     ) as CoreProperties;
 
     expect(packageJson.name).toBe('sample-app');
-    expect(packageJson.version).toBe('0.1.0');
+    expect(packageJson.version).toBe('1.0.0');
     expect(packageJson.modular).toStrictEqual({ type: 'app' });
     expect(packageJson.dependencies?.react).toBeTruthy();
     expect(packageJson.dependencies?.['react-dom']).toBeTruthy();

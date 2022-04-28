@@ -32,7 +32,13 @@ describe('createEsbuildBrowserslistTarget', () => {
     );
 
     const result = createEsbuildBrowserslistTarget(process.cwd());
-    expect(result).toEqual(['chrome97', 'firefox96', 'safari15.2']);
+    expect(result).toMatchInlineSnapshot(`
+      Array [
+        "chrome99",
+        "firefox98",
+        "safari15.4",
+      ]
+    `);
   });
 
   it('filters out unsupported browsers', () => {
@@ -51,7 +57,13 @@ describe('createEsbuildBrowserslistTarget', () => {
     );
 
     const result = createEsbuildBrowserslistTarget(process.cwd());
-    expect(result).toEqual(['chrome97', 'firefox96', 'safari15.2']);
+    expect(result).toMatchInlineSnapshot(`
+      Array [
+        "chrome99",
+        "firefox98",
+        "safari15.4",
+      ]
+    `);
   });
 
   it('filters out unsupported browser versions', () => {
@@ -70,6 +82,12 @@ describe('createEsbuildBrowserslistTarget', () => {
     );
 
     const result = createEsbuildBrowserslistTarget(process.cwd());
-    expect(result).toEqual(['chrome97', 'firefox96', 'safari15.2']);
+    expect(result).toMatchInlineSnapshot(`
+      Array [
+        "chrome99",
+        "firefox98",
+        "safari15.4",
+      ]
+    `);
   });
 });

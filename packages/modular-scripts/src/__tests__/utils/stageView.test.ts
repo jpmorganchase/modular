@@ -27,11 +27,9 @@ describe('stageView', () => {
       "test-view
       ├─ package.json
       ├─ public
-      │  ├─ index.html #rm3xgn
-      │  └─ manifest.json #kalmoq
+      │  └─ index.html #6bixo0
       ├─ src
-      │  ├─ index.tsx #1qbgs9s
-      │  └─ react-app-env.d.ts #t4ygcy
+      │  └─ index.tsx #yuzcqd
       └─ tsconfig.json #1ww9d44"
     `);
   });

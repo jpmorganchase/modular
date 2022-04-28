@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`when working with a NODE_ENV app WHEN building with esbuild can generate a js/index-FG4XHKNZ.js 1`] = `
+"console.log(\\"production\\");
+//# sourceMappingURL=/static/js/index-FG4XHKNZ.js.map
+"
+`;
+
+exports[`when working with a NODE_ENV app WHEN building with webpack can generate a js/main.3db228f9.chunk.js 1`] = `
+"(this[\\"webpackJsonpnode-env-app\\"] =
+  this[\\"webpackJsonpnode-env-app\\"] || []).push([
+  [0],
+  [
+    function (n, o, p) {
+      \\"use strict\\";
+      p.r(o), console.log(\\"production\\");
+    },
+  ],
+  [[0, 1]],
+]);
+//# sourceMappingURL=main.3db228f9.chunk.js.map
+"
+`;

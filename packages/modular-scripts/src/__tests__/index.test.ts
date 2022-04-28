@@ -100,7 +100,6 @@ describe('modular-scripts', () => {
       expect(tree(path.join(packagesPath, 'sample-view')))
         .toMatchInlineSnapshot(`
         "sample-view
-        ├─ README.md #11adaka
         ├─ package.json
         └─ src
            ├─ __tests__
@@ -113,7 +112,6 @@ describe('modular-scripts', () => {
       expect(tree(path.join(packagesPath, 'sample-package')))
         .toMatchInlineSnapshot(`
         "sample-package
-        ├─ README.md #1jv3l2q
         ├─ package.json
         └─ src
            ├─ __tests__
@@ -127,7 +125,6 @@ describe('modular-scripts', () => {
       expect(tree(path.join(packagesPath, 'nested/sample-nested-package')))
         .toMatchInlineSnapshot(`
         "sample-nested-package
-        ├─ README.md #1jv3l2q
         ├─ package.json
         └─ src
            ├─ __tests__
@@ -214,18 +211,18 @@ describe('modular-scripts', () => {
             "react": "17.0.2",
           },
           "files": Array [
-            "README.md",
             "dist-cjs",
             "dist-es",
             "dist-types",
+            "README.md",
           ],
-          "license": "UNLICENSED",
           "main": "dist-cjs/index.js",
           "modular": Object {
             "type": "view",
           },
           "module": "dist-es/index.js",
           "name": "sample-view",
+          "private": false,
           "typings": "dist-types/index.d.ts",
           "version": "1.0.0",
         }
@@ -266,13 +263,12 @@ describe('modular-scripts', () => {
       expect(tree(path.join(modularRoot, 'dist', 'sample-view')))
         .toMatchInlineSnapshot(`
         "sample-view
-        ├─ README.md #11adaka
         ├─ dist-cjs
         │  ├─ index.js #a7k6ic
-        │  └─ index.js.map #1pwjhqx
+        │  └─ index.js.map #1m4qim9
         ├─ dist-es
         │  ├─ index.js #1ymmv5l
-        │  └─ index.js.map #xpk3zp
+        │  └─ index.js.map #11lg0ox
         ├─ dist-types
         │  └─ index.d.ts #1vloh7q
         └─ package.json"
@@ -328,15 +324,18 @@ describe('modular-scripts', () => {
         Object {
           "dependencies": Object {},
           "files": Array [
-            "README.md",
             "dist-cjs",
             "dist-es",
             "dist-types",
+            "README.md",
           ],
-          "license": "UNLICENSED",
           "main": "dist-cjs/index.js",
+          "modular": Object {
+            "type": "package",
+          },
           "module": "dist-es/index.js",
           "name": "sample-package",
+          "private": false,
           "typings": "dist-types/index.d.ts",
           "version": "1.0.0",
         }
@@ -347,13 +346,12 @@ describe('modular-scripts', () => {
       expect(tree(path.join(modularRoot, 'dist', 'sample-package')))
         .toMatchInlineSnapshot(`
         "sample-package
-        ├─ README.md #1jv3l2q
         ├─ dist-cjs
         │  ├─ index.js #rq9uxe
-        │  └─ index.js.map #1l2chuu
+        │  └─ index.js.map #19satcx
         ├─ dist-es
         │  ├─ index.js #3bszhr
-        │  └─ index.js.map #gt6dtg
+        │  └─ index.js.map #1m2nocl
         ├─ dist-types
         │  └─ index.d.ts #f68aj
         └─ package.json"
@@ -398,15 +396,18 @@ describe('modular-scripts', () => {
         Object {
           "dependencies": Object {},
           "files": Array [
-            "README.md",
             "dist-cjs",
             "dist-es",
             "dist-types",
+            "README.md",
           ],
-          "license": "UNLICENSED",
           "main": "dist-cjs/nested-sample-package.cjs.js",
+          "modular": Object {
+            "type": "package",
+          },
           "module": "dist-es/nested-sample-package.es.js",
           "name": "@nested/sample-package",
+          "private": false,
           "typings": "dist-types/index.d.ts",
           "version": "1.0.0",
         }
@@ -417,13 +418,12 @@ describe('modular-scripts', () => {
       expect(tree(path.join(modularRoot, 'dist', 'nested-sample-package')))
         .toMatchInlineSnapshot(`
         "nested-sample-package
-        ├─ README.md #1jv3l2q
         ├─ dist-cjs
         │  ├─ nested-sample-package.cjs.js #kv2xzp
-        │  └─ nested-sample-package.cjs.js.map #1s14uw6
+        │  └─ nested-sample-package.cjs.js.map #bgpzsg
         ├─ dist-es
         │  ├─ nested-sample-package.es.js #11z6hlv
-        │  └─ nested-sample-package.es.js.map #1t6z42y
+        │  └─ nested-sample-package.es.js.map #14mne6l
         ├─ dist-types
         │  └─ index.d.ts #f68aj
         └─ package.json"

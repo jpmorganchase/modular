@@ -1,5 +1,71 @@
 # modular-scripts
 
+## 2.4.0
+
+### Minor Changes
+
+- [#1408](https://github.com/jpmorganchase/modular/pull/1408)
+  [`162d76c`](https://github.com/jpmorganchase/modular/commit/162d76c739501296d157c8bdda74eec23c548c1d)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Support Community based
+  templates
+
+### Patch Changes
+
+- [#1591](https://github.com/jpmorganchase/modular/pull/1591)
+  [`e685545`](https://github.com/jpmorganchase/modular/commit/e68554520b65f9f0d83a6c60e054a86384c095b1)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  @rollup/plugin-commonjs from 21.0.3 to 21.1.0
+
+* [#1587](https://github.com/jpmorganchase/modular/pull/1587)
+  [`27a1d1a`](https://github.com/jpmorganchase/modular/commit/27a1d1a22bae9de87a8fef3fce86c71465a80d6d)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump commander
+  from 9.1.0 to 9.2.0
+
+- [#1577](https://github.com/jpmorganchase/modular/pull/1577)
+  [`ea3c523`](https://github.com/jpmorganchase/modular/commit/ea3c5235519e5d5e1a108c33d66fdb8a4815fa74)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump esbuild from
+  0.14.34 to 0.14.36
+
+* [#1586](https://github.com/jpmorganchase/modular/pull/1586)
+  [`f25e285`](https://github.com/jpmorganchase/modular/commit/f25e285696a1f39cd729c97ad8162b9b9d8a55f6)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump rollup from
+  2.70.1 to 2.70.2
+
+- [#1569](https://github.com/jpmorganchase/modular/pull/1569)
+  [`9a96555`](https://github.com/jpmorganchase/modular/commit/9a965550c5e6f03a449cf0f58ec5529835d4cfc9)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Bump
+  rollup-plugin-esbuild from 4.7.2 to 4.9.1
+
+* [#1573](https://github.com/jpmorganchase/modular/pull/1573)
+  [`a847ae6`](https://github.com/jpmorganchase/modular/commit/a847ae6b7bce606cf2c305d46b2ad9ebb0c89d3b)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  @rollup/plugin-node-resolve from 13.1.3 to 13.2.0
+
+- [#1590](https://github.com/jpmorganchase/modular/pull/1590)
+  [`f1e352e`](https://github.com/jpmorganchase/modular/commit/f1e352e70a1f61f20918538c36f7c1d9a97ec9cd)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump fs-extra from
+  10.0.1 to 10.1.0
+
+* [#1576](https://github.com/jpmorganchase/modular/pull/1576)
+  [`9849f80`](https://github.com/jpmorganchase/modular/commit/9849f808a200bdc7a3a9bd85fc2cc9793e67e525)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump semver from
+  7.3.6 to 7.3.7
+
+- [#1589](https://github.com/jpmorganchase/modular/pull/1589)
+  [`1dedfb8`](https://github.com/jpmorganchase/modular/commit/1dedfb8ff293dfcda95a2e91d456d14d06911848)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  @rollup/plugin-node-resolve from 13.2.0 to 13.2.1
+
+* [#1547](https://github.com/jpmorganchase/modular/pull/1547)
+  [`822a3ab`](https://github.com/jpmorganchase/modular/commit/822a3abef01209f56b66f9734a58136c5edd2d74)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Remove empty REAME.md
+  files from packages and split tests for packages
+
+- [#1483](https://github.com/jpmorganchase/modular/pull/1483)
+  [`14255a8`](https://github.com/jpmorganchase/modular/commit/14255a8c0aeb7a3c15054712081e6eb7c149a460)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump browserslist
+  from 4.19.1 to 4.20.2
+
 ## 2.3.2
 
 ### Patch Changes
