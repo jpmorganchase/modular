@@ -57,7 +57,7 @@
     "file-loader": "6.2.0",
     "filesize": "8.0.3",
     "find-up": "5.0.0",
-    "fork-ts-checker-webpack-plugin": "6.5.0",
+    "fork-ts-checker-webpack-plugin": "7.2.8",
     "fs-extra": "10.1.0",
     "global-modules": "2.0.0",
     "globby": "11.0.4",
