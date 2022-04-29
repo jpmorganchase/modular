@@ -41,18 +41,18 @@
     "change-case": "4.1.2",
     "commander": "9.2.0",
     "cross-spawn": "7.0.3",
-    "css-loader": "6.6.0",
+    "css-loader": "6.7.1",
     "css-minimizer-webpack-plugin": "3.4.1",
     "dedent": "0.7.0",
     "detect-port-alt": "1.1.6",
     "dotenv": "16.0.0",
     "dotenv-expand": "8.0.3",
-    "esbuild": "0.14.36",
+    "esbuild": "0.14.38",
     "esbuild-loader": "2.18.0",
     "escape-string-regexp": "2.0.0",
     "eslint": "7.32.0",
     "execa": "5.1.1",
-    "express": "4.17.3",
+    "express": "4.18.0",
     "express-ws": "5.0.2",
     "file-loader": "6.2.0",
     "filesize": "8.0.3",
@@ -78,7 +78,7 @@
     "micromatch": "4.0.5",
     "mime": "^3.0.0",
     "mini-css-extract-plugin": "2.5.3",
-    "npm-packlist": "5.0.0",
+    "npm-packlist": "5.0.2",
     "open": "8.3.0",
     "parse5": "6.0.1",
     "pkg-up": "3.1.0",
@@ -87,7 +87,7 @@
     "postcss-flexbugs-fixes": "4.2.1",
     "postcss-loader": "6.2.1",
     "postcss-normalize": "8.0.1",
-    "postcss-preset-env": "7.4.3",
+    "postcss-preset-env": "7.4.4",
     "postcss-safe-parser": "5.0.2",
     "prompts": "2.4.2",
     "react-error-overlay": "6.0.9",
@@ -115,7 +115,7 @@
     "url-loader": "4.1.1",
     "webpack": "5.72.0",
     "webpack-dev-server": "4.8.1",
-    "webpack-manifest-plugin": "4.1.1",
+    "webpack-manifest-plugin": "5.0.0",
     "ws": "8.5.0"
   },
   "peerDependencies": {
@@ -139,6 +139,6 @@
     "@types/js-yaml": "^4.0.5",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "typescript": "4.6.3"
+    "typescript": "4.6.4"
   }
 }
