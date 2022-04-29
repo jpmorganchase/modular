@@ -381,11 +381,15 @@ describe('modular-scripts', () => {
         .toMatchInlineSnapshot(`
         "sample-package
         ├─ dist-cjs
-        │  ├─ index.js #rq9uxe
-        │  └─ index.js.map #19satcx
+        │  ├─ index.js #p1m6x9
+        │  ├─ index.js.map #16jes1h
+        │  ├─ index2.js #6y6kyx
+        │  └─ index2.js.map #10ij9v
         ├─ dist-es
-        │  ├─ index.js #3bszhr
-        │  └─ index.js.map #1m2nocl
+        │  ├─ index.js #tcl83f
+        │  ├─ index.js.map #yz1h1d
+        │  ├─ index2.js #hx36fq
+        │  └─ index2.js.map #bbrfkq
         ├─ dist-types
         │  └─ index.d.ts #f68aj
         └─ package.json"
