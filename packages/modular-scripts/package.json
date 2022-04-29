@@ -115,7 +115,7 @@
     "url-loader": "4.1.1",
     "webpack": "5.69.1",
     "webpack-dev-server": "4.8.1",
-    "webpack-manifest-plugin": "4.1.1",
+    "webpack-manifest-plugin": "5.0.0",
     "ws": "8.5.0"
   },
   "peerDependencies": {
