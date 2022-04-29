@@ -1,5 +1,64 @@
 # modular-scripts
 
+## 3.0.0-beta.1
+
+### Patch Changes
+
+- [#1618](https://github.com/jpmorganchase/modular/pull/1618)
+  [`118588e`](https://github.com/jpmorganchase/modular/commit/118588e189470b0994985b1677b548021db5fd3a)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump express from
+  4.17.3 to 4.18.0
+
+* [#1656](https://github.com/jpmorganchase/modular/pull/1656)
+  [`828784e`](https://github.com/jpmorganchase/modular/commit/828784e3e907d7e120be6490d7ee5f69c9efc7dc)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  fork-ts-checker-webpack-plugin from 6.5.0 to 7.2.8
+
+- [#1606](https://github.com/jpmorganchase/modular/pull/1606)
+  [`e3893c6`](https://github.com/jpmorganchase/modular/commit/e3893c6b57ca7e182a3cc5f733368cc066feb098)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump esbuild from
+  0.14.36 to 0.14.38
+
+* [#1611](https://github.com/jpmorganchase/modular/pull/1611)
+  [`b3308ee`](https://github.com/jpmorganchase/modular/commit/b3308eef8ae078aea4c1ef13fc5ced9b4295e942)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump browserslist
+  from 4.20.2 to 4.20.3
+
+- [#1630](https://github.com/jpmorganchase/modular/pull/1630)
+  [`24bac46`](https://github.com/jpmorganchase/modular/commit/24bac46e87c9ba35976296cbe66f6d783c594e1b)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  postcss-preset-env from 7.4.3 to 7.4.4
+
+* [#1605](https://github.com/jpmorganchase/modular/pull/1605)
+  [`3c4235e`](https://github.com/jpmorganchase/modular/commit/3c4235e7f5dcf52b6c1a6bb23b9d7869103d666e)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump npm-packlist
+  from 5.0.0 to 5.0.2
+
+- [#1609](https://github.com/jpmorganchase/modular/pull/1609)
+  [`a323549`](https://github.com/jpmorganchase/modular/commit/a323549083c477a1d359f9d059c4e120d87a887d)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  @rollup/plugin-commonjs from 21.1.0 to 22.0.0
+
+* [#1661](https://github.com/jpmorganchase/modular/pull/1661)
+  [`83e258f`](https://github.com/jpmorganchase/modular/commit/83e258f6ca229cee7688e8bdc35d344239a74e53)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  webpack-manifest-plugin from 4.1.1 to 5.0.0
+
+- [#1655](https://github.com/jpmorganchase/modular/pull/1655)
+  [`243f53d`](https://github.com/jpmorganchase/modular/commit/243f53d91d0b9f3c07b080dfb84cf73967caa0c7)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump css-loader
+  from 6.6.0 to 6.7.1
+
+* [#1653](https://github.com/jpmorganchase/modular/pull/1653)
+  [`c3651a6`](https://github.com/jpmorganchase/modular/commit/c3651a6885389279a9bbd295303f4612d2a3f44e)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  mini-css-extract-plugin from 2.5.3 to 2.6.0
+
+- [#1657](https://github.com/jpmorganchase/modular/pull/1657)
+  [`54efe6b`](https://github.com/jpmorganchase/modular/commit/54efe6bd25dfeaf45e24e23b5ca5a28e3384c92f)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump webpack from
+  5.69.1 to 5.72.0
+
 ## 3.0.0-beta.0
 
 ### Major Changes
