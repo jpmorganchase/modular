@@ -599,9 +599,6 @@ module.exports = function (webpackEnv) {
               { file: '**/src/setupTests.*' },
             ],
           },
-          logger: {
-            infrastructure: 'silent',
-          },
         }),
     ].filter(Boolean),
     // Turn off performance processing because we utilize
