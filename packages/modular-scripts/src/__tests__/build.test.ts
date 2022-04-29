@@ -52,13 +52,17 @@ describe('WHEN building with preserve modules', () => {
       .toMatchInlineSnapshot(`
       "sample-async-package
       ├─ dist-cjs
-      │  ├─ index.js #y5z0kw
-      │  ├─ index.js.map #1gofapj
+      │  ├─ index.js #p1m6x9
+      │  ├─ index.js.map #16jes1h
+      │  ├─ index2.js #1gdggtn
+      │  ├─ index2.js.map #r11rcb
       │  ├─ runAsync.js #kr3qrh
       │  └─ runAsync.js.map #19q2dqp
       ├─ dist-es
-      │  ├─ index.js #7arwpf
-      │  ├─ index.js.map #p3aqj2
+      │  ├─ index.js #tcl83f
+      │  ├─ index.js.map #yz1h1d
+      │  ├─ index2.js #67jtpf
+      │  ├─ index2.js.map #1pcnly9
       │  ├─ runAsync.js #1tt0e7o
       │  └─ runAsync.js.map #1tlnsv0
       ├─ dist-types
@@ -78,6 +82,22 @@ describe('WHEN building with preserve modules', () => {
             packageName,
             'dist-es',
             'index.js',
+          ),
+        ),
+      ),
+    ).toMatchSnapshot();
+  });
+
+  it('SHOULD create the correct index2.js', () => {
+    expect(
+      String(
+        fs.readFileSync(
+          path.join(
+            getModularRoot(),
+            'dist',
+            packageName,
+            'dist-es',
+            'index2.js',
           ),
         ),
       ),
@@ -149,11 +169,15 @@ describe('WHEN building packages with private cross-package dependencies', () =>
       .toMatchInlineSnapshot(`
       "sample-depending-package
       ├─ dist-cjs
-      │  ├─ index.js #1gj4b9h
-      │  └─ index.js.map #1v4zj6b
+      │  ├─ index.js #1m9v9ya
+      │  ├─ index.js.map #79ot9r
+      │  ├─ index2.js #q6vf2j
+      │  └─ index2.js.map #10q3jzt
       ├─ dist-es
-      │  ├─ index.js #xezjee
-      │  └─ index.js.map #isxuu
+      │  ├─ index.js #3qxwo1
+      │  ├─ index.js.map #yz1h1d
+      │  ├─ index2.js #14be4lv
+      │  └─ index2.js.map #jfjxet
       ├─ dist-types
       │  └─ index.d.ts #6hjmh9
       └─ package.json"
