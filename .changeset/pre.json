@@ -13,5 +13,12 @@
     "modular-views.macro": "3.1.1",
     "tree-view-for-tests": "2.0.0"
   },
-  "changesets": []
+  "changesets": [
+    "new-avocados-chew",
+    "odd-ants-appear",
+    "serious-ways-enjoy",
+    "silver-dolphins-remember",
+    "slimy-pumas-boil",
+    "wild-kings-invent"
+  ]
 }

@@ -43,7 +43,7 @@ export function webpackMeasureFileSizesBeforeBuild(
 
 export function createWebpackAssets(
   paths: Paths,
-  stats: webpack.Stats.ToJsonOutput,
+  stats: webpack.StatsCompilation,
 ): Asset[] {
   const readableAssets: string[] = (
     stats.assets?.filter((asset: { name: string }) =>
