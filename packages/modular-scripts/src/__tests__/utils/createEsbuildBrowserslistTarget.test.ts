@@ -34,8 +34,8 @@ describe('createEsbuildBrowserslistTarget', () => {
     const result = createEsbuildBrowserslistTarget(process.cwd());
     expect(result).toMatchInlineSnapshot(`
       Array [
-        "chrome99",
-        "firefox98",
+        "chrome101",
+        "firefox99",
         "safari15.4",
       ]
     `);
@@ -59,8 +59,8 @@ describe('createEsbuildBrowserslistTarget', () => {
     const result = createEsbuildBrowserslistTarget(process.cwd());
     expect(result).toMatchInlineSnapshot(`
       Array [
-        "chrome99",
-        "firefox98",
+        "chrome101",
+        "firefox99",
         "safari15.4",
       ]
     `);
@@ -84,8 +84,8 @@ describe('createEsbuildBrowserslistTarget', () => {
     const result = createEsbuildBrowserslistTarget(process.cwd());
     expect(result).toMatchInlineSnapshot(`
       Array [
-        "chrome99",
-        "firefox98",
+        "chrome101",
+        "firefox99",
         "safari15.4",
       ]
     `);
