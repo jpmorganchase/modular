@@ -1,5 +1,15 @@
 # modular-scripts
 
+## 3.0.0-beta.2
+
+### Major Changes
+
+- [#1663](https://github.com/jpmorganchase/modular/pull/1663)
+  [`8afd788`](https://github.com/jpmorganchase/modular/commit/8afd78825194f22e09df72d7086e0de96e3656bd)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Remove requirement to
+  transpile to es6-module supported browsers in default browserslist
+  configuration.
+
 ## 3.0.0-beta.1
 
 ### Patch Changes
