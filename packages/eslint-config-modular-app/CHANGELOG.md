@@ -1,5 +1,21 @@
 # eslint-config-modular-app
 
+## 3.0.0-beta.0
+
+### Major Changes
+
+- [#1564](https://github.com/jpmorganchase/modular/pull/1564)
+  [`6a31ac9`](https://github.com/jpmorganchase/modular/commit/6a31ac9572dcc67cd74f85c4094c6fd11aa1dc6c)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  eslint-plugin-testing-library from 4.12.4 to 5.3.0
+
+### Patch Changes
+
+- [#1647](https://github.com/jpmorganchase/modular/pull/1647)
+  [`591acf5`](https://github.com/jpmorganchase/modular/commit/591acf5219946468265b8ad2d40b01f1b1fc02df)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  eslint-plugin-testing-library from 5.3.0 to 5.3.1
+
 ## 2.0.5
 
 ### Patch Changes

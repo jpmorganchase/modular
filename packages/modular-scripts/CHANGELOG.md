@@ -1,5 +1,29 @@
 # modular-scripts
 
+## 3.0.0-beta.0
+
+### Major Changes
+
+- [#1597](https://github.com/jpmorganchase/modular/pull/1597)
+  [`dda3c93`](https://github.com/jpmorganchase/modular/commit/dda3c938b28a3586c68a52736cf726b38a5f0504)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Upgrade
+  html-minifier-terset to v6.
+
+* [#1604](https://github.com/jpmorganchase/modular/pull/1604)
+  [`d7c8725`](https://github.com/jpmorganchase/modular/commit/d7c872564871c5fe30df836bd392d65c3a8efdd0)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Exclude
+  node builtins from build
+
+- [#1650](https://github.com/jpmorganchase/modular/pull/1650)
+  [`81f88dd`](https://github.com/jpmorganchase/modular/commit/81f88dd2d06a3959e6ddd9d23c07308a5078fd2e)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Upgrade webpack
+  implementation to use webpack 5 + associated loader / plugin dependencies.
+
+* [#1599](https://github.com/jpmorganchase/modular/pull/1599)
+  [`6d118fc`](https://github.com/jpmorganchase/modular/commit/6d118fcb4c0a558788909459e1aed1b6fc37110f)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Drop support for node
+  12 in favor of LTS versions `^14.17.0 || >=16.0.0`.
+
 ## 2.4.0
 
 ### Minor Changes
