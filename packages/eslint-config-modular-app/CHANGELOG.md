@@ -1,5 +1,14 @@
 # eslint-config-modular-app
 
+## 3.0.0-beta.1
+
+### Patch Changes
+
+- [#1628](https://github.com/jpmorganchase/modular/pull/1628)
+  [`46dd6fd`](https://github.com/jpmorganchase/modular/commit/46dd6fd1790778ed2ac51992fa2b57a50b6e79d1)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  eslint-plugin-react-hooks from 4.4.0 to 4.5.0
+
 ## 3.0.0-beta.0
 
 ### Major Changes

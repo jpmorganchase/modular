@@ -14,11 +14,23 @@
     "tree-view-for-tests": "2.0.0"
   },
   "changesets": [
+    "angry-fishes-protect",
+    "famous-hairs-melt",
+    "fuzzy-terms-attack",
+    "khaki-years-deliver",
+    "light-bugs-clap",
     "new-avocados-chew",
     "odd-ants-appear",
+    "plenty-peas-fetch",
+    "red-islands-drop",
     "serious-ways-enjoy",
+    "shiny-points-drum",
     "silver-dolphins-remember",
     "slimy-pumas-boil",
-    "wild-kings-invent"
+    "sweet-bags-guess",
+    "three-queens-search",
+    "twenty-turkeys-lay",
+    "wild-kings-invent",
+    "yellow-meals-arrive"
   ]
 }
