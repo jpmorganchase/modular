@@ -259,16 +259,50 @@ describe('modular-scripts', () => {
       ).toMatchSnapshot();
     });
 
+    it('THEN outputs the correct output cjs index2.js file', () => {
+      expect(
+        String(
+          fs.readFileSync(
+            path.join(
+              modularRoot,
+              'dist',
+              'sample-view',
+              'dist-cjs',
+              'index2.js',
+            ),
+          ),
+        ),
+      ).toMatchSnapshot();
+    });
+
+    it('THEN outputs the correct output cjs  index2.js map file', () => {
+      expect(
+        fs.readJsonSync(
+          path.join(
+            modularRoot,
+            'dist',
+            'sample-view',
+            'dist-cjs',
+            'index2.js.map',
+          ),
+        ),
+      ).toMatchSnapshot();
+    });
+
     it('THEN outputs the correct directory structure', () => {
       expect(tree(path.join(modularRoot, 'dist', 'sample-view')))
         .toMatchInlineSnapshot(`
         "sample-view
         ├─ dist-cjs
-        │  ├─ index.js #a7k6ic
-        │  └─ index.js.map #1m4qim9
+        │  ├─ index.js #p1m6x9
+        │  ├─ index.js.map #16jes1h
+        │  ├─ index2.js #dbk75e
+        │  └─ index2.js.map #11cwgsp
         ├─ dist-es
-        │  ├─ index.js #1ymmv5l
-        │  └─ index.js.map #11lg0ox
+        │  ├─ index.js #tcl83f
+        │  ├─ index.js.map #yz1h1d
+        │  ├─ index2.js #urz4k4
+        │  └─ index2.js.map #1w4fdrj
         ├─ dist-types
         │  └─ index.d.ts #1vloh7q
         └─ package.json"
