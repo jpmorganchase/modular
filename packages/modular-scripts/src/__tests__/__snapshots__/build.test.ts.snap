@@ -1,13 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`WHEN building with preserve modules SHOULD create the correct index.js 1`] = `
+"export { default } from './index2.js';
+//# sourceMappingURL=index.js.map
+"
+`;
+
+exports[`WHEN building with preserve modules SHOULD create the correct index2.js 1`] = `
 "async function runInAsync() {
   const { runAsync } = await import('./runAsync.js');
   return runAsync();
 }
 
 export { runInAsync as default };
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=index2.js.map
 "
 `;
 

@@ -1,6 +1,7 @@
 import isCi from 'is-ci';
 import * as path from 'path';
 import * as esbuild from 'esbuild';
+import builtinModules from 'builtin-modules';
 import type { Paths } from '../../utils/createPaths';
 import getClientEnvironment from './getClientEnvironment';
 import * as logger from '../../utils/logger';
@@ -32,6 +33,11 @@ export default function createEsbuildConfig(
   logger.debug(
     `Using target: ${(partialConfig.target as string[]).join(', ')}`,
   );
+
+  // merge and de-duplicate node builtins with external in the parameters
+  const external = [
+    ...new Set((partialConfig.external ?? []).concat(builtinModules)),
+  ];
 
   return {
     entryPoints: [paths.appIndexJs],
@@ -71,5 +77,7 @@ export default function createEsbuildConfig(
     publicPath: paths.publicUrlOrPath,
     nodePaths: (process.env.NODE_PATH || '').split(path.delimiter),
     ...partialConfig,
+    // this was merged previously; do not override.
+    external,
   };
 }

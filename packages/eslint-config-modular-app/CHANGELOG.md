@@ -1,13 +1,59 @@
 # eslint-config-modular-app
 
-## 2.1.0-alpha-webpack5.0
+## 3.0.0
 
-### Minor Changes
+### Major Changes
 
-- [#1538](https://github.com/jpmorganchase/modular/pull/1538)
-  [`69da976`](https://github.com/jpmorganchase/modular/commit/69da9762d6a749ddc78e2fd16ecd088c5e75f714)
-  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Drop
-  support for node 12
+- [#1564](https://github.com/jpmorganchase/modular/pull/1564)
+  [`6a31ac9`](https://github.com/jpmorganchase/modular/commit/6a31ac9572dcc67cd74f85c4094c6fd11aa1dc6c)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  eslint-plugin-testing-library from 4.12.4 to 5.3.0
+
+### Patch Changes
+
+- [#1647](https://github.com/jpmorganchase/modular/pull/1647)
+  [`591acf5`](https://github.com/jpmorganchase/modular/commit/591acf5219946468265b8ad2d40b01f1b1fc02df)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  eslint-plugin-testing-library from 5.3.0 to 5.3.1
+
+* [#1628](https://github.com/jpmorganchase/modular/pull/1628)
+  [`46dd6fd`](https://github.com/jpmorganchase/modular/commit/46dd6fd1790778ed2ac51992fa2b57a50b6e79d1)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  eslint-plugin-react-hooks from 4.4.0 to 4.5.0
+
+## 3.0.0-beta.1
+
+### Patch Changes
+
+- [#1628](https://github.com/jpmorganchase/modular/pull/1628)
+  [`46dd6fd`](https://github.com/jpmorganchase/modular/commit/46dd6fd1790778ed2ac51992fa2b57a50b6e79d1)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  eslint-plugin-react-hooks from 4.4.0 to 4.5.0
+
+## 3.0.0-beta.0
+
+### Major Changes
+
+- [#1564](https://github.com/jpmorganchase/modular/pull/1564)
+  [`6a31ac9`](https://github.com/jpmorganchase/modular/commit/6a31ac9572dcc67cd74f85c4094c6fd11aa1dc6c)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  eslint-plugin-testing-library from 4.12.4 to 5.3.0
+
+### Patch Changes
+
+- [#1647](https://github.com/jpmorganchase/modular/pull/1647)
+  [`591acf5`](https://github.com/jpmorganchase/modular/commit/591acf5219946468265b8ad2d40b01f1b1fc02df)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  eslint-plugin-testing-library from 5.3.0 to 5.3.1
+
+## 2.0.5
+
+### Patch Changes
+
+- [#1525](https://github.com/jpmorganchase/modular/pull/1525)
+  [`ea5b8c6`](https://github.com/jpmorganchase/modular/commit/ea5b8c6820c4ceb23224576e148726f474b88dfa)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  eslint-plugin-react-hooks from 4.3.0 to 4.4.0
 
 ## 2.0.4
 
