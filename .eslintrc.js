@@ -17,14 +17,14 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['**/*.test.*', '**/__tests__/**'],
+      files: [
+        '**/*.test.*',
+        '**/__tests__/**',
+        '**/modular-template-app/**',
+        '**/modular-template-view/**',
+      ],
       rules: {
         'import/no-extraneous-dependencies': OFF,
-      },
-    },
-    {
-      files: 'packages/modular-scripts/types/**/*',
-      rules: {
         'react/jsx-pascal-case': OFF,
       },
     },

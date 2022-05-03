@@ -1,5 +1,14 @@
 # modular-views.macro
 
+## 3.1.1
+
+### Patch Changes
+
+- [#1590](https://github.com/jpmorganchase/modular/pull/1590)
+  [`f1e352e`](https://github.com/jpmorganchase/modular/commit/f1e352e70a1f61f20918538c36f7c1d9a97ec9cd)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump fs-extra from
+  10.0.1 to 10.1.0
+
 ## 3.1.0
 
 ### Minor Changes

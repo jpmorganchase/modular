@@ -7,13 +7,15 @@ export const packageTypes: PackageType[] = [
   'esm-view',
   'view',
   'package',
+  'template',
 ];
 
 export const ModularTypes: ModularType[] = (
   packageTypes as ModularType[]
 ).concat(['root']);
 
-export type PackageType = 'app' | 'esm-view' | 'view' | 'package';
+export type ModularTemplateType = 'app' | 'esm-view' | 'view' | 'package';
+export type PackageType = ModularTemplateType | 'template';
 
 export type ModularType = PackageType | 'root';
 
@@ -21,6 +23,7 @@ export type ModularPackageJson = PackageJson & {
   browserslist?: Record<string, string[]>;
   modular?: {
     type: ModularType;
+    templateType?: ModularTemplateType;
   };
 };
 

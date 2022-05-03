@@ -2,7 +2,6 @@ import * as fs from 'fs-extra';
 import path from 'path';
 import { pascalCase as toPascalCase } from 'change-case';
 import getModularRoot from './getModularRoot';
-import getAllFiles from './getAllFiles';
 
 export default function stageView(targetedView: string): string {
   const modularRoot = getModularRoot();
@@ -12,55 +11,60 @@ export default function stageView(targetedView: string): string {
     fs.mkdirSync(tempDir);
   }
   const stagedViewAppPath = path.join(tempDir, targetedView);
-  if (!fs.existsSync(`${tempDir}/${targetedView}`)) {
-    const appTypePath = path.join(__dirname, '../../types', 'app-view');
-    fs.mkdirSync(`${tempDir}/${targetedView}`);
-    fs.copySync(appTypePath, stagedViewAppPath);
 
-    const packageFilePaths = getAllFiles(stagedViewAppPath);
+  const name = toPascalCase(targetedView);
 
-    for (const packageFilePath of packageFilePaths) {
-      fs.writeFileSync(
-        packageFilePath,
-        fs
-          .readFileSync(packageFilePath, 'utf8')
-          .replace(/PackageName__/g, toPascalCase(targetedView))
-          .replace(/ComponentName__/g, toPascalCase(targetedView)),
-      );
-      if (path.basename(packageFilePath) === 'packagejson') {
-        fs.moveSync(
-          packageFilePath,
-          packageFilePath.replace('packagejson', 'package.json'),
-        );
-      }
-    }
-  }
+  const workingDirectory = path.join(tempDir, targetedView);
 
-  // This optimizes repeated modular start <view> executions. If a tsconfig.json is present
-  // we assume that this view has been staged before and we do not need to write to the index.tsx
-  // file or write a tsconfig.json again
-  if (!fs.existsSync(path.join(stagedViewAppPath, 'tsconfig.json'))) {
-    const indexTemplate = `import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+  fs.mkdirpSync(workingDirectory);
+  fs.mkdirpSync(path.join(workingDirectory, 'public'));
+  fs.mkdirpSync(path.join(workingDirectory, 'src'));
 
-import App from '${targetedView}';
+  fs.writeJsonSync(path.join(workingDirectory, 'package.json'), {
+    modular: {
+      type: 'app',
+    },
+    name,
+    version: '1.0.0',
+  });
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('root'),
-);`;
-    fs.writeFileSync(
-      path.join(stagedViewAppPath, 'src', 'index.tsx'),
-      indexTemplate,
-    );
-    fs.writeJSONSync(
-      path.join(stagedViewAppPath, 'tsconfig.json'),
-      {
-        extends:
-          path.relative(stagedViewAppPath, modularRoot) + '/tsconfig.json',
-      },
-      { spaces: 2 },
-    );
-  }
+  fs.writeFileSync(
+    path.join(workingDirectory, 'public', 'index.html'),
+    `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <title>{name}</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+  `,
+  );
+
+  const indexTemplate = `import * as React from 'react';
+  import * as ReactDOM from 'react-dom';
+  
+  import App from '${targetedView}';
+  
+  ReactDOM.render(
+    <App />,
+    document.getElementById('root'),
+  );`;
+
+  fs.writeFileSync(
+    path.join(stagedViewAppPath, 'src', 'index.tsx'),
+    indexTemplate,
+  );
+  fs.writeJSONSync(
+    path.join(stagedViewAppPath, 'tsconfig.json'),
+    {
+      extends: path.relative(stagedViewAppPath, modularRoot) + '/tsconfig.json',
+    },
+    { spaces: 2 },
+  );
   return stagedViewAppPath;
 }

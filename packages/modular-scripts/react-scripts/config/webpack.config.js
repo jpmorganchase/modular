@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 const resolve = require('resolve');
+const builtinModules = require('builtin-modules');
 const PnpWebpackPlugin = require('pnp-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
@@ -325,16 +326,10 @@ module.exports = function (webpackEnv) {
       // Some libraries import Node modules but don't use them in the browser.
       // Tell webpack to provide empty mocks for them so importing them works.
       // See https://github.com/webpack/webpack/issues/11649
-      fallback: {
-        module: false,
-        dgram: false,
-        dns: false,
-        fs: false,
-        http2: false,
-        net: false,
-        tls: false,
-        child_process: false,
-      },
+      fallback: builtinModules.reduce((acc, next) => {
+        acc[next] = false;
+        return acc;
+      }, {}),
       plugins: [
         // Adds support for installing with Plug'n'Play, leading to faster installs and adding
         // guards against forgotten dependencies and such.
@@ -686,9 +681,6 @@ module.exports = function (webpackEnv) {
               { file: '**/src/setupProxy.*' },
               { file: '**/src/setupTests.*' },
             ],
-          },
-          logger: {
-            infrastructure: 'silent',
           },
         }),
     ].filter(Boolean),
