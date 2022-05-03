@@ -58,7 +58,7 @@
     "@types/global-modules": "^2.0.0",
     "@types/html-minifier-terser": "6.1.0",
     "@types/is-ci": "3.0.0",
-    "@types/jest": "26.0.24",
+    "@types/jest": "27.5.0",
     "@types/mime": "^2.0.3",
     "@types/node": "*",
     "@types/npm-packlist": "3.0.0",
