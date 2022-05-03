@@ -1,5 +1,14 @@
 # create-modular-react-app
 
+## 3.0.0
+
+### Major Changes
+
+- [#1599](https://github.com/jpmorganchase/modular/pull/1599)
+  [`6d118fc`](https://github.com/jpmorganchase/modular/commit/6d118fcb4c0a558788909459e1aed1b6fc37110f)
+  Thanks [@LukeSheard](https://github.com/LukeSheard)! - Drop support for node
+  12 in favor of LTS versions `^14.17.0 || >=16.0.0`.
+
 ## 3.0.0-beta.0
 
 ### Major Changes
