@@ -4,20 +4,20 @@ exports[`When working with a nested app can generate a asset-manifest 1`] = `
 "{
   \\"files\\": {
     \\"main.css\\": \\"/static/css/main.1a7488ce.css\\",
-    \\"main.js\\": \\"/static/js/main.3563e93f.js\\",
-    \\"runtime-main.js\\": \\"/static/js/runtime-main.83e93d07.js\\",
-    \\"static/js/788.78cfb599.js\\": \\"/static/js/788.78cfb599.js\\",
+    \\"main.js\\": \\"/static/js/main.c2bf6fcb.js\\",
+    \\"runtime-main.js\\": \\"/static/js/runtime-main.b18f5039.js\\",
+    \\"static/js/788.bbd34b33.js\\": \\"/static/js/788.bbd34b33.js\\",
     \\"index.html\\": \\"/index.html\\",
     \\"main.1a7488ce.css.map\\": \\"/static/css/main.1a7488ce.css.map\\",
-    \\"main.3563e93f.js.map\\": \\"/static/js/main.3563e93f.js.map\\",
-    \\"runtime-main.83e93d07.js.map\\": \\"/static/js/runtime-main.83e93d07.js.map\\",
-    \\"788.78cfb599.js.map\\": \\"/static/js/788.78cfb599.js.map\\"
+    \\"main.c2bf6fcb.js.map\\": \\"/static/js/main.c2bf6fcb.js.map\\",
+    \\"runtime-main.b18f5039.js.map\\": \\"/static/js/runtime-main.b18f5039.js.map\\",
+    \\"788.bbd34b33.js.map\\": \\"/static/js/788.bbd34b33.js.map\\"
   },
   \\"entrypoints\\": [
     \\"static/js/runtime-main.b18f5039.js\\",
     \\"static/js/788.bbd34b33.js\\",
     \\"static/css/main.1a7488ce.css\\",
-    \\"static/js/main.3563e93f.js\\"
+    \\"static/js/main.c2bf6fcb.js\\"
   ]
 }"
 `;
@@ -8538,175 +8538,7 @@ exports[`When working with a nested app can generate a hashed vendor chunk in th
     },
   },
 ]);
-//# sourceMappingURL=788.78cfb599.js.map
-"
-`;
-
-exports[`When working with a nested app can generate a hashed main css chunk in the css directory 1`] = `
-".App {
-  text-align: center;
-}
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin 20s linear infinite;
-  }
-}
-.App-header {
-  align-items: center;
-  background-color: #282c34;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  font-size: calc(10px + 2vmin);
-  justify-content: center;
-  min-height: 100vh;
-}
-.App-link {
-  color: #61dafb;
-}
-@keyframes App-logo-spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(1turn);
-  }
-}
-body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  margin: 0;
-}
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, Courier New, monospace;
-}
-/*# sourceMappingURL=main.1a7488ce.css.map*/
-"
-`;
-
-exports[`When working with a nested app can generate a hashed main js chunk in the js directory 1`] = `
-"\\"use strict\\";
-(globalThis.webpackChunk_scoped_sample_app =
-  globalThis.webpackChunk_scoped_sample_app || []).push([
-  [179],
-  {
-    591: (M, L, j) => {
-      var N = j(735),
-        I = j(788);
-      const u = function () {
-        return N.createElement(
-          \\"div\\",
-          { className: \\"App\\" },
-          N.createElement(
-            \\"header\\",
-            { className: \\"App-header\\" },
-            N.createElement(\\"img\\", {
-              src: \\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4NDEuOSA1OTUuMyI+CiAgICA8ZyBmaWxsPSIjNjFEQUZCIj4KICAgICAgICA8cGF0aCBkPSJNNjY2LjMgMjk2LjVjMC0zMi41LTQwLjctNjMuMy0xMDMuMS04Mi40IDE0LjQtNjMuNiA4LTExNC4yLTIwLjItMTMwLjQtNi41LTMuOC0xNC4xLTUuNi0yMi40LTUuNnYyMi4zYzQuNiAwIDguMy45IDExLjQgMi42IDEzLjYgNy44IDE5LjUgMzcuNSAxNC45IDc1LjctMS4xIDkuNC0yLjkgMTkuMy01LjEgMjkuNC0xOS42LTQuOC00MS04LjUtNjMuNS0xMC45LTEzLjUtMTguNS0yNy41LTM1LjMtNDEuNi01MCAzMi42LTMwLjMgNjMuMi00Ni45IDg0LTQ2LjlWNzhjLTI3LjUgMC02My41IDE5LjYtOTkuOSA1My42LTM2LjQtMzMuOC03Mi40LTUzLjItOTkuOS01My4ydjIyLjNjMjAuNyAwIDUxLjQgMTYuNSA4NCA0Ni42LTE0IDE0LjctMjggMzEuNC00MS4zIDQ5LjktMjIuNiAyLjQtNDQgNi4xLTYzLjYgMTEtMi4zLTEwLTQtMTkuNy01LjItMjktNC43LTM4LjIgMS4xLTY3LjkgMTQuNi03NS44IDMtMS44IDYuOS0yLjYgMTEuNS0yLjZWNzguNWMtOC40IDAtMTYgMS44LTIyLjYgNS42LTI4LjEgMTYuMi0zNC40IDY2LjctMTkuOSAxMzAuMS02Mi4yIDE5LjItMTAyLjcgNDkuOS0xMDIuNyA4Mi4zIDAgMzIuNSA0MC43IDYzLjMgMTAzLjEgODIuNC0xNC40IDYzLjYtOCAxMTQuMiAyMC4yIDEzMC40IDYuNSAzLjggMTQuMSA1LjYgMjIuNSA1LjYgMjcuNSAwIDYzLjUtMTkuNiA5OS45LTUzLjYgMzYuNCAzMy44IDcyLjQgNTMuMiA5OS45IDUzLjIgOC40IDAgMTYtMS44IDIyLjYtNS42IDI4LjEtMTYuMiAzNC40LTY2LjcgMTkuOS0xMzAuMSA2Mi0xOS4xIDEwMi41LTQ5LjkgMTAyLjUtODIuM3ptLTEzMC4yLTY2LjdjLTMuNyAxMi45LTguMyAyNi4yLTEzLjUgMzkuNS00LjEtOC04LjQtMTYtMTMuMS0yNC00LjYtOC05LjUtMTUuOC0xNC40LTIzLjQgMTQuMiAyLjEgMjcuOSA0LjcgNDEgNy45em0tNDUuOCAxMDYuNWMtNy44IDEzLjUtMTUuOCAyNi4zLTI0LjEgMzguMi0xNC45IDEuMy0zMCAyLTQ1LjIgMi0xNS4xIDAtMzAuMi0uNy00NS0xLjktOC4zLTExLjktMTYuNC0yNC42LTI0LjItMzgtNy42LTEzLjEtMTQuNS0yNi40LTIwLjgtMzkuOCA2LjItMTMuNCAxMy4yLTI2LjggMjAuNy0zOS45IDcuOC0xMy41IDE1LjgtMjYuMyAyNC4xLTM4LjIgMTQuOS0xLjMgMzAtMiA0NS4yLTIgMTUuMSAwIDMwLjIuNyA0NSAxLjkgOC4zIDExLjkgMTYuNCAyNC42IDI0LjIgMzggNy42IDEzLjEgMTQuNSAyNi40IDIwLjggMzkuOC02LjMgMTMuNC0xMy4yIDI2LjgtMjAuNyAzOS45em0zMi4zLTEzYzUuNCAxMy40IDEwIDI2LjggMTMuOCAzOS44LTEzLjEgMy4yLTI2LjkgNS45LTQxLjIgOCA0LjktNy43IDkuOC0xNS42IDE0LjQtMjMuNyA0LjYtOCA4LjktMTYuMSAxMy0yNC4xek00MjEuMiA0MzBjLTkuMy05LjYtMTguNi0yMC4zLTI3LjgtMzIgOSAuNCAxOC4yLjcgMjcuNS43IDkuNCAwIDE4LjctLjIgMjcuOC0uNy05IDExLjctMTguMyAyMi40LTI3LjUgMzJ6bS03NC40LTU4LjljLTE0LjItMi4xLTI3LjktNC43LTQxLTcuOSAzLjctMTIuOSA4LjMtMjYuMiAxMy41LTM5LjUgNC4xIDggOC40IDE2IDEzLjEgMjQgNC43IDggOS41IDE1LjggMTQuNCAyMy40ek00MjAuNyAxNjNjOS4zIDkuNiAxOC42IDIwLjMgMjcuOCAzMi05LS40LTE4LjItLjctMjcuNS0uNy05LjQgMC0xOC43LjItMjcuOC43IDktMTEuNyAxOC4zLTIyLjQgMjcuNS0zMnptLTc0IDU4LjljLTQuOSA3LjctOS44IDE1LjYtMTQuNCAyMy43LTQuNiA4LTguOSAxNi0xMyAyNC01LjQtMTMuNC0xMC0yNi44LTEzLjgtMzkuOCAxMy4xLTMuMSAyNi45LTUuOCA0MS4yLTcuOXptLTkwLjUgMTI1LjJjLTM1LjQtMTUuMS01OC4zLTM0LjktNTguMy01MC42IDAtMTUuNyAyMi45LTM1LjYgNTguMy01MC42IDguNi0zLjcgMTgtNyAyNy43LTEwLjEgNS43IDE5LjYgMTMuMiA0MCAyMi41IDYwLjktOS4yIDIwLjgtMTYuNiA0MS4xLTIyLjIgNjAuNi05LjktMy4xLTE5LjMtNi41LTI4LTEwLjJ6TTMxMCA0OTBjLTEzLjYtNy44LTE5LjUtMzcuNS0xNC45LTc1LjcgMS4xLTkuNCAyLjktMTkuMyA1LjEtMjkuNCAxOS42IDQuOCA0MSA4LjUgNjMuNSAxMC45IDEzLjUgMTguNSAyNy41IDM1LjMgNDEuNiA1MC0zMi42IDMwLjMtNjMuMiA0Ni45LTg0IDQ2LjktNC41LS4xLTguMy0xLTExLjMtMi43em0yMzcuMi03Ni4yYzQuNyAzOC4yLTEuMSA2Ny45LTE0LjYgNzUuOC0zIDEuOC02LjkgMi42LTExLjUgMi42LTIwLjcgMC01MS40LTE2LjUtODQtNDYuNiAxNC0xNC43IDI4LTMxLjQgNDEuMy00OS45IDIyLjYtMi40IDQ0LTYuMSA2My42LTExIDIuMyAxMC4xIDQuMSAxOS44IDUuMiAyOS4xem0zOC41LTY2LjdjLTguNiAzLjctMTggNy0yNy43IDEwLjEtNS43LTE5LjYtMTMuMi00MC0yMi41LTYwLjkgOS4yLTIwLjggMTYuNi00MS4xIDIyLjItNjAuNiA5LjkgMy4xIDE5LjMgNi41IDI4LjEgMTAuMiAzNS40IDE1LjEgNTguMyAzNC45IDU4LjMgNTAuNi0uMSAxNS43LTIzIDM1LjYtNTguNCA1MC42ek0zMjAuOCA3OC40eiIvPgogICAgICAgIDxjaXJjbGUgY3g9IjQyMC45IiBjeT0iMjk2LjUiIHI9IjQ1LjciLz4KICAgICAgICA8cGF0aCBkPSJNNTIwLjUgNzguMXoiLz4KICAgIDwvZz4KPC9zdmc+Cg==\\",
-              className: \\"App-logo\\",
-              alt: \\"logo\\",
-            }),
-            N.createElement(
-              \\"p\\",
-              null,
-              \\"Edit \\",
-              N.createElement(\\"code\\", null, \\"src/App.tsx\\"),
-              \\" and save to reload.\\"
-            ),
-            N.createElement(
-              \\"a\\",
-              {
-                className: \\"App-link\\",
-                href: \\"https://reactjs.org\\",
-                target: \\"_blank\\",
-                rel: \\"noopener noreferrer\\",
-              },
-              \\"Learn React\\"
-            )
-          )
-        );
-      };
-      I.render(
-        N.createElement(N.StrictMode, null, N.createElement(u, null)),
-        document.getElementById(\\"root\\")
-      );
-    },
-  },
-  (M) => {
-    M.O(0, [788], () => {
-      return (L = 591), M((M.s = L));
-      var L;
-    });
-    M.O();
-  },
-]);
-//# sourceMappingURL=main.3563e93f.js.map
-"
-`;
-
-exports[`When working with a nested app can generate a hashed runtime chunk in the js directory 1`] = `
-"(() => {
-  \\"use strict\\";
-  var r = {},
-    e = {};
-  function o(a) {
-    var p = e[a];
-    if (void 0 !== p) return p.exports;
-    var t = (e[a] = { exports: {} });
-    return r[a](t, t.exports, o), t.exports;
-  }
-  (o.m = r),
-    (() => {
-      var r = [];
-      o.O = (e, a, p, t) => {
-        if (!a) {
-          var n = 1 / 0;
-          for (v = 0; v < r.length; v++) {
-            for (var [a, p, t] = r[v], s = !0, l = 0; l < a.length; l++)
-              (!1 & t || n >= t) && Object.keys(o.O).every((r) => o.O[r](a[l]))
-                ? a.splice(l--, 1)
-                : ((s = !1), t < n && (n = t));
-            if (s) {
-              r.splice(v--, 1);
-              var i = p();
-              void 0 !== i && (e = i);
-            }
-          }
-          return e;
-        }
-        t = t || 0;
-        for (var v = r.length; v > 0 && r[v - 1][2] > t; v--) r[v] = r[v - 1];
-        r[v] = [a, p, t];
-      };
-    })(),
-    (o.o = (r, e) => Object.prototype.hasOwnProperty.call(r, e)),
-    (() => {
-      var r = { 252: 0 };
-      o.O.j = (e) => 0 === r[e];
-      var e = (e, a) => {
-          var p,
-            t,
-            [n, s, l] = a,
-            i = 0;
-          if (n.some((e) => 0 !== r[e])) {
-            for (p in s) o.o(s, p) && (o.m[p] = s[p]);
-            if (l) var v = l(o);
-          }
-          for (e && e(a); i < n.length; i++)
-            (t = n[i]), o.o(r, t) && r[t] && r[t][0](), (r[t] = 0);
-          return o.O(v);
-        },
-        a = (globalThis.webpackChunk_scoped_sample_app =
-          globalThis.webpackChunk_scoped_sample_app || []);
-      a.forEach(e.bind(null, 0)), (a.push = e.bind(null, a.push.bind(a)));
-    })();
-})();
-//# sourceMappingURL=runtime-main.83e93d07.js.map
+//# sourceMappingURL=788.bbd34b33.js.map
 "
 `;
 
@@ -8785,8 +8617,8 @@ exports[`When working with a nested app can generate a index.html 1`] = `
           })();
       })();
     </script>
-    <script defer=\\"defer\\" src=\\"/static/js/788.78cfb599.js\\"></script>
-    <script defer=\\"defer\\" src=\\"/static/js/main.3563e93f.js\\"></script>
+    <script defer=\\"defer\\" src=\\"/static/js/788.bbd34b33.js\\"></script>
+    <script defer=\\"defer\\" src=\\"/static/js/main.c2bf6fcb.js\\"></script>
     <link href=\\"/static/css/main.1a7488ce.css\\" rel=\\"stylesheet\\" />
   </head>
   <body>
@@ -8835,12 +8667,12 @@ exports[`when working with a NODE_ENV app can generate a hashed js chunk in the 
       console.log(\\"production\\");
     },
   },
-  (o) => {
-    var e;
-    (e = 908), o((o.s = e));
+  (e) => {
+    var n;
+    (n = 908), e((e.s = n));
   },
 ]);
-//# sourceMappingURL=main.1c6de6d0.js.map
+//# sourceMappingURL=main.a482480b.js.map
 "
 `;
 
@@ -8848,20 +8680,20 @@ exports[`when working with an app can generate a asset-manifest 1`] = `
 "{
   \\"files\\": {
     \\"main.css\\": \\"/static/css/main.1a7488ce.css\\",
-    \\"main.js\\": \\"/static/js/main.97cda94b.js\\",
-    \\"runtime-main.js\\": \\"/static/js/runtime-main.de9fd74d.js\\",
-    \\"static/js/316.7a4d5eb7.js\\": \\"/static/js/316.7a4d5eb7.js\\",
+    \\"main.js\\": \\"/static/js/main.a7fe4bac.js\\",
+    \\"runtime-main.js\\": \\"/static/js/runtime-main.7150bca8.js\\",
+    \\"static/js/316.394ef80b.js\\": \\"/static/js/316.394ef80b.js\\",
     \\"index.html\\": \\"/index.html\\",
     \\"main.1a7488ce.css.map\\": \\"/static/css/main.1a7488ce.css.map\\",
-    \\"main.97cda94b.js.map\\": \\"/static/js/main.97cda94b.js.map\\",
-    \\"runtime-main.de9fd74d.js.map\\": \\"/static/js/runtime-main.de9fd74d.js.map\\",
-    \\"316.7a4d5eb7.js.map\\": \\"/static/js/316.7a4d5eb7.js.map\\"
+    \\"main.a7fe4bac.js.map\\": \\"/static/js/main.a7fe4bac.js.map\\",
+    \\"runtime-main.7150bca8.js.map\\": \\"/static/js/runtime-main.7150bca8.js.map\\",
+    \\"316.394ef80b.js.map\\": \\"/static/js/316.394ef80b.js.map\\"
   },
   \\"entrypoints\\": [
     \\"static/js/runtime-main.7150bca8.js\\",
     \\"static/js/316.394ef80b.js\\",
     \\"static/css/main.1a7488ce.css\\",
-    \\"static/js/main.97cda94b.js\\"
+    \\"static/js/main.a7fe4bac.js\\"
   ]
 }"
 `;
@@ -8925,7 +8757,7 @@ exports[`when working with an app can generate a hashed main js chunk in the js 
     M.O();
   },
 ]);
-//# sourceMappingURL=main.97cda94b.js.map
+//# sourceMappingURL=main.a7fe4bac.js.map
 "
 `;
 
@@ -17346,8 +17178,8 @@ exports[`when working with an app can generate a index.html 1`] = `
           })();
       })();
     </script>
-    <script defer=\\"defer\\" src=\\"/static/js/316.7a4d5eb7.js\\"></script>
-    <script defer=\\"defer\\" src=\\"/static/js/main.97cda94b.js\\"></script>
+    <script defer=\\"defer\\" src=\\"/static/js/316.394ef80b.js\\"></script>
+    <script defer=\\"defer\\" src=\\"/static/js/main.a7fe4bac.js\\"></script>
     <link href=\\"/static/css/main.1a7488ce.css\\" rel=\\"stylesheet\\" />
   </head>
   <body>
