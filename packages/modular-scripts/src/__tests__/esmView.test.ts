@@ -72,10 +72,9 @@ describe('modular-scripts', () => {
         "sample-esm-view
         ├─ package.json
         └─ src
-           ├─ EsmView.css #1lsezts
+           ├─ EsmView.css #x6onxt
            ├─ __tests__
            │  └─ EsmView.test.tsx #113p9x8
-           ├─ index.css #o7sk21
            ├─ index.tsx #plsqyc
            ├─ logo.svg #1okqmlj
            └─ react-app-env.d.ts #t4ygcy"
@@ -229,7 +228,7 @@ describe('modular-scripts', () => {
       ).toString();
 
       const indexFile = (
-        await fs.readFile(path.join(baseDir, 'index-WLMHTOMW.js'))
+        await fs.readFile(path.join(baseDir, 'index-CWSY44GF.js'))
       ).toString();
       expect(
         prettier.format(indexFile, {
@@ -311,7 +310,7 @@ describe('modular-scripts', () => {
       );
 
       const indexFile = (
-        await fs.readFile(path.join(baseDir, 'index-V6Y75ACI.js'))
+        await fs.readFile(path.join(baseDir, 'index-5PFA727O.js'))
       ).toString();
       expect(
         prettier.format(indexFile, {
@@ -365,7 +364,7 @@ describe('modular-scripts', () => {
       );
 
       const indexFile = (
-        await fs.readFile(path.join(baseDir, 'index-3DGBQNWF.js'))
+        await fs.readFile(path.join(baseDir, 'index-66YWVUWP.js'))
       ).toString();
       expect(
         prettier.format(indexFile, {
@@ -429,7 +428,7 @@ describe('modular-scripts', () => {
       );
 
       const indexFile = (
-        await fs.readFile(path.join(baseDir, 'index-3DGBQNWF.js'))
+        await fs.readFile(path.join(baseDir, 'index-66YWVUWP.js'))
       ).toString();
       expect(
         prettier.format(indexFile, {
@@ -493,7 +492,7 @@ describe('modular-scripts', () => {
       );
 
       const indexFile = (
-        await fs.readFile(path.join(baseDir, 'index-3DGBQNWF.js'))
+        await fs.readFile(path.join(baseDir, 'index-66YWVUWP.js'))
       ).toString();
       expect(indexFile).toContain(`https://mycustomcdn.net/react?version=`);
       expect(indexFile).not.toContain(
