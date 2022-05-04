@@ -72,9 +72,13 @@ describe('modular-scripts', () => {
         "sample-esm-view
         ├─ package.json
         └─ src
+           ├─ EsmView.css #1lsezts
            ├─ __tests__
-           │  └─ index.test.tsx #1739o3j
-           └─ index.tsx #plsqyc"
+           │  └─ EsmView.test.tsx #113p9x8
+           ├─ index.css #o7sk21
+           ├─ index.tsx #plsqyc
+           ├─ logo.svg #1okqmlj
+           └─ react-app-env.d.ts #t4ygcy"
       `);
     });
   });
@@ -161,11 +165,10 @@ describe('modular-scripts', () => {
           "dependencies": Object {
             "react": "17.0.2",
           },
-          "license": "UNLICENSED",
           "modular": Object {
             "type": "esm-view",
           },
-          "module": "static/js/index-C35IQVZC.js",
+          "module": "static/js/index-7JXQF5H3.js",
           "name": "sample-esm-view",
           "version": "1.0.0",
         }
@@ -180,9 +183,9 @@ describe('modular-scripts', () => {
         ├─ package.json
         └─ static
            └─ js
-              ├─ _trampoline.js #1ssnvsl
-              ├─ index-C35IQVZC.js #6jwlc4
-              └─ index-C35IQVZC.js.map #18o5civ"
+              ├─ _trampoline.js #14ismmk
+              ├─ index-7JXQF5H3.js #1yztbh1
+              └─ index-7JXQF5H3.js.map #qbs4qx"
       `);
     });
   });
@@ -207,9 +210,9 @@ describe('modular-scripts', () => {
         ├─ package.json
         └─ static
            └─ js
-              ├─ _trampoline.js #1nnenyj
-              ├─ index-WLMHTOMW.js #1sdrt10
-              └─ index-WLMHTOMW.js.map #1qcmrrk"
+              ├─ _trampoline.js #p8m8p8
+              ├─ index-CWSY44GF.js #d3ivus
+              └─ index-CWSY44GF.js.map #u4q009"
       `);
     });
 
@@ -292,9 +295,9 @@ describe('modular-scripts', () => {
         ├─ package.json
         └─ static
            └─ js
-              ├─ _trampoline.js #dxzkee
-              ├─ index-V6Y75ACI.js #krluh9
-              └─ index-V6Y75ACI.js.map #1awyi3v"
+              ├─ _trampoline.js #gf8drx
+              ├─ index-5PFA727O.js #ciz6lx
+              └─ index-5PFA727O.js.map #np8r25"
       `);
     });
 
@@ -346,9 +349,9 @@ describe('modular-scripts', () => {
         ├─ package.json
         └─ static
            └─ js
-              ├─ _trampoline.js #sbph5z
-              ├─ index-3DGBQNWF.js #x6y8f8
-              └─ index-3DGBQNWF.js.map #122b2zq"
+              ├─ _trampoline.js #15e3mk0
+              ├─ index-66YWVUWP.js #b5zj9
+              └─ index-66YWVUWP.js.map #1opvigk"
       `);
     });
 
@@ -410,9 +413,9 @@ describe('modular-scripts', () => {
         ├─ package.json
         └─ static
            └─ js
-              ├─ _trampoline.js #sbph5z
-              ├─ index-3DGBQNWF.js #x6y8f8
-              └─ index-3DGBQNWF.js.map #122b2zq"
+              ├─ _trampoline.js #15e3mk0
+              ├─ index-66YWVUWP.js #b5zj9
+              └─ index-66YWVUWP.js.map #1opvigk"
       `);
     });
 
@@ -474,9 +477,9 @@ describe('modular-scripts', () => {
         ├─ package.json
         └─ static
            └─ js
-              ├─ _trampoline.js #sbph5z
-              ├─ index-3DGBQNWF.js #x6y8f8
-              └─ index-3DGBQNWF.js.map #122b2zq"
+              ├─ _trampoline.js #15e3mk0
+              ├─ index-66YWVUWP.js #b5zj9
+              └─ index-66YWVUWP.js.map #1opvigk"
       `);
     });
 

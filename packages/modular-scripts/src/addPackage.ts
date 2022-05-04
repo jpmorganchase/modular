@@ -130,7 +130,7 @@ async function addPackage({
 
   const modularTemplateType = modularTemplatePackageJson?.modular
     ?.templateType as string;
-  if (!['app', 'view', 'package'].includes(modularTemplateType)) {
+  if (!['app', 'esm-view', 'view', 'package'].includes(modularTemplateType)) {
     throw new Error(
       `${templateName} has modular type: ${modularTemplateType}, which does not exist, please use update this template`,
     );
