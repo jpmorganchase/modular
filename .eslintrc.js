@@ -22,6 +22,7 @@ module.exports = {
         '**/__tests__/**',
         '**/modular-template-app/**',
         '**/modular-template-view/**',
+        '**/modular-template-esm-view/**',
       ],
       rules: {
         'import/no-extraneous-dependencies': OFF,
