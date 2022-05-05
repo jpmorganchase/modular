@@ -37,6 +37,13 @@ Object {
     "type": "template",
     "workspaceDependencies": Array [],
   },
+  "modular-template-esm-view": Object {
+    "location": "packages/modular-template-esm-view",
+    "mismatchedWorkspaceDependencies": Array [],
+    "public": true,
+    "type": "template",
+    "workspaceDependencies": Array [],
+  },
   "modular-template-node-env-app": Object {
     "location": "packages/modular-template-node-env-app",
     "mismatchedWorkspaceDependencies": Array [],
