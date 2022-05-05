@@ -1,5 +1,4 @@
 ---
-"modular-scripts": patch
 "modular-template-esm-view": major
 ---
 
