@@ -12894,55 +12894,55 @@ export { m as default };
 `;
 
 exports[`modular-scripts WHEN building a esm-view with resolutions and webpack THEN rewrites the dependencies 1`] = `
-"import * as e from \\"https://mycustomcdn.net/react@undefined\\";
-import * as t from \\"https://mycustomcdn.net/lodash@undefined/get\\";
-import * as r from \\"https://mycustomcdn.net/lodash.merge@undefined\\";
-import * as n from \\"https://mycustomcdn.net/lodash@undefined\\";
-var d = {
+"import * as e from \\"https://mycustomcdn.net/react@17.0.2\\";
+import * as t from \\"https://mycustomcdn.net/lodash@4.17.21/get\\";
+import * as r from \\"https://mycustomcdn.net/lodash.merge@4.6.2\\";
+import * as n from \\"https://mycustomcdn.net/lodash@4.17.21\\";
+var a = {
     d: (e, t) => {
       for (var r in t)
-        d.o(t, r) &&
-          !d.o(e, r) &&
+        a.o(t, r) &&
+          !a.o(e, r) &&
           Object.defineProperty(e, r, { enumerable: !0, get: t[r] });
     },
     o: (e, t) => Object.prototype.hasOwnProperty.call(e, t),
   },
-  a = {};
-d.d(a, { Z: () => m });
-const o = ((e) => {
+  o = {};
+a.d(o, { Z: () => s });
+const d = ((e) => {
   var t = {};
-  return d.d(t, e), t;
+  return a.d(t, e), t;
 })({ createElement: () => e.createElement });
-const f = ((e) => {
-  var t = {};
-  return d.d(t, e), t;
-})({ default: () => t.default });
 const c = ((e) => {
   var t = {};
-  return d.d(t, e), t;
-})({ default: () => r.default });
-const u = ((e) => {
+  return a.d(t, e), t;
+})({ default: () => t.default });
+const f = ((e) => {
   var t = {};
-  return d.d(t, e), t;
+  return a.d(t, e), t;
+})({ default: () => r.default });
+const m = ((e) => {
+  var t = {};
+  return a.d(t, e), t;
 })({ difference: () => n.difference });
-function m() {
-  return o.createElement(
+function s() {
+  return d.createElement(
     \\"div\\",
     null,
-    o.createElement(
+    d.createElement(
       \\"pre\\",
       null,
       JSON.stringify({
-        get: f.default,
-        merge: c.default,
-        difference: u.difference,
+        get: c.default,
+        merge: f.default,
+        difference: m.difference,
       })
     )
   );
 }
-var s = a.Z;
-export { s as default };
-//# sourceMappingURL=main.0a76e55c.js.map
+var l = o.Z;
+export { l as default };
+//# sourceMappingURL=main.219bc98b.js.map
 "
 `;
 
