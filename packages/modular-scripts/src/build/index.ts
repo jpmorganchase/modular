@@ -99,10 +99,8 @@ async function buildStandalone(
   // Split dependencies between external and bundled
   const { external: externalDependencies, bundled: bundledDependencies } =
     filterDependencies(packageDependencies, isApp);
-  const { external: externalResolutions } = filterDependencies(
-    packageResolutions,
-    isApp,
-  );
+  const { external: externalResolutions, bundled: bundledResolutions } =
+    filterDependencies(packageResolutions, isApp);
 
   const browserTarget = createEsbuildBrowserslistTarget(targetDirectory);
 
@@ -145,6 +143,10 @@ async function buildStandalone(
         MODULAR_PACKAGE_DEPS: JSON.stringify({
           externalDependencies,
           bundledDependencies,
+        }),
+        MODULAR_PACKAGE_RESOLUTIONS: JSON.stringify({
+          externalResolutions,
+          bundledResolutions,
         }),
       },
     });

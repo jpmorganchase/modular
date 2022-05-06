@@ -74,10 +74,8 @@ async function start(packageName: string): Promise<void> {
     await getPackageDependencies(target);
   const { external: externalDependencies, bundled: bundledDependencies } =
     filterDependencies(packageDependencies, !isEsmView);
-  const { external: externalResolutions } = filterDependencies(
-    packageResolutions,
-    !isEsmView,
-  );
+  const { external: externalResolutions, bundled: bundledResolutions } =
+    filterDependencies(packageResolutions, !isEsmView);
 
   // If you want to use webpack then we'll always use webpack. But if you've indicated
   // you want esbuild - then we'll switch you to the new fancy world.
@@ -115,6 +113,10 @@ async function start(packageName: string): Promise<void> {
         MODULAR_PACKAGE_DEPS: JSON.stringify({
           externalDependencies,
           bundledDependencies,
+        }),
+        MODULAR_PACKAGE_RESOLUTIONS: JSON.stringify({
+          externalResolutions,
+          bundledResolutions,
         }),
       },
     });
