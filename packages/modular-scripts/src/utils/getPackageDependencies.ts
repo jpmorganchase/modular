@@ -118,8 +118,5 @@ export async function getPackageDependencies(
       },
       { manifest: {}, resolutions: {} },
     );
-
-  console.log({ manifest, resolutions });
-
   return { manifest, resolutions };
 }
