@@ -94,10 +94,15 @@ async function buildStandalone(
 
   let assets: Asset[];
   // Retrieve dependencies for target to inform the build process
-  const packageDependencies = await getPackageDependencies(target);
+  const { manifest: packageDependencies, resolutions: packageResolutions } =
+    await getPackageDependencies(target);
   // Split dependencies between external and bundled
   const { external: externalDependencies, bundled: bundledDependencies } =
     filterDependencies(packageDependencies, isApp);
+  const { external: externalResolutions } = filterDependencies(
+    packageResolutions,
+    isApp,
+  );
 
   const browserTarget = createEsbuildBrowserslistTarget(targetDirectory);
 
@@ -112,6 +117,7 @@ async function buildStandalone(
       target,
       paths,
       externalDependencies,
+      externalResolutions,
       type,
     );
     jsEntryPoint = getEntryPoint(paths, result, '.js');
@@ -204,6 +210,7 @@ async function buildStandalone(
       path.basename(jsEntryPoint),
       paths.appSrc,
       externalDependencies,
+      externalResolutions,
       browserTarget,
     );
     const trampolinePath = `${paths.appBuild}/static/js/_trampoline.js`;

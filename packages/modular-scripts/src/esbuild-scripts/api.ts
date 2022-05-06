@@ -25,6 +25,7 @@ export async function createViewTrampoline(
   fileName: string,
   srcPath: string,
   dependencies: Dependency,
+  resolutions: Dependency,
   browserTarget: string[],
 ): Promise<esbuild.BuildResult & { outputFiles: esbuild.OutputFile[] }> {
   const fileRelativePath = `./${fileName}`;
@@ -60,10 +61,16 @@ ReactDOM.render(<Component />, DOMRoot);`;
           });
         },
       },
-      createRewriteDependenciesPlugin({
-        ...dependencies,
-        'react-dom': dependencies.react,
-      }),
+      createRewriteDependenciesPlugin(
+        {
+          ...dependencies,
+          'react-dom': dependencies.react,
+        },
+        {
+          ...resolutions,
+          'react-dom': resolutions.react,
+        },
+      ),
     ],
   });
 

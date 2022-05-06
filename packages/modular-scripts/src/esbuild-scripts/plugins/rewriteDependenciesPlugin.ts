@@ -3,6 +3,7 @@ import type { Dependency } from '@schemastore/package';
 
 export function createRewriteDependenciesPlugin(
   externalDependencies: Dependency,
+  externalResolutions: Dependency,
   target?: string[],
 ): esbuild.Plugin {
   const externalCdnTemplate =
@@ -11,15 +12,20 @@ export function createRewriteDependenciesPlugin(
 
   const importMap: Record<string, string> = Object.entries(
     externalDependencies,
-  ).reduce(
-    (acc, [name, version]) => ({
+  ).reduce((acc, [name, version]) => {
+    if (!externalResolutions[name]) {
+      throw new Error(
+        `Dependency ${name} found in package.json but not in lockfile. Have you installed your dependencies?`,
+      );
+    }
+    return {
       ...acc,
       [name]: externalCdnTemplate
         .replace('[name]', name)
-        .replace('[version]', version),
-    }),
-    {},
-  );
+        .replace('[version]', version)
+        .replace('[resolution]', externalResolutions[name]),
+    };
+  }, {});
 
   const dependencyRewritePlugin: esbuild.Plugin = {
     name: 'dependency-rewrite',

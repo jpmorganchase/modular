@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
 import { Project } from 'ts-morph';
+import { buildDepTree, LockfileType } from 'snyk-nodejs-lockfile-parser';
 import type { CoreProperties, Dependency } from '@schemastore/package';
 import getModularRoot from './getModularRoot';
 import getLocation from './getLocation';
@@ -40,7 +41,7 @@ function getDependenciesFromSource(workspaceLocation: string) {
 
 export async function getPackageDependencies(
   target: string,
-): Promise<DependencyManifest> {
+): Promise<{ manifest: DependencyManifest; resolutions: DependencyManifest }> {
   /* This function is based on the assumption that nested package are not supported, so dependencies can be either declared in the
    * target's package.json or hoisted up to the workspace root.
    */
@@ -55,30 +56,70 @@ export async function getPackageDependencies(
     path.join(targetLocation, 'package.json'),
   ) as CoreProperties;
 
+  const lockFile = fs.readFileSync(path.join(getModularRoot(), 'yarn.lock'), {
+    encoding: 'utf8',
+    flag: 'r',
+  });
+
   const deps = Object.assign(
     Object.create(null),
-    targetManifest.devDependencies,
     rootManifest.devDependencies,
-    targetManifest.dependencies,
     rootManifest.dependencies,
+    targetManifest.devDependencies,
+    targetManifest.dependencies,
   ) as Dependency;
 
-  /* Get regular dependencies from package.json (regular) or root package.json (hoisted)
-   * Exclude workspace dependencies. Error if a dependency is imported in the source code
+  const lockDeps = await buildDepTree(
+    // Build a dependency tree from the lockfile, using target dependencies and root dependencies in order of specificity
+    JSON.stringify(
+      Object.assign(Object.create(null), targetManifest, {
+        dependencies: Object.assign(
+          Object.create(null),
+          rootManifest.dependencies,
+          targetManifest.dependencies,
+        ) as Dependency,
+        devDependencies: Object.assign(
+          Object.create(null),
+          rootManifest.devDependencies,
+          targetManifest.devDependencies,
+        ) as Dependency,
+      }),
+    ),
+    lockFile,
+    true,
+    LockfileType.yarn,
+  );
+
+  /* Get dependencies from package.json (regular), root package.json (hoisted) or pinned version in lockfile (resolution)
+   * Exclude workspace dependencies. Warn if a dependency is imported in the source code
    * but not specified in any of the package.jsons
    */
-  const manifest = getDependenciesFromSource(targetLocation)
+  const { manifest, resolutions } = getDependenciesFromSource(targetLocation)
     .filter((depName) => !(depName in workspaceInfo))
-    .reduce<DependencyManifest>((manifest, depName) => {
-      const depVersion = deps[depName];
-      if (!depVersion) {
-        logger.error(
-          `Package ${depName} imported in ${target} source but not found in package dependencies or hoisted dependencies - this will prevent you from successfully build, start or move packages in the next release of modular`,
-        );
-      }
-      manifest[depName] = depVersion;
-      return manifest;
-    }, {});
+    .reduce<{ manifest: DependencyManifest; resolutions: DependencyManifest }>(
+      (acc, depName) => {
+        const depManifestVersion = deps[depName];
+        if (!depManifestVersion) {
+          logger.error(
+            `Package ${depName} imported in ${target} source but not found in package dependencies or hoisted dependencies - this will prevent you from successfully build, start or move esm-views and will cause an error in the next release of modular`,
+          );
+        }
+        const resolutionVersion = lockDeps.dependencies[depName].version;
+        if (!resolutionVersion) {
+          logger.error(
+            `Package ${depName} imported in ${target} source but not found in lockfile - this will prevent you from successfully build, start or move esm-views and will cause an error in the next release of modular. Have you installed your dependencies?`,
+          );
+        }
+        acc.manifest[depName] = depManifestVersion;
+        if (resolutionVersion) {
+          acc.resolutions[depName] = resolutionVersion;
+        }
+        return acc;
+      },
+      { manifest: {}, resolutions: {} },
+    );
 
-  return manifest;
+  console.log({ manifest, resolutions });
+
+  return { manifest, resolutions };
 }
