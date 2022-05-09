@@ -50,7 +50,7 @@ async function addPackage({
         choices: [
           { title: 'A plain package', value: 'package' },
           { title: 'A view within an application', value: 'view' },
-          { title: 'A ESM view', value: 'esm-view' },
+          { title: 'An ESM view', value: 'esm-view' },
           { title: 'A standalone application', value: 'app' },
           { title: 'Choose my own template', value: '__CHOOSE_MY_OWN__' },
         ],
