@@ -19,7 +19,6 @@ exports[`Creating a new modular app via the CLI should create the right tree 1`]
 ├─ packages
 │  ├─ README.md #14bthrh
 │  └─ app
-│     ├─ CHANGELOG.md
 │     ├─ package.json
 │     ├─ public
 │     │  ├─ favicon.ico #6pu3rg
