@@ -28,7 +28,7 @@ async function serve(target: string, port = 3000): Promise<void> {
       );
     }
   } else {
-    throw new Error(`Modular can only serve an app or a esm-view.`);
+    throw new Error(`Modular can only serve an app or an esm-view.`);
   }
 }
 
