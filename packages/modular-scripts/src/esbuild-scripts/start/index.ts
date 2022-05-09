@@ -91,10 +91,7 @@ class DevServer {
 
     this.express.use(this.handleStaticAsset);
     this.isApp ||
-      this.express.get(
-        '/static/js/_trampoline.js',
-        this.handleTrampoline as RequestHandler,
-      );
+      this.express.get('/static/js/_trampoline.js', this.handleTrampoline);
     this.express.use('/static/js', this.handleStaticAsset);
     this.express.use(this.handleRuntimeAsset);
 
@@ -276,7 +273,7 @@ class DevServer {
     }
   };
 
-  handleTrampoline = async (
+  handleTrampoline: RequestHandler = async (
     _: http.IncomingMessage,
     res: http.ServerResponse,
   ) => {
