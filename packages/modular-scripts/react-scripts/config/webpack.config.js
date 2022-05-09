@@ -765,10 +765,14 @@ function parsePackageName(name) {
 
 // Virtual entrypoint if we're starting a ESM view - see https://github.com/webpack/webpack/issues/6437
 function getVirtualTrampoline() {
+  const entryPointPath = `'./${path.relative(
+    paths.appPath,
+    paths.appIndexJs,
+  )}'`;
   const string = `
   import ReactDOM from 'react-dom'
   import React from 'react';
-  import Component from './src/index.tsx';
+  import Component from ${entryPointPath};
   const DOMRoot = document.getElementById('root');
   ReactDOM.render(React.createElement(Component, null), DOMRoot);
 	`;
