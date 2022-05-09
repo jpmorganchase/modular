@@ -202,7 +202,6 @@ exports[`create-modular-react-app WHEN it sets up a project with prefer Offline 
 ├─ packages
 │  ├─ README.md #14bthrh
 │  └─ app
-│     ├─ CHANGELOG.md
 │     ├─ package.json
 │     ├─ public
 │     │  ├─ favicon.ico #6pu3rg
@@ -427,7 +426,6 @@ exports[`create-modular-react-app WHEN setting a project with defaults should cr
 ├─ packages
 │  ├─ README.md #14bthrh
 │  └─ app
-│     ├─ CHANGELOG.md
 │     ├─ package.json
 │     ├─ public
 │     │  ├─ favicon.ico #6pu3rg
