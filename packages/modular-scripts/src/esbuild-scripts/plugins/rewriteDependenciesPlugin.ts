@@ -18,7 +18,7 @@ export function createRewriteDependenciesPlugin(
         .replace('[name]', name)
         .replace('[version]', version),
     }),
-    {},
+    Object.create(null) as Record<string, string>,
   );
 
   const dependencyRewritePlugin: esbuild.Plugin = {
