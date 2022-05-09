@@ -32,7 +32,7 @@
     "@types/micromatch": "4.0.2",
     "@types/semver-regex": "3.1.0",
     "address": "1.1.2",
-    "babel-jest": "26.6.3",
+    "babel-jest": "28.1.0",
     "babel-preset-react-app": "10.0.1",
     "browserslist": "4.20.3",
     "builtin-modules": "3.2.0",
