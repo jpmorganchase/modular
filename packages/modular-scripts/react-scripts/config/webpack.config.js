@@ -26,6 +26,7 @@ const ModuleNotFoundPlugin = require('../../react-dev-utils/ModuleNotFoundPlugin
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const postcssNormalize = require('postcss-normalize');
 const isCI = require('is-ci');
+const merge = require('webpack-merge');
 
 const isApp = process.env.MODULAR_IS_APP === 'true';
 const isEsmView = !isApp;
@@ -156,34 +157,119 @@ module.exports = function (webpackEnv) {
     return loaders;
   };
 
-  const webpackConfig = {
-    externals: isApp
-      ? undefined
-      : function ({ request }, callback) {
-          const parsedModule = parsePackageName(request);
+  const esmViewOnlyConfig = {
+    externals: function ({ request }, callback) {
+      const parsedModule = parsePackageName(request);
 
-          // If the module is absolute and it is in the import map, we want to externalise it
-          if (
-            parsedModule &&
-            parsedModule.dependencyName &&
-            dependencyMap[parsedModule.dependencyName]
-          ) {
-            const { dependencyName, submodule } = parsedModule;
+      // If the module is absolute and it is in the import map, we want to externalise it
+      if (
+        parsedModule &&
+        parsedModule.dependencyName &&
+        dependencyMap[parsedModule.dependencyName]
+      ) {
+        const { dependencyName, submodule } = parsedModule;
 
-            const toRewrite = `${dependencyMap[dependencyName]}${
-              submodule ? `/${submodule}` : ''
-            }`;
+        const toRewrite = `${dependencyMap[dependencyName]}${
+          submodule ? `/${submodule}` : ''
+        }`;
 
-            return callback(null, toRewrite);
-          }
-          // Otherwise we just want to bundle it
-          return callback();
-        },
-
-    externalsType: isApp ? undefined : 'module',
-    experiments: {
-      outputModule: isApp ? undefined : true,
+        return callback(null, toRewrite);
+      }
+      // Otherwise we just want to bundle it
+      return callback();
     },
+    externalsType: 'module',
+    experiments: {
+      outputModule: true,
+    },
+    output: {
+      module: true,
+      library: {
+        type: 'module',
+      },
+    },
+    optimization: {},
+    plugins: [
+      isEsmViewDevelopment
+        ? // We need to provide a synthetic index.html in case we're starting a ESM view
+          new HtmlWebpackPlugin(
+            Object.assign(
+              {},
+              {
+                inject: true,
+                templateContent: `
+            <html>
+              <body>
+                <div id="root"></div>
+              </body>
+            </html>
+            `,
+                scriptLoading: 'module',
+              },
+            ),
+          )
+        : false,
+    ].filter(Boolean),
+  };
+
+  const appOnlyConfig = {
+    optimization: {
+      // Automatically split vendor and commons
+      // https://twitter.com/wSokra/status/969633336732905474
+      // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
+      splitChunks: {
+        chunks: 'all',
+      },
+      // Keep the runtime chunk separated to enable long term caching
+      // https://twitter.com/wSokra/status/969679223278505985
+      // https://github.com/facebook/create-react-app/issues/5358
+      runtimeChunk: {
+        name: (entrypoint) => `runtime-${entrypoint.name}`,
+      },
+    },
+    plugins: [
+      // Generates an `index.html` file with the <script> injected.
+      new HtmlWebpackPlugin(
+        Object.assign(
+          {},
+          {
+            inject: true,
+            template: paths.appHtml,
+          },
+          isEnvProduction
+            ? {
+                minify: {
+                  removeComments: true,
+                  collapseWhitespace: true,
+                  removeRedundantAttributes: true,
+                  useShortDoctype: true,
+                  removeEmptyAttributes: true,
+                  removeStyleLinkTypeAttributes: true,
+                  keepClosingSlash: true,
+                  minifyJS: true,
+                  minifyCSS: true,
+                  minifyURLs: true,
+                },
+              }
+            : undefined,
+        ),
+      ),
+      // Inlines the webpack runtime script. This script is too small to warrant
+      // a network request.
+      // https://github.com/facebook/create-react-app/issues/5358
+      isEnvProduction &&
+        shouldInlineRuntimeChunk &&
+        new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime-.+[.]js/]),
+      // Makes some environment variables available in index.html.
+      // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
+      // <link rel="icon" href="%PUBLIC_URL%/favicon.ico">
+      // It will be an empty string unless you specify "homepage"
+      // in `package.json`, in which case it will be the pathname of that URL.
+      new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
+    ].filter(Boolean),
+  };
+
+  const baseConfig = {
     // Workaround for this bug: https://stackoverflow.com/questions/53905253/cant-set-up-the-hmr-stuck-with-waiting-for-update-signal-from-wds-in-cons
     target: 'web',
     mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
@@ -199,12 +285,6 @@ module.exports = function (webpackEnv) {
     // We bundle a virtual file to trampoline the ESM view as an entry point if we're starting it (ESM views have no ReactDOM.render)
     entry: isEsmViewDevelopment ? getVirtualTrampoline() : paths.appIndexJs,
     output: {
-      module: isApp ? undefined : true,
-      library: isApp
-        ? undefined
-        : {
-            type: 'module',
-          },
       // The build folder.
       path: isEnvProduction ? paths.appBuild : undefined,
       // Add /* filename */ comments to generated require()s in the output.
@@ -278,22 +358,6 @@ module.exports = function (webpackEnv) {
         }),
         new CssMinimizerPlugin(),
       ],
-      // Automatically split vendor and commons
-      // https://twitter.com/wSokra/status/969633336732905474
-      // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
-      splitChunks: isApp
-        ? {
-            chunks: 'all',
-          }
-        : undefined,
-      // Keep the runtime chunk separated to enable long term caching
-      // https://twitter.com/wSokra/status/969679223278505985
-      // https://github.com/facebook/create-react-app/issues/5358
-      runtimeChunk: isApp
-        ? {
-            name: (entrypoint) => `runtime-${entrypoint.name}`,
-          }
-        : undefined,
     },
     resolve: {
       // This allows you to set a fallback for where webpack should look for modules.
@@ -519,65 +583,6 @@ module.exports = function (webpackEnv) {
       ],
     },
     plugins: [
-      // Generates an `index.html` file with the <script> injected.
-      isApp
-        ? new HtmlWebpackPlugin(
-            Object.assign(
-              {},
-              {
-                inject: true,
-                template: paths.appHtml,
-              },
-              isEnvProduction
-                ? {
-                    minify: {
-                      removeComments: true,
-                      collapseWhitespace: true,
-                      removeRedundantAttributes: true,
-                      useShortDoctype: true,
-                      removeEmptyAttributes: true,
-                      removeStyleLinkTypeAttributes: true,
-                      keepClosingSlash: true,
-                      minifyJS: true,
-                      minifyCSS: true,
-                      minifyURLs: true,
-                    },
-                  }
-                : undefined,
-            ),
-          )
-        : isEsmViewDevelopment
-        ? // We need to provide a synthetic index.html in case we're starting a ESM view
-          new HtmlWebpackPlugin(
-            Object.assign(
-              {},
-              {
-                inject: true,
-                templateContent: `
-                <html>
-                  <body>
-                    <div id="root"></div>
-                  </body>
-                </html>
-                `,
-                scriptLoading: 'module',
-              },
-            ),
-          )
-        : false,
-      // Inlines the webpack runtime script. This script is too small to warrant
-      // a network request.
-      // https://github.com/facebook/create-react-app/issues/5358
-      isApp &&
-        isEnvProduction &&
-        shouldInlineRuntimeChunk &&
-        new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime-.+[.]js/]),
-      // Makes some environment variables available in index.html.
-      // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
-      // <link rel="icon" href="%PUBLIC_URL%/favicon.ico">
-      // It will be an empty string unless you specify "homepage"
-      // in `package.json`, in which case it will be the pathname of that URL.
-      isApp && new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
       // This gives some necessary context to module not found errors, such as
       // the requesting resource.
       new ModuleNotFoundPlugin(paths.appPath),
@@ -688,6 +693,11 @@ module.exports = function (webpackEnv) {
     // our own hints via the FileSizeReporter
     performance: false,
   };
+
+  const webpackConfig = merge(
+    baseConfig,
+    isApp ? appOnlyConfig : esmViewOnlyConfig,
+  );
 
   // These dependencies are so widely used for us (JPM) that it makes sense to install
   // their webpack plugin when used.
