@@ -259,16 +259,24 @@ class DevServer {
 
     res.writeHead(200);
     if (this.isApp) {
-      res.end(await createIndex(this.paths, this.metafile, this.env.raw, true));
+      res.end(
+        await createIndex({
+          paths: this.paths,
+          metafile: this.metafile,
+          replacements: this.env.raw,
+          includeRuntime: true,
+        }),
+      );
     } else {
       res.end(
-        await createIndex(
-          this.paths,
-          this.metafile,
-          this.env.raw,
-          true,
-          indexFile,
-        ),
+        await createIndex({
+          paths: this.paths,
+          metafile: this.metafile,
+          replacements: this.env.raw,
+          includeRuntime: true,
+          indexContent: indexFile,
+          includeTrampoline: true,
+        }),
       );
     }
   };

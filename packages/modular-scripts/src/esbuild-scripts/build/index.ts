@@ -76,7 +76,12 @@ export default async function build(
   }
 
   if (isApp) {
-    const html = await createIndex(paths, result, env.raw, false);
+    const html = await createIndex({
+      paths,
+      metafile: result,
+      replacements: env.raw,
+      includeRuntime: false,
+    });
 
     const minifiedCode = await minimize.minify(html, {
       html5: true,
