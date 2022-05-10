@@ -42,10 +42,6 @@ const reactRefreshOverlayEntry = require.resolve(
 // makes for a smoother build process.
 const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false';
 
-const imageInlineSizeLimit = parseInt(
-  process.env.IMAGE_INLINE_SIZE_LIMIT || '10000',
-);
-
 // Check if TypeScript is setup
 const useTypeScript = fs.existsSync(paths.appTsConfig);
 
@@ -300,13 +296,13 @@ module.exports = function (webpackEnv) {
           oneOf: [
             // TODO: Merge this config once `image/avif` is in the mime-db
             // https://github.com/jshttp/mime-db
-            // Use webpack 5 asset modules instead of loaders 
+            // Use webpack 5 asset modules instead of loaders
             // https://webpack.js.org/guides/asset-modules/
             {
               test: /\.(bmp|gif|jpe?g|png|svg|avif|ico|eot|ttf|woff2?)(\?v=\d+\.\d+\.\d+)?$/i,
               type: 'asset/resource',
               generator: {
-                 filename: 'static/media/[name].[hash:8].[ext]',
+                filename: 'static/media/[name].[hash:8].[ext]',
               },
             },
             // Process application JS with esbuild.
