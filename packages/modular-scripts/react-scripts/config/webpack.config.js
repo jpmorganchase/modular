@@ -298,35 +298,15 @@ module.exports = function (webpackEnv) {
           // match the requirements. When no loader matches it will fall
           // back to the "file" loader at the end of the loader list.
           oneOf: [
-            // Required since esbuild loader will not pass svg the same as babel-loader
-            // was handling them
-            {
-              test: /\.svg$/,
-              use: [
-                require.resolve('@svgr/webpack'),
-                require.resolve('url-loader'),
-              ],
-            },
             // TODO: Merge this config once `image/avif` is in the mime-db
             // https://github.com/jshttp/mime-db
+            // Use webpack 5 asset modules instead of loaders 
+            // https://webpack.js.org/guides/asset-modules/
             {
-              test: [/\.avif$/],
-              loader: require.resolve('url-loader'),
-              options: {
-                limit: imageInlineSizeLimit,
-                mimetype: 'image/avif',
-                name: 'static/media/[name].[hash:8].[ext]',
-              },
-            },
-            // "url" loader works like "file" loader except that it embeds assets
-            // smaller than specified limit in bytes as data URLs to avoid requests.
-            // A missing `test` is equivalent to a match.
-            {
-              test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
-              loader: require.resolve('url-loader'),
-              options: {
-                limit: imageInlineSizeLimit,
-                name: 'static/media/[name].[hash:8].[ext]',
+              test: /\.(bmp|gif|jpe?g|png|svg|avif|ico|eot|ttf|woff2?)(\?v=\d+\.\d+\.\d+)?$/i,
+              type: 'asset/resource',
+              generator: {
+                 filename: 'static/media/[name].[hash:8].[ext]',
               },
             },
             // Process application JS with esbuild.
