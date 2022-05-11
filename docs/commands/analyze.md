@@ -1,6 +1,6 @@
 ---
 parent: Commands
-title: modular add
+title: modular analyze
 ---
 
 # `modular analyze <package-name>`
