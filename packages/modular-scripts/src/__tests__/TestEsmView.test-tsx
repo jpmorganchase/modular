@@ -1,0 +1,5 @@
+import * as React from 'react';
+
+export default function SampleESMView(): JSX.Element {
+  return <div data-testid="test-this">this is a modular esm-view</div>
+}

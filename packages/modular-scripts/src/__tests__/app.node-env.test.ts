@@ -62,9 +62,9 @@ describe('when working with a NODE_ENV app', () => {
       expect(tree(path.join(modularRoot, 'dist', 'node-env-app')))
         .toMatchInlineSnapshot(`
         "node-env-app
-        ├─ asset-manifest.json #1qjm6tq
+        ├─ asset-manifest.json #5npfrr
         ├─ favicon.ico #6pu3rg
-        ├─ index.html #z3zac4
+        ├─ index.html #9j6678
         ├─ logo192.png #1nez7vk
         ├─ logo512.png #1hwqvcc
         ├─ manifest.json #19gah8o
@@ -72,14 +72,14 @@ describe('when working with a NODE_ENV app', () => {
         ├─ robots.txt #1sjb8b3
         └─ static
            └─ js
-              ├─ main.1c6de6d0.js #1xkcjze
-              ├─ main.1c6de6d0.js.map #ayfbwn
-              ├─ runtime-main.182069c4.js #r0hm4v
-              └─ runtime-main.182069c4.js.map #ul1xez"
+              ├─ main.a482480b.js #1xwb1v
+              ├─ main.a482480b.js.map #re9pek
+              ├─ runtime-main.97707f9d.js #15lezt9
+              └─ runtime-main.97707f9d.js.map #12i5ddp"
       `);
     });
 
-    it('can generate a js/main.1c6de6d0.js', async () => {
+    it('can generate a js/main.a482480b.js', async () => {
       expect(
         prettier.format(
           String(
@@ -90,12 +90,12 @@ describe('when working with a NODE_ENV app', () => {
                 'node-env-app',
                 'static',
                 'js',
-                'main.1c6de6d0.js',
+                'main.a482480b.js',
               ),
             ),
           ),
           {
-            filepath: 'main.1c6de6d0.js',
+            filepath: 'main.a482480b.js',
           },
         ),
       ).toMatchSnapshot();

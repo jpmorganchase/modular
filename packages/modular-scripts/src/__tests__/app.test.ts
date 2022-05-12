@@ -50,6 +50,71 @@ function cleanup() {
 beforeAll(cleanup);
 afterAll(cleanup);
 
+describe('when working with a NODE_ENV app', () => {
+  beforeAll(async () => {
+    await modular(
+      'add node-env-app --unstable-type app --unstable-name node-env-app',
+      { stdio: 'inherit' },
+    );
+
+    await fs.writeFile(
+      path.join(modularRoot, 'packages', 'node-env-app', 'src', 'index.ts'),
+      `
+      console.log(process.env.NODE_ENV);
+
+      export {};
+    `,
+    );
+
+    await modular('build node-env-app', {
+      stdio: 'inherit',
+    });
+  });
+
+  it('can build a app', () => {
+    expect(tree(path.join(modularRoot, 'dist', 'node-env-app')))
+      .toMatchInlineSnapshot(`
+      "node-env-app
+      ├─ asset-manifest.json #5npfrr
+      ├─ favicon.ico #6pu3rg
+      ├─ index.html #9j6678
+      ├─ logo192.png #1nez7vk
+      ├─ logo512.png #1hwqvcc
+      ├─ manifest.json #19gah8o
+      ├─ package.json
+      ├─ robots.txt #1sjb8b3
+      └─ static
+         └─ js
+            ├─ main.a482480b.js #1xwb1v
+            ├─ main.a482480b.js.map #1vulei2
+            ├─ runtime-main.97707f9d.js #15lezt9
+            └─ runtime-main.97707f9d.js.map #12i5ddp"
+    `);
+  });
+
+  it('can generate a hashed js chunk in the js directory', async () => {
+    expect(
+      prettier.format(
+        String(
+          await fs.readFile(
+            path.join(
+              modularRoot,
+              'dist',
+              'node-env-app',
+              'static',
+              'js',
+              'main.a482480b.js',
+            ),
+          ),
+        ),
+        {
+          filepath: 'main.a482480b.js',
+        },
+      ),
+    ).toMatchSnapshot();
+  });
+});
+
 describe('When working with a nested app', () => {
   beforeAll(async () => {
     await modular(
@@ -66,9 +131,9 @@ describe('When working with a nested app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'scoped-sample-app')))
       .toMatchInlineSnapshot(`
       "scoped-sample-app
-      ├─ asset-manifest.json #9gtyy0
+      ├─ asset-manifest.json #1wkfjg2
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #1sg09j9
+      ├─ index.html #sphr07
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -79,13 +144,13 @@ describe('When working with a nested app', () => {
          │  ├─ main.1a7488ce.css #x701i6
          │  └─ main.1a7488ce.css.map #z36y5v
          └─ js
-            ├─ 788.78cfb599.js #1bgvsgc
-            ├─ 788.78cfb599.js.LICENSE.txt #eplx8h
-            ├─ 788.78cfb599.js.map #jf9876
-            ├─ main.3563e93f.js #32b8p3
-            ├─ main.3563e93f.js.map #1rftojn
-            ├─ runtime-main.83e93d07.js #1mo3tl5
-            └─ runtime-main.83e93d07.js.map #3ycdm3"
+            ├─ 788.bbd34b33.js #33pg04
+            ├─ 788.bbd34b33.js.LICENSE.txt #eplx8h
+            ├─ 788.bbd34b33.js.map #1xdy7n0
+            ├─ main.c2bf6fcb.js #3w772b
+            ├─ main.c2bf6fcb.js.map #1sdsrcm
+            ├─ runtime-main.b18f5039.js #qy2lhb
+            └─ runtime-main.b18f5039.js.map #1o0el5f"
     `);
   });
 
@@ -181,12 +246,12 @@ describe('When working with a nested app', () => {
               'scoped-sample-app',
               'static',
               'js',
-              'main.3563e93f.js',
+              'main.c2bf6fcb.js',
             ),
           ),
         ),
         {
-          filepath: 'main.3563e93f.js',
+          filepath: 'main.c2bf6fcb.js',
         },
       ),
     ).toMatchSnapshot();
@@ -203,18 +268,18 @@ describe('When working with a nested app', () => {
               'scoped-sample-app',
               'static',
               'js',
-              'runtime-main.83e93d07.js',
+              'runtime-main.b18f5039.js',
             ),
           ),
         ),
         {
-          filepath: 'runtime-main.83e93d07.js',
+          filepath: 'runtime-main.b18f5039.js',
         },
       ),
     ).toMatchSnapshot();
   });
 
-  it('can generate a hashed js chunk in the js directory', async () => {
+  it('can generate a hashed vendor chunk in the js directory', async () => {
     expect(
       prettier.format(
         String(
@@ -225,12 +290,12 @@ describe('When working with a nested app', () => {
               'scoped-sample-app',
               'static',
               'js',
-              '788.78cfb599.js',
+              '788.bbd34b33.js',
             ),
           ),
         ),
         {
-          filepath: '788.78cfb599.js',
+          filepath: '788.bbd34b33.js',
         },
       ),
     ).toMatchSnapshot();
@@ -284,9 +349,9 @@ describe('when working with an app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'sample-app')))
       .toMatchInlineSnapshot(`
       "sample-app
-      ├─ asset-manifest.json #qh7m9p
+      ├─ asset-manifest.json #4fw8y3
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #1vs1sdm
+      ├─ index.html #q5x53d
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -297,13 +362,13 @@ describe('when working with an app', () => {
          │  ├─ main.1a7488ce.css #x701i6
          │  └─ main.1a7488ce.css.map #z36y5v
          └─ js
-            ├─ 316.7a4d5eb7.js #1yh1m0p
-            ├─ 316.7a4d5eb7.js.LICENSE.txt #eplx8h
-            ├─ 316.7a4d5eb7.js.map #1ib48x2
-            ├─ main.97cda94b.js #19zv1xf
-            ├─ main.97cda94b.js.map #omkf7l
-            ├─ runtime-main.de9fd74d.js #1slkp3g
-            └─ runtime-main.de9fd74d.js.map #d7r4im"
+            ├─ 316.394ef80b.js #1mv4xg9
+            ├─ 316.394ef80b.js.LICENSE.txt #eplx8h
+            ├─ 316.394ef80b.js.map #b33pzn
+            ├─ main.a7fe4bac.js #1ovpx07
+            ├─ main.a7fe4bac.js.map #beaj83
+            ├─ runtime-main.7150bca8.js #hhaxbg
+            └─ runtime-main.7150bca8.js.map #1pmss5r"
     `);
   });
 
@@ -369,12 +434,12 @@ describe('when working with an app', () => {
               'sample-app',
               'static',
               'js',
-              'main.97cda94b.js',
+              'main.a7fe4bac.js',
             ),
           ),
         ),
         {
-          filepath: 'main.97cda94b.js',
+          filepath: 'main.a7fe4bac.js',
         },
       ),
     ).toMatchSnapshot();
@@ -391,12 +456,12 @@ describe('when working with an app', () => {
               'sample-app',
               'static',
               'js',
-              'runtime-main.de9fd74d.js',
+              'runtime-main.7150bca8.js',
             ),
           ),
         ),
         {
-          filepath: 'runtime-main.de9fd74d.js',
+          filepath: 'runtime-main.7150bca8.js',
         },
       ),
     ).toMatchSnapshot();
@@ -413,12 +478,12 @@ describe('when working with an app', () => {
               'sample-app',
               'static',
               'js',
-              '316.7a4d5eb7.js',
+              '316.394ef80b.js',
             ),
           ),
         ),
         {
-          filepath: '316.7a4d5eb7.js',
+          filepath: '316.394ef80b.js',
         },
       ),
     ).toMatchSnapshot();

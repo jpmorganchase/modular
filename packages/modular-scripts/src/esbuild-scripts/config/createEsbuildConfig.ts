@@ -4,7 +4,6 @@ import * as esbuild from 'esbuild';
 import builtinModules from 'builtin-modules';
 import type { Paths } from '../../utils/createPaths';
 import getClientEnvironment from './getClientEnvironment';
-import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowserslistTarget';
 import * as logger from '../../utils/logger';
 
 import moduleScopePlugin from '../plugins/moduleScopePlugin';
@@ -31,9 +30,9 @@ export default function createEsbuildConfig(
     },
   );
 
-  const target = createEsbuildBrowserslistTarget(paths.appPath);
-
-  logger.debug(`Using target: ${target.join(', ')}`);
+  logger.debug(
+    `Using target: ${(partialConfig.target as string[]).join(', ')}`,
+  );
 
   // merge and de-duplicate node builtins with external in the parameters
   const external = [
@@ -66,7 +65,7 @@ export default function createEsbuildConfig(
       '.js': 'jsx',
     },
     logLevel: 'silent',
-    target,
+    target: partialConfig.target,
     format: 'esm',
     color: !isCi,
     define,

@@ -4,6 +4,7 @@ import * as fs from 'fs-extra';
 
 export const packageTypes: PackageType[] = [
   'app',
+  'esm-view',
   'view',
   'package',
   'template',
@@ -13,7 +14,7 @@ export const ModularTypes: ModularType[] = (
   packageTypes as ModularType[]
 ).concat(['root']);
 
-export type ModularTemplateType = 'app' | 'view' | 'package';
+export type ModularTemplateType = 'app' | 'esm-view' | 'view' | 'package';
 export type PackageType = ModularTemplateType | 'template';
 
 export type ModularType = PackageType | 'root';
