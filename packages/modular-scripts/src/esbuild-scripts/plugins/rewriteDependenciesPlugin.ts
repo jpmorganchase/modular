@@ -14,7 +14,7 @@ export function createRewriteDependenciesPlugin(
     Object.entries(externalDependencies).map(([name, version]) => {
       if (!externalResolutions[name]) {
         throw new Error(
-          `Couldn't find resolution in locfile for dependency ${name} at version ${version}. Are you sure you installed your dependencies?`,
+          `Dependency ${name} found in package.json but not in lockfile. Have you installed your dependencies?`,
         );
       }
       return [
