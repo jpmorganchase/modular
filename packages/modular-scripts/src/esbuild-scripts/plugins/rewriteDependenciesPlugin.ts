@@ -9,16 +9,11 @@ export function createRewriteDependenciesPlugin(
     process.env.EXTERNAL_CDN_TEMPLATE ??
     'https://cdn.skypack.dev/[name]@[version]';
 
-  const importMap: Record<string, string> = Object.entries(
-    externalDependencies,
-  ).reduce(
-    (acc, [name, version]) => ({
-      ...acc,
-      [name]: externalCdnTemplate
-        .replace('[name]', name)
-        .replace('[version]', version),
-    }),
-    {},
+  const importMap: Map<string, string> = new Map(
+    Object.entries(externalDependencies).map(([name, version]) => [
+      name,
+      externalCdnTemplate.replace('[name]', name).replace('[version]', version),
+    ]),
   );
 
   const dependencyRewritePlugin: esbuild.Plugin = {
@@ -33,11 +28,10 @@ export function createRewriteDependenciesPlugin(
           // Get name and eventual submodule to construct the url
           const { dependencyName, submodule } = parsePackageName(args.path);
           // Find dependency name (no submodule) in the pre-built import map
-          if (dependencyName in importMap) {
+          const dependencyUrl = importMap.get(dependencyName) as string;
+          if (dependencyUrl) {
             // Rewrite the path taking the submodule into account
-            const path = `${importMap[dependencyName]}${
-              submodule ? `/${submodule}` : ''
-            }`;
+            const path = `${dependencyUrl}${submodule ? `/${submodule}` : ''}`;
             if (submodule.endsWith('.css')) {
               // This is a global CSS import from the CDN.
               if (target && target.every((target) => target === 'esnext')) {

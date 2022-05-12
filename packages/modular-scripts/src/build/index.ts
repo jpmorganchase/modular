@@ -21,7 +21,7 @@ import checkRequiredFiles from '../utils/checkRequiredFiles';
 import createEsbuildBrowserslistTarget from '../utils/createEsbuildBrowserslistTarget';
 import getClientEnvironment from '../esbuild-scripts/config/getClientEnvironment';
 import {
-  createBuildIndex,
+  createSyntheticIndex,
   getEntryPoint,
   createViewTrampoline,
 } from '../esbuild-scripts/api';
@@ -182,7 +182,7 @@ async function buildStandalone(
     }
     // Create synthetic index
     const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
-    const html = createBuildIndex(cssEntryPoint, env.raw);
+    const html = createSyntheticIndex({ cssEntryPoint, replacements: env.raw });
     await fs.writeFile(
       path.join(paths.appBuild, 'index.html'),
       await minimize.minify(html, {
