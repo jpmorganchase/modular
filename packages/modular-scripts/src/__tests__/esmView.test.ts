@@ -178,7 +178,7 @@ describe('modular-scripts', () => {
       expect(tree(path.join(modularRoot, 'dist', 'sample-esm-view')))
         .toMatchInlineSnapshot(`
         "sample-esm-view
-        ├─ index.html #16orq8u
+        ├─ index.html #1t5wlh8
         ├─ package.json
         └─ static
            └─ js
@@ -205,7 +205,7 @@ describe('modular-scripts', () => {
       expect(tree(path.join(modularRoot, 'dist', 'sample-esm-view')))
         .toMatchInlineSnapshot(`
         "sample-esm-view
-        ├─ index.html #16orq8u
+        ├─ index.html #1t5wlh8
         ├─ package.json
         └─ static
            └─ js
@@ -290,7 +290,7 @@ describe('modular-scripts', () => {
       expect(tree(path.join(modularRoot, 'dist', 'sample-esm-view')))
         .toMatchInlineSnapshot(`
         "sample-esm-view
-        ├─ index.html #16orq8u
+        ├─ index.html #1t5wlh8
         ├─ package.json
         └─ static
            └─ js
@@ -371,7 +371,7 @@ describe('modular-scripts', () => {
       expect(tree(path.join(modularRoot, 'dist', 'sample-esm-view')))
         .toMatchInlineSnapshot(`
         "sample-esm-view
-        ├─ index.html #16orq8u
+        ├─ index.html #1t5wlh8
         ├─ package.json
         └─ static
            └─ js
@@ -447,7 +447,7 @@ describe('modular-scripts', () => {
         .toMatchInlineSnapshot(`
         "sample-esm-view
         ├─ asset-manifest.json #1pem6dg
-        ├─ index.html #16orq8u
+        ├─ index.html #1t5wlh8
         ├─ package.json
         └─ static
            └─ js
@@ -496,7 +496,7 @@ describe('modular-scripts', () => {
       expect(tree(path.join(modularRoot, 'dist', 'sample-esm-view')))
         .toMatchInlineSnapshot(`
         "sample-esm-view
-        ├─ index.html #16orq8u
+        ├─ index.html #1t5wlh8
         ├─ package.json
         └─ static
            └─ js
@@ -560,7 +560,7 @@ describe('modular-scripts', () => {
       expect(tree(path.join(modularRoot, 'dist', 'sample-esm-view')))
         .toMatchInlineSnapshot(`
         "sample-esm-view
-        ├─ index.html #16orq8u
+        ├─ index.html #1t5wlh8
         ├─ package.json
         └─ static
            └─ js
@@ -624,7 +624,7 @@ describe('modular-scripts', () => {
       expect(tree(path.join(modularRoot, 'dist', 'sample-esm-view')))
         .toMatchInlineSnapshot(`
         "sample-esm-view
-        ├─ index.html #16orq8u
+        ├─ index.html #1t5wlh8
         ├─ package.json
         └─ static
            └─ js
