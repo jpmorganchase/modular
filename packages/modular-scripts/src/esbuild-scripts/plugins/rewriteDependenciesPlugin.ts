@@ -10,22 +10,22 @@ export function createRewriteDependenciesPlugin(
     process.env.EXTERNAL_CDN_TEMPLATE ??
     'https://cdn.skypack.dev/[name]@[version]';
 
-  const importMap: Record<string, string> = Object.entries(
-    externalDependencies,
-  ).reduce((acc, [name, version]) => {
-    if (!externalResolutions[name]) {
-      throw new Error(
-        `Dependency ${name} found in package.json but not in lockfile. Have you installed your dependencies?`,
-      );
-    }
-    return {
-      ...acc,
-      [name]: externalCdnTemplate
-        .replace('[name]', name)
-        .replace('[version]', version)
-        .replace('[resolution]', externalResolutions[name]),
-    };
-  }, {});
+  const importMap: Map<string, string> = new Map(
+    Object.entries(externalDependencies).map(([name, version]) => {
+      if (!externalResolutions[name]) {
+        throw new Error(
+          `Couldn't find resolution in locfile for dependency ${name} at version ${version}. Are you sure you installed your dependencies?`,
+        );
+      }
+      return [
+        name,
+        externalCdnTemplate
+          .replace('[name]', name)
+          .replace('[version]', version ?? externalResolutions[name])
+          .replace('[resolution]', externalResolutions[name]),
+      ];
+    }),
+  );
 
   const dependencyRewritePlugin: esbuild.Plugin = {
     name: 'dependency-rewrite',
@@ -39,11 +39,10 @@ export function createRewriteDependenciesPlugin(
           // Get name and eventual submodule to construct the url
           const { dependencyName, submodule } = parsePackageName(args.path);
           // Find dependency name (no submodule) in the pre-built import map
-          if (dependencyName in importMap) {
+          const dependencyUrl = importMap.get(dependencyName) as string;
+          if (dependencyUrl) {
             // Rewrite the path taking the submodule into account
-            const path = `${importMap[dependencyName]}${
-              submodule ? `/${submodule}` : ''
-            }`;
+            const path = `${dependencyUrl}${submodule ? `/${submodule}` : ''}`;
             if (submodule.endsWith('.css')) {
               // This is a global CSS import from the CDN.
               if (target && target.every((target) => target === 'esnext')) {
