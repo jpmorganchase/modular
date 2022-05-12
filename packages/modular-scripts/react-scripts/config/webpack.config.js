@@ -760,7 +760,7 @@ function createExternalDependenciesMap(
       ...acc,
       [name]: externalCdnTemplate
         .replace('[name]', name)
-        .replace('[version]', version)
+        .replace('[version]', version || externalResolutions[name])
         .replace('[resolution]', externalResolutions[name]),
     };
   }, {});
