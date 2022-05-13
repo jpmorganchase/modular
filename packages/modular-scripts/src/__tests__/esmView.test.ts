@@ -513,4 +513,42 @@ describe('modular-scripts', () => {
       ).toEqual(['lodash', 'lodash.merge']);
     });
   });
+
+  describe('WHEN building a esm-view specifying a PUBLIC_URL', () => {
+    beforeAll(async () => {
+      await modular('build sample-esm-view', {
+        stdio: 'inherit',
+        env: {
+          USE_MODULAR_ESBUILD: 'true',
+          PUBLIC_URL: '/public/path/',
+          EXTERNAL_CDN_TEMPLATE:
+            'https://mycustomcdn.net/[name]?version=[version]',
+        },
+      });
+    });
+
+    it('THEN outputs the correct directory structure', () => {
+      expect(tree(path.join(modularRoot, 'dist', 'sample-esm-view')))
+        .toMatchInlineSnapshot(`
+        "sample-esm-view
+        ├─ index.html #1cwcz61
+        ├─ package.json
+        └─ static
+           └─ js
+              ├─ _trampoline.js #gf8drx
+              ├─ index-5PFA727O.js #19et37v
+              └─ index-5PFA727O.js.map #np8r25"
+      `);
+    });
+
+    it('THEN expects the correct source in package.json', async () => {
+      expect(
+        (
+          (await fs.readJson(
+            path.join(modularRoot, 'dist', 'sample-esm-view', 'package.json'),
+          )) as CoreProperties
+        ).module,
+      ).toEqual('/public/path/static/js/index-5PFA727O.js');
+    });
+  });
 });
