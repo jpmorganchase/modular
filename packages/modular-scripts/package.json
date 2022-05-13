@@ -31,7 +31,7 @@
     "@svgr/webpack": "5.5.0",
     "@types/micromatch": "4.0.2",
     "@types/semver-regex": "3.1.0",
-    "address": "1.1.2",
+    "address": "1.2.0",
     "babel-jest": "26.6.3",
     "babel-preset-react-app": "10.0.1",
     "browserslist": "4.20.3",
