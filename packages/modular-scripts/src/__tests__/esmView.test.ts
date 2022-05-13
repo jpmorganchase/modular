@@ -167,7 +167,7 @@ describe('modular-scripts', () => {
           "modular": Object {
             "type": "esm-view",
           },
-          "module": "static/js/index-7JXQF5H3.js",
+          "module": "/static/js/index-7JXQF5H3.js",
           "name": "sample-esm-view",
           "version": "1.0.0",
         }
