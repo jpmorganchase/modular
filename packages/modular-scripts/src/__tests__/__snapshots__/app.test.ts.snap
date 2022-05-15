@@ -4,20 +4,21 @@ exports[`When working with a nested app can generate a asset-manifest 1`] = `
 "{
   \\"files\\": {
     \\"main.css\\": \\"/static/css/main.1a7488ce.css\\",
-    \\"main.js\\": \\"/static/js/main.3563e93f.js\\",
-    \\"runtime-main.js\\": \\"/static/js/runtime-main.83e93d07.js\\",
+    \\"main.js\\": \\"/static/js/main.325f7489.js\\",
+    \\"runtime-main.js\\": \\"/static/js/runtime-main.11dce4fa.js\\",
     \\"static/js/788.78cfb599.js\\": \\"/static/js/788.78cfb599.js\\",
+    \\"static/media/logo.svg\\": \\"/static/media/logo.103b5fa1..svg\\",
     \\"index.html\\": \\"/index.html\\",
     \\"main.1a7488ce.css.map\\": \\"/static/css/main.1a7488ce.css.map\\",
-    \\"main.3563e93f.js.map\\": \\"/static/js/main.3563e93f.js.map\\",
-    \\"runtime-main.83e93d07.js.map\\": \\"/static/js/runtime-main.83e93d07.js.map\\",
+    \\"main.325f7489.js.map\\": \\"/static/js/main.325f7489.js.map\\",
+    \\"runtime-main.11dce4fa.js.map\\": \\"/static/js/runtime-main.11dce4fa.js.map\\",
     \\"788.78cfb599.js.map\\": \\"/static/js/788.78cfb599.js.map\\"
   },
   \\"entrypoints\\": [
-    \\"static/js/runtime-main.83e93d07.js\\",
+    \\"static/js/runtime-main.11dce4fa.js\\",
     \\"static/js/788.78cfb599.js\\",
     \\"static/css/main.1a7488ce.css\\",
-    \\"static/js/main.3563e93f.js\\"
+    \\"static/js/main.325f7489.js\\"
   ]
 }"
 `;
@@ -8428,29 +8429,30 @@ exports[`When working with a nested app can generate a hashed main js chunk in t
   globalThis.webpackChunk_scoped_sample_app || []).push([
   [179],
   {
-    591: (M, L, j) => {
-      var N = j(735),
-        I = j(788);
-      const u = function () {
-        return N.createElement(
+    194: (e, a, t) => {
+      var l = t(735),
+        r = t(788);
+      const n = t.p + \\"static/media/logo.103b5fa1..svg\\";
+      const c = function () {
+        return l.createElement(
           \\"div\\",
           { className: \\"App\\" },
-          N.createElement(
+          l.createElement(
             \\"header\\",
             { className: \\"App-header\\" },
-            N.createElement(\\"img\\", {
-              src: \\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4NDEuOSA1OTUuMyI+CiAgICA8ZyBmaWxsPSIjNjFEQUZCIj4KICAgICAgICA8cGF0aCBkPSJNNjY2LjMgMjk2LjVjMC0zMi41LTQwLjctNjMuMy0xMDMuMS04Mi40IDE0LjQtNjMuNiA4LTExNC4yLTIwLjItMTMwLjQtNi41LTMuOC0xNC4xLTUuNi0yMi40LTUuNnYyMi4zYzQuNiAwIDguMy45IDExLjQgMi42IDEzLjYgNy44IDE5LjUgMzcuNSAxNC45IDc1LjctMS4xIDkuNC0yLjkgMTkuMy01LjEgMjkuNC0xOS42LTQuOC00MS04LjUtNjMuNS0xMC45LTEzLjUtMTguNS0yNy41LTM1LjMtNDEuNi01MCAzMi42LTMwLjMgNjMuMi00Ni45IDg0LTQ2LjlWNzhjLTI3LjUgMC02My41IDE5LjYtOTkuOSA1My42LTM2LjQtMzMuOC03Mi40LTUzLjItOTkuOS01My4ydjIyLjNjMjAuNyAwIDUxLjQgMTYuNSA4NCA0Ni42LTE0IDE0LjctMjggMzEuNC00MS4zIDQ5LjktMjIuNiAyLjQtNDQgNi4xLTYzLjYgMTEtMi4zLTEwLTQtMTkuNy01LjItMjktNC43LTM4LjIgMS4xLTY3LjkgMTQuNi03NS44IDMtMS44IDYuOS0yLjYgMTEuNS0yLjZWNzguNWMtOC40IDAtMTYgMS44LTIyLjYgNS42LTI4LjEgMTYuMi0zNC40IDY2LjctMTkuOSAxMzAuMS02Mi4yIDE5LjItMTAyLjcgNDkuOS0xMDIuNyA4Mi4zIDAgMzIuNSA0MC43IDYzLjMgMTAzLjEgODIuNC0xNC40IDYzLjYtOCAxMTQuMiAyMC4yIDEzMC40IDYuNSAzLjggMTQuMSA1LjYgMjIuNSA1LjYgMjcuNSAwIDYzLjUtMTkuNiA5OS45LTUzLjYgMzYuNCAzMy44IDcyLjQgNTMuMiA5OS45IDUzLjIgOC40IDAgMTYtMS44IDIyLjYtNS42IDI4LjEtMTYuMiAzNC40LTY2LjcgMTkuOS0xMzAuMSA2Mi0xOS4xIDEwMi41LTQ5LjkgMTAyLjUtODIuM3ptLTEzMC4yLTY2LjdjLTMuNyAxMi45LTguMyAyNi4yLTEzLjUgMzkuNS00LjEtOC04LjQtMTYtMTMuMS0yNC00LjYtOC05LjUtMTUuOC0xNC40LTIzLjQgMTQuMiAyLjEgMjcuOSA0LjcgNDEgNy45em0tNDUuOCAxMDYuNWMtNy44IDEzLjUtMTUuOCAyNi4zLTI0LjEgMzguMi0xNC45IDEuMy0zMCAyLTQ1LjIgMi0xNS4xIDAtMzAuMi0uNy00NS0xLjktOC4zLTExLjktMTYuNC0yNC42LTI0LjItMzgtNy42LTEzLjEtMTQuNS0yNi40LTIwLjgtMzkuOCA2LjItMTMuNCAxMy4yLTI2LjggMjAuNy0zOS45IDcuOC0xMy41IDE1LjgtMjYuMyAyNC4xLTM4LjIgMTQuOS0xLjMgMzAtMiA0NS4yLTIgMTUuMSAwIDMwLjIuNyA0NSAxLjkgOC4zIDExLjkgMTYuNCAyNC42IDI0LjIgMzggNy42IDEzLjEgMTQuNSAyNi40IDIwLjggMzkuOC02LjMgMTMuNC0xMy4yIDI2LjgtMjAuNyAzOS45em0zMi4zLTEzYzUuNCAxMy40IDEwIDI2LjggMTMuOCAzOS44LTEzLjEgMy4yLTI2LjkgNS45LTQxLjIgOCA0LjktNy43IDkuOC0xNS42IDE0LjQtMjMuNyA0LjYtOCA4LjktMTYuMSAxMy0yNC4xek00MjEuMiA0MzBjLTkuMy05LjYtMTguNi0yMC4zLTI3LjgtMzIgOSAuNCAxOC4yLjcgMjcuNS43IDkuNCAwIDE4LjctLjIgMjcuOC0uNy05IDExLjctMTguMyAyMi40LTI3LjUgMzJ6bS03NC40LTU4LjljLTE0LjItMi4xLTI3LjktNC43LTQxLTcuOSAzLjctMTIuOSA4LjMtMjYuMiAxMy41LTM5LjUgNC4xIDggOC40IDE2IDEzLjEgMjQgNC43IDggOS41IDE1LjggMTQuNCAyMy40ek00MjAuNyAxNjNjOS4zIDkuNiAxOC42IDIwLjMgMjcuOCAzMi05LS40LTE4LjItLjctMjcuNS0uNy05LjQgMC0xOC43LjItMjcuOC43IDktMTEuNyAxOC4zLTIyLjQgMjcuNS0zMnptLTc0IDU4LjljLTQuOSA3LjctOS44IDE1LjYtMTQuNCAyMy43LTQuNiA4LTguOSAxNi0xMyAyNC01LjQtMTMuNC0xMC0yNi44LTEzLjgtMzkuOCAxMy4xLTMuMSAyNi45LTUuOCA0MS4yLTcuOXptLTkwLjUgMTI1LjJjLTM1LjQtMTUuMS01OC4zLTM0LjktNTguMy01MC42IDAtMTUuNyAyMi45LTM1LjYgNTguMy01MC42IDguNi0zLjcgMTgtNyAyNy43LTEwLjEgNS43IDE5LjYgMTMuMiA0MCAyMi41IDYwLjktOS4yIDIwLjgtMTYuNiA0MS4xLTIyLjIgNjAuNi05LjktMy4xLTE5LjMtNi41LTI4LTEwLjJ6TTMxMCA0OTBjLTEzLjYtNy44LTE5LjUtMzcuNS0xNC45LTc1LjcgMS4xLTkuNCAyLjktMTkuMyA1LjEtMjkuNCAxOS42IDQuOCA0MSA4LjUgNjMuNSAxMC45IDEzLjUgMTguNSAyNy41IDM1LjMgNDEuNiA1MC0zMi42IDMwLjMtNjMuMiA0Ni45LTg0IDQ2LjktNC41LS4xLTguMy0xLTExLjMtMi43em0yMzcuMi03Ni4yYzQuNyAzOC4yLTEuMSA2Ny45LTE0LjYgNzUuOC0zIDEuOC02LjkgMi42LTExLjUgMi42LTIwLjcgMC01MS40LTE2LjUtODQtNDYuNiAxNC0xNC43IDI4LTMxLjQgNDEuMy00OS45IDIyLjYtMi40IDQ0LTYuMSA2My42LTExIDIuMyAxMC4xIDQuMSAxOS44IDUuMiAyOS4xem0zOC41LTY2LjdjLTguNiAzLjctMTggNy0yNy43IDEwLjEtNS43LTE5LjYtMTMuMi00MC0yMi41LTYwLjkgOS4yLTIwLjggMTYuNi00MS4xIDIyLjItNjAuNiA5LjkgMy4xIDE5LjMgNi41IDI4LjEgMTAuMiAzNS40IDE1LjEgNTguMyAzNC45IDU4LjMgNTAuNi0uMSAxNS43LTIzIDM1LjYtNTguNCA1MC42ek0zMjAuOCA3OC40eiIvPgogICAgICAgIDxjaXJjbGUgY3g9IjQyMC45IiBjeT0iMjk2LjUiIHI9IjQ1LjciLz4KICAgICAgICA8cGF0aCBkPSJNNTIwLjUgNzguMXoiLz4KICAgIDwvZz4KPC9zdmc+Cg==\\",
+            l.createElement(\\"img\\", {
+              src: n,
               className: \\"App-logo\\",
               alt: \\"logo\\",
             }),
-            N.createElement(
+            l.createElement(
               \\"p\\",
               null,
               \\"Edit \\",
-              N.createElement(\\"code\\", null, \\"src/App.tsx\\"),
+              l.createElement(\\"code\\", null, \\"src/App.tsx\\"),
               \\" and save to reload.\\"
             ),
-            N.createElement(
+            l.createElement(
               \\"a\\",
               {
                 className: \\"App-link\\",
@@ -8463,21 +8465,21 @@ exports[`When working with a nested app can generate a hashed main js chunk in t
           )
         );
       };
-      I.render(
-        N.createElement(N.StrictMode, null, N.createElement(u, null)),
+      r.render(
+        l.createElement(l.StrictMode, null, l.createElement(c, null)),
         document.getElementById(\\"root\\")
       );
     },
   },
-  (M) => {
-    M.O(0, [788], () => {
-      return (L = 591), M((M.s = L));
-      var L;
+  (e) => {
+    e.O(0, [788], () => {
+      return (a = 194), e((e.s = a));
+      var a;
     });
-    M.O();
+    e.O();
   },
 ]);
-//# sourceMappingURL=main.3563e93f.js.map
+//# sourceMappingURL=main.325f7489.js.map
 "
 `;
 
@@ -8517,6 +8519,7 @@ exports[`When working with a nested app can generate a hashed runtime chunk in t
       };
     })(),
     (o.o = (r, e) => Object.prototype.hasOwnProperty.call(r, e)),
+    (o.p = \\"/\\"),
     (() => {
       var r = { 252: 0 };
       o.O.j = (e) => 0 === r[e];
@@ -8538,7 +8541,7 @@ exports[`When working with a nested app can generate a hashed runtime chunk in t
       a.forEach(e.bind(null, 0)), (a.push = e.bind(null, a.push.bind(a)));
     })();
 })();
-//# sourceMappingURL=runtime-main.83e93d07.js.map
+//# sourceMappingURL=runtime-main.11dce4fa.js.map
 "
 `;
 
@@ -8595,6 +8598,7 @@ exports[`When working with a nested app can generate a index.html 1`] = `
             };
           })(),
           (o.o = (r, e) => Object.prototype.hasOwnProperty.call(r, e)),
+          (o.p = \\"/\\"),
           (() => {
             var r = { 252: 0 };
             o.O.j = (e) => 0 === r[e];
@@ -8618,7 +8622,7 @@ exports[`When working with a nested app can generate a index.html 1`] = `
       })();
     </script>
     <script defer=\\"defer\\" src=\\"/static/js/788.78cfb599.js\\"></script>
-    <script defer=\\"defer\\" src=\\"/static/js/main.3563e93f.js\\"></script>
+    <script defer=\\"defer\\" src=\\"/static/js/main.325f7489.js\\"></script>
     <link href=\\"/static/css/main.1a7488ce.css\\" rel=\\"stylesheet\\" />
   </head>
   <body>
@@ -8662,20 +8666,21 @@ exports[`when working with an app can generate a asset-manifest 1`] = `
 "{
   \\"files\\": {
     \\"main.css\\": \\"/static/css/main.1a7488ce.css\\",
-    \\"main.js\\": \\"/static/js/main.97cda94b.js\\",
-    \\"runtime-main.js\\": \\"/static/js/runtime-main.de9fd74d.js\\",
+    \\"main.js\\": \\"/static/js/main.f900b234.js\\",
+    \\"runtime-main.js\\": \\"/static/js/runtime-main.9c48d677.js\\",
     \\"static/js/316.7a4d5eb7.js\\": \\"/static/js/316.7a4d5eb7.js\\",
+    \\"static/media/logo.svg\\": \\"/static/media/logo.103b5fa1..svg\\",
     \\"index.html\\": \\"/index.html\\",
     \\"main.1a7488ce.css.map\\": \\"/static/css/main.1a7488ce.css.map\\",
-    \\"main.97cda94b.js.map\\": \\"/static/js/main.97cda94b.js.map\\",
-    \\"runtime-main.de9fd74d.js.map\\": \\"/static/js/runtime-main.de9fd74d.js.map\\",
+    \\"main.f900b234.js.map\\": \\"/static/js/main.f900b234.js.map\\",
+    \\"runtime-main.9c48d677.js.map\\": \\"/static/js/runtime-main.9c48d677.js.map\\",
     \\"316.7a4d5eb7.js.map\\": \\"/static/js/316.7a4d5eb7.js.map\\"
   },
   \\"entrypoints\\": [
-    \\"static/js/runtime-main.de9fd74d.js\\",
+    \\"static/js/runtime-main.9c48d677.js\\",
     \\"static/js/316.7a4d5eb7.js\\",
     \\"static/css/main.1a7488ce.css\\",
-    \\"static/js/main.97cda94b.js\\"
+    \\"static/js/main.f900b234.js\\"
   ]
 }"
 `;
@@ -8686,29 +8691,30 @@ exports[`when working with an app can generate a hashed main js chunk in the js 
   globalThis.webpackChunksample_app || []).push([
   [179],
   {
-    540: (M, L, j) => {
-      var N = j(784),
-        u = j(316);
-      const I = function () {
-        return N.createElement(
+    466: (e, t, a) => {
+      var l = a(784),
+        r = a(316);
+      const n = a.p + \\"static/media/logo.103b5fa1..svg\\";
+      const s = function () {
+        return l.createElement(
           \\"div\\",
           { className: \\"App\\" },
-          N.createElement(
+          l.createElement(
             \\"header\\",
             { className: \\"App-header\\" },
-            N.createElement(\\"img\\", {
-              src: \\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4NDEuOSA1OTUuMyI+CiAgICA8ZyBmaWxsPSIjNjFEQUZCIj4KICAgICAgICA8cGF0aCBkPSJNNjY2LjMgMjk2LjVjMC0zMi41LTQwLjctNjMuMy0xMDMuMS04Mi40IDE0LjQtNjMuNiA4LTExNC4yLTIwLjItMTMwLjQtNi41LTMuOC0xNC4xLTUuNi0yMi40LTUuNnYyMi4zYzQuNiAwIDguMy45IDExLjQgMi42IDEzLjYgNy44IDE5LjUgMzcuNSAxNC45IDc1LjctMS4xIDkuNC0yLjkgMTkuMy01LjEgMjkuNC0xOS42LTQuOC00MS04LjUtNjMuNS0xMC45LTEzLjUtMTguNS0yNy41LTM1LjMtNDEuNi01MCAzMi42LTMwLjMgNjMuMi00Ni45IDg0LTQ2LjlWNzhjLTI3LjUgMC02My41IDE5LjYtOTkuOSA1My42LTM2LjQtMzMuOC03Mi40LTUzLjItOTkuOS01My4ydjIyLjNjMjAuNyAwIDUxLjQgMTYuNSA4NCA0Ni42LTE0IDE0LjctMjggMzEuNC00MS4zIDQ5LjktMjIuNiAyLjQtNDQgNi4xLTYzLjYgMTEtMi4zLTEwLTQtMTkuNy01LjItMjktNC43LTM4LjIgMS4xLTY3LjkgMTQuNi03NS44IDMtMS44IDYuOS0yLjYgMTEuNS0yLjZWNzguNWMtOC40IDAtMTYgMS44LTIyLjYgNS42LTI4LjEgMTYuMi0zNC40IDY2LjctMTkuOSAxMzAuMS02Mi4yIDE5LjItMTAyLjcgNDkuOS0xMDIuNyA4Mi4zIDAgMzIuNSA0MC43IDYzLjMgMTAzLjEgODIuNC0xNC40IDYzLjYtOCAxMTQuMiAyMC4yIDEzMC40IDYuNSAzLjggMTQuMSA1LjYgMjIuNSA1LjYgMjcuNSAwIDYzLjUtMTkuNiA5OS45LTUzLjYgMzYuNCAzMy44IDcyLjQgNTMuMiA5OS45IDUzLjIgOC40IDAgMTYtMS44IDIyLjYtNS42IDI4LjEtMTYuMiAzNC40LTY2LjcgMTkuOS0xMzAuMSA2Mi0xOS4xIDEwMi41LTQ5LjkgMTAyLjUtODIuM3ptLTEzMC4yLTY2LjdjLTMuNyAxMi45LTguMyAyNi4yLTEzLjUgMzkuNS00LjEtOC04LjQtMTYtMTMuMS0yNC00LjYtOC05LjUtMTUuOC0xNC40LTIzLjQgMTQuMiAyLjEgMjcuOSA0LjcgNDEgNy45em0tNDUuOCAxMDYuNWMtNy44IDEzLjUtMTUuOCAyNi4zLTI0LjEgMzguMi0xNC45IDEuMy0zMCAyLTQ1LjIgMi0xNS4xIDAtMzAuMi0uNy00NS0xLjktOC4zLTExLjktMTYuNC0yNC42LTI0LjItMzgtNy42LTEzLjEtMTQuNS0yNi40LTIwLjgtMzkuOCA2LjItMTMuNCAxMy4yLTI2LjggMjAuNy0zOS45IDcuOC0xMy41IDE1LjgtMjYuMyAyNC4xLTM4LjIgMTQuOS0xLjMgMzAtMiA0NS4yLTIgMTUuMSAwIDMwLjIuNyA0NSAxLjkgOC4zIDExLjkgMTYuNCAyNC42IDI0LjIgMzggNy42IDEzLjEgMTQuNSAyNi40IDIwLjggMzkuOC02LjMgMTMuNC0xMy4yIDI2LjgtMjAuNyAzOS45em0zMi4zLTEzYzUuNCAxMy40IDEwIDI2LjggMTMuOCAzOS44LTEzLjEgMy4yLTI2LjkgNS45LTQxLjIgOCA0LjktNy43IDkuOC0xNS42IDE0LjQtMjMuNyA0LjYtOCA4LjktMTYuMSAxMy0yNC4xek00MjEuMiA0MzBjLTkuMy05LjYtMTguNi0yMC4zLTI3LjgtMzIgOSAuNCAxOC4yLjcgMjcuNS43IDkuNCAwIDE4LjctLjIgMjcuOC0uNy05IDExLjctMTguMyAyMi40LTI3LjUgMzJ6bS03NC40LTU4LjljLTE0LjItMi4xLTI3LjktNC43LTQxLTcuOSAzLjctMTIuOSA4LjMtMjYuMiAxMy41LTM5LjUgNC4xIDggOC40IDE2IDEzLjEgMjQgNC43IDggOS41IDE1LjggMTQuNCAyMy40ek00MjAuNyAxNjNjOS4zIDkuNiAxOC42IDIwLjMgMjcuOCAzMi05LS40LTE4LjItLjctMjcuNS0uNy05LjQgMC0xOC43LjItMjcuOC43IDktMTEuNyAxOC4zLTIyLjQgMjcuNS0zMnptLTc0IDU4LjljLTQuOSA3LjctOS44IDE1LjYtMTQuNCAyMy43LTQuNiA4LTguOSAxNi0xMyAyNC01LjQtMTMuNC0xMC0yNi44LTEzLjgtMzkuOCAxMy4xLTMuMSAyNi45LTUuOCA0MS4yLTcuOXptLTkwLjUgMTI1LjJjLTM1LjQtMTUuMS01OC4zLTM0LjktNTguMy01MC42IDAtMTUuNyAyMi45LTM1LjYgNTguMy01MC42IDguNi0zLjcgMTgtNyAyNy43LTEwLjEgNS43IDE5LjYgMTMuMiA0MCAyMi41IDYwLjktOS4yIDIwLjgtMTYuNiA0MS4xLTIyLjIgNjAuNi05LjktMy4xLTE5LjMtNi41LTI4LTEwLjJ6TTMxMCA0OTBjLTEzLjYtNy44LTE5LjUtMzcuNS0xNC45LTc1LjcgMS4xLTkuNCAyLjktMTkuMyA1LjEtMjkuNCAxOS42IDQuOCA0MSA4LjUgNjMuNSAxMC45IDEzLjUgMTguNSAyNy41IDM1LjMgNDEuNiA1MC0zMi42IDMwLjMtNjMuMiA0Ni45LTg0IDQ2LjktNC41LS4xLTguMy0xLTExLjMtMi43em0yMzcuMi03Ni4yYzQuNyAzOC4yLTEuMSA2Ny45LTE0LjYgNzUuOC0zIDEuOC02LjkgMi42LTExLjUgMi42LTIwLjcgMC01MS40LTE2LjUtODQtNDYuNiAxNC0xNC43IDI4LTMxLjQgNDEuMy00OS45IDIyLjYtMi40IDQ0LTYuMSA2My42LTExIDIuMyAxMC4xIDQuMSAxOS44IDUuMiAyOS4xem0zOC41LTY2LjdjLTguNiAzLjctMTggNy0yNy43IDEwLjEtNS43LTE5LjYtMTMuMi00MC0yMi41LTYwLjkgOS4yLTIwLjggMTYuNi00MS4xIDIyLjItNjAuNiA5LjkgMy4xIDE5LjMgNi41IDI4LjEgMTAuMiAzNS40IDE1LjEgNTguMyAzNC45IDU4LjMgNTAuNi0uMSAxNS43LTIzIDM1LjYtNTguNCA1MC42ek0zMjAuOCA3OC40eiIvPgogICAgICAgIDxjaXJjbGUgY3g9IjQyMC45IiBjeT0iMjk2LjUiIHI9IjQ1LjciLz4KICAgICAgICA8cGF0aCBkPSJNNTIwLjUgNzguMXoiLz4KICAgIDwvZz4KPC9zdmc+Cg==\\",
+            l.createElement(\\"img\\", {
+              src: n,
               className: \\"App-logo\\",
               alt: \\"logo\\",
             }),
-            N.createElement(
+            l.createElement(
               \\"p\\",
               null,
               \\"Edit \\",
-              N.createElement(\\"code\\", null, \\"src/App.tsx\\"),
+              l.createElement(\\"code\\", null, \\"src/App.tsx\\"),
               \\" and save to reload.\\"
             ),
-            N.createElement(
+            l.createElement(
               \\"a\\",
               {
                 className: \\"App-link\\",
@@ -8719,28 +8725,28 @@ exports[`when working with an app can generate a hashed main js chunk in the js 
               \\"Learn React\\"
             )
           ),
-          N.createElement(
+          l.createElement(
             \\"div\\",
             { \\"data-testid\\": \\"test-this\\" },
             \\"this is a modular app\\"
           )
         );
       };
-      u.render(
-        N.createElement(N.StrictMode, null, N.createElement(I, null)),
+      r.render(
+        l.createElement(l.StrictMode, null, l.createElement(s, null)),
         document.getElementById(\\"root\\")
       );
     },
   },
-  (M) => {
-    M.O(0, [316], () => {
-      return (L = 540), M((M.s = L));
-      var L;
+  (e) => {
+    e.O(0, [316], () => {
+      return (t = 466), e((e.s = t));
+      var t;
     });
-    M.O();
+    e.O();
   },
 ]);
-//# sourceMappingURL=main.97cda94b.js.map
+//# sourceMappingURL=main.f900b234.js.map
 "
 `;
 
@@ -8750,50 +8756,51 @@ exports[`when working with an app can generate a hashed runtime chunk in the js 
   var r = {},
     e = {};
   function a(o) {
-    var t = e[o];
-    if (void 0 !== t) return t.exports;
-    var n = (e[o] = { exports: {} });
-    return r[o](n, n.exports, a), n.exports;
+    var p = e[o];
+    if (void 0 !== p) return p.exports;
+    var t = (e[o] = { exports: {} });
+    return r[o](t, t.exports, a), t.exports;
   }
   (a.m = r),
     (() => {
       var r = [];
-      a.O = (e, o, t, n) => {
+      a.O = (e, o, p, t) => {
         if (!o) {
-          var p = 1 / 0;
+          var n = 1 / 0;
           for (v = 0; v < r.length; v++) {
-            for (var [o, t, n] = r[v], l = !0, i = 0; i < o.length; i++)
-              (!1 & n || p >= n) && Object.keys(a.O).every((r) => a.O[r](o[i]))
+            for (var [o, p, t] = r[v], l = !0, i = 0; i < o.length; i++)
+              (!1 & t || n >= t) && Object.keys(a.O).every((r) => a.O[r](o[i]))
                 ? o.splice(i--, 1)
-                : ((l = !1), n < p && (p = n));
+                : ((l = !1), t < n && (n = t));
             if (l) {
               r.splice(v--, 1);
-              var s = t();
+              var s = p();
               void 0 !== s && (e = s);
             }
           }
           return e;
         }
-        n = n || 0;
-        for (var v = r.length; v > 0 && r[v - 1][2] > n; v--) r[v] = r[v - 1];
-        r[v] = [o, t, n];
+        t = t || 0;
+        for (var v = r.length; v > 0 && r[v - 1][2] > t; v--) r[v] = r[v - 1];
+        r[v] = [o, p, t];
       };
     })(),
     (a.o = (r, e) => Object.prototype.hasOwnProperty.call(r, e)),
+    (a.p = \\"/\\"),
     (() => {
       var r = { 252: 0 };
       a.O.j = (e) => 0 === r[e];
       var e = (e, o) => {
-          var t,
-            n,
-            [p, l, i] = o,
+          var p,
+            t,
+            [n, l, i] = o,
             s = 0;
-          if (p.some((e) => 0 !== r[e])) {
-            for (t in l) a.o(l, t) && (a.m[t] = l[t]);
+          if (n.some((e) => 0 !== r[e])) {
+            for (p in l) a.o(l, p) && (a.m[p] = l[p]);
             if (i) var v = i(a);
           }
-          for (e && e(o); s < p.length; s++)
-            (n = p[s]), a.o(r, n) && r[n] && r[n][0](), (r[n] = 0);
+          for (e && e(o); s < n.length; s++)
+            (t = n[s]), a.o(r, t) && r[t] && r[t][0](), (r[t] = 0);
           return a.O(v);
         },
         o = (globalThis.webpackChunksample_app =
@@ -8801,7 +8808,7 @@ exports[`when working with an app can generate a hashed runtime chunk in the js 
       o.forEach(e.bind(null, 0)), (o.push = e.bind(null, o.push.bind(o)));
     })();
 })();
-//# sourceMappingURL=runtime-main.de9fd74d.js.map
+//# sourceMappingURL=runtime-main.9c48d677.js.map
 "
 `;
 
@@ -17109,52 +17116,53 @@ exports[`when working with an app can generate a index.html 1`] = `
         var r = {},
           e = {};
         function a(o) {
-          var t = e[o];
-          if (void 0 !== t) return t.exports;
-          var n = (e[o] = { exports: {} });
-          return r[o](n, n.exports, a), n.exports;
+          var p = e[o];
+          if (void 0 !== p) return p.exports;
+          var t = (e[o] = { exports: {} });
+          return r[o](t, t.exports, a), t.exports;
         }
         (a.m = r),
           (() => {
             var r = [];
-            a.O = (e, o, t, n) => {
+            a.O = (e, o, p, t) => {
               if (!o) {
-                var p = 1 / 0;
+                var n = 1 / 0;
                 for (v = 0; v < r.length; v++) {
-                  for (var [o, t, n] = r[v], l = !0, i = 0; i < o.length; i++)
-                    (!1 & n || p >= n) &&
+                  for (var [o, p, t] = r[v], l = !0, i = 0; i < o.length; i++)
+                    (!1 & t || n >= t) &&
                     Object.keys(a.O).every((r) => a.O[r](o[i]))
                       ? o.splice(i--, 1)
-                      : ((l = !1), n < p && (p = n));
+                      : ((l = !1), t < n && (n = t));
                   if (l) {
                     r.splice(v--, 1);
-                    var s = t();
+                    var s = p();
                     void 0 !== s && (e = s);
                   }
                 }
                 return e;
               }
-              n = n || 0;
-              for (var v = r.length; v > 0 && r[v - 1][2] > n; v--)
+              t = t || 0;
+              for (var v = r.length; v > 0 && r[v - 1][2] > t; v--)
                 r[v] = r[v - 1];
-              r[v] = [o, t, n];
+              r[v] = [o, p, t];
             };
           })(),
           (a.o = (r, e) => Object.prototype.hasOwnProperty.call(r, e)),
+          (a.p = \\"/\\"),
           (() => {
             var r = { 252: 0 };
             a.O.j = (e) => 0 === r[e];
             var e = (e, o) => {
-                var t,
-                  n,
-                  [p, l, i] = o,
+                var p,
+                  t,
+                  [n, l, i] = o,
                   s = 0;
-                if (p.some((e) => 0 !== r[e])) {
-                  for (t in l) a.o(l, t) && (a.m[t] = l[t]);
+                if (n.some((e) => 0 !== r[e])) {
+                  for (p in l) a.o(l, p) && (a.m[p] = l[p]);
                   if (i) var v = i(a);
                 }
-                for (e && e(o); s < p.length; s++)
-                  (n = p[s]), a.o(r, n) && r[n] && r[n][0](), (r[n] = 0);
+                for (e && e(o); s < n.length; s++)
+                  (t = n[s]), a.o(r, t) && r[t] && r[t][0](), (r[t] = 0);
                 return a.O(v);
               },
               o = (globalThis.webpackChunksample_app =
@@ -17164,7 +17172,7 @@ exports[`when working with an app can generate a index.html 1`] = `
       })();
     </script>
     <script defer=\\"defer\\" src=\\"/static/js/316.7a4d5eb7.js\\"></script>
-    <script defer=\\"defer\\" src=\\"/static/js/main.97cda94b.js\\"></script>
+    <script defer=\\"defer\\" src=\\"/static/js/main.f900b234.js\\"></script>
     <link href=\\"/static/css/main.1a7488ce.css\\" rel=\\"stylesheet\\" />
   </head>
   <body>
