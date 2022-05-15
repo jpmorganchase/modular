@@ -142,34 +142,34 @@ code {
 
 exports[`When working with a nested app can generate a hashed main js chunk in the js directory 1`] = `
 "\\"use strict\\";
-(globalThis.webpackChunk_scoped_sample_app =
-  globalThis.webpackChunk_scoped_sample_app || []).push([
+(self.webpackChunk_scoped_sample_app =
+  self.webpackChunk_scoped_sample_app || []).push([
   [179],
   {
-    194: (e, a, t) => {
-      var l = t(735),
-        r = t(788);
-      const n = t.p + \\"static/media/logo.103b5fa1..svg\\";
+    194: (e, t, a) => {
+      var r = a(735),
+        l = a(788);
+      const n = a.p + \\"static/media/logo.103b5fa1..svg\\";
       const c = function () {
-        return l.createElement(
+        return r.createElement(
           \\"div\\",
           { className: \\"App\\" },
-          l.createElement(
+          r.createElement(
             \\"header\\",
             { className: \\"App-header\\" },
-            l.createElement(\\"img\\", {
+            r.createElement(\\"img\\", {
               src: n,
               className: \\"App-logo\\",
               alt: \\"logo\\",
             }),
-            l.createElement(
+            r.createElement(
               \\"p\\",
               null,
               \\"Edit \\",
-              l.createElement(\\"code\\", null, \\"src/App.tsx\\"),
+              r.createElement(\\"code\\", null, \\"src/App.tsx\\"),
               \\" and save to reload.\\"
             ),
-            l.createElement(
+            r.createElement(
               \\"a\\",
               {
                 className: \\"App-link\\",
@@ -182,21 +182,21 @@ exports[`When working with a nested app can generate a hashed main js chunk in t
           )
         );
       };
-      r.render(
-        l.createElement(l.StrictMode, null, l.createElement(c, null)),
+      l.render(
+        r.createElement(r.StrictMode, null, r.createElement(c, null)),
         document.getElementById(\\"root\\")
       );
     },
   },
   (e) => {
     e.O(0, [788], () => {
-      return (a = 194), e((e.s = a));
-      var a;
+      return (t = 194), e((e.s = t));
+      var t;
     });
     e.O();
   },
 ]);
-//# sourceMappingURL=main.325f7489.js.map
+//# sourceMappingURL=main.f646b520.js.map
 "
 `;
 
@@ -205,26 +205,26 @@ exports[`When working with a nested app can generate a hashed runtime chunk in t
   \\"use strict\\";
   var r = {},
     e = {};
-  function o(a) {
-    var p = e[a];
-    if (void 0 !== p) return p.exports;
-    var t = (e[a] = { exports: {} });
-    return r[a](t, t.exports, o), t.exports;
+  function o(p) {
+    var a = e[p];
+    if (void 0 !== a) return a.exports;
+    var t = (e[p] = { exports: {} });
+    return r[p](t, t.exports, o), t.exports;
   }
   (o.m = r),
     (() => {
       var r = [];
-      o.O = (e, a, p, t) => {
-        if (!a) {
+      o.O = (e, p, a, t) => {
+        if (!p) {
           var n = 1 / 0;
           for (v = 0; v < r.length; v++) {
-            for (var [a, p, t] = r[v], s = !0, l = 0; l < a.length; l++)
-              (!1 & t || n >= t) && Object.keys(o.O).every((r) => o.O[r](a[l]))
-                ? a.splice(l--, 1)
+            for (var [p, a, t] = r[v], s = !0, l = 0; l < p.length; l++)
+              (!1 & t || n >= t) && Object.keys(o.O).every((r) => o.O[r](p[l]))
+                ? p.splice(l--, 1)
                 : ((s = !1), t < n && (n = t));
             if (s) {
               r.splice(v--, 1);
-              var i = p();
+              var i = a();
               void 0 !== i && (e = i);
             }
           }
@@ -232,7 +232,7 @@ exports[`When working with a nested app can generate a hashed runtime chunk in t
         }
         t = t || 0;
         for (var v = r.length; v > 0 && r[v - 1][2] > t; v--) r[v] = r[v - 1];
-        r[v] = [a, p, t];
+        r[v] = [p, a, t];
       };
     })(),
     (o.o = (r, e) => Object.prototype.hasOwnProperty.call(r, e)),
@@ -240,25 +240,25 @@ exports[`When working with a nested app can generate a hashed runtime chunk in t
     (() => {
       var r = { 252: 0 };
       o.O.j = (e) => 0 === r[e];
-      var e = (e, a) => {
-          var p,
+      var e = (e, p) => {
+          var a,
             t,
-            [n, s, l] = a,
+            [n, s, l] = p,
             i = 0;
           if (n.some((e) => 0 !== r[e])) {
-            for (p in s) o.o(s, p) && (o.m[p] = s[p]);
+            for (a in s) o.o(s, a) && (o.m[a] = s[a]);
             if (l) var v = l(o);
           }
-          for (e && e(a); i < n.length; i++)
+          for (e && e(p); i < n.length; i++)
             (t = n[i]), o.o(r, t) && r[t] && r[t][0](), (r[t] = 0);
           return o.O(v);
         },
-        a = (globalThis.webpackChunk_scoped_sample_app =
-          globalThis.webpackChunk_scoped_sample_app || []);
-      a.forEach(e.bind(null, 0)), (a.push = e.bind(null, a.push.bind(a)));
+        p = (self.webpackChunk_scoped_sample_app =
+          self.webpackChunk_scoped_sample_app || []);
+      p.forEach(e.bind(null, 0)), (p.push = e.bind(null, p.push.bind(p)));
     })();
 })();
-//# sourceMappingURL=runtime-main.11dce4fa.js.map
+//# sourceMappingURL=runtime-main.de012fdc.js.map
 "
 `;
 
@@ -8667,16 +8667,16 @@ exports[`when working with a NODE_ENV app can generate a hashed js chunk in the 
 (self.webpackChunknode_env_app = self.webpackChunknode_env_app || []).push([
   [179],
   {
-    908: () => {
+    469: () => {
       console.log(\\"production\\");
     },
   },
   (e) => {
     var n;
-    (n = 908), e((e.s = n));
+    (n = 469), e((e.s = n));
   },
 ]);
-//# sourceMappingURL=main.a482480b.js.map
+//# sourceMappingURL=main.6f646c6c.js.map
 "
 `;
 
@@ -8709,29 +8709,29 @@ exports[`when working with an app can generate a hashed main js chunk in the js 
   [179],
   {
     466: (e, t, a) => {
-      var l = a(784),
-        r = a(316);
+      var r = a(784),
+        l = a(316);
       const n = a.p + \\"static/media/logo.103b5fa1..svg\\";
       const s = function () {
-        return l.createElement(
+        return r.createElement(
           \\"div\\",
           { className: \\"App\\" },
-          l.createElement(
+          r.createElement(
             \\"header\\",
             { className: \\"App-header\\" },
-            l.createElement(\\"img\\", {
+            r.createElement(\\"img\\", {
               src: n,
               className: \\"App-logo\\",
               alt: \\"logo\\",
             }),
-            l.createElement(
+            r.createElement(
               \\"p\\",
               null,
               \\"Edit \\",
-              l.createElement(\\"code\\", null, \\"src/App.tsx\\"),
+              r.createElement(\\"code\\", null, \\"src/App.tsx\\"),
               \\" and save to reload.\\"
             ),
-            l.createElement(
+            r.createElement(
               \\"a\\",
               {
                 className: \\"App-link\\",
@@ -8742,15 +8742,15 @@ exports[`when working with an app can generate a hashed main js chunk in the js 
               \\"Learn React\\"
             )
           ),
-          l.createElement(
+          r.createElement(
             \\"div\\",
             { \\"data-testid\\": \\"test-this\\" },
             \\"this is a modular app\\"
           )
         );
       };
-      r.render(
-        l.createElement(l.StrictMode, null, l.createElement(s, null)),
+      l.render(
+        r.createElement(r.StrictMode, null, r.createElement(s, null)),
         document.getElementById(\\"root\\")
       );
     },
@@ -8763,7 +8763,7 @@ exports[`when working with an app can generate a hashed main js chunk in the js 
     e.O();
   },
 ]);
-//# sourceMappingURL=main.f900b234.js.map
+//# sourceMappingURL=main.1080ac5a.js.map
 "
 `;
 
@@ -8785,14 +8785,14 @@ exports[`when working with an app can generate a hashed runtime chunk in the js 
         if (!o) {
           var n = 1 / 0;
           for (v = 0; v < r.length; v++) {
-            for (var [o, p, t] = r[v], l = !0, i = 0; i < o.length; i++)
-              (!1 & t || n >= t) && Object.keys(a.O).every((r) => a.O[r](o[i]))
-                ? o.splice(i--, 1)
-                : ((l = !1), t < n && (n = t));
-            if (l) {
+            for (var [o, p, t] = r[v], s = !0, l = 0; l < o.length; l++)
+              (!1 & t || n >= t) && Object.keys(a.O).every((r) => a.O[r](o[l]))
+                ? o.splice(l--, 1)
+                : ((s = !1), t < n && (n = t));
+            if (s) {
               r.splice(v--, 1);
-              var s = p();
-              void 0 !== s && (e = s);
+              var i = p();
+              void 0 !== i && (e = i);
             }
           }
           return e;
@@ -8810,21 +8810,21 @@ exports[`when working with an app can generate a hashed runtime chunk in the js 
       var e = (e, o) => {
           var p,
             t,
-            [n, l, i] = o,
-            s = 0;
+            [n, s, l] = o,
+            i = 0;
           if (n.some((e) => 0 !== r[e])) {
-            for (p in l) a.o(l, p) && (a.m[p] = l[p]);
-            if (i) var v = i(a);
+            for (p in s) a.o(s, p) && (a.m[p] = s[p]);
+            if (l) var v = l(a);
           }
-          for (e && e(o); s < n.length; s++)
-            (t = n[s]), a.o(r, t) && r[t] && r[t][0](), (r[t] = 0);
+          for (e && e(o); i < n.length; i++)
+            (t = n[i]), a.o(r, t) && r[t] && r[t][0](), (r[t] = 0);
           return a.O(v);
         },
         o = (self.webpackChunksample_app = self.webpackChunksample_app || []);
       o.forEach(e.bind(null, 0)), (o.push = e.bind(null, o.push.bind(o)));
     })();
 })();
-//# sourceMappingURL=runtime-main.9c48d677.js.map
+//# sourceMappingURL=runtime-main.e92969dd.js.map
 "
 `;
 

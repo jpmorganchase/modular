@@ -103,12 +103,12 @@ describe('when working with a NODE_ENV app', () => {
               'node-env-app',
               'static',
               'js',
-              'main.a482480b.js',
+              'main.6f646c6c.js',
             ),
           ),
         ),
         {
-          filepath: 'main.a482480b.js',
+          filepath: 'main.6f646c6c.js',
         },
       ),
     ).toMatchSnapshot();
@@ -248,12 +248,12 @@ describe('When working with a nested app', () => {
               'scoped-sample-app',
               'static',
               'js',
-              'main.325f7489.js',
+              'main.f646b520.js',
             ),
           ),
         ),
         {
-          filepath: 'main.325f7489.js',
+          filepath: 'main.f646b520.js',
         },
       ),
     ).toMatchSnapshot();
@@ -270,12 +270,12 @@ describe('When working with a nested app', () => {
               'scoped-sample-app',
               'static',
               'js',
-              'runtime-main.11dce4fa.js',
+              'runtime-main.de012fdc.js',
             ),
           ),
         ),
         {
-          filepath: 'runtime-main.11dce4fa.js',
+          filepath: 'runtime-main.de012fdc.js',
         },
       ),
     ).toMatchSnapshot();
@@ -438,12 +438,12 @@ describe('when working with an app', () => {
               'sample-app',
               'static',
               'js',
-              'main.f900b234.js',
+              'main.1080ac5a.js',
             ),
           ),
         ),
         {
-          filepath: 'main.f900b234.js',
+          filepath: 'main.1080ac5a.js',
         },
       ),
     ).toMatchSnapshot();
@@ -460,12 +460,12 @@ describe('when working with an app', () => {
               'sample-app',
               'static',
               'js',
-              'runtime-main.9c48d677.js',
+              'runtime-main.e92969dd.js',
             ),
           ),
         ),
         {
-          filepath: 'runtime-main.9c48d677.js',
+          filepath: 'runtime-main.e92969dd.js',
         },
       ),
     ).toMatchSnapshot();
