@@ -50,6 +50,71 @@ function cleanup() {
 beforeAll(cleanup);
 afterAll(cleanup);
 
+describe('when working with a NODE_ENV app', () => {
+  beforeAll(async () => {
+    await modular(
+      'add node-env-app --unstable-type app --unstable-name node-env-app',
+      { stdio: 'inherit' },
+    );
+
+    await fs.writeFile(
+      path.join(modularRoot, 'packages', 'node-env-app', 'src', 'index.ts'),
+      `
+      console.log(process.env.NODE_ENV);
+
+      export {};
+    `,
+    );
+
+    await modular('build node-env-app', {
+      stdio: 'inherit',
+    });
+  });
+
+  it('can build a app', () => {
+    expect(tree(path.join(modularRoot, 'dist', 'node-env-app')))
+      .toMatchInlineSnapshot(`
+      "node-env-app
+      ├─ asset-manifest.json #5npfrr
+      ├─ favicon.ico #6pu3rg
+      ├─ index.html #9j6678
+      ├─ logo192.png #1nez7vk
+      ├─ logo512.png #1hwqvcc
+      ├─ manifest.json #19gah8o
+      ├─ package.json
+      ├─ robots.txt #1sjb8b3
+      └─ static
+         └─ js
+            ├─ main.a482480b.js #1xwb1v
+            ├─ main.a482480b.js.map #1vulei2
+            ├─ runtime-main.97707f9d.js #15lezt9
+            └─ runtime-main.97707f9d.js.map #12i5ddp"
+    `);
+  });
+
+  it('can generate a hashed js chunk in the js directory', async () => {
+    expect(
+      prettier.format(
+        String(
+          await fs.readFile(
+            path.join(
+              modularRoot,
+              'dist',
+              'node-env-app',
+              'static',
+              'js',
+              'main.a482480b.js',
+            ),
+          ),
+        ),
+        {
+          filepath: 'main.a482480b.js',
+        },
+      ),
+    ).toMatchSnapshot();
+  });
+});
+
 describe('When working with a nested app', () => {
   beforeAll(async () => {
     await modular(
@@ -216,7 +281,7 @@ describe('When working with a nested app', () => {
     ).toMatchSnapshot();
   });
 
-  it('can generate a hashed js chunk in the js directory', async () => {
+  it('can generate a hashed vendor chunk in the js directory', async () => {
     expect(
       prettier.format(
         String(
@@ -227,12 +292,12 @@ describe('When working with a nested app', () => {
               'scoped-sample-app',
               'static',
               'js',
-              '788.78cfb599.js',
+              '788.bbd34b33.js',
             ),
           ),
         ),
         {
-          filepath: '788.78cfb599.js',
+          filepath: '788.bbd34b33.js',
         },
       ),
     ).toMatchSnapshot();
@@ -417,12 +482,12 @@ describe('when working with an app', () => {
               'sample-app',
               'static',
               'js',
-              '316.7a4d5eb7.js',
+              '316.394ef80b.js',
             ),
           ),
         ),
         {
-          filepath: '316.7a4d5eb7.js',
+          filepath: '316.394ef80b.js',
         },
       ),
     ).toMatchSnapshot();

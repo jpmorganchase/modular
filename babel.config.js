@@ -17,8 +17,13 @@ module.exports = (api) => {
           },
         },
       ],
-      '@babel/preset-typescript',
+      '@babel/preset-react',
     ],
-    plugins: ['@babel/plugin-proposal-class-properties'],
+    overrides: [
+      {
+        test: /\.tsx?$/,
+        presets: ['@babel/preset-typescript'],
+      },
+    ],
   };
 };

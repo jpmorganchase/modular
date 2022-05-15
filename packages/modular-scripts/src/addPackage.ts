@@ -48,9 +48,18 @@ async function addPackage({
         type: 'select',
         message: `What kind of package is this?`,
         choices: [
-          { title: 'A plain package', value: 'package' },
-          { title: 'A view within an application', value: 'view' },
-          { title: 'A standalone application', value: 'app' },
+          { title: 'A plain package (package)', value: 'package' },
+          {
+            title:
+              'A micro-frontend React view compiled to a bundle file (view)',
+            value: 'view',
+          },
+          {
+            title:
+              'A micro-frontend React view compiled to ES Modules (esm-view)',
+            value: 'esm-view',
+          },
+          { title: 'A micro-frontend React container (app)', value: 'app' },
           { title: 'Choose my own template', value: '__CHOOSE_MY_OWN__' },
         ],
         initial: 0,
@@ -129,7 +138,7 @@ async function addPackage({
 
   const modularTemplateType = modularTemplatePackageJson?.modular
     ?.templateType as string;
-  if (!['app', 'view', 'package'].includes(modularTemplateType)) {
+  if (!['app', 'esm-view', 'view', 'package'].includes(modularTemplateType)) {
     throw new Error(
       `${templateName} has modular type: ${modularTemplateType}, which does not exist, please use update this template`,
     );

@@ -14,6 +14,8 @@ import createPaths from './utils/createPaths';
 import * as logger from './utils/logger';
 import createEsbuildBrowserslistTarget from './utils/createEsbuildBrowserslistTarget';
 import prompts from 'prompts';
+import { getPackageDependencies } from './utils/getPackageDependencies';
+import { filterDependencies } from './utils/filterDependencies';
 
 async function start(packageName: string): Promise<void> {
   let target = packageName;
@@ -33,7 +35,7 @@ async function start(packageName: string): Promise<void> {
     target = chosenTarget.value as string;
   }
 
-  const targetPath = await getLocation(target);
+  let targetPath = await getLocation(target);
 
   await setupEnvForDirectory(targetPath);
 
@@ -43,33 +45,34 @@ async function start(packageName: string): Promise<void> {
     );
   }
 
-  /**
-   * If we're trying to start a view then we first need to stage out the
-   * view into an 'app' directory which can be built.
-   */
-  let startPath: string;
-  if (isModularType(targetPath, 'view')) {
-    startPath = stageView(target);
+  const isEsmView = isModularType(targetPath, 'esm-view');
+  const isView = isModularType(targetPath, 'view');
+  if (isView) {
+    targetPath = stageView(target);
   } else {
-    startPath = targetPath;
-
     // in the case we're an app then we need to make sure that users have no incorrectly
     // setup their app folder.
     const paths = await createPaths(target);
-    await checkRequiredFiles([paths.appHtml, paths.appIndexJs]);
+    isEsmView
+      ? await checkRequiredFiles([paths.appIndexJs])
+      : await checkRequiredFiles([paths.appHtml, paths.appIndexJs]);
   }
 
-  await checkBrowsers(startPath);
+  await checkBrowsers(targetPath);
 
   // True if there's no preference set - or the preference is for webpack.
   const useWebpack =
     !process.env.USE_MODULAR_WEBPACK ||
     process.env.USE_MODULAR_WEBPACK === 'true';
 
-  // True if the preferene IS set and the preference is esbuid.
+  // True if the preference IS set and the preference is esbuild.
   const useEsbuild =
     process.env.USE_MODULAR_ESBUILD &&
     process.env.USE_MODULAR_ESBUILD === 'true';
+
+  const packageDependencies = await getPackageDependencies(target);
+  const { external: externalDependencies, bundled: bundledDependencies } =
+    filterDependencies(packageDependencies, !isEsmView);
 
   // If you want to use webpack then we'll always use webpack. But if you've indicated
   // you want esbuild - then we'll switch you to the new fancy world.
@@ -77,7 +80,7 @@ async function start(packageName: string): Promise<void> {
     const { default: startEsbuildApp } = await import(
       './esbuild-scripts/start'
     );
-    await startEsbuildApp(target);
+    await startEsbuildApp(target, !isEsmView, externalDependencies);
   } else {
     const startScript = require.resolve(
       'modular-scripts/react-scripts/scripts/start.js',
@@ -90,7 +93,7 @@ async function start(packageName: string): Promise<void> {
     logger.debug(`Using target: ${browserTarget.join(', ')}`);
 
     await execAsync('node', [startScript], {
-      cwd: startPath,
+      cwd: targetPath,
       log: false,
       // @ts-ignore
       env: {
@@ -98,6 +101,11 @@ async function start(packageName: string): Promise<void> {
         MODULAR_ROOT: modularRoot,
         MODULAR_PACKAGE: target,
         MODULAR_PACKAGE_NAME: targetName,
+        MODULAR_IS_APP: JSON.stringify(!isEsmView),
+        MODULAR_PACKAGE_DEPS: JSON.stringify({
+          externalDependencies,
+          bundledDependencies,
+        }),
       },
     });
   }
