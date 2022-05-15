@@ -75,9 +75,9 @@ describe('when working with a NODE_ENV app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'node-env-app')))
       .toMatchInlineSnapshot(`
       "node-env-app
-      ├─ asset-manifest.json #5npfrr
+      ├─ asset-manifest.json #qvt3ik
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #9j6678
+      ├─ index.html #1lep1mc
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -85,8 +85,8 @@ describe('when working with a NODE_ENV app', () => {
       ├─ robots.txt #1sjb8b3
       └─ static
          └─ js
-            ├─ main.a482480b.js #1xwb1v
-            ├─ main.a482480b.js.map #1vulei2
+            ├─ main.6f646c6c.js #wj49yd
+            ├─ main.6f646c6c.js.map #1cq3v8v
             ├─ runtime-main.97707f9d.js #15lezt9
             └─ runtime-main.97707f9d.js.map #12i5ddp"
     `);
@@ -131,9 +131,9 @@ describe('When working with a nested app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'scoped-sample-app')))
       .toMatchInlineSnapshot(`
       "scoped-sample-app
-      ├─ asset-manifest.json #4ntm7w
+      ├─ asset-manifest.json #ttt968
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #ci4edj
+      ├─ index.html #wvd44x
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -144,13 +144,13 @@ describe('When working with a nested app', () => {
          │  ├─ main.1a7488ce.css #x701i6
          │  └─ main.1a7488ce.css.map #z36y5v
          ├─ js
-         │  ├─ 788.78cfb599.js #1bgvsgc
-         │  ├─ 788.78cfb599.js.LICENSE.txt #eplx8h
-         │  ├─ 788.78cfb599.js.map #jf9876
-         │  ├─ main.325f7489.js #r2fjkh
-         │  ├─ main.325f7489.js.map #1h63n9w
-         │  ├─ runtime-main.11dce4fa.js #1jab61t
-         │  └─ runtime-main.11dce4fa.js.map #davi3n
+         │  ├─ 788.bbd34b33.js #33pg04
+         │  ├─ 788.bbd34b33.js.LICENSE.txt #eplx8h
+         │  ├─ 788.bbd34b33.js.map #1xdy7n0
+         │  ├─ main.f646b520.js #15ws1rq
+         │  ├─ main.f646b520.js.map #b2tlah
+         │  ├─ runtime-main.de012fdc.js #1qz643h
+         │  └─ runtime-main.de012fdc.js.map #ntuwq4
          └─ media
             └─ logo.103b5fa1..svg #1okqmlj"
     `);
@@ -351,9 +351,9 @@ describe('when working with an app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'sample-app')))
       .toMatchInlineSnapshot(`
       "sample-app
-      ├─ asset-manifest.json #1t31jj3
+      ├─ asset-manifest.json #djc2vb
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #1vj0owr
+      ├─ index.html #1pif5tx
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -364,13 +364,13 @@ describe('when working with an app', () => {
          │  ├─ main.1a7488ce.css #x701i6
          │  └─ main.1a7488ce.css.map #z36y5v
          ├─ js
-         │  ├─ 316.7a4d5eb7.js #1yh1m0p
-         │  ├─ 316.7a4d5eb7.js.LICENSE.txt #eplx8h
-         │  ├─ 316.7a4d5eb7.js.map #1ib48x2
-         │  ├─ main.f900b234.js #vnsjqn
-         │  ├─ main.f900b234.js.map #1r2gswk
-         │  ├─ runtime-main.9c48d677.js #1qpz1bg
-         │  └─ runtime-main.9c48d677.js.map #1jelqrp
+         │  ├─ 316.394ef80b.js #1mv4xg9
+         │  ├─ 316.394ef80b.js.LICENSE.txt #eplx8h
+         │  ├─ 316.394ef80b.js.map #b33pzn
+         │  ├─ main.1080ac5a.js #1fyvdx8
+         │  ├─ main.1080ac5a.js.map #qn4ldn
+         │  ├─ runtime-main.e92969dd.js #1is98ey
+         │  └─ runtime-main.e92969dd.js.map #19haxsp
          └─ media
             └─ logo.103b5fa1..svg #1okqmlj"
     `);
