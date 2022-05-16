@@ -362,7 +362,7 @@ module.exports = function (webpackEnv) {
             // https://webpack.js.org/guides/asset-modules/
             {
               test: /\.(bmp|gif|jpe?g|png|svg|avif|ico|eot|ttf|woff2?)(\?v=\d+\.\d+\.\d+)?$/i,
-              type: 'asset/resource',
+              type: 'asset',
               generator: {
                 filename: 'static/media/[name].[hash:8].[ext]',
               },
