@@ -11,16 +11,6 @@ import type { Dependency } from '@schemastore/package';
 
 type FileType = '.css' | '.js';
 
-export const indexFile = `
-<!DOCTYPE html>
-<html>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="static/js/_trampoline.js"></script>
-  </body>
-</html>
-`;
-
 export async function createViewTrampoline(
   fileName: string,
   srcPath: string,
@@ -68,7 +58,7 @@ ReactDOM.render(<Component />, DOMRoot);`;
         },
         {
           ...resolutions,
-          'react-dom': resolutions.react,
+          'react-dom': resolutions['react-dom'] ?? resolutions.react,
         },
       ),
     ],
@@ -101,6 +91,15 @@ export function getEntryPoint(
     return undefined;
   }
 }
+
+export const indexFile = `
+<!DOCTYPE html>
+<html>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+`;
 
 export async function createIndex({
   paths,
@@ -208,40 +207,6 @@ function compileIndex({
       ).childNodes,
     );
   }
-  let data = parse5.serialize(page);
-
-  // Run HTML through a series of user-specified string replacements.
-  Object.keys(replacements).forEach((key) => {
-    const value = replacements[key];
-    data = data.replace(
-      new RegExp('%' + escapeStringRegexp(key) + '%', 'g'),
-      value,
-    );
-  });
-
-  return data;
-}
-
-export function createBuildIndex(
-  cssEntryPoint: string | undefined,
-  replacements: Record<string, string>,
-): string {
-  const page = parse5.parse(indexFile);
-  const html = page.childNodes.find(
-    (node) => node.nodeName === 'html',
-  ) as parse5.Element;
-  const head = html.childNodes.find(
-    (node) => node.nodeName === 'head',
-  ) as parse5.Element;
-
-  if (cssEntryPoint) {
-    head.childNodes.push(
-      ...parse5.parseFragment(
-        `<link rel="stylesheet" href="%PUBLIC_URL%/${cssEntryPoint}"></script>`,
-      ).childNodes,
-    );
-  }
-
   let data = parse5.serialize(page);
 
   // Run HTML through a series of user-specified string replacements.
