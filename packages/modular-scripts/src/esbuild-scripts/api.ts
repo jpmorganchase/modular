@@ -64,7 +64,7 @@ ReactDOM.render(<Component />, DOMRoot);`;
       createRewriteDependenciesPlugin(
         {
           ...dependencies,
-          'react-dom': dependencies.react,
+          'react-dom': dependencies['react-dom'] ?? dependencies.react,
         },
         {
           ...resolutions,
