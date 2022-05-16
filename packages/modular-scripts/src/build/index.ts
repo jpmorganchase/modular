@@ -230,8 +230,8 @@ async function buildStandalone(
       modular: targetPackageJson.modular,
       dependencies: targetPackageJson.dependencies,
       bundledDependencies: targetPackageJson.bundledDependencies,
-      module: jsEntryPoint,
-      style: cssEntryPoint,
+      module: jsEntryPoint ? paths.publicUrlOrPath + jsEntryPoint : undefined,
+      style: cssEntryPoint ? paths.publicUrlOrPath + cssEntryPoint : undefined,
     },
     { spaces: 2 },
   );
