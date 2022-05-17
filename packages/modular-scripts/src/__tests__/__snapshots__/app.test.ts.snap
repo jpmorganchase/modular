@@ -8662,25 +8662,6 @@ exports[`When working with a nested app can generate a manifest 1`] = `
 "
 `;
 
-exports[`when working with a NODE_ENV app can generate a hashed js chunk in the js directory 1`] = `
-"\\"use strict\\";
-(globalThis.webpackChunknode_env_app =
-  globalThis.webpackChunknode_env_app || []).push([
-  [179],
-  {
-    908: () => {
-      console.log(\\"production\\");
-    },
-  },
-  (o) => {
-    var e;
-    (e = 908), o((o.s = e));
-  },
-]);
-//# sourceMappingURL=main.1c6de6d0.js.map
-"
-`;
-
 exports[`when working with an app can generate a asset-manifest 1`] = `
 "{
   \\"files\\": {
