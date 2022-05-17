@@ -1,5 +1,14 @@
 # modular-scripts
 
+## 3.0.1
+
+### Patch Changes
+
+- [#1734](https://github.com/jpmorganchase/modular/pull/1734)
+  [`4c27c33`](https://github.com/jpmorganchase/modular/commit/4c27c33b2aeea6ad274584efde37f59e0ba4850d)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Fix font
+  loading on Webpack 5
+
 ## 3.0.0
 
 ### Major Changes
