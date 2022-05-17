@@ -358,13 +358,58 @@ module.exports = function (webpackEnv) {
           oneOf: [
             // TODO: Merge this config once `image/avif` is in the mime-db
             // https://github.com/jshttp/mime-db
-            // Use webpack 5 asset modules instead of loaders
-            // https://webpack.js.org/guides/asset-modules/
             {
-              test: /\.(bmp|gif|jpe?g|png|svg|avif|ico|eot|ttf|woff2?)(\?v=\d+\.\d+\.\d+)?$/i,
+              test: [/\.avif$/],
               type: 'asset',
+              mimetype: 'image/avif',
+              parser: {
+                dataUrlCondition: {
+                  maxSize: 10000,
+                },
+              },
               generator: {
                 filename: 'static/media/[name].[hash:8].[ext]',
+              },
+            },
+            // "url" loader works like "file" loader except that it embeds assets
+            // smaller than specified limit in bytes as data URLs to avoid requests.
+            // A missing `test` is equivalent to a match.
+            {
+              test: /\.(bmp|gif|jpe?g|png|ico|eot|ttf|woff2?)(\?v=\d+\.\d+\.\d+)?$/i,
+              type: 'asset',
+              parser: {
+                dataUrlCondition: {
+                  maxSize: 10000,
+                },
+              },
+              generator: {
+                filename: 'static/media/[name].[hash:8].[ext]',
+              },
+            },
+            {
+              test: /\.svg$/,
+              use: [
+                {
+                  loader: require.resolve('@svgr/webpack'),
+                  options: {
+                    prettier: false,
+                    svgo: false,
+                    svgoConfig: {
+                      plugins: [{ removeViewBox: false }],
+                    },
+                    titleProp: true,
+                    ref: true,
+                  },
+                },
+                {
+                  loader: require.resolve('file-loader'),
+                  options: {
+                    name: 'static/media/[name].[hash].[ext]',
+                  },
+                },
+              ],
+              issuer: {
+                and: [/\.(ts|tsx|js|jsx|md|mdx)$/],
               },
             },
             // Process application JS with esbuild.
