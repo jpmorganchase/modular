@@ -53,6 +53,10 @@ const reactRefreshOverlayEntry = require.resolve(
 // makes for a smoother build process.
 const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false';
 
+const imageInlineSizeLimit = parseInt(
+  process.env.IMAGE_INLINE_SIZE_LIMIT || '10000',
+);
+
 // Check if TypeScript is setup
 const useTypeScript = fs.existsSync(paths.appTsConfig);
 
@@ -364,7 +368,7 @@ module.exports = function (webpackEnv) {
               mimetype: 'image/avif',
               parser: {
                 dataUrlCondition: {
-                  maxSize: 10000,
+                  maxSize: imageInlineSizeLimit,
                 },
               },
               generator: {
@@ -379,7 +383,7 @@ module.exports = function (webpackEnv) {
               type: 'asset',
               parser: {
                 dataUrlCondition: {
-                  maxSize: 10000,
+                  maxSize: imageInlineSizeLimit,
                 },
               },
               generator: {
