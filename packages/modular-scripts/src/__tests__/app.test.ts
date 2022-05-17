@@ -75,9 +75,9 @@ describe('when working with a NODE_ENV app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'node-env-app')))
       .toMatchInlineSnapshot(`
       "node-env-app
-      ├─ asset-manifest.json #5npfrr
+      ├─ asset-manifest.json #1qjm6tq
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #9j6678
+      ├─ index.html #z3zac4
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -85,10 +85,10 @@ describe('when working with a NODE_ENV app', () => {
       ├─ robots.txt #1sjb8b3
       └─ static
          └─ js
-            ├─ main.a482480b.js #1xwb1v
-            ├─ main.a482480b.js.map #1vulei2
-            ├─ runtime-main.97707f9d.js #15lezt9
-            └─ runtime-main.97707f9d.js.map #12i5ddp"
+            ├─ main.1c6de6d0.js #1xkcjze
+            ├─ main.1c6de6d0.js.map #1mixunf
+            ├─ runtime-main.182069c4.js #r0hm4v
+            └─ runtime-main.182069c4.js.map #ul1xez"
     `);
   });
 
@@ -103,7 +103,7 @@ describe('when working with a NODE_ENV app', () => {
               'node-env-app',
               'static',
               'js',
-              'main.a482480b.js',
+              'main.1c6de6d0.js',
             ),
           ),
         ),
@@ -131,9 +131,9 @@ describe('When working with a nested app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'scoped-sample-app')))
       .toMatchInlineSnapshot(`
       "scoped-sample-app
-      ├─ asset-manifest.json #1pcwjot
+      ├─ asset-manifest.json #1nrs1u4
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #bs7ctd
+      ├─ index.html #1v4yg7
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -144,13 +144,13 @@ describe('When working with a nested app', () => {
          │  ├─ main.1a7488ce.css #x701i6
          │  └─ main.1a7488ce.css.map #z36y5v
          ├─ js
-         │  ├─ 788.bbd34b33.js #33pg04
-         │  ├─ 788.bbd34b33.js.LICENSE.txt #eplx8h
-         │  ├─ 788.bbd34b33.js.map #1xdy7n0
-         │  ├─ main.99649537.js #b22d4x
-         │  ├─ main.99649537.js.map #16cngow
-         │  ├─ runtime-main.de012fdc.js #1qz643h
-         │  └─ runtime-main.de012fdc.js.map #ntuwq4
+         │  ├─ 788.78cfb599.js #1bgvsgc
+         │  ├─ 788.78cfb599.js.LICENSE.txt #eplx8h
+         │  ├─ 788.78cfb599.js.map #jf9876
+         │  ├─ main.b5c4420c.js #f4a1tc
+         │  ├─ main.b5c4420c.js.map #1jhpjk5
+         │  ├─ runtime-main.11dce4fa.js #1jab61t
+         │  └─ runtime-main.11dce4fa.js.map #davi3n
          └─ media
             └─ logo.103b5fa18196d5665a7e12318285c916.svg #1okqmlj"
     `);
@@ -248,12 +248,12 @@ describe('When working with a nested app', () => {
               'scoped-sample-app',
               'static',
               'js',
-              'main.99649537.js',
+              'main.B5C4420C.js',
             ),
           ),
         ),
         {
-          filepath: 'main.99649537.js',
+          filepath: 'main.B5C4420C.js',
         },
       ),
     ).toMatchSnapshot();
@@ -270,12 +270,12 @@ describe('When working with a nested app', () => {
               'scoped-sample-app',
               'static',
               'js',
-              'runtime-main.de012fdc.js',
+              'runtime-main.11dce4fa.js',
             ),
           ),
         ),
         {
-          filepath: 'runtime-main.de012fdc.js',
+          filepath: 'runtime-main.11dce4fa.js',
         },
       ),
     ).toMatchSnapshot();
@@ -351,9 +351,9 @@ describe('when working with an app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'sample-app')))
       .toMatchInlineSnapshot(`
       "sample-app
-      ├─ asset-manifest.json #lp70k5
+      ├─ asset-manifest.json #66z9jc
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #afmhhb
+      ├─ index.html #13zy9ki
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -364,13 +364,13 @@ describe('when working with an app', () => {
          │  ├─ main.1a7488ce.css #x701i6
          │  └─ main.1a7488ce.css.map #z36y5v
          ├─ js
-         │  ├─ 316.394ef80b.js #1mv4xg9
-         │  ├─ 316.394ef80b.js.LICENSE.txt #eplx8h
-         │  ├─ 316.394ef80b.js.map #b33pzn
-         │  ├─ main.6146e428.js #1d7hazv
-         │  ├─ main.6146e428.js.map #hkmqfm
-         │  ├─ runtime-main.e92969dd.js #1is98ey
-         │  └─ runtime-main.e92969dd.js.map #19haxsp
+         │  ├─ 316.7a4d5eb7.js #1yh1m0p
+         │  ├─ 316.7a4d5eb7.js.LICENSE.txt #eplx8h
+         │  ├─ 316.7a4d5eb7.js.map #1ib48x2
+         │  ├─ main.bbd3ef71.js #rp9ubh
+         │  ├─ main.bbd3ef71.js.map #4hyjxp
+         │  ├─ runtime-main.9c48d677.js #1qpz1bg
+         │  └─ runtime-main.9c48d677.js.map #1jelqrp
          └─ media
             └─ logo.103b5fa18196d5665a7e12318285c916.svg #1okqmlj"
     `);
@@ -438,12 +438,12 @@ describe('when working with an app', () => {
               'sample-app',
               'static',
               'js',
-              'main.6146e428.js',
+              'main.bbd3ef71.js',
             ),
           ),
         ),
         {
-          filepath: 'main.6146e428.js',
+          filepath: 'main.bbd3ef71.js',
         },
       ),
     ).toMatchSnapshot();
@@ -460,12 +460,12 @@ describe('when working with an app', () => {
               'sample-app',
               'static',
               'js',
-              'runtime-main.e92969dd.js',
+              'runtime-main.9c48d677.js',
             ),
           ),
         ),
         {
-          filepath: 'runtime-main.e92969dd.js',
+          filepath: 'runtime-main.9c48d677.js',
         },
       ),
     ).toMatchSnapshot();
