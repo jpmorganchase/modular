@@ -248,12 +248,12 @@ describe('When working with a nested app', () => {
               'scoped-sample-app',
               'static',
               'js',
-              'main.B5C4420C.js',
+              'main.b5c4420c.js',
             ),
           ),
         ),
         {
-          filepath: 'main.B5C4420C.js',
+          filepath: 'main.b5c4420c.js',
         },
       ),
     ).toMatchSnapshot();
