@@ -1,5 +1,41 @@
 # modular-scripts
 
+## 3.1.0
+
+### Minor Changes
+
+- [#1686](https://github.com/jpmorganchase/modular/pull/1686)
+  [`da4eeed`](https://github.com/jpmorganchase/modular/commit/da4eeedd97d5388ef09d14140e5d96d146239813)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Add
+  `esm-view` modular type
+
+### Patch Changes
+
+- [#1675](https://github.com/jpmorganchase/modular/pull/1675)
+  [`95225cb`](https://github.com/jpmorganchase/modular/commit/95225cb80273b02d42d8460e365251ca3c7f61a6)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump express from
+  4.18.0 to 4.18.1
+
+* [#1677](https://github.com/jpmorganchase/modular/pull/1677)
+  [`52b8a4c`](https://github.com/jpmorganchase/modular/commit/52b8a4ce3ddd330158b35cb3f25d03cc27778641)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump address from
+  1.1.2 to 1.2.0
+
+- [#1717](https://github.com/jpmorganchase/modular/pull/1717)
+  [`7c70b3b`](https://github.com/jpmorganchase/modular/commit/7c70b3bc9309a2407fa408f31c3752671d056d16)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  builtin-modules from 3.2.0 to 3.3.0
+
+* [#1707](https://github.com/jpmorganchase/modular/pull/1707)
+  [`fc63653`](https://github.com/jpmorganchase/modular/commit/fc6365391956094070c464ef514570779ea7752b)
+  Thanks [@cheemcheem](https://github.com/cheemcheem)! - Fix font loading on
+  Webpack 5
+
+- [#1671](https://github.com/jpmorganchase/modular/pull/1671)
+  [`ee04d32`](https://github.com/jpmorganchase/modular/commit/ee04d324c423f65f462dd1d2b9cb462873665f04)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump ws from 8.5.0
+  to 8.6.0
+
 ## 3.0.0
 
 ### Major Changes
