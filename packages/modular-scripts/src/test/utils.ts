@@ -41,7 +41,7 @@ export async function addFixturePackage(
   options: { copy: boolean } = { copy: true },
 ): Promise<void> {
   const packageSrcDir = path.join(modularRoot, 'packages', name, 'src');
-  await modular(`add ${name} --unstable-type package --unstable-name ${name}`, {
+  await modular(`add ${name} --unstable-type package`, {
     stdio: 'inherit',
   });
   await fs.emptyDir(packageSrcDir);

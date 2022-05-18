@@ -35,6 +35,9 @@ function modular(str: string, opts: Record<string, unknown> = {}) {
 }
 
 function cleanup() {
+  rimraf.sync(path.join(packagesPath, 'node-env-app'));
+  rimraf.sync(path.join(modularRoot, 'dist/node-env-app'));
+
   rimraf.sync(path.join(packagesPath, 'sample-app'));
   rimraf.sync(path.join(modularRoot, 'dist/sample-app'));
 
@@ -50,12 +53,73 @@ function cleanup() {
 beforeAll(cleanup);
 afterAll(cleanup);
 
+describe('when working with a NODE_ENV app', () => {
+  beforeAll(async () => {
+    await modular('add node-env-app --unstable-type app', { stdio: 'inherit' });
+
+    await fs.writeFile(
+      path.join(modularRoot, 'packages', 'node-env-app', 'src', 'index.ts'),
+      `
+      console.log(process.env.NODE_ENV);
+
+      export {};
+    `,
+    );
+
+    await modular('build node-env-app', {
+      stdio: 'inherit',
+    });
+  });
+
+  it('can build a app', () => {
+    expect(tree(path.join(modularRoot, 'dist', 'node-env-app')))
+      .toMatchInlineSnapshot(`
+      "node-env-app
+      ├─ asset-manifest.json #1qjm6tq
+      ├─ favicon.ico #6pu3rg
+      ├─ index.html #z3zac4
+      ├─ logo192.png #1nez7vk
+      ├─ logo512.png #1hwqvcc
+      ├─ manifest.json #19gah8o
+      ├─ package.json
+      ├─ robots.txt #1sjb8b3
+      └─ static
+         └─ js
+            ├─ main.1c6de6d0.js #1xkcjze
+            ├─ main.1c6de6d0.js.map #1mixunf
+            ├─ runtime-main.182069c4.js #r0hm4v
+            └─ runtime-main.182069c4.js.map #ul1xez"
+    `);
+  });
+
+  it('can generate a hashed js chunk in the js directory', async () => {
+    expect(
+      prettier.format(
+        String(
+          await fs.readFile(
+            path.join(
+              modularRoot,
+              'dist',
+              'node-env-app',
+              'static',
+              'js',
+              'main.1c6de6d0.js',
+            ),
+          ),
+        ),
+        {
+          filepath: 'main.1c6de6d0.js',
+        },
+      ),
+    ).toMatchSnapshot();
+  });
+});
+
 describe('When working with a nested app', () => {
   beforeAll(async () => {
-    await modular(
-      'add scoped/sample-app --unstable-type app --unstable-name @scoped/sample-app',
-      { stdio: 'inherit' },
-    );
+    await modular('add @scoped/sample-app --unstable-type app', {
+      stdio: 'inherit',
+    });
 
     await modular('build @scoped/sample-app', {
       stdio: 'inherit',
@@ -241,10 +305,7 @@ describe('When working with a nested app', () => {
 
 describe('when working with an app', () => {
   beforeAll(async () => {
-    await modular(
-      'add sample-app --unstable-type app --unstable-name sample-app',
-      { stdio: 'inherit' },
-    );
+    await modular('add sample-app --unstable-type app', { stdio: 'inherit' });
 
     // Let's replace the App module with something of our own
     // with a test specific element we can introspect
