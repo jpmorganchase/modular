@@ -10,7 +10,10 @@ import isModularType from './utils/isModularType';
 async function serve(target: string, port = 3000): Promise<void> {
   const targetLocation = await getLocation(target);
 
-  if (isModularType(targetLocation, 'app')) {
+  if (
+    isModularType(targetLocation, 'app') ||
+    isModularType(targetLocation, 'esm-view')
+  ) {
     const paths = await createPaths(target);
 
     if (fs.existsSync(paths.appBuild)) {
@@ -25,7 +28,7 @@ async function serve(target: string, port = 3000): Promise<void> {
       );
     }
   } else {
-    throw new Error(`Modular can only serve an app.`);
+    throw new Error(`Modular can only serve an app or an esm-view.`);
   }
 }
 

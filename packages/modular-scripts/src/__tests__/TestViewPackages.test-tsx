@@ -1,0 +1,12 @@
+import * as React from 'react';
+import get from 'lodash/get';
+import merge from 'lodash.merge';
+import { difference } from 'lodash';
+
+export default function SampleView(): JSX.Element {
+  return (
+    <div>
+      <pre>{JSON.stringify({ get, merge, difference })}</pre>
+    </div>
+  );
+}

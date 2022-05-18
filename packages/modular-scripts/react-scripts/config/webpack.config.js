@@ -27,9 +27,20 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const postcssNormalize = require('postcss-normalize');
 const isCI = require('is-ci');
 
-const esbuildTargetFactory = process.env.ESBUILD_TARGET_FACTORY
-  ? JSON.parse(process.env.ESBUILD_TARGET_FACTORY)
-  : 'es2015';
+const isApp = process.env.MODULAR_IS_APP === 'true';
+const isEsmView = !isApp;
+
+// If it's an app, set it at ESBUILD_TARGET_FACTORY or default to es2015
+// If it's not an app it's an ESM view, then we need es2020
+const esbuildTargetFactory = isApp
+  ? process.env.ESBUILD_TARGET_FACTORY
+    ? JSON.parse(process.env.ESBUILD_TARGET_FACTORY)
+    : 'es2015'
+  : 'es2020';
+
+const { externalDependencies } = process.env.MODULAR_PACKAGE_DEPS
+  ? JSON.parse(process.env.MODULAR_PACKAGE_DEPS)
+  : {};
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -60,6 +71,17 @@ const sassModuleRegex = /\.module\.(scss|sass)$/;
 module.exports = function (webpackEnv) {
   const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
+  const isEsmViewDevelopment = isEsmView & isEnvDevelopment;
+
+  // This is needed if we're serving a ESM view in development node, since it won't be defined in the view dependencies.
+  if (externalDependencies.react && isEsmViewDevelopment) {
+    externalDependencies['react-dom'] = externalDependencies.react;
+  }
+
+  // Create a map of external dependencies if we're building a ESM view
+  const dependencyMap = isEsmView
+    ? createExternalDependenciesMap(externalDependencies)
+    : {};
 
   // Variable used for enabling profiling in Production
   // passed into alias object. Uses a flag if passed into the build command
@@ -135,6 +157,35 @@ module.exports = function (webpackEnv) {
   };
 
   const webpackConfig = {
+    externals: isApp
+      ? undefined
+      : function ({ request }, callback) {
+          const parsedModule = parsePackageName(request);
+
+          // If the module is absolute and it is in the import map, we want to externalise it
+          if (
+            parsedModule &&
+            parsedModule.dependencyName &&
+            dependencyMap[parsedModule.dependencyName]
+          ) {
+            const { dependencyName, submodule } = parsedModule;
+
+            const toRewrite = `${dependencyMap[dependencyName]}${
+              submodule ? `/${submodule}` : ''
+            }`;
+
+            return callback(null, toRewrite);
+          }
+          // Otherwise we just want to bundle it
+          return callback();
+        },
+
+    externalsType: isApp ? undefined : 'module',
+    experiments: {
+      outputModule: isApp ? undefined : true,
+    },
+    // Workaround for this bug: https://stackoverflow.com/questions/53905253/cant-set-up-the-hmr-stuck-with-waiting-for-update-signal-from-wds-in-cons
+    target: 'web',
     mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
     // Stop compilation early in production
     bail: isEnvProduction,
@@ -145,8 +196,15 @@ module.exports = function (webpackEnv) {
       : isEnvDevelopment && 'cheap-module-source-map',
     // These are the "entry points" to our application.
     // This means they will be the "root" imports that are included in JS bundle.
-    entry: paths.appIndexJs,
+    // We bundle a virtual file to trampoline the ESM view as an entry point if we're starting it (ESM views have no ReactDOM.render)
+    entry: isEsmViewDevelopment ? getVirtualTrampoline() : paths.appIndexJs,
     output: {
+      module: isApp ? undefined : true,
+      library: isApp
+        ? undefined
+        : {
+            type: 'module',
+          },
       // The build folder.
       path: isEnvProduction ? paths.appBuild : undefined,
       // Add /* filename */ comments to generated require()s in the output.
@@ -223,15 +281,19 @@ module.exports = function (webpackEnv) {
       // Automatically split vendor and commons
       // https://twitter.com/wSokra/status/969633336732905474
       // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
-      splitChunks: {
-        chunks: 'all',
-      },
+      splitChunks: isApp
+        ? {
+            chunks: 'all',
+          }
+        : undefined,
       // Keep the runtime chunk separated to enable long term caching
       // https://twitter.com/wSokra/status/969679223278505985
       // https://github.com/facebook/create-react-app/issues/5358
-      runtimeChunk: {
-        name: (entrypoint) => `runtime-${entrypoint.name}`,
-      },
+      runtimeChunk: isApp
+        ? {
+            name: (entrypoint) => `runtime-${entrypoint.name}`,
+          }
+        : undefined,
     },
     resolve: {
       // This allows you to set a fallback for where webpack should look for modules.
@@ -249,7 +311,7 @@ module.exports = function (webpackEnv) {
       // for React Native Web.
       extensions: paths.moduleFileExtensions
         .map((ext) => `.${ext}`)
-        .filter((ext) => useTypeScript || !ext.includes('ts')),
+        .filter((ext) => useTypeScript || !isApp || !ext.includes('ts')),
       alias: {
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
@@ -483,35 +545,56 @@ module.exports = function (webpackEnv) {
     },
     plugins: [
       // Generates an `index.html` file with the <script> injected.
-      new HtmlWebpackPlugin(
-        Object.assign(
-          {},
-          {
-            inject: true,
-            template: paths.appHtml,
-          },
-          isEnvProduction
-            ? {
-                minify: {
-                  removeComments: true,
-                  collapseWhitespace: true,
-                  removeRedundantAttributes: true,
-                  useShortDoctype: true,
-                  removeEmptyAttributes: true,
-                  removeStyleLinkTypeAttributes: true,
-                  keepClosingSlash: true,
-                  minifyJS: true,
-                  minifyCSS: true,
-                  minifyURLs: true,
-                },
-              }
-            : undefined,
-        ),
-      ),
+      isApp
+        ? new HtmlWebpackPlugin(
+            Object.assign(
+              {},
+              {
+                inject: true,
+                template: paths.appHtml,
+              },
+              isEnvProduction
+                ? {
+                    minify: {
+                      removeComments: true,
+                      collapseWhitespace: true,
+                      removeRedundantAttributes: true,
+                      useShortDoctype: true,
+                      removeEmptyAttributes: true,
+                      removeStyleLinkTypeAttributes: true,
+                      keepClosingSlash: true,
+                      minifyJS: true,
+                      minifyCSS: true,
+                      minifyURLs: true,
+                    },
+                  }
+                : undefined,
+            ),
+          )
+        : isEsmViewDevelopment
+        ? // We need to provide a synthetic index.html in case we're starting a ESM view
+          new HtmlWebpackPlugin(
+            Object.assign(
+              {},
+              {
+                inject: true,
+                templateContent: `
+                <html>
+                  <body>
+                    <div id="root"></div>
+                  </body>
+                </html>
+                `,
+                scriptLoading: 'module',
+              },
+            ),
+          )
+        : false,
       // Inlines the webpack runtime script. This script is too small to warrant
       // a network request.
       // https://github.com/facebook/create-react-app/issues/5358
-      isEnvProduction &&
+      isApp &&
+        isEnvProduction &&
         shouldInlineRuntimeChunk &&
         new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime-.+[.]js/]),
       // Makes some environment variables available in index.html.
@@ -519,7 +602,7 @@ module.exports = function (webpackEnv) {
       // <link rel="icon" href="%PUBLIC_URL%/favicon.ico">
       // It will be an empty string unless you specify "homepage"
       // in `package.json`, in which case it will be the pathname of that URL.
-      new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
+      isApp && new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
       // This gives some necessary context to module not found errors, such as
       // the requesting resource.
       new ModuleNotFoundPlugin(paths.appPath),
@@ -676,3 +759,49 @@ module.exports = function (webpackEnv) {
 
   return webpackConfig;
 };
+
+function createExternalDependenciesMap(externalDependencies) {
+  const externalCdnTemplate =
+    process.env.EXTERNAL_CDN_TEMPLATE ||
+    'https://cdn.skypack.dev/[name]@[version]';
+
+  return Object.entries(externalDependencies).reduce(
+    (acc, [name, version]) => ({
+      ...acc,
+      [name]: externalCdnTemplate
+        .replace('[name]', name)
+        .replace('[version]', version),
+    }),
+    {},
+  );
+}
+
+const packageRegex =
+  /^(@[a-z0-9-~][a-z0-9-._~]*)?\/?([a-z0-9-~][a-z0-9-._~]*)\/?(.*)/;
+function parsePackageName(name) {
+  const parsedName = packageRegex.exec(name);
+  if (!parsedName) {
+    return;
+  }
+  const [_, scope, module, submodule] = parsedName;
+  const dependencyName = (scope ? `${scope}/` : '') + module;
+  return { dependencyName, scope, module, submodule };
+}
+
+// Virtual entrypoint if we're starting a ESM view - see https://github.com/webpack/webpack/issues/6437
+function getVirtualTrampoline() {
+  const entryPointPath = `'./${path.relative(
+    paths.appPath,
+    paths.appIndexJs,
+  )}'`;
+  const string = `
+  import ReactDOM from 'react-dom'
+  import React from 'react';
+  import Component from ${entryPointPath};
+  const DOMRoot = document.getElementById('root');
+  ReactDOM.render(React.createElement(Component, null), DOMRoot);
+	`;
+
+  const base64 = Buffer.from(string).toString('base64');
+  return `./src/_trampoline.js!=!data:text/javascript;base64,${base64}`;
+}

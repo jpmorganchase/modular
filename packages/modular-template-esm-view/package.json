@@ -1,0 +1,16 @@
+{
+  "name": "modular-template-esm-view",
+  "version": "1.0.0",
+  "exports": {
+    "./package.json": "./package.json"
+  },
+  "modular": {
+    "type": "template",
+    "templateType": "esm-view"
+  },
+  "license": "Apache-2.0",
+  "files": [
+    "README.md",
+    "src"
+  ]
+}

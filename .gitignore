@@ -7,6 +7,7 @@ node_modules
 packages/sample-app
 packages/sample-esbuild-app
 packages/sample-view
+packages/sample-esm-view
 packages/sample-package
 packages/nested
 packages/sample-library-package
