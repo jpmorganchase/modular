@@ -40,10 +40,9 @@ afterAll(cleanup);
 
 describe('when working with an app', () => {
   beforeAll(async () => {
-    await modular(
-      'add sample-esbuild-app --unstable-type app --unstable-name sample-esbuild-app',
-      { stdio: 'inherit' },
-    );
+    await modular('add sample-esbuild-app --unstable-type app', {
+      stdio: 'inherit',
+    });
 
     await modular('build sample-esbuild-app', {
       stdio: 'inherit',

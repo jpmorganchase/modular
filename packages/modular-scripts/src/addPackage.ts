@@ -16,91 +16,138 @@ import LineFilterOutStream from './utils/LineFilterOutStream';
 import { ModularPackageJson } from './utils/isModularType';
 
 const packagesRoot = 'packages';
+const CUSTOM_TEMPLATE = '__CHOOSE_MY_OWN__';
 
 interface AddOptions {
-  destination: string;
-  type: string | void;
   name: string | void;
+  type: string | void;
   template: string | void;
   preferOffline: boolean;
   verbose: boolean;
+  unstableName: string | void;
+}
+
+async function promptForName(name: string | void) {
+  // The user may try to create a package using a name that already exists
+  // so we loop until they choose a unique name or cancel
+  while (true) {
+    // Default the response the predefined `name` argument
+    const response = name
+      ? { name }
+      : ((await prompts({
+          name: 'name',
+          type: 'text',
+          message: `What would you like to name this package?`,
+        })) as { name: string } | Record<string, never>);
+
+    // Exit if the user cancels
+    if (!response.name) {
+      throw Error('No name entered, exiting');
+    }
+
+    // Check whether the package exists already
+    const modularRoot = getModularRoot();
+    const packagePath = path.join(modularRoot, packagesRoot, response.name);
+    if (fs.existsSync(packagePath)) {
+      logger.error(`A package called "${response.name}" already exists!`);
+      name = undefined;
+    } else {
+      return response.name;
+    }
+  }
+}
+
+async function promptForType(type: string | void) {
+  if (type) {
+    return type;
+  }
+
+  const response = (await prompts({
+    name: 'type',
+    type: 'select',
+    message: `What kind of package is this?`,
+    choices: [
+      { title: 'A plain package (package)', value: 'package' },
+      {
+        title: 'A micro-frontend React view compiled to a bundle file (view)',
+        value: 'view',
+      },
+      {
+        title: 'A micro-frontend React view compiled to ES Modules (esm-view)',
+        value: 'esm-view',
+      },
+      { title: 'A micro-frontend React container (app)', value: 'app' },
+      { title: 'Choose my own template', value: CUSTOM_TEMPLATE },
+    ],
+    initial: 0,
+  })) as { type: string } | Record<string, never>;
+
+  if (!response.type) {
+    throw Error('No type entered, exiting');
+  }
+
+  return response.type;
+}
+
+async function promptForTemplate(templateName: string) {
+  if (templateName === CUSTOM_TEMPLATE) {
+    logger.warn(
+      'Note: you are choosing to install a template that is not maintained by the modular team.',
+    );
+
+    const response = (await prompts([
+      {
+        name: 'templateName',
+        type: 'text',
+        message: `Which modular template would you like to use?`,
+      },
+    ])) as { templateName: string } | Record<string, never>;
+
+    if (!response.templateName) {
+      throw Error('No template name entered, exiting');
+    }
+
+    if (response.templateName[0] === '@') {
+      const [scope, typePackageName] = response.templateName.split('/');
+      templateName = `${scope}/modular-template-${typePackageName}`;
+    } else {
+      templateName = response.templateName;
+    }
+  }
+
+  if (!templateName.startsWith('modular-template')) {
+    return `modular-template-${templateName}`;
+  }
+
+  return templateName;
 }
 
 async function addPackage({
-  destination,
-  type: typeArg,
   name: nameArg,
+  type: typeArg,
   template: templateNameArg,
   preferOffline = true,
   verbose = false,
+  unstableName,
 }: AddOptions): Promise<void> {
-  const { type: packageType, name } =
-    (typeArg && nameArg ? { type: typeArg, name: nameArg } : null) ||
-    ((await prompts([
-      {
-        name: 'name',
-        type: 'text',
-        message: `What would you like to name this package?`,
-        initial: toParamCase(destination),
-      },
-      {
-        name: 'type',
-        type: 'select',
-        message: `What kind of package is this?`,
-        choices: [
-          { title: 'A plain package (package)', value: 'package' },
-          {
-            title:
-              'A micro-frontend React view compiled to a bundle file (view)',
-            value: 'view',
-          },
-          {
-            title:
-              'A micro-frontend React view compiled to ES Modules (esm-view)',
-            value: 'esm-view',
-          },
-          { title: 'A micro-frontend React container (app)', value: 'app' },
-          { title: 'Choose my own template', value: '__CHOOSE_MY_OWN__' },
-        ],
-        initial: 0,
-      },
-    ])) as { type: string; name: string });
-
-  let templateName = templateNameArg || packageType;
-  if (packageType === '__CHOOSE_MY_OWN__') {
-    logger.warn(
-      'You are choosing to install a template which is not maintained by the modular team.',
-    );
-    const typeResponse = await prompts([
-      {
-        name: 'typeName',
-        type: 'text',
-        message: `Which modular template would you like to use.?`,
-      },
-    ]);
-    const typeName = typeResponse.typeName as string;
-    if (typeName[0] === '@') {
-      const [scope, typePackageName] = typeName.split('/');
-      templateName = `${scope}/modular-template-${typePackageName}`;
-    }
-  } else {
-    templateName = `modular-template-${templateName}`;
-  }
-
+  const name = await promptForName(nameArg || unstableName);
+  const packageType = templateNameArg ?? (await promptForType(typeArg));
+  const templateName = await promptForTemplate(templateNameArg || packageType);
   const modularRoot = getModularRoot();
-  const newComponentName = toPascalCase(name);
-
-  const newPackagePath = path.join(modularRoot, packagesRoot, destination);
-  if (fs.existsSync(newPackagePath)) {
-    throw new Error(`A package already exists at ${destination}!`);
-  }
+  const packageName = toParamCase(name, { stripRegexp: /[^A-Z0-9@/]+/gi });
+  const packageDir = toParamCase(name, { stripRegexp: /[^A-Z0-9/]+/gi });
+  const componentName = toPascalCase(name);
+  const packagePath = path.join(modularRoot, packagesRoot, packageDir);
+  const installedPackageJsonPath = path.join(templateName, 'package.json');
+  let newModularPackageJsonPath;
 
   // try and find the modular template packge, if it's already been installed
   // in the project then continue without needing to do an install.
   // else we will fetch it from the yarn registry.
   try {
-    require.resolve(`${templateName}/package.json`);
+    newModularPackageJsonPath = require.resolve(installedPackageJsonPath);
   } catch (e) {
+    logger.log('Installing package template, this may take a moment...');
     const templateInstallSubprocess = execAsync(
       'yarnpkg',
       ['add', templateName, '--prefer-offline', '--silent', '-W'],
@@ -119,11 +166,8 @@ async function addPackage({
     }
 
     await templateInstallSubprocess;
+    newModularPackageJsonPath = require.resolve(installedPackageJsonPath);
   }
-
-  const newModularPackageJsonPath = require.resolve(
-    `${templateName}/package.json`,
-  );
 
   const modularTemplatePackageJson = (await fs.readJSON(
     newModularPackageJsonPath,
@@ -146,42 +190,42 @@ async function addPackage({
 
   const packageTypePath = path.dirname(newModularPackageJsonPath);
   // create a new package source folder
-  await fs.mkdirp(newPackagePath);
-  await fs.copy(packageTypePath, newPackagePath, {
+  await fs.mkdirp(packagePath);
+  await fs.copy(packageTypePath, packagePath, {
     recursive: true,
     filter(src) {
       return !(path.basename(src) === 'package.json');
     },
   });
 
-  const packageFilePaths = getAllFiles(newPackagePath);
+  const packageFilePaths = getAllFiles(packagePath);
 
   // If we get our package locally we need to whitelist files like yarn publish does
   const packageWhitelist = globby.sync(
     modularTemplatePackageJson.files || ['*'],
     {
-      cwd: newPackagePath,
+      cwd: packagePath,
       absolute: true,
     },
   );
   for (const packageFilePath of packageFilePaths) {
     if (!packageWhitelist.includes(packageFilePath)) {
       fs.removeSync(packageFilePath);
-    } else {
+    } else if (/\.(ts|tsx|js|jsx|json|md|txt)$/i.test(packageFilePath)) {
       fs.writeFileSync(
         packageFilePath,
         fs
           .readFileSync(packageFilePath, 'utf8')
-          .replace(/PackageName__/g, name)
-          .replace(/ComponentName__/g, newComponentName),
+          .replace(/PackageName__/g, packageName)
+          .replace(/ComponentName__/g, componentName),
       );
     }
   }
 
   await fs.writeJson(
-    path.join(newPackagePath, 'package.json'),
+    path.join(packagePath, 'package.json'),
     {
-      name,
+      name: packageName,
       private: modularTemplateType === 'app',
       modular: {
         type: modularTemplateType,
@@ -198,9 +242,9 @@ async function addPackage({
   if (modularTemplateType === 'app') {
     // add a tsconfig, because CRA expects it
     await fs.writeJSON(
-      path.join(newPackagePath, 'tsconfig.json'),
+      path.join(packagePath, 'tsconfig.json'),
       {
-        extends: path.relative(newPackagePath, modularRoot) + '/tsconfig.json',
+        extends: path.relative(packagePath, modularRoot) + '/tsconfig.json',
       },
       { spaces: 2 },
     );

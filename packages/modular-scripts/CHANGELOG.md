@@ -1,5 +1,14 @@
 # modular-scripts
 
+## 3.0.2
+
+### Patch Changes
+
+- [#1738](https://github.com/jpmorganchase/modular/pull/1738)
+  [`bc95a70`](https://github.com/jpmorganchase/modular/commit/bc95a70093005f1688fa2a545d4b4ca67d0c30cb)
+  Thanks [@benpryke](https://github.com/benpryke)! - fix: fix modular ux and
+  bugs
+
 ## 3.0.1
 
 ### Patch Changes

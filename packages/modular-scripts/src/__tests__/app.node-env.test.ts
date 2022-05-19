@@ -35,10 +35,7 @@ afterAll(cleanup);
 
 describe('when working with a NODE_ENV app', () => {
   beforeAll(async () => {
-    await modular(
-      'add node-env-app --unstable-type app --unstable-name node-env-app',
-      { stdio: 'inherit' },
-    );
+    await modular('add node-env-app --unstable-type app', { stdio: 'inherit' });
 
     await fs.writeFile(
       path.join(modularRoot, 'packages', 'node-env-app', 'src', 'index.ts'),
