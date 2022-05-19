@@ -166,7 +166,9 @@ module.exports = function (webpackEnv) {
           if (
             parsedModule &&
             parsedModule.dependencyName &&
-            dependencyMap[parsedModule.dependencyName]
+            dependencyMap[parsedModule.dependencyName] &&
+            // If this is an absolute export of css we need to deal with it in the loader
+            !request.endsWith('.css')
           ) {
             const { dependencyName, submodule } = parsedModule;
 
@@ -360,24 +362,6 @@ module.exports = function (webpackEnv) {
           // match the requirements. When no loader matches it will fall
           // back to the "file" loader at the end of the loader list.
           oneOf: [
-            {
-              test: function (depName) {
-                if (
-                  depName.includes('node_modules') &&
-                  depName.endsWith('.css')
-                ) {
-                  return true;
-                }
-                return false;
-              },
-              use: function (info) {
-                console.log({ info });
-                return {
-                  loader: require.resolve('./CDNCSSLoader'),
-                  options: info,
-                };
-              },
-            },
             // TODO: Merge this config once `image/avif` is in the mime-db
             // https://github.com/jshttp/mime-db
             {
@@ -475,12 +459,21 @@ module.exports = function (webpackEnv) {
             {
               test: cssRegex,
               exclude: cssModuleRegex,
-              use: getStyleLoaders({
-                importLoaders: 1,
-                sourceMap: isEnvProduction
-                  ? shouldUseSourceMap
-                  : isEnvDevelopment,
-              }),
+              use: [
+                function (info) {
+                  console.log({ info });
+                  return {
+                    loader: require.resolve('./CDNAssetLoader'),
+                    options: { info, dependencyMap },
+                  };
+                },
+                ...getStyleLoaders({
+                  importLoaders: 1,
+                  sourceMap: isEnvProduction
+                    ? shouldUseSourceMap
+                    : isEnvDevelopment,
+                }),
+              ],
               // Don't consider CSS imports dead code even if the
               // containing package claims to have no side effects.
               // Remove this when webpack adds a warning or an error for this.
