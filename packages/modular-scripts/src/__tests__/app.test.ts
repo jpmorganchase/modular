@@ -131,9 +131,9 @@ describe('When working with a nested app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'scoped-sample-app')))
       .toMatchInlineSnapshot(`
       "scoped-sample-app
-      ├─ asset-manifest.json #1pcwjot
+      ├─ asset-manifest.json #hy4ikp
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #bs7ctd
+      ├─ index.html #idgpeh
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -147,8 +147,8 @@ describe('When working with a nested app', () => {
          │  ├─ 788.bbd34b33.js #33pg04
          │  ├─ 788.bbd34b33.js.LICENSE.txt #eplx8h
          │  ├─ 788.bbd34b33.js.map #1xdy7n0
-         │  ├─ main.99649537.js #b22d4x
-         │  ├─ main.99649537.js.map #16cngow
+         │  ├─ main.1f260474.js #3ojt7i
+         │  ├─ main.1f260474.js.map #881te9
          │  ├─ runtime-main.de012fdc.js #1qz643h
          │  └─ runtime-main.de012fdc.js.map #ntuwq4
          └─ media
@@ -248,12 +248,12 @@ describe('When working with a nested app', () => {
               'scoped-sample-app',
               'static',
               'js',
-              'main.99649537.js',
+              'main.1f260474.js',
             ),
           ),
         ),
         {
-          filepath: 'main.99649537.js',
+          filepath: 'main.1f260474.js',
         },
       ),
     ).toMatchSnapshot();
@@ -351,9 +351,9 @@ describe('when working with an app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'sample-app')))
       .toMatchInlineSnapshot(`
       "sample-app
-      ├─ asset-manifest.json #lp70k5
+      ├─ asset-manifest.json #y1bfdl
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #afmhhb
+      ├─ index.html #3u8gor
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -367,8 +367,8 @@ describe('when working with an app', () => {
          │  ├─ 316.394ef80b.js #1mv4xg9
          │  ├─ 316.394ef80b.js.LICENSE.txt #eplx8h
          │  ├─ 316.394ef80b.js.map #b33pzn
-         │  ├─ main.6146e428.js #1d7hazv
-         │  ├─ main.6146e428.js.map #hkmqfm
+         │  ├─ main.b0eac4c5.js #169xo7t
+         │  ├─ main.b0eac4c5.js.map #19epn0f
          │  ├─ runtime-main.e92969dd.js #1is98ey
          │  └─ runtime-main.e92969dd.js.map #19haxsp
          └─ media
@@ -438,12 +438,12 @@ describe('when working with an app', () => {
               'sample-app',
               'static',
               'js',
-              'main.6146e428.js',
+              'main.b0eac4c5.js',
             ),
           ),
         ),
         {
-          filepath: 'main.6146e428.js',
+          filepath: 'main.b0eac4c5.js',
         },
       ),
     ).toMatchSnapshot();
