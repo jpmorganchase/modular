@@ -42,6 +42,10 @@ const { externalDependencies } = process.env.MODULAR_PACKAGE_DEPS
   ? JSON.parse(process.env.MODULAR_PACKAGE_DEPS)
   : {};
 
+const { externalResolutions } = process.env.MODULAR_PACKAGE_RESOLUTIONS
+  ? JSON.parse(process.env.MODULAR_PACKAGE_RESOLUTIONS)
+  : {};
+
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
 
@@ -77,10 +81,13 @@ module.exports = function (webpackEnv) {
   if (externalDependencies.react && isEsmViewDevelopment) {
     externalDependencies['react-dom'] = externalDependencies.react;
   }
+  if (externalResolutions.react && isEsmViewDevelopment) {
+    externalResolutions['react-dom'] = externalResolutions.react;
+  }
 
   // Create a map of external dependencies if we're building a ESM view
   const dependencyMap = isEsmView
-    ? createExternalDependenciesMap(externalDependencies)
+    ? createExternalDependenciesMap(externalDependencies, externalResolutions)
     : {};
 
   // Variable used for enabling profiling in Production
@@ -771,20 +778,28 @@ module.exports = function (webpackEnv) {
   return webpackConfig;
 };
 
-function createExternalDependenciesMap(externalDependencies) {
+function createExternalDependenciesMap(
+  externalDependencies,
+  externalResolutions,
+) {
   const externalCdnTemplate =
     process.env.EXTERNAL_CDN_TEMPLATE ||
     'https://cdn.skypack.dev/[name]@[version]';
 
-  return Object.entries(externalDependencies).reduce(
-    (acc, [name, version]) => ({
+  return Object.entries(externalDependencies).reduce((acc, [name, version]) => {
+    if (!externalResolutions[name]) {
+      throw new Error(
+        `Dependency ${name} found in package.json but not in lockfile. Have you installed your dependencies?`,
+      );
+    }
+    return {
       ...acc,
       [name]: externalCdnTemplate
         .replace('[name]', name)
-        .replace('[version]', version),
-    }),
-    {},
-  );
+        .replace('[version]', version || externalResolutions[name])
+        .replace('[resolution]', externalResolutions[name]),
+    };
+  }, {});
 }
 
 const packageRegex =

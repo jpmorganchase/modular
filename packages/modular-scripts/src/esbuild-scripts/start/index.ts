@@ -64,6 +64,7 @@ class DevServer {
 
   private isApp: boolean; // TODO maybe it's better to pass the type here
   private dependencies: Dependency;
+  private resolutions: Dependency;
 
   constructor(
     paths: Paths,
@@ -72,6 +73,7 @@ class DevServer {
     port: number,
     isApp: boolean,
     dependencies: Dependency,
+    resolutions: Dependency,
   ) {
     this.paths = paths;
     this.urls = urls;
@@ -79,6 +81,7 @@ class DevServer {
     this.port = port;
     this.isApp = isApp;
     this.dependencies = dependencies;
+    this.resolutions = resolutions;
 
     this.firstCompilePromise = new Promise<void>((resolve) => {
       this.firstCompilePromiseResolve = resolve;
@@ -198,7 +201,13 @@ class DevServer {
       target: browserTarget,
       plugins: this.isApp
         ? undefined
-        : [createRewriteDependenciesPlugin(this.dependencies, browserTarget)],
+        : [
+            createRewriteDependenciesPlugin(
+              this.dependencies,
+              this.resolutions,
+              browserTarget,
+            ),
+          ],
     });
   });
 
@@ -292,6 +301,7 @@ class DevServer {
       'index.js',
       this.paths.appSrc,
       this.dependencies,
+      this.resolutions,
       baseConfig.target as string[],
     );
     res.end(trampolineBuildResult.outputFiles[0].text);
@@ -359,6 +369,7 @@ export default async function start(
   target: string,
   isApp: boolean,
   packageDependencies: Dependency,
+  packageResolutions: Dependency,
 ): Promise<void> {
   const paths = await createPaths(target);
   const host = getHost();
@@ -376,6 +387,7 @@ export default async function start(
     port,
     isApp,
     packageDependencies,
+    packageResolutions,
   );
 
   const server = await devServer.start();

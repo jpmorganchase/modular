@@ -327,6 +327,158 @@ describe('modular-scripts', () => {
     });
   });
 
+  describe('WHEN building a esm-view with resolutions', () => {
+    beforeAll(async () => {
+      await fs.copyFile(
+        path.join(__dirname, 'TestViewPackages.test-tsx'),
+        path.join(packagesPath, targetedView, 'src', 'index.tsx'),
+      );
+
+      const packageJsonPath = path.join(
+        packagesPath,
+        targetedView,
+        'package.json',
+      );
+      const packageJson = (await fs.readJSON(
+        packageJsonPath,
+      )) as CoreProperties;
+
+      await fs.writeJSON(
+        packageJsonPath,
+        Object.assign(packageJson, {
+          dependencies: {
+            lodash: '^4.17.21',
+            'lodash.merge': '^4.6.2',
+          },
+        }),
+      );
+
+      await execa('yarnpkg', [], {
+        cwd: modularRoot,
+        cleanup: true,
+      });
+
+      await modular('build sample-esm-view', {
+        stdio: 'inherit',
+        env: {
+          USE_MODULAR_ESBUILD: 'true',
+          EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[resolution]',
+        },
+      });
+    });
+
+    it('THEN outputs the correct directory structure', () => {
+      expect(tree(path.join(modularRoot, 'dist', 'sample-esm-view')))
+        .toMatchInlineSnapshot(`
+        "sample-esm-view
+        ├─ index.html #17sfbiz
+        ├─ package.json
+        └─ static
+           └─ js
+              ├─ _trampoline.js #1j54e9x
+              ├─ index-IDYQ56WQ.js #1g1vpil
+              └─ index-IDYQ56WQ.js.map #l9p9hs"
+      `);
+    });
+
+    it('THEN rewrites the dependencies', async () => {
+      const baseDir = path.join(
+        modularRoot,
+        'dist',
+        'sample-esm-view',
+        'static',
+        'js',
+      );
+
+      const indexFile = (
+        await fs.readFile(path.join(baseDir, 'index-IDYQ56WQ.js'))
+      ).toString();
+      expect(
+        prettier.format(indexFile, {
+          filepath: 'index-F6YQ237K.js',
+        }),
+      ).toMatchSnapshot();
+      expect(indexFile).toContain(`https://mycustomcdn.net/react@1`);
+      expect(indexFile).toContain(`https://mycustomcdn.net/lodash@4`);
+    });
+  });
+
+  describe('WHEN building a esm-view with resolutions and webpack', () => {
+    beforeAll(async () => {
+      await fs.copyFile(
+        path.join(__dirname, 'TestViewPackages.test-tsx'),
+        path.join(packagesPath, targetedView, 'src', 'index.tsx'),
+      );
+
+      const packageJsonPath = path.join(
+        packagesPath,
+        targetedView,
+        'package.json',
+      );
+      const packageJson = (await fs.readJSON(
+        packageJsonPath,
+      )) as CoreProperties;
+
+      await fs.writeJSON(
+        packageJsonPath,
+        Object.assign(packageJson, {
+          dependencies: {
+            lodash: '^4.17.21',
+            'lodash.merge': '^4.6.2',
+          },
+        }),
+      );
+
+      await execa('yarnpkg', [], {
+        cwd: modularRoot,
+        cleanup: true,
+      });
+
+      await modular('build sample-esm-view', {
+        stdio: 'inherit',
+        env: {
+          EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[resolution]',
+        },
+      });
+    });
+
+    it('THEN outputs the correct directory structure', () => {
+      expect(tree(path.join(modularRoot, 'dist', 'sample-esm-view')))
+        .toMatchInlineSnapshot(`
+        "sample-esm-view
+        ├─ asset-manifest.json #1pem6dg
+        ├─ index.html #17sfbiz
+        ├─ package.json
+        └─ static
+           └─ js
+              ├─ _trampoline.js #1fc8fjx
+              ├─ main.219bc98b.js #g4nmwx
+              └─ main.219bc98b.js.map #1cp7wwt"
+      `);
+    });
+
+    it('THEN rewrites the dependencies', async () => {
+      const baseDir = path.join(
+        modularRoot,
+        'dist',
+        'sample-esm-view',
+        'static',
+        'js',
+      );
+
+      const indexFile = (
+        await fs.readFile(path.join(baseDir, 'main.219bc98b.js'))
+      ).toString();
+      expect(
+        prettier.format(indexFile, {
+          filepath: 'index-F6YQ237K.js',
+        }),
+      ).toMatchSnapshot();
+      expect(indexFile).toContain(`https://mycustomcdn.net/react@1`);
+      expect(indexFile).toContain(`https://mycustomcdn.net/lodash@4`);
+    });
+  });
+
   describe('WHEN building a esm-view specifying a dependency to not being rewritten', () => {
     beforeAll(async () => {
       await modular('build sample-esm-view', {
