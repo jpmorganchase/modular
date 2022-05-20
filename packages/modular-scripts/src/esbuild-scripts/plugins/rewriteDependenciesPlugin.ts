@@ -3,6 +3,7 @@ import type { Dependency } from '@schemastore/package';
 
 export function createRewriteDependenciesPlugin(
   externalDependencies: Dependency,
+  externalResolutions: Dependency,
   target?: string[],
 ): esbuild.Plugin {
   const externalCdnTemplate =
@@ -10,10 +11,20 @@ export function createRewriteDependenciesPlugin(
     'https://cdn.skypack.dev/[name]@[version]';
 
   const importMap: Map<string, string> = new Map(
-    Object.entries(externalDependencies).map(([name, version]) => [
-      name,
-      externalCdnTemplate.replace('[name]', name).replace('[version]', version),
-    ]),
+    Object.entries(externalDependencies).map(([name, version]) => {
+      if (!externalResolutions[name]) {
+        throw new Error(
+          `Dependency ${name} found in package.json but not in lockfile. Have you installed your dependencies?`,
+        );
+      }
+      return [
+        name,
+        externalCdnTemplate
+          .replace('[name]', name)
+          .replace('[version]', version ?? externalResolutions[name])
+          .replace('[resolution]', externalResolutions[name]),
+      ];
+    }),
   );
 
   const dependencyRewritePlugin: esbuild.Plugin = {

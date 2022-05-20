@@ -70,9 +70,12 @@ async function start(packageName: string): Promise<void> {
     process.env.USE_MODULAR_ESBUILD &&
     process.env.USE_MODULAR_ESBUILD === 'true';
 
-  const packageDependencies = await getPackageDependencies(target);
+  const { manifest: packageDependencies, resolutions: packageResolutions } =
+    await getPackageDependencies(target);
   const { external: externalDependencies, bundled: bundledDependencies } =
     filterDependencies(packageDependencies, !isEsmView);
+  const { external: externalResolutions, bundled: bundledResolutions } =
+    filterDependencies(packageResolutions, !isEsmView);
 
   // If you want to use webpack then we'll always use webpack. But if you've indicated
   // you want esbuild - then we'll switch you to the new fancy world.
@@ -80,7 +83,12 @@ async function start(packageName: string): Promise<void> {
     const { default: startEsbuildApp } = await import(
       './esbuild-scripts/start'
     );
-    await startEsbuildApp(target, !isEsmView, externalDependencies);
+    await startEsbuildApp(
+      target,
+      !isEsmView,
+      externalDependencies,
+      externalResolutions,
+    );
   } else {
     const startScript = require.resolve(
       'modular-scripts/react-scripts/scripts/start.js',
@@ -105,6 +113,10 @@ async function start(packageName: string): Promise<void> {
         MODULAR_PACKAGE_DEPS: JSON.stringify({
           externalDependencies,
           bundledDependencies,
+        }),
+        MODULAR_PACKAGE_RESOLUTIONS: JSON.stringify({
+          externalResolutions,
+          bundledResolutions,
         }),
       },
     });
