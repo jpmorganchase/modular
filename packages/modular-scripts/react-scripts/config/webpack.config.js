@@ -468,7 +468,6 @@ module.exports = function (webpackEnv) {
               exclude: cssModuleRegex,
               use: [
                 function (info) {
-                  console.log({ info });
                   return {
                     loader: require.resolve('./CDNAssetLoader'),
                     options: { info, dependencyMap },
