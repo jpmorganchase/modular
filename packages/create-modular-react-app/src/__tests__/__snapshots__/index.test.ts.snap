@@ -1,0 +1,449 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`create-modular-react-app WHEN it sets up a project with prefer Offline SHOULD setup an app package.json correctly: 
+        Object {
+          "author": "?",
+          "dependencies": Object {},
+          "modular": Object {
+            "type": "app",
+          },
+          "name": "app",
+          "private": true,
+          "version": "0.1.0",
+        }
+       1`] = `
+Object {
+  "author": "?",
+  "modular": Object {
+    "type": "app",
+  },
+  "name": "app",
+  "private": true,
+  "version": "1.0.0",
+}
+`;
+
+exports[`create-modular-react-app WHEN it sets up a project with prefer Offline SHOULD setup an package.json correctly: 
+        Object {
+          "author": "?",
+          "browserslist": Object {
+            "development": Array [
+              "last 1 chrome version",
+              "last 1 firefox version",
+              "last 1 safari version",
+            ],
+            "production": Array [
+              ">0.2%",
+              "not dead",
+              "not op_mini all",
+            ],
+          },
+          "dependencies": Object {
+            "@testing-library/dom": "?",
+            "@testing-library/jest-dom": "?",
+            "@testing-library/react": "?",
+            "@testing-library/user-event": "?",
+            "@types/jest": "?",
+            "@types/node": "?",
+            "@types/react": "?",
+            "@types/react-dom": "?",
+            "eslint-config-modular-app": "?",
+            "modular-scripts": "?",
+            "prettier": "?",
+            "react": "?",
+            "react-dom": "?",
+            "typescript": "?",
+          },
+          "eslintConfig": Object {
+            "extends": "modular-app",
+          },
+          "license": "MIT",
+          "main": "index.js",
+          "modular": Object {
+            "type": "root",
+          },
+          "name": "test-repo",
+          "prettier": Object {
+            "printWidth": 80,
+            "proseWrap": "always",
+            "singleQuote": true,
+            "trailingComma": "all",
+          },
+          "private": true,
+          "scripts": Object {
+            "build": "modular build",
+            "lint": "eslint . --ext .js,.ts,.tsx",
+            "prettier": "prettier --write .",
+            "start": "modular start",
+            "test": "modular test",
+          },
+          "version": "1.0.0",
+          "workspaces": Array [
+            "packages/**",
+          ],
+        }
+       1`] = `
+Object {
+  "author": "?",
+  "browserslist": Object {
+    "development": Array [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version",
+    ],
+    "production": Array [
+      ">0.2%",
+      "not dead",
+      "not op_mini all",
+    ],
+  },
+  "dependencies": Object {
+    "@testing-library/dom": "?",
+    "@testing-library/jest-dom": "?",
+    "@testing-library/react": "?",
+    "@testing-library/user-event": "?",
+    "@types/jest": "?",
+    "@types/node": "?",
+    "@types/react": "?",
+    "@types/react-dom": "?",
+    "eslint-config-modular-app": "?",
+    "modular-scripts": "?",
+    "modular-template-app": "?",
+    "prettier": "?",
+    "react": "?",
+    "react-dom": "?",
+    "typescript": "?",
+  },
+  "eslintConfig": Object {
+    "extends": "modular-app",
+  },
+  "license": "MIT",
+  "main": "index.js",
+  "modular": Object {
+    "type": "root",
+  },
+  "name": "test-repo",
+  "prettier": Object {
+    "printWidth": 80,
+    "proseWrap": "always",
+    "singleQuote": true,
+    "trailingComma": "all",
+  },
+  "private": true,
+  "scripts": Object {
+    "build": "modular build",
+    "lint": "eslint . --ext .js,.ts,.tsx",
+    "prettier": "prettier --write .",
+    "start": "modular start",
+    "test": "modular test",
+  },
+  "version": "1.0.0",
+  "workspaces": Array [
+    "packages/**",
+  ],
+}
+`;
+
+exports[`create-modular-react-app WHEN it sets up a project with prefer Offline should create a project with prefer offline: 
+        "test-repo
+        ├─ .editorconfig #1p4gvuw
+        ├─ .eslintignore #1ot2bpo
+        ├─ .gitignore #175wbq
+        ├─ .prettierignore #10uqwgj
+        ├─ .vscode
+        │  ├─ extensions.json #1i4584r
+        │  ├─ launch.json #1kk1omt
+        │  └─ settings.json #xes41c
+        ├─ .yarnrc #1orkcoz
+        ├─ README.md #1nksyzj
+        ├─ modular
+        │  ├─ setupEnvironment.ts #m0s4vb
+        │  └─ setupTests.ts #bnjknz
+        ├─ package.json
+        ├─ packages
+        │  ├─ README.md #14bthrh
+        │  └─ app
+        │     ├─ package.json
+        │     ├─ public
+        │     │  ├─ favicon.ico #6pu3rg
+        │     │  ├─ index.html #1m6toxd
+        │     │  ├─ logo192.png #1nez7vk
+        │     │  ├─ logo512.png #1hwqvcc
+        │     │  ├─ manifest.json #19gah8o
+        │     │  └─ robots.txt #1sjb8b3
+        │     ├─ src
+        │     │  ├─ App.css #1o0zosm
+        │     │  ├─ App.tsx #c80ven
+        │     │  ├─ __tests__
+        │     │  │  └─ App.test.tsx #16urcos
+        │     │  ├─ index.css #o7sk21
+        │     │  ├─ index.tsx #zdn6mw
+        │     │  ├─ logo.svg #1okqmlj
+        │     │  └─ react-app-env.d.ts #t4ygcy
+        │     └─ tsconfig.json #6rw46b
+        ├─ tsconfig.json #1h72lkd
+        └─ yarn.lock"
+       1`] = `
+"test-repo
+├─ .editorconfig #1p4gvuw
+├─ .eslintignore #1ot2bpo
+├─ .gitignore #175wbq
+├─ .prettierignore #10uqwgj
+├─ .vscode
+│  ├─ extensions.json #1i4584r
+│  ├─ launch.json #1kk1omt
+│  └─ settings.json #xes41c
+├─ .yarnrc #1orkcoz
+├─ README.md #1nksyzj
+├─ modular
+│  ├─ setupEnvironment.ts #m0s4vb
+│  └─ setupTests.ts #bnjknz
+├─ package.json
+├─ packages
+│  ├─ README.md #14bthrh
+│  └─ app
+│     ├─ package.json
+│     ├─ public
+│     │  ├─ favicon.ico #6pu3rg
+│     │  ├─ index.html #1m6toxd
+│     │  ├─ logo192.png #1nez7vk
+│     │  ├─ logo512.png #1hwqvcc
+│     │  ├─ manifest.json #19gah8o
+│     │  └─ robots.txt #1sjb8b3
+│     ├─ src
+│     │  ├─ App.css #1o0zosm
+│     │  ├─ App.tsx #c80ven
+│     │  ├─ __tests__
+│     │  │  └─ App.test.tsx #16urcos
+│     │  ├─ index.css #o7sk21
+│     │  ├─ index.tsx #zdn6mw
+│     │  ├─ logo.svg #1okqmlj
+│     │  └─ react-app-env.d.ts #t4ygcy
+│     └─ tsconfig.json #6rw46b
+├─ tsconfig.json #1h72lkd
+└─ yarn.lock"
+`;
+
+exports[`create-modular-react-app WHEN setting a project with defaults Sets up an app package.json correctly: 
+          Object {
+            "author": "?",
+            "dependencies": Object {},
+            "modular": Object {
+              "type": "app",
+            },
+            "name": "app",
+            "private": true,
+            "version": "0.1.0",
+          }
+         1`] = `
+Object {
+  "author": "?",
+  "modular": Object {
+    "type": "app",
+  },
+  "name": "app",
+  "private": true,
+  "version": "1.0.0",
+}
+`;
+
+exports[`create-modular-react-app WHEN setting a project with defaults Sets up the package.json correctly: 
+          Object {
+            "author": "?",
+            "browserslist": Object {
+              "development": Array [
+                "last 1 chrome version",
+                "last 1 firefox version",
+                "last 1 safari version",
+              ],
+              "production": Array [
+                ">0.2%",
+                "not dead",
+                "not op_mini all",
+              ],
+            },
+            "dependencies": Object {
+              "@testing-library/dom": "?",
+              "@testing-library/jest-dom": "?",
+              "@testing-library/react": "?",
+              "@testing-library/user-event": "?",
+              "@types/jest": "?",
+              "@types/node": "?",
+              "@types/react": "?",
+              "@types/react-dom": "?",
+              "eslint-config-modular-app": "?",
+              "modular-scripts": "?",
+              "prettier": "?",
+              "react": "?",
+              "react-dom": "?",
+              "typescript": "?",
+            },
+            "eslintConfig": Object {
+              "extends": "modular-app",
+            },
+            "license": "MIT",
+            "main": "index.js",
+            "modular": Object {
+              "type": "root",
+            },
+            "name": "test-repo",
+            "prettier": Object {
+              "printWidth": 80,
+              "proseWrap": "always",
+              "singleQuote": true,
+              "trailingComma": "all",
+            },
+            "private": true,
+            "scripts": Object {
+              "build": "modular build",
+              "lint": "eslint . --ext .js,.ts,.tsx",
+              "prettier": "prettier --write .",
+              "start": "modular start",
+              "test": "modular test",
+            },
+            "version": "1.0.0",
+            "workspaces": Array [
+              "packages/**",
+            ],
+          }
+         1`] = `
+Object {
+  "author": "?",
+  "browserslist": Object {
+    "development": Array [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version",
+    ],
+    "production": Array [
+      ">0.2%",
+      "not dead",
+      "not op_mini all",
+    ],
+  },
+  "dependencies": Object {
+    "@testing-library/dom": "?",
+    "@testing-library/jest-dom": "?",
+    "@testing-library/react": "?",
+    "@testing-library/user-event": "?",
+    "@types/jest": "?",
+    "@types/node": "?",
+    "@types/react": "?",
+    "@types/react-dom": "?",
+    "eslint-config-modular-app": "?",
+    "modular-scripts": "?",
+    "modular-template-app": "?",
+    "prettier": "?",
+    "react": "?",
+    "react-dom": "?",
+    "typescript": "?",
+  },
+  "eslintConfig": Object {
+    "extends": "modular-app",
+  },
+  "license": "MIT",
+  "main": "index.js",
+  "modular": Object {
+    "type": "root",
+  },
+  "name": "test-repo",
+  "prettier": Object {
+    "printWidth": 80,
+    "proseWrap": "always",
+    "singleQuote": true,
+    "trailingComma": "all",
+  },
+  "private": true,
+  "scripts": Object {
+    "build": "modular build",
+    "lint": "eslint . --ext .js,.ts,.tsx",
+    "prettier": "prettier --write .",
+    "start": "modular start",
+    "test": "modular test",
+  },
+  "version": "1.0.0",
+  "workspaces": Array [
+    "packages/**",
+  ],
+}
+`;
+
+exports[`create-modular-react-app WHEN setting a project with defaults should create a project with defaults: 
+          "test-repo
+          ├─ .editorconfig #1p4gvuw
+          ├─ .eslintignore #1ot2bpo
+          ├─ .gitignore #175wbq
+          ├─ .prettierignore #10uqwgj
+          ├─ .vscode
+          │  ├─ extensions.json #1i4584r
+          │  ├─ launch.json #1kk1omt
+          │  └─ settings.json #xes41c
+          ├─ .yarnrc #1orkcoz
+          ├─ README.md #1nksyzj
+          ├─ modular
+          │  ├─ setupEnvironment.ts #m0s4vb
+          │  └─ setupTests.ts #bnjknz
+          ├─ package.json
+          ├─ packages
+          │  ├─ README.md #14bthrh
+          │  └─ app
+          │     ├─ package.json
+          │     ├─ public
+          │     │  ├─ favicon.ico #6pu3rg
+          │     │  ├─ index.html #1m6toxd
+          │     │  ├─ logo192.png #1nez7vk
+          │     │  ├─ logo512.png #1hwqvcc
+          │     │  ├─ manifest.json #19gah8o
+          │     │  └─ robots.txt #1sjb8b3
+          │     ├─ src
+          │     │  ├─ App.css #1o0zosm
+          │     │  ├─ App.tsx #c80ven
+          │     │  ├─ __tests__
+          │     │  │  └─ App.test.tsx #16urcos
+          │     │  ├─ index.css #o7sk21
+          │     │  ├─ index.tsx #zdn6mw
+          │     │  ├─ logo.svg #1okqmlj
+          │     │  └─ react-app-env.d.ts #t4ygcy
+          │     └─ tsconfig.json #6rw46b
+          ├─ tsconfig.json #1h72lkd
+          └─ yarn.lock"
+         1`] = `
+"test-repo
+├─ .editorconfig #1p4gvuw
+├─ .eslintignore #1ot2bpo
+├─ .gitignore #175wbq
+├─ .prettierignore #10uqwgj
+├─ .vscode
+│  ├─ extensions.json #1i4584r
+│  ├─ launch.json #1kk1omt
+│  └─ settings.json #xes41c
+├─ .yarnrc #1orkcoz
+├─ README.md #1nksyzj
+├─ modular
+│  ├─ setupEnvironment.ts #m0s4vb
+│  └─ setupTests.ts #bnjknz
+├─ package.json
+├─ packages
+│  ├─ README.md #14bthrh
+│  └─ app
+│     ├─ package.json
+│     ├─ public
+│     │  ├─ favicon.ico #6pu3rg
+│     │  ├─ index.html #1m6toxd
+│     │  ├─ logo192.png #1nez7vk
+│     │  ├─ logo512.png #1hwqvcc
+│     │  ├─ manifest.json #19gah8o
+│     │  └─ robots.txt #1sjb8b3
+│     ├─ src
+│     │  ├─ App.css #1o0zosm
+│     │  ├─ App.tsx #c80ven
+│     │  ├─ __tests__
+│     │  │  └─ App.test.tsx #16urcos
+│     │  ├─ index.css #o7sk21
+│     │  ├─ index.tsx #zdn6mw
+│     │  ├─ logo.svg #1okqmlj
+│     │  └─ react-app-env.d.ts #t4ygcy
+│     └─ tsconfig.json #6rw46b
+├─ tsconfig.json #1h72lkd
+└─ yarn.lock"
+`;

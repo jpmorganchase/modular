@@ -11,16 +11,6 @@ import type { Dependency } from '@schemastore/package';
 
 type FileType = '.css' | '.js';
 
-export const indexFile = `
-<!DOCTYPE html>
-<html>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="static/js/_trampoline.js"></script>
-  </body>
-</html>
-`;
-
 export async function createViewTrampoline(
   fileName: string,
   srcPath: string,
@@ -64,11 +54,11 @@ ReactDOM.render(<Component />, DOMRoot);`;
       createRewriteDependenciesPlugin(
         {
           ...dependencies,
-          'react-dom': dependencies.react,
+          'react-dom': dependencies['react-dom'] ?? dependencies.react,
         },
         {
           ...resolutions,
-          'react-dom': resolutions.react,
+          'react-dom': resolutions['react-dom'] ?? resolutions.react,
         },
       ),
     ],
@@ -102,29 +92,89 @@ export function getEntryPoint(
   }
 }
 
-export async function createIndex(
-  paths: Paths,
-  metafile: esbuild.Metafile | undefined,
-  replacements: Record<string, string>,
-  includeRuntime: boolean,
-  indexContent?: string,
-): Promise<string> {
+export const indexFile = `
+<!DOCTYPE html>
+<html>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+`;
+
+export async function createIndex({
+  paths,
+  metafile,
+  replacements,
+  includeRuntime,
+  indexContent,
+  includeTrampoline,
+}: {
+  paths: Paths;
+  metafile: esbuild.Metafile | undefined;
+  replacements: Record<string, string>;
+  includeRuntime: boolean;
+  indexContent?: string;
+  includeTrampoline?: boolean;
+}): Promise<string> {
   const index =
     indexContent ?? (await fs.readFile(paths.appHtml, { encoding: 'utf-8' }));
-  const page = parse5.parse(index);
-  const html = page.childNodes.find(
-    (node) => node.nodeName === 'html',
-  ) as parse5.Element;
-  const head = html.childNodes.find(
-    (node) => node.nodeName === 'head',
-  ) as parse5.Element;
-
   const cssEntryPoint = metafile
     ? getEntryPoint(paths, metafile, '.css')
     : undefined;
   const jsEntryPoint = metafile
     ? getEntryPoint(paths, metafile, '.js')
     : undefined;
+
+  return compileIndex({
+    indexContent: index,
+    cssEntryPoint,
+    jsEntryPoint,
+    replacements,
+    includeRuntime,
+    includeTrampoline,
+  });
+}
+
+export function createSyntheticIndex({
+  cssEntryPoint,
+  replacements,
+}: {
+  cssEntryPoint: string | undefined;
+  replacements: Record<string, string>;
+}): string {
+  return compileIndex({
+    indexContent: indexFile,
+    cssEntryPoint,
+    replacements,
+    includeTrampoline: true,
+  });
+}
+
+function compileIndex({
+  indexContent,
+  cssEntryPoint,
+  jsEntryPoint,
+  replacements,
+  includeRuntime,
+  includeTrampoline,
+}: {
+  indexContent: string;
+  cssEntryPoint?: string;
+  jsEntryPoint?: string;
+  replacements: Record<string, string>;
+  includeRuntime?: boolean;
+  includeTrampoline?: boolean;
+}) {
+  const page = parse5.parse(indexContent);
+  const html = page.childNodes.find(
+    (node) => node.nodeName === 'html',
+  ) as parse5.Element;
+  const head = html.childNodes.find(
+    (node) => node.nodeName === 'head',
+  ) as parse5.Element;
+  const body = html.childNodes.find(
+    (node) => node.nodeName === 'body',
+  ) as parse5.Element;
 
   if (cssEntryPoint) {
     head.childNodes.push(
@@ -133,14 +183,19 @@ export async function createIndex(
       ).childNodes,
     );
   }
-  const body = html.childNodes.find(
-    (node) => node.nodeName === 'body',
-  ) as parse5.Element;
 
   if (jsEntryPoint) {
     body.childNodes.push(
       ...parse5.parseFragment(
         `<script type="module" src="%PUBLIC_URL%/${jsEntryPoint}"></script>`,
+      ).childNodes,
+    );
+  }
+
+  if (includeTrampoline) {
+    body.childNodes.push(
+      ...parse5.parseFragment(
+        `<script type="module" src="%PUBLIC_URL%/static/js/_trampoline.js"></script>`,
       ).childNodes,
     );
   }

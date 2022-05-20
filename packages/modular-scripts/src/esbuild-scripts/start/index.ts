@@ -94,10 +94,7 @@ class DevServer {
 
     this.express.use(this.handleStaticAsset);
     this.isApp ||
-      this.express.get(
-        '/static/js/_trampoline.js',
-        this.handleTrampoline as RequestHandler,
-      );
+      this.express.get('/static/js/_trampoline.js', this.handleTrampoline);
     this.express.use('/static/js', this.handleStaticAsset);
     this.express.use(this.handleRuntimeAsset);
 
@@ -271,21 +268,29 @@ class DevServer {
 
     res.writeHead(200);
     if (this.isApp) {
-      res.end(await createIndex(this.paths, this.metafile, this.env.raw, true));
+      res.end(
+        await createIndex({
+          paths: this.paths,
+          metafile: this.metafile,
+          replacements: this.env.raw,
+          includeRuntime: true,
+        }),
+      );
     } else {
       res.end(
-        await createIndex(
-          this.paths,
-          this.metafile,
-          this.env.raw,
-          true,
-          indexFile,
-        ),
+        await createIndex({
+          paths: this.paths,
+          metafile: this.metafile,
+          replacements: this.env.raw,
+          includeRuntime: true,
+          indexContent: indexFile,
+          includeTrampoline: true,
+        }),
       );
     }
   };
 
-  handleTrampoline = async (
+  handleTrampoline: RequestHandler = async (
     _: http.IncomingMessage,
     res: http.ServerResponse,
   ) => {
