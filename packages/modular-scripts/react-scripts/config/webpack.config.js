@@ -102,8 +102,18 @@ module.exports = function (webpackEnv) {
   const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
 
   // common function to get style loaders
-  const getStyleLoaders = (cssOptions, preProcessor) => {
+  const getStyleLoaders = (cssOptions, preProcessor, includeEsmLoader) => {
     const loaders = [
+      // This loader translates external css dependencies if we're using a CDN
+      // Since it's a pitching loader, it's important that it stays at the top
+      // excluding all the others in the chain if it's triggered
+      includeEsmLoader &&
+        function externalStyleLoader(info) {
+          return {
+            loader: require.resolve('./cdnStyleLoader'),
+            options: { info, dependencyMap },
+          };
+        },
       isEnvDevelopment && require.resolve('style-loader'),
       isEnvProduction && {
         loader: MiniCssExtractPlugin.loader,
@@ -160,6 +170,7 @@ module.exports = function (webpackEnv) {
         },
       );
     }
+
     return loaders;
   };
 
@@ -466,20 +477,17 @@ module.exports = function (webpackEnv) {
             {
               test: cssRegex,
               exclude: cssModuleRegex,
-              use: [
-                function (info) {
-                  return {
-                    loader: require.resolve('./CDNAssetLoader'),
-                    options: { info, dependencyMap },
-                  };
-                },
-                ...getStyleLoaders({
+              use: getStyleLoaders(
+                {
                   importLoaders: 1,
                   sourceMap: isEnvProduction
                     ? shouldUseSourceMap
                     : isEnvDevelopment,
-                }),
-              ],
+                },
+                undefined,
+                true,
+              ),
+
               // Don't consider CSS imports dead code even if the
               // containing package claims to have no side effects.
               // Remove this when webpack adds a warning or an error for this.
