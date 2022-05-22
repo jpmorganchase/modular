@@ -21,9 +21,7 @@ async function transform() {
 async function modularAddView(name: string) {
   return await execa(
     'yarnpkg',
-    `modular add ${name} --unstable-type view --unstable-name ${name}`.split(
-      ' ',
-    ),
+    `modular add ${name} --unstable-type view`.split(' '),
     {
       cleanup: true,
       cwd: modularRoot,
