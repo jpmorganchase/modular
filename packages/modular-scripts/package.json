@@ -1,6 +1,6 @@
 {
   "name": "modular-scripts",
-  "version": "3.0.2",
+  "version": "3.1.0",
   "license": "Apache-2.0",
   "bin": {
     "modular": "dist-cjs/cli.js"
