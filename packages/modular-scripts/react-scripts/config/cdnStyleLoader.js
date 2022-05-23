@@ -18,11 +18,9 @@ module.exports.pitch = function () {
   const dependency = dependencyMap[descriptionData.name];
 
   if (dependency) {
-    console.log({ info, dependency, context: this.context });
     // The submodule bit is the relative path between the location of the module and the resolved path
     const submodule = path.relative(this.context, info.realResource);
     const dependencyUrl = `${dependency}${submodule ? `/${submodule}` : ''}`;
-    console.log(`Rewriting css import to ${dependencyUrl}`);
     return generateStyleInjector(dependencyUrl);
   }
 };
