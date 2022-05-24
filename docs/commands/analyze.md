@@ -46,7 +46,7 @@ For this reason, `resolution` versions are strictly exact, while `manifest`
 versions can contain any admissible type of
 [ranged semver](https://github.com/npm/node-semver#versions). `manifest`
 versions are set to the first successful lookup from the following sequence of
-lookup locations::
+lookup locations:
 
 1. The package's `package.json` `dependencies` field
 1. The package's `package.json` `devDependencies` field
