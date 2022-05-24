@@ -195,8 +195,7 @@ describe('modular-scripts', () => {
         stdio: 'inherit',
         env: {
           USE_MODULAR_ESBUILD: 'true',
-          EXTERNAL_CDN_TEMPLATE:
-            'https://mycustomcdn.net/[name]?version=[version]',
+          EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
         },
       });
     });
@@ -209,9 +208,9 @@ describe('modular-scripts', () => {
         ├─ package.json
         └─ static
            └─ js
-              ├─ _trampoline.js #p8m8p8
-              ├─ index-CWSY44GF.js #d3ivus
-              └─ index-CWSY44GF.js.map #u4q009"
+              ├─ _trampoline.js #1ty1plt
+              ├─ index-L37UKP56.js #qx2hs8
+              └─ index-L37UKP56.js.map #qbs4qx"
       `);
     });
 
@@ -228,24 +227,20 @@ describe('modular-scripts', () => {
       ).toString();
 
       const indexFile = (
-        await fs.readFile(path.join(baseDir, 'index-CWSY44GF.js'))
+        await fs.readFile(path.join(baseDir, 'index-L37UKP56.js'))
       ).toString();
       expect(
         prettier.format(indexFile, {
           filepath: 'index-F6YQ237K.js',
         }),
       ).toMatchSnapshot();
-      expect(trampolineFile).toContain(
-        `https://mycustomcdn.net/react?version=`,
-      );
-      expect(trampolineFile).toContain(
-        `https://mycustomcdn.net/react-dom?version=`,
-      );
-      expect(indexFile).toContain(`https://mycustomcdn.net/react?version=`);
+      expect(trampolineFile).toContain(`https://mycustomcdn.net/react@1`);
+      expect(trampolineFile).toContain(`https://mycustomcdn.net/react-dom@1`);
+      expect(indexFile).toContain(`https://mycustomcdn.net/react@1`);
     });
   });
 
-  describe('WHEN building a esm-view with various kinds of package dependencies', () => {
+  describe('WHEN building a esm-view with various kinds of package dependencies with esbuild', () => {
     beforeAll(async () => {
       await fs.copyFile(
         path.join(__dirname, 'TestViewPackages.test-tsx'),
@@ -267,6 +262,7 @@ describe('modular-scripts', () => {
           dependencies: {
             lodash: '^4.17.21',
             'lodash.merge': '^4.6.2',
+            'regular-table': '^0.5.6',
           },
         }),
       );
@@ -280,8 +276,7 @@ describe('modular-scripts', () => {
         stdio: 'inherit',
         env: {
           USE_MODULAR_ESBUILD: 'true',
-          EXTERNAL_CDN_TEMPLATE:
-            'https://mycustomcdn.net/[name]?version=[version]',
+          EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
         },
       });
     });
@@ -294,9 +289,9 @@ describe('modular-scripts', () => {
         ├─ package.json
         └─ static
            └─ js
-              ├─ _trampoline.js #gf8drx
-              ├─ index-5PFA727O.js #ciz6lx
-              └─ index-5PFA727O.js.map #np8r25"
+              ├─ _trampoline.js #1wxf8ip
+              ├─ index-CWZPL7BC.js #imt5bw
+              └─ index-CWZPL7BC.js.map #agat27"
       `);
     });
 
@@ -310,19 +305,97 @@ describe('modular-scripts', () => {
       );
 
       const indexFile = (
-        await fs.readFile(path.join(baseDir, 'index-5PFA727O.js'))
+        await fs.readFile(path.join(baseDir, 'index-CWZPL7BC.js'))
       ).toString();
       expect(
         prettier.format(indexFile, {
           filepath: 'index-F6YQ237K.js',
         }),
       ).toMatchSnapshot();
-      expect(indexFile).toContain(`https://mycustomcdn.net/react?version=`);
+      expect(indexFile).toContain(`https://mycustomcdn.net/react@1`);
+      expect(indexFile).toContain(`https://mycustomcdn.net/lodash@^4.17.21`);
       expect(indexFile).toContain(
-        `https://mycustomcdn.net/lodash?version=^4.17.21`,
+        `https://mycustomcdn.net/lodash.merge@^4.6.2`,
       );
+    });
+  });
+
+  describe('WHEN building a esm-view with various kinds of package dependencies with webpack', () => {
+    beforeAll(async () => {
+      await fs.copyFile(
+        path.join(__dirname, 'TestViewPackages.test-tsx'),
+        path.join(packagesPath, targetedView, 'src', 'index.tsx'),
+      );
+
+      const packageJsonPath = path.join(
+        packagesPath,
+        targetedView,
+        'package.json',
+      );
+      const packageJson = (await fs.readJSON(
+        packageJsonPath,
+      )) as CoreProperties;
+
+      await fs.writeJSON(
+        packageJsonPath,
+        Object.assign(packageJson, {
+          dependencies: {
+            lodash: '^4.17.21',
+            'lodash.merge': '^4.6.2',
+            'regular-table': '^0.5.6',
+          },
+        }),
+      );
+
+      await execa('yarnpkg', [], {
+        cwd: modularRoot,
+        cleanup: true,
+      });
+
+      await modular('build sample-esm-view', {
+        stdio: 'inherit',
+        env: {
+          EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
+        },
+      });
+    });
+
+    it('THEN outputs the correct directory structure', () => {
+      expect(tree(path.join(modularRoot, 'dist', 'sample-esm-view')))
+        .toMatchInlineSnapshot(`
+        "sample-esm-view
+        ├─ asset-manifest.json #17u5ev2
+        ├─ index.html #17sfbiz
+        ├─ package.json
+        └─ static
+           └─ js
+              ├─ _trampoline.js #16jj7re
+              ├─ main.55a7c313.js #1gya3xe
+              └─ main.55a7c313.js.map #168abd0"
+      `);
+    });
+
+    it('THEN rewrites the dependencies', async () => {
+      const baseDir = path.join(
+        modularRoot,
+        'dist',
+        'sample-esm-view',
+        'static',
+        'js',
+      );
+
+      const indexFile = (
+        await fs.readFile(path.join(baseDir, 'main.55a7c313.js'))
+      ).toString();
+      expect(
+        prettier.format(indexFile, {
+          filepath: 'index-F6YQ237K.js',
+        }),
+      ).toMatchSnapshot();
+      expect(indexFile).toContain(`https://mycustomcdn.net/react@1`);
+      expect(indexFile).toContain(`https://mycustomcdn.net/lodash@^4.17.21`);
       expect(indexFile).toContain(
-        `https://mycustomcdn.net/lodash.merge?version=^4.6.2`,
+        `https://mycustomcdn.net/lodash.merge@^4.6.2`,
       );
     });
   });
@@ -349,6 +422,7 @@ describe('modular-scripts', () => {
           dependencies: {
             lodash: '^4.17.21',
             'lodash.merge': '^4.6.2',
+            'regular-table': '^0.5.6',
           },
         }),
       );
@@ -375,9 +449,9 @@ describe('modular-scripts', () => {
         ├─ package.json
         └─ static
            └─ js
-              ├─ _trampoline.js #1j54e9x
-              ├─ index-IDYQ56WQ.js #1g1vpil
-              └─ index-IDYQ56WQ.js.map #l9p9hs"
+              ├─ _trampoline.js #uiztvx
+              ├─ index-REREBP7K.js #1tmiw85
+              └─ index-REREBP7K.js.map #sk95di"
       `);
     });
 
@@ -391,7 +465,7 @@ describe('modular-scripts', () => {
       );
 
       const indexFile = (
-        await fs.readFile(path.join(baseDir, 'index-IDYQ56WQ.js'))
+        await fs.readFile(path.join(baseDir, 'index-REREBP7K.js'))
       ).toString();
       expect(
         prettier.format(indexFile, {
@@ -425,6 +499,7 @@ describe('modular-scripts', () => {
           dependencies: {
             lodash: '^4.17.21',
             'lodash.merge': '^4.6.2',
+            'regular-table': '^0.5.6',
           },
         }),
       );
@@ -446,14 +521,14 @@ describe('modular-scripts', () => {
       expect(tree(path.join(modularRoot, 'dist', 'sample-esm-view')))
         .toMatchInlineSnapshot(`
         "sample-esm-view
-        ├─ asset-manifest.json #1pem6dg
+        ├─ asset-manifest.json #1knd7
         ├─ index.html #17sfbiz
         ├─ package.json
         └─ static
            └─ js
-              ├─ _trampoline.js #1fc8fjx
-              ├─ main.219bc98b.js #g4nmwx
-              └─ main.219bc98b.js.map #1cp7wwt"
+              ├─ _trampoline.js #1r17hw8
+              ├─ main.78d8ce40.js #v46m01
+              └─ main.78d8ce40.js.map #7oa3bn"
       `);
     });
 
@@ -467,7 +542,7 @@ describe('modular-scripts', () => {
       );
 
       const indexFile = (
-        await fs.readFile(path.join(baseDir, 'main.219bc98b.js'))
+        await fs.readFile(path.join(baseDir, 'main.78d8ce40.js'))
       ).toString();
       expect(
         prettier.format(indexFile, {
@@ -485,8 +560,7 @@ describe('modular-scripts', () => {
         stdio: 'inherit',
         env: {
           USE_MODULAR_ESBUILD: 'true',
-          EXTERNAL_CDN_TEMPLATE:
-            'https://mycustomcdn.net/[name]?version=[version]',
+          EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
           EXTERNAL_BLOCK_LIST: 'lodash,lodash.merge',
         },
       });
@@ -500,9 +574,9 @@ describe('modular-scripts', () => {
         ├─ package.json
         └─ static
            └─ js
-              ├─ _trampoline.js #15e3mk0
-              ├─ index-66YWVUWP.js #b5zj9
-              └─ index-66YWVUWP.js.map #1opvigk"
+              ├─ _trampoline.js #17ucrp2
+              ├─ index-XEPSSNSR.js #18as3s5
+              └─ index-XEPSSNSR.js.map #3rxdut"
       `);
     });
 
@@ -516,20 +590,16 @@ describe('modular-scripts', () => {
       );
 
       const indexFile = (
-        await fs.readFile(path.join(baseDir, 'index-66YWVUWP.js'))
+        await fs.readFile(path.join(baseDir, 'index-XEPSSNSR.js'))
       ).toString();
       expect(
         prettier.format(indexFile, {
           filepath: 'index-F6YQ237K.js',
         }),
       ).toMatchSnapshot();
-      expect(indexFile).toContain(`https://mycustomcdn.net/react?version=`);
-      expect(indexFile).not.toContain(
-        `https://mycustomcdn.net/lodash?version=`,
-      );
-      expect(indexFile).not.toContain(
-        `https://mycustomcdn.net/lodash.merge?version=`,
-      );
+      expect(indexFile).toContain(`https://mycustomcdn.net/react@`);
+      expect(indexFile).not.toContain(`https://mycustomcdn.net/lodash@`);
+      expect(indexFile).not.toContain(`https://mycustomcdn.net/lodash.merge@`);
     });
 
     it('THEN expects the correct bundledDependencies in package.json', async () => {
@@ -549,8 +619,7 @@ describe('modular-scripts', () => {
         stdio: 'inherit',
         env: {
           USE_MODULAR_ESBUILD: 'true',
-          EXTERNAL_CDN_TEMPLATE:
-            'https://mycustomcdn.net/[name]?version=[version]',
+          EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
           EXTERNAL_BLOCK_LIST: 'lodash*',
         },
       });
@@ -564,9 +633,9 @@ describe('modular-scripts', () => {
         ├─ package.json
         └─ static
            └─ js
-              ├─ _trampoline.js #15e3mk0
-              ├─ index-66YWVUWP.js #b5zj9
-              └─ index-66YWVUWP.js.map #1opvigk"
+              ├─ _trampoline.js #17ucrp2
+              ├─ index-XEPSSNSR.js #18as3s5
+              └─ index-XEPSSNSR.js.map #3rxdut"
       `);
     });
 
@@ -580,20 +649,16 @@ describe('modular-scripts', () => {
       );
 
       const indexFile = (
-        await fs.readFile(path.join(baseDir, 'index-66YWVUWP.js'))
+        await fs.readFile(path.join(baseDir, 'index-XEPSSNSR.js'))
       ).toString();
       expect(
         prettier.format(indexFile, {
           filepath: 'index-F6YQ237K.js',
         }),
       ).toMatchSnapshot();
-      expect(indexFile).toContain(`https://mycustomcdn.net/react?version=`);
-      expect(indexFile).not.toContain(
-        `https://mycustomcdn.net/lodash?version=`,
-      );
-      expect(indexFile).not.toContain(
-        `https://mycustomcdn.net/lodash.merge?version=`,
-      );
+      expect(indexFile).toContain(`https://mycustomcdn.net/react@`);
+      expect(indexFile).not.toContain(`https://mycustomcdn.net/lodash@`);
+      expect(indexFile).not.toContain(`https://mycustomcdn.net/lodash.merge@`);
     });
 
     it('THEN expects the correct bundledDependencies in package.json', async () => {
@@ -613,8 +678,7 @@ describe('modular-scripts', () => {
         stdio: 'inherit',
         env: {
           USE_MODULAR_ESBUILD: 'true',
-          EXTERNAL_CDN_TEMPLATE:
-            'https://mycustomcdn.net/[name]?version=[version]',
+          EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
           EXTERNAL_ALLOW_LIST: 'react*',
         },
       });
@@ -624,13 +688,16 @@ describe('modular-scripts', () => {
       expect(tree(path.join(modularRoot, 'dist', 'sample-esm-view')))
         .toMatchInlineSnapshot(`
         "sample-esm-view
-        ├─ index.html #17sfbiz
+        ├─ index.html #i5rgnz
         ├─ package.json
         └─ static
+           ├─ css
+           │  ├─ index-EF6KSY3N.css #1dws3j4
+           │  └─ index-EF6KSY3N.css.map #1ipj0y2
            └─ js
-              ├─ _trampoline.js #15e3mk0
-              ├─ index-66YWVUWP.js #b5zj9
-              └─ index-66YWVUWP.js.map #1opvigk"
+              ├─ _trampoline.js #1xwy35p
+              ├─ index-LIUI66J3.js #3c96f6
+              └─ index-LIUI66J3.js.map #h3w4jy"
       `);
     });
 
@@ -644,15 +711,11 @@ describe('modular-scripts', () => {
       );
 
       const indexFile = (
-        await fs.readFile(path.join(baseDir, 'index-66YWVUWP.js'))
+        await fs.readFile(path.join(baseDir, 'index-LIUI66J3.js'))
       ).toString();
-      expect(indexFile).toContain(`https://mycustomcdn.net/react?version=`);
-      expect(indexFile).not.toContain(
-        `https://mycustomcdn.net/lodash?version=`,
-      );
-      expect(indexFile).not.toContain(
-        `https://mycustomcdn.net/lodash.merge?version=`,
-      );
+      expect(indexFile).toContain(`https://mycustomcdn.net/react@`);
+      expect(indexFile).not.toContain(`https://mycustomcdn.net/lodash@`);
+      expect(indexFile).not.toContain(`https://mycustomcdn.net/lodash.merge@`);
     });
 
     it('THEN expects the correct bundledDependencies in package.json', async () => {
@@ -662,7 +725,7 @@ describe('modular-scripts', () => {
             path.join(modularRoot, 'dist', 'sample-esm-view', 'package.json'),
           )) as CoreProperties
         ).bundledDependencies,
-      ).toEqual(['lodash', 'lodash.merge']);
+      ).toEqual(['lodash', 'lodash.merge', 'regular-table']);
     });
   });
 
@@ -673,8 +736,7 @@ describe('modular-scripts', () => {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           PUBLIC_URL: '/public/path/',
-          EXTERNAL_CDN_TEMPLATE:
-            'https://mycustomcdn.net/[name]?version=[version]',
+          EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
         },
       });
     });
@@ -687,9 +749,9 @@ describe('modular-scripts', () => {
         ├─ package.json
         └─ static
            └─ js
-              ├─ _trampoline.js #gf8drx
-              ├─ index-5PFA727O.js #19et37v
-              └─ index-5PFA727O.js.map #np8r25"
+              ├─ _trampoline.js #1wxf8ip
+              ├─ index-CWZPL7BC.js #1vkjn5c
+              └─ index-CWZPL7BC.js.map #agat27"
       `);
     });
 
@@ -700,7 +762,7 @@ describe('modular-scripts', () => {
             path.join(modularRoot, 'dist', 'sample-esm-view', 'package.json'),
           )) as CoreProperties
         ).module,
-      ).toEqual('/public/path/static/js/index-5PFA727O.js');
+      ).toEqual('/public/path/static/js/index-CWZPL7BC.js');
     });
   });
   describe('WHEN building a esm-view specifying a PUBLIC_URL and the path is ./', () => {
@@ -710,8 +772,7 @@ describe('modular-scripts', () => {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           PUBLIC_URL: './',
-          EXTERNAL_CDN_TEMPLATE:
-            'https://mycustomcdn.net/[name]?version=[version]',
+          EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
         },
       });
     });
@@ -724,9 +785,9 @@ describe('modular-scripts', () => {
         ├─ package.json
         └─ static
            └─ js
-              ├─ _trampoline.js #gf8drx
-              ├─ index-5PFA727O.js #154xvqn
-              └─ index-5PFA727O.js.map #np8r25"
+              ├─ _trampoline.js #1wxf8ip
+              ├─ index-CWZPL7BC.js #1phjm7s
+              └─ index-CWZPL7BC.js.map #agat27"
       `);
     });
 
@@ -737,7 +798,7 @@ describe('modular-scripts', () => {
             path.join(modularRoot, 'dist', 'sample-esm-view', 'package.json'),
           )) as CoreProperties
         ).module,
-      ).toEqual('./static/js/index-5PFA727O.js');
+      ).toEqual('./static/js/index-CWZPL7BC.js');
     });
   });
 });
