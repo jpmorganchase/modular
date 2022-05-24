@@ -1,6 +1,4 @@
 'use strict';
-const path = require('path');
-
 // This is a pitching loader, which means that it will exclude other loaders if its pitch method returns.
 // pitch methods are evaluated left to right and the correspondent default methods are evaluated later, right to left
 // For this reason, this loader must be first in the chain of other style loaders.
@@ -18,9 +16,12 @@ module.exports.pitch = function () {
   const dependency = dependencyMap[descriptionData.name];
 
   if (dependency) {
-    // The submodule bit is the relative path between the location of the module and the resolved path
-    const submodule = path.relative(this.context, info.realResource);
-    const dependencyUrl = `${dependency}${submodule ? `/${submodule}` : ''}`;
+    // The submodule bit is the relative path in the resolver data. Use URL to normalize paths.
+    const submodule = this._module.resourceResolveData.relativePath;
+    const dependencyPath = new URL(dependency).pathname;
+    const dependencyUrl = submodule
+      ? new URL(`${dependencyPath}/${submodule}`, dependency).href
+      : dependency;
     return generateStyleInjector(dependencyUrl);
   }
 };
