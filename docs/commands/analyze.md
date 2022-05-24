@@ -49,6 +49,6 @@ versions are set to the first successful lookup from the following sequence of
 lookup locations:
 
 1. The package's `package.json` `dependencies` field
-1. The package's `package.json` `devDependencies` field
-1. The root `package.json` `dependencies` field
-1. The root `package.json` `devDependencies` field
+2. The package's `package.json` `devDependencies` field
+3. The root `package.json` `dependencies` field
+4. The root `package.json` `devDependencies` field
