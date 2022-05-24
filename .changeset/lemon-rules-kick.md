@@ -2,4 +2,4 @@
 "modular-scripts": minor
 ---
 
-Add the analyze command
+Add the modular analyze command
