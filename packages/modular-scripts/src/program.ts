@@ -21,11 +21,12 @@ program.version(
 );
 
 program
-  .command('add <package-name>')
-  .description(`Add a new folder into the modular workspace.`)
+  .command('add')
+  .description(`Add a new package into the modular workspace.`)
+  .argument('[package-name]', 'Package name for the package.json')
   .option(
     '--unstable-type <type>',
-    "Type of the folder ('app', 'view', 'package')",
+    "Type of the package ('app', 'view', 'package')",
   )
   .option('--unstable-name <name>', 'Package name for the package.json')
   .option('--template <name>', 'Package name for the package.json')
@@ -40,23 +41,33 @@ program
       packageName: string,
       addOptions: {
         unstableType?: string;
-        unstableName?: string;
         template?: string;
         preferOffline?: boolean;
         verbose?: boolean;
+        unstableName?: string;
       },
     ) => {
       const { default: addPackage } = await import('./addPackage');
       return addPackage({
-        destination: packageName,
+        name: packageName,
         type: addOptions.unstableType,
-        name: addOptions.unstableName,
         template: addOptions.template,
         preferOffline: addOptions.preferOffline,
         verbose: addOptions.verbose,
+        unstableName: addOptions.unstableName,
       });
     },
   );
+
+program
+  .command('analyze <package-name>')
+  .description(`Analyze the dependencies of a package.`)
+  .action(async (packageName: string) => {
+    const { default: analyze } = await import('./analyze');
+    return analyze({
+      target: packageName,
+    });
+  });
 
 program
   .command('build <packages...>')

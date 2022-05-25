@@ -35,6 +35,9 @@ function modular(str: string, opts: Record<string, unknown> = {}) {
 }
 
 function cleanup() {
+  rimraf.sync(path.join(packagesPath, 'node-env-app'));
+  rimraf.sync(path.join(modularRoot, 'dist/node-env-app'));
+
   rimraf.sync(path.join(packagesPath, 'sample-app'));
   rimraf.sync(path.join(modularRoot, 'dist/sample-app'));
 
@@ -52,10 +55,7 @@ afterAll(cleanup);
 
 describe('when working with a NODE_ENV app', () => {
   beforeAll(async () => {
-    await modular(
-      'add node-env-app --unstable-type app --unstable-name node-env-app',
-      { stdio: 'inherit' },
-    );
+    await modular('add node-env-app --unstable-type app', { stdio: 'inherit' });
 
     await fs.writeFile(
       path.join(modularRoot, 'packages', 'node-env-app', 'src', 'index.ts'),
@@ -117,10 +117,9 @@ describe('when working with a NODE_ENV app', () => {
 
 describe('When working with a nested app', () => {
   beforeAll(async () => {
-    await modular(
-      'add scoped/sample-app --unstable-type app --unstable-name @scoped/sample-app',
-      { stdio: 'inherit' },
-    );
+    await modular('add @scoped/sample-app --unstable-type app', {
+      stdio: 'inherit',
+    });
 
     await modular('build @scoped/sample-app', {
       stdio: 'inherit',
@@ -306,10 +305,7 @@ describe('When working with a nested app', () => {
 
 describe('when working with an app', () => {
   beforeAll(async () => {
-    await modular(
-      'add sample-app --unstable-type app --unstable-name sample-app',
-      { stdio: 'inherit' },
-    );
+    await modular('add sample-app --unstable-type app', { stdio: 'inherit' });
 
     // Let's replace the App module with something of our own
     // with a test specific element we can introspect

@@ -54,22 +54,13 @@ describe('modular-scripts', () => {
   beforeAll(async () => {
     await cleanup();
 
-    await modular(
-      'add sample-view --unstable-type view --unstable-name sample-view',
-      { stdio: 'inherit' },
-    );
-    await modular(
-      'add sample-package --unstable-type package --unstable-name sample-package',
-      {
-        stdio: 'inherit',
-      },
-    );
-    await modular(
-      'add nested/sample-nested-package --unstable-type package --unstable-name @nested/sample-package',
-      {
-        stdio: 'inherit',
-      },
-    );
+    await modular('add sample-view --unstable-type view', { stdio: 'inherit' });
+    await modular('add sample-package --unstable-type package', {
+      stdio: 'inherit',
+    });
+    await modular('add @nested/sample-package --unstable-type package', {
+      stdio: 'inherit',
+    });
 
     await fs.copyFile(
       path.join(__dirname, 'TestView.test-tsx'),
@@ -122,9 +113,9 @@ describe('modular-scripts', () => {
     });
 
     it('can add a nested package', () => {
-      expect(tree(path.join(packagesPath, 'nested/sample-nested-package')))
+      expect(tree(path.join(packagesPath, 'nested/sample-package')))
         .toMatchInlineSnapshot(`
-        "sample-nested-package
+        "sample-package
         ├─ package.json
         └─ src
            ├─ __tests__
@@ -312,7 +303,7 @@ describe('modular-scripts', () => {
 
   it('can execute tests', async () => {
     const output = await modular(
-      'test sample-package sample-view sample-nested-package --watchAll false',
+      'test sample-package sample-view @nested/sample-package --watchAll false',
       {
         all: true,
         reject: false,
@@ -337,7 +328,7 @@ describe('modular-scripts', () => {
       'PASS test packages/sample-package/src/__tests__/index.test.ts',
     );
     expect(cleanedOutput).toContain(
-      'PASS test packages/nested/sample-nested-package/src/__tests__/index.test.ts',
+      'PASS test packages/nested/sample-package/src/__tests__/index.test.ts',
     );
   });
 
