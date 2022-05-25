@@ -87,9 +87,8 @@ By default, all external dependencies are rewritten to a CDN url and none are
 bundled. This logic can be controlled using two environment variables:
 
 1. `EXTERNAL_ALLOW_LIST` is a comma-separated string that specifies which
-   dependencies are allowed to be rewritten to CDN according to 
-   [micromatch](https://github.com/micromatch/micromatch) glob format; if not 
-   specified, its default value is '\**' ( -> all dependencies are rewritten)
+   dependencies are allowed to be rewritten to CDN; if not specified, its
+   default value is '\**' ( -> all dependencies are rewritten)
 2. `EXTERNAL_BLOCK_LIST` is a comma-separated string that specifies which
    dependencies are **not** allowed to be rewritten to CDN; if not specified its
    default value is '' ( -> no dependency excluded, i.e. all dependencies are
