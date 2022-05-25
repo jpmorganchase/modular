@@ -88,10 +88,10 @@ bundled. This logic can be controlled using two environment variables:
 
 1. `EXTERNAL_ALLOW_LIST` is a comma-separated string that specifies which
    dependencies are allowed to be rewritten to CDN; if not specified, its
-   default value is '\**' ( -> all dependencies are rewritten)
+   default value is `**` ( -> all dependencies are rewritten)
 2. `EXTERNAL_BLOCK_LIST` is a comma-separated string that specifies which
    dependencies are **not** allowed to be rewritten to CDN; if not specified its
-   default value is '' ( -> no dependency excluded, i.e. all dependencies are
+   default value is empty ( -> no dependency excluded, i.e. all dependencies are
    rewritten)
 
 The allow / block lists are parsed and processed according to this logic:
