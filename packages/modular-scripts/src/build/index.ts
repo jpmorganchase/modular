@@ -93,6 +93,7 @@ async function buildStandalone(
   }
 
   let assets: Asset[];
+  logger.debug('Extracting dependencies from source code...');
   // Retrieve dependencies for target to inform the build process
   const { manifest: packageDependencies, resolutions: packageResolutions } =
     await getPackageDependencies(target);
@@ -101,6 +102,19 @@ async function buildStandalone(
     filterDependencies(packageDependencies, isApp);
   const { external: externalResolutions, bundled: bundledResolutions } =
     filterDependencies(packageResolutions, isApp);
+
+  logger.debug(
+    `These are the external dependencies and their resolutions: ${{
+      externalDependencies,
+      externalResolutions,
+    }}`,
+  );
+  logger.debug(
+    `These are the bundled dependencies and their resolutions: ${{
+      bundledDependencies,
+      bundledResolutions,
+    }}`,
+  );
 
   const browserTarget = createEsbuildBrowserslistTarget(targetDirectory);
 
