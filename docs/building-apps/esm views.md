@@ -69,15 +69,19 @@ statically as a standalone application (for example, using `modular serve`).
 ## Customise the ESM CDN
 
 You can specify a CDN template to rewrite dependencies using an environment
-variable `EXTERNAL_CDN_TEMPLATE`, which contains a template string where the
-substring `[name]` is replaced with the name of the imported dependency and the
-substring `[version]` is replaced with the version of the imported dependency,
-as extracted from the package's or the root's (hoisted) `package.json`.
+variable `EXTERNAL_CDN_TEMPLATE`, which contains a template string where:
+
+- the substring `[name]` is replaced with the name of the imported dependency
+- the substring `[version]` is replaced with the version of the imported
+  dependency as extracted from the package's or the root's (hoisted)
+  `package.json`.
+- the substring `[resolution]` is replaced with the version of the imported
+  dependency as extracted from the yarn lockfile (`yarn.lock`).
 
 For example:
 
 - The default template for the [Skypack](https://www.skypack.dev/) public CDN is
-  `EXTERNAL_CDN_TEMPLATE="https://cdn.skypack.dev/[name]@[version]"`
+  `EXTERNAL_CDN_TEMPLATE="https://cdn.skypack.dev/[name]@[resolution]"`
 - A valid template to work with the esm.sh public CDN can be specified with
   `EXTERNAL_CDN_TEMPLATE="https://esm.sh/[name]@[version]"`
 
