@@ -773,7 +773,7 @@ function createExternalDependenciesMap(
 ) {
   const externalCdnTemplate =
     process.env.EXTERNAL_CDN_TEMPLATE ||
-    'https://cdn.skypack.dev/[name]@[version]';
+    'https://cdn.skypack.dev/[name]@[resolution]';
 
   return Object.entries(externalDependencies).reduce((acc, [name, version]) => {
     if (!externalResolutions[name]) {
