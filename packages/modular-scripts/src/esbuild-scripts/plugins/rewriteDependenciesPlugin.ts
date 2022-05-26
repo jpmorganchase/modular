@@ -8,7 +8,7 @@ export function createRewriteDependenciesPlugin(
 ): esbuild.Plugin {
   const externalCdnTemplate =
     process.env.EXTERNAL_CDN_TEMPLATE ??
-    'https://cdn.skypack.dev/[name]@[version]';
+    'https://cdn.skypack.dev/[name]@[resolution]';
 
   const importMap: Map<string, string> = new Map(
     Object.entries(externalDependencies).map(([name, version]) => {
