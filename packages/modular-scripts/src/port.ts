@@ -304,7 +304,7 @@ export async function port(relativePath: string): Promise<void> {
 
     logger.log('Installing dependencies...');
 
-    execa.sync('yarnpkg', ['--silent'], { cwd: modularRoot });
+    execa.sync('yarn', ['--silent'], { cwd: modularRoot });
 
     logger.log('Validating your modular project...');
 

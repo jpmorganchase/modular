@@ -158,7 +158,7 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
 
     logger.log('Running yarn to update dependencies');
 
-    execa.sync('yarnpkg', ['--silent', 'add', '-W', ...additionalDeps], {
+    execa.sync('yarn', ['--silent', 'add', '-W', ...additionalDeps], {
       cwd,
     });
 

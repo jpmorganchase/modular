@@ -4,7 +4,7 @@ import getModularRoot from '../utils/getModularRoot';
 import * as logger from '../utils/logger';
 
 function modular(str: string, opts: Record<string, unknown> = {}) {
-  return execa('yarnpkg', ['modular', ...str.split(' ')], {
+  return execa('yarn', ['modular', ...str.split(' ')], {
     cwd: modularRoot,
     cleanup: true,
     ...opts,

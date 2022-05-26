@@ -9,7 +9,7 @@ describe('Creating a new modular app via the CLI', () => {
   beforeEach(async () => {
     cwd = path.join(tmp.dirSync().name, 'new-modular-app');
 
-    await execa('yarnpkg', ['create-modular-react-app', cwd], {
+    await execa('yarn', ['create-modular-react-app', cwd], {
       cwd: __dirname,
       cleanup: true,
       stderr: process.stderr,
@@ -31,7 +31,7 @@ describe('Creating a new modular app via the CLI with --empty', () => {
   beforeEach(async () => {
     cwd = path.join(tmp.dirSync().name, 'another-new-modular-app');
 
-    await execa('yarnpkg', ['create-modular-react-app', cwd, '--empty'], {
+    await execa('yarn', ['create-modular-react-app', cwd, '--empty'], {
       cwd: __dirname,
       cleanup: true,
       stderr: process.stderr,

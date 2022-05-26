@@ -36,7 +36,7 @@ function exec(
 
 function isYarnInstalled(): boolean {
   try {
-    execa.sync('yarnpkg', ['-v']);
+    execa.sync('yarn', ['-v']);
     return true;
   } catch (err) {
     return false;
@@ -87,7 +87,7 @@ export default async function createModularApp(argv: {
     await exec('git', ['init'], newModularRoot);
   }
 
-  await exec('yarnpkg', ['init', '-y'], newModularRoot);
+  await exec('yarn', ['init', '-y'], newModularRoot);
 
   fs.writeJsonSync(projectPackageJsonPath, {
     ...fs.readJsonSync(projectPackageJsonPath),
@@ -123,7 +123,7 @@ export default async function createModularApp(argv: {
   });
 
   const subprocess = exec(
-    'yarnpkg',
+    'yarn',
     [
       'add',
       '-W',

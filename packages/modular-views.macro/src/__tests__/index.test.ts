@@ -20,7 +20,7 @@ async function transform() {
 
 async function modularAddView(name: string) {
   return await execa(
-    'yarnpkg',
+    'yarn',
     `modular add ${name} --unstable-type view`.split(' '),
     {
       cleanup: true,
@@ -32,7 +32,7 @@ async function modularAddView(name: string) {
 }
 
 beforeAll(async () => {
-  await execa('yarnpkg', ['build'], {
+  await execa('yarn', ['build'], {
     cleanup: true,
     cwd: path.join(__dirname, '..', '..'),
     stderr: process.stderr,
@@ -44,7 +44,7 @@ afterAll(async () => {
   rimraf.sync(path.join(packagesPath, 'view-1'));
   rimraf.sync(path.join(packagesPath, 'view-2'));
   // run yarn so yarn.lock gets reset
-  await execa('yarnpkg', [], {
+  await execa('yarn', [], {
     cwd: modularRoot,
     stderr: process.stderr,
     stdout: process.stdout,

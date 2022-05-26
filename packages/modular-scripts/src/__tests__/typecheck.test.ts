@@ -49,7 +49,7 @@ describe('Modular typecheck', () => {
         }
         let modularStdErr = '';
         try {
-          await execa('yarnpkg', ['modular', 'typecheck'], {
+          await execa('yarn', ['modular', 'typecheck'], {
             all: true,
             cleanup: true,
           });
@@ -76,7 +76,7 @@ describe('Modular typecheck', () => {
         }
         let modularStdErr = '';
         try {
-          await execa('yarnpkg', ['modular', 'typecheck'], {
+          await execa('yarn', ['modular', 'typecheck'], {
             all: true,
             cleanup: true,
           });
@@ -93,7 +93,7 @@ describe('Modular typecheck', () => {
   });
   describe('when there are no type errors', () => {
     it('should print a one line success message', async () => {
-      const result = await execa('yarnpkg', ['modular', 'typecheck'], {
+      const result = await execa('yarn', ['modular', 'typecheck'], {
         all: true,
         cleanup: true,
       });

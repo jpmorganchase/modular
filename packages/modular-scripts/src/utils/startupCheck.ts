@@ -9,7 +9,7 @@ import * as semver from 'semver';
 
 async function isYarnInstalled(): Promise<boolean> {
   try {
-    await execa('yarnpkg', ['-v']);
+    await execa('yarn', ['-v']);
     return true;
   } catch (err) {
     return false;

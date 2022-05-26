@@ -67,7 +67,7 @@ describe('Modular lint', () => {
       }
       let modularLogs: string[] = [];
       try {
-        await execa('yarnpkg', ['modular', 'lint', '__fixtures__/lint'], {
+        await execa('yarn', ['modular', 'lint', '__fixtures__/lint'], {
           all: true,
           cleanup: true,
           cwd: modularRoot,
@@ -82,7 +82,7 @@ describe('Modular lint', () => {
     it('should not pass lint test', async () => {
       let modularLogs: string[] = [];
       try {
-        await execa('yarnpkg', ['modular', 'lint', '__fixtures__/lint'], {
+        await execa('yarn', ['modular', 'lint', '__fixtures__/lint'], {
           all: true,
           cleanup: true,
           cwd: modularRoot,
@@ -102,7 +102,7 @@ describe('Modular lint', () => {
     it('should pass the lint tests', async () => {
       const files = fs.readdirSync(path.join(fixturesFolder));
       const result = await execa(
-        'yarnpkg',
+        'yarn',
         ['modular', 'lint', '__fixtures__/lint'],
         {
           all: true,

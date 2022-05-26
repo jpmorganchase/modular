@@ -28,7 +28,7 @@ const { getNodeText } = queries;
 const packagesPath = path.join(getModularRoot(), 'packages');
 
 function modular(str: string, opts: Record<string, unknown> = {}) {
-  return execa('yarnpkg', ['modular', ...str.split(' ')], {
+  return execa('yarn', ['modular', ...str.split(' ')], {
     cwd: modularRoot,
     cleanup: true,
     ...opts,
@@ -43,7 +43,7 @@ async function cleanup() {
   await rimraf(path.join(modularRoot, 'dist/sample-package'));
   await rimraf(path.join(modularRoot, 'dist/nested'));
   // run yarn so yarn.lock gets reset
-  await execa('yarnpkg', ['--silent'], {
+  await execa('yarn', ['--silent'], {
     cwd: modularRoot,
   });
 }

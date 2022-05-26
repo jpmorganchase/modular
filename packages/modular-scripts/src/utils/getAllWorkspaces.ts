@@ -42,15 +42,15 @@ export interface PackageManagerInfo {
 
 const supportedPackageManagers: SupportedPackageManagers = {
   yarn1: {
-    getWorkspaceCommand: 'yarnpkg --silent workspaces info',
+    getWorkspaceCommand: 'yarn --silent workspaces info',
     formatWorkspaceCommandOutput: formatYarn1Workspace,
   },
   yarn2: {
-    getWorkspaceCommand: 'yarnpkg workspaces list --json -v',
+    getWorkspaceCommand: 'yarn workspaces list --json -v',
     formatWorkspaceCommandOutput: formatNewYarnWorkspace,
   },
   yarn3: {
-    getWorkspaceCommand: 'yarnpkg workspaces list --json -v',
+    getWorkspaceCommand: 'yarn workspaces list --json -v',
     formatWorkspaceCommandOutput: formatNewYarnWorkspace,
   },
 };
@@ -79,7 +79,7 @@ async function getCommandOutput(
 
 async function getPackageManagerInfo(cwd: string, packageManager: string) {
   if (packageManager === 'yarn') {
-    const yarnVersion = await getCommandOutput(cwd, 'yarnpkg', ['--version']);
+    const yarnVersion = await getCommandOutput(cwd, 'yarn', ['--version']);
     if (yarnVersion.startsWith('1.')) {
       return supportedPackageManagers.yarn1;
     }

@@ -13,7 +13,7 @@ const modularRoot = getModularRoot();
 const packagesPath = path.join(getModularRoot(), 'packages');
 
 function modular(str: string, opts: Record<string, unknown> = {}) {
-  return execa('yarnpkg', ['modular', ...str.split(' ')], {
+  return execa('yarn', ['modular', ...str.split(' ')], {
     cwd: modularRoot,
     cleanup: true,
     ...opts,
@@ -25,7 +25,7 @@ function cleanup() {
   rimraf.sync(path.join(modularRoot, 'dist/node-env-app'));
 
   // run yarn so yarn.lock gets reset
-  return execa.sync('yarnpkg', ['--silent'], {
+  return execa.sync('yarn', ['--silent'], {
     cwd: modularRoot,
   });
 }

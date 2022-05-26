@@ -4,7 +4,7 @@ import path from 'path';
 import tmp from 'tmp';
 
 function modular(str: string, cwd: string, opts: Record<string, unknown> = {}) {
-  return execa('yarnpkg', ['modular', ...str.split(' ')], {
+  return execa('yarn', ['modular', ...str.split(' ')], {
     cwd,
     cleanup: true,
     ...opts,

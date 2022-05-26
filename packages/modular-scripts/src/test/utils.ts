@@ -14,7 +14,7 @@ export function modular(
   str: string,
   opts: Record<string, unknown> = {},
 ): execa.ExecaChildProcess<string> {
-  return execa('yarnpkg', ['modular', ...str.split(' ')], {
+  return execa('yarn', ['modular', ...str.split(' ')], {
     cwd: modularRoot,
     cleanup: true,
     ...opts,
@@ -31,7 +31,7 @@ export async function cleanup(packageNames: Array<string>): Promise<void> {
   }
 
   // run yarn so yarn.lock gets reset
-  await execa('yarnpkg', ['--silent'], {
+  await execa('yarn', ['--silent'], {
     cwd: modularRoot,
   });
 }

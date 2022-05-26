@@ -29,7 +29,7 @@ const { getNodeText } = queries;
 const packagesPath = path.join(getModularRoot(), 'packages');
 
 function modular(str: string, opts: Record<string, unknown> = {}) {
-  return execa('yarnpkg', ['modular', ...str.split(' ')], {
+  return execa('yarn', ['modular', ...str.split(' ')], {
     cwd: modularRoot,
     cleanup: true,
     ...opts,
@@ -40,7 +40,7 @@ async function cleanup() {
   await rimraf(path.join(packagesPath, 'sample-esm-view'));
   await rimraf(path.join(modularRoot, 'dist/sample-esm-view'));
   // run yarn so yarn.lock gets reset
-  await execa('yarnpkg', ['--silent'], {
+  await execa('yarn', ['--silent'], {
     cwd: modularRoot,
   });
 }
@@ -271,7 +271,7 @@ describe('modular-scripts', () => {
         }),
       );
 
-      await execa('yarnpkg', [], {
+      await execa('yarn', [], {
         cwd: modularRoot,
         cleanup: true,
       });
@@ -353,7 +353,7 @@ describe('modular-scripts', () => {
         }),
       );
 
-      await execa('yarnpkg', [], {
+      await execa('yarn', [], {
         cwd: modularRoot,
         cleanup: true,
       });
@@ -429,7 +429,7 @@ describe('modular-scripts', () => {
         }),
       );
 
-      await execa('yarnpkg', [], {
+      await execa('yarn', [], {
         cwd: modularRoot,
         cleanup: true,
       });

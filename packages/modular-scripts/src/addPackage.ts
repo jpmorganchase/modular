@@ -149,7 +149,7 @@ async function addPackage({
   } catch (e) {
     logger.log('Installing package template, this may take a moment...');
     const templateInstallSubprocess = execAsync(
-      'yarnpkg',
+      'yarn',
       ['add', templateName, '--prefer-offline', '--silent', '-W'],
       {
         cwd: modularRoot,
@@ -254,7 +254,7 @@ async function addPackage({
   if (preferOffline) {
     yarnArgs.push('--prefer-offline');
   }
-  const subprocess = execAsync('yarnpkg', yarnArgs, {
+  const subprocess = execAsync('yarn', yarnArgs, {
     cwd: modularRoot,
     stderr: 'pipe',
   });

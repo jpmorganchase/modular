@@ -40,14 +40,10 @@ describe('Modular test', () => {
     it('should exit with an error', async () => {
       let errorNumber = 0;
       try {
-        await execa(
-          'yarnpkg',
-          ['modular', 'test', 'test/InvalidTest.test.ts'],
-          {
-            all: true,
-            cleanup: true,
-          },
-        );
+        await execa('yarn', ['modular', 'test', 'test/InvalidTest.test.ts'], {
+          all: true,
+          cleanup: true,
+        });
       } catch (error) {
         errorNumber = (error as ExecaError).exitCode;
       }
@@ -59,7 +55,7 @@ describe('Modular test', () => {
     it('should exit with no error', async () => {
       let errorNumber = 0;
       try {
-        await execa('yarnpkg', ['modular', 'test', 'test/ValidTest.test.ts'], {
+        await execa('yarn', ['modular', 'test', 'test/ValidTest.test.ts'], {
           all: true,
           cleanup: true,
         });

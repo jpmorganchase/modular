@@ -18,10 +18,10 @@ type ModularPackageJson = PackageJson & {
 };
 
 function getWorkspaces(): Array<[string, { location: string }]> {
-  const { stdout: yarnVersion } = execa.sync('yarnpkg', ['--version']);
+  const { stdout: yarnVersion } = execa.sync('yarn', ['--version']);
 
   if (yarnVersion.startsWith('1.')) {
-    const output = execa.sync('yarnpkg', ['workspaces', 'info'], {
+    const output = execa.sync('yarn', ['workspaces', 'info'], {
       all: true,
       reject: false,
       cwd: modularRootDir,
@@ -35,7 +35,7 @@ function getWorkspaces(): Array<[string, { location: string }]> {
     return workspaces;
   }
 
-  const output = execa.sync('yarnpkg', ['workspaces', 'list', '--json'], {
+  const output = execa.sync('yarn', ['workspaces', 'list', '--json'], {
     all: true,
     reject: false,
     cwd: modularRootDir,
