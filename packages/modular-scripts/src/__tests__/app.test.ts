@@ -130,9 +130,9 @@ describe('When working with a nested app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'scoped-sample-app')))
       .toMatchInlineSnapshot(`
       "scoped-sample-app
-      ├─ asset-manifest.json #1pcwjot
+      ├─ asset-manifest.json #tpf5u4
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #bs7ctd
+      ├─ index.html #1cgzs99
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -146,8 +146,8 @@ describe('When working with a nested app', () => {
          │  ├─ 788.bbd34b33.js #33pg04
          │  ├─ 788.bbd34b33.js.LICENSE.txt #eplx8h
          │  ├─ 788.bbd34b33.js.map #1xdy7n0
-         │  ├─ main.99649537.js #b22d4x
-         │  ├─ main.99649537.js.map #16cngow
+         │  ├─ main.502b419b.js #14cckvx
+         │  ├─ main.502b419b.js.map #17qi16y
          │  ├─ runtime-main.de012fdc.js #1qz643h
          │  └─ runtime-main.de012fdc.js.map #ntuwq4
          └─ media
