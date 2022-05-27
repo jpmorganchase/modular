@@ -485,7 +485,7 @@ module.exports = function (webpackEnv) {
                     : isEnvDevelopment,
                 },
                 undefined,
-                true,
+                isEsmView,
               ),
 
               // Don't consider CSS imports dead code even if the
