@@ -365,14 +365,14 @@ describe('modular-scripts', () => {
       expect(tree(path.join(modularRoot, 'dist', 'sample-esm-view')))
         .toMatchInlineSnapshot(`
         "sample-esm-view
-        ├─ asset-manifest.json #17u5ev2
+        ├─ asset-manifest.json #1nofqb7
         ├─ index.html #17sfbiz
         ├─ package.json
         └─ static
            └─ js
-              ├─ _trampoline.js #16jj7re
-              ├─ main.55a7c313.js #1gya3xe
-              └─ main.55a7c313.js.map #168abd0"
+              ├─ _trampoline.js #1r6l45w
+              ├─ main.641dd395.js #1xbi3kt
+              └─ main.641dd395.js.map #iff2zu"
       `);
     });
 
@@ -386,7 +386,7 @@ describe('modular-scripts', () => {
       );
 
       const indexFile = (
-        await fs.readFile(path.join(baseDir, 'main.55a7c313.js'))
+        await fs.readFile(path.join(baseDir, 'main.641dd395.js'))
       ).toString();
       expect(
         prettier.format(indexFile, {
@@ -522,14 +522,14 @@ describe('modular-scripts', () => {
       expect(tree(path.join(modularRoot, 'dist', 'sample-esm-view')))
         .toMatchInlineSnapshot(`
         "sample-esm-view
-        ├─ asset-manifest.json #1knd7
+        ├─ asset-manifest.json #11wu34r
         ├─ index.html #17sfbiz
         ├─ package.json
         └─ static
            └─ js
-              ├─ _trampoline.js #1r17hw8
-              ├─ main.78d8ce40.js #v46m01
-              └─ main.78d8ce40.js.map #7oa3bn"
+              ├─ _trampoline.js #b3kerw
+              ├─ main.2ed560c9.js #m26j81
+              └─ main.2ed560c9.js.map #v28o2j"
       `);
     });
 
@@ -543,7 +543,7 @@ describe('modular-scripts', () => {
       );
 
       const indexFile = (
-        await fs.readFile(path.join(baseDir, 'main.78d8ce40.js'))
+        await fs.readFile(path.join(baseDir, 'main.2ed560c9.js'))
       ).toString();
       expect(
         prettier.format(indexFile, {

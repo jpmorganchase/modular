@@ -12917,69 +12917,75 @@ exports[`modular-scripts WHEN building a esm-view with resolutions and webpack T
 import * as t from \\"https://mycustomcdn.net/lodash@4.17.21/get\\";
 import * as r from \\"https://mycustomcdn.net/lodash.merge@4.6.2\\";
 import * as n from \\"https://mycustomcdn.net/lodash@4.17.21\\";
-var a = {
+var o = {
     545: () => {
       const e = document.createElement(\\"link\\");
-      (e.rel = \\"stylesheet\\"),
+      if (
+        ((e.rel = \\"stylesheet\\"),
         (e.type = \\"text/css\\"),
         (e.href =
           \\"https://mycustomcdn.net/regular-table@0.5.6/dist/css/material.css\\"),
-        document.getElementsByTagName(\\"HEAD\\")[0].appendChild(e);
+        !document.head)
+      ) {
+        const e = document.createElement(\\"head\\");
+        document.documentElement.insertBefore(e, document.body || null);
+      }
+      document.head.appendChild(e);
     },
   },
-  o = {};
-function s(e) {
-  var t = o[e];
+  a = {};
+function c(e) {
+  var t = a[e];
   if (void 0 !== t) return t.exports;
-  var r = (o[e] = { exports: {} });
-  return a[e](r, r.exports, s), r.exports;
+  var r = (a[e] = { exports: {} });
+  return o[e](r, r.exports, c), r.exports;
 }
-(s.d = (e, t) => {
+(c.d = (e, t) => {
   for (var r in t)
-    s.o(t, r) &&
-      !s.o(e, r) &&
+    c.o(t, r) &&
+      !c.o(e, r) &&
       Object.defineProperty(e, r, { enumerable: !0, get: t[r] });
 }),
-  (s.o = (e, t) => Object.prototype.hasOwnProperty.call(e, t));
-var c = {};
+  (c.o = (e, t) => Object.prototype.hasOwnProperty.call(e, t));
+var d = {};
 (() => {
-  s.d(c, { Z: () => l });
-  const a = ((e) => {
-    var t = {};
-    return s.d(t, e), t;
-  })({ createElement: () => e.createElement });
+  c.d(d, { Z: () => l });
   const o = ((e) => {
     var t = {};
-    return s.d(t, e), t;
-  })({ default: () => t.default });
-  const d = ((e) => {
+    return c.d(t, e), t;
+  })({ createElement: () => e.createElement });
+  const a = ((e) => {
     var t = {};
-    return s.d(t, e), t;
+    return c.d(t, e), t;
+  })({ default: () => t.default });
+  const s = ((e) => {
+    var t = {};
+    return c.d(t, e), t;
   })({ default: () => r.default });
   const m = ((e) => {
     var t = {};
-    return s.d(t, e), t;
+    return c.d(t, e), t;
   })({ difference: () => n.difference });
-  s(545);
+  c(545);
   function l() {
-    return a.createElement(
+    return o.createElement(
       \\"div\\",
       null,
-      a.createElement(
+      o.createElement(
         \\"pre\\",
         null,
         JSON.stringify({
-          get: o.default,
-          merge: d.default,
+          get: a.default,
+          merge: s.default,
           difference: m.difference,
         })
       )
     );
   }
 })();
-var d = c.Z;
-export { d as default };
-//# sourceMappingURL=main.78d8ce40.js.map
+var s = d.Z;
+export { s as default };
+//# sourceMappingURL=main.2ed560c9.js.map
 "
 `;
 
@@ -13014,68 +13020,74 @@ exports[`modular-scripts WHEN building a esm-view with various kinds of package 
 import * as t from \\"https://mycustomcdn.net/lodash@^4.17.21/get\\";
 import * as r from \\"https://mycustomcdn.net/lodash.merge@^4.6.2\\";
 import * as n from \\"https://mycustomcdn.net/lodash@^4.17.21\\";
-var a = {
+var o = {
     545: () => {
       const e = document.createElement(\\"link\\");
-      (e.rel = \\"stylesheet\\"),
+      if (
+        ((e.rel = \\"stylesheet\\"),
         (e.type = \\"text/css\\"),
         (e.href =
           \\"https://mycustomcdn.net/regular-table@^0.5.6/dist/css/material.css\\"),
-        document.getElementsByTagName(\\"HEAD\\")[0].appendChild(e);
+        !document.head)
+      ) {
+        const e = document.createElement(\\"head\\");
+        document.documentElement.insertBefore(e, document.body || null);
+      }
+      document.head.appendChild(e);
     },
   },
-  o = {};
-function s(e) {
-  var t = o[e];
+  a = {};
+function c(e) {
+  var t = a[e];
   if (void 0 !== t) return t.exports;
-  var r = (o[e] = { exports: {} });
-  return a[e](r, r.exports, s), r.exports;
+  var r = (a[e] = { exports: {} });
+  return o[e](r, r.exports, c), r.exports;
 }
-(s.d = (e, t) => {
+(c.d = (e, t) => {
   for (var r in t)
-    s.o(t, r) &&
-      !s.o(e, r) &&
+    c.o(t, r) &&
+      !c.o(e, r) &&
       Object.defineProperty(e, r, { enumerable: !0, get: t[r] });
 }),
-  (s.o = (e, t) => Object.prototype.hasOwnProperty.call(e, t));
-var c = {};
+  (c.o = (e, t) => Object.prototype.hasOwnProperty.call(e, t));
+var d = {};
 (() => {
-  s.d(c, { Z: () => l });
-  const a = ((e) => {
-    var t = {};
-    return s.d(t, e), t;
-  })({ createElement: () => e.createElement });
+  c.d(d, { Z: () => l });
   const o = ((e) => {
     var t = {};
-    return s.d(t, e), t;
-  })({ default: () => t.default });
-  const d = ((e) => {
+    return c.d(t, e), t;
+  })({ createElement: () => e.createElement });
+  const a = ((e) => {
     var t = {};
-    return s.d(t, e), t;
+    return c.d(t, e), t;
+  })({ default: () => t.default });
+  const s = ((e) => {
+    var t = {};
+    return c.d(t, e), t;
   })({ default: () => r.default });
   const m = ((e) => {
     var t = {};
-    return s.d(t, e), t;
+    return c.d(t, e), t;
   })({ difference: () => n.difference });
-  s(545);
+  c(545);
   function l() {
-    return a.createElement(
+    return o.createElement(
       \\"div\\",
       null,
-      a.createElement(
+      o.createElement(
         \\"pre\\",
         null,
         JSON.stringify({
-          get: o.default,
-          merge: d.default,
+          get: a.default,
+          merge: s.default,
           difference: m.difference,
         })
       )
     );
   }
 })();
-var d = c.Z;
-export { d as default };
-//# sourceMappingURL=main.55a7c313.js.map
+var s = d.Z;
+export { s as default };
+//# sourceMappingURL=main.641dd395.js.map
 "
 `;
