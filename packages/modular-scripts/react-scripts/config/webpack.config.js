@@ -14,7 +14,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
-const { info } = require('../../react-dev-utils/logger');
+const logger = require('../../react-dev-utils/logger');
 const InterpolateHtmlPlugin = require('../../react-dev-utils/InterpolateHtmlPlugin');
 const WatchMissingNodeModulesPlugin = require('../../react-dev-utils/WatchMissingNodeModulesPlugin');
 const ModuleScopePlugin = require('../../react-dev-utils/ModuleScopePlugin');
@@ -763,7 +763,7 @@ module.exports = function (webpackEnv) {
       try {
         require.resolve(plugin.package);
       } catch (err) {
-        info(
+        logger.info(
           `It appears you're using ${chalk.cyan(
             dependency,
           )}. Run ${chalk.cyan.bold(
