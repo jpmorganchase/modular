@@ -41,19 +41,19 @@ export function filterDependencies(
     )}`,
   );
 
-  return matchDependencies({
+  return partitionDependencies({
     packageDependencies,
     allowList: externalAllowList,
     blockList: externalBlockList,
   });
 }
 
-export function matchDependencies({
+export function partitionDependencies({
   packageDependencies,
-  // By default, everything in allow list
-  allowList = ['**'],
-  // By default, nothing is in blocklist
-  blockList = [],
+  // By default, everything is externalized
+  allowList: externalizeList = ['**'],
+  // By default, nothing is bundled
+  blockList: bundleList = [],
 }: {
   packageDependencies: Dependency;
   allowList?: string[];
@@ -61,8 +61,8 @@ export function matchDependencies({
 }): FilteredDependencies {
   return Object.entries(packageDependencies).reduce<FilteredDependencies>(
     (acc, [name, version]) => {
-      const isBlocked = micromatch.isMatch(name, blockList);
-      const isAllowed = micromatch.isMatch(name, allowList);
+      const isBlocked = micromatch.isMatch(name, bundleList);
+      const isAllowed = micromatch.isMatch(name, externalizeList);
 
       logger.debug(
         `Dependency ${name} isBlocked:${isBlocked.toString()}, isAllowed: ${isAllowed.toString()}`,
