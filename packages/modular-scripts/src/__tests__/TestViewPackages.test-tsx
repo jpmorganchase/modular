@@ -2,6 +2,7 @@ import * as React from 'react';
 import get from 'lodash/get';
 import merge from 'lodash.merge';
 import { difference } from 'lodash';
+import 'regular-table/dist/css/material.css';
 
 export default function SampleView(): JSX.Element {
   return (

@@ -14,7 +14,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
-const { info } = require('../../react-dev-utils/logger');
+const logger = require('../../react-dev-utils/logger');
 const InterpolateHtmlPlugin = require('../../react-dev-utils/InterpolateHtmlPlugin');
 const WatchMissingNodeModulesPlugin = require('../../react-dev-utils/WatchMissingNodeModulesPlugin');
 const ModuleScopePlugin = require('../../react-dev-utils/ModuleScopePlugin');
@@ -102,8 +102,18 @@ module.exports = function (webpackEnv) {
   const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
 
   // common function to get style loaders
-  const getStyleLoaders = (cssOptions, preProcessor) => {
+  const getStyleLoaders = (cssOptions, preProcessor, includeEsmLoader) => {
     const loaders = [
+      // This loader translates external css dependencies if we're using a CDN
+      // Since it's a pitching loader, it's important that it stays at the top
+      // excluding all the others in the chain if it's triggered
+      includeEsmLoader &&
+        function externalStyleLoader(info) {
+          return {
+            loader: require.resolve('./cdnStyleLoader'),
+            options: { info, dependencyMap },
+          };
+        },
       isEnvDevelopment && require.resolve('style-loader'),
       isEnvProduction && {
         loader: MiniCssExtractPlugin.loader,
@@ -160,6 +170,7 @@ module.exports = function (webpackEnv) {
         },
       );
     }
+
     return loaders;
   };
 
@@ -173,7 +184,9 @@ module.exports = function (webpackEnv) {
           if (
             parsedModule &&
             parsedModule.dependencyName &&
-            dependencyMap[parsedModule.dependencyName]
+            dependencyMap[parsedModule.dependencyName] &&
+            // If this is an absolute export of css we need to deal with it in the loader
+            !request.endsWith('.css')
           ) {
             const { dependencyName, submodule } = parsedModule;
 
@@ -464,12 +477,17 @@ module.exports = function (webpackEnv) {
             {
               test: cssRegex,
               exclude: cssModuleRegex,
-              use: getStyleLoaders({
-                importLoaders: 1,
-                sourceMap: isEnvProduction
-                  ? shouldUseSourceMap
-                  : isEnvDevelopment,
-              }),
+              use: getStyleLoaders(
+                {
+                  importLoaders: 1,
+                  sourceMap: isEnvProduction
+                    ? shouldUseSourceMap
+                    : isEnvDevelopment,
+                },
+                undefined,
+                isEsmView,
+              ),
+
               // Don't consider CSS imports dead code even if the
               // containing package claims to have no side effects.
               // Remove this when webpack adds a warning or an error for this.
@@ -745,7 +763,7 @@ module.exports = function (webpackEnv) {
       try {
         require.resolve(plugin.package);
       } catch (err) {
-        info(
+        logger.info(
           `It appears you're using ${chalk.cyan(
             dependency,
           )}. Run ${chalk.cyan.bold(
