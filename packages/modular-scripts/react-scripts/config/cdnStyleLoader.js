@@ -32,6 +32,11 @@ function generateStyleInjector(url) {
   link.rel = 'stylesheet'; 
   link.type = 'text/css';
   link.href = '${url}'; 
-  document.getElementsByTagName('HEAD')[0].appendChild(link); 
+  if (!document.head) {
+    const newHead = document.createElement('head');
+    document.documentElement.insertBefore(newHead, document.body || null);
+  }
+  const head = document.head;
+  head.appendChild(link); 
   `;
 }
