@@ -19,17 +19,15 @@ export function filterDependencies(
     };
   }
 
-  // By default, nothing is in blocklist
   const externalBlockList =
     process.env.EXTERNAL_BLOCK_LIST && !isApp
       ? process.env.EXTERNAL_BLOCK_LIST.split(',')
-      : [];
+      : undefined;
 
-  // By default, everything in allow list
   const externalAllowList =
     process.env.EXTERNAL_ALLOW_LIST && !isApp
       ? process.env.EXTERNAL_ALLOW_LIST.split(',')
-      : ['**'];
+      : undefined;
 
   logger.debug('Filtering dependencies...');
   logger.debug(
@@ -43,10 +41,28 @@ export function filterDependencies(
     )}`,
   );
 
+  return matchDependencies({
+    packageDependencies,
+    allowList: externalAllowList,
+    blockList: externalBlockList,
+  });
+}
+
+export function matchDependencies({
+  packageDependencies,
+  // By default, everything in allow list
+  allowList = ['**'],
+  // By default, nothing is in blocklist
+  blockList = [],
+}: {
+  packageDependencies: Dependency;
+  allowList?: string[];
+  blockList?: string[];
+}): FilteredDependencies {
   return Object.entries(packageDependencies).reduce<FilteredDependencies>(
     (acc, [name, version]) => {
-      const isBlocked = micromatch.isMatch(name, externalBlockList);
-      const isAllowed = micromatch.isMatch(name, externalAllowList);
+      const isBlocked = micromatch.isMatch(name, blockList);
+      const isAllowed = micromatch.isMatch(name, allowList);
 
       logger.debug(
         `Dependency ${name} isBlocked:${isBlocked.toString()}, isAllowed: ${isAllowed.toString()}`,
