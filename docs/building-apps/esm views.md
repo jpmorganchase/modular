@@ -58,7 +58,7 @@ The default behaviour when building an ESM view is:
    - a synthetically generated `index.html` file, linking the trampoline file
      and the css bundle
    - a synthetically generated trampoline file, dynamically `import`ing the js
-     bundle
+     bundle and `React.render`ing its default export to a `#root` div.
 
 The ESM view build result can either be
 [dynamically imported](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#dynamic_imports)
