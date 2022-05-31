@@ -10,9 +10,9 @@ Adds a new package by creating a new workspace at `packages/<packagePath>`
 (i.e. `modular add my-app` would create a package in `packages/my-app` and
 `modular add libs/lib-a` would create a package in `packages/libs/lib-a`)
 
-Packages can currently be one of 3 types:
+Packages can currently be one of the following types:
 
-- A standalone `application`. This corresponds to a single `create-react-app`
+- A standalone `app`. This corresponds to a single `create-react-app`
   project in a workspace. Inside this workspace, you can import packages from
   other workspaces freely, and features like jsx and typechecking work out of
   the box.
