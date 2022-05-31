@@ -11,8 +11,8 @@ to implement micro frontends through [ESM Views](../building-apps/esm-views.md),
 which are applications built as ES Modules. ESM Views can be served standalone
 or dynamically imported by a host application at runtime and rendered in the
 host application's own React tree, without the need of using Iframes. ESM Views
-also allow automatic dependency de-duplication in the browser, thanks to how we
-offload third-party dependencies to a configurable ESM CDN.
+also allow automatic dependency de-duplication in the browser, thanks to how
+Modular offloads third-party dependencies to a configurable ESM CDN.
 
 ## How we build micro frontends
 
