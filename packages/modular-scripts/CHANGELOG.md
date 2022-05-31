@@ -1,5 +1,52 @@
 # modular-scripts
 
+## 3.1.0
+
+### Minor Changes
+
+- [#1711](https://github.com/jpmorganchase/modular/pull/1711)
+  [`813c941`](https://github.com/jpmorganchase/modular/commit/813c94180efa36af3dce849e11544485a7b84a87)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Add the
+  modular analyze command
+
+* [#1686](https://github.com/jpmorganchase/modular/pull/1686)
+  [`da4eeed`](https://github.com/jpmorganchase/modular/commit/da4eeedd97d5388ef09d14140e5d96d146239813)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Add
+  `esm-view` modular type
+
+### Patch Changes
+
+- [#1675](https://github.com/jpmorganchase/modular/pull/1675)
+  [`95225cb`](https://github.com/jpmorganchase/modular/commit/95225cb80273b02d42d8460e365251ca3c7f61a6)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump express from
+  4.18.0 to 4.18.1
+
+* [#1757](https://github.com/jpmorganchase/modular/pull/1757)
+  [`1e72dc4`](https://github.com/jpmorganchase/modular/commit/1e72dc4278dafda57765d1b49b9a3aa02007931f)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Webpack
+  build: Support CSS from CDN in esm-views
+
+- [#1677](https://github.com/jpmorganchase/modular/pull/1677)
+  [`52b8a4c`](https://github.com/jpmorganchase/modular/commit/52b8a4ce3ddd330158b35cb3f25d03cc27778641)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump address from
+  1.1.2 to 1.2.0
+
+* [#1693](https://github.com/jpmorganchase/modular/pull/1693)
+  [`7c6369b`](https://github.com/jpmorganchase/modular/commit/7c6369b57b7772ac25939b6f8722164684f90c05)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Adds the
+  [resolution] tag in the CDN template to point to the pinned version as
+  resolved from yarn.lock.
+
+- [#1717](https://github.com/jpmorganchase/modular/pull/1717)
+  [`7c70b3b`](https://github.com/jpmorganchase/modular/commit/7c70b3bc9309a2407fa408f31c3752671d056d16)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  builtin-modules from 3.2.0 to 3.3.0
+
+* [#1671](https://github.com/jpmorganchase/modular/pull/1671)
+  [`ee04d32`](https://github.com/jpmorganchase/modular/commit/ee04d324c423f65f462dd1d2b9cb462873665f04)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump ws from 8.5.0
+  to 8.6.0
+
 ## 3.0.2
 
 ### Patch Changes
