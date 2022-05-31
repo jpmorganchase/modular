@@ -11,7 +11,7 @@ to implement micro frontends through [ESM Views](../building-apps/esm-views.md),
 which are applications built as ES Modules. ESM Views can be served standalone
 or dynamically imported by a host application at runtime and rendered in the
 host application's own React tree, without the need of using Iframes. ESM Views
-also allow automatic dependency de-duplication, thanks to how we offload
+also allow automatic dependency de-duplication in the browser, thanks to how we offload
 third-party dependencies to a configurable ESM CDN.
 
 ## How we build micro frontends
@@ -42,12 +42,12 @@ without incurring errors associated with
 Since dynamically importing ES Modules leverages a
 [widely supported standard](https://caniuse.com/es6-module-dynamic-import),
 where the browser does the heavy lifting of fetching, de-duplicating and making
-dependencies available, ES Modules are Modular's choice building blocks to
+dependencies available, ES Modules are Modular's preferred building blocks to
 implement a micro frontend architecture.
 
 ## How to load micro frontends
 
-ESM Views, when built, generate a single JavaScript entrypoint and a single CSS
+Building an ESM View generates a single JavaScript entrypoint and a single CSS
 entrypoint that can be imported at runtime by any application (or other ESM
 View) using dynamic import (or any viable technique in case of styles). ESM
 Views will generate a package manifest (`package.json` file) that contains:
