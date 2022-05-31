@@ -8,7 +8,7 @@ modular builds packages of `"type": "esm-view"` as
 rewriting all of a subset of their imports to make use of a configurable esm CDN
 (e.g. [Skypack](https://www.skypack.dev) or [esm.sh](https://esm.sh/)). This
 allows users to implement the
-[microfrontend pattern](../concepts/microfrontends.md), by creating an artefact
+[microfrontend pattern](../concepts/microfrontends.md), by creating an artifact
 that can be
 [`import`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#dynamic_imports)ed
 at runtime by an host application, or loaded stand-alone thanks to the automatic
@@ -87,16 +87,16 @@ For example:
 
 ## Customise bundling / rewriting strategy
 
-By default, all external dependencies are rewritten to a CDN url and none are
+By default, all external dependencies are rewritten to a CDN URL and none is
 bundled. This logic can be controlled using two environment variables:
 
 1. `EXTERNAL_ALLOW_LIST` is a comma-separated string that specifies which
-   dependencies are allowed to be rewritten to CDN; if not specified, its
+   dependencies are allowed to be rewritten to the CDN; if not specified, its
    default value is `**` ( -> all dependencies are rewritten)
 2. `EXTERNAL_BLOCK_LIST` is a comma-separated string that specifies which
-   dependencies are **not** allowed to be rewritten to CDN; if not specified its
-   default value is empty ( -> no dependency excluded, i.e. all dependencies are
-   rewritten)
+   dependencies are **not** allowed to be rewritten to the CDN; if not specified
+   its default value is empty ( -> no dependency excluded, i.e. all dependencies
+   are rewritten)
 
 The allow / block lists are parsed and processed according to this logic:
 
@@ -145,7 +145,7 @@ of added / modified fields:
 
 CSS imports pointing to an external package (for example:
 [`import 'regular-table/dist/css/material.css'`](https://www.npmjs.com/package/regular-table)
-) will be rewritten to a CDN url as normal packages (for example, using skypack,
+) will be rewritten to a CDN URL (for example, using Skypack,
 `https://cdn.skypack.dev/regular-table@[version]/dist/css/material.css`). The
 only difference is that they will be rewritten in the bundle as code that
 applies the CSS into the page, either by simply adding it to the `head` or,
@@ -153,4 +153,5 @@ depending on the build `target`, using
 [CSS Module scripts](https://web.dev/css-module-scripts/) and adding the script
 to the
 [adopted stylesheet](https://wicg.github.io/construct-stylesheets/#using-constructed-stylesheets).
+
 This feature is experimental and feedback is appreciated.

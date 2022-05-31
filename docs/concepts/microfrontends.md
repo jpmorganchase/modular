@@ -4,16 +4,15 @@ parent: Concepts
 
 ## ESM micro frontends in Modular
 
-Micro frontends are a pattern where discrete UIs (frontends) are composed from
+Micro frontends are a pattern in which discrete UIs (frontends) are composed of
 independent fragments that can be built and deployed separately by different
 teams and loaded on-demand at runtime. Modular gives developers the opportunity
-of implementing microfrontends through
-[ESM views](../building-apps/esm-views.md), which are applications built as ES
-Modules, that can be served standalone or dynamically imported by an host
-application. This is particularly useful when a View exports a default React
-component: an host application can import it at runtime and render it in its own
-React tree, without the need of using Iframes and with automatic dependency
-de-duplication, thanks to how we offload dependencies to an external ESM CDN.
+to implement micro frontends through [ESM Views](../building-apps/esm-views.md),
+which are applications built as ES Modules. ESM Views can be served standalone
+or dynamically imported by a host application at runtime and rendered in the
+host application's own React tree, without the need of using Iframes. ESM Views
+also allow automatic dependency de-duplication, thanks to how we offload
+third-party dependencies to a configurable ESM CDN.
 
 ## How we build micro frontends
 
