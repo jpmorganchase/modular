@@ -12,10 +12,9 @@ Adds a new package by creating a new workspace at `packages/<packagePath>`
 
 Packages can currently be one of the following types:
 
-- A standalone `app`. This corresponds to a single `create-react-app`
-  project in a workspace. Inside this workspace, you can import packages from
-  other workspaces freely, and features like jsx and typechecking work out of
-  the box.
+- A standalone `app`. This corresponds to a single `create-react-app` project in
+  a workspace. Inside this workspace, you can import packages from other
+  workspaces freely, and features like jsx and typechecking work out of the box.
 
 - An `esm-view`, which is a package that typically exports a React component by
   default. ESM Views are built as ES modules that can be `import`ed at runtime
