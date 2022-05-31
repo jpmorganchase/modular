@@ -18,17 +18,15 @@ Packages can currently be one of 3 types:
   the box.
 
 - An `esm-view`, which is a package that typically exports a React component by
-  default. ESM Views are built as ESM modules that can be `import`ed at runtime
-  by an host to implement a [micro frontend](../concepts/microfrontends.md)
-  architecture or started as a normal standalone application, thanks to an
-  automatically generated `index.html` file. See also
+  default. ESM Views are built as ES modules that can be `import`ed at runtime
+  by a host to implement a [micro frontend](../concepts/microfrontends.md)
+  architecture or started as a normal standalone application. See also
   [the view building reference](../building-apps/esm-views.md)
 
-- A `view`, which is a package that exports a React component by default. Views
-  are primary, top-level components in `modular`. Read more about Views in
-  [this explainer](../concepts/views.md).
+- A `view`, which is a package that exports a React component by default. Read
+  more about Views in [this explainer](../concepts/views.md).
 
-- A typical javascript `package`. You can use this to create any other kind of
+- A typical JavaScript `package`. You can use this to create any other kind of
   utility, tool, or whatever your needs require you to do. As an example, you
   could build a node.js server inside one of these.
 
