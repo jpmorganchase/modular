@@ -2,8 +2,8 @@ import * as logger from '../utils/logger';
 
 const CHECKS = [
   'verifyBrowserslist',
+  'verifyModularRootPackageJson',
   'verifyPackageTree',
-  'verifyPrivateModularRoot',
   'verifyWorkspaceDependencies',
   'verifyWorkspaceStructure',
   'verifyYarnRcYml',
