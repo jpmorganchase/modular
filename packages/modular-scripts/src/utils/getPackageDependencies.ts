@@ -71,41 +71,7 @@ export async function getPackageDependencies(
     targetManifest.dependencies,
   ) as Dependency;
 
-  let lockDeps: Dependency = {};
-
-  try {
-    // Try to parse with v1 parser
-    const parsedLockfile = lockfile.parse(lockFile);
-    lockDeps = Object.entries(deps).reduce<Record<string, string>>(
-      (acc, [name, version]) => {
-        acc[name] = (parsedLockfile.object as LockFileEntries)[
-          `${name}@${version}`
-        ].version;
-        return acc;
-      },
-      {},
-    );
-  } catch (e) {
-    // Try to parse as yaml (v2+) - https://github.com/yarnpkg/yarn/issues/5629#issuecomment-753418765
-    const parsedLockfile = yaml.load(lockFile) as LockFileEntries;
-    const dependencyArray = Object.entries(deps);
-    // Parse: yarn v3 lock comes with entries like "'yargs@npm:^15.0.2, yargs@npm:^15.1.0, yargs@npm:^15.3.1, yargs@npm:^15.4.1'"
-    Object.entries(parsedLockfile).forEach(([name, { version }]) => {
-      const entryDependencies = name.split(', ');
-      dependencyArray.some(([dependencyName, dependencyVersion]) => {
-        if (
-          entryDependencies.includes(
-            `${dependencyName}@npm:${dependencyVersion}`,
-          )
-        ) {
-          lockDeps[dependencyName] = version;
-          return true;
-        }
-        return false;
-      });
-    });
-    // Prepare the parsed lockfile for access
-  }
+  const lockDeps = parseYarnLock(lockFile, deps);
 
   /* Get dependencies from package.json (regular), root package.json (hoisted) or pinned version in lockfile (resolution)
    * Exclude workspace dependencies. Warn if a dependency is imported in the source code
@@ -136,4 +102,46 @@ export async function getPackageDependencies(
       { manifest: {}, resolutions: {} },
     );
   return { manifest, resolutions };
+}
+
+function parseYarnLock(lockFile: string, deps: Dependency): Dependency {
+  return parseYarnLockV1(lockFile, deps) || parseYarnLockV3(lockFile, deps);
+}
+
+function parseYarnLockV1(
+  lockFile: string,
+  deps: Dependency,
+): Dependency | null {
+  try {
+    const parsedLockfile = lockfile.parse(lockFile);
+    return Object.entries(deps).reduce<Record<string, string>>(
+      (acc, [name, version]) => {
+        acc[name] = (parsedLockfile.object as LockFileEntries)[
+          `${name}@${version}`
+        ].version;
+        return acc;
+      },
+      {},
+    );
+  } catch (e) {
+    return null;
+  }
+}
+
+function parseYarnLockV3(lockFile: string, deps: Dependency): Dependency {
+  const dependencyArray = Object.entries(deps);
+  return Object.entries(
+    yaml.load(lockFile) as LockFileEntries,
+  ).reduce<Dependency>((acc, [name, { version }]) => {
+    // yarn v3 lockfiles comes with keys like "'yargs@npm:^15.0.2, yargs@npm:^15.1.0, yargs@npm:^15.3.1, yargs@npm:^15.4.1'"
+    const entryDependencies = name.split(', ');
+    for (const [dependencyName, dependencyVersion] of dependencyArray) {
+      if (
+        entryDependencies.includes(`${dependencyName}@npm:${dependencyVersion}`)
+      ) {
+        acc[dependencyName] = version;
+      }
+    }
+    return acc;
+  }, {});
 }
