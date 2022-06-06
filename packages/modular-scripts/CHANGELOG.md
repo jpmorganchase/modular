@@ -1,5 +1,14 @@
 # modular-scripts
 
+## 3.1.1
+
+### Patch Changes
+
+- [#1793](https://github.com/jpmorganchase/modular/pull/1793)
+  [`89ca8a7`](https://github.com/jpmorganchase/modular/commit/89ca8a748d5e8569f9967d274dc7221c0823d19e)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Correctly
+  parse v3 lockfiles for `modular analyze`
+
 ## 3.1.0
 
 ### Minor Changes
