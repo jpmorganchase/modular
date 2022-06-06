@@ -1,7 +1,9 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
 import { Project } from 'ts-morph';
-import { buildDepTree, LockfileType } from 'snyk-nodejs-lockfile-parser';
+import * as lockfile from '@yarnpkg/lockfile';
+import * as yaml from 'js-yaml';
+
 import type { CoreProperties, Dependency } from '@schemastore/package';
 import getModularRoot from './getModularRoot';
 import getLocation from './getLocation';
@@ -9,6 +11,7 @@ import getWorkspaceInfo from './getWorkspaceInfo';
 import * as logger from './logger';
 
 type DependencyManifest = NonNullable<CoreProperties['dependencies']>;
+type LockFileEntries = Record<string, { version: string }>;
 
 const npmPackageMatcher =
   /^(@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*/;
@@ -42,9 +45,8 @@ function getDependenciesFromSource(workspaceLocation: string) {
 export async function getPackageDependencies(
   target: string,
 ): Promise<{ manifest: DependencyManifest; resolutions: DependencyManifest }> {
-  /* This function is based on the assumption that nested package are not supported, so dependencies can be either declared in the
-   * target's package.json or hoisted up to the workspace root.
-   */
+  // This function is based on the assumption that nested package are not supported, so dependencies can be either declared in the
+  // target's package.json or hoisted up to the workspace root.
   const targetLocation = await getLocation(target);
   const workspaceInfo = getWorkspaceInfo();
 
@@ -69,26 +71,7 @@ export async function getPackageDependencies(
     targetManifest.dependencies,
   ) as Dependency;
 
-  const lockDeps = await buildDepTree(
-    // Build a dependency tree from the lockfile, using target dependencies and root dependencies in order of specificity
-    JSON.stringify(
-      Object.assign(Object.create(null), targetManifest, {
-        dependencies: Object.assign(
-          Object.create(null),
-          rootManifest.dependencies,
-          targetManifest.dependencies,
-        ) as Dependency,
-        devDependencies: Object.assign(
-          Object.create(null),
-          rootManifest.devDependencies,
-          targetManifest.devDependencies,
-        ) as Dependency,
-      }),
-    ),
-    lockFile,
-    true,
-    LockfileType.yarn,
-  );
+  const lockDeps = parseYarnLock(lockFile, deps);
 
   /* Get dependencies from package.json (regular), root package.json (hoisted) or pinned version in lockfile (resolution)
    * Exclude workspace dependencies. Warn if a dependency is imported in the source code
@@ -104,7 +87,7 @@ export async function getPackageDependencies(
             `Package ${depName} imported in ${target} source but not found in package dependencies or hoisted dependencies - this will prevent you from successfully build, start or move esm-views and will cause an error in the next release of modular`,
           );
         }
-        const resolutionVersion = lockDeps.dependencies[depName].version;
+        const resolutionVersion = lockDeps[depName];
         if (!resolutionVersion) {
           logger.error(
             `Package ${depName} imported in ${target} source but not found in lockfile - this will prevent you from successfully build, start or move esm-views and will cause an error in the next release of modular. Have you installed your dependencies?`,
@@ -119,4 +102,47 @@ export async function getPackageDependencies(
       { manifest: {}, resolutions: {} },
     );
   return { manifest, resolutions };
+}
+
+function parseYarnLock(lockFile: string, deps: Dependency): Dependency {
+  return parseYarnLockV1(lockFile, deps) || parseYarnLockV3(lockFile, deps);
+}
+
+function parseYarnLockV1(
+  lockFile: string,
+  deps: Dependency,
+): Dependency | null {
+  try {
+    const parsedLockfile = lockfile.parse(lockFile);
+    return Object.entries(deps).reduce<Record<string, string>>(
+      (acc, [name, version]) => {
+        acc[name] = (parsedLockfile.object as LockFileEntries)[
+          `${name}@${version}`
+        ].version;
+        return acc;
+      },
+      {},
+    );
+  } catch (e) {
+    return null;
+  }
+}
+
+function parseYarnLockV3(lockFile: string, deps: Dependency): Dependency {
+  const dependencyArray = Object.entries(deps);
+  // This function loops over all the dependency ranges listed in the lockfile and tries to match the given dependencies with an exact version.
+  return Object.entries(
+    yaml.load(lockFile) as LockFileEntries,
+  ).reduce<Dependency>((acc, [name, { version }]) => {
+    // Yarn v3 lockfile comes with keys like "'yargs@npm:^15.0.2, yargs@npm:^15.1.0, yargs@npm:^15.3.1, yargs@npm:^15.4.1'" - split them
+    const entryDependencies = name.split(', ');
+    for (const [dependencyName, dependencyVersion] of dependencyArray) {
+      if (
+        entryDependencies.includes(`${dependencyName}@npm:${dependencyVersion}`)
+      ) {
+        acc[dependencyName] = version;
+      }
+    }
+    return acc;
+  }, {});
 }
