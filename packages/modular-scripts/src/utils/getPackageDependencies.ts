@@ -130,10 +130,11 @@ function parseYarnLockV1(
 
 function parseYarnLockV3(lockFile: string, deps: Dependency): Dependency {
   const dependencyArray = Object.entries(deps);
+  // This function loops over all the dependency ranges listed in the lockfile and tries to match the given dependencies with an exact version.
   return Object.entries(
     yaml.load(lockFile) as LockFileEntries,
   ).reduce<Dependency>((acc, [name, { version }]) => {
-    // yarn v3 lockfiles comes with keys like "'yargs@npm:^15.0.2, yargs@npm:^15.1.0, yargs@npm:^15.3.1, yargs@npm:^15.4.1'"
+    // Yarn v3 lockfile comes with keys like "'yargs@npm:^15.0.2, yargs@npm:^15.1.0, yargs@npm:^15.3.1, yargs@npm:^15.4.1'" - split them
     const entryDependencies = name.split(', ');
     for (const [dependencyName, dependencyVersion] of dependencyArray) {
       if (
