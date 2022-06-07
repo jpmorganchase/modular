@@ -11016,15 +11016,10 @@ semver-diff@^3.1.1:
   dependencies:
     semver "^6.3.0"
 
-semver-regex@*:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/semver-regex/-/semver-regex-4.0.2.tgz#fd3124efe81647b33eb90a9de07cb72992424a02"
-  integrity sha512-xyuBZk1XYqQkB687hMQqrCP+J9bdJSjPpZwdmmNjyxKW1K3LDXxqxw91Egaqkh/yheBIVtKPt4/1eybKVdCx3g==
-
-semver-regex@3.1.3:
-  version "3.1.3"
-  resolved "https://registry.yarnpkg.com/semver-regex/-/semver-regex-3.1.3.tgz#b2bcc6f97f63269f286994e297e229b6245d0dc3"
-  integrity sha512-Aqi54Mk9uYTjVexLnR67rTyBusmwd04cLkHy9hNvk3+G3nT2Oyg7E0l4XVbOaNwIvQ3hHeYxGcyEy+mKreyBFQ==
+semver-regex@*, semver-regex@4.0.4:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/semver-regex/-/semver-regex-4.0.4.tgz#101d1e277d0de2f67db635c3e053669feccabf0d"
+  integrity sha512-VVI9pu+djW/t19uRPlayYj4qjpIXgHC4Wc5nMgX+4jNsYiP0Sl+d/lFig8JrktjqNEU2YikgQOnth94eLzAVWw==
 
 "semver@2 || 3 || 4 || 5", semver@^5.4.1, semver@^5.5.0, semver@^5.6.0:
   version "5.7.1"
