@@ -77,30 +77,31 @@ export async function getPackageDependencies(
    * Exclude workspace dependencies. Warn if a dependency is imported in the source code
    * but not specified in any of the package.jsons
    */
-  const { manifest, resolutions } = getDependenciesFromSource(targetLocation)
-    .filter((depName) => !(depName in workspaceInfo))
-    .reduce<{ manifest: DependencyManifest; resolutions: DependencyManifest }>(
-      (acc, depName) => {
-        const depManifestVersion = deps[depName];
-        if (!depManifestVersion) {
-          logger.error(
-            `Package ${depName} imported in ${target} source but not found in package dependencies or hoisted dependencies - this will prevent you from successfully build, start or move esm-views and will cause an error in the next release of modular`,
-          );
-        }
-        const resolutionVersion = lockDeps[depName];
-        if (!resolutionVersion) {
-          logger.error(
-            `Package ${depName} imported in ${target} source but not found in lockfile - this will prevent you from successfully build, start or move esm-views and will cause an error in the next release of modular. Have you installed your dependencies?`,
-          );
-        }
-        acc.manifest[depName] = depManifestVersion;
-        if (resolutionVersion) {
-          acc.resolutions[depName] = resolutionVersion;
-        }
-        return acc;
-      },
-      { manifest: {}, resolutions: {} },
-    );
+  const { manifest, resolutions } = getDependenciesFromSource(
+    targetLocation,
+  ).reduce<{ manifest: DependencyManifest; resolutions: DependencyManifest }>(
+    (acc, depName) => {
+      const depManifestVersion = deps[depName];
+      if (!depManifestVersion) {
+        logger.error(
+          `Package ${depName} imported in ${target} source but not found in package dependencies or hoisted dependencies - this will prevent you from successfully build, start or move esm-views and will cause an error in the next release of modular`,
+        );
+      }
+      const resolutionVersion =
+        lockDeps[depName] ?? workspaceInfo[depName]?.version;
+      if (!resolutionVersion) {
+        logger.error(
+          `Package ${depName} imported in ${target} source but not found in lockfile - this will prevent you from successfully build, start or move esm-views and will cause an error in the next release of modular. Have you installed your dependencies?`,
+        );
+      }
+      acc.manifest[depName] = depManifestVersion;
+      if (resolutionVersion) {
+        acc.resolutions[depName] = resolutionVersion;
+      }
+      return acc;
+    },
+    { manifest: {}, resolutions: {} },
+  );
   return { manifest, resolutions };
 }
 

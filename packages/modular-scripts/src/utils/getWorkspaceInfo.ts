@@ -12,6 +12,7 @@ export interface WorkSpaceRecord {
   mismatchedWorkspaceDependencies: string[];
   type: ModularType;
   public: boolean;
+  version?: string;
 }
 
 type WorkspaceInfo = Record<string, WorkSpaceRecord>;
@@ -32,6 +33,7 @@ export async function getWorkspaceInfo(): Promise<WorkspaceInfo> {
       ...packageInfo,
       type,
       public: !packageJson.private,
+      version: packageJson.version,
     };
 
     res[packageName] = modularPackageInfo;
