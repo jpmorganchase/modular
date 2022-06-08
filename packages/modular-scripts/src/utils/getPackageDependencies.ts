@@ -82,7 +82,9 @@ export async function getPackageDependencies(
   ).reduce<{ manifest: DependencyManifest; resolutions: DependencyManifest }>(
     (acc, depName) => {
       const depManifestVersion = deps[depName];
-      if (!depManifestVersion) {
+      if (depManifestVersion) {
+        acc.manifest[depName] = depManifestVersion;
+      } else {
         logger.error(
           `Package ${depName} imported in ${target} source but not found in package dependencies or hoisted dependencies - this will prevent you from successfully build, start or move esm-views and will cause an error in the next release of modular`,
         );
@@ -90,14 +92,12 @@ export async function getPackageDependencies(
       // Resolve either from lockfile or from workspace info. Precedence is given to lockfile.
       const resolutionVersion =
         lockDeps[depName] ?? workspaceInfo[depName]?.version;
-      if (!resolutionVersion) {
+      if (resolutionVersion) {
+        acc.resolutions[depName] = resolutionVersion;
+      } else {
         logger.error(
           `Package ${depName} imported in ${target} source but not found in lockfile - this will prevent you from successfully build, start or move esm-views and will cause an error in the next release of modular. Have you installed your dependencies?`,
         );
-      }
-      acc.manifest[depName] = depManifestVersion;
-      if (resolutionVersion) {
-        acc.resolutions[depName] = resolutionVersion;
       }
       return acc;
     },
