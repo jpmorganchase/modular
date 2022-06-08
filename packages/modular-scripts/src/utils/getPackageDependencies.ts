@@ -48,7 +48,7 @@ export async function getPackageDependencies(
   // This function is based on the assumption that nested package are not supported, so dependencies can be either declared in the
   // target's package.json or hoisted up to the workspace root.
   const targetLocation = await getLocation(target);
-  const workspaceInfo = getWorkspaceInfo();
+  const workspaceInfo = await getWorkspaceInfo();
 
   const rootManifest = fs.readJSONSync(
     path.join(getModularRoot(), 'package.json'),
@@ -112,20 +112,24 @@ function parseYarnLockV1(
   lockFile: string,
   deps: Dependency,
 ): Dependency | null {
+  let parsedLockfile: ReturnType<typeof lockfile.parse>;
   try {
-    const parsedLockfile = lockfile.parse(lockFile);
-    return Object.entries(deps).reduce<Record<string, string>>(
-      (acc, [name, version]) => {
-        acc[name] = (parsedLockfile.object as LockFileEntries)[
-          `${name}@${version}`
-        ].version;
-        return acc;
-      },
-      {},
-    );
+    parsedLockfile = lockfile.parse(lockFile);
   } catch (e) {
     return null;
   }
+  return Object.entries(deps).reduce<Record<string, string>>(
+    (acc, [name, version]) => {
+      const resolution = (parsedLockfile.object as LockFileEntries)[
+        `${name}@${version}`
+      ]?.version;
+      if (resolution !== undefined) {
+        acc[name] = resolution;
+      }
+      return acc;
+    },
+    {},
+  );
 }
 
 function parseYarnLockV3(lockFile: string, deps: Dependency): Dependency {
