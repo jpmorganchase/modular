@@ -14,9 +14,10 @@ describe('partitionDependencies', () => {
       const blockList = ['fake2'];
       expect(
         partitionDependencies({
-          packageDependencies: fakePkg,
+          dependencies: fakePkg,
           allowList,
           blockList,
+          workspaceInfo: {},
         }),
       ).toEqual({
         bundled: {
@@ -42,9 +43,10 @@ describe('partitionDependencies', () => {
       const blockList = ['*-typeb'];
       expect(
         partitionDependencies({
-          packageDependencies: fakePkg,
+          dependencies: fakePkg,
           allowList,
           blockList,
+          workspaceInfo: {},
         }),
       ).toEqual({
         bundled: {
@@ -65,7 +67,8 @@ describe('partitionDependencies', () => {
       };
       expect(
         partitionDependencies({
-          packageDependencies: fakePkg,
+          dependencies: fakePkg,
+          workspaceInfo: {},
         }),
       ).toEqual({
         bundled: {},

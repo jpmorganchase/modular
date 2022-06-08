@@ -87,6 +87,7 @@ export async function getPackageDependencies(
           `Package ${depName} imported in ${target} source but not found in package dependencies or hoisted dependencies - this will prevent you from successfully build, start or move esm-views and will cause an error in the next release of modular`,
         );
       }
+      // Resolve either from lockfile or from workspace info. Precedence is given to lockfile.
       const resolutionVersion =
         lockDeps[depName] ?? workspaceInfo[depName]?.version;
       if (!resolutionVersion) {

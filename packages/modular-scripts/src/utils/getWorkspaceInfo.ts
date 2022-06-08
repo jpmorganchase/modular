@@ -15,7 +15,7 @@ export interface WorkSpaceRecord {
   version?: string;
 }
 
-type WorkspaceInfo = Record<string, WorkSpaceRecord>;
+export type WorkspaceInfo = Record<string, WorkSpaceRecord>;
 
 export async function getWorkspaceInfo(): Promise<WorkspaceInfo> {
   const workspaces = await getAllWorkspaces();

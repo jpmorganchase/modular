@@ -1,6 +1,7 @@
 import micromatch from 'micromatch';
 import * as logger from './logger';
 import type { Dependency } from '@schemastore/package';
+import type { WorkspaceInfo } from './getWorkspaceInfo';
 
 interface FilteredDependencies {
   external: Dependency;
@@ -8,13 +9,18 @@ interface FilteredDependencies {
 }
 
 // Filter out dependencies that are in blocklist
-export function filterDependencies(
-  packageDependencies: Dependency,
-  isApp: boolean,
-): FilteredDependencies {
+export function filterDependencies({
+  dependencies,
+  isApp,
+  workspaceInfo,
+}: {
+  dependencies: Dependency;
+  isApp: boolean;
+  workspaceInfo: WorkspaceInfo;
+}): FilteredDependencies {
   if (isApp) {
     return {
-      bundled: packageDependencies,
+      bundled: dependencies,
       external: {},
     };
   }
@@ -29,47 +35,57 @@ export function filterDependencies(
       ? process.env.EXTERNAL_ALLOW_LIST.split(',')
       : undefined;
 
-  logger.debug('Filtering dependencies...');
-  logger.debug(
-    `External block list for dependencies is: ${JSON.stringify(
-      externalBlockList,
-    )}`,
-  );
-  logger.debug(
-    `External allow list for dependencies is: ${JSON.stringify(
-      externalAllowList,
-    )}`,
-  );
-
   return partitionDependencies({
-    packageDependencies,
+    dependencies,
     allowList: externalAllowList,
     blockList: externalBlockList,
+    workspaceInfo,
   });
 }
 
 export function partitionDependencies({
-  packageDependencies,
+  dependencies,
+  workspaceInfo,
   // By default, everything is externalized
   allowList: externalizeList = ['**'],
   // By default, nothing is bundled
   blockList: bundleList = [],
 }: {
-  packageDependencies: Dependency;
+  dependencies: Dependency;
   allowList?: string[];
   blockList?: string[];
+  workspaceInfo: WorkspaceInfo;
 }): FilteredDependencies {
-  return Object.entries(packageDependencies).reduce<FilteredDependencies>(
+  logger.debug('Filtering dependencies...');
+  logger.debug(
+    `External block list for dependencies is: ${JSON.stringify(
+      externalizeList,
+    )}`,
+  );
+  logger.debug(
+    `External allow list for dependencies is: ${JSON.stringify(bundleList)}`,
+  );
+
+  return Object.entries(dependencies).reduce<FilteredDependencies>(
     (acc, [name, version]) => {
       const isBlocked = micromatch.isMatch(name, bundleList);
       const isAllowed = micromatch.isMatch(name, externalizeList);
+      // Workspace dependencies should always be declared as either wildcard or exact dependencies in package.json
+      const workspaceVersion = workspaceInfo?.[name]?.version;
+      const isWorkspaceDependency =
+        workspaceVersion === version || workspaceVersion === '*';
+
+      // Rules:
+      // - All workspace dependencies that match version are bundled
+      // - All blocked versions are bundled
+      // - All not allowed versions are bundled
+      const isExternal = isAllowed && !isBlocked && !isWorkspaceDependency;
 
       logger.debug(
-        `Dependency ${name} isBlocked:${isBlocked.toString()}, isAllowed: ${isAllowed.toString()}`,
+        `Dependency ${name} isBlocked:${isBlocked.toString()}, isAllowed: ${isAllowed.toString()}, isWorkspaceDependency: ${isWorkspaceDependency.toString()}. Will be rewritten -> ${isExternal.toString()}`,
       );
 
-      // It's not enough to be in allow list, the dependency should also not be in block list to be rewritten
-      if (isAllowed && !isBlocked) {
+      if (isExternal) {
         acc.external[name] = version;
       } else {
         acc.bundled[name] = version;
