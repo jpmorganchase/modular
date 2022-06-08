@@ -68,6 +68,7 @@ describe('partitionDependencies', () => {
       expect(
         partitionDependencies({
           dependencies: fakePkg,
+          // TODO test this
           workspaceInfo: {},
         }),
       ).toEqual({
