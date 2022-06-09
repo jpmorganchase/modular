@@ -85,7 +85,7 @@ export async function getPackageDependencies(
 
   const lockDeps = parseYarnLock(lockFileContents, packageDeps);
   const dependenciesfromSource = getDependenciesFromSource(targetLocation);
-  const packageResolvedDependencies = resolvePackageDependencies({
+  const resolvedPackageDependencies = resolvePackageDependencies({
     dependenciesfromSource,
     packageDeps,
     lockDeps,
@@ -93,12 +93,12 @@ export async function getPackageDependencies(
   });
 
   // Log the errors
-  packageResolvedDependencies.manifestMiss.forEach((depName) =>
+  resolvedPackageDependencies.manifestMiss.forEach((depName) =>
     logger.error(
       `Package ${depName} imported in ${target} source but not found in package dependencies or hoisted dependencies - this will prevent you from successfully build, start or move esm-views and will cause an error in the next release of modular`,
     ),
   );
-  packageResolvedDependencies.lockFileMiss.forEach((depName) =>
+  resolvedPackageDependencies.lockFileMiss.forEach((depName) =>
     logger.error(
       `Package ${depName} imported in ${target} source but not found in lockfile - this will prevent you from successfully build, start or move esm-views and will cause an error in the next release of modular. Have you installed your dependencies?`,
     ),
@@ -106,8 +106,8 @@ export async function getPackageDependencies(
 
   // Return resolutions, omitting the errors
   return {
-    manifest: packageResolvedDependencies.manifest,
-    resolutions: packageResolvedDependencies.resolutions,
+    manifest: resolvedPackageDependencies.manifest,
+    resolutions: resolvedPackageDependencies.resolutions,
   };
 }
 
