@@ -108,7 +108,7 @@ bundled. This logic can be controlled using two environment variables:
 The allow / block lists are parsed and processed according to this logic:
 
 - If a dependency is local to the workspace and the version specified in the
-  dependent package.json matches the verion in the dependency package.json
+  depending `package.json` matches the version in the dependency `package.json`
   (either exactly or by wildcard), it will be bundled
 - If a dependency is only in the allow list, it will be rewritten
 - If a dependency is only in the block list, it will be bundled
