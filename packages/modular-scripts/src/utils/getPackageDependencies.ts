@@ -58,10 +58,13 @@ export async function getPackageDependencies(
     path.join(targetLocation, 'package.json'),
   ) as CoreProperties;
 
-  const lockFile = fs.readFileSync(path.join(getModularRoot(), 'yarn.lock'), {
-    encoding: 'utf8',
-    flag: 'r',
-  });
+  const lockFileContents = fs.readFileSync(
+    path.join(getModularRoot(), 'yarn.lock'),
+    {
+      encoding: 'utf8',
+      flag: 'r',
+    },
+  );
 
   const deps = Object.assign(
     Object.create(null),
@@ -71,7 +74,7 @@ export async function getPackageDependencies(
     targetManifest.dependencies,
   ) as Dependency;
 
-  const lockDeps = parseYarnLock(lockFile, deps);
+  const lockDeps = parseYarnLock(lockFileContents, deps);
 
   /* Get dependencies from package.json (regular), root package.json (hoisted) or pinned version in lockfile (resolution)
    * Exclude workspace dependencies. Warn if a dependency is imported in the source code
@@ -111,12 +114,12 @@ function parseYarnLock(lockFile: string, deps: Dependency): Dependency {
 }
 
 function parseYarnLockV1(
-  lockFile: string,
+  lockFileContents: string,
   deps: Dependency,
 ): Dependency | null {
   let parsedLockfile: ReturnType<typeof lockfile.parse>;
   try {
-    parsedLockfile = lockfile.parse(lockFile);
+    parsedLockfile = lockfile.parse(lockFileContents);
   } catch (e) {
     return null;
   }
@@ -134,11 +137,14 @@ function parseYarnLockV1(
   );
 }
 
-function parseYarnLockV3(lockFile: string, deps: Dependency): Dependency {
+function parseYarnLockV3(
+  lockFileContents: string,
+  deps: Dependency,
+): Dependency {
   const dependencyArray = Object.entries(deps);
   // This function loops over all the dependency ranges listed in the lockfile and tries to match the given dependencies with an exact version.
   return Object.entries(
-    yaml.load(lockFile) as LockFileEntries,
+    yaml.load(lockFileContents) as LockFileEntries,
   ).reduce<Dependency>((acc, [name, { version }]) => {
     // Yarn v3 lockfile comes with keys like "'yargs@npm:^15.0.2, yargs@npm:^15.1.0, yargs@npm:^15.3.1, yargs@npm:^15.4.1'" - split them
     const entryDependencies = name.split(', ');
