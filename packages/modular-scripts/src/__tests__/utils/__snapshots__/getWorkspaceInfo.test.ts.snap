@@ -7,6 +7,7 @@ Object {
     "mismatchedWorkspaceDependencies": Array [],
     "public": true,
     "type": "package",
+    "version": "3.0.0",
     "workspaceDependencies": Array [],
   },
   "eslint-config-modular-app": Object {
@@ -14,6 +15,7 @@ Object {
     "mismatchedWorkspaceDependencies": Array [],
     "public": true,
     "type": "package",
+    "version": "3.0.1",
     "workspaceDependencies": Array [],
   },
   "modular-scripts": Object {
@@ -21,6 +23,7 @@ Object {
     "mismatchedWorkspaceDependencies": Array [],
     "public": true,
     "type": "package",
+    "version": "3.1.1",
     "workspaceDependencies": Array [],
   },
   "modular-site": Object {
@@ -28,6 +31,7 @@ Object {
     "mismatchedWorkspaceDependencies": Array [],
     "public": false,
     "type": "app",
+    "version": "1.0.1",
     "workspaceDependencies": Array [],
   },
   "modular-template-app": Object {
@@ -35,6 +39,7 @@ Object {
     "mismatchedWorkspaceDependencies": Array [],
     "public": true,
     "type": "template",
+    "version": "1.1.0",
     "workspaceDependencies": Array [],
   },
   "modular-template-esm-view": Object {
@@ -42,6 +47,7 @@ Object {
     "mismatchedWorkspaceDependencies": Array [],
     "public": true,
     "type": "template",
+    "version": "1.0.0",
     "workspaceDependencies": Array [],
   },
   "modular-template-node-env-app": Object {
@@ -49,6 +55,7 @@ Object {
     "mismatchedWorkspaceDependencies": Array [],
     "public": false,
     "type": "template",
+    "version": "0.2.0",
     "workspaceDependencies": Array [],
   },
   "modular-template-package": Object {
@@ -56,6 +63,7 @@ Object {
     "mismatchedWorkspaceDependencies": Array [],
     "public": true,
     "type": "template",
+    "version": "1.1.0",
     "workspaceDependencies": Array [],
   },
   "modular-template-view": Object {
@@ -63,6 +71,7 @@ Object {
     "mismatchedWorkspaceDependencies": Array [],
     "public": true,
     "type": "template",
+    "version": "1.1.0",
     "workspaceDependencies": Array [],
   },
   "modular-views.macro": Object {
@@ -70,6 +79,7 @@ Object {
     "mismatchedWorkspaceDependencies": Array [],
     "public": true,
     "type": "package",
+    "version": "3.1.1",
     "workspaceDependencies": Array [],
   },
   "tree-view-for-tests": Object {
@@ -77,6 +87,15 @@ Object {
     "mismatchedWorkspaceDependencies": Array [],
     "public": false,
     "type": "package",
+    "version": "2.0.0",
+    "workspaceDependencies": Array [],
+  },
+  "view-1": Object {
+    "location": "packages/view-1",
+    "mismatchedWorkspaceDependencies": Array [],
+    "public": true,
+    "type": "view",
+    "version": "1.0.0",
     "workspaceDependencies": Array [],
   },
 }
