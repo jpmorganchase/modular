@@ -3,7 +3,7 @@ parent: Building your Apps
 title: ESM Views
 ---
 
-modular builds packages of `"type": "esm-view"` as
+Modular builds packages of `"type": "esm-view"` as
 [ES Modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules),
 rewriting all of a subset of their imports to make use of a configurable ESM CDN
 (e.g. [Skypack](https://www.skypack.dev) or [esm.sh](https://esm.sh/)). This
@@ -107,6 +107,9 @@ bundled. This logic can be controlled using two environment variables:
 
 The allow / block lists are parsed and processed according to this logic:
 
+- If a dependency is local to the workspace and the version specified in the
+  dependent package.json matches the verion in the dependency package.json
+  (either exactly or by wildcard), it will be bundled
 - If a dependency is only in the allow list, it will be rewritten
 - If a dependency is only in the block list, it will be bundled
 - If a dependency is in both lists, it will be bundled (`EXTERNAL_BLOCK_LIST`
