@@ -90,13 +90,5 @@ Object {
     "version": "2.0.0",
     "workspaceDependencies": Array [],
   },
-  "view-1": Object {
-    "location": "packages/view-1",
-    "mismatchedWorkspaceDependencies": Array [],
-    "public": true,
-    "type": "view",
-    "version": "1.0.0",
-    "workspaceDependencies": Array [],
-  },
 }
 `;
