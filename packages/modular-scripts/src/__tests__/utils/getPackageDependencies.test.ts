@@ -41,7 +41,7 @@ describe('Resolve dependencies', () => {
     expect(manifestMiss).toEqual([]);
   });
 
-  it('should resolve dependencies with pacxkage and lockfile misses', () => {
+  it('should resolve dependencies with package and lockfile misses', () => {
     const { manifest, resolutions, manifestMiss, lockFileMiss } =
       resolvePackageDependencies({
         dependenciesfromSource: [
