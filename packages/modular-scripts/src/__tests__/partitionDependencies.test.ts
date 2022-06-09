@@ -68,11 +68,38 @@ describe('partitionDependencies', () => {
       expect(
         partitionDependencies({
           dependencies: fakePkg,
-          // TODO test this
           workspaceInfo: {},
         }),
       ).toEqual({
         bundled: {},
+        external: {
+          '@somescope/fake1': '^2.0.1',
+          '@somescope/fake2': '^1.0.1',
+        },
+      });
+    });
+    it('THEN expects workspace packages to be blocked by default', () => {
+      const fakePkg = {
+        '@somescope/fake1': '^2.0.1',
+        '@somescope/fake2': '^1.0.1',
+        '@workspacescope/my-local-pkg': '7.7.7',
+      };
+      expect(
+        partitionDependencies({
+          dependencies: fakePkg,
+          workspaceInfo: {
+            '@workspacescope/my-local-pkg': {
+              location: '',
+              version: '7.7.7',
+              type: 'esm-view',
+              workspaceDependencies: [],
+              mismatchedWorkspaceDependencies: [],
+              public: false,
+            },
+          },
+        }),
+      ).toEqual({
+        bundled: { '@workspacescope/my-local-pkg': '7.7.7' },
         external: {
           '@somescope/fake1': '^2.0.1',
           '@somescope/fake2': '^1.0.1',
