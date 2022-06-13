@@ -374,7 +374,8 @@
 
 - [#1112](https://github.com/jpmorganchase/modular/pull/1112)
   [`d08e4c2`](https://github.com/jpmorganchase/modular/commit/d08e4c2b15db93ef2adde961651254491db94140)
-  Thanks [@joshwooding](https://github.com/joshwooding)! - Support yarn v3
+  Thanks [@joshwooding](https://github.com/joshwooding)! - ~~Support yarn v3~~
+  Support yarn v3 workspaces
 
 * [#1150](https://github.com/jpmorganchase/modular/pull/1150)
   [`8b0826e`](https://github.com/jpmorganchase/modular/commit/8b0826e8cedf580bcf9c7a51866195e430ba3ddb)

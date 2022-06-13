@@ -799,6 +799,7 @@ function createExternalDependenciesMap(
         `Dependency ${name} found in package.json but not in lockfile. Have you installed your dependencies?`,
       );
     }
+    console.log({ name, externalResolutions });
     return {
       ...acc,
       [name]: externalCdnTemplate
