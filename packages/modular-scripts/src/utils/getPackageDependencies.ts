@@ -95,12 +95,12 @@ export async function getPackageDependencies(
   // Log the errors
   resolvedPackageDependencies.manifestMiss.forEach((depName) =>
     logger.error(
-      `Package ${depName} imported in ${target} source but not found in package dependencies or hoisted dependencies - this will prevent you from successfully build, start or move esm-views and will cause an error in the next release of modular`,
+      `Package ${depName} imported in ${target} source but not found in package dependencies or hoisted dependencies - this will prevent you from successfully building, starting or moving esm-views and will cause an error in the next release of modular`,
     ),
   );
   resolvedPackageDependencies.lockFileMiss.forEach((depName) =>
     logger.error(
-      `Package ${depName} imported in ${target} source but not found in lockfile - this will prevent you from successfully build, start or move esm-views and will cause an error in the next release of modular. Have you installed your dependencies?`,
+      `Package ${depName} imported in ${target} source but not found in lockfile - this will prevent you from successfully building, starting or moving esm-views and will cause an error in the next release of modular. Have you installed your dependencies?`,
     ),
   );
 
