@@ -19,9 +19,10 @@ import { filterDependencies } from './utils/filterDependencies';
 
 async function start(packageName: string): Promise<void> {
   let target = packageName;
+  const workspaceInfo = await getWorkspaceInfo();
 
   if (!target) {
-    const availablePackages = Object.keys(await getWorkspaceInfo());
+    const availablePackages = Object.keys(workspaceInfo);
     const chosenTarget = await prompts<string>({
       type: 'select',
       name: 'value',
@@ -73,9 +74,17 @@ async function start(packageName: string): Promise<void> {
   const { manifest: packageDependencies, resolutions: packageResolutions } =
     await getPackageDependencies(target);
   const { external: externalDependencies, bundled: bundledDependencies } =
-    filterDependencies(packageDependencies, !isEsmView);
+    filterDependencies({
+      dependencies: packageDependencies,
+      isApp: !isEsmView,
+      workspaceInfo,
+    });
   const { external: externalResolutions, bundled: bundledResolutions } =
-    filterDependencies(packageResolutions, !isEsmView);
+    filterDependencies({
+      dependencies: packageResolutions,
+      isApp: !isEsmView,
+      workspaceInfo,
+    });
 
   // If you want to use webpack then we'll always use webpack. But if you've indicated
   // you want esbuild - then we'll switch you to the new fancy world.
