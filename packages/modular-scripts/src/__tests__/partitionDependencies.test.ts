@@ -106,5 +106,86 @@ describe('partitionDependencies', () => {
         },
       });
     });
+    it('THEN expects workspace packages to be blocked with workspace versions', () => {
+      const fakePkg = {
+        '@somescope/fake1': '^2.0.1',
+        '@somescope/fake2': '^1.0.1',
+        '@workspacescope/my-local-pkg': 'workspace:^7.7.7',
+        '@workspacescope/my-other-local-pkg': 'workspace:*',
+      };
+      expect(
+        partitionDependencies({
+          dependencies: fakePkg,
+          workspaceInfo: {
+            '@workspacescope/my-local-pkg': {
+              location: '',
+              version: '7.7.12',
+              type: 'esm-view',
+              workspaceDependencies: [],
+              mismatchedWorkspaceDependencies: [],
+              public: false,
+            },
+            '@workspacescope/my-other-local-pkg': {
+              location: '',
+              version: '1.2.3',
+              type: 'esm-view',
+              workspaceDependencies: [],
+              mismatchedWorkspaceDependencies: [],
+              public: false,
+            },
+          },
+        }),
+      ).toEqual({
+        bundled: {
+          '@workspacescope/my-local-pkg': 'workspace:^7.7.7',
+          '@workspacescope/my-other-local-pkg': 'workspace:*',
+        },
+        external: {
+          '@somescope/fake1': '^2.0.1',
+          '@somescope/fake2': '^1.0.1',
+        },
+      });
+    });
+
+    it('THEN expects workspace packages to be blocked with workspace versions not satisfying semver', () => {
+      const fakePkg = {
+        '@somescope/fake1': '^2.0.1',
+        '@somescope/fake2': '^1.0.1',
+        '@workspacescope/my-local-pkg': '^7.7.7',
+        '@workspacescope/my-other-local-pkg': 'workspace:*',
+      };
+      expect(
+        partitionDependencies({
+          dependencies: fakePkg,
+          workspaceInfo: {
+            '@workspacescope/my-local-pkg': {
+              location: '',
+              version: '7.6.52',
+              type: 'esm-view',
+              workspaceDependencies: [],
+              mismatchedWorkspaceDependencies: [],
+              public: false,
+            },
+            '@workspacescope/my-other-local-pkg': {
+              location: '',
+              version: '1.2.3',
+              type: 'esm-view',
+              workspaceDependencies: [],
+              mismatchedWorkspaceDependencies: [],
+              public: false,
+            },
+          },
+        }),
+      ).toEqual({
+        bundled: {
+          '@workspacescope/my-other-local-pkg': 'workspace:*',
+        },
+        external: {
+          '@workspacescope/my-local-pkg': '^7.7.7',
+          '@somescope/fake1': '^2.0.1',
+          '@somescope/fake2': '^1.0.1',
+        },
+      });
+    });
   });
 });

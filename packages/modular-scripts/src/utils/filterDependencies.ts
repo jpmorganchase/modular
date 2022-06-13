@@ -1,4 +1,5 @@
 import micromatch from 'micromatch';
+import * as semver from 'semver';
 import * as logger from './logger';
 import type { Dependency } from '@schemastore/package';
 import type { WorkspaceInfo } from './getWorkspaceInfo';
@@ -70,10 +71,15 @@ export function partitionDependencies({
     (acc, [name, version]) => {
       const isBlocked = micromatch.isMatch(name, bundleList);
       const isAllowed = micromatch.isMatch(name, externalizeList);
-      // Workspace dependencies should always be declared as either wildcard or exact dependencies in package.json
-      const workspaceVersion = workspaceInfo?.[name]?.version;
+
+      const workspaceVersion = workspaceInfo?.[name]?.version ?? '';
+      const hasWorkspacePrefix = version.startsWith('workspace:');
+      const packageVersion = hasWorkspacePrefix
+        ? version.split('workspace:')[1]
+        : version;
       const isWorkspaceDependency =
-        workspaceVersion === version || workspaceVersion === '*';
+        semver.satisfies(workspaceVersion, packageVersion) ||
+        packageVersion === '*';
 
       // Rules:
       // - All workspace dependencies that match version are bundled
