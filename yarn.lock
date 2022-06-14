@@ -10417,10 +10417,10 @@ pupa@^2.1.1:
   dependencies:
     escape-goat "^2.0.0"
 
-puppeteer@14.2.1:
-  version "14.2.1"
-  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-14.2.1.tgz#e343379061e0211b4c02d0c535883c26a39f825e"
-  integrity sha512-cIEsAbEbNYqHbkvdZY4+YSdxVwh4YFqOHSezuLpu46XAYlKkQeAMdJQ+mDAxg9v77gIn8PHJ6PlftIVsWKRACA==
+puppeteer@14.4.0:
+  version "14.4.0"
+  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-14.4.0.tgz#e711789814f785484ff5906d464a32a8146a1304"
+  integrity sha512-hAXoJX7IAmnRBwf4VrowoRdrS8hqWZsGuQ1Dg5R0AwDK5juaxnNO/obySo9+ytyF7pp9/VsmIA9yFE1GLSouCQ==
   dependencies:
     cross-fetch "3.1.5"
     debug "4.3.4"
