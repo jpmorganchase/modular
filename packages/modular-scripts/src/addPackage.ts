@@ -122,6 +122,14 @@ async function promptForTemplate(templateName: string) {
   return templateName;
 }
 
+async function getYarnVersion() {
+  const { stdout: version } = await execAsync('yarnpkg', ['--version'], {
+    cwd: getModularRoot(),
+    stdout: 'pipe',
+  });
+  return version;
+}
+
 async function addPackage({
   name: nameArg,
   type: typeArg,
@@ -134,6 +142,8 @@ async function addPackage({
   const packageType = templateNameArg ?? (await promptForType(typeArg));
   const templateName = await promptForTemplate(templateNameArg || packageType);
   const modularRoot = getModularRoot();
+  const yarnVersion = await getYarnVersion();
+  const isYarnV1 = yarnVersion.startsWith('1.');
   const packageName = toParamCase(name, { stripRegexp: /[^A-Z0-9@/]+/gi });
   const packageDir = toParamCase(name, { stripRegexp: /[^A-Z0-9/]+/gi });
   const componentName = toPascalCase(name);
@@ -148,14 +158,19 @@ async function addPackage({
     newModularPackageJsonPath = require.resolve(installedPackageJsonPath);
   } catch (e) {
     logger.log('Installing package template, this may take a moment...');
-    const templateInstallSubprocess = execAsync(
-      'yarnpkg',
-      ['add', templateName, '--prefer-offline', '--silent', '-W'],
-      {
-        cwd: modularRoot,
-        stderr: 'pipe',
-      },
-    );
+    const yarnAddArgs = ['add', templateName];
+
+    if (isYarnV1) {
+      yarnAddArgs.push('--prefer-offline', '-W');
+    } else {
+      yarnAddArgs.push('--cached');
+    }
+
+    const templateInstallSubprocess = execAsync('yarnpkg', yarnAddArgs, {
+      cwd: modularRoot,
+      stderr: 'pipe',
+      stdout: 'ignore',
+    });
 
     // Remove warnings
     templateInstallSubprocess.stderr?.pipe(
@@ -250,13 +265,22 @@ async function addPackage({
     );
   }
 
-  const yarnArgs = verbose ? ['--verbose'] : ['--silent'];
-  if (preferOffline) {
-    yarnArgs.push('--prefer-offline');
+  const yarnArgs = [];
+
+  if (isYarnV1) {
+    if (verbose) {
+      yarnArgs.push('--verbose');
+    }
+
+    if (preferOffline) {
+      yarnArgs.push('--prefer-offline');
+    }
   }
+
   const subprocess = execAsync('yarnpkg', yarnArgs, {
     cwd: modularRoot,
     stderr: 'pipe',
+    stdout: verbose ? process.stdout : 'ignore',
   });
 
   // Remove warnings
