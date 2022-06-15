@@ -1,5 +1,21 @@
 # modular-scripts
 
+## 3.1.2
+
+### Patch Changes
+
+- [#1825](https://github.com/jpmorganchase/modular/pull/1825)
+  [`ceb837d`](https://github.com/jpmorganchase/modular/commit/ceb837d11a366f1dd203f36eca4af1843f40478d)
+  Thanks [@joshwooding](https://github.com/joshwooding)! - Add yarn 3 support
+  for `modular add`
+
+* [#1821](https://github.com/jpmorganchase/modular/pull/1821)
+  [`61f6e36`](https://github.com/jpmorganchase/modular/commit/61f6e363d80a9a26d00705a4237d7fb8836e5acd)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Fix
+  package resolutions for local (workspace) dependencies - this fixes the
+  `build`, `start` and `analyze` commands when an esm-view or an app has
+  workspace dependencies.
+
 ## 3.1.1
 
 ### Patch Changes
