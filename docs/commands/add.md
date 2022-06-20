@@ -20,7 +20,7 @@ Packages can currently be one of the following types:
   default. ESM Views are built as ES modules that can be `import`ed at runtime
   by a host to implement a [micro frontend](../concepts/microfrontends.md)
   architecture or started as a normal standalone application. See also
-  [the view building reference](../building-apps/esm-views.md)
+  [the view building reference](../esm-views/index.md)
 
 - A `view`, which is a package that exports a React component by default. Read
   more about Views in [this explainer](../concepts/views.md).
