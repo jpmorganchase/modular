@@ -79,7 +79,7 @@
     "loader-utils": "3.2.0",
     "micromatch": "4.0.5",
     "mime": "^3.0.0",
-    "mini-css-extract-plugin": "2.6.0",
+    "mini-css-extract-plugin": "2.6.1",
     "npm-packlist": "5.1.0",
     "open": "8.3.0",
     "parse5": "6.0.1",
