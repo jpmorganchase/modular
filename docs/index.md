@@ -49,6 +49,7 @@ It supports three flags:
 - [`port`](./commands/port.md)
 - [`typecheck`](./commands/typecheck.md)
 - [`lint`](./commands/lint.md)
+- [`rename`](./commands/rename.md)
 
 ## Concepts
 
