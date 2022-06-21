@@ -7,12 +7,12 @@ parent: Concepts
 Micro frontends are a pattern in which discrete UIs (frontends) are composed of
 independent fragments that can be built and deployed separately by different
 teams and loaded on-demand at runtime. Modular gives developers the opportunity
-to implement micro frontends through [ESM Views](../building-apps/esm-views.md),
-which are applications built as ES Modules. ESM Views can be served standalone
-or dynamically imported by a host application at runtime and rendered in the
-host application's own React tree, without the need of using Iframes. ESM Views
-also allow automatic dependency de-duplication in the browser, thanks to how
-Modular offloads third-party dependencies to a configurable ESM CDN.
+to implement micro frontends through [ESM Views](../esm-views/index.md), which
+are applications built as ES Modules. ESM Views can be served standalone or
+dynamically imported by a host application at runtime and rendered in the host
+application's own React tree, without the need of using Iframes. ESM Views also
+allow automatic dependency de-duplication in the browser, thanks to how Modular
+offloads third-party dependencies to a configurable ESM CDN.
 
 ## How we build micro frontends
 
@@ -50,14 +50,16 @@ implement a micro frontend architecture.
 Building an ESM View generates a single JavaScript entrypoint and a single CSS
 entrypoint that can be imported at runtime by any application (or other ESM
 View) using dynamic import (or any viable technique in case of styles). ESM
-Views will generate a package manifest (`package.json` file) that contains:
+Views will generate
+[a package manifest](../esm-views/output-package-manifest.md) (`package.json`
+file) that contains:
 
 - Information regarding the location of the built files, whose names are
   uniquely hashed to facilitate caching
 - Lists of bundled and rewritten dependencies along with their dependencies, in
   order to decouple importing of ESM Views from the actual build result
   structure. For more information, visit the
-  [ESM Views reference page](../building-apps/esm-views.md)
+  [ESM Views reference page](../esm-views/index.md)
 
 ## Standalone support
 
@@ -73,4 +75,4 @@ via an ESM CDN.
 ESM views can be customised by editing the template used to rewrite the external
 imports and by setting which dependency imports are rewritten to point to a CDN
 and which are bundled. For more information on how to customise the build of ESM
-views, visit the [ESM Views reference page](../building-apps/esm-views.md)
+views, visit the [ESM Views reference page](../esm-views/index.md)
