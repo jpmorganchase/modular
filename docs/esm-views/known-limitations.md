@@ -1,7 +1,7 @@
 ---
 parent: ESM Views
 nav_order: 100
-title: Known limitations of ESM Views
+title: Known limitations
 ---
 
 # Known limitations of ESM Views
