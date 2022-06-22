@@ -216,13 +216,13 @@ async function addPackage({
   const packageFilePaths = getAllFiles(packagePath);
 
   // If we get our package locally we need to whitelist files like yarn publish does
-  const packageWhitelist = globby.sync(
-    modularTemplatePackageJson.files || ['*'],
-    {
+  const packageWhitelist = globby
+    .sync(modularTemplatePackageJson.files || ['*'], {
       cwd: packagePath,
       absolute: true,
-    },
-  );
+    })
+    .map((filePath) => path.normalize(filePath));
+
   for (const packageFilePath of packageFilePaths) {
     if (!packageWhitelist.includes(packageFilePath)) {
       fs.removeSync(packageFilePath);
