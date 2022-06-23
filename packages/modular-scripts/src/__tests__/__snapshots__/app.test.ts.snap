@@ -4,13 +4,13 @@ exports[`When working with a nested app can generate a asset-manifest 1`] = `
 "{
   \\"files\\": {
     \\"main.css\\": \\"/static/css/main.1a7488ce.css\\",
-    \\"main.js\\": \\"/static/js/main.99649537.js\\",
+    \\"main.js\\": \\"/static/js/main.502b419b.js\\",
     \\"runtime-main.js\\": \\"/static/js/runtime-main.de012fdc.js\\",
     \\"static/js/788.bbd34b33.js\\": \\"/static/js/788.bbd34b33.js\\",
     \\"static/media/logo.svg\\": \\"/static/media/logo.103b5fa18196d5665a7e12318285c916.svg\\",
     \\"index.html\\": \\"/index.html\\",
     \\"main.1a7488ce.css.map\\": \\"/static/css/main.1a7488ce.css.map\\",
-    \\"main.99649537.js.map\\": \\"/static/js/main.99649537.js.map\\",
+    \\"main.502b419b.js.map\\": \\"/static/js/main.502b419b.js.map\\",
     \\"runtime-main.de012fdc.js.map\\": \\"/static/js/runtime-main.de012fdc.js.map\\",
     \\"788.bbd34b33.js.map\\": \\"/static/js/788.bbd34b33.js.map\\"
   },
@@ -18,7 +18,7 @@ exports[`When working with a nested app can generate a asset-manifest 1`] = `
     \\"static/js/runtime-main.de012fdc.js\\",
     \\"static/js/788.bbd34b33.js\\",
     \\"static/css/main.1a7488ce.css\\",
-    \\"static/js/main.99649537.js\\"
+    \\"static/js/main.502b419b.js\\"
   ]
 }"
 `;
@@ -146,7 +146,7 @@ exports[`When working with a nested app can generate a hashed main js chunk in t
   self.webpackChunk_scoped_sample_app || []).push([
   [179],
   {
-    235: (e, t, a) => {
+    754: (e, t, a) => {
       var r = a(735),
         l = a(788);
       const n = a.p + \\"static/media/logo.103b5fa18196d5665a7e12318285c916.svg\\";
@@ -190,13 +190,13 @@ exports[`When working with a nested app can generate a hashed main js chunk in t
   },
   (e) => {
     e.O(0, [788], () => {
-      return (t = 235), e((e.s = t));
+      return (t = 754), e((e.s = t));
       var t;
     });
     e.O();
   },
 ]);
-//# sourceMappingURL=main.99649537.js.map
+//# sourceMappingURL=main.502b419b.js.map
 "
 `;
 
@@ -8622,7 +8622,7 @@ exports[`When working with a nested app can generate a index.html 1`] = `
       })();
     </script>
     <script defer=\\"defer\\" src=\\"/static/js/788.bbd34b33.js\\"></script>
-    <script defer=\\"defer\\" src=\\"/static/js/main.99649537.js\\"></script>
+    <script defer=\\"defer\\" src=\\"/static/js/main.502b419b.js\\"></script>
     <link href=\\"/static/css/main.1a7488ce.css\\" rel=\\"stylesheet\\" />
   </head>
   <body>
@@ -8684,13 +8684,13 @@ exports[`when working with an app can generate a asset-manifest 1`] = `
 "{
   \\"files\\": {
     \\"main.css\\": \\"/static/css/main.1a7488ce.css\\",
-    \\"main.js\\": \\"/static/js/main.6146e428.js\\",
+    \\"main.js\\": \\"/static/js/main.abe6afa1.js\\",
     \\"runtime-main.js\\": \\"/static/js/runtime-main.e92969dd.js\\",
     \\"static/js/316.394ef80b.js\\": \\"/static/js/316.394ef80b.js\\",
     \\"static/media/logo.svg\\": \\"/static/media/logo.103b5fa18196d5665a7e12318285c916.svg\\",
     \\"index.html\\": \\"/index.html\\",
     \\"main.1a7488ce.css.map\\": \\"/static/css/main.1a7488ce.css.map\\",
-    \\"main.6146e428.js.map\\": \\"/static/js/main.6146e428.js.map\\",
+    \\"main.abe6afa1.js.map\\": \\"/static/js/main.abe6afa1.js.map\\",
     \\"runtime-main.e92969dd.js.map\\": \\"/static/js/runtime-main.e92969dd.js.map\\",
     \\"316.394ef80b.js.map\\": \\"/static/js/316.394ef80b.js.map\\"
   },
@@ -8698,7 +8698,7 @@ exports[`when working with an app can generate a asset-manifest 1`] = `
     \\"static/js/runtime-main.e92969dd.js\\",
     \\"static/js/316.394ef80b.js\\",
     \\"static/css/main.1a7488ce.css\\",
-    \\"static/js/main.6146e428.js\\"
+    \\"static/js/main.abe6afa1.js\\"
   ]
 }"
 `;
@@ -8708,7 +8708,7 @@ exports[`when working with an app can generate a hashed main js chunk in the js 
 (self.webpackChunksample_app = self.webpackChunksample_app || []).push([
   [179],
   {
-    217: (e, t, a) => {
+    354: (e, t, a) => {
       var r = a(784),
         l = a(316);
       const n = a.p + \\"static/media/logo.103b5fa18196d5665a7e12318285c916.svg\\";
@@ -8757,13 +8757,13 @@ exports[`when working with an app can generate a hashed main js chunk in the js 
   },
   (e) => {
     e.O(0, [316], () => {
-      return (t = 217), e((e.s = t));
+      return (t = 354), e((e.s = t));
       var t;
     });
     e.O();
   },
 ]);
-//# sourceMappingURL=main.6146e428.js.map
+//# sourceMappingURL=main.abe6afa1.js.map
 "
 `;
 
@@ -17187,7 +17187,7 @@ exports[`when working with an app can generate a index.html 1`] = `
       })();
     </script>
     <script defer=\\"defer\\" src=\\"/static/js/316.394ef80b.js\\"></script>
-    <script defer=\\"defer\\" src=\\"/static/js/main.6146e428.js\\"></script>
+    <script defer=\\"defer\\" src=\\"/static/js/main.abe6afa1.js\\"></script>
     <link href=\\"/static/css/main.1a7488ce.css\\" rel=\\"stylesheet\\" />
   </head>
   <body>
