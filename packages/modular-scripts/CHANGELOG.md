@@ -1,5 +1,77 @@
 # modular-scripts
 
+## 3.1.2
+
+### Patch Changes
+
+- [#1825](https://github.com/jpmorganchase/modular/pull/1825)
+  [`ceb837d`](https://github.com/jpmorganchase/modular/commit/ceb837d11a366f1dd203f36eca4af1843f40478d)
+  Thanks [@joshwooding](https://github.com/joshwooding)! - Add yarn 3 support
+  for `modular add`
+
+* [#1821](https://github.com/jpmorganchase/modular/pull/1821)
+  [`61f6e36`](https://github.com/jpmorganchase/modular/commit/61f6e363d80a9a26d00705a4237d7fb8836e5acd)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Fix
+  package resolutions for local (workspace) dependencies - this fixes the
+  `build`, `start` and `analyze` commands when an esm-view or an app has
+  workspace dependencies.
+
+## 3.1.1
+
+### Patch Changes
+
+- [#1793](https://github.com/jpmorganchase/modular/pull/1793)
+  [`89ca8a7`](https://github.com/jpmorganchase/modular/commit/89ca8a748d5e8569f9967d274dc7221c0823d19e)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Correctly
+  parse v3 lockfiles for `modular analyze`
+
+## 3.1.0
+
+### Minor Changes
+
+- [#1711](https://github.com/jpmorganchase/modular/pull/1711)
+  [`813c941`](https://github.com/jpmorganchase/modular/commit/813c94180efa36af3dce849e11544485a7b84a87)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Add the
+  modular analyze command
+
+* [#1686](https://github.com/jpmorganchase/modular/pull/1686)
+  [`da4eeed`](https://github.com/jpmorganchase/modular/commit/da4eeedd97d5388ef09d14140e5d96d146239813)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Add
+  `esm-view` modular type
+
+### Patch Changes
+
+- [#1675](https://github.com/jpmorganchase/modular/pull/1675)
+  [`95225cb`](https://github.com/jpmorganchase/modular/commit/95225cb80273b02d42d8460e365251ca3c7f61a6)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump express from
+  4.18.0 to 4.18.1
+
+* [#1757](https://github.com/jpmorganchase/modular/pull/1757)
+  [`1e72dc4`](https://github.com/jpmorganchase/modular/commit/1e72dc4278dafda57765d1b49b9a3aa02007931f)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Webpack
+  build: Support CSS from CDN in esm-views
+
+- [#1677](https://github.com/jpmorganchase/modular/pull/1677)
+  [`52b8a4c`](https://github.com/jpmorganchase/modular/commit/52b8a4ce3ddd330158b35cb3f25d03cc27778641)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump address from
+  1.1.2 to 1.2.0
+
+* [#1693](https://github.com/jpmorganchase/modular/pull/1693)
+  [`7c6369b`](https://github.com/jpmorganchase/modular/commit/7c6369b57b7772ac25939b6f8722164684f90c05)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Adds the
+  [resolution] tag in the CDN template to point to the pinned version as
+  resolved from yarn.lock.
+
+- [#1717](https://github.com/jpmorganchase/modular/pull/1717)
+  [`7c70b3b`](https://github.com/jpmorganchase/modular/commit/7c70b3bc9309a2407fa408f31c3752671d056d16)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  builtin-modules from 3.2.0 to 3.3.0
+
+* [#1671](https://github.com/jpmorganchase/modular/pull/1671)
+  [`ee04d32`](https://github.com/jpmorganchase/modular/commit/ee04d324c423f65f462dd1d2b9cb462873665f04)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump ws from 8.5.0
+  to 8.6.0
+
 ## 3.0.2
 
 ### Patch Changes
@@ -318,7 +390,8 @@
 
 - [#1112](https://github.com/jpmorganchase/modular/pull/1112)
   [`d08e4c2`](https://github.com/jpmorganchase/modular/commit/d08e4c2b15db93ef2adde961651254491db94140)
-  Thanks [@joshwooding](https://github.com/joshwooding)! - Support yarn v3
+  Thanks [@joshwooding](https://github.com/joshwooding)! - ~~Support yarn v3~~
+  Support yarn v3 workspaces
 
 * [#1150](https://github.com/jpmorganchase/modular/pull/1150)
   [`8b0826e`](https://github.com/jpmorganchase/modular/commit/8b0826e8cedf580bcf9c7a51866195e430ba3ddb)

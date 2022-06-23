@@ -8,6 +8,7 @@ import getModularRoot from '../utils/getModularRoot';
 import actionPreflightCheck from '../utils/actionPreflightCheck';
 import { getModularType } from '../utils/isModularType';
 import { filterDependencies } from '../utils/filterDependencies';
+import getWorkspaceInfo from '../utils/getWorkspaceInfo';
 import type { ModularType } from '../utils/isModularType';
 import execAsync from '../utils/execAsync';
 import getLocation from '../utils/getLocation';
@@ -93,14 +94,42 @@ async function buildStandalone(
   }
 
   let assets: Asset[];
+  logger.debug('Extracting dependencies from source code...');
   // Retrieve dependencies for target to inform the build process
   const { manifest: packageDependencies, resolutions: packageResolutions } =
     await getPackageDependencies(target);
+  // Get workspace info to automatically bundle workspace dependencies
+  const workspaceInfo = await getWorkspaceInfo();
   // Split dependencies between external and bundled
   const { external: externalDependencies, bundled: bundledDependencies } =
-    filterDependencies(packageDependencies, isApp);
+    filterDependencies({
+      dependencies: packageDependencies,
+      isApp,
+      workspaceInfo,
+    });
   const { external: externalResolutions, bundled: bundledResolutions } =
-    filterDependencies(packageResolutions, isApp);
+    filterDependencies({
+      dependencies: packageResolutions,
+      isApp,
+      workspaceInfo,
+    });
+
+  logger.debug(
+    `These are the external dependencies and their resolutions: ${JSON.stringify(
+      {
+        externalDependencies,
+        externalResolutions,
+      },
+    )}`,
+  );
+  logger.debug(
+    `These are the bundled dependencies and their resolutions: ${JSON.stringify(
+      {
+        bundledDependencies,
+        bundledResolutions,
+      },
+    )}`,
+  );
 
   const browserTarget = createEsbuildBrowserslistTarget(targetDirectory);
 

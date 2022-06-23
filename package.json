@@ -34,19 +34,19 @@
     ]
   },
   "dependencies": {
-    "@babel/cli": "7.17.6",
+    "@babel/cli": "7.17.10",
     "@babel/core": "7.17.9",
-    "@babel/preset-env": "7.16.10",
-    "@babel/preset-react": "7.16.7",
-    "@babel/preset-typescript": "7.16.7",
+    "@babel/preset-env": "7.18.2",
+    "@babel/preset-react": "7.17.12",
+    "@babel/preset-typescript": "7.17.12",
     "@changesets/changelog-github": "^0.4.4",
-    "@changesets/cli": "2.22.0",
+    "@changesets/cli": "2.23.0",
     "@schemastore/package": "0.0.6",
     "@schemastore/tsconfig": "0.0.9",
     "@testing-library/dom": "8.13.0",
     "@testing-library/jest-dom": "5.16.4",
     "@testing-library/react": "12.1.5",
-    "@testing-library/user-event": "14.1.1",
+    "@testing-library/user-event": "14.2.0",
     "@types/babel-plugin-macros": "2.8.5",
     "@types/babel__code-frame": "^7.0.3",
     "@types/cross-spawn": "^6.0.2",
@@ -74,8 +74,8 @@
     "@types/tmp": "0.2.3",
     "@types/update-notifier": "5.1.0",
     "@yarnpkg/lockfile": "^1.1.0",
-    "commander": "9.2.0",
-    "esbuild": "0.14.38",
+    "commander": "9.3.0",
+    "esbuild": "0.14.42",
     "eslint": "7.32.0",
     "execa": "5.1.1",
     "husky": "8.0.1",
@@ -85,16 +85,16 @@
     "patch-package": "^6.4.7",
     "pptr-testing-library": "0.7.0",
     "prettier": "2.6.2",
-    "puppeteer": "13.7.0",
+    "puppeteer": "14.2.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "semver": "7.3.7",
     "string.prototype.replaceall": "^1.0.6",
-    "ts-node": "10.7.0",
-    "typescript": "4.6.4"
+    "ts-node": "10.8.1",
+    "typescript": "4.7.3"
   },
   "resolutions": {
-    "esbuild": "0.14.38"
+    "esbuild": "0.14.42"
   },
   "jest": {
     "coveragePathIgnorePatterns": [

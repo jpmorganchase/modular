@@ -10,18 +10,22 @@ Adds a new package by creating a new workspace at `packages/<packagePath>`
 (i.e. `modular add my-app` would create a package in `packages/my-app` and
 `modular add libs/lib-a` would create a package in `packages/libs/lib-a`)
 
-Packages can currently be one of 3 types:
+Packages can currently be one of the following types:
 
-- A standalone application. This corresponds to a single `create-react-app`
-  project in a workspace. Inside this workspace, you can import packages from
-  other workspaces freely, and features like jsx and typechecking work out of
-  the box.
+- A standalone `app`. This corresponds to a single `create-react-app` project in
+  a workspace. Inside this workspace, you can import packages from other
+  workspaces freely, and features like jsx and typechecking work out of the box.
 
-- A View, which is a package that exports a React component by default. Views
-  are primary, top-level components in `modular`. Read more about Views in
-  [this explainer](../concepts/views.md).
+- An `esm-view`, which is a package that typically exports a React component by
+  default. ESM Views are built as ES modules that can be `import`ed at runtime
+  by a host to implement a [micro frontend](../concepts/microfrontends.md)
+  architecture or started as a normal standalone application. See also
+  [the view building reference](../esm-views/index.md)
 
-- A typical javascript package. You can use this to create any other kind of
+- A `view`, which is a package that exports a React component by default. Read
+  more about Views in [this explainer](../concepts/views.md).
+
+- A typical JavaScript `package`. You can use this to create any other kind of
   utility, tool, or whatever your needs require you to do. As an example, you
   could build a node.js server inside one of these.
 

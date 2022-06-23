@@ -2,82 +2,121 @@
 
 exports[`getWorkspaceInfo 1`] = `
 Object {
-  "create-modular-react-app": Object {
-    "location": "packages/create-modular-react-app",
-    "mismatchedWorkspaceDependencies": Array [],
-    "public": true,
-    "type": "package",
-    "workspaceDependencies": Array [],
-  },
-  "eslint-config-modular-app": Object {
-    "location": "packages/eslint-config-modular-app",
-    "mismatchedWorkspaceDependencies": Array [],
-    "public": true,
-    "type": "package",
-    "workspaceDependencies": Array [],
-  },
-  "modular-scripts": Object {
-    "location": "packages/modular-scripts",
-    "mismatchedWorkspaceDependencies": Array [],
-    "public": true,
-    "type": "package",
-    "workspaceDependencies": Array [],
-  },
-  "modular-site": Object {
-    "location": "packages/modular-site",
-    "mismatchedWorkspaceDependencies": Array [],
-    "public": false,
-    "type": "app",
-    "workspaceDependencies": Array [],
-  },
-  "modular-template-app": Object {
-    "location": "packages/modular-template-app",
-    "mismatchedWorkspaceDependencies": Array [],
-    "public": true,
-    "type": "template",
-    "workspaceDependencies": Array [],
-  },
-  "modular-template-esm-view": Object {
-    "location": "packages/modular-template-esm-view",
-    "mismatchedWorkspaceDependencies": Array [],
-    "public": true,
-    "type": "template",
-    "workspaceDependencies": Array [],
-  },
-  "modular-template-node-env-app": Object {
-    "location": "packages/modular-template-node-env-app",
-    "mismatchedWorkspaceDependencies": Array [],
-    "public": false,
-    "type": "template",
-    "workspaceDependencies": Array [],
-  },
-  "modular-template-package": Object {
-    "location": "packages/modular-template-package",
-    "mismatchedWorkspaceDependencies": Array [],
-    "public": true,
-    "type": "template",
-    "workspaceDependencies": Array [],
-  },
-  "modular-template-view": Object {
-    "location": "packages/modular-template-view",
-    "mismatchedWorkspaceDependencies": Array [],
-    "public": true,
-    "type": "template",
-    "workspaceDependencies": Array [],
-  },
-  "modular-views.macro": Object {
-    "location": "packages/modular-views.macro",
-    "mismatchedWorkspaceDependencies": Array [],
-    "public": true,
-    "type": "package",
-    "workspaceDependencies": Array [],
-  },
-  "tree-view-for-tests": Object {
-    "location": "packages/tree-view-for-tests",
-    "mismatchedWorkspaceDependencies": Array [],
-    "public": false,
-    "type": "package",
-    "workspaceDependencies": Array [],
-  },
+  "location": "packages/create-modular-react-app",
+  "mismatchedWorkspaceDependencies": Array [],
+  "public": true,
+  "type": "package",
+  "version": Any<String>,
+  "workspaceDependencies": Array [],
+}
+`;
+
+exports[`getWorkspaceInfo 2`] = `
+Object {
+  "location": "packages/eslint-config-modular-app",
+  "mismatchedWorkspaceDependencies": Array [],
+  "public": true,
+  "type": "package",
+  "version": Any<String>,
+  "workspaceDependencies": Array [],
+}
+`;
+
+exports[`getWorkspaceInfo 3`] = `
+Object {
+  "location": "packages/modular-scripts",
+  "mismatchedWorkspaceDependencies": Array [],
+  "public": true,
+  "type": "package",
+  "version": Any<String>,
+  "workspaceDependencies": Array [],
+}
+`;
+
+exports[`getWorkspaceInfo 4`] = `
+Object {
+  "location": "packages/modular-site",
+  "mismatchedWorkspaceDependencies": Array [],
+  "public": false,
+  "type": "app",
+  "version": Any<String>,
+  "workspaceDependencies": Array [],
+}
+`;
+
+exports[`getWorkspaceInfo 5`] = `
+Object {
+  "location": "packages/modular-template-app",
+  "mismatchedWorkspaceDependencies": Array [],
+  "public": true,
+  "type": "template",
+  "version": Any<String>,
+  "workspaceDependencies": Array [],
+}
+`;
+
+exports[`getWorkspaceInfo 6`] = `
+Object {
+  "location": "packages/modular-template-esm-view",
+  "mismatchedWorkspaceDependencies": Array [],
+  "public": true,
+  "type": "template",
+  "version": Any<String>,
+  "workspaceDependencies": Array [],
+}
+`;
+
+exports[`getWorkspaceInfo 7`] = `
+Object {
+  "location": "packages/modular-template-node-env-app",
+  "mismatchedWorkspaceDependencies": Array [],
+  "public": false,
+  "type": "template",
+  "version": Any<String>,
+  "workspaceDependencies": Array [],
+}
+`;
+
+exports[`getWorkspaceInfo 8`] = `
+Object {
+  "location": "packages/modular-template-package",
+  "mismatchedWorkspaceDependencies": Array [],
+  "public": true,
+  "type": "template",
+  "version": Any<String>,
+  "workspaceDependencies": Array [],
+}
+`;
+
+exports[`getWorkspaceInfo 9`] = `
+Object {
+  "location": "packages/modular-template-view",
+  "mismatchedWorkspaceDependencies": Array [],
+  "public": true,
+  "type": "template",
+  "version": Any<String>,
+  "workspaceDependencies": Array [],
+}
+`;
+
+exports[`getWorkspaceInfo 10`] = `
+Object {
+  "location": "packages/modular-views.macro",
+  "mismatchedWorkspaceDependencies": Array [],
+  "public": true,
+  "type": "package",
+  "version": Any<String>,
+  "workspaceDependencies": Array [],
+}
+`;
+
+exports[`getWorkspaceInfo 11`] = `
+Object {
+  "location": "packages/tree-view-for-tests",
+  "mismatchedWorkspaceDependencies": Array [],
+  "public": false,
+  "type": "package",
+  "version": Any<String>,
+  "workspaceDependencies": Array [],
 }
 `;
