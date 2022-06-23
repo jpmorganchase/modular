@@ -5,8 +5,8 @@ import * as path from 'path';
 import recursive from 'recursive-readdir';
 
 import type { Paths } from '../utils/createPaths';
-import getModularRoot from '../utils/getModularRoot';
 import { Asset, canReadAsset } from './fileSizeReporter';
+import { StandAloneBuilderContext } from './createBuilderContext';
 
 function removeFileNameHash(fileName: string): string {
   return fileName
@@ -17,45 +17,46 @@ function removeFileNameHash(fileName: string): string {
     );
 }
 
-export function esbuildMeasureFileSizesBeforeBuild(
-  buildFolder: string,
-): Promise<Record<string, number>> {
-  const modularRoot = getModularRoot();
+export async function esbuildMeasureFileSizesBeforeBuild(
+  context: StandAloneBuilderContext,
+): Promise<void> {
+  const modularRoot = context.modularRoot;
 
-  return new Promise<Record<string, number>>((resolve) => {
-    recursive(buildFolder, (err: Error, fileNames: string[]) => {
-      if (err) {
-        resolve({});
-      } else {
-        resolve(
-          fileNames
-            .filter(canReadAsset)
-            .reduce<Record<string, number>>((memo, absoluteFilePath) => {
-              const filePath = path.relative(modularRoot, absoluteFilePath);
+  context.previousFileSizes = await new Promise<Record<string, number>>(
+    (resolve) => {
+      recursive(context.paths.appBuild, (err: Error, fileNames: string[]) => {
+        if (err) {
+          resolve({});
+        } else {
+          resolve(
+            fileNames
+              .filter(canReadAsset)
+              .reduce<Record<string, number>>((memo, absoluteFilePath) => {
+                const filePath = path.relative(modularRoot, absoluteFilePath);
 
-              const contents = fs.readFileSync(absoluteFilePath);
+                const contents = fs.readFileSync(absoluteFilePath);
 
-              const folder = path.dirname(filePath);
-              const name = path.basename(filePath);
+                const folder = path.dirname(filePath);
+                const name = path.basename(filePath);
 
-              const key = `${folder}/${removeFileNameHash(name)}`;
+                const key = `${folder}/${removeFileNameHash(name)}`;
 
-              memo[key] = gzipSize(contents);
+                memo[key] = gzipSize(contents);
 
-              return memo;
-            }, {}),
-        );
-      }
-    });
-  });
+                return memo;
+              }, {}),
+          );
+        }
+      });
+    },
+  );
 }
 
 export function createEsbuildAssets(
   paths: Paths,
   stats: esbuild.Metafile,
+  modularRoot: string,
 ): Asset[] {
-  const modularRoot = getModularRoot();
-
   const readableAssets = Object.keys(stats.outputs).filter(canReadAsset);
 
   return readableAssets

@@ -16,7 +16,7 @@ process.on('unhandledRejection', (err) => {
 });
 
 async function startUp(env: typeof process.env.NODE_ENV) {
-  await setupEnv(env);
+  setupEnv(env);
 
   await startupCheck();
 }

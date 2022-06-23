@@ -6,6 +6,7 @@ import type webpack from 'webpack';
 
 import type { Paths } from '../utils/createPaths';
 import { Asset, canReadAsset } from './fileSizeReporter';
+import { StandAloneBuilderContext } from './createBuilderContext';
 
 function removeFileNameHash(fileName: string): string {
   return fileName
@@ -16,29 +17,32 @@ function removeFileNameHash(fileName: string): string {
     );
 }
 
-export function webpackMeasureFileSizesBeforeBuild(
-  buildFolder: string,
-): Promise<Record<string, number>> {
-  return new Promise<Record<string, number>>((resolve) => {
-    recursive(buildFolder, (err: Error, fileNames: string[]) => {
-      if (err) {
-        resolve({});
-      } else {
-        resolve(
-          fileNames
-            .filter(canReadAsset)
-            .reduce<Record<string, number>>((memo, fileName) => {
-              let contents = fs.readFileSync(fileName);
-              let key = removeFileNameHash(
-                path.relative(buildFolder, fileName),
-              );
-              memo[key] = gzipSize(contents);
-              return memo;
-            }, {}),
-        );
-      }
-    });
-  });
+export async function webpackMeasureFileSizesBeforeBuild(
+  context: StandAloneBuilderContext,
+): Promise<void> {
+  const buildFolder = context.paths.appBuild;
+  context.previousFileSizes = await new Promise<Record<string, number>>(
+    (resolve) => {
+      recursive(buildFolder, (err: Error, fileNames: string[]) => {
+        if (err) {
+          resolve({});
+        } else {
+          resolve(
+            fileNames
+              .filter(canReadAsset)
+              .reduce<Record<string, number>>((memo, fileName) => {
+                let contents = fs.readFileSync(fileName);
+                let key = removeFileNameHash(
+                  path.relative(buildFolder, fileName),
+                );
+                memo[key] = gzipSize(contents);
+                return memo;
+              }, {}),
+          );
+        }
+      });
+    },
+  );
 }
 
 export function createWebpackAssets(

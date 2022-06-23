@@ -5,44 +5,36 @@ import { expand } from 'dotenv-expand';
 
 import { findModularRoot } from './getModularRoot';
 
-export async function setupEnvForDirectory(dirName: string): Promise<void> {
-  const resolveRelative = (relativePath: string) =>
-    path.resolve(dirName, relativePath);
-  const dotenv = resolveRelative('.env');
-
-  // https://github.com/bkeepers/dotenv#what-other-env-files-can-i-use
-  const dotenvFiles = [
-    `${dotenv}.${process.env.NODE_ENV}.local`,
-    // Don't include `.env.local` for `test` environment
-    // since normally you expect tests to produce the same
-    // results for everyone
-    // @ts-ignore
-    (process.env.NODE_ENV !== 'test' && `${dotenv}.local`) || '',
-    `${dotenv}.${process.env.NODE_ENV}`,
+/**
+ * Include `.env.${NODE_ENV}.local` for all environments and `.env.local`
+ * (other than for `test` environment seeing as you expect tests to produce
+ * the same results no matter where they run) before also loading the `.env`
+ *
+ * @see https://github.com/bkeepers/dotenv#what-other-env-files-can-i-use
+ */
+function dotEnvFiles(dotenv: string, nodeEnv = process.env.NODE_ENV): string[] {
+  const envFiles = [
+    `${dotenv}.${nodeEnv}.local`,
+    nodeEnv === 'test' ? '' : `${dotenv}.local`,
+    `${dotenv}.${nodeEnv}`,
     dotenv,
-  ].filter(Boolean);
+  ];
 
+  return envFiles.filter((path) => path && fs.pathExistsSync(path));
+}
+
+export function setupEnvForDirectory(dirName: string): void {
   // Load environment variables from .env* files. Suppress warnings using silent
   // if this file is missing. dotenv will never modify any environment variables
   // that have already been set.  Variable expansion is supported in .env files.
   // https://github.com/motdotla/dotenv
   // https://github.com/motdotla/dotenv-expand
-  await Promise.all(
-    dotenvFiles.map(async (dotenvFile: string) => {
-      if (await fs.pathExists(dotenvFile)) {
-        expand(
-          loadConfig({
-            path: dotenvFile,
-          }),
-        );
-      }
-    }),
-  );
+  dotEnvFiles(path.resolve(dirName, '.env')).forEach((path) => {
+    expand(loadConfig({ path }));
+  });
 }
 
-export default async function setupEnv(
-  env: typeof process.env.NODE_ENV,
-): Promise<void> {
+export default function setupEnv(env: typeof process.env.NODE_ENV): void {
   const modularRoot = findModularRoot();
 
   // setup verbose Logging
@@ -82,5 +74,5 @@ export default async function setupEnv(
     process.env.BROWSERSLIST_ENV ||
     (process.env.NODE_ENV === 'test' ? 'production' : process.env.NODE_ENV);
 
-  await setupEnvForDirectory(modularRoot);
+  setupEnvForDirectory(modularRoot);
 }

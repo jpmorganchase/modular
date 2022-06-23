@@ -38,7 +38,7 @@ async function start(packageName: string): Promise<void> {
 
   let targetPath = await getLocation(target);
 
-  await setupEnvForDirectory(targetPath);
+  setupEnvForDirectory(targetPath);
 
   if (isModularType(targetPath, 'package')) {
     throw new Error(

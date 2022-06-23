@@ -3,6 +3,7 @@ import chalk from 'chalk';
 import filesize from 'filesize';
 import stripAnsi from 'strip-ansi';
 import * as logger from '../utils/logger';
+import { StandAloneBuilderContext } from './createBuilderContext';
 
 export interface Asset {
   folder: string;
@@ -25,14 +26,12 @@ const WARN_AFTER_CHUNK_GZIP_SIZE = 1024 * 1024;
 const FIFTY_KILOBYTES = 1024 * 50;
 
 // Prints a detailed summary of build files.
-export function printFileSizesAfterBuild(
-  assets: Asset[],
-  previousSizeMap: Record<string, number | undefined>,
-) {
+export function printFileSizesAfterBuild(context: StandAloneBuilderContext) {
+  const { assets, previousFileSizes } = context;
   const sizedAssets = assets
     .sort((a, b) => b.size - a.size)
     .map<LabelledAsset>((asset) => {
-      const previousSize = previousSizeMap[asset.normalizedName];
+      const previousSize = previousFileSizes[asset.normalizedName];
       const differenceLabel = getDifferenceLabel(asset.size, previousSize);
       return {
         ...asset,
