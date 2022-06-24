@@ -809,6 +809,7 @@ function createExternalDependenciesMap(
         `Dependency ${name} found in package.json but not in lockfile. Have you installed your dependencies?`,
       );
     }
+
     return {
       ...acc,
       [name]: externalCdnTemplate
@@ -817,7 +818,11 @@ function createExternalDependenciesMap(
         .replace('[resolution]', externalResolutions[name])
         .replace(
           '[selectiveCDNResolutions]',
-          selectiveCDNResolutions.join(','),
+          selectiveCDNResolutions
+            ? Object.entries(selectiveCDNResolutions)
+                .map(([key, value]) => `${key}@${value}`)
+                .join(',')
+            : '',
         ),
     };
   }, {});
