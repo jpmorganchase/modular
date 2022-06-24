@@ -1,5 +1,24 @@
 # modular-scripts
 
+## 3.1.3
+
+### Patch Changes
+
+- [#1792](https://github.com/jpmorganchase/modular/pull/1792)
+  [`f8ef4e7`](https://github.com/jpmorganchase/modular/commit/f8ef4e7331e3a3639104ded6d34d07da628fb436)
+  Thanks [@benpryke](https://github.com/benpryke)! - fix: support object type
+  for package.json workspaces field
+
+* [#1765](https://github.com/jpmorganchase/modular/pull/1765)
+  [`de0a7ce`](https://github.com/jpmorganchase/modular/commit/de0a7ce917cf3eb45ddd0379bfcec545252889b8)
+  Thanks [@origami-z](https://github.com/origami-z)! - Upgrade svgr to v6 for
+  Webpack
+
+- [#1865](https://github.com/jpmorganchase/modular/pull/1865)
+  [`ad9a85c`](https://github.com/jpmorganchase/modular/commit/ad9a85c05fd03ec6d50edd439ef389eb652ad53a)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Fix files
+  not added when using a template with `modular add` on Windows
+
 ## 3.1.2
 
 ### Patch Changes
