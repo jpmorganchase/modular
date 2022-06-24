@@ -1,26 +1,29 @@
 import chalk from 'chalk';
 
 import * as logger from '../utils/logger';
+import { StandAloneBuilderContext } from './createBuilderContext';
 
-function printHostingInstructions(
-  target: string,
-  publicUrl: string,
-  publicPath: string,
-  buildFolder: string,
+export function printHostingInstructions(
+  context: StandAloneBuilderContext,
 ): void {
-  if (publicUrl && publicUrl.includes('.github.io/')) {
+  const {
+    targetDirectory,
+    paths: { publicUrlOrPath, appBuild },
+  } = context;
+
+  if (publicUrlOrPath && publicUrlOrPath.includes('.github.io/')) {
     // "homepage": "http://user.github.io/project"
-    const publicPathname = new URL(publicPath).pathname;
-    printBaseMessage(buildFolder, publicPathname);
-  } else if (publicPath !== '/') {
+    const publicPathname = new URL(publicUrlOrPath).pathname;
+    printBaseMessage(appBuild, publicPathname);
+  } else if (publicUrlOrPath !== '/') {
     // "homepage": "http://mywebsite.com/project"
-    printBaseMessage(buildFolder, publicPath);
+    printBaseMessage(appBuild, publicUrlOrPath);
   } else {
     // "homepage": "http://mywebsite.com"
     //   or no homepage
-    printBaseMessage(buildFolder, publicUrl);
+    printBaseMessage(appBuild, publicUrlOrPath);
 
-    printStaticServerInstructions(target);
+    printStaticServerInstructions(targetDirectory);
   }
   logger.log();
   logger.log('Find out more about deployment here:');
@@ -29,7 +32,7 @@ function printHostingInstructions(
   logger.log();
 }
 
-function printBaseMessage(buildFolder: string, hostingLocation: string) {
+function printBaseMessage(appBuild: string, hostingLocation: string) {
   logger.log(
     `The project was built assuming it is hosted at ${chalk.green(
       hostingLocation || 'the server root',
@@ -52,7 +55,7 @@ function printBaseMessage(buildFolder: string, hostingLocation: string) {
     );
   }
   logger.log();
-  logger.log(`The ${chalk.cyan(buildFolder)} folder is ready to be deployed.`);
+  logger.log(`The ${chalk.cyan(appBuild)} folder is ready to be deployed.`);
 }
 
 function printStaticServerInstructions(target: string) {
@@ -61,5 +64,3 @@ function printStaticServerInstructions(target: string) {
 
   logger.log(`  ${chalk.cyan('modular serve')} ${target}`);
 }
-
-export default printHostingInstructions;
