@@ -96,8 +96,11 @@ async function buildStandalone(
   let assets: Asset[];
   logger.debug('Extracting dependencies from source code...');
   // Retrieve dependencies for target to inform the build process
-  const { manifest: packageDependencies, resolutions: packageResolutions } =
-    await getPackageDependencies(target);
+  const {
+    manifest: packageDependencies,
+    resolutions: packageResolutions,
+    selectiveCDNResolutions,
+  } = await getPackageDependencies(target);
   // Get workspace info to automatically bundle workspace dependencies
   const workspaceInfo = await getWorkspaceInfo();
   // Split dependencies between external and bundled
@@ -177,6 +180,9 @@ async function buildStandalone(
           externalResolutions,
           bundledResolutions,
         }),
+        MODULAR_PACKAGE_SELECTIVE_CDN_RESOLUTIONS: JSON.stringify(
+          selectiveCDNResolutions,
+        ),
       },
     });
 

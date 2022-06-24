@@ -21,6 +21,13 @@ interface DependencyResolutionWithErrors extends DependencyResolution {
 }
 type LockFileEntries = Record<string, { version: string }>;
 
+// TODO: maybe refactor this to contain all the Modular conf fields and be used throught the whole project
+interface ModularInputManifest extends CoreProperties {
+  modular: {
+    CDNResolutions?: DependencyManifest;
+  };
+}
+
 const npmPackageMatcher =
   /^(@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*/;
 
@@ -50,9 +57,11 @@ function getDependenciesFromSource(workspaceLocation: string) {
   return Array.from(dependencySet);
 }
 
-export async function getPackageDependencies(
-  target: string,
-): Promise<{ manifest: DependencyManifest; resolutions: DependencyManifest }> {
+export async function getPackageDependencies(target: string): Promise<{
+  manifest: DependencyManifest;
+  resolutions: DependencyManifest;
+  selectiveCDNResolutions: DependencyManifest;
+}> {
   // This function is based on the assumption that nested package are not supported, so dependencies can be either declared in the
   // target's package.json or hoisted up to the workspace root.
   const targetLocation = await getLocation(target);
@@ -60,11 +69,11 @@ export async function getPackageDependencies(
 
   const rootManifest = fs.readJSONSync(
     path.join(getModularRoot(), 'package.json'),
-  ) as CoreProperties;
+  ) as ModularInputManifest;
 
   const targetManifest = fs.readJSONSync(
     path.join(targetLocation, 'package.json'),
-  ) as CoreProperties;
+  ) as ModularInputManifest;
 
   const lockFileContents = fs.readFileSync(
     path.join(getModularRoot(), 'yarn.lock'),
@@ -73,6 +82,13 @@ export async function getPackageDependencies(
       flag: 'r',
     },
   );
+
+  // Selective CDN resolutions is a list of dependencies that we want our CDN to use to build our dependencies with.
+  // Some CDNs support this mechanism - https://github.com/esm-dev/esm.sh#specify-external-dependencies
+  // This is especially useful if we have stateful dependencies (like React) that we need to query the same version through all our CDN depenencies
+  // We just output them as a comma-separated parameter in the CDN template as [selectiveCDNResolutions]
+  // TODO: possibly fallback to a filtered version of resolutions if this is not present
+  const selectiveCDNResolutions = targetManifest?.modular?.CDNResolutions ?? {};
 
   // Package dependencies can be either local to the package or in the root package (hoisted)
   const packageDeps = Object.assign(
@@ -108,6 +124,7 @@ export async function getPackageDependencies(
   return {
     manifest: resolvedPackageDependencies.manifest,
     resolutions: resolvedPackageDependencies.resolutions,
+    selectiveCDNResolutions,
   };
 }
 
