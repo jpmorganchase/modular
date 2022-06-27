@@ -449,13 +449,14 @@ describe('modular-scripts', () => {
       expect(tree(path.join(modularRoot, 'dist', 'sample-esm-view')))
         .toMatchInlineSnapshot(`
         "sample-esm-view
+        ├─ asset-manifest.json #ih1jkw
         ├─ index.html #17sfbiz
         ├─ package.json
         └─ static
            └─ js
-              ├─ _trampoline.js #1uj23ks
-              ├─ index-7FGNLQVW.js #1wtgmmz
-              └─ index-7FGNLQVW.js.map #1dt67hc"
+              ├─ _trampoline.js #1dusx14
+              ├─ main.62f8218b.js #1g7koy7
+              └─ main.62f8218b.js.map #1whmojy"
       `);
     });
 
@@ -469,7 +470,7 @@ describe('modular-scripts', () => {
       );
 
       const indexFile = (
-        await fs.readFile(path.join(baseDir, 'index-7FGNLQVW.js'))
+        await fs.readFile(path.join(baseDir, 'main.62f8218b.js'))
       ).toString();
       expect(
         prettier.format(indexFile, {
