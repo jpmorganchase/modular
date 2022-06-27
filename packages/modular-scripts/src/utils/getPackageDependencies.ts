@@ -9,24 +9,15 @@ import getModularRoot from './getModularRoot';
 import getLocation from './getLocation';
 import getWorkspaceInfo, { WorkspaceInfo } from './getWorkspaceInfo';
 import * as logger from './logger';
-
-type DependencyManifest = NonNullable<CoreProperties['dependencies']>;
 interface DependencyResolution {
-  manifest: DependencyManifest;
-  resolutions: DependencyManifest;
+  manifest: Dependency;
+  resolutions: Dependency;
 }
 interface DependencyResolutionWithErrors extends DependencyResolution {
   manifestMiss: string[];
   lockFileMiss: string[];
 }
 type LockFileEntries = Record<string, { version: string }>;
-
-// TODO: maybe refactor this to contain all the Modular conf fields and be used throught the whole project
-interface ModularInputManifest extends CoreProperties {
-  modular: {
-    CDNResolutions?: DependencyManifest;
-  };
-}
 
 const npmPackageMatcher =
   /^(@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*/;
@@ -58,9 +49,9 @@ function getDependenciesFromSource(workspaceLocation: string) {
 }
 
 export async function getPackageDependencies(target: string): Promise<{
-  manifest: DependencyManifest;
-  resolutions: DependencyManifest;
-  selectiveCDNResolutions: DependencyManifest;
+  manifest: Dependency;
+  resolutions: Dependency;
+  selectiveCDNResolutions: Dependency;
 }> {
   // This function is based on the assumption that nested package are not supported, so dependencies can be either declared in the
   // target's package.json or hoisted up to the workspace root.
@@ -69,11 +60,11 @@ export async function getPackageDependencies(target: string): Promise<{
 
   const rootManifest = fs.readJSONSync(
     path.join(getModularRoot(), 'package.json'),
-  ) as ModularInputManifest;
+  ) as CoreProperties;
 
   const targetManifest = fs.readJSONSync(
     path.join(targetLocation, 'package.json'),
-  ) as ModularInputManifest;
+  ) as CoreProperties;
 
   const lockFileContents = fs.readFileSync(
     path.join(getModularRoot(), 'yarn.lock'),
@@ -88,7 +79,7 @@ export async function getPackageDependencies(target: string): Promise<{
   // This is especially useful if we have stateful dependencies (like React) that we need to query the same version through all our CDN depenencies
   // We just output them as a comma-separated parameter in the CDN template as [selectiveCDNResolutions]
   // TODO: possibly fallback to a filtered version of resolutions if this is not present
-  const selectiveCDNResolutions = targetManifest?.modular?.CDNResolutions ?? {};
+  const selectiveCDNResolutions = targetManifest?.resolutions ?? {};
 
   // Package dependencies can be either local to the package or in the root package (hoisted)
   const packageDeps = Object.assign(
