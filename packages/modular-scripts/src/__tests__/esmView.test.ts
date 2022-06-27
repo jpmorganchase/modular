@@ -400,7 +400,7 @@ describe('modular-scripts', () => {
     });
   });
 
-  describe('WHEN building a esm-view with a series of CDN selective dependency resolutions with the resolution field', () => {
+  describe('WHEN building a esm-view with a series of CDN selective dependency resolutions with the resolution field with webpack', () => {
     beforeAll(async () => {
       await fs.copyFile(
         path.join(__dirname, 'TestViewPackages.test-tsx'),
@@ -439,7 +439,6 @@ describe('modular-scripts', () => {
       await modular('build sample-esm-view', {
         stdio: 'inherit',
         env: {
-          USE_MODULAR_ESBUILD: 'true',
           EXTERNAL_CDN_TEMPLATE:
             'https://mycustomcdn.net/[name]@[version]?selectiveDeps=[selectiveCDNResolutions]',
         },
@@ -478,10 +477,10 @@ describe('modular-scripts', () => {
         }),
       ).toMatchSnapshot();
       expect(indexFile).toContain(
-        `https://mycustomcdn.net/lodash@^4.17.21?selectiveDeps=[react@17.0.2,url-join@5.0.0]`,
+        `https://mycustomcdn.net/lodash@^4.17.21?selectiveDeps=react@17.0.2,url-join@5.0.0`,
       );
       expect(indexFile).toContain(
-        `https://mycustomcdn.net/lodash.merge@^4.6.2?selectiveDeps=[react@17.0.2,url-join@5.0.0]`,
+        `https://mycustomcdn.net/lodash.merge@^4.6.2?selectiveDeps=react@17.0.2,url-join@5.0.0`,
       );
     });
   });
