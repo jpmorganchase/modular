@@ -35,9 +35,9 @@ For example:
   `EXTERNAL_CDN_TEMPLATE="https://cdn.skypack.dev/[name]@[resolution]"`
 - A valid template to work with the esm.sh public CDN can be specified with
   `EXTERNAL_CDN_TEMPLATE="https://esm.sh/[name]@[version]"`
-  - A valid template to work with the esm.sh public CDN, telling the CDN to
-    build dependencies with selective version resolutions can be specified with
-    `EXTERNAL_CDN_TEMPLATE="https://esm.sh/[name]@[version]?deps=[selectiveCDNResolutions]"`
+- A valid template to work with the esm.sh public CDN, telling the CDN to build
+  dependencies with selective version resolutions can be specified with
+  `EXTERNAL_CDN_TEMPLATE="https://esm.sh/[name]@[version]?deps=[selectiveCDNResolutions]"`
 
 These are the substrings that are replaced in the template:
 

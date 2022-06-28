@@ -65,10 +65,10 @@ the registry in the moment when the package is built on the CDN. This is
 particularly relevant in case the `peerDependency` in question is stateful:
 suppose, for example, that one of your ESM Views depends on `react@17.0.1`, but
 one of your dependencies on the CDN depend on `react@>16.8.0` (pretty common if
-the dependency uses hooks). Depending on the moment that your dependency was first
-requested from the CDN (and the version of your CDN), it can come with _any_
-version of React hardcoded, resulting in two different versions of React loaded
-onto the page, hooks failing and the ESM view crashing.
+the dependency uses hooks). Depending on the moment that your dependency was
+first requested from the CDN (and the version of your CDN), it can come with
+_any_ version of React hardcoded, resulting in two different versions of React
+loaded onto the page, hooks failing and the ESM view crashing.
 
 This problem can be carefully solved on the CDN. There are two commonly used
 approaches:
