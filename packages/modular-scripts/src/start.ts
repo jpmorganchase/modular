@@ -100,6 +100,7 @@ async function start(packageName: string): Promise<void> {
       !isEsmView,
       externalDependencies,
       externalResolutions,
+      selectiveCDNResolutions,
     );
   } else {
     const startScript = require.resolve(

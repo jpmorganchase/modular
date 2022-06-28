@@ -12886,6 +12886,33 @@ export { e as default };
 "
 `;
 
+exports[`modular-scripts WHEN building a esm-view with a series of CDN selective dependency resolutions with the resolution field with esbuild THEN rewrites the dependencies 1`] = `
+"import * as t from \\"https://mycustomcdn.net/react@17.0.2?selectiveDeps=react@17.0.2,url-join@5.0.0\\";
+import m from \\"https://mycustomcdn.net/lodash@^4.17.21?selectiveDeps=react@17.0.2,url-join@5.0.0/get\\";
+import i from \\"https://mycustomcdn.net/lodash.merge@^4.6.2?selectiveDeps=react@17.0.2,url-join@5.0.0\\";
+import { difference as n } from \\"https://mycustomcdn.net/lodash@^4.17.21?selectiveDeps=react@17.0.2,url-join@5.0.0\\";
+var e = document.createElement(\\"link\\");
+e.rel = \\"stylesheet\\";
+e.type = \\"text/css\\";
+e.href =
+  \\"https://mycustomcdn.net/regular-table@^0.5.6?selectiveDeps=react@17.0.2,url-join@5.0.0/dist/css/material.css\\";
+document.getElementsByTagName(\\"HEAD\\")[0].appendChild(e);
+function s() {
+  return t.createElement(
+    \\"div\\",
+    null,
+    t.createElement(
+      \\"pre\\",
+      null,
+      JSON.stringify({ get: m, merge: i, difference: n })
+    )
+  );
+}
+export { s as default };
+//# sourceMappingURL=/static/js/index-ZHOP3VOF.js.map
+"
+`;
+
 exports[`modular-scripts WHEN building a esm-view with a series of CDN selective dependency resolutions with the resolution field with webpack THEN rewrites the dependencies 1`] = `
 "import * as e from \\"https://mycustomcdn.net/react@17.0.2?selectiveDeps=react@17.0.2,url-join@5.0.0\\";
 import * as t from \\"https://mycustomcdn.net/lodash@^4.17.21?selectiveDeps=react@17.0.2,url-join@5.0.0/get\\";

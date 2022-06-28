@@ -148,6 +148,7 @@ async function buildStandalone(
       paths,
       externalDependencies,
       externalResolutions,
+      selectiveCDNResolutions,
       type,
     );
     jsEntryPoint = getEntryPoint(paths, result, '.js');
@@ -248,6 +249,7 @@ async function buildStandalone(
       paths.appSrc,
       externalDependencies,
       externalResolutions,
+      selectiveCDNResolutions,
       browserTarget,
     );
     const trampolinePath = `${paths.appBuild}/static/js/_trampoline.js`;

@@ -454,7 +454,7 @@ describe('modular-scripts', () => {
         ├─ package.json
         └─ static
            └─ js
-              ├─ _trampoline.js #1dusx14
+              ├─ _trampoline.js #1kohre7
               ├─ main.62f8218b.js #1g7koy7
               └─ main.62f8218b.js.map #1whmojy"
       `);
@@ -471,6 +471,92 @@ describe('modular-scripts', () => {
 
       const indexFile = (
         await fs.readFile(path.join(baseDir, 'main.62f8218b.js'))
+      ).toString();
+      expect(
+        prettier.format(indexFile, {
+          filepath: 'index-F6YQ237K.js',
+        }),
+      ).toMatchSnapshot();
+      expect(indexFile).toContain(
+        `https://mycustomcdn.net/lodash@^4.17.21?selectiveDeps=react@17.0.2,url-join@5.0.0`,
+      );
+      expect(indexFile).toContain(
+        `https://mycustomcdn.net/lodash.merge@^4.6.2?selectiveDeps=react@17.0.2,url-join@5.0.0`,
+      );
+    });
+  });
+
+  describe('WHEN building a esm-view with a series of CDN selective dependency resolutions with the resolution field with esbuild', () => {
+    beforeAll(async () => {
+      await fs.copyFile(
+        path.join(__dirname, 'TestViewPackages.test-tsx'),
+        path.join(packagesPath, targetedView, 'src', 'index.tsx'),
+      );
+
+      const packageJsonPath = path.join(
+        packagesPath,
+        targetedView,
+        'package.json',
+      );
+      const packageJson = (await fs.readJSON(
+        packageJsonPath,
+      )) as CoreProperties;
+
+      await fs.writeJSON(
+        packageJsonPath,
+        Object.assign(packageJson, {
+          dependencies: {
+            lodash: '^4.17.21',
+            'lodash.merge': '^4.6.2',
+            'regular-table': '^0.5.6',
+          },
+          resolutions: {
+            react: '17.0.2',
+            'url-join': '5.0.0',
+          },
+        }),
+      );
+
+      await execa('yarnpkg', [], {
+        cwd: modularRoot,
+        cleanup: true,
+      });
+
+      await modular('build sample-esm-view', {
+        stdio: 'inherit',
+        env: {
+          USE_MODULAR_ESBUILD: 'true',
+          EXTERNAL_CDN_TEMPLATE:
+            'https://mycustomcdn.net/[name]@[version]?selectiveDeps=[selectiveCDNResolutions]',
+        },
+      });
+    });
+
+    it('THEN outputs the correct directory structure', () => {
+      expect(tree(path.join(modularRoot, 'dist', 'sample-esm-view')))
+        .toMatchInlineSnapshot(`
+        "sample-esm-view
+        ├─ index.html #17sfbiz
+        ├─ package.json
+        └─ static
+           └─ js
+              ├─ _trampoline.js #1wurily
+              ├─ index-ZHOP3VOF.js #7gwf58
+              └─ index-ZHOP3VOF.js.map #10lquwp"
+      `);
+    });
+
+    it('THEN rewrites the dependencies', async () => {
+      const baseDir = path.join(
+        modularRoot,
+        'dist',
+        'sample-esm-view',
+        'static',
+        'js',
+      );
+
+      const indexFile = (
+        await fs.readFile(path.join(baseDir, 'index-ZHOP3VOF.js'))
       ).toString();
       expect(
         prettier.format(indexFile, {

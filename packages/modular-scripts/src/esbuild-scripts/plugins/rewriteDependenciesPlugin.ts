@@ -4,6 +4,7 @@ import type { Dependency } from '@schemastore/package';
 export function createRewriteDependenciesPlugin(
   externalDependencies: Dependency,
   externalResolutions: Dependency,
+  selectiveCDNResolutions: Dependency,
   target?: string[],
 ): esbuild.Plugin {
   const externalCdnTemplate =
@@ -22,7 +23,15 @@ export function createRewriteDependenciesPlugin(
         externalCdnTemplate
           .replace('[name]', name)
           .replace('[version]', version ?? externalResolutions[name])
-          .replace('[resolution]', externalResolutions[name]),
+          .replace('[resolution]', externalResolutions[name])
+          .replace(
+            '[selectiveCDNResolutions]',
+            selectiveCDNResolutions
+              ? Object.entries(selectiveCDNResolutions)
+                  .map(([key, value]) => `${key}@${value}`)
+                  .join(',')
+              : '',
+          ),
       ];
     }),
   );
