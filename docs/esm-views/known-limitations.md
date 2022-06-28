@@ -76,7 +76,7 @@ approaches:
 1. The CDN is aware of stateful dependencies and serves only one version of
    them, no matter which version was requested, essentially "lying" to the user.
    This is the approach taken by
-   [Skypack](https://github.com/skypackjs/skypack-cdn/issues/88)
+   [Skypack](https://github.com/skypackjs/skypack-cdn/issues/88).
 2. The CDN is not aware of stateful dependencies, but has a mechanism that
    allows requesting any dependency with a list of locked sub-dependencies. This
    essentially generates hashed dependencies (that can be reused) which are
@@ -84,13 +84,28 @@ approaches:
    the approach taken by
    [esm.sh with the external dependencies query option](https://github.com/esm-dev/esm.sh#specify-external-dependencies)
 
-Modular has a flexible approach to this problem, allowing users to specify a
-custom CDN query template, in which query parameters can be specified manually
-(for example,
+While approach 1 is completely up to the server and needs no additional
+configuration to work, it has the disadvantage of not being flexible:
+essentially, a bunch of well-known stateful libraries are locked to a version
+that's "good enough". This is often not enough in terms of security and
+guarantees of immutability (since the version can be only updated unilaterally,
+on the CDN). In the previous example, it wouldn't matter what version of `react`
+we specify in our manifest - the CDN would always serve a fixed version at
+runtime to our application and all its dependencies.
+
+Modular has a flexible approach to address rewriting, allowing users to specify
+a custom CDN query template, in which query parameters can be specified
+manually. This can be used to complement approach 2. For example,
 `EXTERNAL_CDN_TEMPLATE="https://esm.sh/[name]@[resolution]?deps=react@17.0.1`
 would lock React to the same version throught the whole dependency tree on the
-CDN). [It also provides `[selectiveCDNResolutions]`](./esm-cdn.md), a template
-string to automatically translate
+CDN (i.e. any requested dependency that has a dependency on React and is built
+on the CDN will be guaranteed to import `react@17.0.1` on the CDN at runtime, no
+matter what its manifest file says). In the previous example, we don't care of
+the `peerDependency` range of our dependencies, since we know that their `react`
+will always point to `17.0.1`.
+
+Modular also provides a [`[selectiveCDNResolutions] token`](./esm-cdn.md) in its
+template, which automatically translates
 [Yarn selective version resolutions](https://classic.yarnpkg.com/lang/en/docs/selective-version-resolutions/)
 to lists of locked dependencies. For example, if you had these resolutions in
 your package.json:
