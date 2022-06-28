@@ -16,6 +16,7 @@ export async function createViewTrampoline(
   srcPath: string,
   dependencies: Dependency,
   resolutions: Dependency,
+  selectiveCDNResolutions: Dependency,
   browserTarget: string[],
 ): Promise<esbuild.BuildResult & { outputFiles: esbuild.OutputFile[] }> {
   const fileRelativePath = `./${fileName}`;
@@ -60,6 +61,7 @@ ReactDOM.render(<Component />, DOMRoot);`;
           ...resolutions,
           'react-dom': resolutions['react-dom'] ?? resolutions.react,
         },
+        selectiveCDNResolutions,
       ),
     ],
   });

@@ -65,6 +65,7 @@ class DevServer {
   private isApp: boolean; // TODO maybe it's better to pass the type here
   private dependencies: Dependency;
   private resolutions: Dependency;
+  private selectiveCDNResolutions: Dependency;
 
   constructor(
     paths: Paths,
@@ -74,6 +75,7 @@ class DevServer {
     isApp: boolean,
     dependencies: Dependency,
     resolutions: Dependency,
+    selectiveCDNResolutions: Dependency,
   ) {
     this.paths = paths;
     this.urls = urls;
@@ -82,6 +84,7 @@ class DevServer {
     this.isApp = isApp;
     this.dependencies = dependencies;
     this.resolutions = resolutions;
+    this.selectiveCDNResolutions = selectiveCDNResolutions;
 
     this.firstCompilePromise = new Promise<void>((resolve) => {
       this.firstCompilePromiseResolve = resolve;
@@ -205,6 +208,7 @@ class DevServer {
             createRewriteDependenciesPlugin(
               this.dependencies,
               this.resolutions,
+              this.selectiveCDNResolutions,
               browserTarget,
             ),
           ],
@@ -302,6 +306,7 @@ class DevServer {
       this.paths.appSrc,
       this.dependencies,
       this.resolutions,
+      this.selectiveCDNResolutions,
       baseConfig.target as string[],
     );
     res.end(trampolineBuildResult.outputFiles[0].text);
@@ -370,6 +375,7 @@ export default async function start(
   isApp: boolean,
   packageDependencies: Dependency,
   packageResolutions: Dependency,
+  selectiveCDNResolutions: Dependency,
 ): Promise<void> {
   const paths = await createPaths(target);
   const host = getHost();
@@ -388,6 +394,7 @@ export default async function start(
     isApp,
     packageDependencies,
     packageResolutions,
+    selectiveCDNResolutions,
   );
 
   const server = await devServer.start();

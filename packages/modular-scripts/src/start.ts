@@ -71,8 +71,11 @@ async function start(packageName: string): Promise<void> {
     process.env.USE_MODULAR_ESBUILD &&
     process.env.USE_MODULAR_ESBUILD === 'true';
 
-  const { manifest: packageDependencies, resolutions: packageResolutions } =
-    await getPackageDependencies(target);
+  const {
+    manifest: packageDependencies,
+    resolutions: packageResolutions,
+    selectiveCDNResolutions,
+  } = await getPackageDependencies(target);
   const { external: externalDependencies, bundled: bundledDependencies } =
     filterDependencies({
       dependencies: packageDependencies,
@@ -97,6 +100,7 @@ async function start(packageName: string): Promise<void> {
       !isEsmView,
       externalDependencies,
       externalResolutions,
+      selectiveCDNResolutions,
     );
   } else {
     const startScript = require.resolve(
@@ -127,6 +131,9 @@ async function start(packageName: string): Promise<void> {
           externalResolutions,
           bundledResolutions,
         }),
+        MODULAR_PACKAGE_SELECTIVE_CDN_RESOLUTIONS: JSON.stringify(
+          selectiveCDNResolutions,
+        ),
       },
     });
   }

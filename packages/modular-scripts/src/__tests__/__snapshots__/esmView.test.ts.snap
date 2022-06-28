@@ -12886,6 +12886,110 @@ export { e as default };
 "
 `;
 
+exports[`modular-scripts WHEN building a esm-view with a series of CDN selective dependency resolutions with the resolution field with esbuild THEN rewrites the dependencies 1`] = `
+"import * as t from \\"https://mycustomcdn.net/react@17.0.2?selectiveDeps=react@17.0.2,url-join@5.0.0\\";
+import m from \\"https://mycustomcdn.net/lodash@^4.17.21?selectiveDeps=react@17.0.2,url-join@5.0.0/get\\";
+import i from \\"https://mycustomcdn.net/lodash.merge@^4.6.2?selectiveDeps=react@17.0.2,url-join@5.0.0\\";
+import { difference as n } from \\"https://mycustomcdn.net/lodash@^4.17.21?selectiveDeps=react@17.0.2,url-join@5.0.0\\";
+var e = document.createElement(\\"link\\");
+e.rel = \\"stylesheet\\";
+e.type = \\"text/css\\";
+e.href =
+  \\"https://mycustomcdn.net/regular-table@^0.5.6?selectiveDeps=react@17.0.2,url-join@5.0.0/dist/css/material.css\\";
+document.getElementsByTagName(\\"HEAD\\")[0].appendChild(e);
+function s() {
+  return t.createElement(
+    \\"div\\",
+    null,
+    t.createElement(
+      \\"pre\\",
+      null,
+      JSON.stringify({ get: m, merge: i, difference: n })
+    )
+  );
+}
+export { s as default };
+//# sourceMappingURL=/static/js/index-ZHOP3VOF.js.map
+"
+`;
+
+exports[`modular-scripts WHEN building a esm-view with a series of CDN selective dependency resolutions with the resolution field with webpack THEN rewrites the dependencies 1`] = `
+"import * as e from \\"https://mycustomcdn.net/react@17.0.2?selectiveDeps=react@17.0.2,url-join@5.0.0\\";
+import * as t from \\"https://mycustomcdn.net/lodash@^4.17.21?selectiveDeps=react@17.0.2,url-join@5.0.0/get\\";
+import * as r from \\"https://mycustomcdn.net/lodash.merge@^4.6.2?selectiveDeps=react@17.0.2,url-join@5.0.0\\";
+import * as n from \\"https://mycustomcdn.net/lodash@^4.17.21?selectiveDeps=react@17.0.2,url-join@5.0.0\\";
+var o = {
+    545: () => {
+      const e = document.createElement(\\"link\\");
+      if (
+        ((e.rel = \\"stylesheet\\"),
+        (e.type = \\"text/css\\"),
+        (e.href =
+          \\"https://mycustomcdn.net/regular-table@^0.5.6/dist/css/material.css\\"),
+        !document.head)
+      ) {
+        const e = document.createElement(\\"head\\");
+        document.documentElement.insertBefore(e, document.body || null);
+      }
+      document.head.appendChild(e);
+    },
+  },
+  c = {};
+function s(e) {
+  var t = c[e];
+  if (void 0 !== t) return t.exports;
+  var r = (c[e] = { exports: {} });
+  return o[e](r, r.exports, s), r.exports;
+}
+(s.d = (e, t) => {
+  for (var r in t)
+    s.o(t, r) &&
+      !s.o(e, r) &&
+      Object.defineProperty(e, r, { enumerable: !0, get: t[r] });
+}),
+  (s.o = (e, t) => Object.prototype.hasOwnProperty.call(e, t));
+var a = {};
+(() => {
+  s.d(a, { Z: () => u });
+  const o = ((e) => {
+    var t = {};
+    return s.d(t, e), t;
+  })({ createElement: () => e.createElement });
+  const c = ((e) => {
+    var t = {};
+    return s.d(t, e), t;
+  })({ default: () => t.default });
+  const d = ((e) => {
+    var t = {};
+    return s.d(t, e), t;
+  })({ default: () => r.default });
+  const l = ((e) => {
+    var t = {};
+    return s.d(t, e), t;
+  })({ difference: () => n.difference });
+  s(545);
+  function u() {
+    return o.createElement(
+      \\"div\\",
+      null,
+      o.createElement(
+        \\"pre\\",
+        null,
+        JSON.stringify({
+          get: c.default,
+          merge: d.default,
+          difference: l.difference,
+        })
+      )
+    );
+  }
+})();
+var d = a.Z;
+export { d as default };
+//# sourceMappingURL=main.62f8218b.js.map
+"
+`;
+
 exports[`modular-scripts WHEN building a esm-view with resolutions THEN rewrites the dependencies 1`] = `
 "import * as t from \\"https://mycustomcdn.net/react@17.0.2\\";
 import m from \\"https://mycustomcdn.net/lodash@4.17.21/get\\";

@@ -46,6 +46,11 @@ const { externalResolutions } = process.env.MODULAR_PACKAGE_RESOLUTIONS
   ? JSON.parse(process.env.MODULAR_PACKAGE_RESOLUTIONS)
   : {};
 
+const selectiveCDNResolutions = process.env
+  .MODULAR_PACKAGE_SELECTIVE_CDN_RESOLUTIONS
+  ? JSON.parse(process.env.MODULAR_PACKAGE_SELECTIVE_CDN_RESOLUTIONS)
+  : {};
+
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
 
@@ -87,7 +92,11 @@ module.exports = function (webpackEnv) {
 
   // Create a map of external dependencies if we're building a ESM view
   const dependencyMap = isEsmView
-    ? createExternalDependenciesMap(externalDependencies, externalResolutions)
+    ? createExternalDependenciesMap(
+        externalDependencies,
+        externalResolutions,
+        selectiveCDNResolutions,
+      )
     : {};
 
   // Variable used for enabling profiling in Production
@@ -788,6 +797,7 @@ module.exports = function (webpackEnv) {
 function createExternalDependenciesMap(
   externalDependencies,
   externalResolutions,
+  selectiveCDNResolutions,
 ) {
   const externalCdnTemplate =
     process.env.EXTERNAL_CDN_TEMPLATE ||
@@ -799,12 +809,21 @@ function createExternalDependenciesMap(
         `Dependency ${name} found in package.json but not in lockfile. Have you installed your dependencies?`,
       );
     }
+
     return {
       ...acc,
       [name]: externalCdnTemplate
         .replace('[name]', name)
         .replace('[version]', version || externalResolutions[name])
-        .replace('[resolution]', externalResolutions[name]),
+        .replace('[resolution]', externalResolutions[name])
+        .replace(
+          '[selectiveCDNResolutions]',
+          selectiveCDNResolutions
+            ? Object.entries(selectiveCDNResolutions)
+                .map(([key, value]) => `${key}@${value}`)
+                .join(',')
+            : '',
+        ),
     };
   }, {});
 }

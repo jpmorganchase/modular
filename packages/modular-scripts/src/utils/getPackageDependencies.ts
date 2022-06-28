@@ -9,11 +9,9 @@ import getModularRoot from './getModularRoot';
 import getLocation from './getLocation';
 import getWorkspaceInfo, { WorkspaceInfo } from './getWorkspaceInfo';
 import * as logger from './logger';
-
-type DependencyManifest = NonNullable<CoreProperties['dependencies']>;
 interface DependencyResolution {
-  manifest: DependencyManifest;
-  resolutions: DependencyManifest;
+  manifest: Dependency;
+  resolutions: Dependency;
 }
 interface DependencyResolutionWithErrors extends DependencyResolution {
   manifestMiss: string[];
@@ -50,9 +48,11 @@ function getDependenciesFromSource(workspaceLocation: string) {
   return Array.from(dependencySet);
 }
 
-export async function getPackageDependencies(
-  target: string,
-): Promise<{ manifest: DependencyManifest; resolutions: DependencyManifest }> {
+export async function getPackageDependencies(target: string): Promise<{
+  manifest: Dependency;
+  resolutions: Dependency;
+  selectiveCDNResolutions: Dependency;
+}> {
   // This function is based on the assumption that nested package are not supported, so dependencies can be either declared in the
   // target's package.json or hoisted up to the workspace root.
   const targetLocation = await getLocation(target);
@@ -73,6 +73,12 @@ export async function getPackageDependencies(
       flag: 'r',
     },
   );
+
+  // Selective CDN resolutions is a list of dependencies that we want our CDN to use to build our dependencies with.
+  // Some CDNs support this mechanism - https://github.com/esm-dev/esm.sh#specify-external-dependencies
+  // This is especially useful if we have stateful dependencies (like React) that we need to query the same version through all our CDN depenencies
+  // We just output them as a comma-separated parameter in the CDN template as [selectiveCDNResolutions]
+  const selectiveCDNResolutions = targetManifest?.resolutions ?? {};
 
   // Package dependencies can be either local to the package or in the root package (hoisted)
   const packageDeps = Object.assign(
@@ -108,6 +114,7 @@ export async function getPackageDependencies(
   return {
     manifest: resolvedPackageDependencies.manifest,
     resolutions: resolvedPackageDependencies.resolutions,
+    selectiveCDNResolutions,
   };
 }
 

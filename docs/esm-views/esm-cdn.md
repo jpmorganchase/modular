@@ -35,6 +35,9 @@ For example:
   `EXTERNAL_CDN_TEMPLATE="https://cdn.skypack.dev/[name]@[resolution]"`
 - A valid template to work with the esm.sh public CDN can be specified with
   `EXTERNAL_CDN_TEMPLATE="https://esm.sh/[name]@[version]"`
+- A valid template to work with the esm.sh public CDN, telling the CDN to build
+  dependencies with selective version resolutions can be specified with
+  `EXTERNAL_CDN_TEMPLATE="https://esm.sh/[name]@[version]?deps=[selectiveCDNResolutions]"`
 
 These are the substrings that are replaced in the template:
 
@@ -43,3 +46,18 @@ These are the substrings that are replaced in the template:
   extracted from the package's or the root's (hoisted) `package.json`.
 - `[resolution]` is replaced with the version of the imported dependency as
   extracted from the yarn lockfile (`yarn.lock`).
+- `[selectiveCDNResolutions]` is replaced with the
+  [selective version resolutions](https://classic.yarnpkg.com/lang/en/docs/selective-version-resolutions/)
+  specified in the manifest, as a comma-separated list of `package@version`
+  resolutions. Some CDNs implement a mechanism of building all the requested
+  dependencies on the fly, giving the user the option to specify how their
+  requested dependencies' subdependencies must be resolved. For example, esm.sh
+  has an option to specify a list of fixed dependencies, called
+  ["external dependencies"](https://github.com/esm-dev/esm.sh#specify-external-dependencies).
+  This is similar to the concept of forcing selective resolutions throughout the
+  dependency tree in Yarn; `[selectiveCDNResolutions]` is a mechanism to
+  automatically generate a comma-separated list of selective resolutions to pass
+  to the CDN from the `resolutions` field in the manifest. _Please note that
+  selective version resolutions are not filtered out in any way._ If your
+  `resolutions` have special characters like wildcards, and those are not
+  supported by your CDN, you can still specify your query options manually.
