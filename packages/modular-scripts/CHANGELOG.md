@@ -1,5 +1,15 @@
 # modular-scripts
 
+## 3.1.4
+
+### Patch Changes
+
+- [#1872](https://github.com/jpmorganchase/modular/pull/1872)
+  [`e48bf7e`](https://github.com/jpmorganchase/modular/commit/e48bf7e53c810a4ba7828791447d2dad0351f6a0)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Support
+  selective version resolutions in esm-views via `[selectiveCDNResolutions]`
+  template token.
+
 ## 3.1.3
 
 ### Patch Changes
