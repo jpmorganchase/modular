@@ -92,4 +92,19 @@ would lock React to the same version throught the whole dependency tree on the
 CDN). [It also provides `[selectiveCDNResolutions]`](./esm-cdn.md), a template
 string to automatically translate
 [Yarn selective version resolutions](https://classic.yarnpkg.com/lang/en/docs/selective-version-resolutions/)
-to lists of locked dependencies.
+to lists of locked dependencies. For example, if you had these resolutions in
+your package.json:
+
+```json
+{
+  "resolutions": {
+    "react": "17.0.1",
+    "another-dependency": "2.3.7"
+  }
+}
+```
+
+and your environment contained
+`EXTERNAL_CDN_TEMPLATE="https://esm.sh/[name]@[resolution]?deps=[selectiveCDNResolutions]`,
+all your imports would be rewritten in this form:
+`import someDependency from "https://esm.sh/some-dependency@7.7.7?deps=react@17.0.1,another-dependency@2.3.7"`

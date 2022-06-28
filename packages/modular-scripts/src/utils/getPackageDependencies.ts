@@ -78,7 +78,6 @@ export async function getPackageDependencies(target: string): Promise<{
   // Some CDNs support this mechanism - https://github.com/esm-dev/esm.sh#specify-external-dependencies
   // This is especially useful if we have stateful dependencies (like React) that we need to query the same version through all our CDN depenencies
   // We just output them as a comma-separated parameter in the CDN template as [selectiveCDNResolutions]
-  // TODO: possibly fallback to a filtered version of resolutions if this is not present
   const selectiveCDNResolutions = targetManifest?.resolutions ?? {};
 
   // Package dependencies can be either local to the package or in the root package (hoisted)
