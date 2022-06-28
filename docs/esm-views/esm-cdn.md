@@ -54,7 +54,7 @@ These are the substrings that are replaced in the template:
   requested dependencies' subdependencies must be resolved. For example, esm.sh
   has an option to specify a list of fixed dependencies, called
   ["external dependencies"](https://github.com/esm-dev/esm.sh#specify-external-dependencies).
-  This is similar to the concept of forcing selective resolutions throught the
+  This is similar to the concept of forcing selective resolutions throughout the
   dependency tree in Yarn; `[selectiveCDNResolutions]` is a mechanism to
   automatically generate a comma-separated list of selective resolutions to pass
   to the CDN from the `resolutions` field in the manifest. _Please note that
