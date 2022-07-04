@@ -97,8 +97,9 @@ function createPlugin(): esbuild.Plugin {
             },
           );
 
+          const normalizedPath = normalizeToPosix(pathName);
           const contentsWrapper = `
-          export { default } from "@svgurl:${normalizeToPosix(pathName) || ''}";
+          export { default } from "@svgurl:${normalizedPath}";
           
           ${transformedContents}
           `;
