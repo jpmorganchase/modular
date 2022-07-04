@@ -348,8 +348,6 @@ class DevServer {
     // wait until the first watch compile is complete
     await this.firstCompilePromise;
 
-    console.log(this.esbuild);
-
     this.serveEsbuild(
       this.baseEsbuildConfig().outdir as string,
       req.url as string,
