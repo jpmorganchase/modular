@@ -1,7 +1,7 @@
 import path from 'path';
 
-export function normalizeToPosix(pathName?: string): string | undefined {
-  if (pathName) {
-    return pathName.split(path.sep).join(path.posix.sep);
-  }
+export function normalizeToPosix<T extends string | undefined>(pathName: T): T {
+  return (
+    pathName ? pathName.split(path.sep).join(path.posix.sep) : pathName
+  ) as T;
 }
