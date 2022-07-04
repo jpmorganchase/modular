@@ -323,16 +323,6 @@ class DevServer {
     const outputFiles = result.outputFiles || [];
 
     for (const file of outputFiles) {
-      // if (url.endsWith('css')) {
-      //   const other = normalizeToPosix(
-      //     sanitizeFileName('/' + path.relative(outputDirectory, file.path)),
-      //   );
-
-      //   console.log({
-      //     url,
-      //     other,
-      //   });
-      // }
       if (
         normalizeToPosix(
           sanitizeFileName('/' + path.relative(outputDirectory, file.path)),
