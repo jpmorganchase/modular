@@ -842,10 +842,13 @@ function parsePackageName(name) {
 
 // Virtual entrypoint if we're starting a ESM view - see https://github.com/webpack/webpack/issues/6437
 function getVirtualTrampoline() {
-  const entryPointPath = `'./${path.relative(
-    paths.appPath,
-    paths.appIndexJs,
-  )}'`;
+  // Build the relative path between the root and the entrypoint.
+  const relativeEntrypointPath = path
+    .relative(paths.appPath, paths.appIndexJs)
+    .split(path.sep)
+    .join(path.posix.sep); // Separator could be win32 on Windows system, since it comes from a filesystem path. Force it to be posix since it's an URL
+
+  const entryPointPath = `'./${relativeEntrypointPath}'`;
   const string = `
   import ReactDOM from 'react-dom'
   import React from 'react';
