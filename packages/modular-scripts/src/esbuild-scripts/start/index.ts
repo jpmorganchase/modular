@@ -35,6 +35,7 @@ import getModularRoot from '../../utils/getModularRoot';
 import { createRewriteDependenciesPlugin } from '../plugins/rewriteDependenciesPlugin';
 import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowserslistTarget';
 import type { Dependency } from '@schemastore/package';
+import { normalizeToPosix } from '../utils/formatPath';
 
 const RUNTIME_DIR = path.join(__dirname, 'runtime');
 class DevServer {
@@ -322,9 +323,20 @@ class DevServer {
     const outputFiles = result.outputFiles || [];
 
     for (const file of outputFiles) {
+      // if (url.endsWith('css')) {
+      //   const other = normalizeToPosix(
+      //     sanitizeFileName('/' + path.relative(outputDirectory, file.path)),
+      //   );
+
+      //   console.log({
+      //     url,
+      //     other,
+      //   });
+      // }
       if (
-        sanitizeFileName('/' + path.relative(outputDirectory, file.path)) ===
-        url
+        normalizeToPosix(
+          sanitizeFileName('/' + path.relative(outputDirectory, file.path)),
+        ) === url
       ) {
         const type = getType(url) as string;
 
@@ -345,6 +357,8 @@ class DevServer {
   ) => {
     // wait until the first watch compile is complete
     await this.firstCompilePromise;
+
+    console.log(this.esbuild);
 
     this.serveEsbuild(
       this.baseEsbuildConfig().outdir as string,
