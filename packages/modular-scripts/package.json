@@ -76,6 +76,7 @@
     "jest-transform-stub": "2.0.0",
     "jest-watch-typeahead": "0.6.5",
     "js-yaml": "^4.1.0",
+    "kill-port": "^2.0.1",
     "loader-utils": "3.2.0",
     "micromatch": "4.0.5",
     "mime": "^3.0.0",
