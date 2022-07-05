@@ -8,6 +8,7 @@ import type { Paths } from '../utils/createPaths';
 import getModularRoot from '../utils/getModularRoot';
 import * as path from 'path';
 import type { Dependency } from '@schemastore/package';
+import { normalizeToPosix } from './utils/formatPath';
 
 type FileType = '.css' | '.js';
 
@@ -121,10 +122,10 @@ export async function createIndex({
   const index =
     indexContent ?? (await fs.readFile(paths.appHtml, { encoding: 'utf-8' }));
   const cssEntryPoint = metafile
-    ? getEntryPoint(paths, metafile, '.css')
+    ? normalizeToPosix(getEntryPoint(paths, metafile, '.css'))
     : undefined;
   const jsEntryPoint = metafile
-    ? getEntryPoint(paths, metafile, '.js')
+    ? normalizeToPosix(getEntryPoint(paths, metafile, '.js'))
     : undefined;
 
   return compileIndex({
