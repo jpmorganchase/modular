@@ -1,5 +1,19 @@
 # modular-scripts
 
+## 3.1.5
+
+### Patch Changes
+
+- [#1903](https://github.com/jpmorganchase/modular/pull/1903)
+  [`aa68e0e`](https://github.com/jpmorganchase/modular/commit/aa68e0e86ec6fe841538ca7f667e3dcaea8adb69)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Fix paths
+  issue with "modular start" and esm-views on windows
+
+* [#1910](https://github.com/jpmorganchase/modular/pull/1910)
+  [`d35167c`](https://github.com/jpmorganchase/modular/commit/d35167c1dd6bf555ccbfb4a15252faa08346d739)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Fix
+  `app`s and `esm-view`s building and starting with esbuild mode on Windows
+
 ## 3.1.4
 
 ### Patch Changes
