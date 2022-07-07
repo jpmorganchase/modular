@@ -5480,10 +5480,10 @@ detectie@1.0.0:
   resolved "https://registry.yarnpkg.com/detectie/-/detectie-1.0.0.tgz#66b2cae2236d4d29ef71161180957bf89fbe535d"
   integrity sha1-ZrLK4iNtTSnvcRYRgJV7+J++U10=
 
-devtools-protocol@0.0.1001819:
-  version "0.0.1001819"
-  resolved "https://registry.yarnpkg.com/devtools-protocol/-/devtools-protocol-0.0.1001819.tgz#0a98f44cefdb02cc684f3d5e6bd898a1690231d9"
-  integrity sha512-G6OsIFnv/rDyxSqBa2lDLR6thp9oJioLsb2Gl+LbQlyoA9/OBAkrTU9jiCcQ8Pnh7z4d6slDiLaogR5hzgJLmQ==
+devtools-protocol@0.0.1011705:
+  version "0.0.1011705"
+  resolved "https://registry.yarnpkg.com/devtools-protocol/-/devtools-protocol-0.0.1011705.tgz#2582ed29f84848df83fba488122015540a744539"
+  integrity sha512-OKvTvu9n3swmgYshvsyVHYX0+aPzCoYUnyXUacfQMmFtBtBKewV/gT4I9jkAbpTqtTi2E4S9MXLlvzBDUlqg0Q==
 
 diff-sequences@^26.6.2:
   version "26.6.2"
@@ -10378,14 +10378,14 @@ pupa@^2.1.1:
   dependencies:
     escape-goat "^2.0.0"
 
-puppeteer@14.2.1:
-  version "14.2.1"
-  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-14.2.1.tgz#e343379061e0211b4c02d0c535883c26a39f825e"
-  integrity sha512-cIEsAbEbNYqHbkvdZY4+YSdxVwh4YFqOHSezuLpu46XAYlKkQeAMdJQ+mDAxg9v77gIn8PHJ6PlftIVsWKRACA==
+puppeteer@15.3.1:
+  version "15.3.1"
+  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-15.3.1.tgz#0ff9b433a8fc3798f5ec82ea4b31ec47857219cf"
+  integrity sha512-Z+SpYBiS1zUzMXV7Wnhe2pyuVCFAFRTq1UrUWHB2CkLos5v7bXvXYuZ3Fn5pSN5IObxijyx4opNYKTCRnGni6Q==
   dependencies:
     cross-fetch "3.1.5"
     debug "4.3.4"
-    devtools-protocol "0.0.1001819"
+    devtools-protocol "0.0.1011705"
     extract-zip "2.0.1"
     https-proxy-agent "5.0.1"
     pkg-dir "4.2.0"
@@ -10394,7 +10394,7 @@ puppeteer@14.2.1:
     rimraf "3.0.2"
     tar-fs "2.1.1"
     unbzip2-stream "1.4.3"
-    ws "8.7.0"
+    ws "8.8.0"
 
 qs@6.10.3:
   version "6.10.3"
@@ -12560,11 +12560,6 @@ write-file-atomic@^3.0.0:
     is-typedarray "^1.0.0"
     signal-exit "^3.0.2"
     typedarray-to-buffer "^3.1.5"
-
-ws@8.7.0:
-  version "8.7.0"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-8.7.0.tgz#eaf9d874b433aa00c0e0d8752532444875db3957"
-  integrity sha512-c2gsP0PRwcLFzUiA8Mkr37/MI7ilIlHQxaEAtd0uNMbVMoy8puJyafRlm0bV9MbGSabUPeLrRRaqIBcFcA2Pqg==
 
 ws@8.8.0, ws@^8.4.2:
   version "8.8.0"
