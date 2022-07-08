@@ -174,19 +174,6 @@ describe('modular-scripts', () => {
       `);
     });
 
-    it('THEN outputs the correct directory structure', () => {
-      const entrypointJsMapPath = `${outputJsEntrypoint}.map`;
-      const treeView = tree(path.join(modularRoot, 'dist', 'sample-esm-view'), {
-        hashIgnores: [
-          outputJsEntrypoint,
-          entrypointJsMapPath,
-          'package.json',
-          '_trampoline.js',
-        ],
-      });
-      expect(treeView).toMatchSnapshot();
-    });
-
     it('THEN matches the entrypoint snapshot', async () => {
       const { module: moduleEntryPoint } = outputManifest;
       const packageEntryPointPath = path.join(
