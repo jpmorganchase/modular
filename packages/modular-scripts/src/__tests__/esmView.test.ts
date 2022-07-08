@@ -10,6 +10,7 @@ import {
   getQueriesForElement,
   queries,
 } from 'pptr-testing-library';
+import prettier from 'prettier';
 import puppeteer from 'puppeteer';
 
 import getModularRoot from '../utils/getModularRoot';
@@ -203,7 +204,11 @@ describe('modular-scripts', () => {
       const entrypointWithoutSources = stripLastLine(
         await fs.readFile(packageEntryPointPath, 'utf8'),
       );
-      expect(entrypointWithoutSources).toMatchSnapshot();
+      expect(
+        prettier.format(entrypointWithoutSources, {
+          filepath: outputJsEntrypoint,
+        }),
+      ).toMatchSnapshot();
     });
   });
 
@@ -255,7 +260,11 @@ describe('modular-scripts', () => {
       const entrypointWithoutSources = stripLastLine(
         await fs.readFile(packageEntryPointPath, 'utf8'),
       );
-      expect(entrypointWithoutSources).toMatchSnapshot();
+      expect(
+        prettier.format(entrypointWithoutSources, {
+          filepath: outputJsEntrypoint,
+        }),
+      ).toMatchSnapshot();
     });
   });
 
@@ -336,7 +345,11 @@ describe('modular-scripts', () => {
       const entrypointWithoutSources = stripLastLine(
         await fs.readFile(packageEntryPointPath, 'utf8'),
       );
-      expect(entrypointWithoutSources).toMatchSnapshot();
+      expect(
+        prettier.format(entrypointWithoutSources, {
+          filepath: outputJsEntrypoint,
+        }),
+      ).toMatchSnapshot();
     });
   });
 
@@ -416,7 +429,11 @@ describe('modular-scripts', () => {
       const entrypointWithoutSources = stripLastLine(
         await fs.readFile(packageEntryPointPath, 'utf8'),
       );
-      expect(entrypointWithoutSources).toMatchSnapshot();
+      expect(
+        prettier.format(entrypointWithoutSources, {
+          filepath: outputJsEntrypoint,
+        }),
+      ).toMatchSnapshot();
     });
   });
 
@@ -502,7 +519,11 @@ describe('modular-scripts', () => {
       const entrypointWithoutSources = stripLastLine(
         await fs.readFile(packageEntryPointPath, 'utf8'),
       );
-      expect(entrypointWithoutSources).toMatchSnapshot();
+      expect(
+        prettier.format(entrypointWithoutSources, {
+          filepath: outputJsEntrypoint,
+        }),
+      ).toMatchSnapshot();
     });
   });
 
@@ -590,7 +611,11 @@ describe('modular-scripts', () => {
       const entrypointWithoutSources = stripLastLine(
         await fs.readFile(packageEntryPointPath, 'utf8'),
       );
-      expect(entrypointWithoutSources).toMatchSnapshot();
+      expect(
+        prettier.format(entrypointWithoutSources, {
+          filepath: outputJsEntrypoint,
+        }),
+      ).toMatchSnapshot();
     });
   });
 
@@ -669,7 +694,11 @@ describe('modular-scripts', () => {
       const entrypointWithoutSources = stripLastLine(
         await fs.readFile(packageEntryPointPath, 'utf8'),
       );
-      expect(entrypointWithoutSources).toMatchSnapshot();
+      expect(
+        prettier.format(entrypointWithoutSources, {
+          filepath: outputJsEntrypoint,
+        }),
+      ).toMatchSnapshot();
     });
   });
 
@@ -746,7 +775,11 @@ describe('modular-scripts', () => {
       const entrypointWithoutSources = stripLastLine(
         await fs.readFile(packageEntryPointPath, 'utf8'),
       );
-      expect(entrypointWithoutSources).toMatchSnapshot();
+      expect(
+        prettier.format(entrypointWithoutSources, {
+          filepath: outputJsEntrypoint,
+        }),
+      ).toMatchSnapshot();
     });
   });
 
@@ -806,7 +839,11 @@ describe('modular-scripts', () => {
       const entrypointWithoutSources = stripLastLine(
         await fs.readFile(packageEntryPointPath, 'utf8'),
       );
-      expect(entrypointWithoutSources).toMatchSnapshot();
+      expect(
+        prettier.format(entrypointWithoutSources, {
+          filepath: outputJsEntrypoint,
+        }),
+      ).toMatchSnapshot();
     });
   });
 
@@ -867,7 +904,11 @@ describe('modular-scripts', () => {
       const entrypointWithoutSources = stripLastLine(
         await fs.readFile(packageEntryPointPath, 'utf8'),
       );
-      expect(entrypointWithoutSources).toMatchSnapshot();
+      expect(
+        prettier.format(entrypointWithoutSources, {
+          filepath: outputJsEntrypoint,
+        }),
+      ).toMatchSnapshot();
     });
   });
 
@@ -927,7 +968,11 @@ describe('modular-scripts', () => {
       const entrypointWithoutSources = stripLastLine(
         await fs.readFile(packageEntryPointPath, 'utf8'),
       );
-      expect(entrypointWithoutSources).toMatchSnapshot();
+      expect(
+        prettier.format(entrypointWithoutSources, {
+          filepath: outputJsEntrypoint,
+        }),
+      ).toMatchSnapshot();
     });
   });
 
@@ -966,7 +1011,11 @@ describe('modular-scripts', () => {
       const entrypointWithoutSources = stripLastLine(
         await fs.readFile(packageEntryPointPath, 'utf8'),
       );
-      expect(entrypointWithoutSources).toMatchSnapshot();
+      expect(
+        prettier.format(entrypointWithoutSources, {
+          filepath: outputJsEntrypoint,
+        }),
+      ).toMatchSnapshot();
     });
   });
 
