@@ -177,7 +177,12 @@ describe('modular-scripts', () => {
     it('THEN outputs the correct directory structure', () => {
       const entrypointJsMapPath = `${outputJsEntrypoint}.map`;
       const treeView = tree(path.join(modularRoot, 'dist', 'sample-esm-view'), {
-        hashIgnores: [outputJsEntrypoint, entrypointJsMapPath, 'package.json'],
+        hashIgnores: [
+          outputJsEntrypoint,
+          entrypointJsMapPath,
+          'package.json',
+          '_trampoline.js',
+        ],
       });
       const treeSnapshot = `
         "sample-esm-view
@@ -189,7 +194,19 @@ describe('modular-scripts', () => {
               ├─ ${outputJsEntrypoint}
               └─ ${entrypointJsMapPath}"
       `;
-      expect(treeView).toMatchInlineSnapshot(treeSnapshot);
+      expect(treeView).toMatchInlineSnapshot(
+        treeSnapshot,
+        `
+        "sample-esm-view
+        ├─ index.html #17sfbiz
+        ├─ package.json
+        └─ static
+           └─ js
+              ├─ _trampoline.js
+              ├─ index-7JXQF5H3.js
+              └─ index-7JXQF5H3.js.map"
+      `,
+      );
     });
 
     it('THEN matches the entrypoint snapshot', async () => {
