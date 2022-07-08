@@ -196,7 +196,7 @@ describe('modular-scripts', () => {
         moduleEntryPoint as string,
       );
       // Strip the last line to remove the source maps, which may vary according to the underlying OS terminator
-      const entrypointWithoutSources = stripLastLine(
+      const entrypointWithoutSources = stripSourceMapLine(
         await fs.readFile(packageEntryPointPath, 'utf8'),
       );
       expect(
@@ -252,7 +252,7 @@ describe('modular-scripts', () => {
         'sample-esm-view',
         outputJsEntrypointPath,
       );
-      const entrypointWithoutSources = stripLastLine(
+      const entrypointWithoutSources = stripSourceMapLine(
         await fs.readFile(packageEntryPointPath, 'utf8'),
       );
       expect(
@@ -337,7 +337,7 @@ describe('modular-scripts', () => {
         'sample-esm-view',
         outputJsEntrypointPath,
       );
-      const entrypointWithoutSources = stripLastLine(
+      const entrypointWithoutSources = stripSourceMapLine(
         await fs.readFile(packageEntryPointPath, 'utf8'),
       );
       expect(
@@ -421,7 +421,7 @@ describe('modular-scripts', () => {
         'sample-esm-view',
         outputJsEntrypointPath,
       );
-      const entrypointWithoutSources = stripLastLine(
+      const entrypointWithoutSources = stripSourceMapLine(
         await fs.readFile(packageEntryPointPath, 'utf8'),
       );
       expect(
@@ -511,7 +511,7 @@ describe('modular-scripts', () => {
         'sample-esm-view',
         outputJsEntrypointPath,
       );
-      const entrypointWithoutSources = stripLastLine(
+      const entrypointWithoutSources = stripSourceMapLine(
         await fs.readFile(packageEntryPointPath, 'utf8'),
       );
       expect(
@@ -603,7 +603,7 @@ describe('modular-scripts', () => {
         'sample-esm-view',
         outputJsEntrypointPath,
       );
-      const entrypointWithoutSources = stripLastLine(
+      const entrypointWithoutSources = stripSourceMapLine(
         await fs.readFile(packageEntryPointPath, 'utf8'),
       );
       expect(
@@ -686,7 +686,7 @@ describe('modular-scripts', () => {
         'sample-esm-view',
         outputJsEntrypointPath,
       );
-      const entrypointWithoutSources = stripLastLine(
+      const entrypointWithoutSources = stripSourceMapLine(
         await fs.readFile(packageEntryPointPath, 'utf8'),
       );
       expect(
@@ -767,7 +767,7 @@ describe('modular-scripts', () => {
         'sample-esm-view',
         outputJsEntrypointPath,
       );
-      const entrypointWithoutSources = stripLastLine(
+      const entrypointWithoutSources = stripSourceMapLine(
         await fs.readFile(packageEntryPointPath, 'utf8'),
       );
       expect(
@@ -831,7 +831,7 @@ describe('modular-scripts', () => {
         'sample-esm-view',
         outputJsEntrypointPath,
       );
-      const entrypointWithoutSources = stripLastLine(
+      const entrypointWithoutSources = stripSourceMapLine(
         await fs.readFile(packageEntryPointPath, 'utf8'),
       );
       expect(
@@ -896,7 +896,7 @@ describe('modular-scripts', () => {
         'sample-esm-view',
         outputJsEntrypointPath,
       );
-      const entrypointWithoutSources = stripLastLine(
+      const entrypointWithoutSources = stripSourceMapLine(
         await fs.readFile(packageEntryPointPath, 'utf8'),
       );
       expect(
@@ -960,7 +960,7 @@ describe('modular-scripts', () => {
         'sample-esm-view',
         outputJsEntrypointPath,
       );
-      const entrypointWithoutSources = stripLastLine(
+      const entrypointWithoutSources = stripSourceMapLine(
         await fs.readFile(packageEntryPointPath, 'utf8'),
       );
       expect(
@@ -1003,7 +1003,7 @@ describe('modular-scripts', () => {
         'js',
         outputJsEntrypoint,
       );
-      const entrypointWithoutSources = stripLastLine(
+      const entrypointWithoutSources = stripSourceMapLine(
         await fs.readFile(packageEntryPointPath, 'utf8'),
       );
       expect(
@@ -1052,10 +1052,6 @@ async function getPackageOutputManifest(target: string) {
   return { manifest, jsEntrypointName, jsEntrypointPath };
 }
 
-function stripLastLine(content: string) {
-  if (content.lastIndexOf('\n') > 0) {
-    return content.substring(0, content.lastIndexOf('\n'));
-  } else {
-    return content;
-  }
+function stripSourceMapLine(content: string) {
+  return content.replace(/\/\/# sourceMappingURL.*$/gm, '');
 }
