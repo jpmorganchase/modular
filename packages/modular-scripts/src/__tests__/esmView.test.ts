@@ -194,7 +194,19 @@ describe('modular-scripts', () => {
               ├─ ${outputJsEntrypoint}
               └─ ${entrypointJsMapPath}"
       `;
-      expect(treeView).toMatchInlineSnapshot(treeSnapshot);
+      expect(treeView).toMatchInlineSnapshot(
+        treeSnapshot,
+        `
+        "sample-esm-view
+        ├─ index.html #17sfbiz
+        ├─ package.json
+        └─ static
+           └─ js
+              ├─ _trampoline.js
+              ├─ index-7JXQF5H3.js
+              └─ index-7JXQF5H3.js.map"
+      `,
+      );
     });
 
     it('THEN matches the entrypoint snapshot', async () => {
