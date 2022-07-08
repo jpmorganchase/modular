@@ -14,6 +14,7 @@ import prettier from 'prettier';
 import puppeteer from 'puppeteer';
 
 import getModularRoot from '../utils/getModularRoot';
+import { normalizeToPosix } from '../esbuild-scripts/utils/formatPath';
 import { startApp, DevServer } from './start-app';
 import type { CoreProperties } from '@schemastore/package';
 
@@ -978,7 +979,9 @@ describe('modular-scripts', () => {
     });
 
     it('THEN expects the correct source in package.json', () => {
-      expect(outputJsEntrypointPath.startsWith('/public/path')).toBeTruthy();
+      expect(
+        normalizeToPosix(outputJsEntrypointPath).startsWith('/public/path'),
+      ).toBeTruthy();
     });
 
     it('THEN matches the entrypoint snapshot', async () => {
@@ -1019,7 +1022,9 @@ describe('modular-scripts', () => {
     });
 
     it('THEN expects the correct source in package.json', () => {
-      expect(outputJsEntrypointPath.startsWith('./static/js/')).toBeTruthy();
+      expect(
+        normalizeToPosix(outputJsEntrypointPath).startsWith('./static/js/'),
+      ).toBeTruthy();
     });
   });
 });
