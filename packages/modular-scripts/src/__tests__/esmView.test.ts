@@ -184,29 +184,7 @@ describe('modular-scripts', () => {
           '_trampoline.js',
         ],
       });
-      const treeSnapshot = `
-        "sample-esm-view
-        ├─ index.html #17sfbiz
-        ├─ package.json
-        └─ static
-           └─ js
-              ├─ _trampoline.js #14ismmk
-              ├─ ${outputJsEntrypoint}
-              └─ ${entrypointJsMapPath}"
-      `;
-      expect(treeView).toMatchInlineSnapshot(
-        treeSnapshot,
-        `
-        "sample-esm-view
-        ├─ index.html #17sfbiz
-        ├─ package.json
-        └─ static
-           └─ js
-              ├─ _trampoline.js
-              ├─ index-7JXQF5H3.js
-              └─ index-7JXQF5H3.js.map"
-      `,
-      );
+      expect(treeView).toMatchSnapshot();
     });
 
     it('THEN matches the entrypoint snapshot', async () => {
