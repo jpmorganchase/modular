@@ -74,7 +74,7 @@
     "jest-config": "26.6.3",
     "jest-runner-eslint": "1.0.1",
     "jest-transform-stub": "2.0.0",
-    "jest-watch-typeahead": "0.6.5",
+    "jest-watch-typeahead": "2.0.0",
     "js-yaml": "^4.1.0",
     "kill-port": "^2.0.1",
     "loader-utils": "3.2.0",
