@@ -88,7 +88,7 @@
     "pnp-webpack-plugin": "1.7.0",
     "postcss": "8.4.14",
     "postcss-flexbugs-fixes": "4.2.1",
-    "postcss-loader": "7.0.0",
+    "postcss-loader": "7.0.1",
     "postcss-normalize": "8.0.1",
     "postcss-preset-env": "7.7.1",
     "postcss-safe-parser": "5.0.2",
