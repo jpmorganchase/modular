@@ -13,6 +13,23 @@ either used implicitly (every modular `type` has a default template) or provided
 explicitly to `modular add`, either interactively or via the `--template`
 option.
 
+# Examples
+
+```bash
+# adds a new package with the name "@app/package-name"
+# and type "esm-view" using a template provided by the modular team
+# this is the same as selecting type: esm-view
+modular add @app/package-name \
+    --template modular-template-esm-view
+```
+
+```bash
+# adds a new package with the name "my-custom"
+# uses a custom template published to npm by the community
+modular add my-custom \
+    --template modular-template-custom-template
+```
+
 # Default templates
 
 The `modular add` command automatically uses a default template to create a new
