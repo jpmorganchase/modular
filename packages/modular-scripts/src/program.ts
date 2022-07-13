@@ -29,7 +29,7 @@ program
     "Type of the package ('app', 'view', 'package')",
   )
   .option('--unstable-name <name>', 'Package name for the package.json')
-  .option('--template <name>', 'Package name for the package.json')
+  .option('--template <name>', 'Template name')
   .option(
     '--prefer-offline',
     'Equivalent of --prefer-offline for yarn installations',
