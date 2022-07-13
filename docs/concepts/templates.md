@@ -25,7 +25,7 @@ modular add @app/package-name \
 
 ```bash
 # adds a new package with the name "my-custom"
-# uses a custom template published to npm by the community
+# uses a the npm package "modular-template-custom-template" published by the community
 modular add my-custom \
     --template modular-template-custom-template
 ```
