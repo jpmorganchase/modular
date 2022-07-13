@@ -27,7 +27,7 @@ modular add @app/package-name \
 # adds a new package with the name "my-custom"
 # uses a the npm package "modular-template-custom-template" published by the community
 modular add my-custom \
-    --template modular-template-custom-template
+    --template custom-template
 ```
 
 # Default templates
