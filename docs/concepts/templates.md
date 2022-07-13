@@ -20,7 +20,7 @@ option.
 # and type "esm-view" using a template provided by the modular team
 # this is the same as selecting type: esm-view
 modular add @app/package-name \
-    --template modular-template-esm-view
+    --template esm-view
 ```
 
 ```bash
