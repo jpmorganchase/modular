@@ -39,7 +39,7 @@ are maintained by the Modular team in the
 published to the NPM registry. This is a list of default templates, linked to
 the correspondent type and NPM package:
 
-| Modular type | Template                                                                                                           | NPM PackagePackage                                              |
+| Modular type | Template                                                                                                           | NPM Package                                                     |
 | ------------ | ------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------- |
 | app          | [modular-template-app](https://github.com/jpmorganchase/modular/tree/main/packages/modular-template-app)           | [Link](https://www.npmjs.com/package/modular-template-app)      |
 | esm-view     | [modular-template-esm-view](https://github.com/jpmorganchase/modular/tree/main/packages/modular-template-esm-view) | [Link](https://www.npmjs.com/package/modular-template-esm-view) |
