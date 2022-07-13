@@ -58,8 +58,12 @@ such a package is not found, Modular will try to install it with Yarn.
 ## How to find community templates
 
 By convention, community templates published to the NPM registry have their name
-prefixed by `modular-template-`. Existing Modular templates can be found by
-searching for
+prefixed by `modular-template-`. You can also specify your template name
+omitting the prefix and Modular will add that for you (for example,
+`modular add my-custom --template my-template` is equivalent to
+`modular add my-custom --template modular-template-my-template`)
+
+Existing Modular templates can be found by searching for
 [`modular-template-*`](https://www.npmjs.com/search?q=modular-template-*) on
 NPM.
 
