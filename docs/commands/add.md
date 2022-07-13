@@ -35,3 +35,7 @@ Packages can currently be one of the following types:
 
 `--verbose`: Run yarn commands with --verbose set and sets
 `MODULAR_LOGGER_DEBUG` to true
+
+`--template <templateName>`: Use the package `templateName` from the repository
+or the registry as a template for the new package. Find more information about
+Modular templates [in this page](../concepts/templates.md)
