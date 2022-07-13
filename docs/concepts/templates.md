@@ -13,6 +13,23 @@ either used implicitly (every modular `type` has a default template) or provided
 explicitly to `modular add`, either interactively or via the `--template`
 option.
 
+# Examples
+
+```bash
+# adds a new package with the name "@app/package-name"
+# and type "esm-view" using a template provided by the modular team
+# this is the same as selecting type: esm-view
+modular add @app/package-name \
+    --template modular-template-esm-view
+```
+
+```bash
+# adds a new package with the name "my-custom"
+# uses a custom template published to npm by the community
+modular add my-custom \
+    --template modular-template-custom-template
+```
+
 # Default templates
 
 The `modular add` command automatically uses a default template to create a new
@@ -22,12 +39,12 @@ are maintained by the Modular team in the
 published to the NPM registry. This is a list of default templates, linked to
 the correspondent type and NPM package:
 
-| Modular type | Template                                                               | NPM PackagePackage                                              |
-| ------------ | ---------------------------------------------------------------------- | --------------------------------------------------------------- |
-| app          | [modular-template-app](../../packages/modular-template-app/)           | [Link](https://www.npmjs.com/package/modular-template-app)      |
-| esm-view     | [modular-template-esm-view](../../packages/modular-template-esm-view/) | [Link](https://www.npmjs.com/package/modular-template-esm-view) |
-| package      | [modular-template-package](../../packages/modular-template-package/)   | [Link](https://www.npmjs.com/package/modular-template-package)  |
-| view         | [modular-template-view](../../packages/modular-template-view/)         | [Link](https://www.npmjs.com/package/modular-template-view)     |
+| Modular type | Template                                                                                                           | NPM PackagePackage                                              |
+| ------------ | ------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------- |
+| app          | [modular-template-app](https://github.com/jpmorganchase/modular/tree/main/packages/modular-template-app)           | [Link](https://www.npmjs.com/package/modular-template-app)      |
+| esm-view     | [modular-template-esm-view](https://github.com/jpmorganchase/modular/tree/main/packages/modular-template-esm-view) | [Link](https://www.npmjs.com/package/modular-template-esm-view) |
+| package      | [modular-template-package](https://github.com/jpmorganchase/modular/tree/main/packages/modular-template-package)   | [Link](https://www.npmjs.com/package/modular-template-package)  |
+| view         | [modular-template-view](https://github.com/jpmorganchase/modular/tree/main/packages/modular-template-view)         | [Link](https://www.npmjs.com/package/modular-template-view)     |
 
 # Community templates
 
