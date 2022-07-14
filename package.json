@@ -40,7 +40,7 @@
     "@babel/preset-react": "7.17.12",
     "@babel/preset-typescript": "7.17.12",
     "@changesets/changelog-github": "^0.4.4",
-    "@changesets/cli": "2.23.0",
+    "@changesets/cli": "2.23.2",
     "@schemastore/package": "0.0.6",
     "@schemastore/tsconfig": "0.0.9",
     "@testing-library/dom": "8.13.0",
