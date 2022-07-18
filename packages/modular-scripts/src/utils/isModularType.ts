@@ -18,8 +18,9 @@ export const ModularTypes: ModularType[] = (
 
 export type ModularTemplateType = 'app' | 'esm-view' | 'view' | 'package';
 export type PackageType = ModularTemplateType | 'template';
+export type UnknownType = 'unknown';
 
-export type ModularType = PackageType | 'root';
+export type ModularType = PackageType | UnknownType | 'root';
 
 // Utility type that extends type `T1` with the fields of type `T2`
 type Extend<T1, T2> = {
