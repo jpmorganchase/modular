@@ -4,5 +4,8 @@
     "modular",
     "packages/**/src",
     "packages/create-modular-react-app/template/"
-  ]
+  ],
+  "compilerOptions": {
+    "allowJs": true
+  }
 }

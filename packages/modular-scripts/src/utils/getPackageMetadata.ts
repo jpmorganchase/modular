@@ -52,6 +52,7 @@ async function getPackageMetadata() {
   // explicitly included in dependencies
   // maybe that belongs in `modular check`
 
+
   const typescriptConfig: TSConfig = {};
   // validate tsconfig
   // Extract configuration from config file and parse JSON,
@@ -94,6 +95,7 @@ async function getPackageMetadata() {
   });
 
   typescriptConfig.compilerOptions = typescriptConfig.compilerOptions || {};
+
   Object.assign(typescriptConfig.compilerOptions, {
     noEmit: false,
     declaration: true,

@@ -1,15 +1,56 @@
 import isCI from 'is-ci';
 import ts from 'typescript';
 import chalk from 'chalk';
+import * as path from 'path';
+import * as fse from 'fs-extra';
 import getPackageMetadata from './utils/getPackageMetadata';
 import * as logger from './utils/logger';
 import getModularRoot from './utils/getModularRoot';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 
 async function typecheck(): Promise<void> {
-  const { typescriptConfig } = await getPackageMetadata();
+  const { typescriptConfig, packageNames } = await getPackageMetadata();
+  const modularRoot = getModularRoot();
 
-  const { _compilerOptions, ...rest } = typescriptConfig;
+  packageNames.forEach((name) => {
+    const result = ts.parseConfigFileTextToJson(
+      path.join(modularRoot, 'packages/'+name+'/tsconfig.json'),
+      fse.readFileSync('packages/'+name+'/tsconfig.json', 'utf8').toString(),
+    );
+
+    const rest = result.config as Record<any, any>
+
+    let compilerOptions;
+    if(rest.compilerOptions){
+      compilerOptions = rest.compilerOptions as Record<any, any>;
+    }else{
+      compilerOptions = {}
+    }
+
+    const tsConfig = {
+      ...rest,
+      exclude: [
+        'node_modules',
+        'bower_components',
+        'jspm_packages',
+        'tmp',
+        '**/dist-types',
+        '**/dist-cjs',
+        '**/dist-es',
+        'dist',
+      ],
+      compilerOptions: {
+        ...compilerOptions,
+        noEmit: true,
+        emitDeclarationOnly: false
+      },
+    };
+
+    console.log(tsConfig)
+    console.log('---------')
+  })
+
+  const { compilerOptions, ...rest } = typescriptConfig;
 
   const tsConfig = {
     ...rest,
