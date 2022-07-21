@@ -1,0 +1,9 @@
+{
+  "extends": "../modular-scripts/tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "outDir": "dist-cjs"
+  }
+}

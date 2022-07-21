@@ -1,11 +1,17 @@
 {
-  "name": "@modular-scripts/workspace-resolver",
+  "name": "workspace-resolver",
   "version": "1.0.0",
+  "main": "dist-cjs/index.js",
   "dependencies": {
+    "modular-types": "1.0.0",
     "fs-extra": "^10.1.0",
     "globby": "11.0.4"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.13"
-  }
+  },
+  "scripts": {
+    "build": "tsc && babel --source-maps --root-mode upward src --out-dir dist-cjs --extensions .ts --ignore 'src/**/*.test.ts'"
+  },
+  "types": "dist-cjs/index.d.ts"
 }

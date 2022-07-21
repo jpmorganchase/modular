@@ -1,7 +1,8 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 
-import { ModularType, ModularPackageJson } from './isModularType';
+import type { ModularPackageJson } from './isModularType';
+import type { ModularType } from 'modular-types';
 import { getAllWorkspaces } from './getAllWorkspaces';
 import getModularRoot from './getModularRoot';
 import memoize from './memoize';

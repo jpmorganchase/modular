@@ -2,14 +2,16 @@ import { paramCase as toParamCase } from 'change-case';
 import chalk from 'chalk';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import * as logger from '../utils/logger';
 import * as minimize from 'html-minifier-terser';
+import type { CoreProperties } from '@schemastore/package';
+import type { ModularType } from 'modular-types';
+
+import * as logger from '../utils/logger';
 import getModularRoot from '../utils/getModularRoot';
 import actionPreflightCheck from '../utils/actionPreflightCheck';
 import { getModularType } from '../utils/isModularType';
 import { filterDependencies } from '../utils/filterDependencies';
 import getWorkspaceInfo from '../utils/getWorkspaceInfo';
-import type { ModularType } from '../utils/isModularType';
 import execAsync from '../utils/execAsync';
 import getLocation from '../utils/getLocation';
 import { setupEnvForDirectory } from '../utils/setupEnv';
@@ -35,7 +37,6 @@ import {
   esbuildMeasureFileSizesBeforeBuild,
 } from './esbuildFileSizeReporter';
 import { getPackageDependencies } from '../utils/getPackageDependencies';
-import type { CoreProperties } from '@schemastore/package';
 
 async function buildStandalone(
   target: string,

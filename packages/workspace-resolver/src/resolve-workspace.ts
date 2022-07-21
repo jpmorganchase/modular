@@ -2,7 +2,7 @@ import { join } from 'path';
 import { readJson } from 'fs-extra';
 import globby from 'globby';
 
-import type { ModularType } from 'modular-scripts/src/utils/isModularType';
+import type { ModularWorkspacePackage, ModularType } from 'modular-types';
 
 function packageJsonPath(dir: string) {
   return dir.endsWith('package.json') ? dir : join(dir, 'package.json');
@@ -36,23 +36,12 @@ function readPackageJson(path: string): Promise<PackageJson> {
   return readJson(path) as Promise<PackageJson>;
 }
 
-type ModularWorkspacePackage = {
-  path: string;
-  name: string;
-  version: string;
-  workspace: boolean;
-  modular: {
-    type: ModularType;
-  };
-  children: ModularWorkspacePackage[];
-  parent: ModularWorkspacePackage | null;
-};
-
 type WorkspaceResolverOptions = {
   filter?: (json: PackageJson) => true | unknown;
 };
 
 export async function resolveWorkspace(
+  isRoot: boolean,
   root: string,
   { filter }: WorkspaceResolverOptions,
   parent: ModularWorkspacePackage | null = null,
@@ -81,8 +70,39 @@ export async function resolveWorkspace(
   };
   collector.set(json.name, pkg);
 
+  if (json.modular?.type === 'root' && !isRoot) {
+    throw new Error(
+      'Nested modular roots are currently not supported by Modular',
+    );
+  }
+
+  // Allow for the `workspaces` value to be `[]` or `{}`, otherwise throw (nested workspaces unsupported)
+  if (!isRoot && json.workspaces) {
+    if (Array.isArray(json.workspaces) && json.workspaces.length > 0) {
+      throw new Error(
+        'Nested workspaces are currently not supported by Modular',
+      );
+    }
+
+    if (
+      typeof json.workspaces === 'object' &&
+      !Array.isArray(json.workspaces) &&
+      Object.keys(json.workspaces).length > 0
+    ) {
+      throw new Error(
+        'Nested workspaces are currently not supported by Modular',
+      );
+    }
+  }
+
   for (const link of resolveWorkspacesDefinition(root, json.workspaces)) {
-    const [, child] = await resolveWorkspace(link, { filter }, pkg, collector);
+    const [, child] = await resolveWorkspace(
+      false,
+      link,
+      { filter },
+      pkg,
+      collector,
+    );
     child && pkg.children.push(child);
   }
 
