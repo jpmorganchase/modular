@@ -1,11 +1,3 @@
-export const packageTypes: PackageType[] = [
-  'app',
-  'esm-view',
-  'view',
-  'package',
-  'template',
-];
-
 export type ModularTemplateType = 'app' | 'esm-view' | 'view' | 'package';
 export type PackageType = ModularTemplateType | 'template';
 export type UnknownType = 'unknown';

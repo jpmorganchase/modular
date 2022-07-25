@@ -1,10 +1,8 @@
 import execa from 'execa';
 import memoize from './memoize';
 import getModularRoot from './getModularRoot';
-import { resolveWorkspace } from 'workspace-resolver';
 import * as logger from './logger';
 import stripAnsi from 'strip-ansi';
-import type { ModularWorkspacePackage } from 'modular-types';
 
 interface WorkspaceObj {
   location: string;
@@ -106,18 +104,6 @@ export async function getWorkspaceInfo(
   return packageManagerUtils.formatWorkspaceCommandOutput(
     workspaceCommandOutput,
   );
-}
-
-// TODO call when fflag is enabled
-export async function getWorkspaceInfoAgnostically(): Promise<
-  Map<string, ModularWorkspacePackage>
-> {
-  const modularRoot = getModularRoot();
-  const [allPackages] = await resolveWorkspace(true, modularRoot, {});
-
-  // TODO active depcom1! to ascertain workspace inter dependencies
-
-  return allPackages;
 }
 
 function _getAllWorkspaces(): Promise<WorkspaceMap> {

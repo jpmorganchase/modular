@@ -36,14 +36,9 @@ function readPackageJson(path: string): Promise<PackageJson> {
   return readJson(path) as Promise<PackageJson>;
 }
 
-type WorkspaceResolverOptions = {
-  filter?: (json: PackageJson) => true | unknown;
-};
-
 export async function resolveWorkspace(
   isRoot: boolean,
   root: string,
-  { filter }: WorkspaceResolverOptions,
   parent: ModularWorkspacePackage | null = null,
   collector = new Map<string, ModularWorkspacePackage>(),
 ): Promise<
@@ -51,10 +46,6 @@ export async function resolveWorkspace(
 > {
   const path = packageJsonPath(root);
   const json = await readPackageJson(path);
-
-  if (filter && filter(json) !== true) {
-    return [collector, null];
-  }
 
   const pkg: ModularWorkspacePackage = {
     path,
@@ -96,13 +87,7 @@ export async function resolveWorkspace(
   }
 
   for (const link of resolveWorkspacesDefinition(root, json.workspaces)) {
-    const [, child] = await resolveWorkspace(
-      false,
-      link,
-      { filter },
-      pkg,
-      collector,
-    );
+    const [, child] = await resolveWorkspace(false, link, pkg, collector);
     child && pkg.children.push(child);
   }
 
