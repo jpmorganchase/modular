@@ -1,4 +1,4 @@
-import { join } from 'path';
+import path, { join } from 'path';
 import { readJson } from 'fs-extra';
 import globby from 'globby';
 import semver from 'semver';
@@ -24,6 +24,7 @@ function resolveWorkspacesDefinition(
 
   if (Array.isArray(def)) {
     return def.flatMap((path: string) => {
+      // TODO does this work as expected on windows?
       return globby.sync([`${path}/package.json`, '!**/node_modules/**/*'], {
         absolute: false,
         cwd,
@@ -39,6 +40,8 @@ type PackageJson = {
   version: string;
   workspaces?: string[] | { noHost: boolean; packages: string[] };
   modular?: { type: ModularType };
+  optionalDependencies: Record<string, string> | undefined;
+  devDependencies: Record<string, string> | undefined;
   dependencies: Record<string, string> | undefined;
 };
 
@@ -57,7 +60,6 @@ export async function resolveWorkspace(
   const path = packageJsonPath(root);
   const json = await readPackageJson(path);
 
-  // TODO do we care about devDeps, optionalDeps, bundledDeps?
   const pkg: ModularWorkspacePackage = {
     path,
     name: json.name,
@@ -69,7 +71,12 @@ export async function resolveWorkspace(
       type: 'unknown',
       ...json.modular,
     },
-    dependencies: json.dependencies || {},
+    // Like yarn classic `workspaces info`, we include all except peerDependencies
+    dependencies: {
+      ...json.optionalDependencies,
+      ...json.devDependencies,
+      ...json.dependencies,
+    },
   };
   collector.set(json.name, pkg);
 
@@ -149,7 +156,8 @@ export function analyzeWorkspaceDependencies(
       .flatMap(([dep]) => dep);
 
     mappedDeps.set(pkgName, {
-      location: pkg.path.replace('/package.json', ''),
+      // TODO is this windows-friendly? test it on windows
+      location: path.dirname(pkg.path),
       workspaceDependencies: packageDepNames.filter(
         (depName) => !mismatchedWorkspaceDependencies.includes(depName),
       ),
