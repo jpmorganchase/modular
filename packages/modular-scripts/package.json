@@ -120,7 +120,7 @@
     "webpack-dev-server": "4.9.3",
     "webpack-manifest-plugin": "5.0.0",
     "webpack": "5.73.0",
-    "workspace-resolver": "1.0.0",
+    "@modular-scripts/workspace-resolver": "1.0.0",
     "ws": "8.8.0"
   },
   "peerDependencies": {

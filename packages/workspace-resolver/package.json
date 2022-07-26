@@ -1,11 +1,12 @@
 {
-  "name": "workspace-resolver",
+  "name": "@modular-scripts/workspace-resolver",
   "version": "1.0.0",
   "main": "dist-cjs/index.js",
   "dependencies": {
-    "modular-types": "1.0.0",
     "fs-extra": "^10.1.0",
-    "globby": "11.0.4"
+    "globby": "11.0.4",
+    "modular-types": "1.0.0",
+    "semver": "7.3.7"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.13"

@@ -1,15 +1,14 @@
 import execa from 'execa';
 import memoize from './memoize';
 import getModularRoot from './getModularRoot';
+import {
+  resolveWorkspace,
+  analyzeWorkspaceDependencies,
+} from '@modular-scripts/workspace-resolver';
+
 import * as logger from './logger';
 import stripAnsi from 'strip-ansi';
-
-interface WorkspaceObj {
-  location: string;
-  workspaceDependencies: string[];
-  mismatchedWorkspaceDependencies: string[];
-}
-type WorkspaceMap = Record<string, WorkspaceObj>;
+import type { WorkspaceMap, WorkspaceObj } from 'modular-types';
 
 function formatYarn1Workspace(stdout: string): WorkspaceMap {
   return JSON.parse(stdout) as WorkspaceMap;
@@ -94,16 +93,28 @@ async function getPackageManagerInfo(cwd: string, packageManager: string) {
   throw new Error(`${packageManager} is not supported.`);
 }
 
+const useNewThing = true;
+
 export async function getWorkspaceInfo(
   cwd: string,
   packageManager: string,
 ): Promise<WorkspaceMap> {
+  if (useNewThing) {
+    return await getWorkspaceInfoAgnostically();
+  }
   const packageManagerUtils = await getPackageManagerInfo(cwd, packageManager);
   const [file, ...args] = packageManagerUtils.getWorkspaceCommand.split(' ');
   const workspaceCommandOutput = await getCommandOutput(cwd, file, args);
   return packageManagerUtils.formatWorkspaceCommandOutput(
     workspaceCommandOutput,
   );
+}
+
+export async function getWorkspaceInfoAgnostically(): Promise<WorkspaceMap> {
+  const modularRoot = getModularRoot();
+  const [allPackages] = await resolveWorkspace(true, modularRoot);
+
+  return analyzeWorkspaceDependencies(allPackages);
 }
 
 function _getAllWorkspaces(): Promise<WorkspaceMap> {

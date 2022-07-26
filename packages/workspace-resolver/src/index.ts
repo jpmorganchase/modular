@@ -1,1 +1,4 @@
-export { resolveWorkspace } from './resolve-workspace';
+export {
+  resolveWorkspace,
+  analyzeWorkspaceDependencies,
+} from './resolve-workspace';

@@ -1,8 +1,14 @@
 import { join } from 'path';
 import { readJson } from 'fs-extra';
 import globby from 'globby';
+import semver from 'semver';
 
-import type { ModularWorkspacePackage, ModularType } from 'modular-types';
+import type {
+  ModularWorkspacePackage,
+  ModularType,
+  WorkspaceMap,
+  WorkspaceObj,
+} from 'modular-types';
 
 function packageJsonPath(dir: string) {
   return dir.endsWith('package.json') ? dir : join(dir, 'package.json');
@@ -18,7 +24,10 @@ function resolveWorkspacesDefinition(
 
   if (Array.isArray(def)) {
     return def.flatMap((path: string) => {
-      return globby.sync(`${path}/package.json`, { absolute: true, cwd });
+      return globby.sync([`${path}/package.json`, '!**/node_modules/**/*'], {
+        absolute: false,
+        cwd,
+      });
     });
   }
 
@@ -30,6 +39,7 @@ type PackageJson = {
   version: string;
   workspaces?: string[] | { noHost: boolean; packages: string[] };
   modular?: { type: ModularType };
+  dependencies: Record<string, string> | undefined;
 };
 
 function readPackageJson(path: string): Promise<PackageJson> {
@@ -47,6 +57,7 @@ export async function resolveWorkspace(
   const path = packageJsonPath(root);
   const json = await readPackageJson(path);
 
+  // TODO do we care about devDeps, optionalDeps, bundledDeps?
   const pkg: ModularWorkspacePackage = {
     path,
     name: json.name,
@@ -58,6 +69,7 @@ export async function resolveWorkspace(
       type: 'unknown',
       ...json.modular,
     },
+    dependencies: json.dependencies || {},
   };
   collector.set(json.name, pkg);
 
@@ -67,7 +79,7 @@ export async function resolveWorkspace(
     );
   }
 
-  // Allow for the `workspaces` value to be `[]` or `{}`, otherwise throw (nested workspaces unsupported)
+  // Allow for the `workspaces` value to be `[]` or `{}`, otherwise throw (as nested workspaces currently unsupported)
   if (!isRoot && json.workspaces) {
     if (Array.isArray(json.workspaces) && json.workspaces.length > 0) {
       throw new Error(
@@ -92,4 +104,51 @@ export async function resolveWorkspace(
   }
 
   return [collector, pkg];
+}
+
+export function analyzeWorkspaceDependencies(
+  workspacePackages: Map<string, ModularWorkspacePackage>,
+): WorkspaceMap {
+  const mappedDeps = new Map<string, WorkspaceObj>();
+  const exhaustivePackageNameList = Array.from(workspacePackages.keys());
+  const allPackages = Array.from(workspacePackages.entries());
+
+  // Exclude the root when analyzing package inter-dependencies
+  const packagesWithoutRoot = Array.from(workspacePackages.entries()).filter(
+    ([_key, value]) => {
+      return value.modular.type !== 'root';
+    },
+  );
+
+  // Calculate deps and mismatches a-la Yarn classic `workspaces info`
+  packagesWithoutRoot.forEach(([pkgName, pkg]) => {
+    const packageDeps = allPackages.filter(([key, value]) => {
+      return exhaustivePackageNameList.includes(value.name);
+    });
+
+    // Mismatched = version in package.json does not satisfy the dependent's range
+    const mismatchedWorkspaceDependencies = Object.entries(
+      pkg.dependencies || {},
+    )
+      .filter(([dep, range]) => {
+        const matchingPackage = packageDeps.find(
+          ([matchingPackageName]) => dep === matchingPackageName,
+        );
+        if (!matchingPackage) {
+          return false;
+        }
+
+        const [, match] = matchingPackage;
+        return !semver.satisfies(match.version, range);
+      })
+      .flatMap(([dep]) => dep);
+
+    mappedDeps.set(pkgName, {
+      location: pkg.path.replace('package.json', ''),
+      workspaceDependencies: packageDeps.flatMap(([depName]) => depName),
+      mismatchedWorkspaceDependencies,
+    });
+  });
+
+  return Object.fromEntries(mappedDeps);
 }

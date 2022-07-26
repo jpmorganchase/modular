@@ -14,4 +14,13 @@ export type ModularWorkspacePackage = {
   };
   children: ModularWorkspacePackage[];
   parent: ModularWorkspacePackage | null;
+  dependencies: Record<string, string> | undefined;
 };
+
+export interface WorkspaceObj {
+  location: string;
+  workspaceDependencies: string[];
+  mismatchedWorkspaceDependencies: string[];
+}
+
+export type WorkspaceMap = Record<string, WorkspaceObj>;

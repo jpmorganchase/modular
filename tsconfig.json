@@ -7,7 +7,9 @@
   ],
   "compilerOptions": {
     "paths": {
-      "workspace-resolver": ["./packages/workspace-resolver/src"]
+      "@modular-scripts/workspace-resolver": [
+        "./packages/workspace-resolver/src"
+      ]
     }
   }
 }
