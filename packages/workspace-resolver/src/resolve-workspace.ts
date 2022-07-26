@@ -24,7 +24,6 @@ function resolveWorkspacesDefinition(
 
   if (Array.isArray(def)) {
     return def.flatMap((path: string) => {
-      // TODO does this work as expected on windows?
       return globby.sync([`${path}/package.json`, '!**/node_modules/**/*'], {
         absolute: false,
         cwd,
@@ -156,7 +155,6 @@ export function analyzeWorkspaceDependencies(
       .flatMap(([dep]) => dep);
 
     mappedDeps.set(pkgName, {
-      // TODO is this windows-friendly? test it on windows
       location: path.dirname(pkg.path),
       workspaceDependencies: packageDepNames.filter(
         (depName) => !mismatchedWorkspaceDependencies.includes(depName),
