@@ -115,18 +115,23 @@ export function analyzeWorkspaceDependencies(
 
   // Exclude the root when analyzing package inter-dependencies
   const packagesWithoutRoot = Array.from(workspacePackages.entries()).filter(
-    ([_key, value]) => {
-      return value.modular.type !== 'root';
+    ([, pkg]) => {
+      return pkg.modular.type !== 'root';
     },
   );
 
   // Calculate deps and mismatches a-la Yarn classic `workspaces info`
   packagesWithoutRoot.forEach(([pkgName, pkg]) => {
-    const packageDeps = allPackages.filter(([key, value]) => {
-      return exhaustivePackageNameList.includes(value.name);
-    });
+    const packageDepNames = Object.keys(pkg.dependencies || {}).filter(
+      (dep) => {
+        return exhaustivePackageNameList.includes(dep);
+      },
+    );
+    const packageDeps = allPackages.filter(([, pkg]) =>
+      packageDepNames.includes(pkg.name),
+    );
 
-    // Mismatched = version in package.json does not satisfy the dependent's range
+    // Mismatched = version in packages/<package>/package.json does not satisfy the dependent's range
     const mismatchedWorkspaceDependencies = Object.entries(
       pkg.dependencies || {},
     )
@@ -144,11 +149,15 @@ export function analyzeWorkspaceDependencies(
       .flatMap(([dep]) => dep);
 
     mappedDeps.set(pkgName, {
-      location: pkg.path.replace('package.json', ''),
-      workspaceDependencies: packageDeps.flatMap(([depName]) => depName),
+      location: pkg.path.replace('/package.json', ''),
+      workspaceDependencies: packageDepNames.filter(
+        (depName) => !mismatchedWorkspaceDependencies.includes(depName),
+      ),
       mismatchedWorkspaceDependencies,
     });
   });
+
+  console.log(Object.fromEntries(mappedDeps));
 
   return Object.fromEntries(mappedDeps);
 }
