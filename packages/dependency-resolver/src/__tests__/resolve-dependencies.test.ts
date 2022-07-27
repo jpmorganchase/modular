@@ -1,7 +1,4 @@
-import {
-  generateFlatWorkspaceDependencyForPackage,
-  LiteWorkSpaceRecord,
-} from '../';
+import { flattenWorkspaceDependencies, LiteWorkSpaceRecord } from '../';
 
 describe('@modular-scripts/dependency-resolver', () => {
   describe('flatten dependencies', () => {
@@ -13,9 +10,14 @@ describe('@modular-scripts/dependency-resolver', () => {
         d: { location: '/d', workspaceDependencies: undefined },
         e: { location: '/e', workspaceDependencies: ['a', 'b', 'c'] },
       };
-      expect(
-        generateFlatWorkspaceDependencyForPackage(workspaces, 'a'),
-      ).toEqual(new Set(['a', 'b', 'c', 'd']));
+      const flattenedDependencies = flattenWorkspaceDependencies(workspaces);
+      expect(flattenedDependencies.get('a')).toEqual(new Set(['b', 'c', 'd']));
+      expect(flattenedDependencies.get('b')).toEqual(new Set(['d']));
+      expect(flattenedDependencies.get('c')).toEqual(new Set(['b', 'd']));
+      expect(flattenedDependencies.get('d')).toEqual(new Set());
+      expect(flattenedDependencies.get('e')).toEqual(
+        new Set(['a', 'b', 'c', 'd']),
+      );
     });
 
     it('flags loops', () => {
@@ -25,9 +27,9 @@ describe('@modular-scripts/dependency-resolver', () => {
         c: { location: '/c', workspaceDependencies: undefined },
         d: { location: '/d', workspaceDependencies: ['a'] },
       };
-      expect(
-        generateFlatWorkspaceDependencyForPackage(workspaces, 'a'),
-      ).toEqual(new Set(['a', 'b', 'c', 'd']));
+      expect(flattenWorkspaceDependencies(workspaces).get('a')).toEqual(
+        new Set(['a', 'b', 'c', 'd']),
+      );
     });
   });
 });
