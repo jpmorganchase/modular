@@ -112,7 +112,11 @@ export async function getWorkspaceInfo(
 
 export async function getWorkspaceInfoAgnostically(): Promise<WorkspaceMap> {
   const modularRoot = getModularRoot();
-  const [allPackages] = await resolveWorkspace(true, modularRoot);
+  const [allPackages] = await resolveWorkspace(
+    process.cwd(),
+    true,
+    modularRoot,
+  );
 
   return analyzeWorkspaceDependencies(allPackages);
 }

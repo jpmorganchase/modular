@@ -19,6 +19,7 @@ const supportedOverrides = [
   'testPathIgnorePatterns',
   'testRunner',
   'transformIgnorePatterns',
+  'coverageProvider',
 ];
 
 type SetUpFilesMap = {

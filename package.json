@@ -102,7 +102,8 @@
       "/node_modules/",
       "/modular-site/",
       "/modular-views.macro/"
-    ]
+    ],
+    "coverageProvider": "v8"
   },
   "modular": {
     "type": "root"

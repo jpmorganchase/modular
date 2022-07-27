@@ -24,10 +24,13 @@ function resolveWorkspacesDefinition(
 
   if (Array.isArray(def)) {
     return def.flatMap((path: string) => {
-      return globby.sync([`${path}/package.json`, '!**/node_modules/**/*'], {
-        absolute: false,
-        cwd,
-      });
+      return globby.sync(
+        [`${path}/package.json`, '!**/node_modules/**/*', '!**/__tests__/**/*'],
+        {
+          absolute: false,
+          cwd,
+        },
+      );
     });
   }
 
@@ -44,11 +47,22 @@ type PackageJson = {
   dependencies: Record<string, string> | undefined;
 };
 
-function readPackageJson(path: string): Promise<PackageJson> {
-  return readJson(path) as Promise<PackageJson>;
+function readPackageJson(
+  isRoot: boolean,
+  workingDir: string,
+  relativePath: string,
+): Promise<PackageJson> {
+  if (isRoot) {
+    return readJson(relativePath) as Promise<PackageJson>;
+  }
+
+  return readJson(
+    `${workingDir}${path.sep}${relativePath}`,
+  ) as Promise<PackageJson>;
 }
 
 export async function resolveWorkspace(
+  workingDir: string,
   isRoot: boolean,
   root: string,
   parent: ModularWorkspacePackage | null = null,
@@ -57,7 +71,7 @@ export async function resolveWorkspace(
   [Map<string, ModularWorkspacePackage>, ModularWorkspacePackage | null]
 > {
   const path = packageJsonPath(root);
-  const json = await readPackageJson(path);
+  const json = await readPackageJson(isRoot, workingDir, path);
 
   const pkg: ModularWorkspacePackage = {
     path,
@@ -104,8 +118,16 @@ export async function resolveWorkspace(
     }
   }
 
+  console.log(resolveWorkspacesDefinition(root, json.workspaces));
+
   for (const link of resolveWorkspacesDefinition(root, json.workspaces)) {
-    const [, child] = await resolveWorkspace(false, link, pkg, collector);
+    const [, child] = await resolveWorkspace(
+      workingDir,
+      false,
+      link,
+      pkg,
+      collector,
+    );
     child && pkg.children.push(child);
   }
 

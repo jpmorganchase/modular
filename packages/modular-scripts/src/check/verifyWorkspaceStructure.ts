@@ -15,10 +15,13 @@ export async function check(): Promise<boolean> {
    */
 
   const workspaceLocations: string[] = (
-    await globby(['packages/**/package.json', '!**/node_modules/**'], {
-      onlyFiles: true,
-      cwd: modularRoot,
-    })
+    await globby(
+      ['packages/**/package.json', '!**/node_modules/**', '!**/__tests__/**/*'],
+      {
+        onlyFiles: true,
+        cwd: modularRoot,
+      },
+    )
   ).map((l) => path.dirname(l));
 
   Object.entries(workspace).forEach(([packageName, w]) => {
