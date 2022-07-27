@@ -1,4 +1,7 @@
-import { resolveWorkspace } from '../resolve-workspace';
+import {
+  resolveWorkspace,
+  analyzeWorkspaceDependencies,
+} from '../resolve-workspace';
 import path from 'path';
 
 describe('@modular-scripts/workspace-resolver', () => {
@@ -77,5 +80,63 @@ describe('@modular-scripts/workspace-resolver', () => {
     });
   });
 
-  // TODO analyzeWorkspaceDependencies
+  describe('analyzeWorkspaceDependencies', () => {
+    it('correctly identifies workspace dependencies for a clean workspace', async () => {
+      const projectRoot = `${__dirname}${path.sep}__fixtures__${path.sep}clean-workspace`;
+      const [allPackages] = await resolveWorkspace(
+        projectRoot,
+        true,
+        projectRoot,
+      );
+
+      const result = analyzeWorkspaceDependencies(allPackages);
+      const expected = {
+        'app-one': {
+          location: 'packages/app-one',
+          workspaceDependencies: ['package-one', 'package-two'],
+          mismatchedWorkspaceDependencies: [],
+        },
+        'package-one': {
+          location: 'packages/package-one',
+          workspaceDependencies: [],
+          mismatchedWorkspaceDependencies: [],
+        },
+        'package-two': {
+          location: 'packages/package-two',
+          workspaceDependencies: [],
+          mismatchedWorkspaceDependencies: [],
+        },
+      };
+      expect(JSON.stringify(result)).toEqual(JSON.stringify(expected));
+    });
+
+    it('correctly identifies mismatched dependencies', async () => {
+      const projectRoot = `${__dirname}${path.sep}__fixtures__${path.sep}mismatched-dependency`;
+      const [allPackages] = await resolveWorkspace(
+        projectRoot,
+        true,
+        projectRoot,
+      );
+
+      const result = analyzeWorkspaceDependencies(allPackages);
+      const expected = {
+        'app-one': {
+          location: 'packages/app-one',
+          workspaceDependencies: ['package-two'],
+          mismatchedWorkspaceDependencies: ['package-one'],
+        },
+        'package-one': {
+          location: 'packages/package-one',
+          workspaceDependencies: [],
+          mismatchedWorkspaceDependencies: [],
+        },
+        'package-two': {
+          location: 'packages/package-two',
+          workspaceDependencies: [],
+          mismatchedWorkspaceDependencies: [],
+        },
+      };
+      expect(JSON.stringify(result)).toEqual(JSON.stringify(expected));
+    });
+  });
 });

@@ -22,6 +22,7 @@ async function typecheck(): Promise<void> {
       '**/dist-cjs',
       '**/dist-es',
       'dist',
+      '**/__fixtures__',
     ],
     compilerOptions: {
       noEmit: true,
