@@ -23,19 +23,22 @@ export function generateFlatWorkspaceDependencyForPackage(
   const immediateDependencies =
     workspaces[packageName].workspaceDependencies || [];
 
-  let newDeps = new Set<string>();
+  let newDeps: string[] = [];
   for (const dependency of immediateDependencies) {
     if (!done.has(dependency)) {
       console.log('scheduling undiscovered', dependency);
-      newDeps = new Set([
+      newDeps = [
         ...newDeps,
         ...generateFlatWorkspaceDependencyForPackage(
           workspaces,
           dependency,
           done,
         ),
-      ]);
+      ];
     } else {
+      if (dependency === packageName) {
+        console.warn('Loop found at dependency', dependency);
+      }
       console.log('Not scheduling', dependency, 'because already done');
     }
   }
