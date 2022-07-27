@@ -19,12 +19,6 @@ export function flattenWorkspaceDependencies(
   Object.keys(workspaces).forEach((workspaceName) => {
     if (!cache.has(workspaceName)) {
       cacheDependencies(workspaceName);
-    } else {
-      console.log(
-        'Dependencies for',
-        workspaceName,
-        'already calculated, skipping...',
-      );
     }
   });
 
@@ -34,26 +28,17 @@ export function flattenWorkspaceDependencies(
     packageName: string,
     done: Set<string> = new Set(),
   ): Set<string> {
-    console.log('doing', packageName);
     done.add(packageName);
-
-    console.log('Getting dependencies for package', packageName);
     const immediateDependencies =
       workspaces[packageName].workspaceDependencies || [];
 
     let recursiveDeps: string[] = [];
     for (const dependency of immediateDependencies) {
-      const flattenedFromCache = cache.get(dependency);
-      console.log(
-        'Getting dependencies from cache for dep',
-        packageName,
-        flattenedFromCache,
-      );
-      if (flattenedFromCache) {
-        recursiveDeps = [...flattenedFromCache];
+      const fromCache = cache.get(dependency);
+      if (fromCache) {
+        recursiveDeps = [...fromCache];
         continue;
       } else if (!done.has(dependency)) {
-        console.log('scheduling undiscovered', dependency);
         recursiveDeps = [
           ...recursiveDeps,
           ...cacheDependencies(dependency, done),
@@ -62,10 +47,6 @@ export function flattenWorkspaceDependencies(
     }
 
     const result = new Set([...immediateDependencies, ...recursiveDeps]);
-    console.log('Caching result for', packageName, '->', {
-      immediateDependencies,
-      recursiveDeps,
-    });
     cache.set(packageName, result);
     return result;
   }
