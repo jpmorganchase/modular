@@ -2,7 +2,7 @@
   "name": "modular",
   "private": true,
   "workspaces": [
-    "packages/**"
+    "packages/**!(__tests__)"
   ],
   "engines": {
     "node": "^14.17.0 || >=16.0.0"
