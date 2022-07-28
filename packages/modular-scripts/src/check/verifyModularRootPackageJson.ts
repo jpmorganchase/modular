@@ -12,6 +12,7 @@ import * as logger from '../utils/logger';
  */
 function checkWorkspaceHasPackages(rootPackageJson: ModularPackageJson) {
   // Allow modular itself to have any value
+  // This allows us to have a custom glob to exclude things like test fixtures
   if (rootPackageJson.name === 'modular') {
     return true;
   }
