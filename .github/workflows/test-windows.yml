@@ -31,7 +31,11 @@ jobs:
           cache: 'yarn'
       - name: Install Dependencies
         run: yarn --frozen-lockfile
-      - name: Build modular-types
-        run: yarn workspace modular-types build
-      - name: Run Windows tests
+      - name: Build prerequisites
+        run:
+          yarn workspace modular-types build && yarn workspace
+          @modular-scripts/workspace-resolver build
+      - name: Run Windows tests (part 1)
         run: yarn test esmView.test.ts
+      - name: Run Windows tests (part 2)
+        run: yarn test workspace-resolver

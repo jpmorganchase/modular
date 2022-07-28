@@ -41,4 +41,5 @@ yarn-error.log*
 .tsbuildinfo
 *.tsbuildinfo
 
-__fixtures__
+# Top level test fixtures
+/__fixtures__
