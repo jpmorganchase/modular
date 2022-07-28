@@ -11,12 +11,6 @@ import * as logger from '../utils/logger';
  * @returns Returns true if the packages directory is correctly included in `workspaces`, else false
  */
 function checkWorkspaceHasPackages(rootPackageJson: ModularPackageJson) {
-  // Allow modular itself to have any value
-  // This allows us to have a custom glob to exclude things like test fixtures
-  if (rootPackageJson.name === 'modular') {
-    return true;
-  }
-
   if (Array.isArray(rootPackageJson?.workspaces)) {
     return !!rootPackageJson.workspaces.includes('packages/**');
   }

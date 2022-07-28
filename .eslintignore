@@ -40,3 +40,5 @@ yarn-error.log*
 # Used by typescript for incremental builds
 .tsbuildinfo
 *.tsbuildinfo
+
+__fixtures__

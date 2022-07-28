@@ -2,12 +2,22 @@ import {
   resolveWorkspace,
   analyzeWorkspaceDependencies,
 } from '../resolve-workspace';
+
 import path from 'path';
+
+// Find test fixtures (i.e. fake modular workspaces) 4 dirs up, in the root of the project
+// This approach avoids putting fake or real packages in the packages dir, which can confuse various tools
+const dirsUp = 4;
+const traverseUp = Array.from({ length: dirsUp })
+  .map(() => `..`)
+  .join(path.sep)
+  .concat(path.sep);
+const fixturesPath = `${__dirname}${path.sep}${traverseUp}__fixtures__${path.sep}`;
 
 describe('@modular-scripts/workspace-resolver', () => {
   describe('resolveWorkspace', () => {
     it('resolves a clean workspace, detecting modular packages as appropriate', async () => {
-      const projectRoot = `${__dirname}${path.sep}__fixtures__${path.sep}clean-workspace`;
+      const projectRoot = `${fixturesPath}clean-workspace`;
       const [allPackages] = await resolveWorkspace(
         projectRoot,
         true,
@@ -20,7 +30,7 @@ describe('@modular-scripts/workspace-resolver', () => {
     });
 
     it('does not support nested modular roots', async () => {
-      const projectRoot = `${__dirname}${path.sep}__fixtures__${path.sep}invalid-workspace-1`;
+      const projectRoot = `${fixturesPath}invalid-workspace-1`;
       let thrown = false;
       let message = '';
 
@@ -40,7 +50,7 @@ describe('@modular-scripts/workspace-resolver', () => {
     });
 
     it('does not support nested yarn workspaces (implementation 1)', async () => {
-      const projectRoot = `${__dirname}${path.sep}__fixtures__${path.sep}invalid-workspace-2`;
+      const projectRoot = `${fixturesPath}invalid-workspace-2`;
       let thrown = false;
       let message = '';
 
@@ -60,7 +70,7 @@ describe('@modular-scripts/workspace-resolver', () => {
     });
 
     it('does not support nested yarn workspaces (implementation 2)', async () => {
-      const projectRoot = `${__dirname}${path.sep}__fixtures__${path.sep}invalid-workspace-3`;
+      const projectRoot = `${fixturesPath}invalid-workspace-3`;
       let thrown = false;
       let message = '';
 
@@ -82,7 +92,7 @@ describe('@modular-scripts/workspace-resolver', () => {
 
   describe('analyzeWorkspaceDependencies', () => {
     it('correctly identifies workspace dependencies for a clean workspace', async () => {
-      const projectRoot = `${__dirname}${path.sep}__fixtures__${path.sep}clean-workspace`;
+      const projectRoot = `${fixturesPath}clean-workspace`;
       const [allPackages] = await resolveWorkspace(
         projectRoot,
         true,
@@ -111,7 +121,7 @@ describe('@modular-scripts/workspace-resolver', () => {
     });
 
     it('correctly identifies mismatched dependencies', async () => {
-      const projectRoot = `${__dirname}${path.sep}__fixtures__${path.sep}mismatched-dependency`;
+      const projectRoot = `${fixturesPath}mismatched-dependency`;
       const [allPackages] = await resolveWorkspace(
         projectRoot,
         true,

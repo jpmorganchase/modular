@@ -118,8 +118,6 @@ export async function resolveWorkspace(
     }
   }
 
-  console.log(resolveWorkspacesDefinition(root, json.workspaces));
-
   for (const link of resolveWorkspacesDefinition(root, json.workspaces)) {
     const [, child] = await resolveWorkspace(
       workingDir,
@@ -184,8 +182,6 @@ export function analyzeWorkspaceDependencies(
       mismatchedWorkspaceDependencies,
     });
   });
-
-  console.log(Object.fromEntries(mappedDeps));
 
   return Object.fromEntries(mappedDeps);
 }
