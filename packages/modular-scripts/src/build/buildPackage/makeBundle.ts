@@ -290,7 +290,7 @@ export async function makeBundle(
   const outputPath = buildOutput[0].fileName;
 
   // return the public facing package.json that we'll write to disk later
-  return {
+  const pkg = {
     ...packageJson,
     main: preserveModules
       ? path.posix.join(`${outputDirectory}-cjs`, outputPath)
@@ -314,4 +314,17 @@ export async function makeBundle(
       'README.md',
     ]),
   };
+
+  let transpiledBin = undefined;
+
+  if (packageJson.bin) {
+    transpiledBin = Object.entries(packageJson.bin as { [k: string]: any });
+    transpiledBin.forEach((bin) => {
+      bin[1] = preserveModules
+        ? path.posix.join(`${outputDirectory}-cjs`, outputPath)
+        : `${outputDirectory}-cjs/${paramCaseTarget + '.cjs.js'}`;
+    });
+    pkg.bin = Object.fromEntries(transpiledBin);
+  }
+  return pkg;
 }

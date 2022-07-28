@@ -76,13 +76,7 @@ describe('WHEN building with preserve modules', () => {
     expect(
       String(
         fs.readFileSync(
-          path.join(
-            getModularRoot(),
-            'dist',
-            packageName,
-            'dist-es',
-            'index.js',
-          ),
+          path.join(modularRoot, 'dist', packageName, 'dist-es', 'index.js'),
         ),
       ),
     ).toMatchSnapshot();
@@ -92,13 +86,7 @@ describe('WHEN building with preserve modules', () => {
     expect(
       String(
         fs.readFileSync(
-          path.join(
-            getModularRoot(),
-            'dist',
-            packageName,
-            'dist-es',
-            'index2.js',
-          ),
+          path.join(modularRoot, 'dist', packageName, 'dist-es', 'index2.js'),
         ),
       ),
     ).toMatchSnapshot();
@@ -108,13 +96,7 @@ describe('WHEN building with preserve modules', () => {
     expect(
       String(
         fs.readFileSync(
-          path.join(
-            getModularRoot(),
-            'dist',
-            packageName,
-            'dist-es',
-            'runAsync.js',
-          ),
+          path.join(modularRoot, 'dist', packageName, 'dist-es', 'runAsync.js'),
         ),
       ),
     ).toMatchSnapshot();
@@ -132,24 +114,60 @@ describe('WHEN building packages with private cross-package dependencies', () =>
 
     // Can't specify it in the fixtures, as we can't nest package.json files in packages
     const package_json = `{
-  "name": "${libraryPackage}",
-  "version": "1.0.0",
-  "main": "src/index.ts",
-  "private": true,
-  "modular": {
-    "type": "package"
-  }
-}
-`;
+      "name": "${libraryPackage}",
+      "version": "1.0.0",
+      "main": "src/index.ts",
+      "private": true,
+      "modular": {
+        "type": "package"
+      },
+      "bin": {
+        "sample-library-package": "src/cli.ts"
+      }
+    }`;
 
     await fs.writeFile(
-      path.join(getModularRoot(), 'packages', libraryPackage, 'package.json'),
+      path.join(modularRoot, 'packages', libraryPackage, 'package.json'),
       package_json,
       'utf8',
     );
   });
 
   afterAll(async () => await cleanup([dependentPackage, libraryPackage]));
+
+  it('THEN expects the correct output package.json from libraryPackage', async () => {
+    await modular(`build ${libraryPackage} --preserve-modules --private`, {
+      stdio: 'inherit',
+    });
+
+    expect(
+      await fs.readJson(
+        path.join(modularRoot, 'dist', libraryPackage, 'package.json'),
+      ),
+    ).toMatchInlineSnapshot(`
+      Object {
+        "bin": Object {
+          "sample-library-package": "dist-cjs/cli.js",
+        },
+        "dependencies": Object {},
+        "files": Array [
+          "dist-cjs",
+          "dist-es",
+          "dist-types",
+          "README.md",
+        ],
+        "main": "dist-cjs/index.js",
+        "modular": Object {
+          "type": "package",
+        },
+        "module": "dist-es/index.js",
+        "name": "sample-library-package",
+        "private": true,
+        "typings": "dist-types/index.d.ts",
+        "version": "1.0.0",
+      }
+    `);
+  });
 
   it('THEN the build fails by default', () => {
     return expect(
