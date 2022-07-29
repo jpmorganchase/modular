@@ -35,8 +35,6 @@ jobs:
       - name: 'Install Dependencies'
         run: yarn --frozen-lockfile
       - name: Build prerequisites
-        run:
-          yarn workspace modular-types build && yarn workspace
-          @modular-scripts/workspace-resolver build
+        run: yarn workspace modular-types build
       - name: ${{ matrix.name }}
         run: yarn ${{ matrix.command }}

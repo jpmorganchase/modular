@@ -12,7 +12,8 @@
     "@types/fs-extra": "^9.0.13"
   },
   "scripts": {
-    "build": "tsc && babel --source-maps --root-mode upward src --out-dir dist-cjs --extensions .ts --ignore **/__tests__"
+    "build": "tsc && babel --source-maps --root-mode upward src --out-dir dist-cjs --extensions .ts --ignore **/__tests__",
+    "clean": "rimraf dist-cjs"
   },
   "types": "dist-cjs/index.d.ts"
 }

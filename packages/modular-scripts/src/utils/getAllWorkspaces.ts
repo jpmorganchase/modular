@@ -1,10 +1,6 @@
 import execa from 'execa';
 import memoize from './memoize';
 import getModularRoot from './getModularRoot';
-// import {
-//   resolveWorkspace,
-//   analyzeWorkspaceDependencies,
-// } from '@modular-scripts/workspace-resolver';
 
 import * as logger from './logger';
 import stripAnsi from 'strip-ansi';
@@ -93,15 +89,10 @@ async function getPackageManagerInfo(cwd: string, packageManager: string) {
   throw new Error(`${packageManager} is not supported.`);
 }
 
-// const useNewThing = true;
-
 export async function getWorkspaceInfo(
   cwd: string,
   packageManager: string,
 ): Promise<WorkspaceMap> {
-  // if (useNewThing) {
-  //   return await getWorkspaceInfoAgnostically();
-  // }
   const packageManagerUtils = await getPackageManagerInfo(cwd, packageManager);
   const [file, ...args] = packageManagerUtils.getWorkspaceCommand.split(' ');
   const workspaceCommandOutput = await getCommandOutput(cwd, file, args);
@@ -109,17 +100,6 @@ export async function getWorkspaceInfo(
     workspaceCommandOutput,
   );
 }
-
-// export async function getWorkspaceInfoAgnostically(): Promise<WorkspaceMap> {
-//   const modularRoot = getModularRoot();
-//   const [allPackages] = await resolveWorkspace(
-//     process.cwd(),
-//     true,
-//     modularRoot,
-//   );
-
-//   return analyzeWorkspaceDependencies(allPackages);
-// }
 
 function _getAllWorkspaces(): Promise<WorkspaceMap> {
   const modularRoot = getModularRoot();
