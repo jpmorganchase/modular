@@ -5,7 +5,5 @@
     "declaration": true,
     "emitDeclarationOnly": true,
     "outDir": "dist-cjs"
-  },
-  "include": ["src/*"],
-  "exclude": ["src/__tests__", "node_modules"]
+  }
 }
