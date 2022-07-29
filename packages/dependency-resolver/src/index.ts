@@ -1,15 +1,40 @@
 export interface LiteWorkSpaceRecord {
-  location: string;
   workspaceDependencies?: string[];
-  version?: string;
+}
+
+export interface LiteWorkSpaceAncestorRecord {
+  workspaceAncestors?: string[];
 }
 
 type OrderedDependencies = Map<string, number>;
 type OrderedUnvisited = { name: string; level: number };
 
-export function walkWorkspaceDependencies(
+export function computeAncestorFromDescendants(
+  workspaces: Record<string, LiteWorkSpaceRecord>,
+): Record<string, LiteWorkSpaceAncestorRecord> {
+  return Object.entries(workspaces).reduce<
+    Record<string, LiteWorkSpaceAncestorRecord>
+  >((output, [currentWorkspace, workspaceRecord]) => {
+    // Loop through all the dependencies for currentWorkspace and save the inverse relation in the output
+    workspaceRecord.workspaceDependencies?.forEach((dependency) => {
+      // Create a workspaceAncestors record if not already present
+      if (!output[dependency]) {
+        output[dependency] = { workspaceAncestors: [] };
+      }
+      // Insert if the ancestor is not already present.
+      // This would be less costly with a Set, but a Set would come at the cost of arrayfy-ing all the Sets later
+      if (!output[dependency].workspaceAncestors?.includes(currentWorkspace)) {
+        output[dependency].workspaceAncestors?.push(currentWorkspace);
+      }
+    });
+    return output;
+  }, Object.create(null));
+}
+
+export function walkWorkspaceRelations(
   workspaces: Record<string, LiteWorkSpaceRecord>,
   workspaceName: string,
+  breakOnCycle?: boolean,
 ): OrderedDependencies {
   // Initialize the unvisited list with the immediate dependency array.
   const unvisited: OrderedUnvisited[] = (
@@ -32,7 +57,12 @@ export function walkWorkspaceDependencies(
     if (cycleBreaker.has(currentDependencyName)) {
       // Sets are guaranteed to be iterable in insertion order, so they will represent our traversal order faithfully
       // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
-      throw new Error(`Cycle detected: ${[...cycleBreaker].join(' -> ')}`);
+      if (breakOnCycle)
+        throw new Error(`Cycle detected: ${[...cycleBreaker].join(' -> ')}`);
+      else {
+        cycleBreaker.clear();
+        continue;
+      }
     }
     cycleBreaker.add(currentDependencyName);
 
