@@ -1,10 +1,29 @@
 import {
   walkWorkspaceRelations,
   computeAncestorFromDescendants,
+  computeAncestorSet,
   LiteWorkSpaceRecord,
 } from '..';
 
 describe('@modular-scripts/dependency-resolver', () => {
+  describe('computeAncestorSet', () => {
+    it('get an ancestors set of a number of workspaces', () => {
+      const workspaces: Record<string, LiteWorkSpaceRecord> = {
+        a: { workspaceDependencies: ['b', 'c'] },
+        b: { workspaceDependencies: ['d'] },
+        c: { workspaceDependencies: ['b'] },
+        d: { workspaceDependencies: undefined },
+        e: { workspaceDependencies: ['a', 'b', 'c'] },
+      };
+      expect(computeAncestorSet(['d', 'b'], workspaces)).toEqual(
+        new Set(['b', 'a', 'c', 'e']),
+      );
+      expect(computeAncestorSet(['a', 'c'], workspaces)).toEqual(
+        new Set(['e', 'a']),
+      );
+      expect(computeAncestorSet(['e'], workspaces)).toEqual(new Set());
+    });
+  });
   describe('computeAncestorFromDescendants', () => {
     it('inverts descendants to ancestors', () => {
       const workspaces: Record<string, LiteWorkSpaceRecord> = {
@@ -16,10 +35,10 @@ describe('@modular-scripts/dependency-resolver', () => {
       };
 
       expect(computeAncestorFromDescendants(workspaces)).toEqual({
-        a: { workspaceAncestors: ['e'] },
-        b: { workspaceAncestors: ['a', 'c', 'e'] },
-        c: { workspaceAncestors: ['a', 'e'] },
-        d: { workspaceAncestors: ['b'] },
+        a: { workspaceDependencies: ['e'] },
+        b: { workspaceDependencies: ['a', 'c', 'e'] },
+        c: { workspaceDependencies: ['a', 'e'] },
+        d: { workspaceDependencies: ['b'] },
       });
     });
   });
