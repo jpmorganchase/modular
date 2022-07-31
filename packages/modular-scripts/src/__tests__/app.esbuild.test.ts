@@ -79,7 +79,7 @@ describe('when working with an app', () => {
       .toMatchInlineSnapshot(`
       "sample-esbuild-app
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #nrfr3t
+      ├─ index.html #zk3xji
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -87,11 +87,11 @@ describe('when working with an app', () => {
       ├─ robots.txt #1sjb8b3
       └─ static
          ├─ css
-         │  ├─ index-OPRZV2UT.css #1ldttcq
-         │  └─ index-OPRZV2UT.css.map #za6yi0
+         │  ├─ index-PE2NG66F.css #1t4q6xl
+         │  └─ index-PE2NG66F.css.map #za6yi0
          ├─ js
-         │  ├─ index-LSDSCJMN.js #1cuiasc
-         │  └─ index-LSDSCJMN.js.map #5p9anu
+         │  ├─ index-TKIUYRMA.js #l9v7el
+         │  └─ index-TKIUYRMA.js.map #51gooi
          └─ media
             └─ logo-PGX3QVVN.svg #1okqmlj"
     `);
