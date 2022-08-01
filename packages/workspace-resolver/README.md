@@ -2,8 +2,8 @@
 
 This package encapsulates two functions:
 
-1. `resolveWorkspace` - Searches the filesystem for workspace packages,
-   returning a flat map of all packages found
+1. `resolveWorkspace` - Searches the filesystem (at a given modular root) for
+   workspace packages, returning a flat map of all packages found
 2. `analyzeWorkspaceDependencies` - Analyzes `package.json` files for a set of
    workspace packages, returning a flat object for each package, listing out
    workspace inter-dependencies plus and mismatched dependencies. The

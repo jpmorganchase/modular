@@ -1,0 +1,14 @@
+{
+  "name": "app-one",
+  "private": true,
+  "modular": {
+    "type": "app"
+  },
+  "dependencies": {
+    "package-one": "workspace:*",
+    "package-two": "workspace:^",
+    "package-three": "workspace:~",
+    "package-four": "workspace:^1.0.0"
+  },
+  "version": "1.0.0"
+}

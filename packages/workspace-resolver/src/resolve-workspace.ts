@@ -10,6 +10,9 @@ import type {
   ModularPackageJson,
 } from 'modular-types';
 
+// See https://yarnpkg.com/features/workspaces#workspace-ranges-workspace
+const YARN_WORKSPACE_RANGE_PREFIX = 'workspace:';
+
 function packageJsonPath(dir: string) {
   return dir.endsWith('package.json') ? dir : join(dir, 'package.json');
 }
@@ -42,13 +45,11 @@ function readPackageJson(
   workingDir: string,
   relativePath: string,
 ): Promise<ModularPackageJson> {
-  if (isRoot) {
-    return readJson(relativePath) as Promise<ModularPackageJson>;
-  }
+  const jsonPath = isRoot
+    ? relativePath
+    : `${workingDir}${path.sep}${relativePath}`;
 
-  return readJson(
-    `${workingDir}${path.sep}${relativePath}`,
-  ) as Promise<ModularPackageJson>;
+  return readJson(jsonPath) as Promise<ModularPackageJson>;
 }
 
 export async function resolveWorkspace(
@@ -175,7 +176,14 @@ export function analyzeWorkspaceDependencies(
         }
 
         const [, match] = matchingPackage;
-        return !semver.satisfies(match.version, range);
+
+        // Account for use of Yarn Workspace Ranges
+        // Note: we do not support the unstable project-relative path flavour syntax
+        const rangeToUse = range.includes(YARN_WORKSPACE_RANGE_PREFIX)
+          ? range.replace(YARN_WORKSPACE_RANGE_PREFIX, '')
+          : range;
+
+        return !semver.satisfies(match.version, rangeToUse);
       })
       .flatMap(([dep]) => dep);
 

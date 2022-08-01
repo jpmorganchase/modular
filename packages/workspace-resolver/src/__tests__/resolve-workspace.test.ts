@@ -36,6 +36,17 @@ describe('@modular-scripts/workspace-resolver', () => {
       expect(allPackages.has('package-two')).toEqual(true);
     });
 
+    it('resolves a clean workspace (using workspace ranges)', async () => {
+      const projectRoot = `${fixturesPath}clean-workspace-3`;
+      const [allPackages] = await resolveWorkspace(projectRoot, projectRoot);
+      expect(allPackages.has('clean-workspace-3')).toEqual(true);
+      expect(allPackages.has('app-one')).toEqual(true);
+      expect(allPackages.has('package-one')).toEqual(true);
+      expect(allPackages.has('package-two')).toEqual(true);
+      expect(allPackages.has('package-three')).toEqual(true);
+      expect(allPackages.has('package-four')).toEqual(true);
+    });
+
     it('does not support nested modular roots', async () => {
       const projectRoot = `${fixturesPath}invalid-workspace-1`;
       let thrown = false;
@@ -160,7 +171,7 @@ describe('@modular-scripts/workspace-resolver', () => {
           mismatchedWorkspaceDependencies: [],
         },
       };
-      expect(JSON.stringify(result)).toEqual(JSON.stringify(expected));
+      expect(result).toEqual(expected);
     });
 
     it('correctly identifies mismatched dependencies', async () => {
@@ -185,7 +196,49 @@ describe('@modular-scripts/workspace-resolver', () => {
           mismatchedWorkspaceDependencies: [],
         },
       };
-      expect(JSON.stringify(result)).toEqual(JSON.stringify(expected));
+      expect(result).toEqual(expected);
+    });
+
+    it('correctly identifies dependencies (workspace range)', async () => {
+      const projectRoot = `${fixturesPath}clean-workspace-3`;
+      const [allPackages] = await resolveWorkspace(projectRoot, projectRoot);
+
+      // Matches explanation (version 1.0.0):
+      // Range of '*': matches
+      // Range of '^1.0.0': matches
+      // Range of '^': mismatches
+      // Range of '~': mismatches
+      // We rely on semver to determine this, the same way that yarn do.
+
+      const result = analyzeWorkspaceDependencies(allPackages);
+      const expected = {
+        'app-one': {
+          location: 'packages/app-one',
+          workspaceDependencies: ['package-one', 'package-four'],
+          mismatchedWorkspaceDependencies: ['package-two', 'package-three'],
+        },
+        'package-one': {
+          location: 'packages/package-one',
+          workspaceDependencies: [],
+          mismatchedWorkspaceDependencies: [],
+        },
+        'package-two': {
+          location: 'packages/package-two',
+          workspaceDependencies: [],
+          mismatchedWorkspaceDependencies: [],
+        },
+        'package-three': {
+          location: 'packages/package-three',
+          workspaceDependencies: [],
+          mismatchedWorkspaceDependencies: [],
+        },
+        'package-four': {
+          location: 'packages/package-four',
+          workspaceDependencies: [],
+          mismatchedWorkspaceDependencies: [],
+        },
+      };
+      expect(result).toEqual(expected);
     });
   });
 });
