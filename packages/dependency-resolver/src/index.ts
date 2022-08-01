@@ -5,6 +5,10 @@ export interface LiteWorkSpaceRecord {
 type OrderedDependencies = Map<string, number>;
 type OrderedUnvisited = { name: string; level: number };
 
+// This function takes a tree of dependencies (dependant -> child dependencies)
+// and returns an equivalent tree where the relation's direction is inverted
+// (dependency -> parent dependencies)
+// This allows us to use the same algorithm to query ancestors or descendants.
 export function computeAncestorFromDescendants(
   workspaces: Record<string, LiteWorkSpaceRecord>,
 ): Record<string, LiteWorkSpaceRecord> {
@@ -53,6 +57,13 @@ export function computeAncestorSet(
   return new Set(ancestorList);
 }
 
+// Walk the graph to get an ordered set of dependencies (map reverseOrder => dependencyName)
+// This iterative solution visits all the dependencies in the graph in a DFS walk
+// If it encounters an unvisited dependency, it schedules all its dependencies for walking
+// If it encounters an already visited dependency with the same dependant, there's a cycle in the graph
+// The user can choose wheter to break (breakOnCycle = true) or just ignore the cycle
+// If it encounters an already visited dependency with a different dependant, it will update the
+// dependency's depth level based on it parent's level, in order to generate an ordered response
 export function walkWorkspaceRelations(
   workspaceName: string,
   workspaces: Record<string, LiteWorkSpaceRecord>,
