@@ -44,7 +44,7 @@ export function computeAncestorSet(
   for (const entrypoint of originWorkspaces) {
     // Get the dependency relations for every entrypoint, then flatten them
     const ancestorsArray = Array.from(
-      walkWorkspaceRelations(ancestorMap, entrypoint).keys(),
+      walkWorkspaceRelations(entrypoint, ancestorMap).keys(),
     ).flat(Infinity);
     // And add them to the global dependency list
     ancestorList = ancestorList.concat(ancestorsArray);
@@ -54,8 +54,8 @@ export function computeAncestorSet(
 }
 
 export function walkWorkspaceRelations(
-  workspaces: Record<string, LiteWorkSpaceRecord>,
   workspaceName: string,
+  workspaces: Record<string, LiteWorkSpaceRecord>,
   breakOnCycle?: boolean,
 ): OrderedDependencies {
   // Initialize the unvisited list with the immediate dependency array.
