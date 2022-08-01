@@ -1,5 +1,5 @@
 import {
-  walkWorkspaceRelations,
+  traverseWorkspaceRelations,
   computeAncestorFromDescendants,
   computeAncestorSet,
   computeDescendantSet,
@@ -70,24 +70,24 @@ describe('@modular-scripts/dependency-resolver', () => {
         d: { workspaceDependencies: undefined },
         e: { workspaceDependencies: ['a', 'b', 'c'] },
       };
-      expect(walkWorkspaceRelations('a', workspaces)).toEqual(
+      expect(traverseWorkspaceRelations('a', workspaces)).toEqual(
         new Map([
           ['c', 1],
           ['b', 2],
           ['d', 3],
         ]),
       );
-      expect(walkWorkspaceRelations('b', workspaces)).toEqual(
+      expect(traverseWorkspaceRelations('b', workspaces)).toEqual(
         new Map([['d', 1]]),
       );
-      expect(walkWorkspaceRelations('c', workspaces)).toEqual(
+      expect(traverseWorkspaceRelations('c', workspaces)).toEqual(
         new Map([
           ['b', 1],
           ['d', 2],
         ]),
       );
-      expect(walkWorkspaceRelations('d', workspaces)).toEqual(new Map());
-      expect(walkWorkspaceRelations('e', workspaces)).toEqual(
+      expect(traverseWorkspaceRelations('d', workspaces)).toEqual(new Map());
+      expect(traverseWorkspaceRelations('e', workspaces)).toEqual(
         new Map([
           ['a', 1],
           ['b', 3],
@@ -105,7 +105,7 @@ describe('@modular-scripts/dependency-resolver', () => {
         d: { workspaceDependencies: ['a'] },
         e: { workspaceDependencies: ['d'] },
       };
-      const dependencyMap = walkWorkspaceRelations('a', workspaces, false);
+      const dependencyMap = traverseWorkspaceRelations('a', workspaces, false);
       expect(dependencyMap.has('a')).toBe(true); // The original dependency is there, because it's inside the cycle
       expect(dependencyMap.has('b')).toBe(true);
       expect(dependencyMap.has('c')).toBe(true);
@@ -118,7 +118,7 @@ describe('@modular-scripts/dependency-resolver', () => {
         b: { workspaceDependencies: ['c'] },
         c: { workspaceDependencies: ['b'] },
       };
-      const dependencyMap = walkWorkspaceRelations('a', workspaces, false);
+      const dependencyMap = traverseWorkspaceRelations('a', workspaces, false);
       expect(dependencyMap.has('a')).toBe(false); // The original dependency is not there, because it's outside of the cycle
       expect(dependencyMap.has('b')).toBe(true);
       expect(dependencyMap.has('c')).toBe(true);
@@ -131,7 +131,7 @@ describe('@modular-scripts/dependency-resolver', () => {
         c: { workspaceDependencies: undefined },
         d: { workspaceDependencies: ['a'] },
       };
-      expect(() => walkWorkspaceRelations('a', workspaces, true)).toThrow();
+      expect(() => traverseWorkspaceRelations('a', workspaces, true)).toThrow();
     });
 
     it('throws on cycles in later descendants, if breakOnCycle true', () => {
@@ -140,7 +140,7 @@ describe('@modular-scripts/dependency-resolver', () => {
         b: { workspaceDependencies: ['c'] },
         c: { workspaceDependencies: ['b'] },
       };
-      expect(() => walkWorkspaceRelations('a', workspaces, true)).toThrow();
+      expect(() => traverseWorkspaceRelations('a', workspaces, true)).toThrow();
     });
   });
 });

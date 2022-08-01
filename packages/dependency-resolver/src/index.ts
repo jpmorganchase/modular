@@ -10,13 +10,17 @@ export function computeDescendantSet(
   allWorkspaces: Record<string, LiteWorkSpaceRecord>,
   breakOnCycle?: boolean,
 ): Set<string> {
-  // Flatten and dedupe all the dependencies in a set (as the user needs only the list of descendants)
+  // This function computes the ordered dependants of one or more packages, then flattens and dedupes them in a set
 
   let descendantList: string[] = [];
   for (const entrypoint of originWorkspaces) {
     // Get the dependency relations for every entrypoint, then flatten them
     const descendantsArray = Array.from(
-      walkWorkspaceRelations(entrypoint, allWorkspaces, breakOnCycle).keys(),
+      traverseWorkspaceRelations(
+        entrypoint,
+        allWorkspaces,
+        breakOnCycle,
+      ).keys(),
     ).flat(Infinity);
     // And add them to the global dependency list
     descendantList = descendantList.concat(descendantsArray);
@@ -69,14 +73,12 @@ export function computeAncestorFromDescendants(
   );
 }
 
-// Walk the graph to get an ordered set of dependencies (map reverseOrder => dependencyName)
+// This function traverses the graph to get an ordered set of dependencies (map reverseOrder => dependencyName)
 // This iterative solution visits all the dependencies in the graph in a DFS walk
-// If it encounters an unvisited dependency, it schedules all its dependencies for walking
-// If it encounters an already visited dependency with the same dependant, there's a cycle in the graph
-// The user can choose wheter to break (breakOnCycle = true) or just ignore the cycle
-// If it encounters an already visited dependency with a different dependant, it will update the
-// dependency's depth level based on it parent's level, in order to generate an ordered response
-export function walkWorkspaceRelations(
+// If it encounters an unvisited dependency, it puts it in the visited bin and put all its dependencies in the unvisited bin
+// If it encounters an already visited dependency with the same parent, there's a cycle in the graph. Switch on breakOnCycle to either throw or continue
+// If it encounters an already visited dependency with a different parent, update the dependency's order based on it parent's order
+export function traverseWorkspaceRelations(
   workspaceName: string,
   workspaces: Record<string, LiteWorkSpaceRecord>,
   breakOnCycle?: boolean,
@@ -121,7 +123,7 @@ export function walkWorkspaceRelations(
 
     // Add current dependency to the visited set.
     // If we already visited it at a lower depth in the graph, raise its level to the current depth
-    // (this dependency could be a dependency of some other node, but since is also a dependency of *this* node, it gets the bigger depth of the two)
+    // (i.e. this dependency could be a dependency of some other node, but since is also a dependency of *this* node, it gets the bigger depth of the two)
     const dependencyLevel = visited.has(currentDependencyName)
       ? Math.max(
           currentDependencyDepth,
@@ -137,7 +139,7 @@ export function walkWorkspaceRelations(
         level: currentDependencyDepth + 1,
       }));
       // If we insert the immediate dependencies at the end (push), we do a BFS walk.
-      // If we insert them at the star (unshift), we do a DFS walk. We want to go DFS because it's easier to detect cycles.
+      // If we insert them at the star (unshift), we do a DFS walk. We want DFS because it's easier to detect cycles.
       unvisited.unshift(...levelledMaps);
     }
   }
