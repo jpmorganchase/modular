@@ -17,9 +17,20 @@ const fixturesPath = `${__dirname}${path.sep}${traverseUp}__fixtures__${path.sep
 describe('@modular-scripts/workspace-resolver', () => {
   describe('resolveWorkspace', () => {
     it('resolves a clean workspace, detecting modular packages as appropriate', async () => {
-      const projectRoot = `${fixturesPath}clean-workspace`;
+      const projectRoot = `${fixturesPath}clean-workspace-1`;
       const [allPackages] = await resolveWorkspace(projectRoot, projectRoot);
-      expect(allPackages.has('clean-workspace')).toEqual(true);
+      expect(allPackages.has('clean-workspace-1')).toEqual(true);
+      expect(allPackages.has('app-one')).toEqual(true);
+      expect(allPackages.has('package-one')).toEqual(true);
+      expect(allPackages.has('package-two')).toEqual(true);
+    });
+
+    // This covers the alternative object workspaces syntax that yarn supports
+    // See https://classic.yarnpkg.com/blog/2018/02/15/nohoist/
+    it('resolves a clean workspace (using object workspaces syntax)', async () => {
+      const projectRoot = `${fixturesPath}clean-workspace-2`;
+      const [allPackages] = await resolveWorkspace(projectRoot, projectRoot);
+      expect(allPackages.has('clean-workspace-2')).toEqual(true);
       expect(allPackages.has('app-one')).toEqual(true);
       expect(allPackages.has('package-one')).toEqual(true);
       expect(allPackages.has('package-two')).toEqual(true);
@@ -84,11 +95,51 @@ describe('@modular-scripts/workspace-resolver', () => {
         'Nested workspaces are currently not supported by Modular',
       );
     });
+
+    it('does not support packages with no name', async () => {
+      const projectRoot = `${fixturesPath}invalid-workspace-4`;
+      let thrown = false;
+      let message = '';
+
+      try {
+        await resolveWorkspace(projectRoot, projectRoot);
+      } catch (err) {
+        thrown = true;
+        if (err instanceof Error) {
+          message = err.message;
+        }
+      }
+
+      expect(thrown).toEqual(true);
+      expect(message).toEqual(
+        'The package at packages/app-one/package.json does not have a valid name. Modular requires workspace packages to have a name.',
+      );
+    });
+
+    it('does not support packages with no version', async () => {
+      const projectRoot = `${fixturesPath}invalid-workspace-5`;
+      let thrown = false;
+      let message = '';
+
+      try {
+        await resolveWorkspace(projectRoot, projectRoot);
+      } catch (err) {
+        thrown = true;
+        if (err instanceof Error) {
+          message = err.message;
+        }
+      }
+
+      expect(thrown).toEqual(true);
+      expect(message).toEqual(
+        'The package "app-one" has an invalid version. Modular requires workspace packages to have a version.',
+      );
+    });
   });
 
   describe('analyzeWorkspaceDependencies', () => {
     it('correctly identifies workspace dependencies for a clean workspace', async () => {
-      const projectRoot = `${fixturesPath}clean-workspace`;
+      const projectRoot = `${fixturesPath}clean-workspace-1`;
       const [allPackages] = await resolveWorkspace(projectRoot, projectRoot);
 
       const result = analyzeWorkspaceDependencies(allPackages);
