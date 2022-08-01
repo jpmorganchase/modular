@@ -2,10 +2,29 @@ import {
   walkWorkspaceRelations,
   computeAncestorFromDescendants,
   computeAncestorSet,
+  computeDescendantSet,
   LiteWorkSpaceRecord,
 } from '..';
 
 describe('@modular-scripts/dependency-resolver', () => {
+  describe('computeDescendantSet', () => {
+    it('get an descendent set of a number of workspaces', () => {
+      const workspaces: Record<string, LiteWorkSpaceRecord> = {
+        a: { workspaceDependencies: ['b', 'c'] },
+        b: { workspaceDependencies: ['d'] },
+        c: { workspaceDependencies: ['b'] },
+        d: { workspaceDependencies: undefined },
+        e: { workspaceDependencies: ['a', 'b', 'c'] },
+      };
+      expect(computeDescendantSet(['a', 'b'], workspaces)).toEqual(
+        new Set(['c', 'd']),
+      );
+      expect(computeDescendantSet(['b', 'c'], workspaces)).toEqual(
+        new Set(['d']),
+      );
+      expect(computeDescendantSet(['d'], workspaces)).toEqual(new Set());
+    });
+  });
   describe('computeAncestorSet', () => {
     it('get an ancestors set of a number of workspaces', () => {
       const workspaces: Record<string, LiteWorkSpaceRecord> = {
@@ -16,10 +35,10 @@ describe('@modular-scripts/dependency-resolver', () => {
         e: { workspaceDependencies: ['a', 'b', 'c'] },
       };
       expect(computeAncestorSet(['d', 'b'], workspaces)).toEqual(
-        new Set(['b', 'a', 'c', 'e']),
+        new Set(['a', 'c', 'e']),
       );
       expect(computeAncestorSet(['a', 'c'], workspaces)).toEqual(
-        new Set(['e', 'a']),
+        new Set(['e']),
       );
       expect(computeAncestorSet(['e'], workspaces)).toEqual(new Set());
     });

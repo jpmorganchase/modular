@@ -5,6 +5,41 @@ export interface LiteWorkSpaceRecord {
 type OrderedDependencies = Map<string, number>;
 type OrderedUnvisited = { name: string; level: number };
 
+export function computeDescendantSet(
+  originWorkspaces: string[],
+  allWorkspaces: Record<string, LiteWorkSpaceRecord>,
+  breakOnCycle?: boolean,
+): Set<string> {
+  // Flatten and dedupe all the dependencies in a set (as the user needs only the list of descendants)
+
+  let descendantList: string[] = [];
+  for (const entrypoint of originWorkspaces) {
+    // Get the dependency relations for every entrypoint, then flatten them
+    const descendantsArray = Array.from(
+      walkWorkspaceRelations(entrypoint, allWorkspaces, breakOnCycle).keys(),
+    ).flat(Infinity);
+    // And add them to the global dependency list
+    descendantList = descendantList.concat(descendantsArray);
+  }
+  // The descendant list is a list containing all the descendants, possibily duplicated.
+  // 1 - Remove the input workspaces
+  // 2 - Convert it to Set to dedupe it.
+  return setDiff(new Set(descendantList), new Set(originWorkspaces));
+}
+
+export function computeAncestorSet(
+  originWorkspaces: string[],
+  allWorkspaces: Record<string, LiteWorkSpaceRecord>,
+  breakOnCycle?: boolean,
+): Set<string> {
+  // Computing an ancestor set is like computing a dependant set with an inverted graph
+  return computeDescendantSet(
+    originWorkspaces,
+    computeAncestorFromDescendants(allWorkspaces),
+    breakOnCycle,
+  );
+}
+
 // This function takes a tree of dependencies (dependant -> child dependencies)
 // and returns an equivalent tree where the relation's direction is inverted
 // (dependency -> parent dependencies)
@@ -32,29 +67,6 @@ export function computeAncestorFromDescendants(
     },
     Object.create(null),
   );
-}
-
-export function computeAncestorSet(
-  originWorkspaces: string[],
-  allWorkspaces: Record<string, LiteWorkSpaceRecord>,
-): Set<string> {
-  // Computing an ancestor set is like computing a dependant set with an inverted graph
-  // We will invert the graph and walk it normally for all the entrypoints needed
-  // Then flatten and dedupe all the dependencies in a set (as the user needs only the list of ancestors)
-
-  // Invert the graph
-  const ancestorMap = computeAncestorFromDescendants(allWorkspaces);
-  let ancestorList: string[] = [];
-  for (const entrypoint of originWorkspaces) {
-    // Get the dependency relations for every entrypoint, then flatten them
-    const ancestorsArray = Array.from(
-      walkWorkspaceRelations(entrypoint, ancestorMap).keys(),
-    ).flat(Infinity);
-    // And add them to the global dependency list
-    ancestorList = ancestorList.concat(ancestorsArray);
-  }
-  // The ancestor list is a list containing all the ancestors, possibily duplicated. Convert it to Set to dedupe it.
-  return new Set(ancestorList);
 }
 
 // Walk the graph to get an ordered set of dependencies (map reverseOrder => dependencyName)
@@ -131,4 +143,8 @@ export function walkWorkspaceRelations(
   }
 
   return visited;
+}
+
+function setDiff<T>(a: Set<T>, b: Set<T>): Set<T> {
+  return new Set([...a].filter((x) => !b.has(x)));
 }

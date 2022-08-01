@@ -131,14 +131,3 @@ Object {
   "workspaceDependencies": Array [],
 }
 `;
-
-exports[`getWorkspaceInfo 13`] = `
-Object {
-  "location": "packages/view-1",
-  "mismatchedWorkspaceDependencies": Array [],
-  "public": false,
-  "type": "app",
-  "version": Any<String>,
-  "workspaceDependencies": Array [],
-}
-`;
