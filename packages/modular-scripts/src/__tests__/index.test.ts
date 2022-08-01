@@ -14,7 +14,8 @@ import puppeteer from 'puppeteer';
 
 import getModularRoot from '../utils/getModularRoot';
 import { startApp, DevServer } from './start-app';
-import { ModularPackageJson } from '../utils/isModularType';
+
+import type { ModularPackageJson } from 'modular-types';
 
 const rimraf = promisify(_rimraf);
 

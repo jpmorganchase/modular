@@ -11,9 +11,10 @@ import * as logger from './utils/logger';
 import getModularRoot from './utils/getModularRoot';
 import getWorkspaceInfo from './utils/getWorkspaceInfo';
 import actionPreflightCheck from './utils/actionPreflightCheck';
-import { ModularPackageJson } from './utils/isModularType';
 import { cleanGit, stashChanges } from './utils/gitActions';
 import { check } from './check';
+
+import type { ModularPackageJson } from 'modular-types';
 
 process.on('SIGINT', () => {
   stashChanges();

@@ -18,11 +18,7 @@ describe('@modular-scripts/workspace-resolver', () => {
   describe('resolveWorkspace', () => {
     it('resolves a clean workspace, detecting modular packages as appropriate', async () => {
       const projectRoot = `${fixturesPath}clean-workspace`;
-      const [allPackages] = await resolveWorkspace(
-        projectRoot,
-        true,
-        projectRoot,
-      );
+      const [allPackages] = await resolveWorkspace(projectRoot, projectRoot);
       expect(allPackages.has('clean-workspace')).toEqual(true);
       expect(allPackages.has('app-one')).toEqual(true);
       expect(allPackages.has('package-one')).toEqual(true);
@@ -35,7 +31,7 @@ describe('@modular-scripts/workspace-resolver', () => {
       let message = '';
 
       try {
-        await resolveWorkspace(projectRoot, true, projectRoot);
+        await resolveWorkspace(projectRoot, projectRoot);
       } catch (err) {
         thrown = true;
         if (err instanceof Error) {
@@ -55,7 +51,7 @@ describe('@modular-scripts/workspace-resolver', () => {
       let message = '';
 
       try {
-        await resolveWorkspace(projectRoot, true, projectRoot);
+        await resolveWorkspace(projectRoot, projectRoot);
       } catch (err) {
         thrown = true;
         if (err instanceof Error) {
@@ -75,7 +71,7 @@ describe('@modular-scripts/workspace-resolver', () => {
       let message = '';
 
       try {
-        await resolveWorkspace(projectRoot, true, projectRoot);
+        await resolveWorkspace(projectRoot, projectRoot);
       } catch (err) {
         thrown = true;
         if (err instanceof Error) {
@@ -93,11 +89,7 @@ describe('@modular-scripts/workspace-resolver', () => {
   describe('analyzeWorkspaceDependencies', () => {
     it('correctly identifies workspace dependencies for a clean workspace', async () => {
       const projectRoot = `${fixturesPath}clean-workspace`;
-      const [allPackages] = await resolveWorkspace(
-        projectRoot,
-        true,
-        projectRoot,
-      );
+      const [allPackages] = await resolveWorkspace(projectRoot, projectRoot);
 
       const result = analyzeWorkspaceDependencies(allPackages);
       const expected = {
@@ -122,11 +114,7 @@ describe('@modular-scripts/workspace-resolver', () => {
 
     it('correctly identifies mismatched dependencies', async () => {
       const projectRoot = `${fixturesPath}mismatched-dependency`;
-      const [allPackages] = await resolveWorkspace(
-        projectRoot,
-        true,
-        projectRoot,
-      );
+      const [allPackages] = await resolveWorkspace(projectRoot, projectRoot);
 
       const result = analyzeWorkspaceDependencies(allPackages);
       const expected = {

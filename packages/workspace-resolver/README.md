@@ -20,11 +20,7 @@ because the yarn command is not consistent across other versions of yarn.
 ## Example
 
 ```TypeScript
-const [workspacePackages] = resolveWorkspace(
-    process.cwd(), // Working directory
-    true, // Is the root project?
-    'path/to/modular/project/root' // Absolute path to modular root
-)
+const [workspacePackages] = resolveWorkspace('path/to/modular/project/root')
 
 /*
 Map {

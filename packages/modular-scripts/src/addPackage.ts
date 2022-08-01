@@ -13,7 +13,8 @@ import * as logger from './utils/logger';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import getAllFiles from './utils/getAllFiles';
 import LineFilterOutStream from './utils/LineFilterOutStream';
-import { ModularPackageJson } from './utils/isModularType';
+
+import type { ModularPackageJson } from 'modular-types';
 
 const packagesRoot = 'packages';
 const CUSTOM_TEMPLATE = '__CHOOSE_MY_OWN__';

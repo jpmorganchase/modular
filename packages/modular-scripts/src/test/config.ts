@@ -6,7 +6,8 @@ import globby from 'globby';
 import type { Config } from '@jest/types';
 import { defaults } from 'jest-config';
 import getModularRoot from '../utils/getModularRoot';
-import { ModularPackageJson } from '../utils/isModularType';
+
+import type { ModularPackageJson } from 'modular-types';
 
 // This list may change as we learn of options where flexibility would be valuable.
 // Based on react-scripts supported override options

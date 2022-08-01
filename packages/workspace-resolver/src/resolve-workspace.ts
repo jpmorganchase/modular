@@ -5,9 +5,9 @@ import semver from 'semver';
 
 import type {
   ModularWorkspacePackage,
-  ModularType,
   WorkspaceMap,
   WorkspaceObj,
+  ModularPackageJson,
 } from 'modular-types';
 
 function packageJsonPath(dir: string) {
@@ -16,7 +16,7 @@ function packageJsonPath(dir: string) {
 
 function resolveWorkspacesDefinition(
   cwd: string,
-  def: PackageJson['workspaces'],
+  def: ModularPackageJson['workspaces'],
 ): string[] {
   if (!def) {
     return [];
@@ -37,46 +37,52 @@ function resolveWorkspacesDefinition(
   return resolveWorkspacesDefinition(cwd, def.packages);
 }
 
-type PackageJson = {
-  name: string;
-  version: string;
-  workspaces?: string[] | { noHost: boolean; packages: string[] };
-  modular?: { type: ModularType };
-  optionalDependencies: Record<string, string> | undefined;
-  devDependencies: Record<string, string> | undefined;
-  dependencies: Record<string, string> | undefined;
-};
-
 function readPackageJson(
   isRoot: boolean,
   workingDir: string,
   relativePath: string,
-): Promise<PackageJson> {
+): Promise<ModularPackageJson> {
   if (isRoot) {
-    return readJson(relativePath) as Promise<PackageJson>;
+    return readJson(relativePath) as Promise<ModularPackageJson>;
   }
 
   return readJson(
     `${workingDir}${path.sep}${relativePath}`,
-  ) as Promise<PackageJson>;
+  ) as Promise<ModularPackageJson>;
 }
 
 export async function resolveWorkspace(
-  workingDir: string,
-  isRoot: boolean,
   root: string,
+  workingDir: string | null = null,
   parent: ModularWorkspacePackage | null = null,
   collector = new Map<string, ModularWorkspacePackage>(),
 ): Promise<
   [Map<string, ModularWorkspacePackage>, ModularWorkspacePackage | null]
 > {
+  const workingDirToUse = workingDir ?? process.cwd();
+  const isRoot = workingDirToUse === root;
   const path = packageJsonPath(root);
-  const json = await readPackageJson(isRoot, workingDir, path);
+  const json = await readPackageJson(isRoot, workingDirToUse, path);
+  const isModularRoot = json.modular?.type === 'root';
+
+  if (!json.name) {
+    throw new Error(
+      `The package at ${path} does not have a valid name. Modular requires workspace packages to have a name.`,
+    );
+  }
+
+  const versionToUse = isModularRoot ? '1.0.0' : json.version;
+
+  if (!versionToUse) {
+    throw new Error(
+      `The package "${json.name}" has an invalid version. Modular requires workspace packages to have a version.`,
+    );
+  }
 
   const pkg: ModularWorkspacePackage = {
     path,
     name: json.name,
-    version: json.version,
+    version: versionToUse,
     workspace: !!json.workspaces,
     children: [],
     parent,
@@ -120,9 +126,8 @@ export async function resolveWorkspace(
 
   for (const link of resolveWorkspacesDefinition(root, json.workspaces)) {
     const [, child] = await resolveWorkspace(
-      workingDir,
-      false,
       link,
+      workingDirToUse,
       pkg,
       collector,
     );

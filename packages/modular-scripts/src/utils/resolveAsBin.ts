@@ -1,6 +1,6 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import { ModularPackageJson } from './isModularType';
+import type { ModularPackageJson } from 'modular-types';
 
 async function getBin(packageDir: string) {
   const packageJson = (await fs.readJson(

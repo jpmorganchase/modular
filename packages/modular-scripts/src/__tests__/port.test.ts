@@ -3,10 +3,11 @@ import * as tmp from 'tmp';
 import * as fs from 'fs-extra';
 import rimraf from 'rimraf';
 
-import { ModularPackageJson } from '../utils/isModularType';
 import * as getModularRoot from '../utils/getModularRoot';
 import { port } from '../port';
 import { initModularFolder } from '../init';
+
+import type { ModularPackageJson } from 'modular-types';
 
 jest.mock('../utils/getModularRoot');
 

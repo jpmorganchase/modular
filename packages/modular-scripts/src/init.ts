@@ -2,8 +2,9 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 import { defaultBrowsers } from './utils/checkBrowsers';
 import execAsync from './utils/execAsync';
-import { ModularPackageJson } from './utils/isModularType';
 import * as logger from './utils/logger';
+
+import type { ModularPackageJson } from 'modular-types';
 
 export async function initModularFolder(
   folder: string,

@@ -33,7 +33,5 @@ jobs:
         run: yarn --frozen-lockfile
       - name: Build prerequisites
         run: yarn workspace modular-types build
-      - name: Run Windows tests (part 1)
-        run: yarn test esmView.test.ts
-      - name: Run Windows tests (part 2)
-        run: yarn test workspace-resolver
+      - name: Run Windows tests
+        run: yarn test esmView.test.ts workspace-resolver
