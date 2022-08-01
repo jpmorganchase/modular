@@ -123,7 +123,7 @@ describe('when working with an app', () => {
               'sample-esbuild-app',
               'static',
               'js',
-              'index-LSDSCJMN.js',
+              'index-TKIUYRMA.js',
             ),
           ),
         ),
@@ -149,12 +149,12 @@ describe('when working with an app', () => {
   };
 
   it('can generate a index.js.map', () => {
-    expect(readSourceMap('static/js/index-LSDSCJMN.js.map')).toMatchSnapshot();
+    expect(readSourceMap('static/js/index-TKIUYRMA.js.map')).toMatchSnapshot();
   });
 
   it('can generate a index.css.map', () => {
     expect(
-      readSourceMap('static/css/index-OPRZV2UT.css.map'),
+      readSourceMap('static/css/index-PE2NG66F.css.map'),
     ).toMatchSnapshot();
   });
 });

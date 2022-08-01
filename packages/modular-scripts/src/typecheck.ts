@@ -11,7 +11,7 @@ async function typecheck(): Promise<void> {
 
   const { _compilerOptions, ...rest } = typescriptConfig;
 
-  const tsConfig = {
+  const tsConfig: typeof typescriptConfig = {
     ...rest,
     exclude: [
       'node_modules',
@@ -27,6 +27,11 @@ async function typecheck(): Promise<void> {
       noEmit: true,
     },
   };
+
+  // If compilerOptions.jsx is defined use it otherwise, depend on the extended config by not setting it to undefined.
+  if (tsConfig.compilerOptions && rest.compilerOptions?.jsx) {
+    tsConfig.compilerOptions.jsx = rest.compilerOptions.jsx;
+  }
 
   const diagnosticHost = {
     getCurrentDirectory: (): string => getModularRoot(),
