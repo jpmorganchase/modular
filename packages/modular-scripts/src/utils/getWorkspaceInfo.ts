@@ -1,12 +1,13 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 
-import type { ModularType } from '@modular-scripts/modular-types';
+import type {
+  ModularType,
+  ModularPackageJson,
+} from '@modular-scripts/modular-types';
 import { getAllWorkspaces } from './getAllWorkspaces';
 import getModularRoot from './getModularRoot';
 import memoize from './memoize';
-
-import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
 export interface WorkSpaceRecord {
   location: string;
