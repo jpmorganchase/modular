@@ -4,7 +4,7 @@ import type {
   ModularType,
   PackageType,
   ModularPackageJson,
-} from 'modular-types';
+} from '@modular-scripts/modular-types';
 
 import * as fs from 'fs-extra';
 

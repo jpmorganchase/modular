@@ -19,7 +19,7 @@ import getModularRoot from '../../utils/getModularRoot';
 import getRelativeLocation from '../../utils/getRelativeLocation';
 import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowserslistTarget';
 
-import type { ModularPackageJson } from 'modular-types';
+import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
 const outputDirectory = 'dist';
 const extensions = ['.ts', '.tsx', '.js', '.jsx'];

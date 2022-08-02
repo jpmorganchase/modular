@@ -4,7 +4,7 @@ import { defaultBrowsers } from './utils/checkBrowsers';
 import execAsync from './utils/execAsync';
 import * as logger from './utils/logger';
 
-import type { ModularPackageJson } from 'modular-types';
+import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
 export async function initModularFolder(
   folder: string,

@@ -7,7 +7,7 @@ import * as getModularRoot from '../utils/getModularRoot';
 import { convert } from '../convert';
 import tree from 'tree-view-for-tests';
 
-import type { ModularPackageJson } from 'modular-types';
+import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
 jest.mock('../utils/getModularRoot');
 

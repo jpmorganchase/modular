@@ -1,10 +1,6 @@
 {
-  "name": "modular-types",
+  "name": "@modular-scripts/modular-types",
   "version": "1.0.0",
   "license": "Apache-2.0",
-  "scripts": {
-    "build": "tsc",
-    "clean": "rimraf dist"
-  },
-  "types": "dist/types.d.ts"
+  "types": "src/types.ts"
 }

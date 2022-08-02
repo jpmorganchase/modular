@@ -8,7 +8,7 @@ import type {
   WorkspaceMap,
   WorkspaceObj,
   ModularPackageJson,
-} from 'modular-types';
+} from '@modular-scripts/modular-types';
 
 // See https://yarnpkg.com/features/workspaces#workspace-ranges-workspace
 const YARN_WORKSPACE_RANGE_PREFIX = 'workspace:';

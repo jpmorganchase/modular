@@ -2,7 +2,7 @@ import * as path from 'path';
 
 import type { IncludeDefinition as TSConfig } from '@schemastore/tsconfig';
 import type { Dependency } from '@schemastore/package';
-import type { ModularPackageJson } from 'modular-types';
+import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
 import execa from 'execa';
 import { paramCase as toParamCase } from 'change-case';

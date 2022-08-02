@@ -9,7 +9,7 @@ import getModularRoot from '../utils/getModularRoot';
 import getWorkspaceInfo from '../utils/getWorkspaceInfo';
 import { defaultBrowsers } from '../utils/checkBrowsers';
 
-import type { ModularPackageJson } from 'modular-types';
+import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
 export async function check(): Promise<boolean> {
   let valid = true;

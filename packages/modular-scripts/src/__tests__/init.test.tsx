@@ -5,7 +5,7 @@ import * as fs from 'fs-extra';
 import { promisify } from 'util';
 import { getWorkspaceInfo } from '../utils/getAllWorkspaces';
 
-import type { ModularPackageJson } from 'modular-types';
+import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
 const mktempd = promisify(tmp.dir);
 

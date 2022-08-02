@@ -4,7 +4,7 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as minimize from 'html-minifier-terser';
 import type { CoreProperties } from '@schemastore/package';
-import type { ModularType } from 'modular-types';
+import type { ModularType } from '@modular-scripts/modular-types';
 
 import * as logger from '../utils/logger';
 import getModularRoot from '../utils/getModularRoot';

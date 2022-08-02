@@ -7,7 +7,7 @@ import * as getModularRoot from '../utils/getModularRoot';
 import { port } from '../port';
 import { initModularFolder } from '../init';
 
-import type { ModularPackageJson } from 'modular-types';
+import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
 jest.mock('../utils/getModularRoot');
 

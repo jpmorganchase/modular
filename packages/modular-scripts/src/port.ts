@@ -14,7 +14,7 @@ import actionPreflightCheck from './utils/actionPreflightCheck';
 import { cleanGit, stashChanges } from './utils/gitActions';
 import { check } from './check';
 
-import type { ModularPackageJson } from 'modular-types';
+import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
 process.on('SIGINT', () => {
   stashChanges();

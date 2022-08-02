@@ -30,7 +30,7 @@ Object {
   "type": "package",
   "version": Any<String>,
   "workspaceDependencies": Array [
-    "modular-types",
+    "@modular-scripts/modular-types",
     "@modular-scripts/workspace-resolver",
   ],
 }
@@ -104,7 +104,7 @@ Object {
 
 exports[`getWorkspaceInfo 10`] = `
 Object {
-  "location": "packages/modular-types",
+  "location": "packages/@modular-scripts/modular-types",
   "mismatchedWorkspaceDependencies": Array [],
   "public": true,
   "type": "package",
@@ -143,7 +143,7 @@ Object {
   "type": "package",
   "version": Any<String>,
   "workspaceDependencies": Array [
-    "modular-types",
+    "@modular-scripts/modular-types",
   ],
 }
 `;
