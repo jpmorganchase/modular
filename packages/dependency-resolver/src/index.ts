@@ -107,7 +107,6 @@ export function traverseWorkspaceRelations(
       if (breakOnCycle)
         throw new Error(`Cycle detected: ${[...cycleBreaker].join(' -> ')}`);
       else {
-        cycleBreaker.clear();
         continue;
       }
     }

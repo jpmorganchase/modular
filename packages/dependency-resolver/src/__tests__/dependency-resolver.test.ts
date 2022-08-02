@@ -8,7 +8,7 @@ import {
 
 describe('@modular-scripts/dependency-resolver', () => {
   describe('computeDescendantSet', () => {
-    it('get an descendent set of a number of workspaces', () => {
+    it('get a descendent set of a number of workspaces', () => {
       const workspaces: Record<string, LiteWorkSpaceRecord> = {
         a: { workspaceDependencies: ['b', 'c'] },
         b: { workspaceDependencies: ['d'] },
@@ -23,6 +23,33 @@ describe('@modular-scripts/dependency-resolver', () => {
         new Set(['d']),
       );
       expect(computeDescendantSet(['d'], workspaces)).toEqual(new Set());
+    });
+    it('get a descendent set, breaking on cycles', () => {
+      const workspaces: Record<string, LiteWorkSpaceRecord> = {
+        a: { workspaceDependencies: ['b', 'c'] },
+        b: { workspaceDependencies: ['c'] },
+        c: { workspaceDependencies: ['a'] },
+      };
+      expect(() =>
+        computeDescendantSet(['a', 'b'], workspaces, true),
+      ).toThrow();
+      expect(() =>
+        computeDescendantSet(['b', 'c'], workspaces, true),
+      ).toThrow();
+    });
+
+    it('get a descendent set, ignoring cycles', () => {
+      const workspaces: Record<string, LiteWorkSpaceRecord> = {
+        a: { workspaceDependencies: ['b', 'c'] },
+        b: { workspaceDependencies: ['c'] },
+        c: { workspaceDependencies: ['a'] },
+      };
+      expect(computeDescendantSet(['a', 'b'], workspaces)).toEqual(
+        new Set(['c']),
+      );
+      expect(computeDescendantSet(['b', 'c'], workspaces)).toEqual(
+        new Set(['a']),
+      );
     });
   });
   describe('computeAncestorSet', () => {
@@ -120,6 +147,19 @@ describe('@modular-scripts/dependency-resolver', () => {
       };
       const dependencyMap = traverseWorkspaceRelations('a', workspaces, false);
       expect(dependencyMap.has('a')).toBe(false); // The original dependency is not there, because it's outside of the cycle
+      expect(dependencyMap.has('b')).toBe(true);
+      expect(dependencyMap.has('c')).toBe(true);
+    });
+
+    it('resolves descendants in some (unreliable) order with a cycle and two dependencies', () => {
+      const workspaces: Record<string, LiteWorkSpaceRecord> = {
+        a: { workspaceDependencies: ['b', 'c'] },
+        b: { workspaceDependencies: ['c'] },
+        c: { workspaceDependencies: ['a'] },
+      };
+
+      const dependencyMap = traverseWorkspaceRelations('a', workspaces, false);
+      expect(dependencyMap.has('a')).toBe(true);
       expect(dependencyMap.has('b')).toBe(true);
       expect(dependencyMap.has('c')).toBe(true);
     });
