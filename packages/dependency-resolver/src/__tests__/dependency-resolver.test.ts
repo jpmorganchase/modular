@@ -124,6 +124,22 @@ describe('@modular-scripts/dependency-resolver', () => {
       );
     });
 
+    it('resolves descendants in order and recognise tasks with the same order (parallel)', () => {
+      const workspaces: Record<string, LiteWorkSpaceRecord> = {
+        a: { workspaceDependencies: ['b', 'c'] },
+        b: { workspaceDependencies: ['d'] },
+        c: { workspaceDependencies: ['d'] },
+        d: { workspaceDependencies: undefined },
+      };
+      expect(traverseWorkspaceRelations('a', workspaces)).toEqual(
+        new Map([
+          ['c', 1],
+          ['b', 1],
+          ['d', 2],
+        ]),
+      );
+    });
+
     it('resolves descendants in some (unreliable) order with a cycle going back to the first dependency', () => {
       const workspaces: Record<string, LiteWorkSpaceRecord> = {
         a: { workspaceDependencies: ['b', 'c'] },
