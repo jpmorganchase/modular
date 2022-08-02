@@ -1,12 +1,12 @@
 {
   "name": "@modular-scripts/workspace-resolver",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "license": "Apache-2.0",
   "main": "dist-cjs/index.js",
   "dependencies": {
     "fs-extra": "^10.1.0",
     "globby": "11.0.4",
-    "@modular-scripts/modular-types": "1.0.0",
+    "@modular-scripts/modular-types": "0.0.1",
     "semver": "7.3.7"
   },
   "devDependencies": {

@@ -81,7 +81,7 @@
     "micromatch": "4.0.5",
     "mime": "^3.0.0",
     "mini-css-extract-plugin": "2.6.1",
-    "@modular-scripts/modular-types": "1.0.0",
+    "@modular-scripts/modular-types": "0.0.1",
     "npm-packlist": "5.1.1",
     "open": "8.3.0",
     "parse5": "6.0.1",
@@ -120,7 +120,7 @@
     "webpack-dev-server": "4.9.3",
     "webpack-manifest-plugin": "5.0.0",
     "webpack": "5.73.0",
-    "@modular-scripts/workspace-resolver": "1.0.0",
+    "@modular-scripts/workspace-resolver": "0.0.1",
     "ws": "8.8.0"
   },
   "peerDependencies": {
