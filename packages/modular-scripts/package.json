@@ -63,7 +63,7 @@
     "fork-ts-checker-webpack-plugin": "7.2.11",
     "fs-extra": "10.1.0",
     "global-modules": "2.0.0",
-    "globby": "11.0.4",
+    "globby": "13.1.2",
     "gzip-size": "6.0.0",
     "html-minifier-terser": "6.1.0",
     "html-webpack-plugin": "5.5.0",
