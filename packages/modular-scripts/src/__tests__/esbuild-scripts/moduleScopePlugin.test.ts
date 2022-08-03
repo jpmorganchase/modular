@@ -72,6 +72,7 @@ describe('WHEN running esbuild with the svgrPlugin', () => {
       expect(err).toMatchInlineSnapshot(`
         Object {
           "detail": undefined,
+          "id": "",
           "location": Object {
             "column": 20,
             "file": "packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/module-scope/src/index.tsx",
