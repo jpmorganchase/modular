@@ -39,7 +39,7 @@ export function computeAncestorSet(
   // Computing an ancestor set is like computing a dependant set with an inverted graph
   return computeDescendantSet(
     originWorkspaces,
-    computeAncestorFromDescendants(allWorkspaces),
+    invertDependencyDirection(allWorkspaces),
     breakOnCycle,
   );
 }
@@ -48,7 +48,7 @@ export function computeAncestorSet(
 // and returns an equivalent tree where the relation's direction is inverted
 // (dependency -> parent dependencies)
 // This allows us to use the same algorithm to query ancestors or descendants.
-export function computeAncestorFromDescendants(
+export function invertDependencyDirection(
   workspaces: Record<string, LiteWorkSpaceRecord>,
 ): Record<string, LiteWorkSpaceRecord> {
   return Object.entries(workspaces).reduce<Record<string, LiteWorkSpaceRecord>>(

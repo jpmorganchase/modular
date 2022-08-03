@@ -1,6 +1,6 @@
 import {
   traverseWorkspaceRelations,
-  computeAncestorFromDescendants,
+  invertDependencyDirection,
   computeAncestorSet,
   computeDescendantSet,
   LiteWorkSpaceRecord,
@@ -70,7 +70,7 @@ describe('@modular-scripts/dependency-resolver', () => {
       expect(computeAncestorSet(['e'], workspaces)).toEqual(new Set());
     });
   });
-  describe('computeAncestorFromDescendants', () => {
+  describe('invertDependencyDirection', () => {
     it('inverts descendants to ancestors', () => {
       const workspaces: Record<string, LiteWorkSpaceRecord> = {
         a: { workspaceDependencies: ['b', 'c'] },
@@ -80,7 +80,7 @@ describe('@modular-scripts/dependency-resolver', () => {
         e: { workspaceDependencies: ['a', 'b', 'c'] },
       };
 
-      expect(computeAncestorFromDescendants(workspaces)).toEqual({
+      expect(invertDependencyDirection(workspaces)).toEqual({
         a: { workspaceDependencies: ['e'] },
         b: { workspaceDependencies: ['a', 'c', 'e'] },
         c: { workspaceDependencies: ['a', 'e'] },

@@ -1,6 +1,8 @@
 # Dependency resolver API
 
-## traverseWorkspaceRelations
+## Low-level API
+
+### traverseWorkspaceRelations
 
 Traverses a dependency graph from a single vertix and returns an ordered map of
 vertices. The order can be used, inverted, to compute a set of build steps.
@@ -13,7 +15,7 @@ traverseWorkspaceRelations(
 ): OrderedDependencies
 ```
 
-### Parameters
+#### Parameters
 
 - `workspaceName`: the name of the starting vertix
 - `workspaces`: a record of workspaces expressed in the form
@@ -22,9 +24,9 @@ traverseWorkspaceRelations(
   (default: falsy). If this is falsy and there is a cycle in the graph, the
   order in the result will not be reliable by definition.
 
-### Example
+#### Examples
 
-#### Serial order
+##### Serial order
 
 ```ts
 workspaces = {
@@ -61,7 +63,7 @@ Map(
 */
 ```
 
-#### Serial / parallel order
+##### Serial / parallel order
 
 ```ts
 workspaces = {
@@ -94,7 +96,7 @@ Map(
 */
 ```
 
-#### Cycle
+##### Cycle
 
 ```ts
 workspaces = {
@@ -116,4 +118,60 @@ traverseWorkspaceRelations('a', workspaces, false);
 /* Will return an unreliable order map */
 traverseWorkspaceRelations('a', workspaces, true);
 /* Will throw */
+```
+
+### invertDependencyDirection
+
+Takes a dependency graph and inverts the edge direction. The result is a graph
+describing the same information as the original but with the relationship
+inverted. Useful to produce an ancestor graph from a descendant graph and vice
+versa.
+
+#### Example
+
+```ts
+const workspaces = {
+  a: { workspaceDependencies: ['b', 'c'] },
+  b: { workspaceDependencies: ['d'] },
+  c: { workspaceDependencies: ['b'] },
+  d: { workspaceDependencies: undefined },
+  e: { workspaceDependencies: ['a', 'b', 'c'] },
+};
+```
+
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->B;
+    E-->A;
+    E-->B;
+    E-->C;
+```
+
+```ts
+invertDependencyDirection(workspaces);
+```
+
+##### Resulting (inverted) graph
+
+```ts
+{
+    a: { workspaceDependencies: ['e'] },
+    b: { workspaceDependencies: ['a', 'c', 'e'] },
+    c: { workspaceDependencies: ['a', 'e'] },
+    d: { workspaceDependencies: ['b'] },
+}
+```
+
+```mermaid
+graph TD;
+    A-->E;
+    B-->A;
+    B-->C;
+    B-->E;
+    C-->A;
+    C-->E;
+    D-->B;
 ```
