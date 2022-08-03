@@ -4,7 +4,7 @@ import {
   computeAncestorSet,
   computeDescendantSet,
   LiteWorkSpaceRecord,
-} from '..';
+} from '../resolve-dependencies';
 
 describe('@modular-scripts/dependency-resolver', () => {
   describe('computeDescendantSet', () => {

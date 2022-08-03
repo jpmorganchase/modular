@@ -1,9 +1,0 @@
-{
-  "name": "@modular-scripts/dependency-resolver",
-  "version": "1.0.0",
-  "main": "dist-cjs/index.js",
-  "scripts": {
-    "build": "tsc && babel --source-maps --root-mode upward src --out-dir dist-cjs --extensions .ts --ignore 'src/**/*.test.ts'"
-  },
-  "types": "dist-cjs/index.d.ts"
-}
