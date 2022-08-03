@@ -96,7 +96,7 @@ graph TD;
 ```
 
 ```ts
-computeDescendantSet(['d', 'b'], workspaces))
+computeDescendantSet(['a', 'b'], workspaces))
 // Result:  new Set(['c', 'd'])
 ```
 
