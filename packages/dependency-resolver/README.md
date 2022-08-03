@@ -1,8 +1,106 @@
 # Dependency resolver API
 
-## Low-level API
+## computeAncestorSet
 
-### traverseWorkspaceRelations
+From one or more vertices in a graph, compute the flat set of all their
+ancestors (excluding the vertices themselves).
+
+```ts
+computeAncestorSet(
+  originWorkspaces: string[],
+  allWorkspaces: Record<string, LiteWorkSpaceRecord>,
+  breakOnCycle?: boolean,
+): Set<string>
+```
+
+### Parameters
+
+- `originWorkspaces`: the name of the vertices of which we want to know the
+  ancestors
+- `allWorkspaces`: a record of workspaces expressed as
+  `{ "workspace_name": { workspaceDependencies?: [ 'another_workspace', ...] }, ... }`
+- `breakOnCycle`: Will throw if a cycle (circular dependency) is detected
+  (default: falsy).
+
+### Example
+
+```ts
+const workspaces = {
+  a: { workspaceDependencies: ['b', 'c'] },
+  b: { workspaceDependencies: ['d'] },
+  c: { workspaceDependencies: ['b'] },
+  d: { workspaceDependencies: undefined },
+  e: { workspaceDependencies: ['a', 'b', 'c'] },
+};
+```
+
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->B;
+    E-->A;
+    E-->B;
+    E-->C;
+```
+
+```ts
+computeAncestorSet(['d', 'b'], workspaces))
+// Result:  new Set(['a', 'c', 'e'])
+```
+
+## computeDescendantSet
+
+From one or more vertices in a graph, compute the flat set of all their
+dependants (excluding the vertices themselves).
+
+```ts
+computeDescendantSet(
+  originWorkspaces: string[],
+  allWorkspaces: Record<string, LiteWorkSpaceRecord>,
+  breakOnCycle?: boolean,
+): Set<string>
+```
+
+### Parameters
+
+- `originWorkspaces`: the name of the vertices of which we want to know the
+  ancestors
+- `allWorkspaces`: a record of workspaces expressed as
+  `{ "workspace_name": { workspaceDependencies?: [ 'another_workspace', ...] }, ... }`
+- `breakOnCycle`: Will throw if a cycle (circular dependency) is detected
+  (default: falsy).
+
+### Example
+
+```ts
+const workspaces = {
+  a: { workspaceDependencies: ['b', 'c'] },
+  b: { workspaceDependencies: ['d'] },
+  c: { workspaceDependencies: ['b'] },
+  d: { workspaceDependencies: undefined },
+  e: { workspaceDependencies: ['a', 'b', 'c'] },
+};
+```
+
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->B;
+    E-->A;
+    E-->B;
+    E-->C;
+```
+
+```ts
+computeDescendantSet(['d', 'b'], workspaces))
+// Result:  new Set(['c', 'd'])
+```
+
+## traverseWorkspaceRelations
 
 Traverses a dependency graph from a single vertix and returns an ordered map of
 vertices. The order can be used, inverted, to compute a set of build steps.
@@ -15,18 +113,18 @@ traverseWorkspaceRelations(
 ): OrderedDependencies
 ```
 
-#### Parameters
+### Parameters
 
 - `workspaceName`: the name of the starting vertix
-- `workspaces`: a record of workspaces expressed in the form
+- `workspaces`: a record of workspaces expressed as
   `{ "workspace_name": { workspaceDependencies?: [ 'another_workspace', ...] }, ... }`
 - `breakOnCycle`: Will throw if a cycle (circular dependency) is detected
   (default: falsy). If this is falsy and there is a cycle in the graph, the
   order in the result will not be reliable by definition.
 
-#### Examples
+### Examples
 
-##### Serial order
+#### Serial order
 
 ```ts
 workspaces = {
@@ -63,7 +161,7 @@ Map(
 */
 ```
 
-##### Serial / parallel order
+#### Serial / parallel order
 
 ```ts
 workspaces = {
@@ -96,7 +194,7 @@ Map(
 */
 ```
 
-##### Cycle
+#### Cycle
 
 ```ts
 workspaces = {
@@ -120,14 +218,19 @@ traverseWorkspaceRelations('a', workspaces, true);
 /* Will throw */
 ```
 
-### invertDependencyDirection
+## invertDependencyDirection
 
 Takes a dependency graph and inverts the edge direction. The result is a graph
 describing the same information as the original but with the relationship
 inverted. Useful to produce an ancestor graph from a descendant graph and vice
 versa.
 
-#### Example
+### Parameters
+
+- `workspaces`: a record of workspaces expressed as
+  `{ "workspace_name": { workspaceDependencies?: [ 'another_workspace', ...] }, ... }`
+
+### Example
 
 ```ts
 const workspaces = {
@@ -154,7 +257,7 @@ graph TD;
 invertDependencyDirection(workspaces);
 ```
 
-##### Resulting (inverted) graph
+#### Resulting (inverted) graph
 
 ```ts
 {
