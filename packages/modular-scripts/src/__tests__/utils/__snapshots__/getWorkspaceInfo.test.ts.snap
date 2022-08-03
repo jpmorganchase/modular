@@ -30,8 +30,8 @@ Object {
   "type": "package",
   "version": Any<String>,
   "workspaceDependencies": Array [
-    "@modular-scripts/workspace-resolver",
     "@modular-scripts/modular-types",
+    "@modular-scripts/workspace-resolver",
   ],
 }
 `;

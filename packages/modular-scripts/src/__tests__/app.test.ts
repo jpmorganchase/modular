@@ -147,7 +147,7 @@ describe('When working with a nested app', () => {
          │  ├─ 788.bbd34b33.js.LICENSE.txt #eplx8h
          │  ├─ 788.bbd34b33.js.map #1xdy7n0
          │  ├─ main.502b419b.js #14cckvx
-         │  ├─ main.502b419b.js.map #17qi16y
+         │  ├─ main.502b419b.js.map #1c1of4g
          │  ├─ runtime-main.de012fdc.js #1qz643h
          │  └─ runtime-main.de012fdc.js.map #ntuwq4
          └─ media
@@ -364,7 +364,7 @@ describe('when working with an app', () => {
          │  ├─ 316.394ef80b.js.LICENSE.txt #eplx8h
          │  ├─ 316.394ef80b.js.map #b33pzn
          │  ├─ main.abe6afa1.js #t9np46
-         │  ├─ main.abe6afa1.js.map #nchh6d
+         │  ├─ main.abe6afa1.js.map #g0kqxf
          │  ├─ runtime-main.e92969dd.js #1is98ey
          │  └─ runtime-main.e92969dd.js.map #19haxsp
          └─ media
