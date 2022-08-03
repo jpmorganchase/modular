@@ -41,7 +41,7 @@
     "case-sensitive-paths-webpack-plugin": "2.4.0",
     "chalk": "4.1.2",
     "change-case": "4.1.2",
-    "commander": "9.3.0",
+    "commander": "9.4.0",
     "cross-spawn": "7.0.3",
     "css-loader": "6.7.1",
     "css-minimizer-webpack-plugin": "3.4.1",
