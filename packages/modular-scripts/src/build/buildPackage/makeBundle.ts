@@ -16,9 +16,10 @@ import { getPackageEntryPoints } from './getPackageEntryPoints';
 import getPrefixedLogger from '../../utils/getPrefixedLogger';
 import getPackageMetadata from '../../utils/getPackageMetadata';
 import getModularRoot from '../../utils/getModularRoot';
-import { ModularPackageJson } from '../../utils/isModularType';
 import getRelativeLocation from '../../utils/getRelativeLocation';
 import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowserslistTarget';
+
+import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
 const outputDirectory = 'dist';
 const extensions = ['.ts', '.tsx', '.js', '.jsx'];

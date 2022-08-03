@@ -2,6 +2,7 @@ import * as path from 'path';
 
 import type { IncludeDefinition as TSConfig } from '@schemastore/tsconfig';
 import type { Dependency } from '@schemastore/package';
+import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
 import execa from 'execa';
 import { paramCase as toParamCase } from 'change-case';
@@ -11,7 +12,6 @@ import rimraf from 'rimraf';
 import { check } from './check';
 import { isValidModularRootPackageJson } from './check/verifyModularRootPackageJson';
 import { cleanGit, stashChanges } from './utils/gitActions';
-import { ModularPackageJson } from './utils/isModularType';
 import * as logger from './utils/logger';
 
 process.on('SIGINT', () => {

@@ -3,10 +3,11 @@ import * as path from 'path';
 import * as tmp from 'tmp';
 import * as fs from 'fs-extra';
 
-import { ModularPackageJson } from '../utils/isModularType';
 import * as getModularRoot from '../utils/getModularRoot';
 import { convert } from '../convert';
 import tree from 'tree-view-for-tests';
+
+import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
 jest.mock('../utils/getModularRoot');
 
