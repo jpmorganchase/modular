@@ -3,8 +3,9 @@ import * as path from 'path';
 import * as tmp from 'tmp';
 import * as fs from 'fs-extra';
 import { promisify } from 'util';
-import { ModularPackageJson } from '../utils/isModularType';
 import { getWorkspaceInfo } from '../utils/getAllWorkspaces';
+
+import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
 const mktempd = promisify(tmp.dir);
 

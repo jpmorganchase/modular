@@ -1,0 +1,11 @@
+{
+  "name": "app-one",
+  "private": true,
+  "modular": {
+    "type": "app"
+  },
+  "dependencies": {
+    "package-one": "1.0.0",
+    "package-two": "1.0.0"
+  }
+}

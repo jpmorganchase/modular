@@ -3,8 +3,9 @@ import * as path from 'path';
 import * as fs from 'fs-extra';
 
 import getModularRoot from '../utils/getModularRoot';
-import { ModularPackageJson } from '../utils/isModularType';
 import * as logger from '../utils/logger';
+
+import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
 /**
  * @param rootPackageJson package.json object from the modular root

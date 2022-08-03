@@ -1,15 +1,13 @@
 import execa from 'execa';
 import memoize from './memoize';
 import getModularRoot from './getModularRoot';
+
 import * as logger from './logger';
 import stripAnsi from 'strip-ansi';
-
-interface WorkspaceObj {
-  location: string;
-  workspaceDependencies: string[];
-  mismatchedWorkspaceDependencies: string[];
-}
-type WorkspaceMap = Record<string, WorkspaceObj>;
+import type {
+  WorkspaceMap,
+  WorkspaceObj,
+} from '@modular-scripts/modular-types';
 
 function formatYarn1Workspace(stdout: string): WorkspaceMap {
   return JSON.parse(stdout) as WorkspaceMap;

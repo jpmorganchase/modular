@@ -10,7 +10,7 @@ export async function check(): Promise<boolean> {
   const modularRoot = getModularRoot();
 
   /**
-   * Validate the the worktree is valid against the globby of pacakge.json files which are found in the
+   * Validate the the worktree is valid against the globby of package.json files which are found in the
    * current working directory. They should be the same but you never know...
    */
 

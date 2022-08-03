@@ -1,0 +1,16 @@
+{
+  "name": "app-one",
+  "private": true,
+  "modular": {
+    "type": "app"
+  },
+  "workspaces": [
+    "foo",
+    "bar"
+  ],
+  "dependencies": {
+    "package-one": "1.0.0",
+    "package-two": "1.0.0"
+  },
+  "version": "1.0.0"
+}
