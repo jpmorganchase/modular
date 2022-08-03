@@ -198,5 +198,24 @@ describe('@modular-scripts/dependency-resolver', () => {
       };
       expect(() => traverseWorkspaceRelations('a', workspaces, true)).toThrow();
     });
+
+    it("doesn't throw if a graph recurs back to an older node, but without a cycle", () => {
+      const workspaces: Record<string, LiteWorkSpaceRecord> = {
+        a: { workspaceDependencies: ['b', 'd'] },
+        b: { workspaceDependencies: ['c'] },
+        c: { workspaceDependencies: undefined },
+        d: { workspaceDependencies: ['b'] },
+      };
+      expect(() =>
+        traverseWorkspaceRelations('a', workspaces, true),
+      ).not.toThrow();
+      expect(traverseWorkspaceRelations('a', workspaces, true)).toEqual(
+        new Map([
+          ['c', 3],
+          ['b', 2],
+          ['d', 1],
+        ]),
+      );
+    });
   });
 });
