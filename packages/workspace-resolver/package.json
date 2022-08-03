@@ -6,10 +6,10 @@
   "dependencies": {
     "fs-extra": "^10.1.0",
     "globby": "11.0.4",
-    "@modular-scripts/modular-types": "0.0.1",
     "semver": "7.3.7"
   },
   "devDependencies": {
+    "@modular-scripts/modular-types": "0.0.1",
     "@types/fs-extra": "^9.0.13"
   },
   "scripts": {
