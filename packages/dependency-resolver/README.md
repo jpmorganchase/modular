@@ -114,6 +114,6 @@ graph TD;
 ```ts
 traverseWorkspaceRelations('a', workspaces, false);
 /* Will return an unreliable order map */
-traverseWorkspaceRelations('a', workspaces, false);
+traverseWorkspaceRelations('a', workspaces, true);
 /* Will throw */
 ```
