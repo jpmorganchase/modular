@@ -10,7 +10,7 @@ import {
   computeDescendantSet,
 } from '../resolve-dependencies';
 
-describe('@modular-scripts/dependency-resolver', () => {
+describe('resolve-dependencies', () => {
   describe('computeDescendantSet', () => {
     it('get a descendent set of a number of workspaces', () => {
       const workspaces: Record<string, WorkspaceDependencyObject> = {
