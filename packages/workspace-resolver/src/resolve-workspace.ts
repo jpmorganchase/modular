@@ -97,6 +97,9 @@ export async function resolveWorkspace(
       ...json.devDependencies,
       ...json.dependencies,
     },
+    // Various parts of modular reach into package.json
+    // It's helpful to keep a full copy of this to avoid duplicate IO later on
+    rawPackageJson: json,
   };
   collector.set(json.name, pkg);
 

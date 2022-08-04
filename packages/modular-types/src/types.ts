@@ -17,6 +17,7 @@ export type ModularWorkspacePackage = {
   children: ModularWorkspacePackage[];
   parent: ModularWorkspacePackage | null;
   dependencies: Record<string, string> | undefined;
+  rawPackageJson: ModularPackageJson;
 };
 
 export interface WorkspaceObj {

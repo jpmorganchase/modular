@@ -47,7 +47,7 @@ describe('Creating a new modular folder', () => {
   });
 
   it('should not have any workspace info', async () => {
-    const workspace = await getWorkspaceInfo(folder, 'yarn');
+    const workspace = await getWorkspaceInfo(folder);
     expect(workspace).toEqual({});
   });
 });

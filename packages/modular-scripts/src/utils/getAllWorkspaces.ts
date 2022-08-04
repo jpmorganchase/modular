@@ -1,113 +1,34 @@
-import execa from 'execa';
 import memoize from './memoize';
 import getModularRoot from './getModularRoot';
 
-import * as logger from './logger';
-import stripAnsi from 'strip-ansi';
+import {
+  resolveWorkspace,
+  analyzeWorkspaceDependencies,
+} from '@modular-scripts/workspace-resolver';
+
 import type {
   WorkspaceMap,
-  WorkspaceObj,
+  ModularWorkspacePackage,
 } from '@modular-scripts/modular-types';
 
-function formatYarn1Workspace(stdout: string): WorkspaceMap {
-  return JSON.parse(stdout) as WorkspaceMap;
-}
-
-interface YarnWorkspaceV3 extends WorkspaceObj {
-  name: string;
-}
-
-function formatNewYarnWorkspace(stdout: string): WorkspaceMap {
-  return stdout.split(/\r?\n/).reduce((acc, workspaceString) => {
-    const { name, ...rest } = JSON.parse(workspaceString) as YarnWorkspaceV3;
-
-    if (rest.location !== '.') {
-      acc[name] = rest;
-    }
-
-    return acc;
-  }, {} as WorkspaceMap);
-}
-
-type SupportedPackageManagers = {
-  [prop: string]: PackageManagerInfo;
-};
-
+type WorkspaceContent = [Map<string, ModularWorkspacePackage>, WorkspaceMap];
 export interface PackageManagerInfo {
   getWorkspaceCommand: string;
   formatWorkspaceCommandOutput: (stdout: string) => WorkspaceMap;
 }
 
-const supportedPackageManagers: SupportedPackageManagers = {
-  yarn1: {
-    getWorkspaceCommand: 'yarnpkg --silent workspaces info',
-    formatWorkspaceCommandOutput: formatYarn1Workspace,
-  },
-  yarn2: {
-    getWorkspaceCommand: 'yarnpkg workspaces list --json -v',
-    formatWorkspaceCommandOutput: formatNewYarnWorkspace,
-  },
-  yarn3: {
-    getWorkspaceCommand: 'yarnpkg workspaces list --json -v',
-    formatWorkspaceCommandOutput: formatNewYarnWorkspace,
-  },
-};
-
-async function getCommandOutput(
-  cwd: string,
-  file: string,
-  args: readonly string[],
-): Promise<string> {
-  const result = await execa(file, args, {
-    cwd,
-    reject: false,
-    cleanup: true,
-  });
-
-  const { exitCode, stdout, stderr } = result;
-
-  if (stderr && !!exitCode) {
-    logger.error(stderr);
-    throw new Error(`Failed to lookup yarn workspace information`);
-  }
-
-  // strip out ANSI color codes and escape characters
-  return stripAnsi(stdout);
-}
-
-async function getPackageManagerInfo(cwd: string, packageManager: string) {
-  if (packageManager === 'yarn') {
-    const yarnVersion = await getCommandOutput(cwd, 'yarnpkg', ['--version']);
-    if (yarnVersion.startsWith('1.')) {
-      return supportedPackageManagers.yarn1;
-    }
-    if (yarnVersion.startsWith('2.')) {
-      return supportedPackageManagers.yarn2;
-    }
-    if (yarnVersion.startsWith('3.')) {
-      return supportedPackageManagers.yarn3;
-    }
-  }
-
-  throw new Error(`${packageManager} is not supported.`);
-}
-
 export async function getWorkspaceInfo(
-  cwd: string,
-  packageManager: string,
-): Promise<WorkspaceMap> {
-  const packageManagerUtils = await getPackageManagerInfo(cwd, packageManager);
-  const [file, ...args] = packageManagerUtils.getWorkspaceCommand.split(' ');
-  const workspaceCommandOutput = await getCommandOutput(cwd, file, args);
-  return packageManagerUtils.formatWorkspaceCommandOutput(
-    workspaceCommandOutput,
-  );
+  modularRoot: string,
+): Promise<WorkspaceContent> {
+  const [allPackages] = await resolveWorkspace(modularRoot);
+
+  return [allPackages, analyzeWorkspaceDependencies(allPackages)];
 }
 
-function _getAllWorkspaces(): Promise<WorkspaceMap> {
+function _getAllWorkspaces(): Promise<WorkspaceContent> {
   const modularRoot = getModularRoot();
 
-  return getWorkspaceInfo(modularRoot, 'yarn');
+  return getWorkspaceInfo(modularRoot);
 }
 
 export const getAllWorkspaces = memoize(_getAllWorkspaces);
