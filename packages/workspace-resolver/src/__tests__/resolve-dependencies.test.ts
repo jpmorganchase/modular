@@ -1,6 +1,6 @@
 import type {
   WorkspaceDependencyObject,
-  WorkspaceObj,
+  WorkspaceMap,
 } from '@modular-scripts/modular-types';
 
 import {
@@ -56,8 +56,8 @@ describe('resolve-dependencies', () => {
       );
     });
 
-    it('can accept WorkspaceObj', () => {
-      const workspaces: Record<string, WorkspaceObj> = {
+    it('can accept WorkspaceMap', () => {
+      const workspaces: WorkspaceMap = {
         a: {
           workspaceDependencies: ['b', 'c'],
           location: '/a',
@@ -253,6 +253,16 @@ describe('resolve-dependencies', () => {
           ['d', 1],
         ]),
       );
+    });
+
+    it('Resolves correctly the case where there are no dependencies', () => {
+      const workspaces: Record<string, WorkspaceDependencyObject> = {
+        a: { workspaceDependencies: [] },
+        b: { workspaceDependencies: ['c'] },
+        c: { workspaceDependencies: [] },
+        d: { workspaceDependencies: ['b'] },
+      };
+      expect(traverseWorkspaceRelations('a', workspaces)).toEqual(new Map([]));
     });
   });
 });

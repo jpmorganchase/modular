@@ -92,7 +92,7 @@ export function traverseWorkspaceRelations(
   while (unvisited.length) {
     // Consume the remaining unvisited descendants one by one
     const unvisitedDependency = unvisited.shift();
-    if (!unvisitedDependency) continue;
+    if (!unvisitedDependency) break;
 
     const { name: currentDependencyName, level: currentDependencyDepth } =
       unvisitedDependency;
