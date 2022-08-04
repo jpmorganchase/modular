@@ -31,22 +31,7 @@ jobs:
           cache: 'yarn'
       - name: Install Dependencies
         run: yarn --frozen-lockfile
-      - name: Run Tests
-        run: yarn test --coverage
-      - name: Coveralls Parallel
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          flag-name: run-${{ matrix.node-version }}
-          parallel: true
-  finish:
-    name: Upload Coverage
-    if: ${{ always() }}
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Coveralls Finished
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          parallel-finished: true
+      - name: Test performance of resolveWorkspace (part 1)
+        run: yarn generate
+      - name: Test performance of resolveWorkspace (part 1)
+        run: yarn modular check

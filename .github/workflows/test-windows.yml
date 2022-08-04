@@ -31,5 +31,7 @@ jobs:
           cache: 'yarn'
       - name: Install Dependencies
         run: yarn --frozen-lockfile
-      - name: Run Windows tests
-        run: yarn test esmView.test.ts workspace-resolver
+      - name: Test performance of resolveWorkspace (part 1)
+        run: yarn generate
+      - name: Test performance of resolveWorkspace (part 1)
+        run: yarn modular check

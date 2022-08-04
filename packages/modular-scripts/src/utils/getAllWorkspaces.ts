@@ -8,6 +8,10 @@ import type {
   WorkspaceMap,
   WorkspaceObj,
 } from '@modular-scripts/modular-types';
+import {
+  resolveWorkspace,
+  analyzeWorkspaceDependencies,
+} from '@modular-scripts/workspace-resolver';
 
 function formatYarn1Workspace(stdout: string): WorkspaceMap {
   return JSON.parse(stdout) as WorkspaceMap;
@@ -92,16 +96,32 @@ async function getPackageManagerInfo(cwd: string, packageManager: string) {
   throw new Error(`${packageManager} is not supported.`);
 }
 
+const useNewThing = true;
+
 export async function getWorkspaceInfo(
   cwd: string,
   packageManager: string,
 ): Promise<WorkspaceMap> {
+  if (useNewThing) {
+    return await getWorkspaceInfoAgnostically();
+  }
+
   const packageManagerUtils = await getPackageManagerInfo(cwd, packageManager);
   const [file, ...args] = packageManagerUtils.getWorkspaceCommand.split(' ');
   const workspaceCommandOutput = await getCommandOutput(cwd, file, args);
   return packageManagerUtils.formatWorkspaceCommandOutput(
     workspaceCommandOutput,
   );
+}
+
+export async function getWorkspaceInfoAgnostically(): Promise<WorkspaceMap> {
+  const modularRoot = getModularRoot();
+  const t0 = performance.now();
+  const [allPackages] = await resolveWorkspace(modularRoot);
+  const t1 = performance.now();
+  console.log(`Call to resolveWorkspace took ${t1 - t0} milliseconds.`);
+
+  return analyzeWorkspaceDependencies(allPackages);
 }
 
 function _getAllWorkspaces(): Promise<WorkspaceMap> {

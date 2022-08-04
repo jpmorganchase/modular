@@ -19,7 +19,8 @@
     "prepare": "is-ci || husky install",
     "postinstall": "patch-package",
     "typecheck": "yarn modular typecheck",
-    "validate-lockfile": "node scripts/validate-lockfile.js"
+    "validate-lockfile": "node scripts/validate-lockfile.js",
+    "generate": "node generate-modular-packages.js"
   },
   "browserslist": {
     "production": [
@@ -91,7 +92,8 @@
     "semver": "7.3.7",
     "string.prototype.replaceall": "^1.0.6",
     "ts-node": "10.8.1",
-    "typescript": "4.7.4"
+    "typescript": "4.7.4",
+    "uuid": "^8.3.2"
   },
   "resolutions": {
     "esbuild": "0.14.51"
