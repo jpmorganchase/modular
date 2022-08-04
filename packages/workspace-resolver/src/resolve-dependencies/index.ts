@@ -1,13 +1,11 @@
-export interface LiteWorkSpaceRecord {
-  workspaceDependencies?: string[];
-}
+import type { WorkspaceDependencyObject } from '@modular-scripts/modular-types';
 
 type OrderedDependencies = Map<string, number>;
 type OrderedUnvisited = { name: string; level: number };
 
 export function computeDescendantSet(
   originWorkspaces: string[],
-  allWorkspaces: Record<string, LiteWorkSpaceRecord>,
+  allWorkspaces: Record<string, WorkspaceDependencyObject>,
   breakOnCycle?: boolean,
 ): Set<string> {
   // This function computes the ordered dependants of one or more packages, then flattens and dedupes them in a set
@@ -33,7 +31,7 @@ export function computeDescendantSet(
 
 export function computeAncestorSet(
   originWorkspaces: string[],
-  allWorkspaces: Record<string, LiteWorkSpaceRecord>,
+  allWorkspaces: Record<string, WorkspaceDependencyObject>,
   breakOnCycle?: boolean,
 ): Set<string> {
   // Computing an ancestor set is like computing a dependant set with an inverted graph
@@ -49,28 +47,27 @@ export function computeAncestorSet(
 // (dependency -> parent dependencies)
 // This allows us to use the same algorithm to query ancestors or descendants.
 export function invertDependencyDirection(
-  workspaces: Record<string, LiteWorkSpaceRecord>,
-): Record<string, LiteWorkSpaceRecord> {
-  return Object.entries(workspaces).reduce<Record<string, LiteWorkSpaceRecord>>(
-    (output, [currentWorkspace, workspaceRecord]) => {
-      // Loop through all the dependencies for currentWorkspace and save the inverse relation in the output
-      workspaceRecord.workspaceDependencies?.forEach((dependency) => {
-        // Create a workspaceAncestors record if not already present
-        if (!output[dependency]) {
-          output[dependency] = { workspaceDependencies: [] };
-        }
-        // Insert if the ancestor is not already present.
-        // This would be less costly with a Set, but a Set would come at the cost of arrayfy-ing all the Sets later
-        if (
-          !output[dependency].workspaceDependencies?.includes(currentWorkspace)
-        ) {
-          output[dependency].workspaceDependencies?.push(currentWorkspace);
-        }
-      });
-      return output;
-    },
-    Object.create(null),
-  );
+  workspaces: Record<string, WorkspaceDependencyObject>,
+): Record<string, WorkspaceDependencyObject> {
+  return Object.entries(workspaces).reduce<
+    Record<string, WorkspaceDependencyObject>
+  >((output, [currentWorkspace, workspaceRecord]) => {
+    // Loop through all the dependencies for currentWorkspace and save the inverse relation in the output
+    workspaceRecord.workspaceDependencies?.forEach((dependency) => {
+      // Create a workspaceAncestors record if not already present
+      if (!output[dependency]) {
+        output[dependency] = { workspaceDependencies: [] };
+      }
+      // Insert if the ancestor is not already present.
+      // This would be less costly with a Set, but a Set would come at the cost of arrayfy-ing all the Sets later
+      if (
+        !output[dependency].workspaceDependencies?.includes(currentWorkspace)
+      ) {
+        output[dependency].workspaceDependencies?.push(currentWorkspace);
+      }
+    });
+    return output;
+  }, Object.create(null));
 }
 
 // This function traverses the graph to get an ordered set of dependencies (map reverseOrder => dependencyName)
@@ -80,7 +77,7 @@ export function invertDependencyDirection(
 // If it encounters an already visited dependency with a different parent, update the dependency's order based on it parent's order
 export function traverseWorkspaceRelations(
   workspaceName: string,
-  workspaces: Record<string, LiteWorkSpaceRecord>,
+  workspaces: Record<string, WorkspaceDependencyObject>,
   breakOnCycle?: boolean,
 ): OrderedDependencies {
   // Initialize the unvisited list with the immediate dependency array.

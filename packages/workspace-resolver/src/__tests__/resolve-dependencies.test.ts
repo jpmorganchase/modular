@@ -1,19 +1,23 @@
+import type {
+  WorkspaceDependencyObject,
+  WorkspaceObj,
+} from '@modular-scripts/modular-types';
+
 import {
   traverseWorkspaceRelations,
   invertDependencyDirection,
   computeAncestorSet,
   computeDescendantSet,
-  LiteWorkSpaceRecord,
 } from '../resolve-dependencies';
 
 describe('@modular-scripts/dependency-resolver', () => {
   describe('computeDescendantSet', () => {
     it('get a descendent set of a number of workspaces', () => {
-      const workspaces: Record<string, LiteWorkSpaceRecord> = {
+      const workspaces: Record<string, WorkspaceDependencyObject> = {
         a: { workspaceDependencies: ['b', 'c'] },
         b: { workspaceDependencies: ['d'] },
         c: { workspaceDependencies: ['b'] },
-        d: { workspaceDependencies: undefined },
+        d: { workspaceDependencies: [] },
         e: { workspaceDependencies: ['a', 'b', 'c'] },
       };
       expect(computeDescendantSet(['a', 'b'], workspaces)).toEqual(
@@ -25,7 +29,7 @@ describe('@modular-scripts/dependency-resolver', () => {
       expect(computeDescendantSet(['d'], workspaces)).toEqual(new Set());
     });
     it('get a descendent set, breaking on cycles', () => {
-      const workspaces: Record<string, LiteWorkSpaceRecord> = {
+      const workspaces: Record<string, WorkspaceDependencyObject> = {
         a: { workspaceDependencies: ['b', 'c'] },
         b: { workspaceDependencies: ['c'] },
         c: { workspaceDependencies: ['a'] },
@@ -39,7 +43,7 @@ describe('@modular-scripts/dependency-resolver', () => {
     });
 
     it('get a descendent set, ignoring cycles', () => {
-      const workspaces: Record<string, LiteWorkSpaceRecord> = {
+      const workspaces: Record<string, WorkspaceDependencyObject> = {
         a: { workspaceDependencies: ['b', 'c'] },
         b: { workspaceDependencies: ['c'] },
         c: { workspaceDependencies: ['a'] },
@@ -51,14 +55,47 @@ describe('@modular-scripts/dependency-resolver', () => {
         new Set(['a']),
       );
     });
+
+    it('can accept WorkspaceObj', () => {
+      const workspaces: Record<string, WorkspaceObj> = {
+        a: {
+          workspaceDependencies: ['b', 'c'],
+          location: '/a',
+          mismatchedWorkspaceDependencies: [],
+        },
+        b: {
+          workspaceDependencies: ['d'],
+          location: '/b',
+          mismatchedWorkspaceDependencies: [],
+        },
+        c: {
+          workspaceDependencies: ['b'],
+          location: '/c',
+          mismatchedWorkspaceDependencies: [],
+        },
+        d: {
+          workspaceDependencies: [],
+          location: '/d',
+          mismatchedWorkspaceDependencies: [],
+        },
+        e: {
+          workspaceDependencies: ['a', 'b', 'c'],
+          location: '/e',
+          mismatchedWorkspaceDependencies: [],
+        },
+      };
+      expect(computeDescendantSet(['a', 'b'], workspaces)).toEqual(
+        new Set(['c', 'd']),
+      );
+    });
   });
   describe('computeAncestorSet', () => {
     it('get an ancestors set of a number of workspaces', () => {
-      const workspaces: Record<string, LiteWorkSpaceRecord> = {
+      const workspaces: Record<string, WorkspaceDependencyObject> = {
         a: { workspaceDependencies: ['b', 'c'] },
         b: { workspaceDependencies: ['d'] },
         c: { workspaceDependencies: ['b'] },
-        d: { workspaceDependencies: undefined },
+        d: { workspaceDependencies: [] },
         e: { workspaceDependencies: ['a', 'b', 'c'] },
       };
       expect(computeAncestorSet(['d', 'b'], workspaces)).toEqual(
@@ -72,11 +109,11 @@ describe('@modular-scripts/dependency-resolver', () => {
   });
   describe('invertDependencyDirection', () => {
     it('inverts descendants to ancestors', () => {
-      const workspaces: Record<string, LiteWorkSpaceRecord> = {
+      const workspaces: Record<string, WorkspaceDependencyObject> = {
         a: { workspaceDependencies: ['b', 'c'] },
         b: { workspaceDependencies: ['d'] },
         c: { workspaceDependencies: ['b'] },
-        d: { workspaceDependencies: undefined },
+        d: { workspaceDependencies: [] },
         e: { workspaceDependencies: ['a', 'b', 'c'] },
       };
 
@@ -90,11 +127,11 @@ describe('@modular-scripts/dependency-resolver', () => {
   });
   describe('walkWorkspaceRelations', () => {
     it('resolves descendants in order', () => {
-      const workspaces: Record<string, LiteWorkSpaceRecord> = {
+      const workspaces: Record<string, WorkspaceDependencyObject> = {
         a: { workspaceDependencies: ['b', 'c'] },
         b: { workspaceDependencies: ['d'] },
         c: { workspaceDependencies: ['b'] },
-        d: { workspaceDependencies: undefined },
+        d: { workspaceDependencies: [] },
         e: { workspaceDependencies: ['a', 'b', 'c'] },
       };
       expect(traverseWorkspaceRelations('a', workspaces)).toEqual(
@@ -125,11 +162,11 @@ describe('@modular-scripts/dependency-resolver', () => {
     });
 
     it('resolves descendants in order and recognise tasks with the same order (parallel)', () => {
-      const workspaces: Record<string, LiteWorkSpaceRecord> = {
+      const workspaces: Record<string, WorkspaceDependencyObject> = {
         a: { workspaceDependencies: ['b', 'c'] },
         b: { workspaceDependencies: ['d'] },
         c: { workspaceDependencies: ['d'] },
-        d: { workspaceDependencies: undefined },
+        d: { workspaceDependencies: [] },
       };
       expect(traverseWorkspaceRelations('a', workspaces)).toEqual(
         new Map([
@@ -141,10 +178,10 @@ describe('@modular-scripts/dependency-resolver', () => {
     });
 
     it('resolves descendants in some (unreliable) order with a cycle going back to the first dependency', () => {
-      const workspaces: Record<string, LiteWorkSpaceRecord> = {
+      const workspaces: Record<string, WorkspaceDependencyObject> = {
         a: { workspaceDependencies: ['b', 'c'] },
         b: { workspaceDependencies: ['d'] },
-        c: { workspaceDependencies: undefined },
+        c: { workspaceDependencies: [] },
         d: { workspaceDependencies: ['a'] },
         e: { workspaceDependencies: ['d'] },
       };
@@ -156,7 +193,7 @@ describe('@modular-scripts/dependency-resolver', () => {
     });
 
     it('resolves descendants in some (unreliable) order with a cycle not going back to the first dependency', () => {
-      const workspaces: Record<string, LiteWorkSpaceRecord> = {
+      const workspaces: Record<string, WorkspaceDependencyObject> = {
         a: { workspaceDependencies: ['b'] },
         b: { workspaceDependencies: ['c'] },
         c: { workspaceDependencies: ['b'] },
@@ -168,7 +205,7 @@ describe('@modular-scripts/dependency-resolver', () => {
     });
 
     it('resolves descendants in some (unreliable) order with a cycle and two dependencies', () => {
-      const workspaces: Record<string, LiteWorkSpaceRecord> = {
+      const workspaces: Record<string, WorkspaceDependencyObject> = {
         a: { workspaceDependencies: ['b', 'c'] },
         b: { workspaceDependencies: ['c'] },
         c: { workspaceDependencies: ['a'] },
@@ -181,17 +218,17 @@ describe('@modular-scripts/dependency-resolver', () => {
     });
 
     it('throws on cycles going back to the first dependency, if breakOnCycle true', () => {
-      const workspaces: Record<string, LiteWorkSpaceRecord> = {
+      const workspaces: Record<string, WorkspaceDependencyObject> = {
         a: { workspaceDependencies: ['b', 'c'] },
         b: { workspaceDependencies: ['d'] },
-        c: { workspaceDependencies: undefined },
+        c: { workspaceDependencies: [] },
         d: { workspaceDependencies: ['a'] },
       };
       expect(() => traverseWorkspaceRelations('a', workspaces, true)).toThrow();
     });
 
     it('throws on cycles in later descendants, if breakOnCycle true', () => {
-      const workspaces: Record<string, LiteWorkSpaceRecord> = {
+      const workspaces: Record<string, WorkspaceDependencyObject> = {
         a: { workspaceDependencies: ['b'] },
         b: { workspaceDependencies: ['c'] },
         c: { workspaceDependencies: ['b'] },
@@ -200,10 +237,10 @@ describe('@modular-scripts/dependency-resolver', () => {
     });
 
     it("doesn't throw if a graph recurs back to an older node, but without a cycle", () => {
-      const workspaces: Record<string, LiteWorkSpaceRecord> = {
+      const workspaces: Record<string, WorkspaceDependencyObject> = {
         a: { workspaceDependencies: ['b', 'd'] },
         b: { workspaceDependencies: ['c'] },
-        c: { workspaceDependencies: undefined },
+        c: { workspaceDependencies: [] },
         d: { workspaceDependencies: ['b'] },
       };
       expect(() =>
