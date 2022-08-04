@@ -31,6 +31,8 @@ jobs:
           cache: 'yarn'
       - name: Install Dependencies
         run: yarn --frozen-lockfile
+      - name: 'Build internal prerequisites'
+        run: yarn workspace @modular-scripts/workspace-resolver build
       - name: Run Tests
         run: yarn test --coverage
       - name: Coveralls Parallel
