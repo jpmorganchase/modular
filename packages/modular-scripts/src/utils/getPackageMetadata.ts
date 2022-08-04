@@ -32,39 +32,19 @@ async function getPackageMetadata() {
     ).dependencies || {};
 
   // let's populate the above three
-  const [workspaces, workspacesMap] = await getAllWorkspaces();
+  const [workspaces] = await getAllWorkspaces();
 
   // an array of all the package names
   const packageNames = Array.from(workspaces.keys());
 
   // a map of all package.json contents, indexed by package name
-  const pkgByName: PackageByPath = {};
-  const packageJsons = Array.from(workspaces).reduce(
-    (byName, [packageName, workspace]) => {
-      byName[packageName] = workspace.rawPackageJson;
-      return byName;
-    },
-    pkgByName,
-  );
+  const packageJsons: PackageByPath = {};
+  const packageJsonsByPackagePath: PackageByPath = {};
 
-  // a map of all package.json contents, indexed by directory name
-  const pkgByPath: PackageByPath = {};
-  const packageJsonsByPackagePath = Object.entries(workspacesMap).reduce(
-    (byPath, [packageName, { location }]) => {
-      const workspace = workspaces.get(packageName);
-      // @modular-scripts/workspace-resolver should guarantee a 1:1 relationship of items in workspaces and workspacesMap
-      if (!workspace) {
-        throw new Error(
-          'Modular was not able to understand your workspaces configuration',
-        );
-      }
-      const { rawPackageJson } = workspace;
-      byPath[location] = rawPackageJson;
-
-      return byPath;
-    },
-    pkgByPath,
-  );
+  Array.from(workspaces).forEach(([packageName, workspace]) => {
+    packageJsons[packageName] = workspace.rawPackageJson;
+    packageJsonsByPackagePath[workspace.location] = workspace.rawPackageJson;
+  });
 
   // TODO: do a quick check to make sure workspaces aren't
   // explicitly included in dependencies

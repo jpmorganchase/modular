@@ -8,6 +8,7 @@ export type ModularType = PackageType | UnknownType | 'root';
 
 export type ModularWorkspacePackage = {
   path: string;
+  location: string;
   name: string;
   version: string;
   workspace: boolean;

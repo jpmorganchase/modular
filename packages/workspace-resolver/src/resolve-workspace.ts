@@ -62,13 +62,13 @@ export async function resolveWorkspace(
 > {
   const workingDirToUse = workingDir ?? process.cwd();
   const isRoot = workingDirToUse === root;
-  const path = packageJsonPath(root);
-  const json = await readPackageJson(isRoot, workingDirToUse, path);
+  const pkgPath = packageJsonPath(root);
+  const json = await readPackageJson(isRoot, workingDirToUse, pkgPath);
   const isModularRoot = json.modular?.type === 'root';
 
   if (!json.name) {
     throw new Error(
-      `The package at ${path} does not have a valid name. Modular requires workspace packages to have a name.`,
+      `The package at ${pkgPath} does not have a valid name. Modular requires workspace packages to have a name.`,
     );
   }
 
@@ -81,7 +81,8 @@ export async function resolveWorkspace(
   }
 
   const pkg: ModularWorkspacePackage = {
-    path,
+    path: pkgPath,
+    location: path.dirname(pkgPath),
     name: json.name,
     version: versionToUse,
     workspace: !!json.workspaces,
