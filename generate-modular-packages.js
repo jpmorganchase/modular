@@ -6,9 +6,7 @@ const path = require('path');
 const NUM_PACKAGES = 1000;
 
 if (!fs.existsSync(`${process.cwd()}${path.sep}generate-modular-packages.js`)) {
-  console.error(
-    'yarn generate should only be run from the root of the dummy large modular project',
-  );
+  console.error('This script should only be called from the root of modular');
   process.exit(1);
 }
 

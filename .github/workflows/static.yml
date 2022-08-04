@@ -34,5 +34,7 @@ jobs:
 
       - name: 'Install Dependencies'
         run: yarn --frozen-lockfile
+      - name: Build internal packages
+        run: yarn build
       - name: ${{ matrix.name }}
         run: yarn ${{ matrix.command }}

@@ -33,5 +33,5 @@ jobs:
         run: yarn --frozen-lockfile
       - name: Test performance of resolveWorkspace (part 1)
         run: yarn generate
-      - name: Test performance of resolveWorkspace (part 1)
+      - name: Test performance of resolveWorkspace (part 2)
         run: yarn modular check
