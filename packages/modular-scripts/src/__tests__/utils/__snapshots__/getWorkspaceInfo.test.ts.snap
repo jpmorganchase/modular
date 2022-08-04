@@ -13,7 +13,7 @@ Object {
 
 exports[`getWorkspaceInfo 2`] = `
 Object {
-  "location": "packages/dependency-resolver",
+  "location": "packages/eslint-config-modular-app",
   "mismatchedWorkspaceDependencies": Array [],
   "public": true,
   "type": "package",
@@ -24,7 +24,7 @@ Object {
 
 exports[`getWorkspaceInfo 3`] = `
 Object {
-  "location": "packages/eslint-config-modular-app",
+  "location": "packages/modular-scripts",
   "mismatchedWorkspaceDependencies": Array [],
   "public": true,
   "type": "package",
@@ -38,17 +38,6 @@ Object {
 
 exports[`getWorkspaceInfo 4`] = `
 Object {
-  "location": "packages/modular-scripts",
-  "mismatchedWorkspaceDependencies": Array [],
-  "public": true,
-  "type": "package",
-  "version": Any<String>,
-  "workspaceDependencies": Array [],
-}
-`;
-
-exports[`getWorkspaceInfo 5`] = `
-Object {
   "location": "packages/modular-site",
   "mismatchedWorkspaceDependencies": Array [],
   "public": false,
@@ -58,7 +47,7 @@ Object {
 }
 `;
 
-exports[`getWorkspaceInfo 6`] = `
+exports[`getWorkspaceInfo 5`] = `
 Object {
   "location": "packages/modular-template-app",
   "mismatchedWorkspaceDependencies": Array [],
@@ -69,7 +58,7 @@ Object {
 }
 `;
 
-exports[`getWorkspaceInfo 7`] = `
+exports[`getWorkspaceInfo 6`] = `
 Object {
   "location": "packages/modular-template-esm-view",
   "mismatchedWorkspaceDependencies": Array [],
@@ -80,7 +69,7 @@ Object {
 }
 `;
 
-exports[`getWorkspaceInfo 8`] = `
+exports[`getWorkspaceInfo 7`] = `
 Object {
   "location": "packages/modular-template-node-env-app",
   "mismatchedWorkspaceDependencies": Array [],
@@ -91,7 +80,7 @@ Object {
 }
 `;
 
-exports[`getWorkspaceInfo 9`] = `
+exports[`getWorkspaceInfo 8`] = `
 Object {
   "location": "packages/modular-template-package",
   "mismatchedWorkspaceDependencies": Array [],
@@ -102,7 +91,7 @@ Object {
 }
 `;
 
-exports[`getWorkspaceInfo 10`] = `
+exports[`getWorkspaceInfo 9`] = `
 Object {
   "location": "packages/modular-template-view",
   "mismatchedWorkspaceDependencies": Array [],
@@ -113,7 +102,7 @@ Object {
 }
 `;
 
-exports[`getWorkspaceInfo 11`] = `
+exports[`getWorkspaceInfo 10`] = `
 Object {
   "location": "packages/modular-types",
   "mismatchedWorkspaceDependencies": Array [],
@@ -124,7 +113,7 @@ Object {
 }
 `;
 
-exports[`getWorkspaceInfo 12`] = `
+exports[`getWorkspaceInfo 11`] = `
 Object {
   "location": "packages/modular-views.macro",
   "mismatchedWorkspaceDependencies": Array [],
