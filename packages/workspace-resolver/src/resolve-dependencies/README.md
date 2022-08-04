@@ -8,7 +8,7 @@ ancestors (excluding the vertices themselves).
 ```ts
 computeAncestorSet(
   originWorkspaces: string[],
-  allWorkspaces: Record<string, LiteWorkSpaceRecord>,
+  allWorkspaces: Record<string, WorkspaceDependencyObject>,
   breakOnCycle?: boolean,
 ): Set<string>
 ```
@@ -58,7 +58,7 @@ dependants (excluding the vertices themselves).
 ```ts
 computeDescendantSet(
   originWorkspaces: string[],
-  allWorkspaces: Record<string, LiteWorkSpaceRecord>,
+  allWorkspaces: Record<string, WorkspaceDependencyObject>,
   breakOnCycle?: boolean,
 ): Set<string>
 ```
@@ -108,7 +108,7 @@ vertices. The order can be used, inverted, to compute a set of build steps.
 ```ts
 traverseWorkspaceRelations(
   workspaceName: string,
-  workspaces: Record<string, LiteWorkSpaceRecord>,
+  workspaces: Record<string, WorkspaceDependencyObject>,
   breakOnCycle?: boolean,
 ): OrderedDependencies
 ```
