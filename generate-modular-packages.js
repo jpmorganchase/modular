@@ -12,9 +12,9 @@ if (!fs.existsSync(`${process.cwd()}${path.sep}generate-modular-packages.js`)) {
 
 const packagesDir = `${process.cwd()}${path.sep}packages`;
 
-console.log(`Clearing the packages dir... (${packagesDir})`);
-fs.rmSync(packagesDir, { recursive: true, force: true });
-fs.mkdirSync(packagesDir);
+// console.log(`Clearing the packages dir... (${packagesDir})`);
+// fs.rmSync(packagesDir, { recursive: true, force: true });
+// fs.mkdirSync(packagesDir);
 
 for (let i = 0; i < NUM_PACKAGES; i += 1) {
   const id = uuidv4();

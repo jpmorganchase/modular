@@ -1,3 +1,4 @@
+import { performance } from 'perf_hooks';
 import execa from 'execa';
 import memoize from './memoize';
 import getModularRoot from './getModularRoot';
