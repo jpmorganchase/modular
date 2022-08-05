@@ -56,6 +56,26 @@ describe('resolve-dependencies', () => {
       );
     });
 
+    it('get a descendent set, ignoring cycles in with different DFS priorities', () => {
+      const workspaces: Record<string, WorkspaceDependencyObject> = {
+        a: {
+          workspaceDependencies: ['b'],
+        },
+        b: {
+          workspaceDependencies: ['c', 'a'],
+        },
+        c: {
+          workspaceDependencies: [],
+        },
+      };
+      expect(computeDescendantSet(['a', 'b'], workspaces)).toEqual(
+        new Set(['c']),
+      );
+      expect(computeDescendantSet(['b', 'c'], workspaces)).toEqual(
+        new Set(['a']),
+      );
+    });
+
     it('can accept WorkspaceMap', () => {
       const workspaces: WorkspaceMap = {
         a: {
@@ -161,6 +181,25 @@ describe('resolve-dependencies', () => {
       );
     });
 
+    it('resolves a walk with maximum length', () => {
+      const workspaces: Record<string, WorkspaceDependencyObject> = {
+        a: { workspaceDependencies: ['b'] },
+        b: { workspaceDependencies: ['c'] },
+        c: { workspaceDependencies: ['d'] },
+        d: { workspaceDependencies: ['e'] },
+        e: { workspaceDependencies: [] },
+      };
+
+      expect(traverseWorkspaceRelations('a', workspaces)).toEqual(
+        new Map([
+          ['b', 1],
+          ['c', 2],
+          ['d', 3],
+          ['e', 4],
+        ]),
+      );
+    });
+
     it('resolves descendants in order and recognise tasks with the same order (parallel)', () => {
       const workspaces: Record<string, WorkspaceDependencyObject> = {
         a: { workspaceDependencies: ['b', 'c'] },
@@ -186,7 +225,7 @@ describe('resolve-dependencies', () => {
         e: { workspaceDependencies: ['d'] },
       };
       const dependencyMap = traverseWorkspaceRelations('a', workspaces, false);
-      expect(dependencyMap.has('a')).toBe(true); // The original dependency is there, because it's inside the cycle
+      expect(dependencyMap.has('a')).toBe(true);
       expect(dependencyMap.has('b')).toBe(true);
       expect(dependencyMap.has('c')).toBe(true);
       expect(dependencyMap.has('e')).toBe(false);
@@ -199,7 +238,7 @@ describe('resolve-dependencies', () => {
         c: { workspaceDependencies: ['b'] },
       };
       const dependencyMap = traverseWorkspaceRelations('a', workspaces, false);
-      expect(dependencyMap.has('a')).toBe(false); // The original dependency is not there, because it's outside of the cycle
+      expect(dependencyMap.has('a')).toBe(false);
       expect(dependencyMap.has('b')).toBe(true);
       expect(dependencyMap.has('c')).toBe(true);
     });
