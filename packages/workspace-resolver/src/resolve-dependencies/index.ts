@@ -76,6 +76,7 @@ export function traverseWorkspaceRelations(
   workspaceName: string,
   workspaces: Record<string, WorkspaceDependencyObject>,
 ): OrderedDependencies {
+  const workspaceN = Object.values(workspaces).length;
   // Initialize the unvisited list with the immediate dependency array.
   const unvisited: OrderedUnvisited[] = (
     workspaces[workspaceName]?.workspaceDependencies ?? []
@@ -119,7 +120,7 @@ export function traverseWorkspaceRelations(
       );
       for (const dep of immediateDependenciesWithDepth) {
         // If we're enqueueing a dependency that we have already processed in this walk, we have a cycle.
-        if (cycleBreaker.has(dep.name)) {
+        if (cycleBreaker.has(dep.name) || currentDependencyDepth > workspaceN) {
           throw new Error(
             `Cycle detected, ${[...cycleBreaker, dep.name].join(' -> ')}`,
           );
