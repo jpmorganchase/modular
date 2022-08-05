@@ -8,6 +8,8 @@ export function computeDescendantSet(
   workspaceNames: string[],
   allWorkspaces: Record<string, OptionalWorkspaceDependencyObject>,
 ): Set<string> {
+  // Really simple and performant ancestors collection: walk the graph via BFS and collect all the dependencies encountered in a set.
+  // If one dependency was already encountered before, don't process it. This is cycle resistant.
   const unvisited: string[] = [...workspaceNames];
   const visited: Set<string> = new Set();
 
@@ -70,7 +72,6 @@ export function invertDependencyDirection(
 }
 
 // This function traverses the graph to get an ordered set of dependencies (map reverseOrder => dependencyName)
-// This iterative solution visits all the dependencies in the graph in a DFS walk
 export function traverseWorkspaceRelations(
   workspaceName: string,
   workspaces: Record<string, WorkspaceDependencyObject>,
@@ -84,10 +85,7 @@ export function traverseWorkspaceRelations(
   // cycleBreaker holds our DFS path and helps identifying cycles
   const cycleBreaker: Set<string> = new Set();
 
-  let cycles = 0;
-
   while (unvisited.length) {
-    if (cycles++ > 100) throw new Error('AAAAAH');
     // Consume the remaining unvisited descendants one by one
     const unvisitedDependency = unvisited.shift();
     if (!unvisitedDependency) break;
@@ -119,14 +117,15 @@ export function traverseWorkspaceRelations(
           level: currentDependencyDepth + 1,
         }),
       );
-      // If we insert the immediate dependencies at the end (push), we do a BFS walk.
-      // If we insert them at the start (unshift), we do a DFS walk. We want DFS because it's easier to detect cycles.
       for (const dep of immediateDependenciesWithDepth) {
+        // If we're enqueueing a dependency that we have already processed in this walk, we have a cycle.
         if (cycleBreaker.has(dep.name)) {
           throw new Error(
             `Cycle detected, ${[...cycleBreaker, dep.name].join(' -> ')}`,
           );
         }
+        // If we insert the immediate dependencies at the end (push), we do a BFS walk.
+        // If we insert them at the start (unshift), we do a DFS walk.
         unvisited.unshift(dep);
       }
 
