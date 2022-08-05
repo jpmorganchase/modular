@@ -2,43 +2,42 @@ import type { WorkspaceDependencyObject } from '@modular-scripts/modular-types';
 
 type OrderedDependencies = Map<string, number>;
 type OrderedUnvisited = { name: string; level: number };
+type OptionalWorkspaceDependencyObject = Partial<WorkspaceDependencyObject>;
 
 export function computeDescendantSet(
-  originWorkspaces: string[],
-  allWorkspaces: Record<string, WorkspaceDependencyObject>,
-  breakOnCycle?: boolean,
+  workspaceNames: string[],
+  allWorkspaces: Record<string, OptionalWorkspaceDependencyObject>,
 ): Set<string> {
-  // This function computes the ordered dependants of one or more packages, then flattens and dedupes them in a set
+  const unvisited: string[] = [...workspaceNames];
+  const visited: Set<string> = new Set();
 
-  let descendantList: string[] = [];
-  for (const entrypoint of originWorkspaces) {
-    // Get the dependency relations for every entrypoint, then flatten them
-    const descendantsArray = Array.from(
-      traverseWorkspaceRelations(
-        entrypoint,
-        allWorkspaces,
-        breakOnCycle,
-      ).keys(),
-    ).flat(Infinity);
-    // And add them to the global dependency list
-    descendantList = descendantList.concat(descendantsArray);
+  while (unvisited.length) {
+    const currentDependency = unvisited.shift();
+    if (!currentDependency) break;
+    visited.add(currentDependency);
+
+    const immediateDependencies =
+      allWorkspaces[currentDependency]?.workspaceDependencies;
+
+    if (immediateDependencies) {
+      for (const immediateDep of immediateDependencies) {
+        if (!visited.has(immediateDep)) {
+          unvisited.push(immediateDep);
+        }
+      }
+    }
   }
-  // The descendant list is a list containing all the descendants, possibily duplicated.
-  // 1 - Remove the input workspaces
-  // 2 - Convert it to Set to dedupe it.
-  return setDiff(new Set(descendantList), new Set(originWorkspaces));
+  return setDiff(visited, new Set(workspaceNames));
 }
 
 export function computeAncestorSet(
-  originWorkspaces: string[],
+  workspaceNames: string[],
   allWorkspaces: Record<string, WorkspaceDependencyObject>,
-  breakOnCycle?: boolean,
 ): Set<string> {
   // Computing an ancestor set is like computing a dependant set with an inverted graph
   return computeDescendantSet(
-    originWorkspaces,
+    workspaceNames,
     invertDependencyDirection(allWorkspaces),
-    breakOnCycle,
   );
 }
 
@@ -48,7 +47,7 @@ export function computeAncestorSet(
 // This allows us to use the same algorithm to query ancestors or descendants.
 export function invertDependencyDirection(
   workspaces: Record<string, WorkspaceDependencyObject>,
-): Record<string, WorkspaceDependencyObject> {
+): Record<string, OptionalWorkspaceDependencyObject> {
   return Object.entries(workspaces).reduce<
     Record<string, WorkspaceDependencyObject>
   >((output, [currentWorkspace, workspaceRecord]) => {
@@ -72,13 +71,9 @@ export function invertDependencyDirection(
 
 // This function traverses the graph to get an ordered set of dependencies (map reverseOrder => dependencyName)
 // This iterative solution visits all the dependencies in the graph in a DFS walk
-// If it encounters an unvisited dependency, it puts it in the visited bin and put all its dependencies in the unvisited bin
-// If it encounters an already visited dependency with the same parent, there's a cycle in the graph. Switch on breakOnCycle to either throw or continue
-// If it encounters an already visited dependency with a different parent, update the dependency's order based on it parent's order
 export function traverseWorkspaceRelations(
   workspaceName: string,
   workspaces: Record<string, WorkspaceDependencyObject>,
-  breakOnCycle?: boolean,
 ): OrderedDependencies {
   // Initialize the unvisited list with the immediate dependency array.
   const unvisited: OrderedUnvisited[] = (
@@ -92,7 +87,7 @@ export function traverseWorkspaceRelations(
   let cycles = 0;
 
   while (unvisited.length) {
-    if (cycles++ > 1000) throw new Error('AAAAAH');
+    if (cycles++ > 100) throw new Error('AAAAAH');
     // Consume the remaining unvisited descendants one by one
     const unvisitedDependency = unvisited.shift();
     if (!unvisitedDependency) break;
@@ -128,19 +123,11 @@ export function traverseWorkspaceRelations(
       // If we insert them at the start (unshift), we do a DFS walk. We want DFS because it's easier to detect cycles.
       for (const dep of immediateDependenciesWithDepth) {
         if (cycleBreaker.has(dep.name)) {
-          console.log(
-            `Cycle detected 2, ${[...cycleBreaker, dep.name].join(' -> ')}`,
+          throw new Error(
+            `Cycle detected, ${[...cycleBreaker, dep.name].join(' -> ')}`,
           );
-          if (breakOnCycle) {
-            throw new Error(
-              `Cycle detected, ${[...cycleBreaker, dep.name].join(' -> ')}`,
-            );
-          } else {
-            continue;
-          }
-        } else {
-          unvisited.unshift(dep);
         }
+        unvisited.unshift(dep);
       }
 
       // If we got to an end node, we finish the current DFS traversal: reset the cycle breaker

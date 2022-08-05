@@ -28,19 +28,6 @@ describe('resolve-dependencies', () => {
       );
       expect(computeDescendantSet(['d'], workspaces)).toEqual(new Set());
     });
-    it('get a descendent set, breaking on cycles', () => {
-      const workspaces: Record<string, WorkspaceDependencyObject> = {
-        a: { workspaceDependencies: ['b', 'c'] },
-        b: { workspaceDependencies: ['c'] },
-        c: { workspaceDependencies: ['a'] },
-      };
-      expect(() =>
-        computeDescendantSet(['a', 'b'], workspaces, true),
-      ).toThrow();
-      expect(() =>
-        computeDescendantSet(['b', 'c'], workspaces, true),
-      ).toThrow();
-    });
 
     it('get a descendent set, ignoring cycles', () => {
       const workspaces: Record<string, WorkspaceDependencyObject> = {
@@ -216,7 +203,7 @@ describe('resolve-dependencies', () => {
       );
     });
 
-    it('resolves descendants in some (unreliable) order with a cycle going back to the first dependency', () => {
+    it('catches a cycle going back to the first dependency', () => {
       const workspaces: Record<string, WorkspaceDependencyObject> = {
         a: { workspaceDependencies: ['b', 'c'] },
         b: { workspaceDependencies: ['d'] },
@@ -224,55 +211,35 @@ describe('resolve-dependencies', () => {
         d: { workspaceDependencies: ['a'] },
         e: { workspaceDependencies: ['d'] },
       };
-      const dependencyMap = traverseWorkspaceRelations('a', workspaces, false);
-      expect(dependencyMap.has('a')).toBe(true);
-      expect(dependencyMap.has('b')).toBe(true);
-      expect(dependencyMap.has('c')).toBe(true);
-      expect(dependencyMap.has('e')).toBe(false);
+      expect(() => traverseWorkspaceRelations('a', workspaces)).toThrow();
     });
 
-    it('resolves descendants in some (unreliable) order with a cycle not going back to the first dependency', () => {
+    it('catches a cycle not going back to the first dependency', () => {
       const workspaces: Record<string, WorkspaceDependencyObject> = {
         a: { workspaceDependencies: ['b'] },
         b: { workspaceDependencies: ['c'] },
         c: { workspaceDependencies: ['b'] },
       };
-      const dependencyMap = traverseWorkspaceRelations('a', workspaces, false);
-      expect(dependencyMap.has('a')).toBe(false);
-      expect(dependencyMap.has('b')).toBe(true);
-      expect(dependencyMap.has('c')).toBe(true);
+      expect(() => traverseWorkspaceRelations('a', workspaces)).toThrow();
     });
 
-    it('resolves descendants in some (unreliable) order with a cycle and two dependencies', () => {
+    it('catches a cycle and two dependencies', () => {
       const workspaces: Record<string, WorkspaceDependencyObject> = {
         a: { workspaceDependencies: ['b', 'c'] },
         b: { workspaceDependencies: ['c'] },
         c: { workspaceDependencies: ['a'] },
       };
 
-      const dependencyMap = traverseWorkspaceRelations('a', workspaces, false);
-      expect(dependencyMap.has('a')).toBe(true);
-      expect(dependencyMap.has('b')).toBe(true);
-      expect(dependencyMap.has('c')).toBe(true);
+      expect(() => traverseWorkspaceRelations('a', workspaces)).toThrow();
     });
 
-    it('throws on cycles going back to the first dependency, if breakOnCycle true', () => {
-      const workspaces: Record<string, WorkspaceDependencyObject> = {
-        a: { workspaceDependencies: ['b', 'c'] },
-        b: { workspaceDependencies: ['d'] },
-        c: { workspaceDependencies: [] },
-        d: { workspaceDependencies: ['a'] },
-      };
-      expect(() => traverseWorkspaceRelations('a', workspaces, true)).toThrow();
-    });
-
-    it('throws on cycles in later descendants, if breakOnCycle true', () => {
+    it('catches a cycle in later descendants', () => {
       const workspaces: Record<string, WorkspaceDependencyObject> = {
         a: { workspaceDependencies: ['b'] },
         b: { workspaceDependencies: ['c'] },
         c: { workspaceDependencies: ['b'] },
       };
-      expect(() => traverseWorkspaceRelations('a', workspaces, true)).toThrow();
+      expect(() => traverseWorkspaceRelations('a', workspaces)).toThrow();
     });
 
     it("doesn't throw if a graph recurs back to an older node, but without a cycle", () => {
@@ -282,10 +249,8 @@ describe('resolve-dependencies', () => {
         c: { workspaceDependencies: [] },
         d: { workspaceDependencies: ['b'] },
       };
-      expect(() =>
-        traverseWorkspaceRelations('a', workspaces, true),
-      ).not.toThrow();
-      expect(traverseWorkspaceRelations('a', workspaces, true)).toEqual(
+      expect(() => traverseWorkspaceRelations('a', workspaces)).not.toThrow();
+      expect(traverseWorkspaceRelations('a', workspaces)).toEqual(
         new Map([
           ['c', 3],
           ['b', 2],

@@ -3,13 +3,13 @@
 ## computeAncestorSet
 
 From one or more vertices in a graph, compute the flat set of all their
-ancestors (excluding the vertices themselves).
+ancestors (excluding the vertices themselves). This function will work with
+cycles, since it doesn't compute the dependency order.
 
 ```ts
 computeAncestorSet(
   originWorkspaces: string[],
   allWorkspaces: Record<string, WorkspaceDependencyObject>,
-  breakOnCycle?: boolean,
 ): Set<string>
 ```
 
@@ -19,8 +19,6 @@ computeAncestorSet(
   ancestors
 - `allWorkspaces`: a record of workspaces expressed as
   `{ "workspace_name": { workspaceDependencies?: [ 'another_workspace', ...] }, ... }`
-- `breakOnCycle`: Will throw if a cycle (circular dependency) is detected
-  (default: falsy).
 
 ### Example
 
@@ -53,13 +51,13 @@ computeAncestorSet(['d', 'b'], workspaces))
 ## computeDescendantSet
 
 From one or more vertices in a graph, compute the flat set of all their
-dependants (excluding the vertices themselves).
+dependants (excluding the vertices themselves). This function will work with
+cycles, since it doesn't compute the dependency order.
 
 ```ts
 computeDescendantSet(
   originWorkspaces: string[],
   allWorkspaces: Record<string, WorkspaceDependencyObject>,
-  breakOnCycle?: boolean,
 ): Set<string>
 ```
 
@@ -69,8 +67,6 @@ computeDescendantSet(
   ancestors
 - `allWorkspaces`: a record of workspaces expressed as
   `{ "workspace_name": { workspaceDependencies?: [ 'another_workspace', ...] }, ... }`
-- `breakOnCycle`: Will throw if a cycle (circular dependency) is detected
-  (default: falsy).
 
 ### Example
 
@@ -102,14 +98,18 @@ computeDescendantSet(['a', 'b'], workspaces))
 
 ## traverseWorkspaceRelations
 
-Traverses a dependency graph from a single vertix and returns an ordered map of
-vertices. The order can be used, inverted, to compute a set of build steps.
+Traverses a dependency graph from a single vertix and returns an map from
+vertices to inverse build order. The order can be used to compute a set of build
+steps, where dependencies of the same order can be executed in parallel. This
+function will throw in case of cycles, with an exception describing the first
+cycle found, because the order can't be computed (e.g. if `a` needs `b` to be
+built and `b` needs `a` to be built, their respective order will grow to
+`Infinity`).
 
 ```ts
 traverseWorkspaceRelations(
   workspaceName: string,
-  workspaces: Record<string, WorkspaceDependencyObject>,
-  breakOnCycle?: boolean,
+  workspaces: Record<string, WorkspaceDependencyObject>
 ): OrderedDependencies
 ```
 
@@ -118,9 +118,6 @@ traverseWorkspaceRelations(
 - `workspaceName`: the name of the starting vertix
 - `workspaces`: a record of workspaces expressed as
   `{ "workspace_name": { workspaceDependencies?: [ 'another_workspace', ...] }, ... }`
-- `breakOnCycle`: Will throw if a cycle (circular dependency) is detected
-  (default: falsy). If this is falsy and there is a cycle in the graph, the
-  order in the result will not be reliable by definition.
 
 ### Examples
 
@@ -212,9 +209,7 @@ graph TD;
 ```
 
 ```ts
-traverseWorkspaceRelations('a', workspaces, false);
-/* Will return an unreliable order map */
-traverseWorkspaceRelations('a', workspaces, true);
+traverseWorkspaceRelations('a', workspaces);
 /* Will throw */
 ```
 
@@ -223,7 +218,9 @@ traverseWorkspaceRelations('a', workspaces, true);
 Takes a dependency graph and inverts the edge direction. The result is a graph
 describing the same information as the original but with the relationship
 inverted. Useful to produce an ancestor graph from a descendant graph and vice
-versa.
+versa. Please note that, to optimize for performance, this function can produce
+graphs in which some `workspaceDependencies` are `undefined` (instead of empty
+arrays).
 
 ### Parameters
 
