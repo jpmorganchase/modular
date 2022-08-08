@@ -98,7 +98,7 @@ computeDescendantSet(['a', 'b'], workspaces))
 
 ## traverseWorkspaceRelations
 
-Traverses a dependency graph from an array of vertices and returns an map from
+Traverses a dependency graph from an array of vertices and returns a map from
 vertices to inverse build order. The order can be used to compute a set of build
 steps, where dependencies of the same order can be executed in parallel. This
 function will throw in case of cycles, with an exception describing the first
