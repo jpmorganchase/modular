@@ -132,7 +132,7 @@ describe('resolve-dependencies', () => {
       });
     });
   });
-  describe('walkWorkspaceRelations', () => {
+  describe('walkWorkspaceRelations with a single workspace', () => {
     it('resolves descendants in order', () => {
       const workspaces: Record<string, WorkspaceDependencyObject> = {
         a: { workspaceDependencies: ['b', 'c'] },
@@ -141,25 +141,33 @@ describe('resolve-dependencies', () => {
         d: { workspaceDependencies: [] },
         e: { workspaceDependencies: ['a', 'b', 'c'] },
       };
-      expect(traverseWorkspaceRelations('a', workspaces)).toEqual(
+      expect(traverseWorkspaceRelations(['a'], workspaces)).toEqual(
         new Map([
+          ['a', 0],
           ['c', 1],
           ['b', 2],
           ['d', 3],
         ]),
       );
-      expect(traverseWorkspaceRelations('b', workspaces)).toEqual(
-        new Map([['d', 1]]),
-      );
-      expect(traverseWorkspaceRelations('c', workspaces)).toEqual(
+      expect(traverseWorkspaceRelations(['b'], workspaces)).toEqual(
         new Map([
+          ['b', 0],
+          ['d', 1],
+        ]),
+      );
+      expect(traverseWorkspaceRelations(['c'], workspaces)).toEqual(
+        new Map([
+          ['c', 0],
           ['b', 1],
           ['d', 2],
         ]),
       );
-      expect(traverseWorkspaceRelations('d', workspaces)).toEqual(new Map());
-      expect(traverseWorkspaceRelations('e', workspaces)).toEqual(
+      expect(traverseWorkspaceRelations(['d'], workspaces)).toEqual(
+        new Map([['d', 0]]),
+      );
+      expect(traverseWorkspaceRelations(['e'], workspaces)).toEqual(
         new Map([
+          ['e', 0],
           ['a', 1],
           ['b', 3],
           ['c', 2],
@@ -177,8 +185,9 @@ describe('resolve-dependencies', () => {
         e: { workspaceDependencies: [] },
       };
 
-      expect(traverseWorkspaceRelations('a', workspaces)).toEqual(
+      expect(traverseWorkspaceRelations(['a'], workspaces)).toEqual(
         new Map([
+          ['a', 0],
           ['b', 1],
           ['c', 2],
           ['d', 3],
@@ -194,8 +203,9 @@ describe('resolve-dependencies', () => {
         c: { workspaceDependencies: ['d'] },
         d: { workspaceDependencies: [] },
       };
-      expect(traverseWorkspaceRelations('a', workspaces)).toEqual(
+      expect(traverseWorkspaceRelations(['a'], workspaces)).toEqual(
         new Map([
+          ['a', 0],
           ['c', 1],
           ['b', 1],
           ['d', 2],
@@ -211,7 +221,7 @@ describe('resolve-dependencies', () => {
         d: { workspaceDependencies: ['a'] },
         e: { workspaceDependencies: ['d'] },
       };
-      expect(() => traverseWorkspaceRelations('a', workspaces)).toThrow();
+      expect(() => traverseWorkspaceRelations(['a'], workspaces)).toThrow();
     });
 
     it('catches a cycle not going back to the first dependency', () => {
@@ -220,7 +230,7 @@ describe('resolve-dependencies', () => {
         b: { workspaceDependencies: ['c'] },
         c: { workspaceDependencies: ['b'] },
       };
-      expect(() => traverseWorkspaceRelations('a', workspaces)).toThrow();
+      expect(() => traverseWorkspaceRelations(['a'], workspaces)).toThrow();
     });
 
     it('catches a cycle and two dependencies', () => {
@@ -230,7 +240,7 @@ describe('resolve-dependencies', () => {
         c: { workspaceDependencies: ['a'] },
       };
 
-      expect(() => traverseWorkspaceRelations('a', workspaces)).toThrow();
+      expect(() => traverseWorkspaceRelations(['a'], workspaces)).toThrow();
     });
 
     it('catches a cycle in later descendants', () => {
@@ -239,7 +249,7 @@ describe('resolve-dependencies', () => {
         b: { workspaceDependencies: ['c'] },
         c: { workspaceDependencies: ['b'] },
       };
-      expect(() => traverseWorkspaceRelations('a', workspaces)).toThrow();
+      expect(() => traverseWorkspaceRelations(['a'], workspaces)).toThrow();
     });
 
     it("doesn't throw if a graph recurs back to an older node, but without a cycle", () => {
@@ -249,9 +259,10 @@ describe('resolve-dependencies', () => {
         c: { workspaceDependencies: [] },
         d: { workspaceDependencies: ['b'] },
       };
-      expect(() => traverseWorkspaceRelations('a', workspaces)).not.toThrow();
-      expect(traverseWorkspaceRelations('a', workspaces)).toEqual(
+      expect(() => traverseWorkspaceRelations(['a'], workspaces)).not.toThrow();
+      expect(traverseWorkspaceRelations(['a'], workspaces)).toEqual(
         new Map([
+          ['a', 0],
           ['c', 3],
           ['b', 2],
           ['d', 1],
@@ -266,7 +277,116 @@ describe('resolve-dependencies', () => {
         c: { workspaceDependencies: [] },
         d: { workspaceDependencies: ['b'] },
       };
-      expect(traverseWorkspaceRelations('a', workspaces)).toEqual(new Map([]));
+      expect(traverseWorkspaceRelations(['a'], workspaces)).toEqual(
+        new Map([['a', 0]]),
+      );
+    });
+  });
+
+  describe('walkWorkspaceRelations with more than one workspace', () => {
+    it('resolves descendants in order', () => {
+      const workspaces: Record<string, WorkspaceDependencyObject> = {
+        a: { workspaceDependencies: ['b', 'c'] },
+        b: { workspaceDependencies: ['d'] },
+        c: { workspaceDependencies: ['b'] },
+        d: { workspaceDependencies: [] },
+        e: { workspaceDependencies: ['a', 'b', 'c'] },
+      };
+      expect(traverseWorkspaceRelations(['a', 'b'], workspaces)).toEqual(
+        new Map([
+          ['a', 0],
+          ['c', 1],
+          ['b', 2],
+          ['d', 3],
+        ]),
+      );
+      expect(traverseWorkspaceRelations(['e', 'a'], workspaces)).toEqual(
+        new Map([
+          ['e', 0],
+          ['a', 1],
+          ['b', 3],
+          ['c', 2],
+          ['d', 4],
+        ]),
+      );
+    });
+
+    it('catches a cycle going back to the first dependency', () => {
+      const workspaces: Record<string, WorkspaceDependencyObject> = {
+        a: { workspaceDependencies: ['b', 'c'] },
+        b: { workspaceDependencies: ['d'] },
+        c: { workspaceDependencies: [] },
+        d: { workspaceDependencies: ['a'] },
+        e: { workspaceDependencies: ['d'] },
+      };
+      expect(() =>
+        traverseWorkspaceRelations(['a', 'e'], workspaces),
+      ).toThrow();
+    });
+
+    it('catches a cycle not going back to the first dependency', () => {
+      const workspaces: Record<string, WorkspaceDependencyObject> = {
+        a: { workspaceDependencies: ['b'] },
+        b: { workspaceDependencies: ['c'] },
+        c: { workspaceDependencies: ['b'] },
+      };
+      expect(() =>
+        traverseWorkspaceRelations(['a', 'c'], workspaces),
+      ).toThrow();
+    });
+
+    it('calculates correctly disjointed dependencies', () => {
+      const workspaces: Record<string, WorkspaceDependencyObject> = {
+        a: { workspaceDependencies: ['b', 'c'] },
+        b: { workspaceDependencies: ['c'] },
+        c: { workspaceDependencies: ['d', 'e'] },
+        d: { workspaceDependencies: ['e'] },
+        e: { workspaceDependencies: [] },
+        f: { workspaceDependencies: ['g'] },
+        g: { workspaceDependencies: ['h', 'i'] },
+        h: { workspaceDependencies: ['i'] },
+        i: { workspaceDependencies: [] },
+      };
+      expect(traverseWorkspaceRelations(['a', 'f'], workspaces)).toEqual(
+        new Map([
+          ['a', 0],
+          ['b', 1],
+          ['c', 2],
+          ['d', 3],
+          ['e', 4],
+          ['f', 0],
+          ['g', 1],
+          ['h', 2],
+          ['i', 3],
+        ]),
+      );
+    });
+
+    it('calculates correctly semi-disjointed dependencies', () => {
+      const workspaces: Record<string, WorkspaceDependencyObject> = {
+        a: { workspaceDependencies: ['b', 'c'] },
+        b: { workspaceDependencies: ['c'] },
+        c: { workspaceDependencies: ['d', 'e'] },
+        d: { workspaceDependencies: ['e'] },
+        e: { workspaceDependencies: [] },
+        f: { workspaceDependencies: ['d', 'g'] },
+        g: { workspaceDependencies: ['h', 'i'] },
+        h: { workspaceDependencies: ['e', 'i'] },
+        i: { workspaceDependencies: [] },
+      };
+      expect(traverseWorkspaceRelations(['a', 'f'], workspaces)).toEqual(
+        new Map([
+          ['a', 0],
+          ['b', 1],
+          ['c', 2],
+          ['d', 3],
+          ['e', 4],
+          ['f', 0],
+          ['g', 1],
+          ['h', 2],
+          ['i', 3],
+        ]),
+      );
     });
   });
 });

@@ -73,16 +73,30 @@ export function invertDependencyDirection(
 
 // This function traverses the graph to get an ordered set of dependencies (map reverseOrder => dependencyName)
 export function traverseWorkspaceRelations(
-  workspaceName: string,
+  workspaceNames: string[],
   workspaces: Record<string, WorkspaceDependencyObject>,
 ): OrderedDependencies {
   const workspaceN = Object.values(workspaces).length;
-  // Initialize the unvisited list with the immediate dependency array.
-  const unvisited: OrderedUnvisited[] = (
-    workspaces[workspaceName]?.workspaceDependencies ?? []
-  ).map((dep) => ({ name: dep, level: 1 }));
+  // Initialize the unvisited list with the immediate dependency arrays.
+  const unvisitedList = workspaceNames.reduce<string[]>(
+    (acc, workspaceName) => {
+      const immediate = workspaces[workspaceName]?.workspaceDependencies ?? [];
+      return [...acc, ...immediate];
+    },
+    [],
+  );
+  // Dedupe initial unvisited and start from order 1
+  const unvisited: OrderedUnvisited[] = Array.from(new Set(unvisitedList)).map(
+    (dep) => ({
+      name: dep,
+      level: 1,
+    }),
+  );
+
   // visited holds all the nodes that we've visited previously
-  const visited: OrderedDependencies = new Map();
+  const visited: OrderedDependencies = new Map(
+    workspaceNames.map((dep) => [dep, 0]),
+  );
   // cycleBreaker holds our DFS path and helps identifying cycles
   const cycleBreaker: Set<string> = new Set();
 

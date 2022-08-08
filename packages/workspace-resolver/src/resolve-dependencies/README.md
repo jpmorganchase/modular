@@ -98,7 +98,7 @@ computeDescendantSet(['a', 'b'], workspaces))
 
 ## traverseWorkspaceRelations
 
-Traverses a dependency graph from a single vertix and returns an map from
+Traverses a dependency graph from an array of vertices and returns an map from
 vertices to inverse build order. The order can be used to compute a set of build
 steps, where dependencies of the same order can be executed in parallel. This
 function will throw in case of cycles, with an exception describing the first
@@ -108,14 +108,14 @@ built and `b` needs `a` to be built, their respective order will grow to
 
 ```ts
 traverseWorkspaceRelations(
-  workspaceName: string,
+  workspaceNames: string[],
   workspaces: Record<string, WorkspaceDependencyObject>
 ): OrderedDependencies
 ```
 
 ### Parameters
 
-- `workspaceName`: the name of the starting vertix
+- `workspaceNames`: an array of start vertices
 - `workspaces`: a record of workspaces expressed as
   `{ "workspace_name": { workspaceDependencies?: [ 'another_workspace', ...] }, ... }`
 
@@ -145,11 +145,12 @@ graph TD;
 ```
 
 ```ts
-traverseWorkspaceRelations('a', workspaces);
+traverseWorkspaceRelations(['a'], workspaces);
 /*
 // To build a, first build d, then build d, then build c
 Map(
     [
+        ['a', 0],
         ['c', 1],
         ['b', 2],
         ['d', 3],
@@ -178,11 +179,12 @@ graph TD;
 ```
 
 ```ts
-traverseWorkspaceRelations('a', workspaces);
+traverseWorkspaceRelations(['a'], workspaces);
 /*
 // To build a, first build d, then c and b can be built parallely
 Map(
     [
+        ['a', 0],
         ['c', 1],
         ['b', 1],
         ['d', 2],
@@ -209,8 +211,107 @@ graph TD;
 ```
 
 ```ts
-traverseWorkspaceRelations('a', workspaces);
+traverseWorkspaceRelations(['a'], workspaces);
 /* Will throw */
+```
+
+### Multiple vertices with some descendants in common
+
+```ts
+workspaces: = {
+  a: { workspaceDependencies: ['b', 'c'] },
+  b: { workspaceDependencies: ['c'] },
+  c: { workspaceDependencies: ['d', 'e'] },
+  d: { workspaceDependencies: ['e'] },
+  e: { workspaceDependencies: [] },
+  f: { workspaceDependencies: ['d', 'g'] },
+  g: { workspaceDependencies: ['h', 'i'] },
+  h: { workspaceDependencies: ['e', 'i'] },
+  i: { workspaceDependencies: [] },
+};
+```
+
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->C;
+    C-->D;
+    C-->E;
+    D-->E;
+    F-->D;
+    F-->G;
+    G-->H;
+    G-->I;
+    H-->E;
+    H-->I;
+```
+
+```ts
+/*
+Map([
+  ['a', 0],
+  ['b', 1],
+  ['c', 2],
+  ['d', 3],
+  ['e', 4],
+  ['f', 0],
+  ['g', 1],
+  ['h', 2],
+  ['i', 3],
+]),
+*/
+```
+
+### Multiple vertices with no descendants in common
+
+```ts
+workspaces = {
+  a: { workspaceDependencies: ['b', 'c'] },
+  b: { workspaceDependencies: ['c'] },
+  c: { workspaceDependencies: ['d', 'e'] },
+  d: { workspaceDependencies: ['e'] },
+  e: { workspaceDependencies: [] },
+  f: { workspaceDependencies: ['g'] },
+  g: { workspaceDependencies: ['h', 'i'] },
+  h: { workspaceDependencies: ['i'] },
+  i: { workspaceDependencies: [] },
+};
+```
+
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->C;
+    C-->D;
+    C-->E;
+    D-->E;
+    F-->G;
+    G-->H;
+    G-->I;
+    H-->I;
+```
+
+```ts
+traverseWorkspaceRelations(['a', 'f'], workspaces))
+
+/*
+Lots of parallelism here, since we can build descendants of a at the same time as descendants of f
+Map(
+  [
+    ['a', 0],
+    ['b', 1],
+    ['c', 2],
+    ['d', 3],
+    ['e', 4],
+    ['f', 0],
+    ['g', 1],
+    ['h', 2],
+    ['i', 3],
+  ]),
+);
+*/
 ```
 
 ## invertDependencyDirection
