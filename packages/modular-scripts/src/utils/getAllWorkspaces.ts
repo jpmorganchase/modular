@@ -17,7 +17,7 @@ export interface PackageManagerInfo {
   formatWorkspaceCommandOutput: (stdout: string) => WorkspaceMap;
 }
 
-export async function getWorkspaceInfo(
+export async function getWorkspacePackages(
   modularRoot: string,
 ): Promise<WorkspaceContent> {
   const [allPackages] = await resolveWorkspace(modularRoot);
@@ -28,7 +28,7 @@ export async function getWorkspaceInfo(
 function _getAllWorkspaces(): Promise<WorkspaceContent> {
   const modularRoot = getModularRoot();
 
-  return getWorkspaceInfo(modularRoot);
+  return getWorkspacePackages(modularRoot);
 }
 
 export const getAllWorkspaces = memoize(_getAllWorkspaces);
