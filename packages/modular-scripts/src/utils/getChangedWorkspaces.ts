@@ -1,30 +1,63 @@
 import path from 'path';
+import pkgUp from 'pkg-up';
 import { getDiffedFiles } from './gitActions';
 import { getAllWorkspaces } from './getAllWorkspaces';
+import getModularRoot from './getModularRoot';
+import { WorkspaceMap } from '@modular-scripts/modular-types';
 
-export async function getChangedWorkspaces(): Promise<Set<string>> {
+// Gets a list of changed files, then maps them to their workspace and returns a reduced subsection of WorkspaceMap
+export async function getChangedWorkspaces(): Promise<WorkspaceMap> {
   const diffedFiles = getDiffedFiles();
-  console.log(diffedFiles);
   const workspaces = await getAllWorkspaces();
-  const workspaceEntries = Object.entries(workspaces);
-  const changedWorkspaces: Set<string> = new Set();
+  const modularRoot = getModularRoot();
 
-  for (const changedFile of diffedFiles) {
-    const changedWorkspace = workspaceEntries.find(([_, { location }]) =>
-      isSameOrSubdir(location, changedFile),
-    );
-    if (!changedWorkspace) {
-      // If the file changed is not in a workspace, all workspaces are marked as "changed"
-      return new Set(Object.keys(workspaces));
-    }
-    changedWorkspaces.add(changedWorkspace[0]);
-  }
+  // Resolve all the nearest package.json to each of the changed files. The resulting list can contain duplicates and null holes
+  const packageManifetsPaths = await Promise.all(
+    diffedFiles.map((changedFile) => pkgUp({ cwd: path.dirname(changedFile) })),
+  );
+
+  return matchWorkspaces(packageManifetsPaths, modularRoot, workspaces);
+}
+
+// Match paths to manifest.json to a reduced WorkspaceMap. This function works completely in memory and is test-friendly
+export function matchWorkspaces(
+  packagePaths: (string | null)[],
+  root: string,
+  workspaces: WorkspaceMap,
+): WorkspaceMap {
+  const workspaceEntries = Object.entries(workspaces);
+
+  // Map a list of manifest files to a list of (possibly duplicated) root directories relative to the modular root for comparison with the workspace info
+  const packageDirs = packagePaths.map(
+    (packagePath) =>
+      packagePath && path.relative(root, path.dirname(packagePath)),
+  );
+
+  // Match each resolved directory to our resolved workspaces, accumulating every match to a new (reduced) WorkspaceMap
+  const changedWorkspaces = packageDirs.reduce<WorkspaceMap>(
+    (acc, packageDir) => {
+      const foundEntry = workspaceEntries.find(([_, { location }]) =>
+        pathEquality(location, packageDir),
+      );
+      if (foundEntry) {
+        const [foundWorkspaceName, foundWorkspace] = foundEntry;
+        acc[foundWorkspaceName] = foundWorkspace;
+      }
+      return acc;
+    },
+    {},
+  );
+
   return changedWorkspaces;
 }
 
-function isSameOrSubdir(parent: string, dir: string): boolean {
-  const relative = path.relative(parent, dir);
-  return (
-    !relative || (!relative.startsWith('..') && !path.isAbsolute(relative))
-  );
+// Path equality !== striung equality
+function pathEquality(path1: string | null, path2: string | null) {
+  if (!path1 || !path2) return false;
+  path1 = path.resolve(path1);
+  path2 = path.resolve(path2);
+  // Win32 is case insensitive
+  return process.platform === 'win32'
+    ? path1.toLowerCase() === path2.toLowerCase()
+    : path1 === path2;
 }
