@@ -19,7 +19,7 @@ export interface PackageManagerInfo {
 
 export async function getWorkspacePackages(
   modularRoot: string,
-  target?: string,
+  target: string = modularRoot,
 ): Promise<WorkspaceContent> {
   const [allPackages] = await resolveWorkspace(modularRoot, target);
 

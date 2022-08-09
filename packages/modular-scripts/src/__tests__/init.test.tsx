@@ -51,9 +51,12 @@ describe('Creating a new modular folder', () => {
 
     // 1 item in the workspace output (the root package)
     expect(workspace[0].size).toEqual(1);
-    const item = Array.from(workspace[0])[0][1];
-    expect(item.version).toEqual('1.0.0');
-    expect(item.workspace).toEqual(true);
+    const workspaceMap = workspace[0];
+    expect(workspaceMap).toEqual(expect.any(Map));
+    const [, workspaceContent] = Array.from(workspaceMap)[0];
+    expect(workspaceContent).toEqual(
+      expect.objectContaining({ version: '1.0.0', workspace: true }),
+    );
 
     // Empty dependency analysis
     expect(workspace[1]).toEqual({});

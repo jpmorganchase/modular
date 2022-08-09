@@ -19,7 +19,10 @@ interface Verification {
   fix?(): Promise<void>;
 }
 
-export async function check({ fix = false, target }: Check): Promise<void> {
+export async function check({
+  fix = false,
+  target = process.cwd(),
+}: Check): Promise<void> {
   let failed = false;
 
   for (const checkName of CHECKS) {
@@ -32,7 +35,7 @@ export async function check({ fix = false, target }: Check): Promise<void> {
     }
 
     // if the check returns false then we fail and show the error.
-    if (await checkCls.check(target || process.cwd())) {
+    if (await checkCls.check(target)) {
       continue;
     } else {
       failed = true;
