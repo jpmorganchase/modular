@@ -5,7 +5,7 @@ import { getAllWorkspaces } from './getAllWorkspaces';
 import getModularRoot from './getModularRoot';
 import { WorkspaceMap } from '@modular-scripts/modular-types';
 
-// Gets a list of changed files, then maps them to their workspace and returns a reduced subsection of WorkspaceMap
+// Gets a list of changed files, then maps them to their workspace and returns a subset of WorkspaceMap
 export async function getChangedWorkspaces(
   targetBranch: string,
 ): Promise<WorkspaceMap> {
@@ -21,36 +21,31 @@ export async function getChangedWorkspaces(
   return matchWorkspaces(packageManifestPaths, modularRoot, workspaces);
 }
 
-// Match paths to manifest.json to a reduced WorkspaceMap. This function works completely in memory and is test-friendly
+// Match workspace manifest paths to a subset of WorkspaceMap. This function works completely in memory and is test-friendly
 export function matchWorkspaces(
   packagePaths: (string | null)[],
   root: string,
   workspaces: WorkspaceMap,
 ): WorkspaceMap {
   const workspaceEntries = Object.entries(workspaces);
+  const result: WorkspaceMap = {};
 
-  // Map a list of manifest files to a list of (possibly duplicated) root directories relative to the modular root for comparison with the workspace info
-  const packageDirs = packagePaths.map(
-    (packagePath) =>
-      packagePath && path.relative(root, path.dirname(packagePath)),
-  );
-
-  // Match each resolved directory to our resolved workspaces, accumulating every match to a new (reduced) WorkspaceMap
-  const changedWorkspaces = packageDirs.reduce<WorkspaceMap>(
-    (acc, packageDir) => {
-      const foundEntry = workspaceEntries.find(([_, { location }]) =>
-        pathEquality(location, packageDir),
-      );
-      if (foundEntry) {
-        const [foundWorkspaceName, foundWorkspace] = foundEntry;
-        acc[foundWorkspaceName] = foundWorkspace;
-      }
-      return acc;
-    },
-    {},
-  );
-
-  return changedWorkspaces;
+  for (const packagePath of packagePaths) {
+    // Ignore holes
+    if (!packagePath) continue;
+    // Get the package directory from the package.json path and make it relative to the root, for comparison with the original WorkspaceMap
+    const packageDir = path.relative(root, path.dirname(packagePath));
+    // Match the package directory to its entry WorkspaceMap, using pathEquality
+    const foundEntry = workspaceEntries.find(([_, { location }]) =>
+      pathEquality(location, packageDir),
+    );
+    // If found, insert the entry into the WorkspaceMap that we are building
+    if (foundEntry) {
+      const [foundWorkspaceName, foundWorkspace] = foundEntry;
+      result[foundWorkspaceName] = foundWorkspace;
+    }
+  }
+  return result;
 }
 
 // Path equality !== string equality
