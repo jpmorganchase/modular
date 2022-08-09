@@ -218,7 +218,7 @@ program
   .option('--verbose', 'Run yarn commands with --verbose set')
   .action(async ({ fix }: { fix: boolean }) => {
     const { check } = await import('./check');
-    await check(fix);
+    await check({ fix });
     logger.log(chalk.green('Success!'));
   });
 

@@ -10,7 +10,7 @@ function actionPreflightCheck(fn: ModularAction): ModularAction {
     getModularRoot();
     if (process.env.SKIP_PREFLIGHT_CHECK !== 'true') {
       const { check } = await import('../check');
-      await check();
+      await check({ fix: false });
     } else {
       logger.warn(
         'Preflight check is skipped. Modular repository may be invalid.',

@@ -183,6 +183,7 @@ describe('Porting a react app into a modular project', () => {
       );
     });
   });
+
   describe('when modular root has the targeted app dependency', () => {
     it('should not add it to the new app package.json', async () => {
       fs.writeJsonSync(
@@ -216,6 +217,7 @@ describe('Porting a react app into a modular project', () => {
       );
     });
   });
+
   describe('when modular root has the targeted app dev dependency', () => {
     it('should not add it to the new app package.json', async () => {
       fs.writeJsonSync(

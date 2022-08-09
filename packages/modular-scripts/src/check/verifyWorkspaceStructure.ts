@@ -4,9 +4,9 @@ import getModularRoot from '../utils/getModularRoot';
 import getWorkspaceInfo from '../utils/getWorkspaceInfo';
 import * as logger from '../utils/logger';
 
-export async function check(): Promise<boolean> {
+export async function check(target?: string): Promise<boolean> {
   let valid = true;
-  const workspace = await getWorkspaceInfo();
+  const workspace = await getWorkspaceInfo(target);
   const modularRoot = getModularRoot();
 
   /**

@@ -3,7 +3,11 @@
 This package encapsulates two functions:
 
 1. `resolveWorkspace` - Searches the filesystem (at a given modular root) for
-   workspace packages, returning a flat map of all packages found
+   workspace packages, returning a flat map of all packages found. An optional
+   2nd argument of `target` can be passed, which sets the working directory that
+   workspaces should be resolved from. This can be useful when the modular root
+   needs to be different to the current working directory, such as when modular
+   `convert` or `port` happens.
 2. `analyzeWorkspaceDependencies` - Analyzes `package.json` files for a set of
    workspace packages, returning a flat object for each package, listing out
    workspace inter-dependencies plus and mismatched dependencies. The
