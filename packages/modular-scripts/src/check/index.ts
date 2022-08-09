@@ -10,17 +10,22 @@ const CHECKS = [
 ];
 
 interface Check {
-  check(target?: string): Promise<boolean>;
-  fix?(this: void): Promise<void>;
+  fix: boolean;
+  target?: string;
 }
 
-export async function check(fix = false, target?: string): Promise<void> {
+interface Verification {
+  check(target?: string): Promise<boolean>;
+  fix?(): Promise<void>;
+}
+
+export async function check({ fix = false, target }: Check): Promise<void> {
   let failed = false;
 
   for (const checkName of CHECKS) {
     logger.debug('');
     logger.debug(`===== Running ${checkName} =====`);
-    const checkCls = (await import(`./${checkName}`)) as Check;
+    const checkCls = (await import(`./${checkName}`)) as Verification;
 
     if (fix && checkCls.fix) {
       await checkCls.fix();

@@ -309,7 +309,7 @@ export async function port(relativePath: string): Promise<void> {
 
     logger.log('Validating your modular project...');
 
-    await check(false, modularRoot);
+    await check({ fix: false, target: modularRoot });
 
     logger.log('Successfully ported your app over!');
 
