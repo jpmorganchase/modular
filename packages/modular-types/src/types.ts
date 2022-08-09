@@ -21,9 +21,12 @@ export type ModularWorkspacePackage = {
   rawPackageJson: ModularPackageJson;
 };
 
-export interface WorkspaceObj {
-  location: string;
+export interface WorkspaceDependencyObject {
   workspaceDependencies: string[];
+}
+
+export interface WorkspaceObj extends WorkspaceDependencyObject {
+  location: string;
   mismatchedWorkspaceDependencies: string[];
 }
 
