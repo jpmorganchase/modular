@@ -21,10 +21,7 @@ export async function getWorkspacePackages(
   modularRoot: string,
   target?: string,
 ): Promise<WorkspaceContent> {
-  const [allPackages] = await resolveWorkspace({
-    root: modularRoot,
-    workingDir: target,
-  });
+  const [allPackages] = await resolveWorkspace(modularRoot, target);
 
   return [allPackages, analyzeWorkspaceDependencies(allPackages)];
 }
