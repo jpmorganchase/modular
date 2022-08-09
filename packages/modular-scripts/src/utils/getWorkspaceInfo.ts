@@ -1,13 +1,7 @@
-import * as fs from 'fs-extra';
-import * as path from 'path';
-
-import type {
-  ModularType,
-  ModularPackageJson,
-} from '@modular-scripts/modular-types';
 import { getAllWorkspaces } from './getAllWorkspaces';
-import getModularRoot from './getModularRoot';
 import memoize from './memoize';
+
+import type { ModularType } from '@modular-scripts/modular-types';
 
 export interface WorkSpaceRecord {
   location: string;
@@ -20,29 +14,35 @@ export interface WorkSpaceRecord {
 
 export type WorkspaceInfo = Record<string, WorkSpaceRecord>;
 
-export async function getWorkspaceInfo(): Promise<WorkspaceInfo> {
-  const workspaces = await getAllWorkspaces();
-  const workspaceRoot = getModularRoot();
+export async function getWorkspaceInfo(
+  target?: string,
+): Promise<WorkspaceInfo> {
+  const [workspaces, workspacesMap] = await getAllWorkspaces(target);
+  const workspaceInfo: WorkspaceInfo = {};
 
-  const res: WorkspaceInfo = {};
-  for (const [packageName, packageInfo] of Object.entries(workspaces)) {
-    const packageJson = (await fs.readJSON(
-      path.join(workspaceRoot, packageInfo.location, 'package.json'),
-    )) as ModularPackageJson;
+  return Object.entries(workspacesMap).reduce(
+    (byPath, [packageName, packageInfo]) => {
+      const workspace = workspaces.get(packageName);
+      // @modular-scripts/workspace-resolver should guarantee a 1:1 relationship of items in workspaces and workspacesMap
+      if (!workspace) {
+        throw new Error(
+          'Modular was not able to understand your workspaces configuration',
+        );
+      }
+      const { rawPackageJson } = workspace;
 
-    const type = packageJson.modular?.type || ('package' as ModularType);
+      const type = rawPackageJson.modular?.type || ('package' as ModularType);
+      workspaceInfo[packageName] = {
+        ...packageInfo,
+        type,
+        public: !rawPackageJson.private,
+        version: rawPackageJson.version,
+      };
 
-    const modularPackageInfo = {
-      ...packageInfo,
-      type,
-      public: !packageJson.private,
-      version: packageJson.version,
-    };
-
-    res[packageName] = modularPackageInfo;
-  }
-
-  return res;
+      return byPath;
+    },
+    workspaceInfo,
+  );
 }
 
 export default memoize(getWorkspaceInfo);

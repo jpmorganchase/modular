@@ -1,14 +1,18 @@
-import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
-import type { JSONSchemaForTheTypeScriptCompilerSConfigurationFile as TSConfig } from '@schemastore/tsconfig';
 import * as path from 'path';
 import * as ts from 'typescript';
 import * as fse from 'fs-extra';
+import memoize from '../utils/memoize';
 
 import getModularRoot from '../utils/getModularRoot';
 import { getAllWorkspaces } from '../utils/getAllWorkspaces';
 import { reportTSDiagnostics } from './reportTSDiagnostics';
 
-import memoize from '../utils/memoize';
+import type { JSONSchemaForTheTypeScriptCompilerSConfigurationFile as TSConfig } from '@schemastore/tsconfig';
+import type { ModularPackageJson } from '@modular-scripts/modular-types';
+
+interface PackageByPath {
+  [key: string]: ModularPackageJson;
+}
 
 const typescriptConfigFilename = 'tsconfig.json';
 
@@ -21,32 +25,26 @@ async function getPackageMetadata() {
 
   // dependencies defined at the root
   const rootPackageJsonDependencies =
-    (fse.readJSONSync(path.join(modularRoot, 'package.json')) as PackageJson)
-      .dependencies || {};
-
-  // a map of all package.json contents, indexed by package name
-  const packageJsons: { [key: string]: PackageJson } = {};
-  // a map of all package.json contents, indexed by directory name
-
-  const packageJsonsByPackagePath: {
-    [key: string]: PackageJson;
-  } = {};
-
-  // an array of all the package names
-  const packageNames: string[] = [];
+    (
+      fse.readJSONSync(
+        path.join(modularRoot, 'package.json'),
+      ) as ModularPackageJson
+    ).dependencies || {};
 
   // let's populate the above three
-  const workspace = await getAllWorkspaces();
-  for (const [name, { location }] of Object.entries(workspace)) {
-    const pathToPackageJson = path.join(modularRoot, location, 'package.json');
-    const packageJson = fse.readJsonSync(pathToPackageJson) as PackageJson;
+  const [workspaces] = await getAllWorkspaces();
 
-    packageJsons[name] = packageJson;
-    packageJsonsByPackagePath[location] = packageJson;
-    packageNames.push(name);
-  }
+  // an array of all the package names
+  const packageNames = Array.from(workspaces.keys());
 
-  // TODO: the above should probably be lazily evaluated.
+  // a map of all package.json contents, indexed by package name
+  const packageJsons: PackageByPath = {};
+  const packageJsonsByPackagePath: PackageByPath = {};
+
+  Array.from(workspaces).forEach(([packageName, workspace]) => {
+    packageJsons[packageName] = workspace.rawPackageJson;
+    packageJsonsByPackagePath[workspace.location] = workspace.rawPackageJson;
+  });
 
   // TODO: do a quick check to make sure workspaces aren't
   // explicitly included in dependencies

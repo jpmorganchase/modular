@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as tmp from 'tmp';
 import * as fs from 'fs-extra';
 import { promisify } from 'util';
-import { getWorkspaceInfo } from '../utils/getAllWorkspaces';
+import { getWorkspacePackages } from '../utils/getAllWorkspaces';
 
 import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
@@ -46,8 +46,19 @@ describe('Creating a new modular folder', () => {
     expect(String(lockfile)).toMatchSnapshot();
   });
 
-  it('should not have any workspace info', async () => {
-    const workspace = await getWorkspaceInfo(folder, 'yarn');
-    expect(workspace).toEqual({});
+  it('should contain 1 workspace (the root) and an empty dependency analysis', async () => {
+    const workspace = await getWorkspacePackages(folder, folder);
+
+    // 1 item in the workspace output (the root package)
+    expect(workspace[0].size).toEqual(1);
+    const workspaceMap = workspace[0];
+    expect(workspaceMap).toEqual(expect.any(Map));
+    const [, workspaceContent] = Array.from(workspaceMap)[0];
+    expect(workspaceContent).toEqual(
+      expect.objectContaining({ version: '1.0.0', workspace: true }),
+    );
+
+    // Empty dependency analysis
+    expect(workspace[1]).toEqual({});
   });
 });
