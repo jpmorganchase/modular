@@ -52,17 +52,28 @@ function readPackageJson(
   return readJson(jsonPath) as Promise<ModularPackageJson>;
 }
 
+interface ResolveWorkspaceArgs {
+  root: string;
+  workingDir?: string;
+  parent?: ModularWorkspacePackage;
+  collector?: Map<string, ModularWorkspacePackage>;
+}
+
 export async function resolveWorkspace(
-  root: string,
-  workingDir: string | null = null,
-  parent: ModularWorkspacePackage | null = null,
-  collector = new Map<string, ModularWorkspacePackage>(),
+  args: ResolveWorkspaceArgs,
 ): Promise<
   [Map<string, ModularWorkspacePackage>, ModularWorkspacePackage | null]
 > {
+  const {
+    root,
+    workingDir,
+    parent,
+    collector = new Map<string, ModularWorkspacePackage>(),
+  } = args;
   const workingDirToUse = workingDir ?? process.cwd();
   const isRoot = workingDirToUse === root;
   const pkgPath = packageJsonPath(root);
+
   const json = await readPackageJson(isRoot, workingDirToUse, pkgPath);
   const isModularRoot = json.modular?.type === 'root';
 
@@ -130,12 +141,12 @@ export async function resolveWorkspace(
   }
 
   for (const link of resolveWorkspacesDefinition(root, json.workspaces)) {
-    const [, child] = await resolveWorkspace(
-      link,
-      workingDirToUse,
-      pkg,
+    const [, child] = await resolveWorkspace({
+      root: link,
+      workingDir: workingDirToUse,
+      parent: pkg,
       collector,
-    );
+    });
     child && pkg.children.push(child);
   }
 

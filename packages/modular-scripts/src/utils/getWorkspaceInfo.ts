@@ -14,8 +14,10 @@ export interface WorkSpaceRecord {
 
 export type WorkspaceInfo = Record<string, WorkSpaceRecord>;
 
-export async function getWorkspaceInfo(): Promise<WorkspaceInfo> {
-  const [workspaces, workspacesMap] = await getAllWorkspaces();
+export async function getWorkspaceInfo(
+  target?: string,
+): Promise<WorkspaceInfo> {
+  const [workspaces, workspacesMap] = await getAllWorkspaces(target);
   const workspaceInfo: WorkspaceInfo = {};
 
   return Object.entries(workspacesMap).reduce(

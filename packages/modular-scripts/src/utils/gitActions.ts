@@ -15,7 +15,7 @@ export function cleanGit(cwd: string): boolean {
 }
 
 export function stashChanges(): void {
-  execa.sync('git', ['stash', '-u']);
+  // execa.sync('git', ['stash', '-u']);
   throw new Error('Failed to perform action cleanly. Stashing git changes...');
 }
 

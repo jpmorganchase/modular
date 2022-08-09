@@ -10,11 +10,11 @@ const CHECKS = [
 ];
 
 interface Check {
-  check(this: void): Promise<boolean>;
+  check(target?: string): Promise<boolean>;
   fix?(this: void): Promise<void>;
 }
 
-export async function check(fix = false): Promise<void> {
+export async function check(fix = false, target?: string): Promise<void> {
   let failed = false;
 
   for (const checkName of CHECKS) {
@@ -27,7 +27,7 @@ export async function check(fix = false): Promise<void> {
     }
 
     // if the check returns false then we fail and show the error.
-    if (await checkCls.check()) {
+    if (await checkCls.check(target || process.cwd())) {
       continue;
     } else {
       failed = true;

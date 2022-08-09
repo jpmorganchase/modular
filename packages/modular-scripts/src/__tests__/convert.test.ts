@@ -37,7 +37,7 @@ describe('Converting a react app to modular app', () => {
   beforeAll(async () => {
     tmpFolder = tmp.dirSync({ unsafeCleanup: true });
     tmpFolderPath = path.join(tmpFolder.name, tmpProjectName);
-    await fs.mkdir(tmpFolderPath);
+    await fs.mkdirp(tmpFolderPath);
     mockedModularRoot.mockImplementation(() => tmpFolderPath);
     const starterFolder = ['src', 'public'];
     starterFolder.forEach((dir) => {
@@ -154,6 +154,7 @@ describe('Converting a react app to modular app', () => {
       ),
     ).toBe(false);
   });
+
   it('should remove react-scripts from the dependencies', () => {
     const updatedPackageJson = fs.readJsonSync(
       path.join(tmpFolderPath, 'package.json'),

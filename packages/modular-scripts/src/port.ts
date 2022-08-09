@@ -199,7 +199,7 @@ export async function port(relativePath: string): Promise<void> {
       devDependencies: targetDevDeps = {},
     } = targetedAppPackageJson;
 
-    const workspaces = await getWorkspaceInfo();
+    const workspaces = await getWorkspaceInfo(modularRoot);
 
     const publicPackages = Object.keys(workspaces).filter(
       (name) => workspaces[name].public,
@@ -309,7 +309,7 @@ export async function port(relativePath: string): Promise<void> {
 
     logger.log('Validating your modular project...');
 
-    await check();
+    await check(false, modularRoot);
 
     logger.log('Successfully ported your app over!');
 

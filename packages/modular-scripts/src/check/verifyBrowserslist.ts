@@ -11,14 +11,14 @@ import { defaultBrowsers } from '../utils/checkBrowsers';
 
 import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
-export async function check(): Promise<boolean> {
+export async function check(target?: string): Promise<boolean> {
   let valid = true;
 
   browserslist.clearCaches();
 
   const modularRoot = getModularRoot();
 
-  const workspace = await getWorkspaceInfo();
+  const workspace = await getWorkspaceInfo(target);
 
   for (const [packageName, worktree] of Object.entries(workspace)) {
     if (worktree.type === 'app') {

@@ -19,16 +19,20 @@ export interface PackageManagerInfo {
 
 export async function getWorkspacePackages(
   modularRoot: string,
+  target?: string,
 ): Promise<WorkspaceContent> {
-  const [allPackages] = await resolveWorkspace(modularRoot);
+  const [allPackages] = await resolveWorkspace({
+    root: modularRoot,
+    workingDir: target,
+  });
 
   return [allPackages, analyzeWorkspaceDependencies(allPackages)];
 }
 
-function _getAllWorkspaces(): Promise<WorkspaceContent> {
+function _getAllWorkspaces(target?: string): Promise<WorkspaceContent> {
   const modularRoot = getModularRoot();
 
-  return getWorkspacePackages(modularRoot);
+  return getWorkspacePackages(modularRoot, target);
 }
 
 export const getAllWorkspaces = memoize(_getAllWorkspaces);

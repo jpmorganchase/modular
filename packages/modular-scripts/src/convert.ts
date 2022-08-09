@@ -164,7 +164,7 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
     });
 
     logger.log('Validating your modular project...');
-    await check();
+    await check(false, cwd);
   } catch (err) {
     logger.error(err as string);
     stashChanges();
