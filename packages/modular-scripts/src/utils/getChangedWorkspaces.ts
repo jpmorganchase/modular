@@ -11,12 +11,12 @@ export async function getChangedWorkspaces(): Promise<WorkspaceMap> {
   const workspaces = await getAllWorkspaces();
   const modularRoot = getModularRoot();
 
-  // Resolve all the nearest package.json to each of the changed files. The resulting list can contain duplicates and null holes
-  const packageManifetsPaths = await Promise.all(
+  // Resolve each of the changed files to their nearest package.json. The resulting list can contain duplicates and null holes
+  const packageManifestPaths = await Promise.all(
     diffedFiles.map((changedFile) => pkgUp({ cwd: path.dirname(changedFile) })),
   );
 
-  return matchWorkspaces(packageManifetsPaths, modularRoot, workspaces);
+  return matchWorkspaces(packageManifestPaths, modularRoot, workspaces);
 }
 
 // Match paths to manifest.json to a reduced WorkspaceMap. This function works completely in memory and is test-friendly
@@ -51,7 +51,7 @@ export function matchWorkspaces(
   return changedWorkspaces;
 }
 
-// Path equality !== striung equality
+// Path equality !== string equality
 function pathEquality(path1: string | null, path2: string | null) {
   if (!path1 || !path2) return false;
   path1 = path.resolve(path1);
