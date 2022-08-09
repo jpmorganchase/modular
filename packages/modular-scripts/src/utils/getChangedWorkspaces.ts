@@ -3,14 +3,14 @@ import pkgUp from 'pkg-up';
 import { getDiffedFiles } from './gitActions';
 import { getAllWorkspaces } from './getAllWorkspaces';
 import getModularRoot from './getModularRoot';
-import { WorkspaceMap } from '@modular-scripts/modular-types';
+import type { WorkspaceContent } from './getAllWorkspaces';
 
-// Gets a list of changed files, then maps them to their workspace and returns a subset of WorkspaceMap
+// Gets a list of changed files, then maps them to their workspace and returns a subset of WorkspaceContent
 export async function getChangedWorkspaces(
   targetBranch: string,
-): Promise<WorkspaceMap> {
+): Promise<WorkspaceContent> {
   const diffedFiles = getDiffedFiles(targetBranch);
-  const workspaces = await getAllWorkspaces();
+  const workspaceContent = await getAllWorkspaces();
   const modularRoot = getModularRoot();
 
   // Resolve each of the changed files to their nearest package.json. The resulting list can contain duplicates and null holes
@@ -18,31 +18,37 @@ export async function getChangedWorkspaces(
     diffedFiles.map((changedFile) => pkgUp({ cwd: path.dirname(changedFile) })),
   );
 
-  return matchWorkspaces(packageManifestPaths, modularRoot, workspaces);
+  return matchWorkspaces(packageManifestPaths, modularRoot, workspaceContent);
 }
 
-// Match workspace manifest paths to a subset of WorkspaceMap. This function works completely in memory and is test-friendly
+// Match workspace manifest paths to a subset of WorkspaceContent. This function works completely in memory and is test-friendly
 export function matchWorkspaces(
   packagePaths: (string | null)[],
   root: string,
-  workspaces: WorkspaceMap,
-): WorkspaceMap {
+  workspaceContent: WorkspaceContent,
+): WorkspaceContent {
+  const [packages, workspaces] = workspaceContent;
   const workspaceEntries = Object.entries(workspaces);
-  const result: WorkspaceMap = {};
+  const result: WorkspaceContent = [new Map([]), {}];
 
   for (const packagePath of packagePaths) {
+    const [resultPackages, resultWorkspaces] = result;
     // Ignore holes
     if (!packagePath) continue;
-    // Get the package directory from the package.json path and make it relative to the root, for comparison with the original WorkspaceMap
+    // Get the package directory from the package.json path and make it relative to the root, for comparison with the original WorkspaceContent
     const packageDir = path.relative(root, path.dirname(packagePath));
-    // Match the package directory to its entry WorkspaceMap, using pathEquality
+    // Match the package directory to its entry WorkspaceContent, using pathEquality
     const foundEntry = workspaceEntries.find(([_, { location }]) =>
       pathEquality(location, packageDir),
     );
-    // If found, insert the entry into the WorkspaceMap that we are building
+    // If found, insert the entries into the WorkspaceContent that we are building
     if (foundEntry) {
       const [foundWorkspaceName, foundWorkspace] = foundEntry;
-      result[foundWorkspaceName] = foundWorkspace;
+      resultWorkspaces[foundWorkspaceName] = foundWorkspace;
+      const foundPackage = packages.get(foundWorkspaceName);
+      if (foundPackage) {
+        resultPackages.set(foundWorkspaceName, foundPackage);
+      }
     }
   }
   return result;
