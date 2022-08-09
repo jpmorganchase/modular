@@ -50,7 +50,7 @@ export function matchWorkspaces(
 
 // Path equality !== string equality
 function pathEquality(path1: string | null, path2: string | null) {
-  if (!path1 || !path2) return false;
+  if (path1 === null || path2 === null) return false;
   path1 = path.resolve(path1);
   path2 = path.resolve(path2);
   // Win32 is case insensitive
