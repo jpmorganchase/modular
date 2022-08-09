@@ -6,8 +6,10 @@ import getModularRoot from './getModularRoot';
 import { WorkspaceMap } from '@modular-scripts/modular-types';
 
 // Gets a list of changed files, then maps them to their workspace and returns a reduced subsection of WorkspaceMap
-export async function getChangedWorkspaces(): Promise<WorkspaceMap> {
-  const diffedFiles = getDiffedFiles();
+export async function getChangedWorkspaces(
+  targetBranch: string,
+): Promise<WorkspaceMap> {
+  const diffedFiles = getDiffedFiles(targetBranch);
   const workspaces = await getAllWorkspaces();
   const modularRoot = getModularRoot();
 
