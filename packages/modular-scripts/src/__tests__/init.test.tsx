@@ -46,8 +46,16 @@ describe('Creating a new modular folder', () => {
     expect(String(lockfile)).toMatchSnapshot();
   });
 
-  it('should not have any workspace info', async () => {
-    const workspace = await getWorkspacePackages(folder);
-    expect(workspace).toEqual({});
+  it('should contain 1 workspace (the root) and an empty dependency analysis', async () => {
+    const workspace = await getWorkspacePackages(folder, folder);
+
+    // 1 item in the workspace output (the root package)
+    expect(workspace[0].size).toEqual(1);
+    const item = Array.from(workspace[0])[0][1];
+    expect(item.version).toEqual('1.0.0');
+    expect(item.workspace).toEqual(true);
+
+    // Empty dependency analysis
+    expect(workspace[1]).toEqual({});
   });
 });
