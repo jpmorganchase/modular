@@ -2,5 +2,8 @@
   "name": "@modular-scripts/modular-types",
   "version": "0.0.1",
   "license": "Apache-2.0",
-  "types": "src/types.ts"
+  "types": "src/types.ts",
+  "publishConfig": {
+    "access": "public"
+  }
 }
