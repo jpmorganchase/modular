@@ -1,16 +1,15 @@
 import path from 'path';
 import pkgUp from 'pkg-up';
 import { getDiffedFiles } from './gitActions';
-import { getAllWorkspaces } from './getAllWorkspaces';
 import getModularRoot from './getModularRoot';
 import type { WorkspaceContent } from './getAllWorkspaces';
 
 // Gets a list of changed files, then maps them to their workspace and returns a subset of WorkspaceContent
 export async function getChangedWorkspaces(
+  workspaceContent: WorkspaceContent,
   targetBranch: string,
 ): Promise<WorkspaceContent> {
   const diffedFiles = getDiffedFiles(targetBranch);
-  const workspaceContent = await getAllWorkspaces();
   const modularRoot = getModularRoot();
 
   // Resolve each of the changed files to their nearest package.json. The resulting list can contain duplicates and null holes
