@@ -1,5 +1,72 @@
 # modular-scripts
 
+## 3.2.0
+
+### Minor Changes
+
+- [#2015](https://github.com/jpmorganchase/modular/pull/2015)
+  [`c9af2ad`](https://github.com/jpmorganchase/modular/commit/c9af2ad64ba9b8110464b381f7d170203ecf1eac)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Add
+  function to detect changed workspaces
+
+* [#2001](https://github.com/jpmorganchase/modular/pull/2001)
+  [`12d9ea0`](https://github.com/jpmorganchase/modular/commit/12d9ea09a754af478470c8cdb1dc7114f53fd5c3)
+  Thanks [@sgb-io](https://github.com/sgb-io)! - Integrate new yarn-agnostic
+  workspace resolver
+
+### Patch Changes
+
+- [#1928](https://github.com/jpmorganchase/modular/pull/1928)
+  [`0a3bcfb`](https://github.com/jpmorganchase/modular/commit/0a3bcfb7640119a7fa5108e514d2f6855f8d5ad5)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Add
+  template docs and correct command help description for the --template option
+
+* [#1926](https://github.com/jpmorganchase/modular/pull/1926)
+  [`3e95003`](https://github.com/jpmorganchase/modular/commit/3e950034d47c8cacdf07ff0014feac373a83947d)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  postcss-loader from 7.0.0 to 7.0.1
+
+- [#1896](https://github.com/jpmorganchase/modular/pull/1896)
+  [`bedef0a`](https://github.com/jpmorganchase/modular/commit/bedef0a04f83eb2de58dcb35ae04b4c44b38aa14)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump npm-packlist
+  from 5.1.0 to 5.1.1
+
+* [#1889](https://github.com/jpmorganchase/modular/pull/1889)
+  [`9ecf69a`](https://github.com/jpmorganchase/modular/commit/9ecf69a121568879dbcc292c0ad48471be57b662)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump filesize from
+  9.0.1 to 9.0.11
+
+- [#1998](https://github.com/jpmorganchase/modular/pull/1998)
+  [`603b149`](https://github.com/jpmorganchase/modular/commit/603b14954959cf717e1fc2935862c8fd9baacee0)
+  Thanks [@sgb-io](https://github.com/sgb-io)! - Bump esbuild from 0.14.42 to
+  0.14.51
+
+* [#1897](https://github.com/jpmorganchase/modular/pull/1897)
+  [`23d5e33`](https://github.com/jpmorganchase/modular/commit/23d5e332c0955216b6741b54202e655820828a33)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  webpack-dev-server from 4.9.2 to 4.9.3
+
+- [#1978](https://github.com/jpmorganchase/modular/pull/1978)
+  [`b2c9f74`](https://github.com/jpmorganchase/modular/commit/b2c9f74a0542a726d202a68c06bc1bae5c1df541)
+  Thanks [@sgb-io](https://github.com/sgb-io)! - Introduce
+  @modular-scripts/modular-types and @modular-scripts/workspace-resolver
+
+* [#1879](https://github.com/jpmorganchase/modular/pull/1879)
+  [`f8bfdc6`](https://github.com/jpmorganchase/modular/commit/f8bfdc600c2b90bdbc9791febc85840515aca562)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump sass-loader
+  from 13.0.0 to 13.0.2
+
+- [#1998](https://github.com/jpmorganchase/modular/pull/1998)
+  [`603b149`](https://github.com/jpmorganchase/modular/commit/603b14954959cf717e1fc2935862c8fd9baacee0)
+  Thanks [@sgb-io](https://github.com/sgb-io)! - Read `compilerOptions.jsx` when
+  type checking to support the new React JSX transform.
+
+- Updated dependencies
+  [[`051ecf7`](https://github.com/jpmorganchase/modular/commit/051ecf7d257f883268abe73fd082d25615888906),
+  [`12d9ea0`](https://github.com/jpmorganchase/modular/commit/12d9ea09a754af478470c8cdb1dc7114f53fd5c3),
+  [`b2c9f74`](https://github.com/jpmorganchase/modular/commit/b2c9f74a0542a726d202a68c06bc1bae5c1df541)]:
+  - @modular-scripts/workspace-resolver@1.0.0
+
 ## 3.1.5
 
 ### Patch Changes
