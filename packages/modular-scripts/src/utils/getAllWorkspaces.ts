@@ -11,7 +11,10 @@ import type {
   ModularWorkspacePackage,
 } from '@modular-scripts/modular-types';
 
-type WorkspaceContent = [Map<string, ModularWorkspacePackage>, WorkspaceMap];
+export type WorkspaceContent = [
+  Map<string, ModularWorkspacePackage>,
+  WorkspaceMap,
+];
 export interface PackageManagerInfo {
   getWorkspaceCommand: string;
   formatWorkspaceCommandOutput: (stdout: string) => WorkspaceMap;

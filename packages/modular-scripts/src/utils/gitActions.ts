@@ -55,10 +55,9 @@ function getModifiedAndUntrackedFileChanges(): string[] {
 }
 
 // Get all diffed files from git remote origin HEAD
-function getGitDiff(): string[] {
-  const defaultBranch = getGitDefaultBranch();
+function getGitDiff(targetBranch: string): string[] {
   // get a commit sha between the HEAD of the current branch and git remote origin HEAD
-  const sha = execa.sync('git', ['merge-base', 'HEAD', defaultBranch], {
+  const sha = execa.sync('git', ['merge-base', 'HEAD', targetBranch], {
     cwd: getModularRoot(),
   });
 
@@ -85,10 +84,10 @@ function getGitDiff(): string[] {
   return [];
 }
 
-export function getDiffedFiles(): string[] {
+export function getDiffedFiles(targetBranch = getGitDefaultBranch()): string[] {
   return Array.from(
     new Set([
-      ...getGitDiff(),
+      ...getGitDiff(targetBranch),
       ...getModifiedAndUntrackedFileChanges(),
     ]).values(),
   );
