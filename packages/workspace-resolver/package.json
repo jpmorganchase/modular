@@ -19,5 +19,8 @@
   "files": [
     "dist-cjs"
   ],
-  "types": "dist-cjs/index.d.ts"
+  "types": "dist-cjs/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  }
 }
