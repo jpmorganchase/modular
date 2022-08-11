@@ -125,9 +125,18 @@ interface CLITestOptions extends TestOptions {
 program
   .command('test [regexes...]')
   .option(
+    '--ancestors',
+    'Additionally run tests for workspaces that depend on workspaces that have changed',
+    false,
+  )
+  .option(
     '--debug',
     'Setup node.js debugger on the test process - equivalent of setting --inspect-brk on a node.js process',
     false,
+  )
+  .option(
+    '--changed <branch>',
+    'Run tests only for workspaces that have changed compared to the branch specified',
   )
   .option('--coverage', testOptions.coverage.description)
   .option('--forceExit', testOptions.forceExit.description)
@@ -155,11 +164,26 @@ program
   .allowUnknownOption()
   .description('Run tests over the codebase')
   .action(async (regexes: string[], options: CLITestOptions) => {
+    if (options.ancestors && !options.changed) {
+      process.stderr.write(
+        "Option --ancestors doesn't make sense without option --changed",
+      );
+      process.exit(1);
+    }
+    if (options.changed && regexes.length) {
+      process.stderr.write(
+        'Option --changed conflicts with supplied test regex',
+      );
+      process.exit(1);
+    }
+
     const { default: test } = await import('./test');
 
     // proxy simplified options to testOptions
     const { U, ...testOptions } = options;
     testOptions.updateSnapshot = !!(options.updateSnapshot || U);
+
+    console.log(testOptions);
 
     return test(testOptions, regexes);
   });

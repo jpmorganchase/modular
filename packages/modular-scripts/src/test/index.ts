@@ -1,15 +1,20 @@
 import * as path from 'path';
+import { computeAncestorSet } from '@modular-scripts/workspace-resolver';
 import actionPreflightCheck from '../utils/actionPreflightCheck';
 import resolve from 'resolve';
 import { ExecaError } from 'execa';
 import execAsync from '../utils/execAsync';
 import getModularRoot from '../utils/getModularRoot';
+import { getAllWorkspaces } from '../utils/getAllWorkspaces';
+import { getChangedWorkspaces } from '../utils/getChangedWorkspaces';
 import { resolveAsBin } from '../utils/resolveAsBin';
 import * as logger from '../utils/logger';
 
 export interface TestOptions {
+  ancestors: boolean;
   bail: boolean;
   debug: boolean;
+  changed: string;
   clearCache: boolean;
   coverage: boolean;
   forceExit: boolean;
@@ -56,8 +61,15 @@ function resolveJestDefaultEnvironment(name: string) {
 }
 
 async function test(options: TestOptions, regexes?: string[]): Promise<void> {
-  const { debug, env, reporters, testResultsProcessor, ...jestOptions } =
-    options;
+  const {
+    ancestors,
+    changed: changedTargetBranch,
+    debug,
+    env,
+    reporters,
+    testResultsProcessor,
+    ...jestOptions
+  } = options;
 
   // create argv from jest Options
   const cleanArgv: string[] = [];
@@ -97,6 +109,16 @@ async function test(options: TestOptions, regexes?: string[]): Promise<void> {
 
   const additionalOptions: string[] = [];
   const cleanRegexes: string[] = [];
+
+  // TODO: make this more readable
+  if (changedTargetBranch) {
+    const regexesFromChanged = await computeChangedTestsRegexes(
+      changedTargetBranch,
+      ancestors,
+    );
+    console.log(regexesFromChanged);
+    return;
+  }
 
   if (regexes?.length) {
     regexes.forEach((reg) => {
@@ -154,6 +176,33 @@ async function test(options: TestOptions, regexes?: string[]): Promise<void> {
     // ✕ Modular test did not pass
     throw new Error('\u2715 Modular test did not pass');
   }
+}
+
+async function computeChangedTestsRegexes(
+  targetBranch: string,
+  ancestors: boolean,
+) {
+  // Get all the workspaces
+  console.log('MODULAR ROOT:', getModularRoot());
+  const allWorkspaces = await getAllWorkspaces(getModularRoot());
+  console.log(allWorkspaces[1]);
+  // Get the changed workspaces compared to our target branch
+  const changedWorkspaces = await getChangedWorkspaces(
+    allWorkspaces,
+    targetBranch,
+  );
+  // Get the ancestors from the changed workspaces TODO: make this take & return a WorkspaceContent?
+  const allWorkspaceMap = allWorkspaces[1];
+  const changedWorkspaceMap = changedWorkspaces[1];
+  const ancestorWorkspaces = ancestors
+    ? computeAncestorSet(Object.keys(changedWorkspaceMap), allWorkspaceMap)
+    : new Set();
+  // TODO: is this needed?
+  console.log(
+    new Set(
+      Array.from(ancestorWorkspaces).concat(Object.keys(changedWorkspaceMap)),
+    ),
+  );
 }
 
 export default actionPreflightCheck(test);
