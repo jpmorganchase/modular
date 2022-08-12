@@ -113,9 +113,21 @@ async function test(
   const additionalOptions: string[] = [];
   const cleanRegexes: string[] = [];
 
-  const regexes = changedTargetBranch
-    ? await computeChangedTestsRegexes(changedTargetBranch, ancestors)
-    : userRegexes;
+  let regexes = userRegexes;
+
+  if (changedTargetBranch) {
+    const testRegexes = await computeChangedTestsRegexes(
+      changedTargetBranch,
+      ancestors,
+    );
+    if (!testRegexes.length) {
+      // No regexes means "run all tests", but we want to avoid that in --changed mode
+      process.stdout.write('No changed workspaces found');
+      process.exit(0);
+    } else {
+      regexes = testRegexes;
+    }
+  }
 
   if (regexes?.length) {
     regexes.forEach((reg) => {
@@ -135,15 +147,11 @@ async function test(
     }
   }
 
-  console.log(cleanRegexes);
-
   // push any additional options passed in by debugger or other processes
   cleanArgv.push(...additionalOptions);
 
   // finally add the script regexes to run
   cleanArgv.push(...cleanRegexes);
-
-  console.log(cleanArgv);
 
   const jestBin = await resolveAsBin('jest-cli');
   let testBin = jestBin,
@@ -194,8 +202,9 @@ async function computeChangedTestsRegexes(
   const selectedWorkspaces = ancestors
     ? computeAncestorWorkspaces(changedWorkspaces, allWorkspaces)
     : changedWorkspaces;
-  const testRegexes = Object.values(selectedWorkspaces[1]).map((workspace) =>
-    path.normalize(`${workspace.location}${path.sep}__tests__/**/*.test.ts`),
+
+  const testRegexes = Object.values(selectedWorkspaces[1]).map(
+    ({ location }) => location,
   );
   return testRegexes;
 }

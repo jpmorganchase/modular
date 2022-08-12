@@ -6,16 +6,16 @@ export function computeAncestorWorkspaces(
   selectedWorkspaces: WorkspaceContent,
   allWorkspaces: WorkspaceContent,
 ): WorkspaceContent {
-  const selectWorkspaceNames = Object.keys(selectedWorkspaces[1]);
+  const selectedWorkspaceNames = Object.keys(selectedWorkspaces[1]);
   const ancestorWorkspacesSet = setUnion(
-    computeAncestorSet(selectWorkspaceNames, allWorkspaces[1]),
-    selectWorkspaceNames,
+    computeAncestorSet(selectedWorkspaceNames, allWorkspaces[1]),
+    selectedWorkspaceNames,
   );
   const ancestorsWorkspaces: WorkspaceContent = [new Map([]), {}];
 
   for (const dependencyName of [...ancestorWorkspacesSet]) {
     const [ancestorsPackageMap, ancestorsWorkspaceRecord] = ancestorsWorkspaces;
-    const [allPackageMap, allWorkspaceRecord] = ancestorsWorkspaces;
+    const [allPackageMap, allWorkspaceRecord] = allWorkspaces;
     const currentPackage = allPackageMap.get(dependencyName);
     if (currentPackage) {
       ancestorsPackageMap.set(dependencyName, currentPackage);

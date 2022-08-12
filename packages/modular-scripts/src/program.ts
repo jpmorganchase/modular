@@ -183,8 +183,6 @@ program
     const { U, ...testOptions } = options;
     testOptions.updateSnapshot = !!(options.updateSnapshot || U);
 
-    console.log(testOptions);
-
     return test(testOptions, regexes);
   });
 
