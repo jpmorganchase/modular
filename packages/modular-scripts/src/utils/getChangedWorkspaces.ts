@@ -2,7 +2,7 @@ import path from 'path';
 import pkgUp from 'pkg-up';
 import { getDiffedFiles } from './gitActions';
 import getModularRoot from './getModularRoot';
-import type { WorkspaceContent } from './getAllWorkspaces';
+import type { WorkspaceContent } from '@modular-scripts/modular-types';
 
 // Gets a list of changed files, then maps them to their workspace and returns a subset of WorkspaceContent
 export async function getChangedWorkspaces(

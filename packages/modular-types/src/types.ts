@@ -32,6 +32,11 @@ export interface WorkspaceObj extends WorkspaceDependencyObject {
 
 export type WorkspaceMap = Record<string, WorkspaceObj>;
 
+export type WorkspaceContent = [
+  Map<string, ModularWorkspacePackage>,
+  WorkspaceMap,
+];
+
 // Utility type that extends type `T1` with the fields of type `T2`
 type Extend<T1, T2> = {
   [k in keyof (T1 & T2)]: k extends keyof T2
