@@ -185,7 +185,6 @@ async function computeChangedTestsRegexes(
   // Get all the workspaces
   console.log('MODULAR ROOT:', getModularRoot());
   const allWorkspaces = await getAllWorkspaces(getModularRoot());
-  console.log(allWorkspaces[1]);
   // Get the changed workspaces compared to our target branch
   const changedWorkspaces = await getChangedWorkspaces(
     allWorkspaces,
@@ -194,15 +193,20 @@ async function computeChangedTestsRegexes(
   // Get the ancestors from the changed workspaces TODO: make this take & return a WorkspaceContent?
   const allWorkspaceMap = allWorkspaces[1];
   const changedWorkspaceMap = changedWorkspaces[1];
-  const ancestorWorkspaces = ancestors
+  const ancestorWorkspaces: Set<string> = ancestors
     ? computeAncestorSet(Object.keys(changedWorkspaceMap), allWorkspaceMap)
     : new Set();
   // TODO: is this needed?
-  console.log(
-    new Set(
-      Array.from(ancestorWorkspaces).concat(Object.keys(changedWorkspaceMap)),
+  const ancestorSet: Set<string> = new Set(
+    Array.from(ancestorWorkspaces).concat(Object.keys(changedWorkspaceMap)),
+  );
+  console.log(ancestorSet, allWorkspaceMap);
+  const testRegexes = Array.from(ancestorSet).map((depName) =>
+    path.normalize(
+      `${allWorkspaceMap[depName].location}${path.sep}__tests__/**`,
     ),
   );
+  console.log(testRegexes);
 }
 
 export default actionPreflightCheck(test);
