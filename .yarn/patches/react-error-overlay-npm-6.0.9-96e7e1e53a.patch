@@ -1,9 +1,9 @@
-diff --git a/node_modules/react-error-overlay/index.d.ts b/node_modules/react-error-overlay/index.d.ts
+diff --git a/index.d.ts b/index.d.ts
 new file mode 100644
-index 0000000..04929fb
+index 0000000000000000000000000000000000000000..182b7bbc45c3dd685763227d5d8e2e1c95678a3a
 --- /dev/null
-+++ b/node_modules/react-error-overlay/index.d.ts
-@@ -0,0 +1,20 @@
++++ b/index.d.ts
+@@ -0,0 +1,21 @@
 +export type ErrorLocation = {
 +  fileName: string;
 +  lineNumber: number;
@@ -24,3 +24,4 @@ index 0000000..04929fb
 +export const startReportingRuntimeErrors: (options: RuntimeReportingOptions) => void;
 +export const dismissRuntimeErrors: () => void;
 +export const stopReportingRuntimeErrors: () => void;
++

@@ -17,7 +17,6 @@
     "build": "yarn workspace @modular-scripts/workspace-resolver build && yarn workspace create-modular-react-app build && yarn workspace modular-scripts build && yarn workspace modular-views.macro build",
     "start": "yarn modular start modular-site",
     "prepare": "is-ci || husky install",
-    "postinstall": "patch-package",
     "typecheck": "yarn modular typecheck",
     "validate-lockfile": "node scripts/validate-lockfile.js"
   },
@@ -83,7 +82,6 @@
     "js-yaml": "^4.1.0",
     "lint-staged": "12.4.1",
     "micromatch": "4.0.5",
-    "patch-package": "^6.4.7",
     "pptr-testing-library": "0.7.0",
     "prettier": "2.6.2",
     "puppeteer": "14.2.1",
@@ -95,7 +93,9 @@
     "typescript": "4.7.4"
   },
   "resolutions": {
-    "esbuild": "0.14.51"
+    "esbuild": "0.14.51",
+    "detect-port-alt@1.1.6": "patch:detect-port-alt@npm:1.1.6#.yarn/patches/detect-port-alt-npm-1.1.6-013be1149d.patch",
+    "react-error-overlay@6.0.9": "patch:react-error-overlay@npm:6.0.9#.yarn/patches/react-error-overlay-npm-6.0.9-96e7e1e53a.patch"
   },
   "jest": {
     "coveragePathIgnorePatterns": [

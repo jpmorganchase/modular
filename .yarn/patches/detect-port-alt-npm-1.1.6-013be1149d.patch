@@ -1,11 +1,12 @@
-diff --git a/node_modules/detect-port-alt/index.d.ts b/node_modules/detect-port-alt/index.d.ts
+diff --git a/index.d.ts b/index.d.ts
 new file mode 100644
-index 0000000..982cba2
+index 0000000000000000000000000000000000000000..bf2ea329e3f489d0fcfa524a7eda04a2d755f540
 --- /dev/null
-+++ b/node_modules/detect-port-alt/index.d.ts
-@@ -0,0 +1,4 @@
++++ b/index.d.ts
+@@ -0,0 +1,6 @@
 +declare function detectPort(defaultPort: number, host: string, ): Promise<number>;
 +declare function detectPort(defaultPort: number, host: string, callback: (err: any, newPort: number) => any): void;
 +
 +export = detectPort;
-\ No newline at end of file
++
++
