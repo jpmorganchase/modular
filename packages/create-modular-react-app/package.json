@@ -2,9 +2,7 @@
   "name": "create-modular-react-app",
   "version": "3.0.0",
   "license": "Apache-2.0",
-  "bin": {
-    "create-modular-react-app": "build/cli.js"
-  },
+  "bin": "build/cli.js",
   "main": "./build/index.js",
   "exports": {
     ".": "./build/index.js",

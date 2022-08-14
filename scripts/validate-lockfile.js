@@ -1,21 +1,24 @@
 'use strict';
 
-const lockfile = require('@yarnpkg/lockfile');
 const fs = require('fs');
 const path = require('path');
+const yaml = require('js-yaml');
 
 const lockfilePath = path.join(__dirname, '..', 'yarn.lock');
 
-let file = fs.readFileSync(lockfilePath, 'utf8');
-let json = lockfile.parse(file);
-
 let failed = false;
-for (const entry of Object.entries(json.object)) {
-  const [dependency, resolution] = entry;
-  const { resolved, version } = resolution;
-  if (/jpmchase\.net/.test(resolved)) {
+let file = fs.readFileSync(lockfilePath, 'utf8');
+
+for (const [key, { linkType, version, resolution }] of Object.entries(
+  yaml.load(file),
+)) {
+  if (key === '__metadata' || linkType === 'soft') {
+    continue;
+  }
+
+  if (!/.@npm:/.test(decodeURIComponent(resolution))) {
+    console.error(linkType, resolution, version);
     failed = true;
-    console.error(`${dependency}@${version}: ${resolved}`);
   }
 }
 

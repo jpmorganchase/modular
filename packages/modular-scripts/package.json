@@ -117,9 +117,9 @@
     "ts-morph": "^14.0.0",
     "update-notifier": "5.1.0",
     "url-loader": "4.1.1",
+    "webpack": "5.73.0",
     "webpack-dev-server": "4.9.3",
     "webpack-manifest-plugin": "5.0.0",
-    "webpack": "5.73.0",
     "ws": "8.8.0"
   },
   "peerDependencies": {
@@ -142,8 +142,8 @@
     "@schemastore/package": "0.0.6",
     "@schemastore/tsconfig": "0.0.9",
     "@types/js-yaml": "^4.0.5",
-    "react-dom": "17.0.2",
     "react": "17.0.2",
+    "react-dom": "17.0.2",
     "typescript": "4.7.4"
   }
 }
