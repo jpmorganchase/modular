@@ -1,4 +1,5 @@
 .changeset
+.yarn/
 /dist
 packages/*/dist
 packages/*/build

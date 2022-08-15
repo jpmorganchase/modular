@@ -3128,11 +3128,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@modular-scripts/workspace-resolver@workspace:packages/workspace-resolver"
   dependencies:
+    "@babel/cli": 7.17.10
     "@modular-scripts/modular-types": 1.0.0
     "@types/fs-extra": ^9.0.13
     fs-extra: ^10.1.0
     globby: 11.0.4
     semver: 7.3.7
+    typescript: 4.7.4
   languageName: unknown
   linkType: soft
 
