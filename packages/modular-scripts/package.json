@@ -1,6 +1,6 @@
 {
   "name": "modular-scripts",
-  "version": "3.1.5",
+  "version": "3.2.0",
   "license": "Apache-2.0",
   "bin": {
     "modular": "dist-cjs/cli.js"
@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@babel/code-frame": "7.16.7",
-    "@modular-scripts/workspace-resolver": "0.0.1",
+    "@modular-scripts/workspace-resolver": "1.0.0",
     "@rollup/plugin-babel": "5.3.1",
     "@rollup/plugin-commonjs": "22.0.0",
     "@rollup/plugin-json": "4.1.0",
@@ -138,7 +138,7 @@
     "*.js"
   ],
   "devDependencies": {
-    "@modular-scripts/modular-types": "0.0.1",
+    "@modular-scripts/modular-types": "1.0.0",
     "@schemastore/package": "0.0.6",
     "@schemastore/tsconfig": "0.0.9",
     "@types/js-yaml": "^4.0.5",
