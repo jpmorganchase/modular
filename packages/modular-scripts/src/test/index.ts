@@ -14,8 +14,9 @@ export interface TestOptions {
   ancestors: boolean;
   bail: boolean;
   debug: boolean;
-  changed: string;
+  changed: boolean;
   clearCache: boolean;
+  compareBranch: string;
   coverage: boolean;
   forceExit: boolean;
   env: string;
@@ -66,7 +67,8 @@ async function test(
 ): Promise<void> {
   const {
     ancestors,
-    changed: changedTargetBranch,
+    changed,
+    compareBranch,
     debug,
     env,
     reporters,
@@ -115,9 +117,9 @@ async function test(
 
   let regexes = userRegexes;
 
-  if (changedTargetBranch) {
+  if (changed) {
     const testRegexes = await computeChangedTestsRegexes(
-      changedTargetBranch,
+      compareBranch,
       ancestors,
     );
     if (!testRegexes.length) {
@@ -188,7 +190,7 @@ async function test(
 }
 
 async function computeChangedTestsRegexes(
-  targetBranch: string,
+  targetBranch: string | undefined,
   ancestors: boolean,
 ) {
   // Get all the workspaces

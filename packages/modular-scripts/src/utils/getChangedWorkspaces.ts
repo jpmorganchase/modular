@@ -7,7 +7,7 @@ import type { WorkspaceContent } from '@modular-scripts/modular-types';
 // Gets a list of changed files, then maps them to their workspace and returns a subset of WorkspaceContent
 export async function getChangedWorkspaces(
   workspaceContent: WorkspaceContent,
-  targetBranch: string,
+  targetBranch: string | undefined,
 ): Promise<WorkspaceContent> {
   const diffedFiles = getDiffedFiles(targetBranch);
   const modularRoot = getModularRoot();

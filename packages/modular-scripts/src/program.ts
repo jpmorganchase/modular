@@ -135,8 +135,12 @@ program
     false,
   )
   .option(
-    '--changed <branch>',
-    'Run tests only for workspaces that have changed compared to the branch specified',
+    '--changed',
+    'Run tests only for workspaces that have changed compared to the branch specified in --compareBranch',
+  )
+  .option(
+    '--compareBranch <branch>',
+    "Specifies the branch to use with the --changed flag. If not specified, Modular will use the repo's default branch",
   )
   .option('--coverage', testOptions.coverage.description)
   .option('--forceExit', testOptions.forceExit.description)
@@ -167,6 +171,12 @@ program
     if (options.ancestors && !options.changed) {
       process.stderr.write(
         "Option --ancestors doesn't make sense without option --changed",
+      );
+      process.exit(1);
+    }
+    if (options.compareBranch && !options.changed) {
+      process.stderr.write(
+        "Option --compareBranch doesn't make sense without option --changed",
       );
       process.exit(1);
     }
