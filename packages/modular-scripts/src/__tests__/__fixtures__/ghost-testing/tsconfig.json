@@ -1,0 +1,4 @@
+{
+  "extends": "modular-scripts/tsconfig.json",
+  "include": ["modular", "packages/**/src"]
+}
