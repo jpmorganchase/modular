@@ -3118,17 +3118,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@modular-scripts/modular-types@0.0.1, @modular-scripts/modular-types@workspace:packages/modular-types":
+"@modular-scripts/modular-types@1.0.0, @modular-scripts/modular-types@workspace:packages/modular-types":
   version: 0.0.0-use.local
   resolution: "@modular-scripts/modular-types@workspace:packages/modular-types"
   languageName: unknown
   linkType: soft
 
-"@modular-scripts/workspace-resolver@0.0.1, @modular-scripts/workspace-resolver@workspace:packages/workspace-resolver":
+"@modular-scripts/workspace-resolver@1.0.0, @modular-scripts/workspace-resolver@workspace:packages/workspace-resolver":
   version: 0.0.0-use.local
   resolution: "@modular-scripts/workspace-resolver@workspace:packages/workspace-resolver"
   dependencies:
-    "@modular-scripts/modular-types": 0.0.1
+    "@modular-scripts/modular-types": 1.0.0
     "@types/fs-extra": ^9.0.13
     fs-extra: ^10.1.0
     globby: 11.0.4
@@ -12488,8 +12488,8 @@ __metadata:
   resolution: "modular-scripts@workspace:packages/modular-scripts"
   dependencies:
     "@babel/code-frame": 7.16.7
-    "@modular-scripts/modular-types": 0.0.1
-    "@modular-scripts/workspace-resolver": 0.0.1
+    "@modular-scripts/modular-types": 1.0.0
+    "@modular-scripts/workspace-resolver": 1.0.0
     "@rollup/plugin-babel": 5.3.1
     "@rollup/plugin-commonjs": 22.0.0
     "@rollup/plugin-json": 4.1.0
