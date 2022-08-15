@@ -18,6 +18,6 @@ jobs:
           node-version: 14
           cache: 'yarn'
       - name: Install Dependencies
-        run: yarn --frozen-lockfile
+        run: yarn --immutable
       - name: Check yarn.lock registry url
         run: yarn validate-lockfile

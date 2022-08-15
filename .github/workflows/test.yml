@@ -30,7 +30,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
       - name: Install Dependencies
-        run: yarn --frozen-lockfile
+        run: yarn --immutable
       - name: 'Build internal prerequisites'
         run: yarn workspace @modular-scripts/workspace-resolver build
       - name: Run Tests
