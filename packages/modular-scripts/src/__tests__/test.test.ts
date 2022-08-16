@@ -111,6 +111,10 @@ describe('Modular test command', () => {
       );
 
       // Create git repo & commit
+      if (process.env.CI) {
+        execa.sync('git', ['config', 'user.email', 'test@example.com']);
+        execa.sync('git', ['config', 'user.name', 'Test User']);
+      }
       execa.sync('git', ['init'], { cwd: randomOutputFolder });
       execa.sync('yarn', {
         cwd: randomOutputFolder,
