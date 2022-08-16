@@ -2,6 +2,7 @@ import execa, { ExecaError } from 'execa';
 import path from 'path';
 import fs from 'fs-extra';
 import os from 'os';
+import getModularRoot from '../utils/getModularRoot';
 
 function setupTests(fixturesFolder: string) {
   const files = fs.readdirSync(path.join(fixturesFolder));
@@ -84,13 +85,31 @@ describe('Modular test command', () => {
       '__fixtures__',
       'ghost-testing',
     );
+    const currentModularFolder = getModularRoot();
     let randomOutputFolder: string;
 
-    beforeEach(() => {
+    beforeEach(async () => {
       // Create random dir
       randomOutputFolder = fs.mkdtempSync(path.join(os.tmpdir()));
       fs.copySync(fixturesFolder, randomOutputFolder);
-      console.log(randomOutputFolder);
+
+      // Get all the files, recursively, and rename the .incognito files
+      const fileList = await getFileList(randomOutputFolder);
+      // Generate an array of promises that we can wait parallely on with Promise.all
+      await Promise.all(
+        fileList.reduce<Promise<void>[]>((acc, filePath) => {
+          if (path.basename(filePath) === 'package.json.incognito') {
+            acc.push(
+              fs.rename(
+                filePath,
+                path.join(path.dirname(filePath), 'package.json'),
+              ),
+            );
+          }
+          return acc;
+        }, []),
+      );
+
       // Create git repo & commit
       execa.sync('git', ['init'], { cwd: randomOutputFolder });
       execa.sync('yarn', {
@@ -102,8 +121,108 @@ describe('Modular test command', () => {
       });
     });
 
-    it('does 1+1', () => {
-      expect(1 + 1).toEqual(2);
+    // These expects run in a single test, serially for performance reasons (the setup time is quite long)
+    it('finds no unchanged using --changed / finds changed after modifying some workspaces / finds ancestors using --ancestors', () => {
+      const resultUnchanged = runRemoteModularTest(
+        currentModularFolder,
+        randomOutputFolder,
+        ['test', '--changed'],
+      );
+      expect(resultUnchanged.stdout).toContain('No changed workspaces found');
+
+      fs.appendFileSync(
+        path.join(randomOutputFolder, '/packages/b/src/index.ts'),
+        "\n// Comment to package b's source",
+      );
+      fs.appendFileSync(
+        path.join(randomOutputFolder, '/packages/c/src/index.ts'),
+        "\n// Comment to package c's source",
+      );
+
+      const resultChanged = runRemoteModularTest(
+        currentModularFolder,
+        randomOutputFolder,
+        ['test', '--changed'],
+      );
+      expect(resultChanged.stderr).toContain(
+        'packages/c/src/__tests__/utils/c-nested.test.ts',
+      );
+      expect(resultChanged.stderr).toContain(
+        'packages/c/src/__tests__/c.test.ts',
+      );
+      expect(resultChanged.stderr).toContain(
+        'packages/b/src/__tests__/utils/b-nested.test.ts',
+      );
+      expect(resultChanged.stderr).toContain(
+        'packages/b/src/__tests__/b.test.ts',
+      );
+
+      const resultChangedWithAncestors = runRemoteModularTest(
+        currentModularFolder,
+        randomOutputFolder,
+        ['test', '--changed', '--ancestors'],
+      );
+      expect(resultChangedWithAncestors.stderr).toContain(
+        'packages/c/src/__tests__/utils/c-nested.test.ts',
+      );
+      expect(resultChangedWithAncestors.stderr).toContain(
+        'packages/c/src/__tests__/c.test.ts',
+      );
+      expect(resultChangedWithAncestors.stderr).toContain(
+        'packages/b/src/__tests__/utils/b-nested.test.ts',
+      );
+      expect(resultChangedWithAncestors.stderr).toContain(
+        'packages/b/src/__tests__/b.test.ts',
+      );
+      expect(resultChangedWithAncestors.stderr).toContain(
+        'packages/a/src/__tests__/utils/a-nested.test.ts',
+      );
+      expect(resultChangedWithAncestors.stderr).toContain(
+        'packages/a/src/__tests__/a.test.ts',
+      );
+      expect(resultChangedWithAncestors.stderr).toContain(
+        'packages/e/src/__tests__/utils/e-nested.test.ts',
+      );
+      expect(resultChangedWithAncestors.stderr).toContain(
+        'packages/e/src/__tests__/e.test.ts',
+      );
     });
   });
 });
+
+function runRemoteModularTest(
+  modularFolder: string,
+  cwd: string,
+  modularArguments: string[],
+) {
+  return execa.sync(
+    path.join(modularFolder, '/node_modules/.bin/ts-node'),
+    [
+      path.join(modularFolder, '/packages/modular-scripts/src/cli.ts'),
+      ...modularArguments,
+    ],
+    {
+      cwd,
+      env: {
+        ...process.env,
+        CI: 'true',
+      },
+    },
+  );
+}
+
+// Recursively get all files in a directory and its subdirectories
+async function getFileList(dirName: string): Promise<string[]> {
+  let files: string[] = [];
+  const items = await fs.readdir(dirName, { withFileTypes: true });
+
+  for (const item of items) {
+    if (item.isDirectory()) {
+      files = [...files, ...(await getFileList(`${dirName}/${item.name}`))];
+    } else {
+      files.push(`${dirName}/${item.name}`);
+    }
+  }
+
+  return files;
+}
