@@ -1,7 +1,7 @@
 import execa, { ExecaError } from 'execa';
 import path from 'path';
 import fs from 'fs-extra';
-import os from 'os';
+import tmp from 'tmp';
 import getModularRoot from '../utils/getModularRoot';
 
 function setupTests(fixturesFolder: string) {
@@ -90,7 +90,7 @@ describe('Modular test command', () => {
 
     beforeEach(async () => {
       // Create random dir
-      randomOutputFolder = fs.mkdtempSync(path.join(os.tmpdir()));
+      randomOutputFolder = tmp.dirSync({ unsafeCleanup: true }).name;
       fs.copySync(fixturesFolder, randomOutputFolder);
 
       // Get all the files, recursively, and rename the .incognito files
