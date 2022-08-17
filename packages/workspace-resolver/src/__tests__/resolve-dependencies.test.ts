@@ -1,16 +1,119 @@
-import type {
-  WorkspaceDependencyObject,
-  WorkspaceMap,
-} from '@modular-scripts/modular-types';
-
 import {
   traverseWorkspaceRelations,
   invertDependencyDirection,
   computeAncestorSet,
   computeDescendantSet,
+  computeAncestorWorkspaces,
 } from '../resolve-dependencies';
 
+import type {
+  ModularWorkspacePackage,
+  WorkspaceContent,
+  WorkspaceDependencyObject,
+  WorkspaceMap,
+} from '@modular-scripts/modular-types';
+
 describe('resolve-dependencies', () => {
+  describe('computeAncestorWorkspaces', () => {
+    it('get a descendent set of a number of workspaces', () => {
+      function createModularWorkspacePackage(
+        name: string,
+      ): ModularWorkspacePackage {
+        return {
+          path: `/my/path/${name}`,
+          location: `/${name}`,
+          name,
+          version: '1.0.0',
+          workspace: false,
+          modular: {
+            type: 'package',
+          },
+          children: [],
+          parent: null,
+          dependencies: undefined,
+          rawPackageJson: {},
+        };
+      }
+
+      const all: WorkspaceContent = [
+        new Map(
+          Object.entries({
+            a: createModularWorkspacePackage('a'),
+            b: createModularWorkspacePackage('b'),
+            c: createModularWorkspacePackage('c'),
+            d: createModularWorkspacePackage('d'),
+            e: createModularWorkspacePackage('e'),
+          }),
+        ),
+        {
+          a: {
+            workspaceDependencies: ['b', 'c'],
+            location: '/a',
+            mismatchedWorkspaceDependencies: [],
+          },
+          b: {
+            workspaceDependencies: ['d'],
+            location: '/b',
+            mismatchedWorkspaceDependencies: [],
+          },
+          c: {
+            workspaceDependencies: ['b'],
+            location: '/c',
+            mismatchedWorkspaceDependencies: [],
+          },
+          d: {
+            workspaceDependencies: [],
+            location: '/d',
+            mismatchedWorkspaceDependencies: [],
+          },
+          e: {
+            workspaceDependencies: ['a', 'b', 'c'],
+            location: '/e',
+            mismatchedWorkspaceDependencies: [],
+          },
+        },
+      ];
+
+      const selected: WorkspaceContent = [
+        new Map(
+          Object.entries({
+            a: createModularWorkspacePackage('a'),
+          }),
+        ),
+        {
+          a: {
+            workspaceDependencies: ['b', 'c'],
+            location: '/a',
+            mismatchedWorkspaceDependencies: [],
+          },
+        },
+      ];
+
+      const result: WorkspaceContent = [
+        new Map(
+          Object.entries({
+            a: createModularWorkspacePackage('a'),
+            e: createModularWorkspacePackage('e'),
+          }),
+        ),
+        {
+          a: {
+            workspaceDependencies: ['b', 'c'],
+            location: '/a',
+            mismatchedWorkspaceDependencies: [],
+          },
+          e: {
+            workspaceDependencies: ['a', 'b', 'c'],
+            location: '/e',
+            mismatchedWorkspaceDependencies: [],
+          },
+        },
+      ];
+
+      expect(computeAncestorWorkspaces(selected, all)).toEqual(result);
+    });
+  });
+
   describe('computeDescendantSet', () => {
     it('get a descendent set of a number of workspaces', () => {
       const workspaces: Record<string, WorkspaceDependencyObject> = {

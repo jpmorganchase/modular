@@ -1,5 +1,20 @@
 # Dependency resolver API
 
+##
+
+```ts
+computeAncestorWorkspaces(
+  selectedWorkspaces: WorkspaceContent,
+  allWorkspaces: WorkspaceContent,
+): WorkspaceContent
+```
+
+Given a `WorkspaceContent` A (`selectedWorkspaces`), which is a subset of
+another `WorkspaceContent` B (`allWorkspaces`), return a `WorkspaceContent` C,
+which contains all the ancestors of A within B, **including** A. This is
+essentially a wrapper of `computeAncestorSet` that takes and returns
+`WorkspaceContent` values and includes the original dependencies in the result.
+
 ## computeAncestorSet
 
 From one or more vertices in a graph, compute the flat set of all their
