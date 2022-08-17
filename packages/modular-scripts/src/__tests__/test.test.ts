@@ -111,26 +111,20 @@ describe('Modular test command', () => {
       );
 
       // Create git repo & commit
-      console.log('GIT_AUTHOR_NAME:', process.env.GIT_AUTHOR_NAME);
-      console.log('GIT_AUTHOR_EMAIL:', process.env.GIT_AUTHOR_EMAIL);
-
-      console.log(execa.sync('git', ['--version']));
-
       if (process.env.GIT_AUTHOR_NAME && process.env.GIT_AUTHOR_EMAIL) {
         execa.sync('git', [
           'config',
           '--global',
           'user.email',
-          '"test@modular.js.org"',
+          `"${process.env.GIT_AUTHOR_EMAIL}"`,
         ]);
-        execa.sync('git', ['config', '--global', 'user.name', '"Test"']);
+        execa.sync('git', [
+          'config',
+          '--global',
+          'user.name',
+          `"${process.env.GIT_AUTHOR_NAME}"`,
+        ]);
       }
-
-      console.log(execa.sync('git', ['--no-pager', 'config', '--local', '-l']));
-      console.log(
-        execa.sync('git', ['--no-pager', 'config', '--global', '-l']),
-      );
-
       execa.sync('git', ['init'], {
         cwd: randomOutputFolder,
       });
@@ -140,23 +134,9 @@ describe('Modular test command', () => {
       execa.sync('git', ['add', '.'], {
         cwd: randomOutputFolder,
       });
-      execa.sync(
-        'git',
-        [
-          'commit',
-          '--author="Test <test@modular.js.org>"',
-          '-am',
-          '"First commit"',
-        ],
-        {
-          cwd: randomOutputFolder,
-          env: {
-            ...process.env,
-            GIT_AUTHOR_NAME: 'Modular Tests',
-            GIT_AUTHOR_EMAIL: 'tests@modular.js.org',
-          },
-        },
-      );
+      execa.sync('git', ['commit', '-am', '"First commit"'], {
+        cwd: randomOutputFolder,
+      });
     });
 
     // These expects run in a single test, serially for performance reasons (the setup time is quite long)
