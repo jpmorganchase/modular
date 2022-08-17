@@ -113,9 +113,23 @@ describe('Modular test command', () => {
       // Create git repo & commit
       console.log('GIT_AUTHOR_NAME:', process.env.GIT_AUTHOR_NAME);
       console.log('GIT_AUTHOR_EMAIL:', process.env.GIT_AUTHOR_EMAIL);
-      console.log(execa.sync('git', ['--no-pager', 'config', '--local', '-l']));
 
       console.log(execa.sync('git', ['--version']));
+
+      if (process.env.GIT_AUTHOR_NAME && process.env.GIT_AUTHOR_EMAIL) {
+        execa.sync('git', [
+          'config',
+          '--global',
+          'user.email',
+          '"test@modular.js.org"',
+        ]);
+        execa.sync('git', ['config', '--global', 'user.name', '"Test"']);
+      }
+
+      console.log(execa.sync('git', ['--no-pager', 'config', '--local', '-l']));
+      console.log(
+        execa.sync('git', ['--no-pager', 'config', '--global', '-l']),
+      );
 
       execa.sync('git', ['init'], {
         cwd: randomOutputFolder,
