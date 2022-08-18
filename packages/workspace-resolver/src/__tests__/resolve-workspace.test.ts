@@ -10,14 +10,19 @@ import path from 'path';
 const dirsUp = 4;
 const traverseUp = Array.from({ length: dirsUp })
   .map(() => `..`)
-  .join(path.sep)
-  .concat(path.sep);
-const fixturesPath = `${__dirname}${path.sep}${traverseUp}__fixtures__${path.sep}`;
+  .join(path.sep);
+
+const fixturesPath = path.join(
+  __dirname,
+  traverseUp,
+  '__fixtures__',
+  'resolve-workspace',
+);
 
 describe('@modular-scripts/workspace-resolver', () => {
   describe('resolveWorkspace', () => {
     it('resolves a clean workspace, detecting modular packages as appropriate', async () => {
-      const projectRoot = `${fixturesPath}clean-workspace-1`;
+      const projectRoot = path.join(fixturesPath, 'clean-workspace-1');
       const [allPackages] = await resolveWorkspace(projectRoot, projectRoot);
       expect(allPackages.has('clean-workspace-1')).toEqual(true);
       expect(allPackages.has('app-one')).toEqual(true);
@@ -28,7 +33,7 @@ describe('@modular-scripts/workspace-resolver', () => {
     // This covers the alternative object workspaces syntax that yarn supports
     // See https://classic.yarnpkg.com/blog/2018/02/15/nohoist/
     it('resolves a clean workspace (using object workspaces syntax)', async () => {
-      const projectRoot = `${fixturesPath}clean-workspace-2`;
+      const projectRoot = path.join(fixturesPath, 'clean-workspace-2');
       const [allPackages] = await resolveWorkspace(projectRoot, projectRoot);
       expect(allPackages.has('clean-workspace-2')).toEqual(true);
       expect(allPackages.has('app-one')).toEqual(true);
@@ -37,7 +42,7 @@ describe('@modular-scripts/workspace-resolver', () => {
     });
 
     it('resolves a clean workspace (using workspace ranges)', async () => {
-      const projectRoot = `${fixturesPath}clean-workspace-3`;
+      const projectRoot = path.join(fixturesPath, 'clean-workspace-3');
       const [allPackages] = await resolveWorkspace(projectRoot, projectRoot);
       expect(allPackages.has('clean-workspace-3')).toEqual(true);
       expect(allPackages.has('app-one')).toEqual(true);
@@ -48,7 +53,7 @@ describe('@modular-scripts/workspace-resolver', () => {
     });
 
     it('does not support nested modular roots', async () => {
-      const projectRoot = `${fixturesPath}invalid-workspace-1`;
+      const projectRoot = path.join(fixturesPath, 'invalid-workspace-1');
       let thrown = false;
       let message = '';
 
@@ -68,7 +73,7 @@ describe('@modular-scripts/workspace-resolver', () => {
     });
 
     it('does not support nested yarn workspaces (implementation 1)', async () => {
-      const projectRoot = `${fixturesPath}invalid-workspace-2`;
+      const projectRoot = path.join(fixturesPath, 'invalid-workspace-2');
       let thrown = false;
       let message = '';
 
@@ -88,7 +93,7 @@ describe('@modular-scripts/workspace-resolver', () => {
     });
 
     it('does not support nested yarn workspaces (implementation 2)', async () => {
-      const projectRoot = `${fixturesPath}invalid-workspace-3`;
+      const projectRoot = path.join(fixturesPath, 'invalid-workspace-3');
       let thrown = false;
       let message = '';
 
@@ -108,7 +113,7 @@ describe('@modular-scripts/workspace-resolver', () => {
     });
 
     it('does not support packages with no name', async () => {
-      const projectRoot = `${fixturesPath}invalid-workspace-4`;
+      const projectRoot = path.join(fixturesPath, 'invalid-workspace-4');
       let thrown = false;
       let message = '';
 
@@ -128,7 +133,7 @@ describe('@modular-scripts/workspace-resolver', () => {
     });
 
     it('does not support packages with no version', async () => {
-      const projectRoot = `${fixturesPath}invalid-workspace-5`;
+      const projectRoot = path.join(fixturesPath, 'invalid-workspace-5');
       let thrown = false;
       let message = '';
 
@@ -150,7 +155,7 @@ describe('@modular-scripts/workspace-resolver', () => {
 
   describe('analyzeWorkspaceDependencies', () => {
     it('correctly identifies workspace dependencies for a clean workspace', async () => {
-      const projectRoot = `${fixturesPath}clean-workspace-1`;
+      const projectRoot = path.join(fixturesPath, 'clean-workspace-1');
       const [allPackages] = await resolveWorkspace(projectRoot, projectRoot);
 
       const result = analyzeWorkspaceDependencies(allPackages);
@@ -175,7 +180,7 @@ describe('@modular-scripts/workspace-resolver', () => {
     });
 
     it('correctly identifies mismatched dependencies', async () => {
-      const projectRoot = `${fixturesPath}mismatched-dependency`;
+      const projectRoot = path.join(fixturesPath, 'mismatched-dependency');
       const [allPackages] = await resolveWorkspace(projectRoot, projectRoot);
 
       const result = analyzeWorkspaceDependencies(allPackages);
@@ -200,7 +205,7 @@ describe('@modular-scripts/workspace-resolver', () => {
     });
 
     it('correctly identifies dependencies (workspace range)', async () => {
-      const projectRoot = `${fixturesPath}clean-workspace-3`;
+      const projectRoot = path.join(fixturesPath, 'clean-workspace-3');
       const [allPackages] = await resolveWorkspace(projectRoot, projectRoot);
 
       // Matches explanation (version 1.0.0):

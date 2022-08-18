@@ -82,33 +82,21 @@ describe('Modular test command', () => {
   describe('test command can successfully do selective tests based on the state of the repository', () => {
     const fixturesFolder = path.join(
       __dirname,
+      Array.from({ length: 4 }).reduce<string>(
+        (acc) => `${acc}..${path.sep}`,
+        '',
+      ),
       '__fixtures__',
       'ghost-testing',
     );
+
     const currentModularFolder = getModularRoot();
     let randomOutputFolder: string;
 
-    beforeEach(async () => {
+    beforeEach(() => {
       // Create random dir
       randomOutputFolder = tmp.dirSync({ unsafeCleanup: true }).name;
       fs.copySync(fixturesFolder, randomOutputFolder);
-
-      // Get all the files, recursively, and rename the .incognito files
-      const fileList = await getFileList(randomOutputFolder);
-      // Generate an array of promises that we can wait parallely on with Promise.all
-      await Promise.all(
-        fileList.reduce<Promise<void>[]>((acc, filePath) => {
-          if (path.basename(filePath) === 'package.json.incognito') {
-            acc.push(
-              fs.rename(
-                filePath,
-                path.join(path.dirname(filePath), 'package.json'),
-              ),
-            );
-          }
-          return acc;
-        }, []),
-      );
 
       // Create git repo & commit
       if (process.env.GIT_AUTHOR_NAME && process.env.GIT_AUTHOR_EMAIL) {
@@ -227,20 +215,4 @@ function runRemoteModularTest(
       },
     },
   );
-}
-
-// Recursively get all files in a directory and its subdirectories
-async function getFileList(dirName: string): Promise<string[]> {
-  let files: string[] = [];
-  const items = await fs.readdir(dirName, { withFileTypes: true });
-
-  for (const item of items) {
-    if (item.isDirectory()) {
-      files = [...files, ...(await getFileList(`${dirName}/${item.name}`))];
-    } else {
-      files.push(`${dirName}/${item.name}`);
-    }
-  }
-
-  return files;
 }
