@@ -39,6 +39,31 @@ through the `jest` property in the root `package.json`
 - [testRunner](#testRunner)
 - [transformIgnorePatterns](#transformIgnorePatterns)
 
+### ancestors
+
+Default: `false`
+
+Can be used only in combination with `changed` or the command will fail. If set,
+it will additionally execute tests for all the workspaces that (directly or
+indirectly) depend on the workspaces selected by `changed`.
+
+### changed
+
+Default: `false`
+
+Execute tests only for the workspaces that contain files that have changed.
+Files that have changed are calculated comparing the current state of the
+repository with the branch specified by `compareBranch` or, if `compareBranch`
+is not set, with the default git branch.
+
+### compareBranch
+
+Default: `undefined`
+
+Specify the comparison branch used to determine which files have changed when
+using the `changed` option. If this option is used without `changed`, the
+command will fail.
+
 #### collectCoverageFrom
 
 [_Documentation_](https://jestjs.io/docs/configuration#collectcoveragefrom-array)

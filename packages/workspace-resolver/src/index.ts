@@ -3,9 +3,4 @@ export {
   analyzeWorkspaceDependencies,
 } from './resolve-workspace';
 
-export {
-  computeAncestorSet,
-  computeDescendantSet,
-  traverseWorkspaceRelations,
-  invertDependencyDirection,
-} from './resolve-dependencies';
+export * from './resolve-dependencies';

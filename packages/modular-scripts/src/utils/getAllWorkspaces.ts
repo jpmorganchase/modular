@@ -7,14 +7,9 @@ import {
 } from '@modular-scripts/workspace-resolver';
 
 import type {
+  WorkspaceContent,
   WorkspaceMap,
-  ModularWorkspacePackage,
 } from '@modular-scripts/modular-types';
-
-export type WorkspaceContent = [
-  Map<string, ModularWorkspacePackage>,
-  WorkspaceMap,
-];
 export interface PackageManagerInfo {
   getWorkspaceCommand: string;
   formatWorkspaceCommandOutput: (stdout: string) => WorkspaceMap;

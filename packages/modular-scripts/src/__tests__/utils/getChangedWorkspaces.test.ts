@@ -1,5 +1,5 @@
 import { matchWorkspaces } from '../../utils/getChangedWorkspaces';
-import type { WorkspaceContent } from '../../utils/getAllWorkspaces';
+import type { WorkspaceContent } from '@modular-scripts/modular-types';
 
 describe('matchWorkspaces', () => {
   it('matches absolute manifests paths with holes and duplication to subset of workspace entries', () => {

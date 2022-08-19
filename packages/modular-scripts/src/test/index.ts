@@ -1,16 +1,22 @@
 import * as path from 'path';
+import { computeAncestorWorkspaces } from '@modular-scripts/workspace-resolver';
 import actionPreflightCheck from '../utils/actionPreflightCheck';
 import resolve from 'resolve';
 import { ExecaError } from 'execa';
 import execAsync from '../utils/execAsync';
 import getModularRoot from '../utils/getModularRoot';
+import { getAllWorkspaces } from '../utils/getAllWorkspaces';
+import { getChangedWorkspaces } from '../utils/getChangedWorkspaces';
 import { resolveAsBin } from '../utils/resolveAsBin';
 import * as logger from '../utils/logger';
 
 export interface TestOptions {
+  ancestors: boolean;
   bail: boolean;
   debug: boolean;
+  changed: boolean;
   clearCache: boolean;
+  compareBranch: string;
   coverage: boolean;
   forceExit: boolean;
   env: string;
@@ -55,9 +61,20 @@ function resolveJestDefaultEnvironment(name: string) {
   });
 }
 
-async function test(options: TestOptions, regexes?: string[]): Promise<void> {
-  const { debug, env, reporters, testResultsProcessor, ...jestOptions } =
-    options;
+async function test(
+  options: TestOptions,
+  userRegexes?: string[],
+): Promise<void> {
+  const {
+    ancestors,
+    changed,
+    compareBranch,
+    debug,
+    env,
+    reporters,
+    testResultsProcessor,
+    ...jestOptions
+  } = options;
 
   // create argv from jest Options
   const cleanArgv: string[] = [];
@@ -97,6 +114,22 @@ async function test(options: TestOptions, regexes?: string[]): Promise<void> {
 
   const additionalOptions: string[] = [];
   const cleanRegexes: string[] = [];
+
+  let regexes = userRegexes;
+
+  if (changed) {
+    const testRegexes = await computeChangedTestsRegexes(
+      compareBranch,
+      ancestors,
+    );
+    if (!testRegexes.length) {
+      // No regexes means "run all tests", but we want to avoid that in --changed mode
+      process.stdout.write('No changed workspaces found');
+      process.exit(0);
+    } else {
+      regexes = testRegexes;
+    }
+  }
 
   if (regexes?.length) {
     regexes.forEach((reg) => {
@@ -154,6 +187,28 @@ async function test(options: TestOptions, regexes?: string[]): Promise<void> {
     // ✕ Modular test did not pass
     throw new Error('\u2715 Modular test did not pass');
   }
+}
+
+async function computeChangedTestsRegexes(
+  targetBranch: string | undefined,
+  ancestors: boolean,
+) {
+  // Get all the workspaces
+  const allWorkspaces = await getAllWorkspaces(getModularRoot());
+  // Get the changed workspaces compared to our target branch
+  const changedWorkspaces = await getChangedWorkspaces(
+    allWorkspaces,
+    targetBranch,
+  );
+  // Get the ancestors from the changed workspaces
+  const selectedWorkspaces = ancestors
+    ? computeAncestorWorkspaces(changedWorkspaces, allWorkspaces)
+    : changedWorkspaces;
+
+  const testRegexes = Object.values(selectedWorkspaces[1]).map(
+    ({ location }) => location,
+  );
+  return testRegexes;
 }
 
 export default actionPreflightCheck(test);
