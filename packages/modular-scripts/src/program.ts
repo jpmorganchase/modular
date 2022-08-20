@@ -3,7 +3,7 @@
 import * as fs from 'fs-extra';
 import isCI from 'is-ci';
 import chalk from 'chalk';
-import commander from 'commander';
+import commander, { Option } from 'commander';
 import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import type { TestOptions } from './test';
 import type { LintOptions } from './lint';
@@ -245,13 +245,23 @@ program
     await port(relativePath);
   });
 
+const lintStagedFlag = '--staged';
 program
   .command('lint [regexes...]')
   .option(
     '--all',
     'Only lint diffed files from your remote origin default branch (e.g. main or master)',
   )
-  .option('--fix', 'Fix the lint errors wherever possible')
+  .option(
+    '--fix',
+    `Fix the lint errors wherever possible, restages changes if run with ${lintStagedFlag}`,
+  )
+  .addOption(
+    new Option(
+      lintStagedFlag,
+      'Only lint files that have been staged to be committed',
+    ).conflicts('all'),
+  )
   .description('Lints the codebase')
   .action(async (regexes: string[], options: LintOptions) => {
     const { default: lint } = await import('./lint');

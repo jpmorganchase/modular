@@ -54,13 +54,8 @@ function getModifiedAndUntrackedFileChanges(): string[] {
   return [];
 }
 
-// Get all diffed files from git remote origin HEAD
-function getGitDiff(targetBranch: string): string[] {
-  // get a commit sha between the HEAD of the current branch and git remote origin HEAD
-  const sha = execa.sync('git', ['merge-base', 'HEAD', targetBranch], {
-    cwd: getModularRoot(),
-  });
-
+// Get all diffed files in standardised order exluding unknown and removed files
+function runGitDiff(gitDiffCommand: string): string[] {
   /**
    * diff-filter=ACMRTUB
    * (A) Added
@@ -73,7 +68,7 @@ function getGitDiff(targetBranch: string): string[] {
    */
   const diff = execa.sync(
     'git',
-    ['diff', '--name-only', '--diff-filter=ACMRTUB', sha.stdout],
+    ['diff', '--name-only', '--diff-filter=ACMRTUB', gitDiffCommand],
     {
       cwd: getModularRoot(),
     },
@@ -84,6 +79,16 @@ function getGitDiff(targetBranch: string): string[] {
   return [];
 }
 
+// Get all diffed files from git remote origin HEAD
+function getGitDiff(targetBranch: string): string[] {
+  // get a commit sha between the HEAD of the current branch and git remote origin HEAD
+  const sha = execa.sync('git', ['merge-base', 'HEAD', targetBranch], {
+    cwd: getModularRoot(),
+  });
+
+  return runGitDiff(sha.stdout);
+}
+
 export function getDiffedFiles(targetBranch = getGitDefaultBranch()): string[] {
   return Array.from(
     new Set([
@@ -91,4 +96,19 @@ export function getDiffedFiles(targetBranch = getGitDefaultBranch()): string[] {
       ...getModifiedAndUntrackedFileChanges(),
     ]).values(),
   );
+}
+
+// Get all staged files
+export function getStagedFiles(): string[] {
+  // --cached is used instead of --staged for backwards
+  // compatibility with older versions of git
+  return runGitDiff('--cached');
+}
+
+// Stages files in git
+export function addFiles(files: string[]): void {
+  execa.sync('git', ['add', ...files], {
+    cwd: getModularRoot(),
+  });
+  return;
 }
