@@ -313,6 +313,7 @@ export async function makeBundle(
       'dist-es',
       'dist-types',
       'README.md',
+      'LICENSE',
     ]),
   };
 }

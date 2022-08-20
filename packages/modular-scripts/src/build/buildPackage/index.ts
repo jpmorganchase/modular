@@ -17,6 +17,7 @@ import { makeBundle } from './makeBundle';
 import { makeTypings } from './makeTypings';
 import getRelativeLocation from '../../utils/getRelativeLocation';
 import { getRepositoryField } from './getRepositoryField';
+import { maybeCopyRootLicense } from './maybeCopyRootLicense';
 
 const outputDirectory = 'dist';
 
@@ -83,6 +84,8 @@ export async function buildPackage(
       path.join(targetOutputDirectory, fileName),
     );
   });
+
+  await maybeCopyRootLicense(target, targetOutputDirectory);
 
   /// and... that's it
   logger.log(`built ${target} in ${targetOutputDirectory}`);
