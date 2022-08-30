@@ -1,5 +1,19 @@
 # modular-scripts
 
+## 3.3.0
+
+### Minor Changes
+
+- [#2051](https://github.com/jpmorganchase/modular/pull/2051)
+  [`f6a0f9a`](https://github.com/jpmorganchase/modular/commit/f6a0f9ae168ec3202a66c0a0adb4887a43b4432c)
+  Thanks [@cheemcheem](https://github.com/cheemcheem)! - Add --staged flag to
+  modular lint
+
+* [#2027](https://github.com/jpmorganchase/modular/pull/2027)
+  [`0b054b5`](https://github.com/jpmorganchase/modular/commit/0b054b5a950aa652fd5f7d59be238cd67ac934ef)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Add new
+  options for selective testing: `--ancestors`, `--changed`, `--compareBranch`
+
 ## 3.2.0
 
 ### Minor Changes
