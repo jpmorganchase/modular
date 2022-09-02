@@ -1,5 +1,14 @@
 # @modular-scripts/modular-types
 
+## 1.0.1
+
+### Patch Changes
+
+- [#2093](https://github.com/jpmorganchase/modular/pull/2093)
+  [`8e955c8`](https://github.com/jpmorganchase/modular/commit/8e955c82e357ed8e8aeb728866fa187851450122)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Export
+  computeAncestorWorkspaces
+
 ## 1.0.0
 
 ### Major Changes
