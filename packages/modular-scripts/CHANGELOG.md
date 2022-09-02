@@ -1,5 +1,18 @@
 # modular-scripts
 
+## 3.3.1
+
+### Patch Changes
+
+- [#2093](https://github.com/jpmorganchase/modular/pull/2093)
+  [`8e955c8`](https://github.com/jpmorganchase/modular/commit/8e955c82e357ed8e8aeb728866fa187851450122)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Export
+  computeAncestorWorkspaces
+
+- Updated dependencies
+  [[`8e955c8`](https://github.com/jpmorganchase/modular/commit/8e955c82e357ed8e8aeb728866fa187851450122)]:
+  - @modular-scripts/workspace-resolver@1.1.0
+
 ## 3.3.0
 
 ### Minor Changes
