@@ -24,5 +24,5 @@ default to only lint the diffed files.
 `--staged`: Lints only files staged on git (not compatible with `--all`)
 
 `--fix`: Allows eslint to fix the errors and warnings that do not require manual
-intervention wherever possible. Restages any fixed files that were previously 
+intervention wherever possible. Restages any fixed files that were previously
 staged when used in combination with `--staged`.
