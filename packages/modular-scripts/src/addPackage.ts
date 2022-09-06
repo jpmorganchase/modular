@@ -153,13 +153,22 @@ async function addPackage({
       `Invalid package name "${name}" specified\n${packageNameFormattedErrors}`,
     );
   }
+  const modularRoot = getModularRoot();
 
-  // TODO find out if targetPath is outside of modularRoot
-  // TODO find out if targetPath is within package.json's workspace property
+  // Find out if targetPath is outside of modularRoot
+  if (pathArg) {
+    const relative = path.relative(modularRoot, pathArg);
+    const isSubdir =
+      relative && !relative.startsWith('..') && !path.isAbsolute(relative);
+    if (!isSubdir) {
+      throw new Error(
+        `Provided base install path "${pathArg}" is not a descendant of the Modular root directory "${modularRoot}"`,
+      );
+    }
+  }
 
   const packageType = templateNameArg ?? (await promptForType(typeArg));
   const templateName = await promptForTemplate(templateNameArg || packageType);
-  const modularRoot = getModularRoot();
   const yarnVersion = await getYarnVersion();
   const isYarnV1 = yarnVersion.startsWith('1.');
   const installedPackageJsonPath = path.join(templateName, 'package.json');
@@ -185,6 +194,8 @@ async function addPackage({
   } catch {
     // noop: if it fails, the dir doesn't exist
   }
+
+  // TODO: find out if targetPath is within package.json's workspace property
 
   if (dirExists) {
     throw new Error(
