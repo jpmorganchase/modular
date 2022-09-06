@@ -1,11 +1,10 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
+import validate from 'validate-npm-package-name';
+
 import globby from 'globby';
 
-import {
-  pascalCase as toPascalCase,
-  paramCase as toParamCase,
-} from 'change-case';
+import { pascalCase as toPascalCase } from 'change-case';
 import prompts from 'prompts';
 import getModularRoot from './utils/getModularRoot';
 import execAsync from './utils/execAsync';
@@ -13,6 +12,7 @@ import * as logger from './utils/logger';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import getAllFiles from './utils/getAllFiles';
 import LineFilterOutStream from './utils/LineFilterOutStream';
+import { parsePackageName } from './utils/parsePackageName';
 
 import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
@@ -140,16 +140,28 @@ async function addPackage({
   unstableName,
 }: AddOptions): Promise<void> {
   const name = await promptForName(nameArg || unstableName);
+  const { validForNewPackages, errors } = validate(name);
+  const packageNameFormattedErrors = errors?.join('\n') || '';
+
+  if (!validForNewPackages) {
+    throw new Error(
+      `Invalid package name "${name}" specified\n${packageNameFormattedErrors}`,
+    );
+  }
+
   const packageType = templateNameArg ?? (await promptForType(typeArg));
   const templateName = await promptForTemplate(templateNameArg || packageType);
   const modularRoot = getModularRoot();
   const yarnVersion = await getYarnVersion();
   const isYarnV1 = yarnVersion.startsWith('1.');
-  const packageName = toParamCase(name, { stripRegexp: /[^A-Z0-9@/]+/gi });
-  const packageDir = toParamCase(name, { stripRegexp: /[^A-Z0-9/]+/gi });
-  const componentName = toPascalCase(name);
-  const packagePath = path.join(modularRoot, packagesRoot, packageDir);
   const installedPackageJsonPath = path.join(templateName, 'package.json');
+
+  const { dependencyName: packageName, scope, module } = parsePackageName(name);
+  const { componentName, packagePath } = getPackageDetails({
+    scope,
+    module,
+    modularRoot,
+  });
   let newModularPackageJsonPath;
 
   // try and find the modular template packge, if it's already been installed
@@ -291,6 +303,22 @@ async function addPackage({
   }
 
   await subprocess;
+}
+
+function getPackageDetails({
+  scope,
+  module,
+  modularRoot,
+}: {
+  scope?: string;
+  module: string;
+  modularRoot: string;
+}) {
+  const cleanScope = scope?.replace('@', '') ?? '';
+  const packageDir = path.join(cleanScope, module);
+  const componentName = toPascalCase(`${cleanScope} ${module}`);
+  const packagePath = path.join(modularRoot, packagesRoot, packageDir);
+  return { componentName, packagePath };
 }
 
 export default actionPreflightCheck(addPackage);
