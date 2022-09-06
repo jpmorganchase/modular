@@ -1,9 +1,7 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import validate from 'validate-npm-package-name';
-
 import globby from 'globby';
-
 import { pascalCase as toPascalCase } from 'change-case';
 import prompts from 'prompts';
 import getModularRoot from './utils/getModularRoot';
@@ -14,6 +12,7 @@ import getAllFiles from './utils/getAllFiles';
 import LineFilterOutStream from './utils/LineFilterOutStream';
 import { parsePackageName } from './utils/parsePackageName';
 import { getWorkspaceInfo } from './utils/getWorkspaceInfo';
+import { isInWorkspaces } from './utils/isInWorkspaces';
 
 import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
@@ -155,14 +154,21 @@ async function addPackage({
   }
   const modularRoot = getModularRoot();
 
-  // Find out if targetPath is outside of modularRoot
   if (pathArg) {
+    // Find out if the provided base path is outside of modularRoot
     const relative = path.relative(modularRoot, pathArg);
     const isSubdir =
       relative && !relative.startsWith('..') && !path.isAbsolute(relative);
     if (!isSubdir) {
       throw new Error(
         `Provided base install path "${pathArg}" is not a descendant of the Modular root directory "${modularRoot}"`,
+      );
+    }
+
+    // Find out if the provided base path is included in the package.json's "workspaces" globs
+    if (!(await isInWorkspaces(pathArg))) {
+      throw new Error(
+        `Specified package path "${pathArg}" does not match modular workspaces glob patterns`,
       );
     }
   }
@@ -174,7 +180,7 @@ async function addPackage({
   const installedPackageJsonPath = path.join(templateName, 'package.json');
 
   const { dependencyName: packageName, scope, module } = parsePackageName(name);
-  const { componentName, packagePath } = getPackageDetails({
+  const { componentName, packagePath } = getNewPackageDetails({
     scope,
     module,
     targetPath: pathArg || path.join(modularRoot, packagesRoot),
@@ -192,10 +198,8 @@ async function addPackage({
   try {
     dirExists = !!(await fs.readdir(packagePath)).length;
   } catch {
-    // noop: if it fails, the dir doesn't exist
+    // noop: if this throws, the dir doesn't exist
   }
-
-  // TODO: find out if targetPath is within package.json's workspace property
 
   if (dirExists) {
     throw new Error(
@@ -203,7 +207,7 @@ async function addPackage({
     );
   }
 
-  // Try and find the modular template packge, if it's already been installed
+  // Try and find the modular template package. If it's already been installed
   // in the project then continue without needing to do an install.
   // else we will fetch it from the yarn registry.
   try {
@@ -217,8 +221,6 @@ async function addPackage({
     } else {
       yarnAddArgs.push('--cached');
     }
-
-    console.log({ yarnAddArgs });
 
     const templateInstallSubprocess = execAsync('yarnpkg', yarnAddArgs, {
       cwd: modularRoot,
@@ -346,7 +348,7 @@ async function addPackage({
   await subprocess;
 }
 
-function getPackageDetails({
+function getNewPackageDetails({
   scope,
   targetPath,
   module,
