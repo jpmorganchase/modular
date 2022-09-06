@@ -30,6 +30,7 @@ program
   )
   .option('--unstable-name <name>', 'Package name for the package.json')
   .option('--template <name>', 'Template name')
+  .option('--path <targetPath>', 'Target root directory for the package')
   .option(
     '--prefer-offline',
     'Equivalent of --prefer-offline for yarn installations',
@@ -45,6 +46,7 @@ program
         preferOffline?: boolean;
         verbose?: boolean;
         unstableName?: string;
+        path?: string;
       },
     ) => {
       const { default: addPackage } = await import('./addPackage');
@@ -55,6 +57,7 @@ program
         preferOffline: addOptions.preferOffline,
         verbose: addOptions.verbose,
         unstableName: addOptions.unstableName,
+        path: addOptions.path,
       });
     },
   );

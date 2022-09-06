@@ -13,6 +13,7 @@ import actionPreflightCheck from './utils/actionPreflightCheck';
 import getAllFiles from './utils/getAllFiles';
 import LineFilterOutStream from './utils/LineFilterOutStream';
 import { parsePackageName } from './utils/parsePackageName';
+import { getWorkspaceInfo } from './utils/getWorkspaceInfo';
 
 import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
@@ -26,6 +27,7 @@ interface AddOptions {
   preferOffline: boolean;
   verbose: boolean;
   unstableName: string | void;
+  path: string | void;
 }
 
 async function promptForName(name: string | void) {
@@ -138,8 +140,11 @@ async function addPackage({
   preferOffline = true,
   verbose = false,
   unstableName,
+  path: pathArg,
 }: AddOptions): Promise<void> {
   const name = await promptForName(nameArg || unstableName);
+
+  // Validate package name
   const { validForNewPackages, errors } = validate(name);
   const packageNameFormattedErrors = errors?.join('\n') || '';
 
@@ -148,6 +153,9 @@ async function addPackage({
       `Invalid package name "${name}" specified\n${packageNameFormattedErrors}`,
     );
   }
+
+  // TODO find out if targetPath is outside of modularRoot
+  // TODO find out if targetPath is within package.json's workspace property
 
   const packageType = templateNameArg ?? (await promptForType(typeArg));
   const templateName = await promptForTemplate(templateNameArg || packageType);
@@ -160,11 +168,31 @@ async function addPackage({
   const { componentName, packagePath } = getPackageDetails({
     scope,
     module,
-    modularRoot,
+    targetPath: pathArg || path.join(modularRoot, packagesRoot),
   });
   let newModularPackageJsonPath;
 
-  // try and find the modular template packge, if it's already been installed
+  // Find out if a package with the same name already exists
+  if ((await getWorkspaceInfo())[packageName]) {
+    throw new Error(`A package with name "${packageName}" already exists`);
+  }
+
+  // Find out if the directory already exists and it's not empty
+  let dirExists = false;
+
+  try {
+    dirExists = !!(await fs.readdir(packagePath)).length;
+  } catch {
+    // noop: if it fails, the dir doesn't exist
+  }
+
+  if (dirExists) {
+    throw new Error(
+      `Directory "${packagePath}" already exists and it's not empty`,
+    );
+  }
+
+  // Try and find the modular template packge, if it's already been installed
   // in the project then continue without needing to do an install.
   // else we will fetch it from the yarn registry.
   try {
@@ -178,6 +206,8 @@ async function addPackage({
     } else {
       yarnAddArgs.push('--cached');
     }
+
+    console.log({ yarnAddArgs });
 
     const templateInstallSubprocess = execAsync('yarnpkg', yarnAddArgs, {
       cwd: modularRoot,
@@ -307,17 +337,17 @@ async function addPackage({
 
 function getPackageDetails({
   scope,
+  targetPath,
   module,
-  modularRoot,
 }: {
   scope?: string;
+  targetPath: string;
   module: string;
-  modularRoot: string;
 }) {
   const cleanScope = scope?.replace('@', '') ?? '';
   const packageDir = path.join(cleanScope, module);
   const componentName = toPascalCase(`${cleanScope} ${module}`);
-  const packagePath = path.join(modularRoot, packagesRoot, packageDir);
+  const packagePath = path.join(targetPath, packageDir);
   return { componentName, packagePath };
 }
 
