@@ -151,7 +151,7 @@ async function addPackage({
   });
   let newModularPackageJsonPath;
 
-  await validatePackage(name, packagePath, pathArg);
+  await validatePackageDetails(name, packagePath, pathArg);
 
   const packageType = templateNameArg ?? (await promptForType(typeArg));
   const templateName = await promptForTemplate(templateNameArg || packageType);
@@ -315,7 +315,7 @@ function getNewPackageDetails({
   return { componentName, packagePath };
 }
 
-async function validatePackage(
+async function validatePackageDetails(
   name: string,
   packagePath: string,
   pathArg: string | void,

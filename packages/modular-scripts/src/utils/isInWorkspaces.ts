@@ -11,7 +11,7 @@ export async function isInWorkspaces(targetPath: string): Promise<boolean> {
 }
 
 // This function gets all the globs in "workspaces" field in the root package manifest
-export async function getWorkspaceGlobs(): Promise<string[]> {
+async function getWorkspaceGlobs(): Promise<string[]> {
   const modularRoot = getModularRoot();
   const rootPackageJsonPath = path.join(modularRoot, 'package.json');
   const rootPackageJson = (await fs.readJSON(
