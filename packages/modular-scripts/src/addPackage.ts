@@ -149,8 +149,6 @@ async function addPackage({
     name,
     targetPath: pathArg || path.join(modularRoot, packagesRoot),
   });
-  let newModularPackageJsonPath;
-
   await validatePackageDetails(name, packagePath, pathArg);
 
   const packageType = templateNameArg ?? (await promptForType(typeArg));
@@ -162,6 +160,8 @@ async function addPackage({
   // Try and find the modular template package. If it's already been installed
   // in the project then continue without needing to do an install.
   // else we will fetch it from the yarn registry.
+  let newModularPackageJsonPath;
+
   try {
     newModularPackageJsonPath = require.resolve(installedPackageJsonPath);
   } catch (e) {
