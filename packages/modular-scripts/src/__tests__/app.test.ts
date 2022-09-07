@@ -115,6 +115,19 @@ describe('when working with a NODE_ENV app', () => {
   });
 });
 
+describe('When setting a base directory for an app', () => {
+  it('fails if trying to add an app outside the "workspaces" directories', async () => {
+    await expect(
+      modular(
+        'add @scoped/will-not-create-app --path some/other/basepath --unstable-type app',
+        {
+          stdio: 'inherit',
+        },
+      ),
+    ).rejects.toThrow();
+  });
+});
+
 describe('When working with a nested app', () => {
   beforeAll(async () => {
     await modular('add @scoped/sample-app --unstable-type app', {
@@ -124,6 +137,35 @@ describe('When working with a nested app', () => {
     await modular('build @scoped/sample-app', {
       stdio: 'inherit',
     });
+  });
+
+  it('creates the app in the expected directory, with the expected name', async () => {
+    const manifest = (await fs.readJSON(
+      path.join(
+        modularRoot,
+        'packages',
+        'scoped',
+        'sample-app',
+        'package.json',
+      ),
+    )) as CoreProperties;
+    expect(manifest.name).toEqual('@scoped/sample-app');
+  });
+
+  it('fails if trying to add another app with the same name', async () => {
+    await expect(
+      modular('add @scoped/sample-app --unstable-type app', {
+        stdio: 'inherit',
+      }),
+    ).rejects.toThrow();
+  });
+
+  it('fails if trying to add a package with another name but pointing to the same base directory', async () => {
+    await expect(
+      modular('add sample-app --path packages/scoped --unstable-type app', {
+        stdio: 'inherit',
+      }),
+    ).rejects.toThrow();
   });
 
   it('can build a nested app', () => {
