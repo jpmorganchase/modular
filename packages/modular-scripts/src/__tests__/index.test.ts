@@ -59,9 +59,12 @@ describe('modular-scripts', () => {
     await modular('add sample-package --unstable-type package', {
       stdio: 'inherit',
     });
-    await modular('add @nested/sample-package --unstable-type package', {
-      stdio: 'inherit',
-    });
+    await modular(
+      'add @nested/sample-package --unstable-type package --path packages/nested',
+      {
+        stdio: 'inherit',
+      },
+    );
 
     await fs.copyFile(
       path.join(__dirname, 'TestView.test-tsx'),
