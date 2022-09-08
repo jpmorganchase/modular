@@ -22,14 +22,8 @@ function modular(str: string, opts: Record<string, unknown> = {}) {
 }
 
 function cleanup() {
-  rimraf.sync(path.join(packagesPath, 'node-env-app'));
-  rimraf.sync(path.join(modularRoot, 'dist/node-env-app'));
-
   rimraf.sync(path.join(packagesPath, 'sample-app'));
-  rimraf.sync(path.join(modularRoot, 'dist/sample-app'));
-
-  rimraf.sync(path.join(packagesPath, 'scoped'));
-  rimraf.sync(path.join(modularRoot, 'dist/scoped-sample-app'));
+  rimraf.sync(path.join(packagesPath, 'nested', 'scoped'));
 
   // run yarn so yarn.lock gets reset
   return execa.sync('yarnpkg', ['--silent'], {

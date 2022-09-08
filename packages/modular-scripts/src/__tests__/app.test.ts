@@ -44,6 +44,9 @@ function cleanup() {
   rimraf.sync(path.join(packagesPath, 'scoped'));
   rimraf.sync(path.join(modularRoot, 'dist/scoped-sample-app'));
 
+  rimraf.sync(path.join(packagesPath, 'custom'));
+  rimraf.sync(path.join(modularRoot, 'dist/scoped-custom-app'));
+
   // run yarn so yarn.lock gets reset
   return execa.sync('yarnpkg', ['--silent'], {
     cwd: modularRoot,
@@ -117,7 +120,7 @@ describe('when working with a NODE_ENV app', () => {
   });
 });
 
-describe('When working with a nested app', () => {
+describe('When working with a npm scoped app', () => {
   beforeAll(async () => {
     await modular('add @scoped/sample-app --unstable-type app', {
       stdio: 'inherit',
@@ -130,7 +133,7 @@ describe('When working with a nested app', () => {
 
   afterAll(cleanup);
 
-  it('can build a nested app', () => {
+  it('can build a npm scoped app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'scoped-sample-app')))
       .toMatchInlineSnapshot(`
       "scoped-sample-app
@@ -307,7 +310,7 @@ describe('When working with a nested app', () => {
   });
 });
 
-describe('when working with an app', () => {
+describe('when working with a non-scoped app', () => {
   beforeAll(async () => {
     await modular('add sample-app --unstable-type app', { stdio: 'inherit' });
 
@@ -571,5 +574,198 @@ describe('when working with an app', () => {
         },
       );
     }
+  });
+});
+
+describe('When working with an app added in a custom directory', () => {
+  beforeAll(async () => {
+    await modular(
+      'add @scoped/custom-app --unstable-type app --path packages/custom/scoped/',
+      {
+        stdio: 'inherit',
+      },
+    );
+
+    await modular('build @scoped/custom-app', {
+      stdio: 'inherit',
+    });
+  });
+
+  afterAll(cleanup);
+
+  it('can build a scoped app from a custom directory', () => {
+    expect(tree(path.join(modularRoot, 'dist', 'scoped-custom-app')))
+      .toMatchInlineSnapshot(`
+      "scoped-custom-app
+      ├─ asset-manifest.json #dvvkwh
+      ├─ favicon.ico #6pu3rg
+      ├─ index.html #6iz8a6
+      ├─ logo192.png #1nez7vk
+      ├─ logo512.png #1hwqvcc
+      ├─ manifest.json #19gah8o
+      ├─ package.json
+      ├─ robots.txt #1sjb8b3
+      └─ static
+         ├─ css
+         │  ├─ main.1a7488ce.css #x701i6
+         │  └─ main.1a7488ce.css.map #z36y5v
+         ├─ js
+         │  ├─ 350.44eb2511.js #4ubhrm
+         │  ├─ 350.44eb2511.js.LICENSE.txt #eplx8h
+         │  ├─ 350.44eb2511.js.map #1icgdim
+         │  ├─ main.fba21b67.js #16haxht
+         │  ├─ main.fba21b67.js.map #14bnapx
+         │  ├─ runtime-main.cef70e6c.js #1f77948
+         │  └─ runtime-main.cef70e6c.js.map #u0erug
+         └─ media
+            └─ logo.103b5fa18196d5665a7e12318285c916.svg #1okqmlj"
+    `);
+  });
+
+  it('can generate a asset-manifest', async () => {
+    expect(
+      String(
+        await fs.readFile(
+          path.join(
+            modularRoot,
+            'dist',
+            'scoped-custom-app',
+            'asset-manifest.json',
+          ),
+        ),
+      ),
+    ).toMatchSnapshot();
+  });
+
+  it('can generate a manifest', async () => {
+    expect(
+      String(
+        await fs.readFile(
+          path.join(modularRoot, 'dist', 'scoped-custom-app', 'manifest.json'),
+        ),
+      ),
+    ).toMatchSnapshot();
+  });
+
+  it('can generate a index.html', async () => {
+    expect(
+      prettier.format(
+        String(
+          await fs.readFile(
+            path.join(modularRoot, 'dist', 'scoped-custom-app', 'index.html'),
+          ),
+        ),
+        {
+          filepath: 'index.html',
+        },
+      ),
+    ).toMatchSnapshot();
+  });
+
+  it('can generate a hashed main css chunk in the css directory', async () => {
+    expect(
+      prettier.format(
+        String(
+          await fs.readFile(
+            path.join(
+              modularRoot,
+              'dist',
+              'scoped-custom-app',
+              'static',
+              'css',
+              'main.1a7488ce.css',
+            ),
+          ),
+        ),
+        {
+          filepath: 'main.1a7488ce.css',
+        },
+      ),
+    ).toMatchSnapshot();
+  });
+
+  it('can generate a hashed css map in the css directory', async () => {
+    expect(
+      JSON.parse(
+        String(
+          await fs.readFile(
+            path.join(
+              modularRoot,
+              'dist',
+              'scoped-custom-app',
+              'static',
+              'css',
+              'main.1a7488ce.css.map',
+            ),
+          ),
+        ),
+      ),
+    ).toMatchSnapshot();
+  });
+
+  it('can generate a hashed main js chunk in the js directory', async () => {
+    expect(
+      prettier.format(
+        String(
+          await fs.readFile(
+            path.join(
+              modularRoot,
+              'dist',
+              'scoped-custom-app',
+              'static',
+              'js',
+              'main.fba21b67.js',
+            ),
+          ),
+        ),
+        {
+          filepath: 'main.fba21b67.js',
+        },
+      ),
+    ).toMatchSnapshot();
+  });
+
+  it('can generate a hashed runtime chunk in the js directory', async () => {
+    expect(
+      prettier.format(
+        String(
+          await fs.readFile(
+            path.join(
+              modularRoot,
+              'dist',
+              'scoped-custom-app',
+              'static',
+              'js',
+              'runtime-main.cef70e6c.js',
+            ),
+          ),
+        ),
+        {
+          filepath: 'runtime-main.cef70e6c.js',
+        },
+      ),
+    ).toMatchSnapshot();
+  });
+
+  it('can generate a hashed vendor chunk in the js directory', async () => {
+    expect(
+      prettier.format(
+        String(
+          await fs.readFile(
+            path.join(
+              modularRoot,
+              'dist',
+              'scoped-custom-app',
+              'static',
+              'js',
+              '350.44eb2511.js',
+            ),
+          ),
+        ),
+        {
+          filepath: '350.44eb2511.js',
+        },
+      ),
+    ).toMatchSnapshot();
   });
 });
