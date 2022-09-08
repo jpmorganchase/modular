@@ -4,21 +4,21 @@ exports[`When working with a nested app can generate a asset-manifest 1`] = `
 "{
   \\"files\\": {
     \\"main.css\\": \\"/static/css/main.1a7488ce.css\\",
-    \\"main.js\\": \\"/static/js/main.502b419b.js\\",
+    \\"main.js\\": \\"/static/js/main.b44531b6.js\\",
     \\"runtime-main.js\\": \\"/static/js/runtime-main.de012fdc.js\\",
-    \\"static/js/788.bbd34b33.js\\": \\"/static/js/788.bbd34b33.js\\",
+    \\"static/js/316.74c894ba.js\\": \\"/static/js/316.74c894ba.js\\",
     \\"static/media/logo.svg\\": \\"/static/media/logo.103b5fa18196d5665a7e12318285c916.svg\\",
     \\"index.html\\": \\"/index.html\\",
     \\"main.1a7488ce.css.map\\": \\"/static/css/main.1a7488ce.css.map\\",
-    \\"main.502b419b.js.map\\": \\"/static/js/main.502b419b.js.map\\",
+    \\"main.b44531b6.js.map\\": \\"/static/js/main.b44531b6.js.map\\",
     \\"runtime-main.de012fdc.js.map\\": \\"/static/js/runtime-main.de012fdc.js.map\\",
-    \\"788.bbd34b33.js.map\\": \\"/static/js/788.bbd34b33.js.map\\"
+    \\"316.74c894ba.js.map\\": \\"/static/js/316.74c894ba.js.map\\"
   },
   \\"entrypoints\\": [
     \\"static/js/runtime-main.de012fdc.js\\",
-    \\"static/js/788.bbd34b33.js\\",
+    \\"static/js/316.74c894ba.js\\",
     \\"static/css/main.1a7488ce.css\\",
-    \\"static/js/main.502b419b.js\\"
+    \\"static/js/main.b44531b6.js\\"
   ]
 }"
 `;
@@ -146,9 +146,9 @@ exports[`When working with a nested app can generate a hashed main js chunk in t
   self.webpackChunk_scoped_sample_app || []).push([
   [179],
   {
-    754: (e, t, a) => {
-      var r = a(735),
-        l = a(788);
+    354: (e, t, a) => {
+      var r = a(784),
+        l = a(316);
       const n = a.p + \\"static/media/logo.103b5fa18196d5665a7e12318285c916.svg\\";
       const c = function () {
         return r.createElement(
@@ -189,14 +189,14 @@ exports[`When working with a nested app can generate a hashed main js chunk in t
     },
   },
   (e) => {
-    e.O(0, [788], () => {
-      return (t = 754), e((e.s = t));
+    e.O(0, [316], () => {
+      return (t = 354), e((e.s = t));
       var t;
     });
     e.O();
   },
 ]);
-//# sourceMappingURL=main.502b419b.js.map
+//# sourceMappingURL=main.b44531b6.js.map
 "
 `;
 
@@ -263,13 +263,13 @@ exports[`When working with a nested app can generate a hashed runtime chunk in t
 `;
 
 exports[`When working with a nested app can generate a hashed vendor chunk in the js directory 1`] = `
-"/*! For license information please see 788.bbd34b33.js.LICENSE.txt */
+"/*! For license information please see 316.74c894ba.js.LICENSE.txt */
 \\"use strict\\";
 (self.webpackChunk_scoped_sample_app =
   self.webpackChunk_scoped_sample_app || []).push([
-  [788],
+  [316],
   {
-    516: (e) => {
+    320: (e) => {
       var t = Object.getOwnPropertySymbols,
         n = Object.prototype.hasOwnProperty,
         r = Object.prototype.propertyIsEnumerable;
@@ -323,10 +323,10 @@ exports[`When working with a nested app can generate a hashed vendor chunk in th
             return i;
           };
     },
-    975: (e, t, n) => {
-      var r = n(735),
-        l = n(516),
-        a = n(146);
+    967: (e, t, n) => {
+      var r = n(784),
+        l = n(320),
+        a = n(616);
       function o(e) {
         for (
           var t = \\"https://reactjs.org/docs/error-decoder.html?invariant=\\" + e,
@@ -7825,7 +7825,7 @@ exports[`When working with a nested app can generate a hashed vendor chunk in th
         return os(null, e, t, !1, n);
       };
     },
-    788: (e, t, n) => {
+    316: (e, t, n) => {
       !(function e() {
         if (
           \\"undefined\\" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ &&
@@ -7837,10 +7837,10 @@ exports[`When working with a nested app can generate a hashed vendor chunk in th
             console.error(t);
           }
       })(),
-        (e.exports = n(975));
+        (e.exports = n(967));
     },
-    447: (e, t, n) => {
-      var r = n(516),
+    426: (e, t, n) => {
+      var r = n(320),
         l = 60103,
         a = 60106;
       (t.Fragment = 60107), (t.StrictMode = 60108), (t.Profiler = 60114);
@@ -8222,10 +8222,10 @@ exports[`When working with a nested app can generate a hashed vendor chunk in th
         }),
         (t.version = \\"17.0.2\\");
     },
-    735: (e, t, n) => {
-      e.exports = n(447);
+    784: (e, t, n) => {
+      e.exports = n(426);
     },
-    666: (e, t) => {
+    475: (e, t) => {
       var n, r, l, a;
       if (
         \\"object\\" === typeof performance &&
@@ -8536,12 +8536,12 @@ exports[`When working with a nested app can generate a hashed vendor chunk in th
           };
         });
     },
-    146: (e, t, n) => {
-      e.exports = n(666);
+    616: (e, t, n) => {
+      e.exports = n(475);
     },
   },
 ]);
-//# sourceMappingURL=788.bbd34b33.js.map
+//# sourceMappingURL=316.74c894ba.js.map
 "
 `;
 
@@ -8621,8 +8621,8 @@ exports[`When working with a nested app can generate a index.html 1`] = `
           })();
       })();
     </script>
-    <script defer=\\"defer\\" src=\\"/static/js/788.bbd34b33.js\\"></script>
-    <script defer=\\"defer\\" src=\\"/static/js/main.502b419b.js\\"></script>
+    <script defer=\\"defer\\" src=\\"/static/js/316.74c894ba.js\\"></script>
+    <script defer=\\"defer\\" src=\\"/static/js/main.b44531b6.js\\"></script>
     <link href=\\"/static/css/main.1a7488ce.css\\" rel=\\"stylesheet\\" />
   </head>
   <body>

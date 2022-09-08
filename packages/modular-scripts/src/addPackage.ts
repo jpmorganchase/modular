@@ -47,15 +47,7 @@ async function promptForName(name: string | void) {
       throw Error('No name entered, exiting');
     }
 
-    // Check whether the package exists already
-    const modularRoot = getModularRoot();
-    const packagePath = path.join(modularRoot, packagesRoot, response.name);
-    if (fs.existsSync(packagePath)) {
-      logger.error(`A package called "${response.name}" already exists!`);
-      name = undefined;
-    } else {
-      return response.name;
-    }
+    return response.name;
   }
 }
 
@@ -223,8 +215,8 @@ async function addPackage({
 
   const packageFilePaths = getAllFiles(packagePath);
 
-  // If we get our package locally we need to whitelist files like yarn publish does
-  const packageWhitelist = globby
+  // If we get our package locally we need to allowlist files like yarn publish does
+  const packageAllowlist = globby
     .sync(modularTemplatePackageJson.files || ['*'], {
       cwd: packagePath,
       absolute: true,
@@ -232,7 +224,7 @@ async function addPackage({
     .map((filePath) => path.normalize(filePath));
 
   for (const packageFilePath of packageFilePaths) {
-    if (!packageWhitelist.includes(packageFilePath)) {
+    if (!packageAllowlist.includes(packageFilePath)) {
       fs.removeSync(packageFilePath);
     } else if (/\.(ts|tsx|js|jsx|json|md|txt)$/i.test(packageFilePath)) {
       fs.writeFileSync(
@@ -307,11 +299,10 @@ function getNewPackageDetails({
   name: string;
   targetPath: string;
 }) {
-  const { scope, module } = parsePackageName(name);
-  const cleanScope = scope?.replace('@', '') ?? '';
-  const packageDir = path.join(cleanScope, module);
-  const componentName = toPascalCase(`${cleanScope} ${module}`);
-  const packagePath = path.join(targetPath, packageDir);
+  const { module } = parsePackageName(name);
+  const packageDir = path.join(module);
+  const componentName = toPascalCase(module);
+  const packagePath = path.resolve(path.join(targetPath, packageDir));
   return { componentName, packagePath };
 }
 

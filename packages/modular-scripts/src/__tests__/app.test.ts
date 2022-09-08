@@ -71,6 +71,8 @@ describe('when working with a NODE_ENV app', () => {
     });
   });
 
+  afterAll(cleanup);
+
   it('can build a app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'node-env-app')))
       .toMatchInlineSnapshot(`
@@ -115,19 +117,6 @@ describe('when working with a NODE_ENV app', () => {
   });
 });
 
-describe('When setting a base directory for an app', () => {
-  it('fails if trying to add an app outside the "workspaces" directories', async () => {
-    await expect(
-      modular(
-        'add @scoped/will-not-create-app --path some/other/basepath --unstable-type app',
-        {
-          stdio: 'inherit',
-        },
-      ),
-    ).rejects.toThrow();
-  });
-});
-
 describe('When working with a nested app', () => {
   beforeAll(async () => {
     await modular('add @scoped/sample-app --unstable-type app', {
@@ -139,42 +128,15 @@ describe('When working with a nested app', () => {
     });
   });
 
-  it('creates the app in the expected directory, with the expected name', async () => {
-    const manifest = (await fs.readJSON(
-      path.join(
-        modularRoot,
-        'packages',
-        'scoped',
-        'sample-app',
-        'package.json',
-      ),
-    )) as CoreProperties;
-    expect(manifest.name).toEqual('@scoped/sample-app');
-  });
-
-  it('fails if trying to add another app with the same name', async () => {
-    await expect(
-      modular('add @scoped/sample-app --unstable-type app', {
-        stdio: 'inherit',
-      }),
-    ).rejects.toThrow();
-  });
-
-  it('fails if trying to add a package with another name but pointing to the same base directory', async () => {
-    await expect(
-      modular('add sample-app --path packages/scoped --unstable-type app', {
-        stdio: 'inherit',
-      }),
-    ).rejects.toThrow();
-  });
+  afterAll(cleanup);
 
   it('can build a nested app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'scoped-sample-app')))
       .toMatchInlineSnapshot(`
       "scoped-sample-app
-      ├─ asset-manifest.json #tpf5u4
+      ├─ asset-manifest.json #1uspk39
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #1cgzs99
+      ├─ index.html #ysfmfn
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -185,11 +147,11 @@ describe('When working with a nested app', () => {
          │  ├─ main.1a7488ce.css #x701i6
          │  └─ main.1a7488ce.css.map #z36y5v
          ├─ js
-         │  ├─ 788.bbd34b33.js #33pg04
-         │  ├─ 788.bbd34b33.js.LICENSE.txt #eplx8h
-         │  ├─ 788.bbd34b33.js.map #1xdy7n0
-         │  ├─ main.502b419b.js #14cckvx
-         │  ├─ main.502b419b.js.map #17qi16y
+         │  ├─ 316.74c894ba.js #euj72k
+         │  ├─ 316.74c894ba.js.LICENSE.txt #eplx8h
+         │  ├─ 316.74c894ba.js.map #13g05b6
+         │  ├─ main.b44531b6.js #16ahtqz
+         │  ├─ main.b44531b6.js.map #15ijphv
          │  ├─ runtime-main.de012fdc.js #1qz643h
          │  └─ runtime-main.de012fdc.js.map #ntuwq4
          └─ media
@@ -289,12 +251,12 @@ describe('When working with a nested app', () => {
               'scoped-sample-app',
               'static',
               'js',
-              'main.502b419b.js',
+              'main.b44531b6.js',
             ),
           ),
         ),
         {
-          filepath: 'main.502b419b.js',
+          filepath: 'main.b44531b6.js',
         },
       ),
     ).toMatchSnapshot();
@@ -333,12 +295,12 @@ describe('When working with a nested app', () => {
               'scoped-sample-app',
               'static',
               'js',
-              '788.bbd34b33.js',
+              '316.74c894ba.js',
             ),
           ),
         ),
         {
-          filepath: '788.bbd34b33.js',
+          filepath: '316.74c894ba.js',
         },
       ),
     ).toMatchSnapshot();
@@ -360,6 +322,8 @@ describe('when working with an app', () => {
       stdio: 'inherit',
     });
   });
+
+  afterAll(cleanup);
 
   it('can add an app', () => {
     expect(tree(path.join(packagesPath, 'sample-app'))).toMatchInlineSnapshot(`
