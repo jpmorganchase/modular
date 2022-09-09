@@ -5,8 +5,8 @@ title: modular add
 
 # `modular add <packageName>`
 
-Adds a new package by creating a new workspace at `packages/<packageName>` by
-default, excluding the scope if the package is
+Adds a new package by creating a new workspace at `packages/<packageName>`,
+omitting the scope if the package is
 [scoped](https://docs.npmjs.com/cli/v8/using-npm/scope). If `--path <somePath>`
 is specified, create the workspace at `<somePath>/<packageName>`.
 
@@ -37,9 +37,10 @@ Packages can currently be one of the following types:
 
 ## Options:
 
-`--path`: Set the base directory in which the workspace is created. If path is
-outside of the directories specified in the `workspace` field of the root
-package.json, the command will fail
+`--path`: Optionally set the directory in which the workspace is created. If the
+provided path is outside (i.e., not a descendant) of the paths specified in
+[the `workspaces` field](https://classic.yarnpkg.com/lang/en/docs/workspaces/#toc-how-to-use-it)
+of the root `package.json`, the command will fail
 
 `--prefer-offline`: Uses offline yarn cache when possible
 
