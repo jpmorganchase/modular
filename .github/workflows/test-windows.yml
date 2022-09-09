@@ -34,4 +34,4 @@ jobs:
       - name: 'Build internal prerequisites'
         run: yarn workspace @modular-scripts/workspace-resolver build
       - name: Run Windows tests
-        run: yarn test esmView.test.ts workspace-resolver
+        run: yarn test esmView.test.ts workspace-resolver addPackage.test.ts
