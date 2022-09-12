@@ -1,5 +1,20 @@
 # modular-scripts
 
+## 3.3.2
+
+### Patch Changes
+
+- [#2131](https://github.com/jpmorganchase/modular/pull/2131)
+  [`e765c13`](https://github.com/jpmorganchase/modular/commit/e765c13e812b26a7d76e8e2010f67947bf11cfe6)
+  Thanks [@cheemcheem](https://github.com/cheemcheem)! - Fix bug in lint
+  --staged --fix where deleted files would fail the lint.
+
+* [#2131](https://github.com/jpmorganchase/modular/pull/2131)
+  [`e765c13`](https://github.com/jpmorganchase/modular/commit/e765c13e812b26a7d76e8e2010f67947bf11cfe6)
+  Thanks [@cheemcheem](https://github.com/cheemcheem)! - Fix
+  `lint --staged --fix` falsely failing when a deleted file is in the staged
+  files
+
 ## 3.3.1
 
 ### Patch Changes
