@@ -120,7 +120,7 @@
     "url-loader": "4.1.1",
     "validate-npm-package-name": "^4.0.0",
     "webpack": "5.73.0",
-    "webpack-dev-server": "4.9.3",
+    "webpack-dev-server": "4.11.0",
     "webpack-manifest-plugin": "5.0.0",
     "ws": "8.8.1"
   },
