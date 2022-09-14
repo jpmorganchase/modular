@@ -142,6 +142,7 @@ program
     '--compareBranch <branch>',
     "Specifies the branch to use with the --changed flag. If not specified, Modular will use the repo's default branch",
   )
+  .option('--package <packages...>', 'Specifies one or more packages to test')
   .option('--coverage', testOptions.coverage.description)
   .option('--forceExit', testOptions.forceExit.description)
   .option('--env <env>', testOptions.env.description, 'jsdom')
@@ -168,10 +169,14 @@ program
   .allowUnknownOption()
   .description('Run tests over the codebase')
   .action(async (regexes: string[], options: CLITestOptions) => {
-    if (options.ancestors && !options.changed) {
+    if (options.ancestors && !options.changed && !options.package) {
       process.stderr.write(
-        "Option --ancestors doesn't make sense without option --changed",
+        "Option --ancestors doesn't make sense without option --changed or option --package",
       );
+      process.exit(1);
+    }
+    if (options.package && options.changed) {
+      process.stderr.write('Option --package conflicts with option --changed');
       process.exit(1);
     }
     if (options.compareBranch && !options.changed) {
@@ -183,6 +188,12 @@ program
     if (options.changed && regexes.length) {
       process.stderr.write(
         'Option --changed conflicts with supplied test regex',
+      );
+      process.exit(1);
+    }
+    if (options.package && regexes.length) {
+      process.stderr.write(
+        'Option --package conflicts with supplied test regex',
       );
       process.exit(1);
     }

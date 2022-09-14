@@ -1,6 +1,7 @@
 import stripAnsi from 'strip-ansi';
 import execa from 'execa';
 import getModularRoot from './getModularRoot';
+import * as logger from './logger';
 
 export function cleanGit(cwd: string): boolean {
   const trackedChanged = stripAnsi(
@@ -36,10 +37,20 @@ function getGitDefaultBranch(): string {
       'symbolic-ref',
       'refs/remotes/origin/HEAD',
     ]);
-    return `origin/${stripAnsi(result.stdout).split('/').pop() as string}`;
+    const defaultBranch = `origin/${
+      stripAnsi(result.stdout).split('/').pop() as string
+    }`;
+    logger.debug(
+      `Git default branch calculated from remote origin: ${defaultBranch}`,
+    );
+    return defaultBranch;
   } catch (err) {
     // no remote origin, look into git config for init.defaultBranch setting
-    return getGitLocalDefaultBranch();
+    const defaultBranch = getGitLocalDefaultBranch();
+    logger.debug(
+      `Git default branch calculated from local git config: ${defaultBranch}`,
+    );
+    return defaultBranch;
   }
 }
 
