@@ -10,6 +10,7 @@ packages/sample-view
 packages/sample-esm-view
 packages/sample-package
 packages/nested
+packages/custom
 packages/sample-library-package
 packages/sample-renamable-library-package
 packages/sample-renamed-library-package
