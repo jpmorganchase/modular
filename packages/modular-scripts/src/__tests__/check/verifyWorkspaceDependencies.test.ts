@@ -23,9 +23,9 @@ describe('verifyWorkspaceDependencies', () => {
   });
 
   it('rejects packages not in the "packages" directory', async () => {
-    mock(getModularRoot).mockReturnValue('__fixtures__/verify-workspace');
+    mock(getModularRoot).mockReturnValue('__fixtures__/verifiable-project');
 
-    const checked = await check('__fixtures__/verify-workspace');
+    const checked = await check('__fixtures__/verifiable-project');
     expect(checked).toBe(false);
     expect(error).toHaveBeenCalledWith(
       expect.stringContaining(
