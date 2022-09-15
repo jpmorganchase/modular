@@ -286,7 +286,7 @@ async function getSinglePackagesContent(singlePackages: string[]) {
     const packageContent = sourcePackageContent.get(pkgName);
     if (!sourcePackageMap[pkgName] || !packageContent) {
       throw new Error(
-        `Package ${pkgName} was specified, but Modular couldn't find it in the workspaces.`,
+        `Package ${pkgName} was specified, but Modular couldn't find it`,
       );
     }
     targetPackageContent.set(pkgName, packageContent);

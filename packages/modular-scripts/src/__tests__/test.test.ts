@@ -194,6 +194,81 @@ describe('Modular test command', () => {
       );
     });
   });
+
+  describe('test command can successfully do selective tests based on selected packages', () => {
+    const fixturesFolder = path.join(
+      __dirname,
+      Array.from({ length: 4 }).reduce<string>(
+        (acc) => `${acc}..${path.sep}`,
+        '',
+      ),
+      '__fixtures__',
+      'ghost-testing',
+    );
+
+    const currentModularFolder = getModularRoot();
+    let randomOutputFolder: string;
+
+    beforeEach(() => {
+      // Create random dir
+      randomOutputFolder = tmp.dirSync({ unsafeCleanup: true }).name;
+      fs.copySync(fixturesFolder, randomOutputFolder);
+      execa.sync('yarn', {
+        cwd: randomOutputFolder,
+      });
+    });
+
+    // Run in a single test, serially for performance reasons (the setup time is quite long)
+    it('finds --package after specifying a valid workspaces / finds ancestors using --ancestors', () => {
+      const resultPackages = runRemoteModularTest(
+        currentModularFolder,
+        randomOutputFolder,
+        ['test', '--package', 'b', '--package', 'c'],
+      );
+      expect(resultPackages.stderr).toContain(
+        'packages/c/src/__tests__/utils/c-nested.test.ts',
+      );
+      expect(resultPackages.stderr).toContain(
+        'packages/c/src/__tests__/c.test.ts',
+      );
+      expect(resultPackages.stderr).toContain(
+        'packages/b/src/__tests__/utils/b-nested.test.ts',
+      );
+      expect(resultPackages.stderr).toContain(
+        'packages/b/src/__tests__/b.test.ts',
+      );
+
+      const resultPackagesWithAncestors = runRemoteModularTest(
+        currentModularFolder,
+        randomOutputFolder,
+        ['test', '--ancestors', '--package', 'b', '--package', 'c'],
+      );
+      expect(resultPackagesWithAncestors.stderr).toContain(
+        'packages/c/src/__tests__/utils/c-nested.test.ts',
+      );
+      expect(resultPackagesWithAncestors.stderr).toContain(
+        'packages/c/src/__tests__/c.test.ts',
+      );
+      expect(resultPackagesWithAncestors.stderr).toContain(
+        'packages/b/src/__tests__/utils/b-nested.test.ts',
+      );
+      expect(resultPackagesWithAncestors.stderr).toContain(
+        'packages/b/src/__tests__/b.test.ts',
+      );
+      expect(resultPackagesWithAncestors.stderr).toContain(
+        'packages/a/src/__tests__/utils/a-nested.test.ts',
+      );
+      expect(resultPackagesWithAncestors.stderr).toContain(
+        'packages/a/src/__tests__/a.test.ts',
+      );
+      expect(resultPackagesWithAncestors.stderr).toContain(
+        'packages/e/src/__tests__/utils/e-nested.test.ts',
+      );
+      expect(resultPackagesWithAncestors.stderr).toContain(
+        'packages/e/src/__tests__/e.test.ts',
+      );
+    });
+  });
 });
 
 function runRemoteModularTest(
