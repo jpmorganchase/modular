@@ -122,16 +122,26 @@ async function test(
   const cleanRegexes: string[] = [];
 
   // There are two ways of discovering the test regexes we need: either they're specified by the user as CLI arguments
-  // or they have to be calculated from selective options (--changed and --package) and optionally agumented with --ancestors.
-  const regexes =
-    changed || packages?.length
-      ? await computeSelectiveRegexes({
-          changed,
-          compareBranch,
-          packages,
-          ancestors,
-        })
-      : userRegexes;
+  // or they have to be calculated from selective options (--changed and --package) and optionally agumented with --ancestors
+  const isSelective = changed || packages?.length;
+  const regexes = isSelective
+    ? await computeSelectiveRegexes({
+        changed,
+        compareBranch,
+        packages,
+        ancestors,
+      })
+    : userRegexes;
+
+  // If test is selective (user set --changed or --package) and we computed no regexes, then bail out
+  if (!regexes?.length && isSelective) {
+    process.stdout.write(
+      changed
+        ? 'No changed workspaces found'
+        : 'No workspaces found in selection',
+    );
+    process.exit(0);
+  }
 
   if (regexes?.length) {
     regexes.forEach((reg) => {
