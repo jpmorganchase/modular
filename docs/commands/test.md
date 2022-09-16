@@ -146,7 +146,7 @@ in the test environment.
 
 Default: `undefined`
 
-Run all the test for the workspace with the specified package name. Can be
+Run all the tests for the workspace with the specified package name. Can be
 repeated to select more than one workspace. Can be combined with the
 `--ancestors` option to test the specified workspace(s) plus all the workspaces
 that, directly or indirectly, depend on them. Conflicts with `--changed`.
