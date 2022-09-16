@@ -137,8 +137,8 @@ async function test(
   if (!regexes?.length && isSelective) {
     process.stdout.write(
       changed
-        ? 'No changed workspaces found'
-        : 'No workspaces found in selection',
+        ? 'No changed workspaces found\n'
+        : 'No workspaces found in selection\n',
     );
     process.exit(0);
   }
