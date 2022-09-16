@@ -269,6 +269,134 @@ describe('Modular test command', () => {
       );
     });
   });
+
+  describe('test command has error states', () => {
+    // Run in a single test, serially for performance reasons (the setup time is quite long)
+    it('errors when specifying --package with --changed', async () => {
+      let errorNumber;
+      try {
+        await execa(
+          'yarnpkg',
+          ['modular', 'test', '--changed', '--package', 'modular-scripts'],
+          {
+            all: true,
+            cleanup: true,
+          },
+        );
+      } catch (error) {
+        errorNumber = (error as ExecaError).exitCode;
+      }
+      expect(errorNumber).toEqual(1);
+    });
+
+    it('errors when specifying --package with a non-existing workspace', async () => {
+      let capturedError;
+      try {
+        await execa(
+          'yarnpkg',
+          ['modular', 'test', '--package', 'non-existing'],
+          {
+            all: true,
+            cleanup: true,
+          },
+        );
+      } catch (error) {
+        capturedError = error as ExecaError;
+      }
+      expect(capturedError?.exitCode).toEqual(1);
+      expect(capturedError?.stderr).toContain(
+        `Package non-existing was specified, but Modular couldn't find it`,
+      );
+    });
+
+    it('errors when specifying a regex with --packages', async () => {
+      let capturedError;
+      try {
+        await execa(
+          'yarnpkg',
+          [
+            'modular',
+            'test',
+            'memoize.test.ts',
+            '--package',
+            'modular-scripts',
+          ],
+          {
+            all: true,
+            cleanup: true,
+          },
+        );
+      } catch (error) {
+        capturedError = error as ExecaError;
+      }
+      expect(capturedError?.exitCode).toEqual(1);
+      expect(capturedError?.stderr).toContain(
+        `Option --package conflicts with supplied test regex`,
+      );
+    });
+
+    it('errors when specifying a regex with --package', async () => {
+      let capturedError;
+      try {
+        await execa(
+          'yarnpkg',
+          [
+            'modular',
+            'test',
+            'memoize.test.ts',
+            '--package',
+            'modular-scripts',
+          ],
+          {
+            all: true,
+            cleanup: true,
+          },
+        );
+      } catch (error) {
+        capturedError = error as ExecaError;
+      }
+      expect(capturedError?.exitCode).toEqual(1);
+      expect(capturedError?.stderr).toContain(
+        `Option --package conflicts with supplied test regex`,
+      );
+    });
+
+    it('errors when specifying a regex with --changed', async () => {
+      let capturedError;
+      try {
+        await execa(
+          'yarnpkg',
+          ['modular', 'test', 'memoize.test.ts', '--changed'],
+          {
+            all: true,
+            cleanup: true,
+          },
+        );
+      } catch (error) {
+        capturedError = error as ExecaError;
+      }
+      expect(capturedError?.exitCode).toEqual(1);
+      expect(capturedError?.stderr).toContain(
+        `Option --changed conflicts with supplied test regex`,
+      );
+    });
+
+    it('errors when specifying --compareBranch without --changed', async () => {
+      let capturedError;
+      try {
+        await execa('yarnpkg', ['modular', 'test', '--compareBranch', 'main'], {
+          all: true,
+          cleanup: true,
+        });
+      } catch (error) {
+        capturedError = error as ExecaError;
+      }
+      expect(capturedError?.exitCode).toEqual(1);
+      expect(capturedError?.stderr).toContain(
+        `Option --compareBranch doesn't make sense without option --changed`,
+      );
+    });
+  });
 });
 
 function runRemoteModularTest(

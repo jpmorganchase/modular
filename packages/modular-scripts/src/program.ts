@@ -171,29 +171,31 @@ program
   .action(async (regexes: string[], options: CLITestOptions) => {
     if (options.ancestors && !options.changed && !options.package) {
       process.stderr.write(
-        "Option --ancestors doesn't make sense without option --changed or option --package",
+        "Option --ancestors doesn't make sense without option --changed or option --package\n",
       );
       process.exit(1);
     }
     if (options.package && options.changed) {
-      process.stderr.write('Option --package conflicts with option --changed');
+      process.stderr.write(
+        'Option --package conflicts with option --changed\n',
+      );
       process.exit(1);
     }
     if (options.compareBranch && !options.changed) {
       process.stderr.write(
-        "Option --compareBranch doesn't make sense without option --changed",
+        "Option --compareBranch doesn't make sense without option --changed\n",
       );
       process.exit(1);
     }
     if (options.changed && regexes.length) {
       process.stderr.write(
-        'Option --changed conflicts with supplied test regex',
+        'Option --changed conflicts with supplied test regex\n',
       );
       process.exit(1);
     }
     if (options.package && regexes.length) {
       process.stderr.write(
-        'Option --package conflicts with supplied test regex',
+        'Option --package conflicts with supplied test regex\n',
       );
       process.exit(1);
     }
