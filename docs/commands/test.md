@@ -64,7 +64,7 @@ Specify the comparison branch used to determine which files have changed when
 using the `changed` option. If this option is used without `changed`, the
 command will fail.
 
-#### collectCoverageFrom
+### collectCoverageFrom
 
 [_Documentation_](https://jestjs.io/docs/configuration#collectcoveragefrom-array)
 
@@ -88,7 +88,7 @@ Example:
 }
 ```
 
-#### coveragePathIgnorePatterns
+### coveragePathIgnorePatterns
 
 [_Documentation_](https://jestjs.io/docs/configuration#coveragepathignorepatterns-arraystring)
 
@@ -98,7 +98,7 @@ An array of regexp pattern strings that are matched against all file paths
 before executing the test. If the file path matches any of the patterns,
 coverage information will be skipped.
 
-#### coverageThreshold
+### coverageThreshold
 
 [_Documentation_](https://jestjs.io/docs/configuration#coveragethreshold-object)
 
@@ -111,7 +111,7 @@ positive number are taken to be the minimum percentage required. Thresholds
 specified as a negative number represent the maximum number of uncovered
 entities allowed.
 
-#### moduleNameMapper
+### moduleNameMapper
 
 [_Documentation_](https://jestjs.io/docs/configuration#modulenamemapper-objectstring-string--arraystring)
 
@@ -131,7 +131,7 @@ The moduleNameMapper is merged with the `modular` defaults to provide common use
 cases for static assets, like static assets including images, CSS and
 CSS-modules.
 
-#### modulePathIgnorePatterns
+### modulePathIgnorePatterns
 
 [_Documentation_](https://jestjs.io/docs/configuration#modulepathignorepatterns-arraystring)
 
@@ -142,7 +142,16 @@ before those paths are to be considered 'visible' to the module loader. If a
 given module's path matches any of the patterns, it will not be `require()`-able
 in the test environment.
 
-#### testPathIgnorePatterns
+### package
+
+Default: `undefined`
+
+Run all the tests for the workspace with the specified package name. Can be
+repeated to select more than one workspace. Can be combined with the
+`--ancestors` option to test the specified workspace(s) plus all the workspaces
+that, directly or indirectly, depend on them. Conflicts with `--changed`.
+
+### testPathIgnorePatterns
 
 [_Documentation_](https://jestjs.io/docs/configuration#testpathignorepatterns-arraystring)
 
@@ -152,7 +161,7 @@ An array of regexp pattern strings that are matched against all test paths
 before executing the test. If the test path matches any of the patterns, it will
 be skipped.
 
-#### testRunner
+### testRunner
 
 [_Documentation_](https://jestjs.io/docs/configuration#testrunner-string)
 
@@ -166,7 +175,7 @@ This can be used to revert to the previous `jest` default testRunner
 (`jest-jasmine2`) in cases where `circus` is not yet compatible with an older
 codebase.
 
-#### transformIgnorePatterns
+### transformIgnorePatterns
 
 [_Documentation_](https://jestjs.io/docs/configuration#transformignorepatterns-arraystring)
 
