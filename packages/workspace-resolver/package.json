@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "dependencies": {
     "fs-extra": "^10.1.0",
-    "globby": "11.0.4",
+    "globby": "11.1.0",
     "semver": "7.3.7"
   },
   "devDependencies": {
