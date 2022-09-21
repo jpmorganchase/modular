@@ -83,11 +83,11 @@ module.exports = function (webpackEnv) {
   const isEsmViewDevelopment = isEsmView & isEnvDevelopment;
 
   // This is needed if we're serving a ESM view in development node, since it won't be defined in the view dependencies.
-  if (externalDependencies.react && isEsmViewDevelopment) {
-    externalDependencies['react-dom'] = externalDependencies.react;
+  if (isEsmViewDevelopment && externalDependencies?.react) {
+    externalDependencies['react-dom'] = externalDependencies?.react;
   }
-  if (externalResolutions.react && isEsmViewDevelopment) {
-    externalResolutions['react-dom'] = externalResolutions.react;
+  if (isEsmViewDevelopment && externalResolutions?.react) {
+    externalResolutions['react-dom'] = externalResolutions?.react;
   }
 
   // Create a map of external dependencies if we're building a ESM view

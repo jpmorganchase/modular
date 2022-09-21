@@ -84,10 +84,10 @@ module.exports = function (webpackEnv) {
   const isEsmViewDevelopment = isEsmView & isEnvDevelopment;
 
   // This is needed if we're serving a ESM view in development node, since it won't be defined in the view dependencies.
-  if (externalDependencies.react && isEsmViewDevelopment) {
+  if (isEsmViewDevelopment && externalDependencies.react) {
     externalDependencies['react-dom'] = externalDependencies.react;
   }
-  if (externalResolutions.react && isEsmViewDevelopment) {
+  if (isEsmViewDevelopment && externalResolutions.react) {
     externalResolutions['react-dom'] = externalResolutions.react;
   }
 
@@ -185,6 +185,18 @@ module.exports = function (webpackEnv) {
   };
 
   const appConfig = {
+    // TODO: remove me
+    experiments: {
+      outputModule: undefined,
+    },
+    externals: undefined,
+    externalsType: undefined,
+    output: {
+      library: undefined,
+      module: undefined,
+      path: undefined,
+    },
+    // TODO: end remove
     optimization: {
       // Automatically split vendor and commons
       splitChunks: { chunks: 'all' },
@@ -212,12 +224,11 @@ module.exports = function (webpackEnv) {
     // Stop compilation early in production
     bail: true,
     devtool: shouldUseSourceMap ? 'source-map' : false,
-    path: paths.appBuild,
     output: {
       // The build folder.
       path: paths.appBuild,
+      pathinfo: false,
       // There will be one main bundle, and one file per asynchronous chunk.
-
       filename: 'static/js/[name].[contenthash:8].js',
       // There are also additional JS chunk files if you use code splitting.
       // Please remember that Webpack 5, unlike Webpack 4, controls "splitChunks" via fileName, not chunkFilename - https://stackoverflow.com/questions/66077740/webpack-5-output-chunkfilename-not-working
@@ -230,54 +241,11 @@ module.exports = function (webpackEnv) {
     },
     optimization: {
       minimize: true,
-      minimizer: [
-        // This is only used in production mode
-        new TerserPlugin({
-          terserOptions: {
-            parse: {
-              // We want terser to parse ecma 8 code. However, we don't want it
-              // to apply any minification steps that turns valid ecma 5 code
-              // into invalid ecma 5 code. This is why the 'compress' and 'output'
-              // sections only apply transformations that are ecma 5 safe
-              // https://github.com/facebook/create-react-app/pull/4234
-              ecma: 8,
-            },
-            compress: {
-              ecma: 5,
-              warnings: false,
-              // Disabled because of an issue with Uglify breaking seemingly valid code:
-              // https://github.com/facebook/create-react-app/issues/2376
-              // Pending further investigation:
-              // https://github.com/mishoo/UglifyJS2/issues/2011
-              comparisons: false,
-              // Disabled because of an issue with Terser breaking valid code:
-              // https://github.com/facebook/create-react-app/issues/5250
-              // Pending further investigation:
-              // https://github.com/terser-js/terser/issues/120
-              inline: 2,
-            },
-            mangle: {
-              safari10: true,
-            },
-            // Added for profiling in devtools
-            keep_classnames: isEnvProductionProfile,
-            keep_fnames: isEnvProductionProfile,
-            output: {
-              ecma: 5,
-              comments: false,
-              // Turned on because emoji and regex is not minified properly using default
-              // https://github.com/facebook/create-react-app/issues/2488
-              ascii_only: true,
-            },
-          },
-        }),
-        new CssMinimizerPlugin(),
-      ],
     },
   };
 
   const developementConfig = {
-    mode: 'developement',
+    mode: 'development',
     bail: false,
     devtool: 'cheap-module-source-map',
     output: {
@@ -560,6 +528,51 @@ module.exports = function (webpackEnv) {
             // Make sure to add the new loader(s) before the "file" loader.
           ],
         },
+      ],
+    },
+    optimization: {
+      minimizer: [
+        // This is only used in production mode
+        new TerserPlugin({
+          terserOptions: {
+            parse: {
+              // We want terser to parse ecma 8 code. However, we don't want it
+              // to apply any minification steps that turns valid ecma 5 code
+              // into invalid ecma 5 code. This is why the 'compress' and 'output'
+              // sections only apply transformations that are ecma 5 safe
+              // https://github.com/facebook/create-react-app/pull/4234
+              ecma: 8,
+            },
+            compress: {
+              ecma: 5,
+              warnings: false,
+              // Disabled because of an issue with Uglify breaking seemingly valid code:
+              // https://github.com/facebook/create-react-app/issues/2376
+              // Pending further investigation:
+              // https://github.com/mishoo/UglifyJS2/issues/2011
+              comparisons: false,
+              // Disabled because of an issue with Terser breaking valid code:
+              // https://github.com/facebook/create-react-app/issues/5250
+              // Pending further investigation:
+              // https://github.com/terser-js/terser/issues/120
+              inline: 2,
+            },
+            mangle: {
+              safari10: true,
+            },
+            // Added for profiling in devtools
+            keep_classnames: isEnvProductionProfile,
+            keep_fnames: isEnvProductionProfile,
+            output: {
+              ecma: 5,
+              comments: false,
+              // Turned on because emoji and regex is not minified properly using default
+              // https://github.com/facebook/create-react-app/issues/2488
+              ascii_only: true,
+            },
+          },
+        }),
+        new CssMinimizerPlugin(),
       ],
     },
     plugins: [
