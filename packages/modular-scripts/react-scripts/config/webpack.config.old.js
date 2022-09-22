@@ -5,7 +5,6 @@ const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 const resolve = require('resolve');
-const { merge } = require('webpack-merge');
 const builtinModules = require('builtin-modules');
 const PnpWebpackPlugin = require('pnp-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -84,11 +83,11 @@ module.exports = function (webpackEnv) {
   const isEsmViewDevelopment = isEsmView & isEnvDevelopment;
 
   // This is needed if we're serving a ESM view in development node, since it won't be defined in the view dependencies.
-  if (isEsmViewDevelopment && externalDependencies.react) {
-    externalDependencies['react-dom'] = externalDependencies.react;
+  if (isEsmViewDevelopment && externalDependencies?.react) {
+    externalDependencies['react-dom'] = externalDependencies?.react;
   }
-  if (isEsmViewDevelopment && externalResolutions.react) {
-    externalResolutions['react-dom'] = externalResolutions.react;
+  if (isEsmViewDevelopment && externalResolutions?.react) {
+    externalResolutions['react-dom'] = externalResolutions?.react;
   }
 
   // Create a map of external dependencies if we're building a ESM view
@@ -184,98 +183,146 @@ module.exports = function (webpackEnv) {
     return loaders;
   };
 
-  const appConfig = {
-    // TODO: remove me
+  const webpackConfig = {
+    externals: isApp
+      ? undefined
+      : function ({ request }, callback) {
+          const parsedModule = parsePackageName(request);
+
+          // If the module is absolute and it is in the import map, we want to externalise it
+          if (
+            parsedModule &&
+            parsedModule.dependencyName &&
+            dependencyMap[parsedModule.dependencyName] &&
+            // If this is an absolute export of css we need to deal with it in the loader
+            !request.endsWith('.css')
+          ) {
+            const { dependencyName, submodule } = parsedModule;
+
+            const toRewrite = `${dependencyMap[dependencyName]}${
+              submodule ? `/${submodule}` : ''
+            }`;
+
+            return callback(null, toRewrite);
+          }
+          // Otherwise we just want to bundle it
+          return callback();
+        },
+
+    externalsType: isApp ? undefined : 'module',
     experiments: {
-      outputModule: undefined,
+      outputModule: isApp ? undefined : true,
     },
-    externals: undefined,
-    externalsType: undefined,
-    output: {
-      library: undefined,
-      module: undefined,
-      path: undefined,
-    },
-    // TODO: end remove
-    optimization: {
-      // Automatically split vendor and commons
-      splitChunks: { chunks: 'all' },
-      // Keep the runtime chunk separated to enable long term caching
-      // https://twitter.com/wSokra/status/969679223278505985
-      // https://github.com/facebook/create-react-app/issues/5358
-      runtimeChunk: {
-        name: (entrypoint) => `runtime-${entrypoint.name}`,
-      },
-    },
-  };
-
-  const esmViewConfig = {
-    externals: rewriteExternals,
-    externalsType: 'module',
-    experiments: { outputModule: true },
-    output: {
-      module: true,
-      library: { type: 'module' },
-    },
-  };
-
-  const productionConfig = {
-    mode: 'production',
-    // Stop compilation early in production
-    bail: true,
-    devtool: shouldUseSourceMap ? 'source-map' : false,
-    output: {
-      // The build folder.
-      path: paths.appBuild,
-      pathinfo: false,
-      // There will be one main bundle, and one file per asynchronous chunk.
-      filename: 'static/js/[name].[contenthash:8].js',
-      // There are also additional JS chunk files if you use code splitting.
-      // Please remember that Webpack 5, unlike Webpack 4, controls "splitChunks" via fileName, not chunkFilename - https://stackoverflow.com/questions/66077740/webpack-5-output-chunkfilename-not-working
-      chunkFilename: 'static/js/[name].[contenthash:8].chunk.js',
-      // Point sourcemap entries to original disk location (format as URL on Windows)
-      devtoolModuleFilenameTemplate: (info) =>
-        path
-          .relative(paths.appSrc, info.absoluteResourcePath)
-          .replace(/\\/g, '/'),
-    },
-    optimization: {
-      minimize: true,
-    },
-  };
-
-  const developementConfig = {
-    mode: 'development',
-    bail: false,
-    devtool: 'cheap-module-source-map',
-    output: {
-      // Add /* filename */ comments to generated require()s in the output.
-      pathinfo: true,
-      // In development, it does not produce real files.
-      filename: 'static/js/[name].js',
-      // Please remember that Webpack 5, unlike Webpack 4, controls "splitChunks" via fileName, not chunkFilename - https://stackoverflow.com/questions/66077740/webpack-5-output-chunkfilename-not-working
-      chunkFilename: 'static/js/[name].chunk.js',
-      // Point sourcemap entries to original disk location (format as URL on Windows)
-      devtoolModuleFilenameTemplate: (info) =>
-        path.resolve(info.absoluteResourcePath).replace(/\\/g, '/'),
-    },
-    optimization: {
-      minimize: false,
-    },
-  };
-
-  const baseConfig = {
     // Workaround for this bug: https://stackoverflow.com/questions/53905253/cant-set-up-the-hmr-stuck-with-waiting-for-update-signal-from-wds-in-cons
     target: 'web',
+    mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
+    // Stop compilation early in production
+    bail: isEnvProduction,
+    devtool: isEnvProduction
+      ? shouldUseSourceMap
+        ? 'source-map'
+        : false
+      : isEnvDevelopment && 'cheap-module-source-map',
     // These are the "entry points" to our application.
     // This means they will be the "root" imports that are included in JS bundle.
     // We bundle a virtual file to trampoline the ESM view as an entry point if we're starting it (ESM views have no ReactDOM.render)
-    entry: isEsmViewDevelopment ? getVirtualTrampoline() : paths.appIndexJs, // REWRITE
+    entry: isEsmViewDevelopment ? getVirtualTrampoline() : paths.appIndexJs,
     output: {
+      module: isApp ? undefined : true,
+      library: isApp
+        ? undefined
+        : {
+            type: 'module',
+          },
+      // The build folder.
+      path: isEnvProduction ? paths.appBuild : undefined,
+      // Add /* filename */ comments to generated require()s in the output.
+      pathinfo: isEnvDevelopment,
+      // There will be one main bundle, and one file per asynchronous chunk.
+      // In development, it does not produce real files.
+      filename: isEnvProduction
+        ? 'static/js/[name].[contenthash:8].js'
+        : isEnvDevelopment && 'static/js/[name].js',
+      // There are also additional JS chunk files if you use code splitting.
+      // Please remember that Webpack 5, unlike Webpack 4, controls "splitChunks" via fileName, not chunkFilename - https://stackoverflow.com/questions/66077740/webpack-5-output-chunkfilename-not-working
+      chunkFilename: isEnvProduction
+        ? 'static/js/[name].[contenthash:8].chunk.js'
+        : isEnvDevelopment && 'static/js/[name].chunk.js',
       // webpack uses `publicPath` to determine where the app is being served from.
       // It requires a trailing slash, or the file assets will get an incorrect path.
       // We inferred the "public path" (such as / or /my-project) from homepage.
       publicPath: paths.publicUrlOrPath,
+      // Point sourcemap entries to original disk location (format as URL on Windows)
+      devtoolModuleFilenameTemplate: isEnvProduction
+        ? (info) =>
+            path
+              .relative(paths.appSrc, info.absoluteResourcePath)
+              .replace(/\\/g, '/')
+        : isEnvDevelopment &&
+          ((info) =>
+            path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')),
+    },
+    optimization: {
+      minimize: isEnvProduction,
+      minimizer: [
+        // This is only used in production mode
+        new TerserPlugin({
+          terserOptions: {
+            parse: {
+              // We want terser to parse ecma 8 code. However, we don't want it
+              // to apply any minification steps that turns valid ecma 5 code
+              // into invalid ecma 5 code. This is why the 'compress' and 'output'
+              // sections only apply transformations that are ecma 5 safe
+              // https://github.com/facebook/create-react-app/pull/4234
+              ecma: 8,
+            },
+            compress: {
+              ecma: 5,
+              warnings: false,
+              // Disabled because of an issue with Uglify breaking seemingly valid code:
+              // https://github.com/facebook/create-react-app/issues/2376
+              // Pending further investigation:
+              // https://github.com/mishoo/UglifyJS2/issues/2011
+              comparisons: false,
+              // Disabled because of an issue with Terser breaking valid code:
+              // https://github.com/facebook/create-react-app/issues/5250
+              // Pending further investigation:
+              // https://github.com/terser-js/terser/issues/120
+              inline: 2,
+            },
+            mangle: {
+              safari10: true,
+            },
+            // Added for profiling in devtools
+            keep_classnames: isEnvProductionProfile,
+            keep_fnames: isEnvProductionProfile,
+            output: {
+              ecma: 5,
+              comments: false,
+              // Turned on because emoji and regex is not minified properly using default
+              // https://github.com/facebook/create-react-app/issues/2488
+              ascii_only: true,
+            },
+          },
+        }),
+        new CssMinimizerPlugin(),
+      ],
+      // Automatically split vendor and commons
+      // https://twitter.com/wSokra/status/969633336732905474
+      // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
+      splitChunks: isApp
+        ? {
+            chunks: 'all',
+          }
+        : undefined,
+      // Keep the runtime chunk separated to enable long term caching
+      // https://twitter.com/wSokra/status/969679223278505985
+      // https://github.com/facebook/create-react-app/issues/5358
+      runtimeChunk: isApp
+        ? {
+            name: (entrypoint) => `runtime-${entrypoint.name}`,
+          }
+        : undefined,
     },
     resolve: {
       // This allows you to set a fallback for where webpack should look for modules.
@@ -530,51 +577,6 @@ module.exports = function (webpackEnv) {
         },
       ],
     },
-    optimization: {
-      minimizer: [
-        // This is only used in production mode
-        new TerserPlugin({
-          terserOptions: {
-            parse: {
-              // We want terser to parse ecma 8 code. However, we don't want it
-              // to apply any minification steps that turns valid ecma 5 code
-              // into invalid ecma 5 code. This is why the 'compress' and 'output'
-              // sections only apply transformations that are ecma 5 safe
-              // https://github.com/facebook/create-react-app/pull/4234
-              ecma: 8,
-            },
-            compress: {
-              ecma: 5,
-              warnings: false,
-              // Disabled because of an issue with Uglify breaking seemingly valid code:
-              // https://github.com/facebook/create-react-app/issues/2376
-              // Pending further investigation:
-              // https://github.com/mishoo/UglifyJS2/issues/2011
-              comparisons: false,
-              // Disabled because of an issue with Terser breaking valid code:
-              // https://github.com/facebook/create-react-app/issues/5250
-              // Pending further investigation:
-              // https://github.com/terser-js/terser/issues/120
-              inline: 2,
-            },
-            mangle: {
-              safari10: true,
-            },
-            // Added for profiling in devtools
-            keep_classnames: isEnvProductionProfile,
-            keep_fnames: isEnvProductionProfile,
-            output: {
-              ecma: 5,
-              comments: false,
-              // Turned on because emoji and regex is not minified properly using default
-              // https://github.com/facebook/create-react-app/issues/2488
-              ascii_only: true,
-            },
-          },
-        }),
-        new CssMinimizerPlugin(),
-      ],
-    },
     plugins: [
       // Generates an `index.html` file with the <script> injected.
       isApp
@@ -745,36 +747,6 @@ module.exports = function (webpackEnv) {
     // our own hints via the FileSizeReporter
     performance: false,
   };
-
-  const mergeObject = [
-    isApp ? appConfig : esmViewConfig,
-    isEnvProduction ? productionConfig : developementConfig,
-  ];
-
-  const webpackConfig = merge([baseConfig, ...mergeObject]);
-
-  function rewriteExternals({ request }, callback) {
-    const parsedModule = parsePackageName(request);
-
-    // If the module is absolute and it is in the import map, we want to externalise it
-    if (
-      parsedModule &&
-      parsedModule.dependencyName &&
-      dependencyMap[parsedModule.dependencyName] &&
-      // If this is an absolute export of css we need to deal with it in the loader
-      !request.endsWith('.css')
-    ) {
-      const { dependencyName, submodule } = parsedModule;
-
-      const toRewrite = `${dependencyMap[dependencyName]}${
-        submodule ? `/${submodule}` : ''
-      }`;
-
-      return callback(null, toRewrite);
-    }
-    // Otherwise we just want to bundle it
-    return callback();
-  }
 
   // These dependencies are so widely used for us (JPM) that it makes sense to install
   // their webpack plugin when used.
