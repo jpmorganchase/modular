@@ -218,6 +218,11 @@ describe('modular-scripts', () => {
           "module": "dist-es/index.js",
           "name": "sample-view",
           "private": false,
+          "repository": Object {
+            "directory": "packages/sample-view",
+            "type": "git",
+            "url": "https://github.com/jpmorganchase/modular.git",
+          },
           "typings": "dist-types/index.d.ts",
           "version": "1.0.0",
         }
@@ -365,6 +370,11 @@ describe('modular-scripts', () => {
           "module": "dist-es/index.js",
           "name": "sample-package",
           "private": false,
+          "repository": Object {
+            "directory": "packages/sample-package",
+            "type": "git",
+            "url": "https://github.com/jpmorganchase/modular.git",
+          },
           "typings": "dist-types/index.d.ts",
           "version": "1.0.0",
         }
@@ -441,6 +451,11 @@ describe('modular-scripts', () => {
           "module": "dist-es/nested-sample-package.es.js",
           "name": "@nested/sample-package",
           "private": false,
+          "repository": Object {
+            "directory": "packages/nested/sample-package",
+            "type": "git",
+            "url": "https://github.com/jpmorganchase/modular.git",
+          },
           "typings": "dist-types/index.d.ts",
           "version": "1.0.0",
         }

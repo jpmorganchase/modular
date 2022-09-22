@@ -16,6 +16,7 @@ import getModularRoot from '../../utils/getModularRoot';
 import { makeBundle } from './makeBundle';
 import { makeTypings } from './makeTypings';
 import getRelativeLocation from '../../utils/getRelativeLocation';
+import { getRepositoryField } from './getRepositoryField';
 
 const outputDirectory = 'dist';
 
@@ -56,6 +57,10 @@ export async function buildPackage(
     preserveModules,
     includePrivate,
   );
+
+  if (!publicPackageJson.repository) {
+    publicPackageJson.repository = await getRepositoryField(packagePath);
+  }
 
   await fs.writeJson(
     path.join(targetOutputDirectory, 'package.json'),
