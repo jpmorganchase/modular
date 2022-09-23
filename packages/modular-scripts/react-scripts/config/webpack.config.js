@@ -19,6 +19,7 @@ const paths = require('./paths');
 const modules = require('./modules');
 const createPluginConfig = require('./parts/pluginConfig');
 const createLoadersConfig = require('./parts/loadersConfig');
+const { createExternalDependenciesMap } = require('./utils/esmUtils');
 
 const isApp = process.env.MODULAR_IS_APP === 'true';
 const isEsmView = !isApp;
@@ -81,11 +82,11 @@ module.exports = function (webpackEnv) {
 
   // Create a map of external dependencies if we're building a ESM view
   const dependencyMap = isEsmView
-    ? createExternalDependenciesMap(
+    ? createExternalDependenciesMap({
         externalDependencies,
         externalResolutions,
         selectiveCDNResolutions,
-      )
+      })
     : {};
 
   // Variable used for enabling profiling in Production
@@ -585,40 +586,6 @@ module.exports = function (webpackEnv) {
 
   return webpackConfig;
 };
-
-function createExternalDependenciesMap(
-  externalDependencies,
-  externalResolutions,
-  selectiveCDNResolutions,
-) {
-  const externalCdnTemplate =
-    process.env.EXTERNAL_CDN_TEMPLATE ||
-    'https://cdn.skypack.dev/[name]@[version]';
-
-  return Object.entries(externalDependencies).reduce((acc, [name, version]) => {
-    if (!externalResolutions[name]) {
-      throw new Error(
-        `Dependency ${name} found in package.json but not in lockfile. Have you installed your dependencies?`,
-      );
-    }
-
-    return {
-      ...acc,
-      [name]: externalCdnTemplate
-        .replace('[name]', name)
-        .replace('[version]', version || externalResolutions[name])
-        .replace('[resolution]', externalResolutions[name])
-        .replace(
-          '[selectiveCDNResolutions]',
-          selectiveCDNResolutions
-            ? Object.entries(selectiveCDNResolutions)
-                .map(([key, value]) => `${key}@${value}`)
-                .join(',')
-            : '',
-        ),
-    };
-  }, {});
-}
 
 const packageRegex =
   /^(@[a-z0-9-~][a-z0-9-._~]*)?\/?([a-z0-9-~][a-z0-9-._~]*)\/?(.*)/;
