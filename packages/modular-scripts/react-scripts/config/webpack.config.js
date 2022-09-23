@@ -22,6 +22,9 @@ const createLoadersConfig = require('./parts/loadersConfig');
 const { createConfig: createEsmViewConfig } = require('./parts/esmViewConfig');
 const { createConfig: createAppConfig } = require('./parts/appConfig');
 const {
+  createConfig: createDevelopmentConfig,
+} = require('./parts/developmentConfig');
+const {
   createConfig: createProductionConfig,
 } = require('./parts/productionConfig');
 const { createExternalDependenciesMap } = require('./utils/esmUtils');
@@ -104,25 +107,7 @@ module.exports = function (webpackEnv) {
     paths,
   });
 
-  const developementConfig = {
-    mode: 'development',
-    bail: false,
-    devtool: 'cheap-module-source-map',
-    output: {
-      // Add /* filename */ comments to generated require()s in the output.
-      pathinfo: true,
-      // In development, it does not produce real files.
-      filename: 'static/js/[name].js',
-      // Please remember that Webpack 5, unlike Webpack 4, controls "splitChunks" via fileName, not chunkFilename - https://stackoverflow.com/questions/66077740/webpack-5-output-chunkfilename-not-working
-      chunkFilename: 'static/js/[name].chunk.js',
-      // Point sourcemap entries to original disk location (format as URL on Windows)
-      devtoolModuleFilenameTemplate: (info) =>
-        path.resolve(info.absoluteResourcePath).replace(/\\/g, '/'),
-    },
-    optimization: {
-      minimize: false,
-    },
-  };
+  const developementConfig = createDevelopmentConfig({ path });
 
   const baseConfig = {
     // Workaround for this bug: https://stackoverflow.com/questions/53905253/cant-set-up-the-hmr-stuck-with-waiting-for-update-signal-from-wds-in-cons

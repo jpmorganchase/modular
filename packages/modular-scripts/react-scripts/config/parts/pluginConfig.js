@@ -6,8 +6,6 @@ const isCI = require('is-ci');
 const { merge } = require('webpack-merge');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
-const WatchMissingNodeModulesPlugin = require('../../../react-dev-utils/WatchMissingNodeModulesPlugin');
 const ModuleNotFoundPlugin = require('../../../react-dev-utils/ModuleNotFoundPlugin');
 const getClientEnvironment = require('../env');
 const paths = require('../paths');
@@ -15,6 +13,9 @@ const {
   createPluginConfig: createEsmViewPluginConfig,
 } = require('./esmViewConfig');
 const { createPluginConfig: createAppPluginConfig } = require('./appConfig');
+const {
+  createPluginConfig: createDevelopmentPluginConfig,
+} = require('./developmentConfig');
 const {
   createPluginConfig: createProductionPluginConfig,
 } = require('./productionConfig');
@@ -46,19 +47,7 @@ module.exports = function createPluginConfig({
 
   const esmViewPlugins = createEsmViewPluginConfig({ isEnvProduction });
 
-  const developementPlugins = {
-    plugins: [
-      // Watcher doesn't work well if you mistype casing in a path so we use
-      // a plugin that prints an error when you attempt to do this.
-      // See https://github.com/facebook/create-react-app/issues/240
-      new CaseSensitivePathsPlugin(),
-      // If you require a missing module and then `npm install` it, you still have
-      // to restart the development server for webpack to discover it. This plugin
-      // makes the discovery automatic so you don't have to restart.
-      // See https://github.com/facebook/create-react-app/issues/186
-      new WatchMissingNodeModulesPlugin(paths.appNodeModules),
-    ].filter(Boolean),
-  };
+  const developmentPlugins = createDevelopmentPluginConfig({ paths });
 
   const productionPlugins = createProductionPluginConfig();
 
@@ -157,7 +146,7 @@ module.exports = function createPluginConfig({
 
   return merge([
     isApp ? appPlugins : esmViewPlugins,
-    isEnvProduction ? productionPlugins : developementPlugins,
+    isEnvProduction ? productionPlugins : developmentPlugins,
     basePlugins,
   ]);
 };
