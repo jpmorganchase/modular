@@ -9,8 +9,8 @@ updates:
     directory: '/' # Location of package manifests
     schedule:
       interval: 'weekly'
-    # Allow up to 100 open pull requests for NPM dependencies
-    open-pull-requests-limit: 100
+    # Allow up to 10 open pull requests for NPM dependencies
+    open-pull-requests-limit: 10
     # Ignore major version bumps for all dependencies
     ignore:
       - dependency-name: '*'
