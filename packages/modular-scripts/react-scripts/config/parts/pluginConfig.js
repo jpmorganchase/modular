@@ -5,7 +5,6 @@ const resolve = require('resolve');
 const isCI = require('is-ci');
 const { merge } = require('webpack-merge');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const WatchMissingNodeModulesPlugin = require('../../../react-dev-utils/WatchMissingNodeModulesPlugin');
@@ -16,6 +15,9 @@ const {
   createPluginConfig: createEsmViewPluginConfig,
 } = require('./esmViewConfig');
 const { createPluginConfig: createAppPluginConfig } = require('./appConfig');
+const {
+  createPluginConfig: createProductionPluginConfig,
+} = require('./productionConfig');
 
 // Some apps do not need the benefits of saving a web request, so not inlining the chunk
 // makes for a smoother build process.
@@ -58,16 +60,7 @@ module.exports = function createPluginConfig({
     ].filter(Boolean),
   };
 
-  const productionPlugins = {
-    plugins: [
-      new MiniCssExtractPlugin({
-        // Options similar to the same options in webpackOptions.output
-        // both options are optional
-        filename: 'static/css/[name].[contenthash:8].css',
-        chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
-      }),
-    ].filter(Boolean),
-  };
+  const productionPlugins = createProductionPluginConfig();
 
   const basePlugins = {
     plugins: [
