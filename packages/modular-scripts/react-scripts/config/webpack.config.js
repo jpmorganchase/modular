@@ -10,16 +10,15 @@ const builtinModules = require('builtin-modules');
 const PnpWebpackPlugin = require('pnp-webpack-plugin');
 
 const TerserPlugin = require('terser-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const logger = require('../../react-dev-utils/logger');
-const postcssNormalize = require('postcss-normalize');
 
 const ModuleScopePlugin = require('../../react-dev-utils/ModuleScopePlugin');
 const getCSSModuleLocalIdent = require('../../react-dev-utils/getCSSModuleLocalIdent');
 const paths = require('./paths');
 const modules = require('./modules');
-const createPluginConfig = require('./pluginConfig');
+const createPluginConfig = require('./parts/pluginConfig');
+const createLoadersConfig = require('./parts/loadersConfig');
 
 const isApp = process.env.MODULAR_IS_APP === 'true';
 const isEsmView = !isApp;
@@ -93,79 +92,6 @@ module.exports = function (webpackEnv) {
   // passed into alias object. Uses a flag if passed into the build command
   const isEnvProductionProfile =
     isEnvProduction && process.argv.includes('--profile');
-
-  // common function to get style loaders
-  const getStyleLoaders = (cssOptions, preProcessor, includeEsmLoader) => {
-    const loaders = [
-      // This loader translates external css dependencies if we're using a CDN
-      // Since it's a pitching loader, it's important that it stays at the top
-      // excluding all the others in the chain if it's triggered
-      includeEsmLoader &&
-        function externalStyleLoader(info) {
-          return {
-            loader: require.resolve('./cdnStyleLoader'),
-            options: { info, dependencyMap },
-          };
-        },
-      isEnvDevelopment && require.resolve('style-loader'),
-      isEnvProduction && {
-        loader: MiniCssExtractPlugin.loader,
-        // css is located in `static/css`, use '../../' to locate index.html folder
-        // in production `paths.publicUrlOrPath` can be a relative path
-        options: paths.publicUrlOrPath.startsWith('.')
-          ? { publicPath: '../../' }
-          : {},
-      },
-      {
-        loader: require.resolve('css-loader'),
-        options: cssOptions,
-      },
-      {
-        // Options for PostCSS as we reference these options twice
-        // Adds vendor prefixing based on your specified browser support in
-        // package.json
-        loader: require.resolve('postcss-loader'),
-        options: {
-          postcssOptions: {
-            plugins: [
-              require('postcss-flexbugs-fixes'),
-              require('postcss-preset-env')({
-                autoprefixer: {
-                  flexbox: 'no-2009',
-                },
-                stage: 3,
-              }),
-              // Adds PostCSS Normalize as the reset css with default options,
-              // so that it honors browserslist config in package.json
-              // which in turn let's users customize the target behavior as per their needs.
-              postcssNormalize(),
-            ],
-          },
-          sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
-          implementation: require('postcss'),
-        },
-      },
-    ].filter(Boolean);
-    if (preProcessor) {
-      loaders.push(
-        {
-          loader: require.resolve('resolve-url-loader'),
-          options: {
-            sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
-            root: paths.appSrc,
-          },
-        },
-        {
-          loader: preProcessor,
-          options: {
-            sourceMap: true,
-          },
-        },
-      );
-    }
-
-    return loaders;
-  };
 
   const appConfig = {
     // TODO: remove me
@@ -422,16 +348,19 @@ module.exports = function (webpackEnv) {
             {
               test: cssRegex,
               exclude: cssModuleRegex,
-              use: getStyleLoaders(
-                {
+              use: createLoadersConfig({
+                cssOptions: {
                   importLoaders: 1,
                   sourceMap: isEnvProduction
                     ? shouldUseSourceMap
                     : isEnvDevelopment,
                 },
-                undefined,
-                isEsmView,
-              ),
+
+                includeEsmLoader: isEsmView,
+                dependencyMap,
+                isEnvProduction,
+                shouldUseSourceMap,
+              }),
 
               // Don't consider CSS imports dead code even if the
               // containing package claims to have no side effects.
@@ -443,14 +372,19 @@ module.exports = function (webpackEnv) {
             // using the extension .module.css
             {
               test: cssModuleRegex,
-              use: getStyleLoaders({
-                importLoaders: 1,
-                sourceMap: isEnvProduction
-                  ? shouldUseSourceMap
-                  : isEnvDevelopment,
-                modules: {
-                  getLocalIdent: getCSSModuleLocalIdent,
+              use: createLoadersConfig({
+                cssOptions: {
+                  importLoaders: 1,
+                  sourceMap: isEnvProduction
+                    ? shouldUseSourceMap
+                    : isEnvDevelopment,
+                  modules: {
+                    getLocalIdent: getCSSModuleLocalIdent,
+                  },
                 },
+                dependencyMap,
+                isEnvProduction,
+                shouldUseSourceMap,
               }),
             },
             // Opt-in support for SASS (using .scss or .sass extensions).
@@ -459,15 +393,18 @@ module.exports = function (webpackEnv) {
             {
               test: sassRegex,
               exclude: sassModuleRegex,
-              use: getStyleLoaders(
-                {
+              use: createLoadersConfig({
+                cssOptions: {
                   importLoaders: 3,
                   sourceMap: isEnvProduction
                     ? shouldUseSourceMap
                     : isEnvDevelopment,
                 },
-                require.resolve('sass-loader'),
-              ),
+                preProcessor: require.resolve('sass-loader'),
+                dependencyMap,
+                isEnvProduction,
+                shouldUseSourceMap,
+              }),
               // Don't consider CSS imports dead code even if the
               // containing package claims to have no side effects.
               // Remove this when webpack adds a warning or an error for this.
@@ -478,8 +415,8 @@ module.exports = function (webpackEnv) {
             // using the extension .module.scss or .module.sass
             {
               test: sassModuleRegex,
-              use: getStyleLoaders(
-                {
+              use: createLoadersConfig({
+                cssOptions: {
                   importLoaders: 3,
                   sourceMap: isEnvProduction
                     ? shouldUseSourceMap
@@ -488,8 +425,11 @@ module.exports = function (webpackEnv) {
                     getLocalIdent: getCSSModuleLocalIdent,
                   },
                 },
-                require.resolve('sass-loader'),
-              ),
+                preProcessor: require.resolve('sass-loader'),
+                dependencyMap,
+                isEnvProduction,
+                shouldUseSourceMap,
+              }),
             },
             // "file" loader makes sure those assets get served by WebpackDevServer.
             // When you `import` an asset, you get its (virtual) filename.

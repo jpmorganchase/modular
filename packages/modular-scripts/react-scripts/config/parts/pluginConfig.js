@@ -9,12 +9,12 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
-const InlineChunkHtmlPlugin = require('../../react-dev-utils/InlineChunkHtmlPlugin');
-const InterpolateHtmlPlugin = require('../../react-dev-utils/InterpolateHtmlPlugin');
-const WatchMissingNodeModulesPlugin = require('../../react-dev-utils/WatchMissingNodeModulesPlugin');
-const ModuleNotFoundPlugin = require('../../react-dev-utils/ModuleNotFoundPlugin');
-const getClientEnvironment = require('./env');
-const paths = require('./paths');
+const InlineChunkHtmlPlugin = require('../../../react-dev-utils/InlineChunkHtmlPlugin');
+const InterpolateHtmlPlugin = require('../../../react-dev-utils/InterpolateHtmlPlugin');
+const WatchMissingNodeModulesPlugin = require('../../../react-dev-utils/WatchMissingNodeModulesPlugin');
+const ModuleNotFoundPlugin = require('../../../react-dev-utils/ModuleNotFoundPlugin');
+const getClientEnvironment = require('../env');
+const paths = require('../paths');
 
 // Some apps do not need the benefits of saving a web request, so not inlining the chunk
 // makes for a smoother build process.

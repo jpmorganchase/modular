@@ -2,8 +2,8 @@
 
 const diff = require('jest-diff');
 const { inspect } = require('util');
-const createConfigOld = require('./webpack.config');
-const createConfigNew = require('./webpack.config.new');
+const createConfigOld = require('./webpack.config.old');
+const createConfigNew = require('./webpack.config');
 const { exit } = require('process');
 
 let oldConfig;
