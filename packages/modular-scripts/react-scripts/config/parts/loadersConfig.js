@@ -21,7 +21,7 @@ function createConfig({
     includeEsmLoader &&
       function externalStyleLoader(info) {
         return {
-          loader: require.resolve('./cdnStyleLoader'),
+          loader: require.resolve('../cdnStyleLoader'),
           options: { info, dependencyMap },
         };
       },
