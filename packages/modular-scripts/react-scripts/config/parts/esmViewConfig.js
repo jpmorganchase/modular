@@ -1,9 +1,11 @@
 'use strict';
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { parsePackageName } = require('../utils/esmUtils');
+const path = require('path');
 
-function createConfig({ dependencyMap }) {
+function createConfig({ dependencyMap, paths, isEnvProduction }) {
   return {
+    entry: !isEnvProduction ? getVirtualTrampoline(paths) : paths.appIndexJs,
     externals: createExternalRewriter(dependencyMap),
     externalsType: 'module',
     experiments: { outputModule: true },
@@ -62,6 +64,27 @@ function createExternalRewriter(dependencyMap) {
     // Otherwise we just want to bundle it
     return callback();
   };
+}
+
+// Virtual entrypoint if we're starting a ESM view - see https://github.com/webpack/webpack/issues/6437
+function getVirtualTrampoline(paths) {
+  // Build the relative path between the root and the entrypoint.
+  const relativeEntrypointPath = path
+    .relative(paths.appPath, paths.appIndexJs)
+    .split(path.sep)
+    .join(path.posix.sep); // Separator could be win32 on Windows system, since it comes from a filesystem path. Force it to be posix since it's an URL
+
+  const entryPointPath = `'./${relativeEntrypointPath}'`;
+  const string = `
+  import ReactDOM from 'react-dom'
+  import React from 'react';
+  import Component from ${entryPointPath};
+  const DOMRoot = document.getElementById('root');
+  ReactDOM.render(React.createElement(Component, null), DOMRoot);
+	`;
+
+  const base64 = Buffer.from(string).toString('base64');
+  return `./src/_trampoline.js!=!data:text/javascript;base64,${base64}`;
 }
 
 module.exports = { createConfig, createPluginConfig };
