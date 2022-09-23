@@ -36,6 +36,6 @@ function createExternalDependenciesMap({
   }, {});
 }
 
-modules.exports = {
+module.exports = {
   createExternalDependenciesMap,
 };
