@@ -2949,13 +2949,6 @@
   resolved "https://registry.yarnpkg.com/@types/scheduler/-/scheduler-0.16.2.tgz#1a62f89525723dde24ba1b01b092bf5df8ad4d39"
   integrity sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==
 
-"@types/semver-regex@3.1.0", "@types/semver-regex@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@types/semver-regex/-/semver-regex-3.1.0.tgz#76a753b94318df340e9468b0644a387cefcbb8a9"
-  integrity sha512-dF4bvVQjiCd/No7udT/BfOTfBksT1HCUwIpthCjS4kQYTzeZNVx2EKRzk+sIP4OW4ShKVsMDL3V6RX+c7GKmEA==
-  dependencies:
-    semver-regex "*"
-
 "@types/semver@7.3.9":
   version "7.3.9"
   resolved "https://registry.yarnpkg.com/@types/semver/-/semver-7.3.9.tgz#152c6c20a7688c30b967ec1841d31ace569863fc"
@@ -11055,11 +11048,6 @@ semver-diff@^3.1.1:
   integrity sha512-GX0Ix/CJcHyB8c4ykpHGIAvLyOwOobtM/8d+TQkAd81/bEjgPHrfba41Vpesr7jX/t8Uh+R3EX9eAS5be+jQYg==
   dependencies:
     semver "^6.3.0"
-
-semver-regex@*:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/semver-regex/-/semver-regex-4.0.2.tgz#fd3124efe81647b33eb90a9de07cb72992424a02"
-  integrity sha512-xyuBZk1XYqQkB687hMQqrCP+J9bdJSjPpZwdmmNjyxKW1K3LDXxqxw91Egaqkh/yheBIVtKPt4/1eybKVdCx3g==
 
 semver-regex@3.1.4:
   version "3.1.4"
