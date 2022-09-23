@@ -555,18 +555,6 @@ module.exports = function (webpackEnv) {
   return webpackConfig;
 };
 
-const packageRegex =
-  /^(@[a-z0-9-~][a-z0-9-._~]*)?\/?([a-z0-9-~][a-z0-9-._~]*)\/?(.*)/;
-function parsePackageName(name) {
-  const parsedName = packageRegex.exec(name);
-  if (!parsedName) {
-    return;
-  }
-  const [_, scope, module, submodule] = parsedName;
-  const dependencyName = (scope ? `${scope}/` : '') + module;
-  return { dependencyName, scope, module, submodule };
-}
-
 // Virtual entrypoint if we're starting a ESM view - see https://github.com/webpack/webpack/issues/6437
 function getVirtualTrampoline() {
   // Build the relative path between the root and the entrypoint.

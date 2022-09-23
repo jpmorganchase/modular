@@ -15,6 +15,9 @@ const WatchMissingNodeModulesPlugin = require('../../../react-dev-utils/WatchMis
 const ModuleNotFoundPlugin = require('../../../react-dev-utils/ModuleNotFoundPlugin');
 const getClientEnvironment = require('../env');
 const paths = require('../paths');
+const {
+  createPluginConfig: createEsmViewPluginConfig,
+} = require('./esmViewConfig');
 
 // Some apps do not need the benefits of saving a web request, so not inlining the chunk
 // makes for a smoother build process.
@@ -32,9 +35,7 @@ module.exports = function createPluginConfig({
   shouldUseSourceMap,
   useTypeScript,
 }) {
-  const isEsmView = !isApp;
   const isEnvDevelopment = !isEnvProduction;
-  const isEsmViewDevelopment = isEsmView & !isEnvProduction;
 
   const appPlugins = {
     plugins: [
@@ -79,28 +80,7 @@ module.exports = function createPluginConfig({
     ].filter(Boolean),
   };
 
-  const esmViewPlugins = {
-    plugins: [
-      // We need to provide a synthetic index.html in case we're starting a ESM view
-      isEsmViewDevelopment &&
-        new HtmlWebpackPlugin(
-          Object.assign(
-            {},
-            {
-              inject: true,
-              templateContent: `
-                <html>
-                  <body>
-                    <div id="root"></div>
-                  </body>
-                </html>
-                `,
-              scriptLoading: 'module',
-            },
-          ),
-        ),
-    ].filter(Boolean),
-  };
+  const esmViewPlugins = createEsmViewPluginConfig({ isEnvProduction });
 
   const developementPlugins = {
     plugins: [

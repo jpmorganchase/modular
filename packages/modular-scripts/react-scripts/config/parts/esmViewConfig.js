@@ -1,4 +1,5 @@
 'use strict';
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { parsePackageName } = require('../utils/esmUtils');
 
 function createConfig({ dependencyMap }) {
@@ -10,6 +11,31 @@ function createConfig({ dependencyMap }) {
       module: true,
       library: { type: 'module' },
     },
+  };
+}
+
+function createPluginConfig({ isEnvProduction }) {
+  return {
+    plugins: [
+      // We need to provide a synthetic index.html in case we're starting a ESM view
+      !isEnvProduction &&
+        new HtmlWebpackPlugin(
+          Object.assign(
+            {},
+            {
+              inject: true,
+              templateContent: `
+                <html>
+                  <body>
+                    <div id="root"></div>
+                  </body>
+                </html>
+                `,
+              scriptLoading: 'module',
+            },
+          ),
+        ),
+    ].filter(Boolean),
   };
 }
 
@@ -38,4 +64,4 @@ function createExternalRewriter(dependencyMap) {
   };
 }
 
-module.exports = { createConfig };
+module.exports = { createConfig, createPluginConfig };
