@@ -19,6 +19,7 @@ const paths = require('./paths');
 const modules = require('./modules');
 const createPluginConfig = require('./parts/pluginConfig');
 const createLoadersConfig = require('./parts/loadersConfig');
+const { createConfig: createEsmViewConfig } = require('./parts/esmViewConfig');
 const { createExternalDependenciesMap } = require('./utils/esmUtils');
 
 const isApp = process.env.MODULAR_IS_APP === 'true';
@@ -116,16 +117,6 @@ module.exports = function (webpackEnv) {
       runtimeChunk: {
         name: (entrypoint) => `runtime-${entrypoint.name}`,
       },
-    },
-  };
-
-  const esmViewConfig = {
-    externals: rewriteExternals,
-    externalsType: 'module',
-    experiments: { outputModule: true },
-    output: {
-      module: true,
-      library: { type: 'module' },
     },
   };
 
@@ -513,33 +504,10 @@ module.exports = function (webpackEnv) {
 
   const webpackConfig = merge([
     baseConfig,
-    isApp ? appConfig : esmViewConfig,
+    isApp ? appConfig : createEsmViewConfig({ dependencyMap }),
     isEnvProduction ? productionConfig : developementConfig,
     pluginConfig,
   ]);
-
-  function rewriteExternals({ request }, callback) {
-    const parsedModule = parsePackageName(request);
-
-    // If the module is absolute and it is in the import map, we want to externalise it
-    if (
-      parsedModule &&
-      parsedModule.dependencyName &&
-      dependencyMap[parsedModule.dependencyName] &&
-      // If this is an absolute export of css we need to deal with it in the loader
-      !request.endsWith('.css')
-    ) {
-      const { dependencyName, submodule } = parsedModule;
-
-      const toRewrite = `${dependencyMap[dependencyName]}${
-        submodule ? `/${submodule}` : ''
-      }`;
-
-      return callback(null, toRewrite);
-    }
-    // Otherwise we just want to bundle it
-    return callback();
-  }
 
   // These dependencies are so widely used for us (JPM) that it makes sense to install
   // their webpack plugin when used.
