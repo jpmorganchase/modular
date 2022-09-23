@@ -20,6 +20,7 @@ const modules = require('./modules');
 const createPluginConfig = require('./parts/pluginConfig');
 const createLoadersConfig = require('./parts/loadersConfig');
 const { createConfig: createEsmViewConfig } = require('./parts/esmViewConfig');
+const { createConfig: createAppConfig } = require('./parts/appConfig');
 const { createExternalDependenciesMap } = require('./utils/esmUtils');
 
 const isApp = process.env.MODULAR_IS_APP === 'true';
@@ -94,31 +95,6 @@ module.exports = function (webpackEnv) {
   // passed into alias object. Uses a flag if passed into the build command
   const isEnvProductionProfile =
     isEnvProduction && process.argv.includes('--profile');
-
-  const appConfig = {
-    // TODO: remove me
-    experiments: {
-      outputModule: undefined,
-    },
-    externals: undefined,
-    externalsType: undefined,
-    output: {
-      library: undefined,
-      module: undefined,
-      path: undefined,
-    },
-    // TODO: end remove
-    optimization: {
-      // Automatically split vendor and commons
-      splitChunks: { chunks: 'all' },
-      // Keep the runtime chunk separated to enable long term caching
-      // https://twitter.com/wSokra/status/969679223278505985
-      // https://github.com/facebook/create-react-app/issues/5358
-      runtimeChunk: {
-        name: (entrypoint) => `runtime-${entrypoint.name}`,
-      },
-    },
-  };
 
   const productionConfig = {
     mode: 'production',
@@ -504,7 +480,7 @@ module.exports = function (webpackEnv) {
 
   const webpackConfig = merge([
     baseConfig,
-    isApp ? appConfig : createEsmViewConfig({ dependencyMap }),
+    isApp ? createAppConfig() : createEsmViewConfig({ dependencyMap }),
     isEnvProduction ? productionConfig : developementConfig,
     pluginConfig,
   ]);
