@@ -5,18 +5,6 @@ const InterpolateHtmlPlugin = require('../../../react-dev-utils/InterpolateHtmlP
 
 function createConfig() {
   return {
-    // TODO: remove me
-    experiments: {
-      outputModule: undefined,
-    },
-    externals: undefined,
-    externalsType: undefined,
-    output: {
-      library: undefined,
-      module: undefined,
-      path: undefined,
-    },
-    // TODO: end remove
     optimization: {
       // Automatically split vendor and commons
       splitChunks: { chunks: 'all' },
