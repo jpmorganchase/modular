@@ -6,9 +6,9 @@
   },
   "dependencies": {
     "package-one": "workspace:*",
-    "package-two": "workspace:^",
-    "package-three": "workspace:~",
-    "package-four": "workspace:^1.0.0"
+    "package-two": "workspace:*",
+    "package-three": "workspace:*",
+    "package-four": "workspace:*"
   },
   "version": "1.0.0"
 }
