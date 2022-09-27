@@ -72,7 +72,7 @@
     "jest-circus": "26.6.3",
     "jest-cli": "26.6.3",
     "jest-config": "26.6.3",
-    "jest-runner-eslint": "1.0.1",
+    "jest-runner-eslint": "1.1.0",
     "jest-transform-stub": "2.0.0",
     "jest-watch-typeahead": "0.6.5",
     "js-yaml": "^4.1.0",
