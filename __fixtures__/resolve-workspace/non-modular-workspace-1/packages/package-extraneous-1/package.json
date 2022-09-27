@@ -1,0 +1,6 @@
+{
+  "name": "package-extraneous-1",
+  "private": true,
+  "main": "./src/index.ts",
+  "version": "1.0.0"
+}

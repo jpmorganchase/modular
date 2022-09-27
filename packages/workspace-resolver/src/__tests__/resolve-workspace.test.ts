@@ -151,6 +151,35 @@ describe('@modular-scripts/workspace-resolver', () => {
         'The package "app-one" has an invalid version. Modular requires workspace packages to have a version.',
       );
     });
+
+    it('supports type property', async () => {
+      const projectRoot = path.join(fixturesPath, 'non-modular-workspace-1');
+      const [allPackages] = await resolveWorkspace(projectRoot, projectRoot);
+      expect(allPackages.has('non-modular-workspace-1')).toEqual(true);
+      expect(allPackages.has('app-one')).toEqual(true);
+      expect(allPackages.get('app-one')?.modular).toEqual({
+        type: 'app',
+      });
+      expect(allPackages.get('app-one')?.type).toBe('app');
+      expect(allPackages.has('package-one')).toEqual(true);
+      expect(allPackages.get('package-one')?.modular).toEqual({
+        type: 'package',
+      });
+      expect(allPackages.get('package-one')?.type).toBe('package');
+      expect(allPackages.has('package-extraneous-1')).toEqual(true);
+      expect(allPackages.get('package-extraneous-1')?.modular).toBeUndefined();
+      expect(allPackages.get('package-extraneous-1')?.type).toBeUndefined();
+      expect(allPackages.has('package-extraneous-2')).toEqual(true);
+      expect(allPackages.get('package-extraneous-2')?.modular).toEqual({
+        anotherProperty: 'value',
+      });
+      expect(allPackages.get('package-extraneous-2')?.type).toBeUndefined();
+      expect(allPackages.has('package-extraneous-3')).toEqual(true);
+      expect(allPackages.get('package-extraneous-3')?.modular).toEqual({
+        type: '',
+      });
+      expect(allPackages.get('package-extraneous-3')?.type).toBeUndefined();
+    });
   });
 
   describe('analyzeWorkspaceDependencies', () => {

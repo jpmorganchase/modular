@@ -65,7 +65,8 @@ export async function resolveWorkspace(
   const pkgPath = packageJsonPath(root);
 
   const json = await readPackageJson(isRoot, workingDirToUse, pkgPath);
-  const isModularRoot = json.modular?.type === 'root';
+  const type = json.modular?.type || undefined;
+  const isModularRoot = type === 'root';
 
   if (!json.name) {
     throw new Error(
@@ -89,10 +90,8 @@ export async function resolveWorkspace(
     workspace: !!json.workspaces,
     children: [],
     parent,
-    modular: {
-      type: 'unknown',
-      ...json.modular,
-    },
+    modular: json.modular,
+    type,
     // Like yarn classic `workspaces info`, we include all except peerDependencies
     dependencies: {
       ...json.optionalDependencies,
@@ -153,7 +152,7 @@ export function analyzeWorkspaceDependencies(
   // Exclude the root when analyzing package inter-dependencies
   const packagesWithoutRoot = Array.from(workspacePackages.entries()).filter(
     ([, pkg]) => {
-      return pkg.modular.type !== 'root';
+      return pkg.modular?.type !== 'root';
     },
   );
 

@@ -15,6 +15,7 @@ describe('matchWorkspaces', () => {
             modular: {
               type: 'package',
             },
+            type: 'package',
             children: [],
             parent: null,
             dependencies: undefined,
@@ -29,6 +30,7 @@ describe('matchWorkspaces', () => {
             modular: {
               type: 'package',
             },
+            type: 'package',
             children: [],
             parent: null,
             dependencies: undefined,
@@ -43,6 +45,7 @@ describe('matchWorkspaces', () => {
             modular: {
               type: 'package',
             },
+            type: 'package',
             children: [],
             parent: null,
             dependencies: undefined,
@@ -90,6 +93,7 @@ describe('matchWorkspaces', () => {
             modular: {
               type: 'package',
             },
+            type: 'package',
             children: [],
             parent: null,
             dependencies: undefined,
@@ -104,6 +108,7 @@ describe('matchWorkspaces', () => {
             modular: {
               type: 'package',
             },
+            type: 'package',
             children: [],
             parent: null,
             dependencies: undefined,
@@ -139,6 +144,7 @@ describe('matchWorkspaces', () => {
             modular: {
               type: 'package',
             },
+            type: 'package',
             children: [],
             parent: null,
             dependencies: undefined,
@@ -153,6 +159,7 @@ describe('matchWorkspaces', () => {
             modular: {
               type: 'package',
             },
+            type: 'package',
             children: [],
             parent: null,
             dependencies: undefined,
@@ -167,6 +174,7 @@ describe('matchWorkspaces', () => {
             modular: {
               type: 'package',
             },
+            type: 'package',
             children: [],
             parent: null,
             dependencies: undefined,
@@ -215,6 +223,7 @@ describe('matchWorkspaces', () => {
             modular: {
               type: 'root',
             },
+            type: 'root',
             children: [],
             parent: null,
             dependencies: undefined,
@@ -229,6 +238,7 @@ describe('matchWorkspaces', () => {
             modular: {
               type: 'package',
             },
+            type: 'package',
             children: [],
             parent: null,
             dependencies: undefined,

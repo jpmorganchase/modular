@@ -28,6 +28,7 @@ describe('resolve-dependencies', () => {
           modular: {
             type: 'package',
           },
+          type: 'package',
           children: [],
           parent: null,
           dependencies: undefined,
