@@ -29,7 +29,7 @@
     "@rollup/plugin-json": "4.1.0",
     "@rollup/plugin-node-resolve": "13.3.0",
     "@svgr/core": "6.2.1",
-    "@svgr/webpack": "6.2.1",
+    "@svgr/webpack": "6.3.1",
     "@types/micromatch": "4.0.2",
     "@types/yarnpkg__lockfile": "^1.1.5",
     "@yarnpkg/lockfile": "^1.1.0",
