@@ -132,12 +132,12 @@ async function test(
         packages,
         ancestors,
       })
-    : { regexes: userRegexes, extraneous: [] };
+    : { regexes: userRegexes, extraneous: undefined };
 
-  const [extraneousWorkspaces] = extraneous;
+  const [extraneousWorkspaces] = extraneous ?? [];
 
   // If test is selective (user set --changed or --package) and we computed no regexes or extraneous packages involved, then bail out
-  if (!regexes?.length && !extraneousWorkspaces.size && isSelective) {
+  if (!regexes?.length && !extraneousWorkspaces?.size && isSelective) {
     process.stdout.write(
       changed
         ? 'No changed workspaces found\n'
@@ -205,7 +205,7 @@ async function test(
 
   console.log(
     'Running tests for the extraneous dependencies',
-    extraneousWorkspaces.keys(),
+    extraneousWorkspaces?.keys(),
   );
 }
 
