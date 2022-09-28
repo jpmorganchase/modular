@@ -71,6 +71,61 @@ async function test(
   options: TestOptions,
   userRegexes?: string[],
 ): Promise<void> {
+  const { ancestors, changed, package: packages, compareBranch } = options;
+
+  // There are two ways of discovering the test regexes we need: either they're specified by the user as CLI arguments
+  // or they have to be calculated from selective options (--changed and --package) and optionally agumented with --ancestors
+  const isSelective = changed || packages?.length;
+  const { regexes, extraneous } = isSelective
+    ? await computeSelectiveWorkspaces({
+        changed,
+        compareBranch,
+        packages,
+        ancestors,
+      })
+    : { regexes: userRegexes, extraneous: undefined };
+
+  const [extraneousWorkspaces] = extraneous ?? [];
+
+  logger.debug(
+    `Computed regexes are: ${JSON.stringify(
+      regexes,
+    )}. Extraneous workspaces are: ${JSON.stringify([
+      ...(extraneousWorkspaces?.keys() || []),
+    ])}`,
+  );
+
+  // If test is selective (user set --changed or --package) and we computed no regexes or extraneous packages involved, then bail out
+  if (!regexes?.length && !extraneousWorkspaces?.size && isSelective) {
+    process.stdout.write(
+      changed
+        ? 'No changed workspaces found\n'
+        : 'No workspaces found in selection\n',
+    );
+    process.exit(0);
+  }
+
+  // Only run the jest tests if we have regexes or if the test is not selective.
+  // This is because empty regexes in a selective test mean "run no tests", while empty regexes in a non-selective test mean "run all tests"
+  if (regexes?.length || !isSelective) {
+    await runJestTests({
+      regexes,
+      options,
+    });
+  }
+
+  if (extraneousWorkspaces?.size) {
+    runExtraneousTests(extraneousWorkspaces);
+  }
+}
+
+async function runJestTests({
+  regexes,
+  options,
+}: {
+  regexes: string[] | undefined;
+  options: TestOptions;
+}) {
   const {
     ancestors,
     changed,
@@ -122,31 +177,7 @@ async function test(
   const additionalOptions: string[] = [];
   const cleanRegexes: string[] = [];
 
-  // There are two ways of discovering the test regexes we need: either they're specified by the user as CLI arguments
-  // or they have to be calculated from selective options (--changed and --package) and optionally agumented with --ancestors
-  const isSelective = changed || packages?.length;
-  const { regexes, extraneous } = isSelective
-    ? await computeSelectiveWorkspaces({
-        changed,
-        compareBranch,
-        packages,
-        ancestors,
-      })
-    : { regexes: userRegexes, extraneous: undefined };
-
-  const [extraneousWorkspaces] = extraneous ?? [];
-
-  // If test is selective (user set --changed or --package) and we computed no regexes or extraneous packages involved, then bail out
-  if (!regexes?.length && !extraneousWorkspaces?.size && isSelective) {
-    process.stdout.write(
-      changed
-        ? 'No changed workspaces found\n'
-        : 'No workspaces found in selection\n',
-    );
-    process.exit(0);
-  }
-
-  if (regexes?.length && !isSelective) {
+  if (regexes?.length) {
     regexes.forEach((reg) => {
       if (/^(--)([\w]+)/.exec(reg)) {
         return additionalOptions.push(reg);
@@ -202,11 +233,22 @@ async function test(
     // ✕ Modular test did not pass
     throw new Error('\u2715 Modular test did not pass');
   }
+}
 
-  console.log(
-    'Running tests for the extraneous dependencies',
-    extraneousWorkspaces?.keys(),
-  );
+function runExtraneousTests(extraneousWorkspaces: WorkspaceContent[0]) {
+  for (const workspace of extraneousWorkspaces) {
+    const [pkgName, pkg] = workspace;
+    const testScript = pkg.rawPackageJson?.scripts?.test;
+    if (testScript) {
+      logger.debug(
+        `Running tests for non-modular workspace ${pkgName}, using its test script: \`${testScript}\``,
+      );
+    } else {
+      logger.debug(
+        `Not running tests for non-modular workspace ${pkgName}, test script not defined`,
+      );
+    }
+  }
 }
 
 // This function takes all the selective options, validates them and returns a subset of workspaces to test, partitioned between modular and non-modular workspaces
