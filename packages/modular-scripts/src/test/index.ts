@@ -12,6 +12,7 @@ import * as logger from '../utils/logger';
 import type {
   WorkspaceContent,
   ModularWorkspacePackage,
+  WorkspaceMap,
 } from '@modular-scripts/modular-types';
 
 export interface TestOptions {
@@ -124,17 +125,19 @@ async function test(
   // There are two ways of discovering the test regexes we need: either they're specified by the user as CLI arguments
   // or they have to be calculated from selective options (--changed and --package) and optionally agumented with --ancestors
   const isSelective = changed || packages?.length;
-  const regexes = isSelective
-    ? await computeSelectiveRegexes({
+  const { regexes, extraneous } = isSelective
+    ? await computeSelectiveWorkspaces({
         changed,
         compareBranch,
         packages,
         ancestors,
       })
-    : userRegexes;
+    : { regexes: userRegexes, extraneous: [] };
 
-  // If test is selective (user set --changed or --package) and we computed no regexes, then bail out
-  if (!regexes?.length && isSelective) {
+  const [extraneousWorkspaces] = extraneous;
+
+  // If test is selective (user set --changed or --package) and we computed no regexes or extraneous packages involved, then bail out
+  if (!regexes?.length && !extraneousWorkspaces.size && isSelective) {
     process.stdout.write(
       changed
         ? 'No changed workspaces found\n'
@@ -143,7 +146,7 @@ async function test(
     process.exit(0);
   }
 
-  if (regexes?.length) {
+  if (regexes?.length && !isSelective) {
     regexes.forEach((reg) => {
       if (/^(--)([\w]+)/.exec(reg)) {
         return additionalOptions.push(reg);
@@ -199,10 +202,15 @@ async function test(
     // ✕ Modular test did not pass
     throw new Error('\u2715 Modular test did not pass');
   }
+
+  console.log(
+    'Running tests for the extraneous dependencies',
+    extraneousWorkspaces.keys(),
+  );
 }
 
-// This function takes all the selective options, validates them and returns a subset of workspaces to test
-async function computeSelectiveRegexes({
+// This function takes all the selective options, validates them and returns a subset of workspaces to test, partitioned between modular and non-modular workspaces
+async function computeSelectiveWorkspaces({
   changed,
   compareBranch,
   packages,
@@ -247,13 +255,48 @@ async function computeSelectiveRegexes({
     );
   }
 
+  // Partition selected packages that have a modular type vs those who haven't
+  const [workspacePackages, workspaceMap] = resultWorkspaceContent;
+
+  const modularWorkspacePackages = new Map<string, ModularWorkspacePackage>();
+  const modularWorkspaceMap: WorkspaceMap = {};
+  const nonModularWorkspacePackages = new Map<
+    string,
+    ModularWorkspacePackage
+  >();
+  const nonModularWorkspaceMap: WorkspaceMap = {};
+
+  for (const [pkgName, pkg] of workspacePackages) {
+    if (!pkg.type) {
+      // This package is not a Modular package
+      nonModularWorkspacePackages.set(pkgName, pkg);
+      nonModularWorkspaceMap[pkgName] = workspaceMap[pkgName];
+    } else {
+      modularWorkspacePackages.set(pkgName, pkg);
+      modularWorkspaceMap[pkgName] = workspaceMap[pkgName];
+    }
+  }
+
+  const extraneous: WorkspaceContent = [
+    nonModularWorkspacePackages,
+    nonModularWorkspaceMap,
+  ];
+
   logger.debug(
     `Selected test packages are: ${JSON.stringify(
       Object.keys(resultWorkspaceContent[1]),
     )}`,
   );
 
-  return computeTestsRegexes(resultWorkspaceContent);
+  // We return regexes to pass to yarn for Modular workspaces; we can run them with our Yarn configuration
+  // We return a subset of WorkspaceContent for non-modular (extraneous) workspaces; we will run them using the test script, if present
+  return {
+    regexes: computeTestsRegexes([
+      modularWorkspacePackages,
+      modularWorkspaceMap,
+    ]),
+    extraneous,
+  };
 }
 
 // This function returns a WorkspaceContent containing all the changed workspaces, compared to targetBranch
