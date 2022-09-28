@@ -29,13 +29,6 @@ export async function check(target?: string): Promise<boolean> {
       valid = false;
     }
 
-    if (!packageInfo.location.startsWith('packages')) {
-      logger.error(
-        `${packageName} is not located within the "/packages" directory in the repository, instead found "${packageInfo.location}"`,
-      );
-      valid = false;
-    }
-
     if (!isValidModularType(path.join(modularRoot, packageInfo.location))) {
       logger.error(
         `${packageName} at ${

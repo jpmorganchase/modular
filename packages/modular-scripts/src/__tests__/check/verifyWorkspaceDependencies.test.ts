@@ -22,16 +22,12 @@ describe('verifyWorkspaceDependencies', () => {
     expect(error).not.toHaveBeenCalled();
   });
 
-  it('rejects packages not in the "packages" directory', async () => {
+  it('doesn\'t reject packages not in the "packages" directory', async () => {
     mock(getModularRoot).mockReturnValue('__fixtures__/verifiable-project');
 
     const checked = await check('__fixtures__/verifiable-project');
-    expect(checked).toBe(false);
-    expect(error).toHaveBeenCalledWith(
-      expect.stringContaining(
-        `package-four is not located within the "/packages" directory`,
-      ),
-    );
+    expect(checked).toBe(true);
+    expect(error).not.toHaveBeenCalled();
   });
 });
 
