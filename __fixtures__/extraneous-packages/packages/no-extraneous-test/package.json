@@ -1,0 +1,6 @@
+{
+  "name": "no-extraneous-test",
+  "private": false,
+  "main": "./src/index.ts",
+  "version": "1.0.0"
+}

@@ -1,0 +1,9 @@
+{
+  "name": "successful-extraneous-test",
+  "private": false,
+  "main": "./src/index.ts",
+  "scripts": {
+    "test": "echo 'this is the test for successful-extraneous-test'"
+  },
+  "version": "1.0.0"
+}

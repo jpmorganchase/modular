@@ -270,6 +270,74 @@ describe('Modular test command', () => {
     });
   });
 
+  describe('test command supports extraneous (non-modular) packages', () => {
+    const fixturesFolder = path.join(
+      __dirname,
+      Array.from({ length: 4 }).reduce<string>(
+        (acc) => `${acc}..${path.sep}`,
+        '',
+      ),
+      '__fixtures__',
+      'extraneous-packages',
+    );
+
+    const currentModularFolder = getModularRoot();
+    let randomOutputFolder: string;
+
+    beforeEach(() => {
+      // Create random dir
+      randomOutputFolder = tmp.dirSync({ unsafeCleanup: true }).name;
+      fs.copySync(fixturesFolder, randomOutputFolder);
+      execa.sync('yarn', {
+        cwd: randomOutputFolder,
+      });
+    });
+
+    // Run in a single test, serially for performance reasons (the setup time is quite long)
+    it("Runs tests on the dependencies of an extraneous test along with ancestors, then fail when the extraneous test fails, succeed when it suceeds and warn when it doesn't exist", () => {
+      let errorNumber;
+      try {
+        runRemoteModularTest(currentModularFolder, randomOutputFolder, [
+          'test',
+          '--package',
+          'failing-extraneous-test',
+          '--ancestors',
+        ]);
+      } catch (error) {
+        errorNumber = (error as ExecaError).exitCode;
+      }
+      expect(errorNumber).toEqual(1);
+
+      const resultPackagesNoTest = runRemoteModularTest(
+        currentModularFolder,
+        randomOutputFolder,
+        ['test', '--package', 'no-extraneous-test', '--ancestors'],
+      );
+
+      expect(resultPackagesNoTest.stderr).toContain(
+        'PASS test packages/c/src/__tests__/utils/utils.test.ts',
+      );
+
+      expect(resultPackagesNoTest.stderr).toContain(
+        "Can't run tests for non-modular workspace no-extraneous-test: test script is not defined",
+      );
+
+      const resultPackagesSuccessfulTest = runRemoteModularTest(
+        currentModularFolder,
+        randomOutputFolder,
+        ['test', '--package', 'successful-extraneous-test', '--ancestors'],
+      );
+
+      expect(resultPackagesSuccessfulTest.stderr).toContain(
+        'PASS test packages/b/src/__tests__/utils/utils.test.ts',
+      );
+
+      expect(resultPackagesSuccessfulTest.stdout).toContain(
+        'this is the test for successful-extraneous-test',
+      );
+    });
+  });
+
   describe('test command has error states', () => {
     // Run in a single test, serially for performance reasons (the setup time is quite long)
     it('errors when specifying --package with --changed', async () => {

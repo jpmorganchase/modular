@@ -1,0 +1,9 @@
+{
+  "name": "failing-extraneous-test",
+  "private": false,
+  "main": "./src/index.ts",
+  "scripts": {
+    "test": "echo 'this is the test for failing-extraneous-test'  && exit -1"
+  },
+  "version": "1.0.0"
+}
