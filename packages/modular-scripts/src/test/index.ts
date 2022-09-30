@@ -115,7 +115,7 @@ async function test(
   }
 
   if (extraneousWorkspaces?.size) {
-    runExtraneousTests(extraneousWorkspaces);
+    await runExtraneousTests(extraneousWorkspaces);
   }
 }
 
@@ -235,7 +235,7 @@ async function runJestTests({
   }
 }
 
-function runExtraneousTests(extraneousWorkspaces: WorkspaceContent[0]) {
+async function runExtraneousTests(extraneousWorkspaces: WorkspaceContent[0]) {
   for (const workspace of extraneousWorkspaces) {
     const [pkgName, pkg] = workspace;
     const testScript = pkg.rawPackageJson?.scripts?.test;
@@ -243,15 +243,33 @@ function runExtraneousTests(extraneousWorkspaces: WorkspaceContent[0]) {
       logger.debug(
         `Running tests for non-modular workspace ${pkgName}, using its test script: \`${testScript}\``,
       );
+
+      try {
+        await execAsync('yarnpkg', ['workspace', pkgName, 'test'], {
+          cwd: getModularRoot(),
+          log: false,
+          // @ts-ignore
+          env: {
+            BABEL_ENV: 'test',
+            NODE_ENV: 'test',
+          },
+        });
+      } catch (err) {
+        logger.debug((err as ExecaError).message);
+        // ✕ Modular test did not pass
+        throw new Error('\u2715 Custom test did not pass');
+      }
     } else {
-      logger.debug(
-        `Not running tests for non-modular workspace ${pkgName}, test script not defined`,
+      logger.warn(
+        `Can't run tests for non-modular workspace ${pkgName}: test script is not defined`,
       );
     }
   }
 }
 
-// This function takes all the selective options, validates them and returns a subset of workspaces to test, partitioned between modular and non-modular workspaces
+// This function takes all the selective options, validates them and returns:
+// - The modular workspaces to test as a collection of regular expressions to pass to Jest
+// - The non-modular workspaces to test as a subset of WorkspaceContent
 async function computeSelectiveWorkspaces({
   changed,
   compareBranch,
