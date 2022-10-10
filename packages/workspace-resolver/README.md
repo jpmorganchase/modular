@@ -3,7 +3,8 @@
 This package encapsulates two functions:
 
 1. `resolveWorkspace` - Searches the filesystem (at a given modular root) for
-   workspace packages, returning a flat map of all packages found. An optional
+   workspace packages, returning a flat map of all packages found with an
+   additional `type` field containingthe modular type (if present). An optional
    2nd argument of `target` can be passed, which sets the working directory that
    workspaces should be resolved from. This can be useful when the modular root
    needs to be different to the current working directory, such as when modular
@@ -36,6 +37,7 @@ Map {
         modular: {
             type: 'package'
         },
+        type: 'package',
         children: [],
         parent: null,
         dependencies: {
