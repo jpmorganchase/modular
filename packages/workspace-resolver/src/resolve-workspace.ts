@@ -65,7 +65,8 @@ export async function resolveWorkspace(
   const pkgPath = packageJsonPath(root);
 
   const json = await readPackageJson(isRoot, workingDirToUse, pkgPath);
-  const isModularRoot = json.modular?.type === 'root';
+  const type = json.modular?.type;
+  const isModularRoot = type === 'root';
 
   if (!json.name) {
     throw new Error(
@@ -89,10 +90,8 @@ export async function resolveWorkspace(
     workspace: !!json.workspaces,
     children: [],
     parent,
-    modular: {
-      type: 'unknown',
-      ...json.modular,
-    },
+    modular: json.modular,
+    type,
     // Like yarn classic `workspaces info`, we include all except peerDependencies
     dependencies: {
       ...json.optionalDependencies,
@@ -150,55 +149,51 @@ export function analyzeWorkspaceDependencies(
   const exhaustivePackageNameList = Array.from(workspacePackages.keys());
   const allPackages = Array.from(workspacePackages.entries());
 
-  // Exclude the root when analyzing package inter-dependencies
-  const packagesWithoutRoot = Array.from(workspacePackages.entries()).filter(
-    ([, pkg]) => {
-      return pkg.modular.type !== 'root';
-    },
-  );
-
   // Calculate deps and mismatches a-la Yarn classic `workspaces info`
-  packagesWithoutRoot.forEach(([pkgName, pkg]) => {
-    const packageDepNames = Object.keys(pkg.dependencies || {}).filter(
-      (dep) => {
-        return exhaustivePackageNameList.includes(dep);
-      },
-    );
-    const packageDeps = allPackages.filter(([, pkg]) =>
-      packageDepNames.includes(pkg.name),
-    );
+  Array.from(workspacePackages.entries()).forEach(([pkgName, pkg]) => {
+    // Exclude the root when analyzing package inter-dependencies
+    if (pkg.type !== 'root') {
+      const packageDepNames = Object.keys(pkg.dependencies || {}).filter(
+        (dep) => {
+          return exhaustivePackageNameList.includes(dep);
+        },
+      );
+      const packageDeps = allPackages.filter(([, pkg]) =>
+        packageDepNames.includes(pkg.name),
+      );
 
-    // Mismatched = version in packages/<package>/package.json does not satisfy the dependent's range
-    const mismatchedWorkspaceDependencies = Object.entries(
-      pkg.dependencies || {},
-    )
-      .filter(([dep, range]) => {
-        const matchingPackage = packageDeps.find(
-          ([matchingPackageName]) => dep === matchingPackageName,
-        );
-        if (!matchingPackage) {
-          return false;
-        }
+      // Mismatched = version in packages/<package>/package.json does not satisfy the dependent's range
+      const mismatchedWorkspaceDependencies = Object.entries(
+        pkg.dependencies || {},
+      )
+        .filter(([dep, range]) => {
+          const matchingPackage = packageDeps.find(
+            ([matchingPackageName]) => dep === matchingPackageName,
+          );
+          if (!matchingPackage) {
+            return false;
+          }
 
-        const [, match] = matchingPackage;
+          const [, match] = matchingPackage;
 
-        // Account for use of Yarn Workspace Ranges
-        // Note: we do not support the unstable project-relative path flavour syntax
-        const rangeToUse = range.includes(YARN_WORKSPACE_RANGE_PREFIX)
-          ? range.replace(YARN_WORKSPACE_RANGE_PREFIX, '')
-          : range;
+          // Account for use of Yarn Workspace Ranges
+          // Note: we do not support the unstable project-relative path flavour syntax
+          const rangeToUse = range.includes(YARN_WORKSPACE_RANGE_PREFIX)
+            ? range.replace(YARN_WORKSPACE_RANGE_PREFIX, '')
+            : range;
 
-        return !semver.satisfies(match.version, rangeToUse);
-      })
-      .flatMap(([dep]) => dep);
+          return !semver.satisfies(match.version, rangeToUse);
+        })
+        .flatMap(([dep]) => dep);
 
-    mappedDeps.set(pkgName, {
-      location: path.dirname(pkg.path),
-      workspaceDependencies: packageDepNames.filter(
-        (depName) => !mismatchedWorkspaceDependencies.includes(depName),
-      ),
-      mismatchedWorkspaceDependencies,
-    });
+      mappedDeps.set(pkgName, {
+        location: path.dirname(pkg.path),
+        workspaceDependencies: packageDepNames.filter(
+          (depName) => !mismatchedWorkspaceDependencies.includes(depName),
+        ),
+        mismatchedWorkspaceDependencies,
+      });
+    }
   });
 
   return Object.fromEntries(mappedDeps);

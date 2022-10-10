@@ -12,9 +12,10 @@ export type ModularWorkspacePackage = {
   name: string;
   version: string;
   workspace: boolean;
-  modular: {
-    type: ModularType;
+  modular?: {
+    type: ModularType | undefined;
   };
+  type: ModularType | undefined;
   children: ModularWorkspacePackage[];
   parent: ModularWorkspacePackage | null;
   dependencies: Record<string, string> | undefined;
