@@ -178,7 +178,7 @@ describe('@modular-scripts/workspace-resolver', () => {
       expect(allPackages.get('package-extraneous-3')?.modular).toEqual({
         type: '',
       });
-      expect(allPackages.get('package-extraneous-3')?.type).toBeUndefined();
+      expect(allPackages.get('package-extraneous-3')?.type).toBeFalsy();
     });
   });
 
