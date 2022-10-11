@@ -2104,6 +2104,13 @@
     slash "^3.0.0"
     strip-ansi "^6.0.0"
 
+"@jest/create-cache-key-function@^27.4.2":
+  version "27.5.1"
+  resolved "https://registry.yarnpkg.com/@jest/create-cache-key-function/-/create-cache-key-function-27.5.1.tgz#7448fae15602ea95c828f5eceed35c202a820b31"
+  integrity sha1-dEj64VYC6pXIKPXs7tNcICqCCzE=
+  dependencies:
+    "@jest/types" "^27.5.1"
+
 "@jest/environment@^26.6.2":
   version "26.6.2"
   resolved "https://registry.yarnpkg.com/@jest/environment/-/environment-26.6.2.tgz#ba364cc72e221e79cc8f0a99555bf5d7577cf92c"
@@ -2547,6 +2554,119 @@
     "@svgr/plugin-jsx" "^6.2.1"
     "@svgr/plugin-svgo" "^6.2.0"
 
+"@swc/core-android-arm-eabi@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@swc/core-android-arm-eabi/-/core-android-arm-eabi-1.3.0.tgz#6ff8c5020e13794b536d6f0fd89817f2f10e8250"
+  integrity sha1-b/jFAg4TeUtTbW8P2JgX8vEOglA=
+  dependencies:
+    "@swc/wasm" "1.2.122"
+
+"@swc/core-android-arm64@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@swc/core-android-arm64/-/core-android-arm64-1.3.0.tgz#e09c3f6cc478f2c501d5441eb566a4e2c5b88368"
+  integrity sha1-4Jw/bMR48sUB1UQetWak4sW4g2g=
+  dependencies:
+    "@swc/wasm" "1.2.130"
+
+"@swc/core-darwin-arm64@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@swc/core-darwin-arm64/-/core-darwin-arm64-1.3.0.tgz#232e96f2a84da8698c1125684d489f8bec587d35"
+  integrity sha1-Iy6W8qhNqGmMESVoTUifi+xYfTU=
+
+"@swc/core-darwin-x64@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@swc/core-darwin-x64/-/core-darwin-x64-1.3.0.tgz#37d89cfa54311db31302fed8888db03460ccd166"
+  integrity sha1-N9ic+lQxHbMTAv7YiI2wNGDM0WY=
+
+"@swc/core-freebsd-x64@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@swc/core-freebsd-x64/-/core-freebsd-x64-1.3.0.tgz#652995139abe70d67e082168cbc44e726efdca61"
+  integrity sha1-ZSmVE5q+cNZ+CCFoy8ROcm79ymE=
+  dependencies:
+    "@swc/wasm" "1.2.130"
+
+"@swc/core-linux-arm-gnueabihf@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@swc/core-linux-arm-gnueabihf/-/core-linux-arm-gnueabihf-1.3.0.tgz#25a3260634527a678fa83d5e6aa9726fad6f1f32"
+  integrity sha1-JaMmBjRSemePqD1eaqlyb61vHzI=
+  dependencies:
+    "@swc/wasm" "1.2.130"
+
+"@swc/core-linux-arm64-gnu@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@swc/core-linux-arm64-gnu/-/core-linux-arm64-gnu-1.3.0.tgz#f9fd72628f19504a62d663e80fc0a306913c34bd"
+  integrity sha1-+f1yYo8ZUEpi1mPoD8CjBpE8NL0=
+
+"@swc/core-linux-arm64-musl@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@swc/core-linux-arm64-musl/-/core-linux-arm64-musl-1.3.0.tgz#a80dd31211d6d866139cee6237edd919393c5f08"
+  integrity sha1-qA3TEhHW2GYTnO5iN+3ZGTk8Xwg=
+
+"@swc/core-linux-x64-gnu@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@swc/core-linux-x64-gnu/-/core-linux-x64-gnu-1.3.0.tgz#6463fc20af367391da3e612438e8f302b89c6d6b"
+  integrity sha1-ZGP8IK82c5HaPmEkOOjzAricbWs=
+
+"@swc/core-linux-x64-musl@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@swc/core-linux-x64-musl/-/core-linux-x64-musl-1.3.0.tgz#534d1b5368d42fcf9901cbc33f144367b0961e45"
+  integrity sha1-U00bU2jUL8+ZAcvDPxRDZ7CWHkU=
+
+"@swc/core-win32-arm64-msvc@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@swc/core-win32-arm64-msvc/-/core-win32-arm64-msvc-1.3.0.tgz#1797b9d2729673fa5715315f671de2a52bbd6e37"
+  integrity sha1-F5e50nKWc/pXFTFfZx3ipSu9bjc=
+  dependencies:
+    "@swc/wasm" "1.2.130"
+
+"@swc/core-win32-ia32-msvc@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@swc/core-win32-ia32-msvc/-/core-win32-ia32-msvc-1.3.0.tgz#835c3f41ff6e01a53cbcfebafe9784e135847f08"
+  integrity sha1-g1w/Qf9uAaU8vP66/peE4TWEfwg=
+  dependencies:
+    "@swc/wasm" "1.2.130"
+
+"@swc/core-win32-x64-msvc@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@swc/core-win32-x64-msvc/-/core-win32-x64-msvc-1.3.0.tgz#7197ac806ab0673268cbf394f9dcf0fcec160aa2"
+  integrity sha1-cZesgGqwZzJoy/OU+dzw/OwWCqI=
+
+"@swc/core@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@swc/core/-/core-1.3.0.tgz#4bc9006cdb5de8f63c4e5b280d89f71f3384b39a"
+  integrity sha1-S8kAbNtd6PY8TlsoDYn3HzOEs5o=
+  optionalDependencies:
+    "@swc/core-android-arm-eabi" "1.3.0"
+    "@swc/core-android-arm64" "1.3.0"
+    "@swc/core-darwin-arm64" "1.3.0"
+    "@swc/core-darwin-x64" "1.3.0"
+    "@swc/core-freebsd-x64" "1.3.0"
+    "@swc/core-linux-arm-gnueabihf" "1.3.0"
+    "@swc/core-linux-arm64-gnu" "1.3.0"
+    "@swc/core-linux-arm64-musl" "1.3.0"
+    "@swc/core-linux-x64-gnu" "1.3.0"
+    "@swc/core-linux-x64-musl" "1.3.0"
+    "@swc/core-win32-arm64-msvc" "1.3.0"
+    "@swc/core-win32-ia32-msvc" "1.3.0"
+    "@swc/core-win32-x64-msvc" "1.3.0"
+
+"@swc/jest@^0.2.21":
+  version "0.2.21"
+  resolved "https://registry.yarnpkg.com/@swc/jest/-/jest-0.2.21.tgz#e8c4e234016a914f4cfbb7d75844860a250c1d1c"
+  integrity sha1-6MTiNAFqkU9M+7fXWESGCiUMHRw=
+  dependencies:
+    "@jest/create-cache-key-function" "^27.4.2"
+
+"@swc/wasm@1.2.122":
+  version "1.2.122"
+  resolved "https://registry.yarnpkg.com/@swc/wasm/-/wasm-1.2.122.tgz#87a5e654b26a71b2e84b801f41e45f823b856639"
+  integrity sha1-h6XmVLJqcbLoS4AfQeRfgjuFZjk=
+
+"@swc/wasm@1.2.130":
+  version "1.2.130"
+  resolved "https://registry.yarnpkg.com/@swc/wasm/-/wasm-1.2.130.tgz#88ac26433335d1f957162a9a92f1450b73c176a0"
+  integrity sha1-iKwmQzM10flXFiqakvFFC3PBdqA=
+
 "@szmarczak/http-timer@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@szmarczak/http-timer/-/http-timer-1.1.2.tgz#b1665e2c461a2cd92f4c1bbf50d5454de0d4b421"
@@ -2914,6 +3034,18 @@
   version "0.0.29"
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
+
+"@types/lodash.merge@^4.6.6":
+  version "4.6.6"
+  resolved "https://registry.yarnpkg.com/@types/lodash.merge/-/lodash.merge-4.6.6.tgz#b84b403c1d31bc42d51772d1cd5557fa008cd3d6"
+  integrity sha1-uEtAPB0xvELVF3LRzVVX+gCM09Y=
+  dependencies:
+    "@types/lodash" "*"
+
+"@types/lodash@*", "@types/lodash@^4.14.185":
+  version "4.14.185"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.185.tgz#c9843f5a40703a8f5edfd53358a58ae729816908"
+  integrity sha1-yYQ/WkBwOo9e39UzWKWK5ymBaQg=
 
 "@types/micromatch@4.0.2":
   version "4.0.2"

@@ -58,7 +58,7 @@ export function createJestConfig(
           presets: [require.resolve('babel-preset-react-app')],
         },
       ],
-      '^.+\\.(ts|tsx)$': require.resolve('ts-jest'),
+      '^.+\\.(ts|tsx)$': require.resolve('@swc/jest'),
       '^.+\\.(css|scss)$': require.resolve('jest-transform-stub'),
       '.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
         require.resolve('jest-transform-stub'),
