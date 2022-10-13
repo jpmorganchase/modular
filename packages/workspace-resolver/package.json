@@ -1,6 +1,6 @@
 {
   "name": "@modular-scripts/workspace-resolver",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "dependencies": {
@@ -9,7 +9,7 @@
     "semver": "7.3.7"
   },
   "devDependencies": {
-    "@modular-scripts/modular-types": "1.0.1",
+    "@modular-scripts/modular-types": "1.1.0",
     "@types/fs-extra": "^9.0.13"
   },
   "scripts": {

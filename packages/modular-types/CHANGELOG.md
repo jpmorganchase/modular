@@ -1,5 +1,14 @@
 # @modular-scripts/modular-types
 
+## 1.1.0
+
+### Minor Changes
+
+- [#2177](https://github.com/jpmorganchase/modular/pull/2177)
+  [`8311ade`](https://github.com/jpmorganchase/modular/commit/8311ade225d977db2f6a91a14b915f55674b1eee)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Modular
+  type as an additional property in workspace resolver
+
 ## 1.0.1
 
 ### Patch Changes
