@@ -21,6 +21,57 @@ This contains the setup for tests corresponding to
 This contains the setup for tests corresponding to
 [`jest.config.js#setupFilesAfterEnv`](https://jestjs.io/docs/en/configuration#setupfilesafterenv-array).
 
+## Command line options
+
+### Modular-specific options
+
+#### ancestors
+
+Default: `false`
+
+Can be used only in combination with `changed` or the command will fail. If set,
+it will additionally execute tests for all the workspaces that (directly or
+indirectly) depend on the workspaces selected by `changed`.
+
+#### changed
+
+Default: `false`
+
+Execute tests only for the workspaces that contain files that have changed.
+Files that have changed are calculated comparing the current state of the
+repository with the branch specified by `compareBranch` or, if `compareBranch`
+is not set, with the default git branch.
+
+#### debug
+
+Default: `false`
+
+Add the `--inspect-brk` option to the Node.js process executing Jest to allow a
+debugger to be attached to the running process. For more information,
+[see the Node.js debugging guide](https://nodejs.org/en/docs/guides/debugging-getting-started/).
+
+#### compareBranch
+
+Default: `undefined`
+
+Specify the comparison branch used to determine which files have changed when
+using the `changed` option. If this option is used without `changed`, the
+command will fail.
+
+#### package
+
+Default: `undefined`
+
+Run all the tests for the workspace with the specified package name. Can be
+repeated to select more than one workspace. Can be combined with the
+`--ancestors` option to test the specified workspace(s) plus all the workspaces
+that, directly or indirectly, depend on them. Conflicts with `--changed`.
+
+### Jest CLI Options
+
+`modular test` additionally supports passing
+[Jest CLI options](https://jestjs.io/docs/cli) to the underlying Jest process.
+
 ## Escape Hatches
 
 While `modular test` should work straight away for most projects there are some
@@ -38,31 +89,6 @@ through the `jest` property in the root `package.json`
 - [testPathIgnorePatterns](#testPathIgnorePatterns)
 - [testRunner](#testRunner)
 - [transformIgnorePatterns](#transformIgnorePatterns)
-
-### ancestors
-
-Default: `false`
-
-Can be used only in combination with `changed` or the command will fail. If set,
-it will additionally execute tests for all the workspaces that (directly or
-indirectly) depend on the workspaces selected by `changed`.
-
-### changed
-
-Default: `false`
-
-Execute tests only for the workspaces that contain files that have changed.
-Files that have changed are calculated comparing the current state of the
-repository with the branch specified by `compareBranch` or, if `compareBranch`
-is not set, with the default git branch.
-
-### compareBranch
-
-Default: `undefined`
-
-Specify the comparison branch used to determine which files have changed when
-using the `changed` option. If this option is used without `changed`, the
-command will fail.
 
 ### collectCoverageFrom
 
@@ -142,15 +168,6 @@ before those paths are to be considered 'visible' to the module loader. If a
 given module's path matches any of the patterns, it will not be `require()`-able
 in the test environment.
 
-### package
-
-Default: `undefined`
-
-Run all the tests for the workspace with the specified package name. Can be
-repeated to select more than one workspace. Can be combined with the
-`--ancestors` option to test the specified workspace(s) plus all the workspaces
-that, directly or indirectly, depend on them. Conflicts with `--changed`.
-
 ### testPathIgnorePatterns
 
 [_Documentation_](https://jestjs.io/docs/configuration#testpathignorepatterns-arraystring)
@@ -185,8 +202,3 @@ Default:
 An array of regexp pattern strings that are matched against all source file
 paths before transformation. If the file path matches any of the patterns, it
 will not be transformed.
-
-## Options
-
-The available options for `modular test` reflect the available offering from
-[Jest CLI](https://jestjs.io/docs/cli)
