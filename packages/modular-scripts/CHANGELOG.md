@@ -1,5 +1,97 @@
 # modular-scripts
 
+## 3.4.0
+
+### Minor Changes
+
+- [#2145](https://github.com/jpmorganchase/modular/pull/2145)
+  [`a17e9df`](https://github.com/jpmorganchase/modular/commit/a17e9dfae3dcf7d94c415278b4a87892de1c3854)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Selective
+  test on workspace name with the --package option
+
+* [#2111](https://github.com/jpmorganchase/modular/pull/2111)
+  [`deaee2c`](https://github.com/jpmorganchase/modular/commit/deaee2cf0c6cd74200236d886f6baadee089196e)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Improve
+  the way modular add creates new workspaces, add the custom `--path` option,
+  factor out addPackage tests
+
+- [#2169](https://github.com/jpmorganchase/modular/pull/2169)
+  [`32f4a4d`](https://github.com/jpmorganchase/modular/commit/32f4a4d0b109d116f985e4f29908faf20090837e)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Allow
+  workspaces outside the `packages` directory
+
+### Patch Changes
+
+- [#2158](https://github.com/jpmorganchase/modular/pull/2158)
+  [`09a3e02`](https://github.com/jpmorganchase/modular/commit/09a3e0267952daa2112c6bae77fb0f2bd6c647d9)
+  Thanks [@joshwooding](https://github.com/joshwooding)! - Remove
+  @types/semver-regex
+
+* [#2135](https://github.com/jpmorganchase/modular/pull/2135)
+  [`305cff2`](https://github.com/jpmorganchase/modular/commit/305cff287a4eaa812ed92cf810b15d8198230a8f)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump semver-regex
+  from 3.1.3 to 3.1.4
+
+- [#2087](https://github.com/jpmorganchase/modular/pull/2087)
+  [`8c8570a`](https://github.com/jpmorganchase/modular/commit/8c8570a33d320a5e4bfb3f615b81a0509050dc50)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump dotenv from
+  16.0.1 to 16.0.2
+
+* [#2159](https://github.com/jpmorganchase/modular/pull/2159)
+  [`70470c0`](https://github.com/jpmorganchase/modular/commit/70470c0ad53729554ed286ee69829f157135dd80)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Refactor
+  modular config into readable parts
+
+- [#2156](https://github.com/jpmorganchase/modular/pull/2156)
+  [`432392b`](https://github.com/jpmorganchase/modular/commit/432392bfcfd4a6f482429329c1dc1cc0535ddcf6)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump address from
+  1.2.0 to 1.2.1
+
+* [#2011](https://github.com/jpmorganchase/modular/pull/2011)
+  [`3c199ff`](https://github.com/jpmorganchase/modular/commit/3c199ff2c41d4b7fd0dff4c9f62f04b12012a0a3)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump postcss from
+  8.4.14 to 8.4.16
+
+- [#2177](https://github.com/jpmorganchase/modular/pull/2177)
+  [`8311ade`](https://github.com/jpmorganchase/modular/commit/8311ade225d977db2f6a91a14b915f55674b1eee)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Modular
+  type as an additional property in workspace resolver
+
+* [#1975](https://github.com/jpmorganchase/modular/pull/1975)
+  [`2f9d6b8`](https://github.com/jpmorganchase/modular/commit/2f9d6b8062a526dce6ebefeb93ea5f435a46b474)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump webpack from
+  5.73.0 to 5.74.0
+
+- [#2137](https://github.com/jpmorganchase/modular/pull/2137)
+  [`33ffaf8`](https://github.com/jpmorganchase/modular/commit/33ffaf8946264faab10e3ab3e5467f984cd2690e)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump strip-ansi
+  from 6.0.0 to 6.0.1
+
+* [#1949](https://github.com/jpmorganchase/modular/pull/1949)
+  [`00ac6bc`](https://github.com/jpmorganchase/modular/commit/00ac6bc8553fa9963db12407e7be9849a583f3c5)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump commander
+  from 9.3.0 to 9.4.0
+
+- [#1950](https://github.com/jpmorganchase/modular/pull/1950)
+  [`e41effa`](https://github.com/jpmorganchase/modular/commit/e41effa5a6ff62929688acc37bc948199ad0aa7f)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump ws from 8.8.0
+  to 8.8.1
+
+* [#1959](https://github.com/jpmorganchase/modular/pull/1959)
+  [`b3fa5fd`](https://github.com/jpmorganchase/modular/commit/b3fa5fd86398b0626f1e5498c5003cac5361ce50)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  fork-ts-checker-webpack-plugin from 7.2.11 to 7.2.13
+
+- [#1853](https://github.com/jpmorganchase/modular/pull/1853)
+  [`b42ae90`](https://github.com/jpmorganchase/modular/commit/b42ae904a98aa4290626a31b731985250182719b)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump resolve from
+  1.21.0 to 1.22.1
+
+- Updated dependencies
+  [[`db7acd0`](https://github.com/jpmorganchase/modular/commit/db7acd0d2fa0b896f99a0e7f4c745c8e0b790325),
+  [`8311ade`](https://github.com/jpmorganchase/modular/commit/8311ade225d977db2f6a91a14b915f55674b1eee)]:
+  - @modular-scripts/workspace-resolver@1.2.0
+
 ## 3.3.2
 
 ### Patch Changes

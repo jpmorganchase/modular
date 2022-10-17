@@ -1,5 +1,14 @@
 # create-modular-react-app
 
+## 3.0.1
+
+### Patch Changes
+
+- [#1949](https://github.com/jpmorganchase/modular/pull/1949)
+  [`00ac6bc`](https://github.com/jpmorganchase/modular/commit/00ac6bc8553fa9963db12407e7be9849a583f3c5)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump commander
+  from 9.3.0 to 9.4.0
+
 ## 3.0.0
 
 ### Major Changes
