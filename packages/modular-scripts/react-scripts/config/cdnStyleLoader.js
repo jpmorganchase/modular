@@ -15,6 +15,8 @@ module.exports.pitch = function () {
   const { descriptionData } = info;
   const dependency = dependencyMap[descriptionData.name];
 
+  // Rewrite to noop placeholder: dependency will be written in output package.json
+  // and generated index.html, no need to load it in the page
   if (dependency) {
     return `/* Placeholder for ${dependency} - see package.json */`;
   }
