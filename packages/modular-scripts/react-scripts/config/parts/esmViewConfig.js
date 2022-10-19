@@ -27,6 +27,7 @@ function createPluginConfig({ isEnvProduction }) {
             {
               inject: true,
               templateContent: `
+                <!DOCTYPE html>
                 <html>
                   <body>
                     <div id="root"></div>
