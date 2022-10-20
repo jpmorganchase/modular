@@ -1,5 +1,14 @@
 # modular-scripts
 
+## 3.4.1
+
+### Patch Changes
+
+- [#2184](https://github.com/jpmorganchase/modular/pull/2184)
+  [`32adac4`](https://github.com/jpmorganchase/modular/commit/32adac4b4371feec0c3ecf941f3df7b79f0b2069)
+  Thanks [@steveukx](https://github.com/steveukx)! - Set a doctype for the
+  template used when starting an ESM view
+
 ## 3.4.0
 
 ### Minor Changes
