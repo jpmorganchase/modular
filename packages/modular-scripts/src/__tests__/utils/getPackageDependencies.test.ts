@@ -7,7 +7,7 @@ describe('Resolve dependencies', () => {
   it('should resolve dependencies', () => {
     const { manifest, resolutions, manifestMiss, lockFileMiss } =
       resolvePackageDependencies({
-        dependenciesfromSource: ['dependency-1', 'dependency-2'],
+        dependencies: ['dependency-1', 'dependency-2'],
         packageDeps: {
           'dependency-1': '^1.1.2',
           'dependency-2': '^2.3.4',
@@ -44,11 +44,7 @@ describe('Resolve dependencies', () => {
   it('should resolve dependencies with package and lockfile misses', () => {
     const { manifest, resolutions, manifestMiss, lockFileMiss } =
       resolvePackageDependencies({
-        dependenciesfromSource: [
-          'dependency-1',
-          'dependency-2',
-          'dependency-missing',
-        ],
+        dependencies: ['dependency-1', 'dependency-2', 'dependency-missing'],
         packageDeps: {
           'dependency-1': '^1.1.2',
           'dependency-2': '^2.3.4',
