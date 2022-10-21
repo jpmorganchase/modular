@@ -16,7 +16,7 @@ export function createViewTrampoline(
   const fileRelativePath = `./${fileName}`;
 
   const reactDomCdnLocation = importMap.get('react-dom');
-  const reactCdnLocation = importMap.get('react-dom');
+  const reactCdnLocation = importMap.get('react');
 
   if (!reactCdnLocation || !reactDomCdnLocation) {
     throw new Error(
@@ -30,7 +30,7 @@ export function createViewTrampoline(
 import React from "${reactCdnLocation}";
 import Component from "${fileRelativePath}";
 var DOMRoot = document.getElementById("root");
-ReactDOM.render(/* @__PURE__ */ React.createElement(Component, null), DOMRoot);`;
+ReactDOM.render(React.createElement(Component, null), DOMRoot);`;
 }
 
 export function getEntryPoint(
