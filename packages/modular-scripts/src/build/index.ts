@@ -37,6 +37,7 @@ import {
   esbuildMeasureFileSizesBeforeBuild,
 } from './esbuildFileSizeReporter';
 import { getPackageDependencies } from '../utils/getPackageDependencies';
+import { rewriteDependencies } from '../esbuild-scripts/utils/rewriteDependencies'; // TODO: move
 
 async function buildStandalone(
   target: string,
@@ -102,6 +103,7 @@ async function buildStandalone(
     resolutions: packageResolutions,
     selectiveCDNResolutions,
   } = await getPackageDependencies(target);
+
   // Get workspace info to automatically bundle workspace dependencies
   const workspaceInfo = await getWorkspaceInfo();
   // Split dependencies between external and bundled
@@ -140,18 +142,20 @@ async function buildStandalone(
   let jsEntryPoint: string | undefined;
   let cssEntryPoint: string | undefined;
 
+  // Rewrite dependencies. This is only needed for esm-views.
+  const importMap = rewriteDependencies({
+    externalDependencies,
+    externalResolutions,
+    selectiveCDNResolutions,
+  });
+
+  console.log(importMap);
+
   if (isEsbuild) {
     const { default: buildEsbuildApp } = await import(
       '../esbuild-scripts/build'
     );
-    const result = await buildEsbuildApp(
-      target,
-      paths,
-      externalDependencies,
-      externalResolutions,
-      selectiveCDNResolutions,
-      type,
-    );
+    const result = await buildEsbuildApp(target, paths, importMap, type);
     jsEntryPoint = getEntryPoint(paths, result, '.js');
     cssEntryPoint = getEntryPoint(paths, result, '.css');
     assets = createEsbuildAssets(paths, result);
@@ -174,17 +178,7 @@ async function buildStandalone(
         MODULAR_PACKAGE: target,
         MODULAR_PACKAGE_NAME: targetName,
         MODULAR_IS_APP: JSON.stringify(isApp),
-        MODULAR_PACKAGE_DEPS: JSON.stringify({
-          externalDependencies,
-          bundledDependencies,
-        }),
-        MODULAR_PACKAGE_RESOLUTIONS: JSON.stringify({
-          externalResolutions,
-          bundledResolutions,
-        }),
-        MODULAR_PACKAGE_SELECTIVE_CDN_RESOLUTIONS: JSON.stringify(
-          selectiveCDNResolutions,
-        ),
+        MODULAR_IMPORT_MAP: JSON.stringify(Object.fromEntries(importMap)),
       },
     });
 
@@ -225,6 +219,7 @@ async function buildStandalone(
     if (!jsEntryPoint) {
       throw new Error("Can't find main entrypoint after building");
     }
+
     // Create synthetic index
     const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
     const html = createSyntheticIndex({ cssEntryPoint, replacements: env.raw });
@@ -245,19 +240,13 @@ async function buildStandalone(
     );
 
     // Create and write trampoline file
-    const trampolineBuildResult = await createViewTrampoline(
+    const trampolineContent = createViewTrampoline(
       path.basename(jsEntryPoint),
-      paths.appSrc,
-      externalDependencies,
-      externalResolutions,
-      selectiveCDNResolutions,
-      browserTarget,
+      importMap,
     );
+
     const trampolinePath = `${paths.appBuild}/static/js/_trampoline.js`;
-    await fs.writeFile(
-      trampolinePath,
-      trampolineBuildResult.outputFiles[0].contents,
-    );
+    await fs.writeFile(trampolinePath, trampolineContent);
   }
 
   // Add dependencies from source and bundled dependencies to target package.json
