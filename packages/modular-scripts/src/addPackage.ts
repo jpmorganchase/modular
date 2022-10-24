@@ -137,11 +137,11 @@ async function addPackage({
 
   const modularRoot = getModularRoot();
 
-  const { componentName, packagePath } = getNewPackageDetails({
+  const { componentName, packagePath: newPackagePath } = getNewPackageDetails({
     name,
     targetPath: pathArg || path.join(modularRoot, packagesRoot),
   });
-  await validatePackageDetails(name, packagePath, pathArg);
+  await validatePackageDetails(name, newPackagePath, pathArg);
 
   const packageType = templateNameArg ?? (await promptForType(typeArg));
   const templateName = await promptForTemplate(templateNameArg || packageType);
@@ -152,11 +152,11 @@ async function addPackage({
   // Try and find the modular template package. If it's already been installed
   // in the project then continue without needing to do an install.
   // else we will fetch it from the yarn registry.
-  let newModularPackageJsonPath;
+  let templatePackageJsonPath;
 
   try {
     logger.log(`Looking for template ${templateName} in project...`);
-    newModularPackageJsonPath = require.resolve(installedPackageJsonPath);
+    templatePackageJsonPath = require.resolve(installedPackageJsonPath);
   } catch (e) {
     logger.log(
       'Fetching template package from registry, this may take a moment...',
@@ -184,11 +184,11 @@ async function addPackage({
     }
 
     await templateInstallSubprocess;
-    newModularPackageJsonPath = require.resolve(installedPackageJsonPath);
+    templatePackageJsonPath = require.resolve(installedPackageJsonPath);
   }
 
   const modularTemplatePackageJson = (await fs.readJSON(
-    newModularPackageJsonPath,
+    templatePackageJsonPath,
   )) as ModularPackageJson;
 
   const modularType = modularTemplatePackageJson?.modular?.type as string;
@@ -206,22 +206,24 @@ async function addPackage({
     );
   }
 
-  const packageTypePath = path.dirname(newModularPackageJsonPath);
-  // create a new package source folder
-  await fs.mkdirp(packagePath);
-  await fs.copy(packageTypePath, packagePath, {
+  const templatePath = path.dirname(templatePackageJsonPath);
+  // Create new package directory
+  await fs.mkdirp(newPackagePath);
+  // Copy files from template directory to new package directory
+  await fs.copy(templatePath, newPackagePath, {
     recursive: true,
     filter(src) {
       return !(path.basename(src) === 'package.json');
     },
   });
 
-  const packageFilePaths = getAllFiles(packagePath);
+  const packageFilePaths = getAllFiles(newPackagePath);
 
   // If we get our package locally we need to allowlist files like yarn publish does
+  // If package.json specifies "files" to include, filter, otherwise allow all files
   const packageAllowlist = globby
     .sync(modularTemplatePackageJson.files || ['**'], {
-      cwd: packagePath,
+      cwd: newPackagePath,
       absolute: true,
     })
     .map((filePath) => path.normalize(filePath));
@@ -241,7 +243,7 @@ async function addPackage({
   }
 
   await fs.writeJson(
-    path.join(packagePath, 'package.json'),
+    path.join(newPackagePath, 'package.json'),
     {
       name,
       private: modularTemplateType === 'app',
@@ -260,9 +262,9 @@ async function addPackage({
   if (modularTemplateType === 'app') {
     // add a tsconfig, because CRA expects it
     await fs.writeJSON(
-      path.join(packagePath, 'tsconfig.json'),
+      path.join(newPackagePath, 'tsconfig.json'),
       {
-        extends: path.relative(packagePath, modularRoot) + '/tsconfig.json',
+        extends: path.relative(newPackagePath, modularRoot) + '/tsconfig.json',
       },
       { spaces: 2 },
     );
