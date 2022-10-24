@@ -334,6 +334,15 @@ program
     await rename(oldPackageName, newPackageName);
   });
 
+program
+  .command('convert-to-template <packageName>')
+  .description(`Converts a package to a template.`)
+  .option('--verbose', 'Enables verbose logging within modular.')
+  .action(async (packageName: string) => {
+    const { default: convertToTemplate } = await import('./convertToTemplate');
+    await convertToTemplate(packageName);
+  });
+
 interface ServeOptions {
   port: string;
 }
