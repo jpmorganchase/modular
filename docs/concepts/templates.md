@@ -13,6 +13,11 @@ either used implicitly (every modular `type` has a default template) or provided
 explicitly to `modular add`, either interactively or via the `--template`
 option.
 
+Templates can either be defined and used locally within your workplace, or
+published to the NPM registry to be shared with the community. When using
+`modular add` and specifying a custom template, modular will first search your
+workspace for the template before checking the registry.
+
 # Examples
 
 ```bash
