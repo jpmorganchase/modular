@@ -60,6 +60,9 @@ selection at the interactive prompt), will search for a package whose name
 equals to the provided template option in the current workspace packages. If
 such a package is not found, Modular will try to install it with Yarn.
 
+It's important to make sure all dependencies required by the template are in the
+template's package.json when publishing it to the registry.
+
 ## How to find community templates
 
 By convention, community templates published to the NPM registry have their name
