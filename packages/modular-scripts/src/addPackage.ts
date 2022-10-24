@@ -155,9 +155,12 @@ async function addPackage({
   let newModularPackageJsonPath;
 
   try {
+    logger.log(`Looking for template ${templateName} in project...`);
     newModularPackageJsonPath = require.resolve(installedPackageJsonPath);
   } catch (e) {
-    logger.log('Installing package template, this may take a moment...');
+    logger.log(
+      'Fetching template package from registry, this may take a moment...',
+    );
     const yarnAddArgs = ['add', templateName];
 
     if (isYarnV1) {
