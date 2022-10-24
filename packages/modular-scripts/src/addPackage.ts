@@ -220,7 +220,7 @@ async function addPackage({
 
   // If we get our package locally we need to allowlist files like yarn publish does
   const packageAllowlist = globby
-    .sync(modularTemplatePackageJson.files || ['*'], {
+    .sync(modularTemplatePackageJson.files || ['**'], {
       cwd: packagePath,
       absolute: true,
     })
