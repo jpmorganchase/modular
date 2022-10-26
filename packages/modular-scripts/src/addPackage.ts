@@ -159,7 +159,7 @@ async function addPackage({
     templatePackageJsonPath = require.resolve(installedPackageJsonPath);
   } catch (e) {
     logger.log(
-      'Fetching template package from registry, this may take a moment...',
+      `Installing template package ${templateName} from registry, this may take a moment...`,
     );
     const yarnAddArgs = ['add', templateName];
 
