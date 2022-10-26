@@ -1,0 +1,11 @@
+.profileCard label {
+  color: grey;
+}
+
+.profileCard [class~="uitkAvatar"] {
+  transition: border-radius linear 200ms;
+}
+
+.profileCard:hover [class~="uitkAvatar"] {
+  border-radius: 25%;
+}
