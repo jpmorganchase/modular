@@ -86,7 +86,7 @@ describe('createEsbuildBrowserslistTarget', () => {
       Array [
         "chrome106",
         "firefox106",
-        "safari16.1"
+        "safari16.1",
       ]
     `);
   });
