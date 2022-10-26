@@ -16,7 +16,6 @@
     "test": "yarn modular test --watchAll false --runInBand",
     "build": "yarn workspace @modular-scripts/workspace-resolver build && yarn workspace create-modular-react-app build && yarn workspace modular-scripts build && yarn workspace modular-views.macro build",
     "start": "yarn modular start modular-site",
-    "prepare": "is-ci || husky install",
     "postinstall": "patch-package",
     "typecheck": "yarn modular typecheck",
     "validate-lockfile": "node scripts/validate-lockfile.js"
@@ -77,7 +76,6 @@
     "esbuild": "0.14.51",
     "eslint": "7.32.0",
     "execa": "5.1.1",
-    "husky": "8.0.1",
     "is-ci": "2.0.0",
     "lint-staged": "12.4.1",
     "micromatch": "4.0.5",
