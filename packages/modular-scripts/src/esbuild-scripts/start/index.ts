@@ -63,7 +63,7 @@ class DevServer {
   private port: number;
 
   private isApp: boolean; // TODO maybe it's better to pass the type here
-  private importMap: Map<string, string>;
+  private importMap: Map<string, string> | undefined;
 
   constructor(
     paths: Paths,
@@ -71,7 +71,7 @@ class DevServer {
     host: string,
     port: number,
     isApp: boolean,
-    importMap: Map<string, string>,
+    importMap: Map<string, string> | undefined,
   ) {
     this.paths = paths;
     this.urls = urls;
@@ -189,6 +189,14 @@ class DevServer {
 
   baseEsbuildConfig = memoize(() => {
     const browserTarget = createEsbuildBrowserslistTarget(this.paths.appPath);
+
+    let plugins;
+    if (!this.isApp && this.importMap) {
+      plugins = [
+        createRewriteDependenciesPlugin(this.importMap, browserTarget),
+      ];
+    }
+
     return createEsbuildConfig(this.paths, {
       write: false,
       minify: false,
@@ -196,9 +204,7 @@ class DevServer {
       chunkNames: 'static/js/[name]',
       assetNames: 'static/media/[name]',
       target: browserTarget,
-      plugins: this.isApp
-        ? undefined
-        : [createRewriteDependenciesPlugin(this.importMap, browserTarget)],
+      plugins,
     });
   });
 
@@ -356,7 +362,7 @@ class DevServer {
 export default async function start(
   target: string,
   isApp: boolean,
-  importMap: Map<string, string>,
+  importMap: Map<string, string> | undefined,
 ): Promise<void> {
   const paths = await createPaths(target);
   const host = getHost();

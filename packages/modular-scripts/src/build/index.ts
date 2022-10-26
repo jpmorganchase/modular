@@ -141,15 +141,16 @@ async function buildStandalone(
 
   let jsEntryPoint: string | undefined;
   let cssEntryPoint: string | undefined;
+  let importMap: Map<string, string> | undefined;
 
-  // Rewrite dependencies. This is only needed for esm-views.
-  const importMap = rewriteDependencies({
-    externalDependencies,
-    externalResolutions,
-    selectiveCDNResolutions,
-  });
-
-  console.log(importMap);
+  if (!isApp) {
+    // Rewrite dependencies. This is only needed for esm-views.
+    importMap = rewriteDependencies({
+      externalDependencies,
+      externalResolutions,
+      selectiveCDNResolutions,
+    });
+  }
 
   if (isEsbuild) {
     const { default: buildEsbuildApp } = await import(
@@ -178,7 +179,7 @@ async function buildStandalone(
         MODULAR_PACKAGE: target,
         MODULAR_PACKAGE_NAME: targetName,
         MODULAR_IS_APP: JSON.stringify(isApp),
-        MODULAR_IMPORT_MAP: JSON.stringify(Object.fromEntries(importMap)),
+        MODULAR_IMPORT_MAP: JSON.stringify(Object.fromEntries(importMap || [])),
       },
     });
 

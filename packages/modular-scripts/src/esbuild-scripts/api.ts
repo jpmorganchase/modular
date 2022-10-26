@@ -11,12 +11,12 @@ type FileType = '.css' | '.js';
 
 export function createViewTrampoline(
   fileName: string,
-  importMap: Map<string, string>,
+  importMap: Map<string, string> | undefined,
 ): string {
   const fileRelativePath = `./${fileName}`;
 
-  const reactDomCdnLocation = importMap.get('react-dom');
-  const reactCdnLocation = importMap.get('react');
+  const reactDomCdnLocation = importMap?.get('react-dom');
+  const reactCdnLocation = importMap?.get('react');
 
   if (!reactCdnLocation || !reactDomCdnLocation) {
     throw new Error(

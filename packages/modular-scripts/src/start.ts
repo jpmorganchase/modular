@@ -107,12 +107,16 @@ async function start(packageName: string): Promise<void> {
     )}`,
   );
 
-  // Rewrite dependencies. This is only needed for esm-views.
-  const importMap = rewriteDependencies({
-    externalDependencies,
-    externalResolutions,
-    selectiveCDNResolutions,
-  });
+  let importMap;
+
+  if (isEsmView) {
+    // Rewrite dependencies. This is only needed for esm-views.
+    importMap = rewriteDependencies({
+      externalDependencies,
+      externalResolutions,
+      selectiveCDNResolutions,
+    });
+  }
 
   // If you want to use webpack then we'll always use webpack. But if you've indicated
   // you want esbuild - then we'll switch you to the new fancy world.
@@ -142,7 +146,7 @@ async function start(packageName: string): Promise<void> {
         MODULAR_PACKAGE: target,
         MODULAR_PACKAGE_NAME: targetName,
         MODULAR_IS_APP: JSON.stringify(!isEsmView),
-        MODULAR_IMPORT_MAP: JSON.stringify(Object.fromEntries(importMap)),
+        MODULAR_IMPORT_MAP: JSON.stringify(Object.fromEntries(importMap || [])),
       },
     });
   }
