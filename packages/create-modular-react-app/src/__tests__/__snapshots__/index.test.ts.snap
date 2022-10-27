@@ -87,9 +87,9 @@ Object {
   "author": "?",
   "browserslist": Object {
     "development": Array [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version",
+      "last 30 chrome versions",
+      "last 30 firefox versions",
+      "last 30 safari versions",
     ],
     "production": Array [
       ">0.2%",
@@ -311,9 +311,9 @@ Object {
   "author": "?",
   "browserslist": Object {
     "development": Array [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version",
+      "last 30 chrome versions",
+      "last 30 firefox versions",
+      "last 30 safari versions",
     ],
     "production": Array [
       ">0.2%",
