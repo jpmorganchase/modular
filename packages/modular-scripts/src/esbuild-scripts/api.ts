@@ -2,76 +2,35 @@ import * as esbuild from 'esbuild';
 import * as fs from 'fs-extra';
 import * as parse5 from 'parse5';
 import escapeStringRegexp from 'escape-string-regexp';
-
-import { createRewriteDependenciesPlugin } from './plugins/rewriteDependenciesPlugin';
 import type { Paths } from '../utils/createPaths';
 import getModularRoot from '../utils/getModularRoot';
 import * as path from 'path';
-import type { Dependency } from '@schemastore/package';
 import { normalizeToPosix } from './utils/formatPath';
 
 type FileType = '.css' | '.js';
 
-export async function createViewTrampoline(
+export function createViewTrampoline(
   fileName: string,
-  srcPath: string,
-  dependencies: Dependency,
-  resolutions: Dependency,
-  selectiveCDNResolutions: Dependency,
-  browserTarget: string[],
-): Promise<esbuild.BuildResult & { outputFiles: esbuild.OutputFile[] }> {
+  importMap: Map<string, string> | undefined,
+): string {
   const fileRelativePath = `./${fileName}`;
 
-  const trampolineTemplate = `
-import ReactDOM from 'react-dom'
-import React from 'react'
-import Component from '${fileRelativePath}'
-const DOMRoot = document.getElementById('root');
-ReactDOM.render(<Component />, DOMRoot);`;
+  const reactDomCdnLocation = importMap?.get('react-dom');
+  const reactCdnLocation = importMap?.get('react');
 
-  const fileRegexp = new RegExp(String.raw`^${escapeRegex(fileRelativePath)}$`);
+  if (!reactCdnLocation || !reactDomCdnLocation) {
+    throw new Error(
+      `react (${reactCdnLocation ?? 'undefined'}) or react-dom (${
+        reactDomCdnLocation ?? 'undefined'
+      }) location not specified. are you sure you have them in your package.json?`,
+    );
+  }
 
-  // Build the trampoline on the fly, from stdin
-  const buildResult = await esbuild.build({
-    stdin: {
-      contents: trampolineTemplate,
-      resolveDir: srcPath,
-      sourcefile: '_trampoline.tsx',
-      loader: 'tsx',
-    },
-    format: 'esm',
-    bundle: true,
-    write: false,
-    target: browserTarget,
-    plugins: [
-      // See https://github.com/evanw/esbuild/issues/456
-      {
-        name: 'import-path',
-        setup(build) {
-          build.onResolve({ filter: fileRegexp }, (args) => {
-            return { path: args.path, external: true };
-          });
-        },
-      },
-      createRewriteDependenciesPlugin(
-        {
-          ...dependencies,
-          'react-dom': dependencies['react-dom'] ?? dependencies.react,
-        },
-        {
-          ...resolutions,
-          'react-dom': resolutions['react-dom'] ?? resolutions.react,
-        },
-        selectiveCDNResolutions,
-      ),
-    ],
-  });
-
-  return buildResult;
-}
-
-function escapeRegex(s: string) {
-  return s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+  return `import ReactDOM from "${reactDomCdnLocation}";
+import React from "${reactCdnLocation}";
+import Component from "${fileRelativePath}";
+var DOMRoot = document.getElementById("root");
+ReactDOM.render(React.createElement(Component, null), DOMRoot);`;
 }
 
 export function getEntryPoint(

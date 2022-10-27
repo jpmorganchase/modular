@@ -1,42 +1,10 @@
 import * as esbuild from 'esbuild';
 import { parsePackageName } from '../../utils/parsePackageName';
-import type { Dependency } from '@schemastore/package';
 
 export function createRewriteDependenciesPlugin(
-  externalDependencies: Dependency,
-  externalResolutions: Dependency,
-  selectiveCDNResolutions: Dependency,
+  importMap: Map<string, string>,
   target?: string[],
 ): esbuild.Plugin {
-  const externalCdnTemplate =
-    process.env.EXTERNAL_CDN_TEMPLATE ??
-    'https://cdn.skypack.dev/[name]@[version]';
-
-  const importMap: Map<string, string> = new Map(
-    Object.entries(externalDependencies).map(([name, version]) => {
-      if (!externalResolutions[name]) {
-        throw new Error(
-          `Dependency ${name} found in package.json but not in lockfile. Have you installed your dependencies?`,
-        );
-      }
-      return [
-        name,
-        externalCdnTemplate
-          .replace('[name]', name)
-          .replace('[version]', version ?? externalResolutions[name])
-          .replace('[resolution]', externalResolutions[name])
-          .replace(
-            '[selectiveCDNResolutions]',
-            selectiveCDNResolutions
-              ? Object.entries(selectiveCDNResolutions)
-                  .map(([key, value]) => `${key}@${value}`)
-                  .join(',')
-              : '',
-          ),
-      ];
-    }),
-  );
-
   const dependencyRewritePlugin: esbuild.Plugin = {
     name: 'dependency-rewrite',
     setup(build) {
