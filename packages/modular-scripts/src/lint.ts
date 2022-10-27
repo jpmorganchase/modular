@@ -6,28 +6,29 @@ import actionPreflightCheck from './utils/actionPreflightCheck';
 import { resolveAsBin } from './utils/resolveAsBin';
 import getModularRoot from './utils/getModularRoot';
 import execAsync from './utils/execAsync';
-import { getDiffedFiles } from './utils/gitActions';
+import { addFiles, getDiffedFiles, getStagedFiles } from './utils/gitActions';
 import * as logger from './utils/logger';
 
 export interface LintOptions {
   all: boolean;
   fix: boolean;
+  staged: boolean;
 }
 
 async function lint(
   options: LintOptions,
   regexes: string[] = [],
 ): Promise<void> {
-  const { all = false, fix = false } = options;
+  const { all = false, fix = false, staged = false } = options;
   const modularRoot = getModularRoot();
   const lintExtensions = ['.ts', '.tsx', '.js', '.jsx'];
   let targetedFiles = ['<rootDir>/**/src/**/*.{js,jsx,ts,tsx}'];
 
-  if (!all && !isCI && regexes.length === 0) {
-    const diffedFiles = getDiffedFiles();
+  if (!all && (!isCI || staged) && regexes.length === 0) {
+    const diffedFiles = staged ? getStagedFiles() : getDiffedFiles();
     if (diffedFiles.length === 0) {
       logger.log(
-        'No diffed files detected. Add the `--all` option to lint the entire codebase',
+        'No diffed files detected. Use the `--all` option to lint the entire codebase',
       );
       return;
     }
@@ -71,6 +72,11 @@ async function lint(
         MODULAR_LINT_FIX: String(fix),
       },
     });
+
+    if (staged && fix) {
+      targetedFiles = targetedFiles.map((p) => p.replace('<rootDir>/', ''));
+      addFiles(targetedFiles);
+    }
   } catch (err) {
     logger.debug((err as ExecaError).message);
     // ✕ Modular lint did not pass

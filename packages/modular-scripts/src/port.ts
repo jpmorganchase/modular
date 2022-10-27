@@ -11,9 +11,10 @@ import * as logger from './utils/logger';
 import getModularRoot from './utils/getModularRoot';
 import getWorkspaceInfo from './utils/getWorkspaceInfo';
 import actionPreflightCheck from './utils/actionPreflightCheck';
-import { ModularPackageJson } from './utils/isModularType';
 import { cleanGit, stashChanges } from './utils/gitActions';
 import { check } from './check';
+
+import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
 process.on('SIGINT', () => {
   stashChanges();
@@ -198,7 +199,7 @@ export async function port(relativePath: string): Promise<void> {
       devDependencies: targetDevDeps = {},
     } = targetedAppPackageJson;
 
-    const workspaces = await getWorkspaceInfo();
+    const workspaces = await getWorkspaceInfo(modularRoot);
 
     const publicPackages = Object.keys(workspaces).filter(
       (name) => workspaces[name].public,
@@ -308,7 +309,7 @@ export async function port(relativePath: string): Promise<void> {
 
     logger.log('Validating your modular project...');
 
-    await check();
+    await check({ fix: false, target: modularRoot });
 
     logger.log('Successfully ported your app over!');
 

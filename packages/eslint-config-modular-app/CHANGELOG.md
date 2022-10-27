@@ -1,5 +1,28 @@
 # eslint-config-modular-app
 
+## 3.0.2
+
+### Patch Changes
+
+- [#2134](https://github.com/jpmorganchase/modular/pull/2134)
+  [`704b3a4`](https://github.com/jpmorganchase/modular/commit/704b3a44f4f9766fe69e0dbac8eb667626cdb4a2)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  eslint-plugin-jest-dom from 3.9.2 to 3.9.4
+
+* [#2143](https://github.com/jpmorganchase/modular/pull/2143)
+  [`902e03a`](https://github.com/jpmorganchase/modular/commit/902e03a319aa0e19729932f2591238b583ad16d0)
+  Thanks [@joshwooding](https://github.com/joshwooding)! - Fix Jest linting
+  rules being applied to Cypress tests
+
+## 3.0.1
+
+### Patch Changes
+
+- [#1713](https://github.com/jpmorganchase/modular/pull/1713)
+  [`a0468bb`](https://github.com/jpmorganchase/modular/commit/a0468bb543a6159e6a5c8fd727da3be3153c29a1)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  eslint-plugin-testing-library from 5.3.1 to 5.5.0
+
 ## 3.0.0
 
 ### Major Changes

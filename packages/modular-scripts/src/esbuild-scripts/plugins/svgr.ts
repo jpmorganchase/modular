@@ -5,6 +5,7 @@ import { createRequire } from 'module';
 import * as svgr from '@svgr/core';
 import path from 'path';
 import getModularRoot from '../../utils/getModularRoot';
+import { normalizeToPosix } from '../utils/formatPath';
 
 const svgrOptions: svgr.Config = {
   template(variables, { tpl }) {
@@ -96,13 +97,16 @@ function createPlugin(): esbuild.Plugin {
             },
           );
 
+          const normalizedPath = normalizeToPosix(pathName);
+          const contentsWrapper = `
+          export { default } from "@svgurl:${normalizedPath}";
+          
+          ${transformedContents}
+          `;
+
           return {
             resolveDir: pluginData.resolveDir,
-            contents: `
-            export { default } from "@svgurl:${pathName}";
-            
-            ${transformedContents}
-            `,
+            contents: contentsWrapper,
             loader: 'jsx',
           };
         }

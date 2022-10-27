@@ -4,13 +4,13 @@ import getModularRoot from '../utils/getModularRoot';
 import getWorkspaceInfo from '../utils/getWorkspaceInfo';
 import * as logger from '../utils/logger';
 
-export async function check(): Promise<boolean> {
+export async function check(target?: string): Promise<boolean> {
   let valid = true;
-  const workspace = await getWorkspaceInfo();
+  const workspace = await getWorkspaceInfo(target);
   const modularRoot = getModularRoot();
 
   /**
-   * Validate the the worktree is valid against the globby of pacakge.json files which are found in the
+   * Validate the the worktree is valid against the globby of package.json files which are found in the
    * current working directory. They should be the same but you never know...
    */
 

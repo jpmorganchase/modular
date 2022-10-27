@@ -16,7 +16,8 @@ module.exports = {
   reportUnusedDisableDirectives: true,
   overrides: [
     {
-      files: ['**/__tests__/**/*.{ts,tsx,js}', '**/*.test.{ts,tsx,js}'],
+      files: ['**/__tests__/**/*.{ts,tsx,js,jsx}', '**/*.test.{ts,tsx,js,jsx}'],
+      excludedFiles: ['*.cy.{ts,tsx,js,jsx}'],
       extends: [
         'plugin:jest/recommended',
         'plugin:jest/style',

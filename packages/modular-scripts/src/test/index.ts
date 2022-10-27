@@ -1,16 +1,26 @@
 import * as path from 'path';
+import { computeAncestorWorkspaces } from '@modular-scripts/workspace-resolver';
 import actionPreflightCheck from '../utils/actionPreflightCheck';
 import resolve from 'resolve';
 import { ExecaError } from 'execa';
 import execAsync from '../utils/execAsync';
 import getModularRoot from '../utils/getModularRoot';
+import { getAllWorkspaces } from '../utils/getAllWorkspaces';
+import { getChangedWorkspaces } from '../utils/getChangedWorkspaces';
 import { resolveAsBin } from '../utils/resolveAsBin';
 import * as logger from '../utils/logger';
+import type {
+  WorkspaceContent,
+  ModularWorkspacePackage,
+} from '@modular-scripts/modular-types';
 
 export interface TestOptions {
+  ancestors: boolean;
   bail: boolean;
   debug: boolean;
+  changed: boolean;
   clearCache: boolean;
+  compareBranch: string;
   coverage: boolean;
   forceExit: boolean;
   env: string;
@@ -22,6 +32,7 @@ export interface TestOptions {
   runInBand: boolean;
   onlyChanged: boolean;
   outputFile: string;
+  package: string[] | undefined;
   silent: boolean;
   testResultsProcessor: string | undefined;
   updateSnapshot: boolean;
@@ -55,9 +66,21 @@ function resolveJestDefaultEnvironment(name: string) {
   });
 }
 
-async function test(options: TestOptions, regexes?: string[]): Promise<void> {
-  const { debug, env, reporters, testResultsProcessor, ...jestOptions } =
-    options;
+async function test(
+  options: TestOptions,
+  userRegexes?: string[],
+): Promise<void> {
+  const {
+    ancestors,
+    changed,
+    package: packages,
+    compareBranch,
+    debug,
+    env,
+    reporters,
+    testResultsProcessor,
+    ...jestOptions
+  } = options;
 
   // create argv from jest Options
   const cleanArgv: string[] = [];
@@ -97,6 +120,28 @@ async function test(options: TestOptions, regexes?: string[]): Promise<void> {
 
   const additionalOptions: string[] = [];
   const cleanRegexes: string[] = [];
+
+  // There are two ways of discovering the test regexes we need: either they're specified by the user as CLI arguments
+  // or they have to be calculated from selective options (--changed and --package) and optionally agumented with --ancestors
+  const isSelective = changed || packages?.length;
+  const regexes = isSelective
+    ? await computeSelectiveRegexes({
+        changed,
+        compareBranch,
+        packages,
+        ancestors,
+      })
+    : userRegexes;
+
+  // If test is selective (user set --changed or --package) and we computed no regexes, then bail out
+  if (!regexes?.length && isSelective) {
+    process.stdout.write(
+      changed
+        ? 'No changed workspaces found\n'
+        : 'No workspaces found in selection\n',
+    );
+    process.exit(0);
+  }
 
   if (regexes?.length) {
     regexes.forEach((reg) => {
@@ -154,6 +199,117 @@ async function test(options: TestOptions, regexes?: string[]): Promise<void> {
     // ✕ Modular test did not pass
     throw new Error('\u2715 Modular test did not pass');
   }
+}
+
+// This function takes all the selective options, validates them and returns a subset of workspaces to test
+async function computeSelectiveRegexes({
+  changed,
+  compareBranch,
+  packages,
+  ancestors,
+}: {
+  changed: boolean;
+  compareBranch?: string;
+  packages?: string[];
+  ancestors: boolean;
+}) {
+  logger.debug(
+    packages?.length
+      ? `Calculating test regexes from specified packages: ${JSON.stringify(
+          packages,
+        )}`
+      : `Calculating test regexes from changed workspaces, compared with ${
+          compareBranch ?? 'default'
+        } branch`,
+  );
+
+  if ((!changed && !packages?.length) || (changed && packages?.length)) {
+    throw new Error(
+      `Conflicting options: --changed (${changed.toString()}) and --package ("${JSON.stringify(
+        packages,
+      )}")`,
+    );
+  }
+
+  // It's terser if we mutate WorkspaceContent; we will use it only to pass it to computeTestsRegexes
+  let resultWorkspaceContent: WorkspaceContent = packages?.length
+    ? await getSinglePackagesContent(packages)
+    : await getChangedWorkspacesContent(compareBranch);
+
+  if (ancestors) {
+    logger.debug(
+      `Calculating ancestors of packages: ${JSON.stringify(
+        Object.keys(resultWorkspaceContent[1]),
+      )}`,
+    );
+    resultWorkspaceContent = await getAncestorWorkspacesContent(
+      resultWorkspaceContent,
+    );
+  }
+
+  logger.debug(
+    `Selected test packages are: ${JSON.stringify(
+      Object.keys(resultWorkspaceContent[1]),
+    )}`,
+  );
+
+  return computeTestsRegexes(resultWorkspaceContent);
+}
+
+// This function returns a WorkspaceContent containing all the changed workspaces, compared to targetBranch
+async function getChangedWorkspacesContent(targetBranch: string | undefined) {
+  const allWorkspaces = await getAllWorkspaces(getModularRoot());
+  // Get the changed workspaces compared to our target branch
+  const changedWorkspaces = await getChangedWorkspaces(
+    allWorkspaces,
+    targetBranch,
+  );
+  return changedWorkspaces;
+}
+
+// This function returns a WorkspaceContent from an array of workspace names
+async function getSinglePackagesContent(singlePackages: string[]) {
+  // Get all the workspaces
+  const allWorkspaces = await getAllWorkspaces(getModularRoot());
+  const uniqueSinglePackages = Array.from(new Set(singlePackages));
+
+  const result: WorkspaceContent = [
+    new Map<string, ModularWorkspacePackage>(),
+    {},
+  ];
+
+  const [sourcePackageContent, sourcePackageMap] = allWorkspaces;
+  const [targetPackageContent, targetPackageMap] = result;
+
+  // Filter, copy onto result and validate existence. This is easier to express with a mutable for loop
+  for (const pkgName of uniqueSinglePackages) {
+    const packageContent = sourcePackageContent.get(pkgName);
+    if (!sourcePackageMap[pkgName] || !packageContent) {
+      throw new Error(
+        `Package ${pkgName} was specified, but Modular couldn't find it`,
+      );
+    }
+    targetPackageContent.set(pkgName, packageContent);
+    targetPackageMap[pkgName] = sourcePackageMap[pkgName];
+  }
+
+  return result;
+}
+
+// This function takes a WorkspaceContent and returns a WorkspaceContent agumented with all the ancestors of the original one
+async function getAncestorWorkspacesContent(
+  selectedWorkspaces: WorkspaceContent,
+) {
+  const allWorkspaces = await getAllWorkspaces(getModularRoot());
+  return computeAncestorWorkspaces(selectedWorkspaces, allWorkspaces);
+}
+
+// This function returns a list for test regexes from a WorkspaceContent
+function computeTestsRegexes(selectedWorkspaces: WorkspaceContent) {
+  const testRegexes = Object.values(selectedWorkspaces[1]).map(
+    ({ location }) => location,
+  );
+  return testRegexes;
 }
 
 export default actionPreflightCheck(test);

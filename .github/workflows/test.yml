@@ -15,22 +15,26 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       MODULAR_LOGGER_DEBUG: true
+      GIT_AUTHOR_NAME: 'Modular Tests'
+      GIT_AUTHOR_EMAIL: 'tests@modular.js.org'
 
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        node-version: ['14.17.0', '16.0.0']
+        node-version: ['14.17.0', '16.x']
 
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3.1.1
+        uses: actions/setup-node@v3.3.0
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
       - name: Install Dependencies
         run: yarn --frozen-lockfile
+      - name: 'Build internal prerequisites'
+        run: yarn workspace @modular-scripts/workspace-resolver build
       - name: Run Tests
         run: yarn test --coverage
       - name: Coveralls Parallel

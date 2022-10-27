@@ -2,13 +2,16 @@ import { paramCase as toParamCase } from 'change-case';
 import chalk from 'chalk';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import * as logger from '../utils/logger';
 import * as minimize from 'html-minifier-terser';
+import type { CoreProperties } from '@schemastore/package';
+import type { ModularType } from '@modular-scripts/modular-types';
+
+import * as logger from '../utils/logger';
 import getModularRoot from '../utils/getModularRoot';
 import actionPreflightCheck from '../utils/actionPreflightCheck';
 import { getModularType } from '../utils/isModularType';
 import { filterDependencies } from '../utils/filterDependencies';
-import type { ModularType } from '../utils/isModularType';
+import getWorkspaceInfo from '../utils/getWorkspaceInfo';
 import execAsync from '../utils/execAsync';
 import getLocation from '../utils/getLocation';
 import { setupEnvForDirectory } from '../utils/setupEnv';
@@ -34,7 +37,6 @@ import {
   esbuildMeasureFileSizesBeforeBuild,
 } from './esbuildFileSizeReporter';
 import { getPackageDependencies } from '../utils/getPackageDependencies';
-import type { CoreProperties } from '@schemastore/package';
 
 async function buildStandalone(
   target: string,
@@ -93,14 +95,45 @@ async function buildStandalone(
   }
 
   let assets: Asset[];
+  logger.debug('Extracting dependencies from source code...');
   // Retrieve dependencies for target to inform the build process
-  const { manifest: packageDependencies, resolutions: packageResolutions } =
-    await getPackageDependencies(target);
+  const {
+    manifest: packageDependencies,
+    resolutions: packageResolutions,
+    selectiveCDNResolutions,
+  } = await getPackageDependencies(target);
+  // Get workspace info to automatically bundle workspace dependencies
+  const workspaceInfo = await getWorkspaceInfo();
   // Split dependencies between external and bundled
   const { external: externalDependencies, bundled: bundledDependencies } =
-    filterDependencies(packageDependencies, isApp);
+    filterDependencies({
+      dependencies: packageDependencies,
+      isApp,
+      workspaceInfo,
+    });
   const { external: externalResolutions, bundled: bundledResolutions } =
-    filterDependencies(packageResolutions, isApp);
+    filterDependencies({
+      dependencies: packageResolutions,
+      isApp,
+      workspaceInfo,
+    });
+
+  logger.debug(
+    `These are the external dependencies and their resolutions: ${JSON.stringify(
+      {
+        externalDependencies,
+        externalResolutions,
+      },
+    )}`,
+  );
+  logger.debug(
+    `These are the bundled dependencies and their resolutions: ${JSON.stringify(
+      {
+        bundledDependencies,
+        bundledResolutions,
+      },
+    )}`,
+  );
 
   const browserTarget = createEsbuildBrowserslistTarget(targetDirectory);
 
@@ -116,6 +149,7 @@ async function buildStandalone(
       paths,
       externalDependencies,
       externalResolutions,
+      selectiveCDNResolutions,
       type,
     );
     jsEntryPoint = getEntryPoint(paths, result, '.js');
@@ -148,6 +182,9 @@ async function buildStandalone(
           externalResolutions,
           bundledResolutions,
         }),
+        MODULAR_PACKAGE_SELECTIVE_CDN_RESOLUTIONS: JSON.stringify(
+          selectiveCDNResolutions,
+        ),
       },
     });
 
@@ -213,6 +250,7 @@ async function buildStandalone(
       paths.appSrc,
       externalDependencies,
       externalResolutions,
+      selectiveCDNResolutions,
       browserTarget,
     );
     const trampolinePath = `${paths.appBuild}/static/js/_trampoline.js`;

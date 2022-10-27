@@ -14,6 +14,7 @@ import prettier from 'prettier';
 import puppeteer from 'puppeteer';
 
 import getModularRoot from '../utils/getModularRoot';
+import { normalizeToPosix } from '../esbuild-scripts/utils/formatPath';
 import { startApp, DevServer } from './start-app';
 import type { CoreProperties } from '@schemastore/package';
 
@@ -113,15 +114,12 @@ describe('modular-scripts', () => {
       }
       if (port) {
         // kill all processes listening to the dev server port
-        exec(
-          `lsof -n -i4TCP:${port} | grep LISTEN | awk '{ print $2 }' | xargs kill -9`,
-          (err) => {
-            if (err) {
-              console.log('err: ', err);
-            }
-            console.log(`Cleaned up processes on port ${port}`);
-          },
-        );
+        exec(`yarnpkg kill-port ${port}`, (err) => {
+          if (err) {
+            console.log('err: ', err);
+          }
+          console.log(`Cleaned up processes on port ${port}`);
+        });
       }
     });
 
@@ -144,6 +142,9 @@ describe('modular-scripts', () => {
   });
 
   describe('WHEN building a esm-view', () => {
+    let outputManifest: CoreProperties;
+    let outputJsEntrypoint: string;
+
     beforeAll(async () => {
       await modular('build sample-esm-view', {
         stdio: 'inherit',
@@ -151,14 +152,15 @@ describe('modular-scripts', () => {
           USE_MODULAR_ESBUILD: 'true',
         },
       });
+      const manifestInfo = await getPackageOutputManifest('sample-esm-view');
+      outputManifest = manifestInfo.manifest;
+      outputJsEntrypoint = manifestInfo.jsEntrypointName;
     });
 
-    it('THEN outputs the correct package.json in the dist directory', async () => {
-      expect(
-        await fs.readJson(
-          path.join(modularRoot, 'dist', 'sample-esm-view', 'package.json'),
-        ),
-      ).toMatchInlineSnapshot(`
+    it('THEN outputs the correct package.json in the dist directory', () => {
+      const { module: _, ...manifest } = outputManifest;
+      // Omit module from manifest as we test it separately, in a more informative way
+      expect(manifest).toMatchInlineSnapshot(`
         Object {
           "bundledDependencies": Array [],
           "dependencies": Object {
@@ -167,52 +169,48 @@ describe('modular-scripts', () => {
           "modular": Object {
             "type": "esm-view",
           },
-          "module": "/static/js/index-7JXQF5H3.js",
           "name": "sample-esm-view",
           "version": "1.0.0",
         }
       `);
     });
 
-    it('THEN outputs the correct directory structure', () => {
-      expect(tree(path.join(modularRoot, 'dist', 'sample-esm-view')))
-        .toMatchInlineSnapshot(`
-        "sample-esm-view
-        ├─ index.html #17sfbiz
-        ├─ package.json
-        └─ static
-           └─ js
-              ├─ _trampoline.js #14ismmk
-              ├─ index-7JXQF5H3.js #1yztbh1
-              └─ index-7JXQF5H3.js.map #qbs4qx"
-      `);
+    it('THEN matches the entrypoint snapshot', async () => {
+      const { module: moduleEntryPoint } = outputManifest;
+      const packageEntryPointPath = path.join(
+        modularRoot,
+        'dist',
+        'sample-esm-view',
+        moduleEntryPoint as string,
+      );
+      // Strip the last line to remove the source maps, which may vary according to the underlying OS terminator
+      const entrypointWithoutSources = stripSourceMapLine(
+        await fs.readFile(packageEntryPointPath, 'utf8'),
+      );
+      expect(
+        prettier.format(entrypointWithoutSources, {
+          filepath: outputJsEntrypoint,
+        }),
+      ).toMatchSnapshot();
     });
   });
 
   describe('WHEN building a esm-view with a custom ESM CDN', () => {
+    let outputJsEntrypoint: string;
+    let outputJsEntrypointPath: string;
+
     beforeAll(async () => {
       await modular('build sample-esm-view', {
         stdio: 'inherit',
         env: {
           USE_MODULAR_ESBUILD: 'true',
-          EXTERNAL_CDN_TEMPLATE:
-            'https://mycustomcdn.net/[name]?version=[version]',
+          EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
         },
       });
-    });
 
-    it('THEN outputs the correct directory structure', () => {
-      expect(tree(path.join(modularRoot, 'dist', 'sample-esm-view')))
-        .toMatchInlineSnapshot(`
-        "sample-esm-view
-        ├─ index.html #17sfbiz
-        ├─ package.json
-        └─ static
-           └─ js
-              ├─ _trampoline.js #p8m8p8
-              ├─ index-CWSY44GF.js #d3ivus
-              └─ index-CWSY44GF.js.map #u4q009"
-      `);
+      const manifestInfo = await getPackageOutputManifest('sample-esm-view');
+      outputJsEntrypoint = manifestInfo.jsEntrypointName;
+      outputJsEntrypointPath = manifestInfo.jsEntrypointPath;
     });
 
     it('THEN rewrites the dependencies according to the template string', async () => {
@@ -228,24 +226,35 @@ describe('modular-scripts', () => {
       ).toString();
 
       const indexFile = (
-        await fs.readFile(path.join(baseDir, 'index-CWSY44GF.js'))
+        await fs.readFile(path.join(baseDir, outputJsEntrypoint))
       ).toString();
+      expect(trampolineFile).toContain(`https://mycustomcdn.net/react@1`);
+      expect(trampolineFile).toContain(`https://mycustomcdn.net/react-dom@1`);
+      expect(indexFile).toContain(`https://mycustomcdn.net/react@1`);
+    });
+
+    it('THEN matches the entrypoint snapshot', async () => {
+      const packageEntryPointPath = path.join(
+        modularRoot,
+        'dist',
+        'sample-esm-view',
+        outputJsEntrypointPath,
+      );
+      const entrypointWithoutSources = stripSourceMapLine(
+        await fs.readFile(packageEntryPointPath, 'utf8'),
+      );
       expect(
-        prettier.format(indexFile, {
-          filepath: 'index-F6YQ237K.js',
+        prettier.format(entrypointWithoutSources, {
+          filepath: outputJsEntrypoint,
         }),
       ).toMatchSnapshot();
-      expect(trampolineFile).toContain(
-        `https://mycustomcdn.net/react?version=`,
-      );
-      expect(trampolineFile).toContain(
-        `https://mycustomcdn.net/react-dom?version=`,
-      );
-      expect(indexFile).toContain(`https://mycustomcdn.net/react?version=`);
     });
   });
 
-  describe('WHEN building a esm-view with various kinds of package dependencies', () => {
+  describe('WHEN building a esm-view with various kinds of package dependencies with esbuild', () => {
+    let outputJsEntrypoint: string;
+    let outputJsEntrypointPath: string;
+
     beforeAll(async () => {
       await fs.copyFile(
         path.join(__dirname, 'TestViewPackages.test-tsx'),
@@ -267,6 +276,270 @@ describe('modular-scripts', () => {
           dependencies: {
             lodash: '^4.17.21',
             'lodash.merge': '^4.6.2',
+            'regular-table': '^0.5.6',
+          },
+        }),
+      );
+
+      await execa('yarnpkg', [], {
+        cwd: modularRoot,
+        cleanup: true,
+      });
+
+      await modular('build sample-esm-view', {
+        stdio: 'inherit',
+        env: {
+          USE_MODULAR_ESBUILD: 'true',
+          EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
+        },
+      });
+
+      const manifestInfo = await getPackageOutputManifest('sample-esm-view');
+      outputJsEntrypoint = manifestInfo.jsEntrypointName;
+      outputJsEntrypointPath = manifestInfo.jsEntrypointPath;
+    });
+
+    it('THEN rewrites the dependencies', async () => {
+      const baseDir = path.join(
+        modularRoot,
+        'dist',
+        'sample-esm-view',
+        'static',
+        'js',
+      );
+
+      const indexFile = (
+        await fs.readFile(path.join(baseDir, outputJsEntrypoint))
+      ).toString();
+      expect(indexFile).toContain(`https://mycustomcdn.net/react@1`);
+      expect(indexFile).toContain(`https://mycustomcdn.net/lodash@^4.17.21`);
+      expect(indexFile).toContain(
+        `https://mycustomcdn.net/lodash.merge@^4.6.2`,
+      );
+    });
+
+    it('THEN matches the entrypoint snapshot', async () => {
+      const packageEntryPointPath = path.join(
+        modularRoot,
+        'dist',
+        'sample-esm-view',
+        outputJsEntrypointPath,
+      );
+      const entrypointWithoutSources = stripSourceMapLine(
+        await fs.readFile(packageEntryPointPath, 'utf8'),
+      );
+      expect(
+        prettier.format(entrypointWithoutSources, {
+          filepath: outputJsEntrypoint,
+        }),
+      ).toMatchSnapshot();
+    });
+  });
+
+  describe('WHEN building a esm-view with various kinds of package dependencies with webpack', () => {
+    let outputJsEntrypoint: string;
+    let outputJsEntrypointPath: string;
+
+    beforeAll(async () => {
+      await fs.copyFile(
+        path.join(__dirname, 'TestViewPackages.test-tsx'),
+        path.join(packagesPath, targetedView, 'src', 'index.tsx'),
+      );
+
+      const packageJsonPath = path.join(
+        packagesPath,
+        targetedView,
+        'package.json',
+      );
+      const packageJson = (await fs.readJSON(
+        packageJsonPath,
+      )) as CoreProperties;
+
+      await fs.writeJSON(
+        packageJsonPath,
+        Object.assign(packageJson, {
+          dependencies: {
+            lodash: '^4.17.21',
+            'lodash.merge': '^4.6.2',
+            'regular-table': '^0.5.6',
+          },
+        }),
+      );
+
+      await execa('yarnpkg', [], {
+        cwd: modularRoot,
+        cleanup: true,
+      });
+
+      await modular('build sample-esm-view', {
+        stdio: 'inherit',
+        env: {
+          EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
+        },
+      });
+
+      const manifestInfo = await getPackageOutputManifest('sample-esm-view');
+      outputJsEntrypoint = manifestInfo.jsEntrypointName;
+      outputJsEntrypointPath = manifestInfo.jsEntrypointPath;
+    });
+
+    it('THEN rewrites the dependencies', async () => {
+      const baseDir = path.join(
+        modularRoot,
+        'dist',
+        'sample-esm-view',
+        'static',
+        'js',
+      );
+
+      const indexFile = (
+        await fs.readFile(path.join(baseDir, outputJsEntrypoint))
+      ).toString();
+      expect(indexFile).toContain(`https://mycustomcdn.net/react@1`);
+      expect(indexFile).toContain(`https://mycustomcdn.net/lodash@^4.17.21`);
+      expect(indexFile).toContain(
+        `https://mycustomcdn.net/lodash.merge@^4.6.2`,
+      );
+    });
+
+    it('THEN matches the entrypoint snapshot', async () => {
+      const packageEntryPointPath = path.join(
+        modularRoot,
+        'dist',
+        'sample-esm-view',
+        outputJsEntrypointPath,
+      );
+      const entrypointWithoutSources = stripSourceMapLine(
+        await fs.readFile(packageEntryPointPath, 'utf8'),
+      );
+      expect(
+        prettier.format(entrypointWithoutSources, {
+          filepath: outputJsEntrypoint,
+        }),
+      ).toMatchSnapshot();
+    });
+  });
+
+  describe('WHEN building a esm-view with a series of CDN selective dependency resolutions with the resolution field with webpack', () => {
+    let outputJsEntrypoint: string;
+    let outputJsEntrypointPath: string;
+
+    beforeAll(async () => {
+      await fs.copyFile(
+        path.join(__dirname, 'TestViewPackages.test-tsx'),
+        path.join(packagesPath, targetedView, 'src', 'index.tsx'),
+      );
+
+      const packageJsonPath = path.join(
+        packagesPath,
+        targetedView,
+        'package.json',
+      );
+      const packageJson = (await fs.readJSON(
+        packageJsonPath,
+      )) as CoreProperties;
+
+      await fs.writeJSON(
+        packageJsonPath,
+        Object.assign(packageJson, {
+          dependencies: {
+            lodash: '^4.17.21',
+            'lodash.merge': '^4.6.2',
+            'regular-table': '^0.5.6',
+          },
+          resolutions: {
+            react: '17.0.2',
+            'url-join': '5.0.0',
+          },
+        }),
+      );
+
+      await execa('yarnpkg', [], {
+        cwd: modularRoot,
+        cleanup: true,
+      });
+
+      await modular('build sample-esm-view', {
+        stdio: 'inherit',
+        env: {
+          EXTERNAL_CDN_TEMPLATE:
+            'https://mycustomcdn.net/[name]@[version]?selectiveDeps=[selectiveCDNResolutions]',
+        },
+      });
+      const manifestInfo = await getPackageOutputManifest('sample-esm-view');
+      outputJsEntrypoint = manifestInfo.jsEntrypointName;
+      outputJsEntrypointPath = manifestInfo.jsEntrypointPath;
+    });
+
+    it('THEN rewrites the dependencies', async () => {
+      const baseDir = path.join(
+        modularRoot,
+        'dist',
+        'sample-esm-view',
+        'static',
+        'js',
+      );
+
+      const indexFile = (
+        await fs.readFile(path.join(baseDir, outputJsEntrypoint))
+      ).toString();
+
+      expect(indexFile).toContain(
+        `https://mycustomcdn.net/lodash@^4.17.21?selectiveDeps=react@17.0.2,url-join@5.0.0`,
+      );
+      expect(indexFile).toContain(
+        `https://mycustomcdn.net/lodash.merge@^4.6.2?selectiveDeps=react@17.0.2,url-join@5.0.0`,
+      );
+    });
+
+    it('THEN matches the entrypoint snapshot', async () => {
+      const packageEntryPointPath = path.join(
+        modularRoot,
+        'dist',
+        'sample-esm-view',
+        outputJsEntrypointPath,
+      );
+      const entrypointWithoutSources = stripSourceMapLine(
+        await fs.readFile(packageEntryPointPath, 'utf8'),
+      );
+      expect(
+        prettier.format(entrypointWithoutSources, {
+          filepath: outputJsEntrypoint,
+        }),
+      ).toMatchSnapshot();
+    });
+  });
+
+  describe('WHEN building a esm-view with a series of CDN selective dependency resolutions with the resolution field with esbuild', () => {
+    let outputJsEntrypoint: string;
+    let outputJsEntrypointPath: string;
+
+    beforeAll(async () => {
+      await fs.copyFile(
+        path.join(__dirname, 'TestViewPackages.test-tsx'),
+        path.join(packagesPath, targetedView, 'src', 'index.tsx'),
+      );
+
+      const packageJsonPath = path.join(
+        packagesPath,
+        targetedView,
+        'package.json',
+      );
+      const packageJson = (await fs.readJSON(
+        packageJsonPath,
+      )) as CoreProperties;
+
+      await fs.writeJSON(
+        packageJsonPath,
+        Object.assign(packageJson, {
+          dependencies: {
+            lodash: '^4.17.21',
+            'lodash.merge': '^4.6.2',
+            'regular-table': '^0.5.6',
+          },
+          resolutions: {
+            react: '17.0.2',
+            'url-join': '5.0.0',
           },
         }),
       );
@@ -281,23 +554,13 @@ describe('modular-scripts', () => {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           EXTERNAL_CDN_TEMPLATE:
-            'https://mycustomcdn.net/[name]?version=[version]',
+            'https://mycustomcdn.net/[name]@[version]?selectiveDeps=[selectiveCDNResolutions]',
         },
       });
-    });
 
-    it('THEN outputs the correct directory structure', () => {
-      expect(tree(path.join(modularRoot, 'dist', 'sample-esm-view')))
-        .toMatchInlineSnapshot(`
-        "sample-esm-view
-        ├─ index.html #17sfbiz
-        ├─ package.json
-        └─ static
-           └─ js
-              ├─ _trampoline.js #gf8drx
-              ├─ index-5PFA727O.js #ciz6lx
-              └─ index-5PFA727O.js.map #np8r25"
-      `);
+      const manifestInfo = await getPackageOutputManifest('sample-esm-view');
+      outputJsEntrypoint = manifestInfo.jsEntrypointName;
+      outputJsEntrypointPath = manifestInfo.jsEntrypointPath;
     });
 
     it('THEN rewrites the dependencies', async () => {
@@ -310,24 +573,39 @@ describe('modular-scripts', () => {
       );
 
       const indexFile = (
-        await fs.readFile(path.join(baseDir, 'index-5PFA727O.js'))
+        await fs.readFile(path.join(baseDir, outputJsEntrypoint))
       ).toString();
+
+      expect(indexFile).toContain(
+        `https://mycustomcdn.net/lodash@^4.17.21?selectiveDeps=react@17.0.2,url-join@5.0.0`,
+      );
+      expect(indexFile).toContain(
+        `https://mycustomcdn.net/lodash.merge@^4.6.2?selectiveDeps=react@17.0.2,url-join@5.0.0`,
+      );
+    });
+
+    it('THEN matches the entrypoint snapshot', async () => {
+      const packageEntryPointPath = path.join(
+        modularRoot,
+        'dist',
+        'sample-esm-view',
+        outputJsEntrypointPath,
+      );
+      const entrypointWithoutSources = stripSourceMapLine(
+        await fs.readFile(packageEntryPointPath, 'utf8'),
+      );
       expect(
-        prettier.format(indexFile, {
-          filepath: 'index-F6YQ237K.js',
+        prettier.format(entrypointWithoutSources, {
+          filepath: outputJsEntrypoint,
         }),
       ).toMatchSnapshot();
-      expect(indexFile).toContain(`https://mycustomcdn.net/react?version=`);
-      expect(indexFile).toContain(
-        `https://mycustomcdn.net/lodash?version=^4.17.21`,
-      );
-      expect(indexFile).toContain(
-        `https://mycustomcdn.net/lodash.merge?version=^4.6.2`,
-      );
     });
   });
 
   describe('WHEN building a esm-view with resolutions', () => {
+    let outputJsEntrypoint: string;
+    let outputJsEntrypointPath: string;
+
     beforeAll(async () => {
       await fs.copyFile(
         path.join(__dirname, 'TestViewPackages.test-tsx'),
@@ -349,6 +627,7 @@ describe('modular-scripts', () => {
           dependencies: {
             lodash: '^4.17.21',
             'lodash.merge': '^4.6.2',
+            'regular-table': '^0.5.6',
           },
         }),
       );
@@ -365,20 +644,10 @@ describe('modular-scripts', () => {
           EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[resolution]',
         },
       });
-    });
 
-    it('THEN outputs the correct directory structure', () => {
-      expect(tree(path.join(modularRoot, 'dist', 'sample-esm-view')))
-        .toMatchInlineSnapshot(`
-        "sample-esm-view
-        ├─ index.html #17sfbiz
-        ├─ package.json
-        └─ static
-           └─ js
-              ├─ _trampoline.js #1j54e9x
-              ├─ index-IDYQ56WQ.js #1g1vpil
-              └─ index-IDYQ56WQ.js.map #l9p9hs"
-      `);
+      const manifestInfo = await getPackageOutputManifest('sample-esm-view');
+      outputJsEntrypoint = manifestInfo.jsEntrypointName;
+      outputJsEntrypointPath = manifestInfo.jsEntrypointPath;
     });
 
     it('THEN rewrites the dependencies', async () => {
@@ -391,19 +660,35 @@ describe('modular-scripts', () => {
       );
 
       const indexFile = (
-        await fs.readFile(path.join(baseDir, 'index-IDYQ56WQ.js'))
+        await fs.readFile(path.join(baseDir, outputJsEntrypoint))
       ).toString();
-      expect(
-        prettier.format(indexFile, {
-          filepath: 'index-F6YQ237K.js',
-        }),
-      ).toMatchSnapshot();
+
       expect(indexFile).toContain(`https://mycustomcdn.net/react@1`);
       expect(indexFile).toContain(`https://mycustomcdn.net/lodash@4`);
+    });
+
+    it('THEN matches the entrypoint snapshot', async () => {
+      const packageEntryPointPath = path.join(
+        modularRoot,
+        'dist',
+        'sample-esm-view',
+        outputJsEntrypointPath,
+      );
+      const entrypointWithoutSources = stripSourceMapLine(
+        await fs.readFile(packageEntryPointPath, 'utf8'),
+      );
+      expect(
+        prettier.format(entrypointWithoutSources, {
+          filepath: outputJsEntrypoint,
+        }),
+      ).toMatchSnapshot();
     });
   });
 
   describe('WHEN building a esm-view with resolutions and webpack', () => {
+    let outputJsEntrypoint: string;
+    let outputJsEntrypointPath: string;
+
     beforeAll(async () => {
       await fs.copyFile(
         path.join(__dirname, 'TestViewPackages.test-tsx'),
@@ -425,6 +710,7 @@ describe('modular-scripts', () => {
           dependencies: {
             lodash: '^4.17.21',
             'lodash.merge': '^4.6.2',
+            'regular-table': '^0.5.6',
           },
         }),
       );
@@ -440,21 +726,10 @@ describe('modular-scripts', () => {
           EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[resolution]',
         },
       });
-    });
 
-    it('THEN outputs the correct directory structure', () => {
-      expect(tree(path.join(modularRoot, 'dist', 'sample-esm-view')))
-        .toMatchInlineSnapshot(`
-        "sample-esm-view
-        ├─ asset-manifest.json #1pem6dg
-        ├─ index.html #17sfbiz
-        ├─ package.json
-        └─ static
-           └─ js
-              ├─ _trampoline.js #1fc8fjx
-              ├─ main.219bc98b.js #g4nmwx
-              └─ main.219bc98b.js.map #1cp7wwt"
-      `);
+      const manifestInfo = await getPackageOutputManifest('sample-esm-view');
+      outputJsEntrypoint = manifestInfo.jsEntrypointName;
+      outputJsEntrypointPath = manifestInfo.jsEntrypointPath;
     });
 
     it('THEN rewrites the dependencies', async () => {
@@ -467,43 +742,47 @@ describe('modular-scripts', () => {
       );
 
       const indexFile = (
-        await fs.readFile(path.join(baseDir, 'main.219bc98b.js'))
+        await fs.readFile(path.join(baseDir, outputJsEntrypoint))
       ).toString();
-      expect(
-        prettier.format(indexFile, {
-          filepath: 'index-F6YQ237K.js',
-        }),
-      ).toMatchSnapshot();
       expect(indexFile).toContain(`https://mycustomcdn.net/react@1`);
       expect(indexFile).toContain(`https://mycustomcdn.net/lodash@4`);
+    });
+
+    it('THEN matches the entrypoint snapshot', async () => {
+      const packageEntryPointPath = path.join(
+        modularRoot,
+        'dist',
+        'sample-esm-view',
+        outputJsEntrypointPath,
+      );
+      const entrypointWithoutSources = stripSourceMapLine(
+        await fs.readFile(packageEntryPointPath, 'utf8'),
+      );
+      expect(
+        prettier.format(entrypointWithoutSources, {
+          filepath: outputJsEntrypoint,
+        }),
+      ).toMatchSnapshot();
     });
   });
 
   describe('WHEN building a esm-view specifying a dependency to not being rewritten', () => {
+    let outputJsEntrypoint: string;
+    let outputJsEntrypointPath: string;
+
     beforeAll(async () => {
       await modular('build sample-esm-view', {
         stdio: 'inherit',
         env: {
           USE_MODULAR_ESBUILD: 'true',
-          EXTERNAL_CDN_TEMPLATE:
-            'https://mycustomcdn.net/[name]?version=[version]',
+          EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
           EXTERNAL_BLOCK_LIST: 'lodash,lodash.merge',
         },
       });
-    });
 
-    it('THEN outputs the correct directory structure', () => {
-      expect(tree(path.join(modularRoot, 'dist', 'sample-esm-view')))
-        .toMatchInlineSnapshot(`
-        "sample-esm-view
-        ├─ index.html #17sfbiz
-        ├─ package.json
-        └─ static
-           └─ js
-              ├─ _trampoline.js #15e3mk0
-              ├─ index-66YWVUWP.js #b5zj9
-              └─ index-66YWVUWP.js.map #1opvigk"
-      `);
+      const manifestInfo = await getPackageOutputManifest('sample-esm-view');
+      outputJsEntrypoint = manifestInfo.jsEntrypointName;
+      outputJsEntrypointPath = manifestInfo.jsEntrypointPath;
     });
 
     it('THEN rewrites only the dependencies that are not specified in the blocklist', async () => {
@@ -516,20 +795,11 @@ describe('modular-scripts', () => {
       );
 
       const indexFile = (
-        await fs.readFile(path.join(baseDir, 'index-66YWVUWP.js'))
+        await fs.readFile(path.join(baseDir, outputJsEntrypoint))
       ).toString();
-      expect(
-        prettier.format(indexFile, {
-          filepath: 'index-F6YQ237K.js',
-        }),
-      ).toMatchSnapshot();
-      expect(indexFile).toContain(`https://mycustomcdn.net/react?version=`);
-      expect(indexFile).not.toContain(
-        `https://mycustomcdn.net/lodash?version=`,
-      );
-      expect(indexFile).not.toContain(
-        `https://mycustomcdn.net/lodash.merge?version=`,
-      );
+      expect(indexFile).toContain(`https://mycustomcdn.net/react@`);
+      expect(indexFile).not.toContain(`https://mycustomcdn.net/lodash@`);
+      expect(indexFile).not.toContain(`https://mycustomcdn.net/lodash.merge@`);
     });
 
     it('THEN expects the correct bundledDependencies in package.json', async () => {
@@ -540,34 +810,43 @@ describe('modular-scripts', () => {
           )) as CoreProperties
         ).bundledDependencies,
       ).toEqual(['lodash', 'lodash.merge']);
+    });
+
+    it('THEN matches the entrypoint snapshot', async () => {
+      const packageEntryPointPath = path.join(
+        modularRoot,
+        'dist',
+        'sample-esm-view',
+        outputJsEntrypointPath,
+      );
+      const entrypointWithoutSources = stripSourceMapLine(
+        await fs.readFile(packageEntryPointPath, 'utf8'),
+      );
+      expect(
+        prettier.format(entrypointWithoutSources, {
+          filepath: outputJsEntrypoint,
+        }),
+      ).toMatchSnapshot();
     });
   });
 
   describe('WHEN building a esm-view specifying a dependency to not being rewritten using wildcards', () => {
+    let outputJsEntrypoint: string;
+    let outputJsEntrypointPath: string;
+
     beforeAll(async () => {
       await modular('build sample-esm-view', {
         stdio: 'inherit',
         env: {
           USE_MODULAR_ESBUILD: 'true',
-          EXTERNAL_CDN_TEMPLATE:
-            'https://mycustomcdn.net/[name]?version=[version]',
+          EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
           EXTERNAL_BLOCK_LIST: 'lodash*',
         },
       });
-    });
 
-    it('THEN outputs the correct directory structure', () => {
-      expect(tree(path.join(modularRoot, 'dist', 'sample-esm-view')))
-        .toMatchInlineSnapshot(`
-        "sample-esm-view
-        ├─ index.html #17sfbiz
-        ├─ package.json
-        └─ static
-           └─ js
-              ├─ _trampoline.js #15e3mk0
-              ├─ index-66YWVUWP.js #b5zj9
-              └─ index-66YWVUWP.js.map #1opvigk"
-      `);
+      const manifestInfo = await getPackageOutputManifest('sample-esm-view');
+      outputJsEntrypoint = manifestInfo.jsEntrypointName;
+      outputJsEntrypointPath = manifestInfo.jsEntrypointPath;
     });
 
     it('THEN rewrites only the dependencies that are not specified in the blocklist', async () => {
@@ -580,20 +859,12 @@ describe('modular-scripts', () => {
       );
 
       const indexFile = (
-        await fs.readFile(path.join(baseDir, 'index-66YWVUWP.js'))
+        await fs.readFile(path.join(baseDir, outputJsEntrypoint))
       ).toString();
-      expect(
-        prettier.format(indexFile, {
-          filepath: 'index-F6YQ237K.js',
-        }),
-      ).toMatchSnapshot();
-      expect(indexFile).toContain(`https://mycustomcdn.net/react?version=`);
-      expect(indexFile).not.toContain(
-        `https://mycustomcdn.net/lodash?version=`,
-      );
-      expect(indexFile).not.toContain(
-        `https://mycustomcdn.net/lodash.merge?version=`,
-      );
+
+      expect(indexFile).toContain(`https://mycustomcdn.net/react@`);
+      expect(indexFile).not.toContain(`https://mycustomcdn.net/lodash@`);
+      expect(indexFile).not.toContain(`https://mycustomcdn.net/lodash.merge@`);
     });
 
     it('THEN expects the correct bundledDependencies in package.json', async () => {
@@ -604,34 +875,43 @@ describe('modular-scripts', () => {
           )) as CoreProperties
         ).bundledDependencies,
       ).toEqual(['lodash', 'lodash.merge']);
+    });
+
+    it('THEN matches the entrypoint snapshot', async () => {
+      const packageEntryPointPath = path.join(
+        modularRoot,
+        'dist',
+        'sample-esm-view',
+        outputJsEntrypointPath,
+      );
+      const entrypointWithoutSources = stripSourceMapLine(
+        await fs.readFile(packageEntryPointPath, 'utf8'),
+      );
+      expect(
+        prettier.format(entrypointWithoutSources, {
+          filepath: outputJsEntrypoint,
+        }),
+      ).toMatchSnapshot();
     });
   });
 
   describe('WHEN building a esm-view specifying a dependency to not being rewritten using allow list and wildcards', () => {
+    let outputJsEntrypoint: string;
+    let outputJsEntrypointPath: string;
+
     beforeAll(async () => {
       await modular('build sample-esm-view', {
         stdio: 'inherit',
         env: {
           USE_MODULAR_ESBUILD: 'true',
-          EXTERNAL_CDN_TEMPLATE:
-            'https://mycustomcdn.net/[name]?version=[version]',
+          EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
           EXTERNAL_ALLOW_LIST: 'react*',
         },
       });
-    });
 
-    it('THEN outputs the correct directory structure', () => {
-      expect(tree(path.join(modularRoot, 'dist', 'sample-esm-view')))
-        .toMatchInlineSnapshot(`
-        "sample-esm-view
-        ├─ index.html #17sfbiz
-        ├─ package.json
-        └─ static
-           └─ js
-              ├─ _trampoline.js #15e3mk0
-              ├─ index-66YWVUWP.js #b5zj9
-              └─ index-66YWVUWP.js.map #1opvigk"
-      `);
+      const manifestInfo = await getPackageOutputManifest('sample-esm-view');
+      outputJsEntrypoint = manifestInfo.jsEntrypointName;
+      outputJsEntrypointPath = manifestInfo.jsEntrypointPath;
     });
 
     it('THEN rewrites only the dependencies that are not specified in the blocklist', async () => {
@@ -644,15 +924,11 @@ describe('modular-scripts', () => {
       );
 
       const indexFile = (
-        await fs.readFile(path.join(baseDir, 'index-66YWVUWP.js'))
+        await fs.readFile(path.join(baseDir, outputJsEntrypoint))
       ).toString();
-      expect(indexFile).toContain(`https://mycustomcdn.net/react?version=`);
-      expect(indexFile).not.toContain(
-        `https://mycustomcdn.net/lodash?version=`,
-      );
-      expect(indexFile).not.toContain(
-        `https://mycustomcdn.net/lodash.merge?version=`,
-      );
+      expect(indexFile).toContain(`https://mycustomcdn.net/react@`);
+      expect(indexFile).not.toContain(`https://mycustomcdn.net/lodash@`);
+      expect(indexFile).not.toContain(`https://mycustomcdn.net/lodash.merge@`);
     });
 
     it('THEN expects the correct bundledDependencies in package.json', async () => {
@@ -662,82 +938,112 @@ describe('modular-scripts', () => {
             path.join(modularRoot, 'dist', 'sample-esm-view', 'package.json'),
           )) as CoreProperties
         ).bundledDependencies,
-      ).toEqual(['lodash', 'lodash.merge']);
+      ).toEqual(['lodash', 'lodash.merge', 'regular-table']);
+    });
+
+    it('THEN matches the entrypoint snapshot', async () => {
+      const packageEntryPointPath = path.join(
+        modularRoot,
+        'dist',
+        'sample-esm-view',
+        outputJsEntrypointPath,
+      );
+      const entrypointWithoutSources = stripSourceMapLine(
+        await fs.readFile(packageEntryPointPath, 'utf8'),
+      );
+      expect(
+        prettier.format(entrypointWithoutSources, {
+          filepath: outputJsEntrypoint,
+        }),
+      ).toMatchSnapshot();
     });
   });
 
   describe('WHEN building a esm-view specifying a PUBLIC_URL', () => {
+    let outputJsEntrypoint: string;
+    let outputJsEntrypointPath: string;
+
     beforeAll(async () => {
       await modular('build sample-esm-view', {
         stdio: 'inherit',
         env: {
           USE_MODULAR_ESBUILD: 'true',
           PUBLIC_URL: '/public/path/',
-          EXTERNAL_CDN_TEMPLATE:
-            'https://mycustomcdn.net/[name]?version=[version]',
+          EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
         },
       });
+
+      const manifestInfo = await getPackageOutputManifest('sample-esm-view');
+      outputJsEntrypoint = manifestInfo.jsEntrypointName;
+      outputJsEntrypointPath = manifestInfo.jsEntrypointPath;
     });
 
-    it('THEN outputs the correct directory structure', () => {
-      expect(tree(path.join(modularRoot, 'dist', 'sample-esm-view')))
-        .toMatchInlineSnapshot(`
-        "sample-esm-view
-        ├─ index.html #1cwcz61
-        ├─ package.json
-        └─ static
-           └─ js
-              ├─ _trampoline.js #gf8drx
-              ├─ index-5PFA727O.js #19et37v
-              └─ index-5PFA727O.js.map #np8r25"
-      `);
-    });
-
-    it('THEN expects the correct source in package.json', async () => {
+    it('THEN expects the correct source in package.json', () => {
       expect(
-        (
-          (await fs.readJson(
-            path.join(modularRoot, 'dist', 'sample-esm-view', 'package.json'),
-          )) as CoreProperties
-        ).module,
-      ).toEqual('/public/path/static/js/index-5PFA727O.js');
+        normalizeToPosix(outputJsEntrypointPath).startsWith('/public/path'),
+      ).toBeTruthy();
+    });
+
+    it('THEN matches the entrypoint snapshot', async () => {
+      const packageEntryPointPath = path.join(
+        modularRoot,
+        'dist',
+        'sample-esm-view',
+        'static',
+        'js',
+        outputJsEntrypoint,
+      );
+      const entrypointWithoutSources = stripSourceMapLine(
+        await fs.readFile(packageEntryPointPath, 'utf8'),
+      );
+      expect(
+        prettier.format(entrypointWithoutSources, {
+          filepath: outputJsEntrypoint,
+        }),
+      ).toMatchSnapshot();
     });
   });
+
   describe('WHEN building a esm-view specifying a PUBLIC_URL and the path is ./', () => {
+    let outputJsEntrypointPath: string;
+
     beforeAll(async () => {
       await modular('build sample-esm-view', {
         stdio: 'inherit',
         env: {
           USE_MODULAR_ESBUILD: 'true',
           PUBLIC_URL: './',
-          EXTERNAL_CDN_TEMPLATE:
-            'https://mycustomcdn.net/[name]?version=[version]',
+          EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
         },
       });
+
+      const manifestInfo = await getPackageOutputManifest('sample-esm-view');
+      outputJsEntrypointPath = manifestInfo.jsEntrypointPath;
     });
 
-    it('THEN outputs the correct directory structure', () => {
-      expect(tree(path.join(modularRoot, 'dist', 'sample-esm-view')))
-        .toMatchInlineSnapshot(`
-        "sample-esm-view
-        ├─ index.html #1eo5g4s
-        ├─ package.json
-        └─ static
-           └─ js
-              ├─ _trampoline.js #gf8drx
-              ├─ index-5PFA727O.js #154xvqn
-              └─ index-5PFA727O.js.map #np8r25"
-      `);
-    });
-
-    it('THEN expects the correct source in package.json', async () => {
+    it('THEN expects the correct source in package.json', () => {
       expect(
-        (
-          (await fs.readJson(
-            path.join(modularRoot, 'dist', 'sample-esm-view', 'package.json'),
-          )) as CoreProperties
-        ).module,
-      ).toEqual('./static/js/index-5PFA727O.js');
+        normalizeToPosix(outputJsEntrypointPath).startsWith('./static/js/'),
+      ).toBeTruthy();
     });
   });
 });
+
+async function getPackageOutputManifest(target: string) {
+  const manifest = (await fs.readJson(
+    path.join(modularRoot, 'dist', target, 'package.json'),
+  )) as CoreProperties;
+
+  if (!manifest.module) {
+    throw new Error('Module has no entrypoint!');
+  }
+
+  const jsEntrypointPath = manifest.module;
+  const jsEntrypointName = path.basename(jsEntrypointPath);
+
+  return { manifest, jsEntrypointName, jsEntrypointPath };
+}
+
+function stripSourceMapLine(content: string) {
+  return content.replace(/\/\/# sourceMappingURL.*$/gm, '');
+}

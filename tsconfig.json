@@ -4,5 +4,12 @@
     "modular",
     "packages/**/src",
     "packages/create-modular-react-app/template/"
-  ]
+  ],
+  "compilerOptions": {
+    "paths": {
+      "@modular-scripts/workspace-resolver": [
+        "./packages/workspace-resolver/src"
+      ]
+    }
+  }
 }

@@ -14,7 +14,8 @@ import puppeteer from 'puppeteer';
 
 import getModularRoot from '../utils/getModularRoot';
 import { startApp, DevServer } from './start-app';
-import { ModularPackageJson } from '../utils/isModularType';
+
+import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
 const rimraf = promisify(_rimraf);
 
@@ -58,9 +59,12 @@ describe('modular-scripts', () => {
     await modular('add sample-package --unstable-type package', {
       stdio: 'inherit',
     });
-    await modular('add @nested/sample-package --unstable-type package', {
-      stdio: 'inherit',
-    });
+    await modular(
+      'add @nested/sample-package --unstable-type package --path packages/nested',
+      {
+        stdio: 'inherit',
+      },
+    );
 
     await fs.copyFile(
       path.join(__dirname, 'TestView.test-tsx'),

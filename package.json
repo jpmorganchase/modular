@@ -14,7 +14,7 @@
     "create-modular-react-app": "ts-node packages/create-modular-react-app/src/cli.ts",
     "modular": "ts-node packages/modular-scripts/src/cli.ts",
     "test": "yarn modular test --watchAll false --runInBand",
-    "build": "yarn workspace create-modular-react-app build && yarn workspace modular-scripts build && yarn workspace modular-views.macro build",
+    "build": "yarn workspace @modular-scripts/workspace-resolver build && yarn workspace create-modular-react-app build && yarn workspace modular-scripts build && yarn workspace modular-views.macro build",
     "start": "yarn modular start modular-site",
     "prepare": "is-ci || husky install",
     "postinstall": "patch-package",
@@ -34,19 +34,19 @@
     ]
   },
   "dependencies": {
-    "@babel/cli": "7.17.6",
+    "@babel/cli": "7.19.3",
     "@babel/core": "7.17.9",
-    "@babel/preset-env": "7.16.10",
-    "@babel/preset-react": "7.16.7",
-    "@babel/preset-typescript": "7.16.7",
-    "@changesets/changelog-github": "^0.4.4",
-    "@changesets/cli": "2.22.0",
+    "@babel/preset-env": "7.18.2",
+    "@babel/preset-react": "7.18.6",
+    "@babel/preset-typescript": "7.18.6",
+    "@changesets/changelog-github": "^0.4.6",
+    "@changesets/cli": "2.23.2",
     "@schemastore/package": "0.0.6",
     "@schemastore/tsconfig": "0.0.9",
-    "@testing-library/dom": "8.13.0",
-    "@testing-library/jest-dom": "5.16.4",
+    "@testing-library/dom": "8.18.1",
+    "@testing-library/jest-dom": "5.16.5",
     "@testing-library/react": "12.1.5",
-    "@testing-library/user-event": "14.1.1",
+    "@testing-library/user-event": "14.4.3",
     "@types/babel-plugin-macros": "2.8.5",
     "@types/babel__code-frame": "^7.0.3",
     "@types/cross-spawn": "^6.0.2",
@@ -69,13 +69,12 @@
     "@types/react-dom": "17.0.14",
     "@types/recursive-readdir": "^2.2.1",
     "@types/rimraf": "3.0.2",
-    "@types/semver": "7.3.9",
-    "@types/semver-regex": "^3.1.0",
+    "@types/semver": "7.3.12",
     "@types/tmp": "0.2.3",
     "@types/update-notifier": "5.1.0",
     "@yarnpkg/lockfile": "^1.1.0",
-    "commander": "9.2.0",
-    "esbuild": "0.14.38",
+    "commander": "9.4.0",
+    "esbuild": "0.14.51",
     "eslint": "7.32.0",
     "execa": "5.1.1",
     "husky": "8.0.1",
@@ -84,18 +83,17 @@
     "micromatch": "4.0.5",
     "patch-package": "^6.4.7",
     "pptr-testing-library": "0.7.0",
-    "prettier": "2.6.2",
-    "puppeteer": "13.7.0",
+    "prettier": "2.7.1",
+    "puppeteer": "14.2.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "semver": "7.3.7",
     "string.prototype.replaceall": "^1.0.6",
-    "ts-node": "10.7.0",
-    "typescript": "4.6.4"
+    "ts-node": "10.9.1",
+    "typescript": "4.8.3"
   },
   "resolutions": {
-    "esbuild": "0.14.38",
-    "ua-parser-js": "0.7.28"
+    "esbuild": "0.14.51"
   },
   "jest": {
     "coveragePathIgnorePatterns": [
@@ -103,7 +101,8 @@
       "/node_modules/",
       "/modular-site/",
       "/modular-views.macro/"
-    ]
+    ],
+    "coverageProvider": "v8"
   },
   "modular": {
     "type": "root"

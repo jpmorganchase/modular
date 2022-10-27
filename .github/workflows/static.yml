@@ -27,12 +27,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js
-        uses: actions/setup-node@v3.1.1
+        uses: actions/setup-node@v3.3.0
         with:
           node-version: '14.17.0'
           cache: 'yarn'
 
       - name: 'Install Dependencies'
         run: yarn --frozen-lockfile
+      - name: 'Build internal prerequisites'
+        run: yarn workspace @modular-scripts/workspace-resolver build
       - name: ${{ matrix.name }}
         run: yarn ${{ matrix.command }}

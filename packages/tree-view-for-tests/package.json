@@ -1,11 +1,11 @@
 {
   "name": "tree-view-for-tests",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "main": "src/index.ts",
   "license": "Apache-2.0",
   "private": true,
   "dependencies": {
-    "@emotion/hash": "0.8.0",
+    "@emotion/hash": "0.9.0",
     "ascii-tree": "0.3.0"
   }
 }

@@ -4,7 +4,7 @@ import getWorkspaceInfo from '../utils/getWorkspaceInfo';
 import { getModularType, isValidModularType } from '../utils/isModularType';
 import * as logger from '../utils/logger';
 
-export async function check(): Promise<boolean> {
+export async function check(target?: string): Promise<boolean> {
   let valid = true;
 
   const modularRoot = getModularRoot();
@@ -13,7 +13,7 @@ export async function check(): Promise<boolean> {
   // init is a special case where we don't already need to be in a modular repository
   // in this case there's no use checking the workspaces yet because we're setting
   // up a new folder
-  const workspace = await getWorkspaceInfo();
+  const workspace = await getWorkspaceInfo(target);
 
   /**
    * Validate the structure of the workspace to ensure there's no mismatched dependencies and that
@@ -25,13 +25,6 @@ export async function check(): Promise<boolean> {
         `${packageName} has mismatchedWorkspaceDependencies ${packageInfo.mismatchedWorkspaceDependencies.join(
           ', ',
         )}`,
-      );
-      valid = false;
-    }
-
-    if (!packageInfo.location.startsWith('packages')) {
-      logger.error(
-        `${packageName} is not located within the "/packages" directory in the repository, instead found "${packageInfo.location}"`,
       );
       valid = false;
     }

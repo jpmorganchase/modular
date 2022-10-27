@@ -8,12 +8,16 @@ updates:
   - package-ecosystem: 'npm' # See documentation for possible values
     directory: '/' # Location of package manifests
     schedule:
-      interval: 'daily'
+      interval: 'weekly'
     # Allow up to 10 open pull requests for NPM dependencies
-    open-pull-requests-limit: 100
+    open-pull-requests-limit: 10
+    # Ignore major version bumps for all dependencies
+    ignore:
+      - dependency-name: '*'
+        update-types: ['version-update:semver-major']
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
-      interval: 'daily'
+      interval: 'weekly'
     # Allow up to 10 open pull requests for actions
     open-pull-requests-limit: 10

@@ -1,0 +1,9 @@
+{
+  "name": "package-four",
+  "private": true,
+  "modular": {
+    "type": "esm-view"
+  },
+  "main": "./src/index.ts",
+  "version": "1.0.0"
+}

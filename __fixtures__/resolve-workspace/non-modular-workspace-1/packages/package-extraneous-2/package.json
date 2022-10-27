@@ -1,0 +1,9 @@
+{
+  "name": "package-extraneous-2",
+  "private": true,
+  "modular": {
+    "anotherProperty": "value"
+  },
+  "main": "./src/index.ts",
+  "version": "1.0.0"
+}

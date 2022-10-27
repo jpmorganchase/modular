@@ -3,7 +3,7 @@
 import * as fs from 'fs-extra';
 import isCI from 'is-ci';
 import chalk from 'chalk';
-import commander from 'commander';
+import commander, { Option } from 'commander';
 import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import type { TestOptions } from './test';
 import type { LintOptions } from './lint';
@@ -29,7 +29,8 @@ program
     "Type of the package ('app', 'view', 'package')",
   )
   .option('--unstable-name <name>', 'Package name for the package.json')
-  .option('--template <name>', 'Package name for the package.json')
+  .option('--template <name>', 'Template name')
+  .option('--path <targetPath>', 'Target root directory for the package')
   .option(
     '--prefer-offline',
     'Equivalent of --prefer-offline for yarn installations',
@@ -45,6 +46,7 @@ program
         preferOffline?: boolean;
         verbose?: boolean;
         unstableName?: string;
+        path?: string;
       },
     ) => {
       const { default: addPackage } = await import('./addPackage');
@@ -55,6 +57,7 @@ program
         preferOffline: addOptions.preferOffline,
         verbose: addOptions.verbose,
         unstableName: addOptions.unstableName,
+        path: addOptions.path,
       });
     },
   );
@@ -125,10 +128,24 @@ interface CLITestOptions extends TestOptions {
 program
   .command('test [regexes...]')
   .option(
+    '--ancestors',
+    'Additionally run tests for workspaces that depend on workspaces that have changed',
+    false,
+  )
+  .option(
     '--debug',
     'Setup node.js debugger on the test process - equivalent of setting --inspect-brk on a node.js process',
     false,
   )
+  .option(
+    '--changed',
+    'Run tests only for workspaces that have changed compared to the branch specified in --compareBranch',
+  )
+  .option(
+    '--compareBranch <branch>',
+    "Specifies the branch to use with the --changed flag. If not specified, Modular will use the repo's default branch",
+  )
+  .option('--package <packages...>', 'Specifies one or more packages to test')
   .option('--coverage', testOptions.coverage.description)
   .option('--forceExit', testOptions.forceExit.description)
   .option('--env <env>', testOptions.env.description, 'jsdom')
@@ -155,6 +172,37 @@ program
   .allowUnknownOption()
   .description('Run tests over the codebase')
   .action(async (regexes: string[], options: CLITestOptions) => {
+    if (options.ancestors && !options.changed && !options.package) {
+      process.stderr.write(
+        "Option --ancestors doesn't make sense without option --changed or option --package\n",
+      );
+      process.exit(1);
+    }
+    if (options.package && options.changed) {
+      process.stderr.write(
+        'Option --package conflicts with option --changed\n',
+      );
+      process.exit(1);
+    }
+    if (options.compareBranch && !options.changed) {
+      process.stderr.write(
+        "Option --compareBranch doesn't make sense without option --changed\n",
+      );
+      process.exit(1);
+    }
+    if (options.changed && regexes.length) {
+      process.stderr.write(
+        'Option --changed conflicts with supplied test regex\n',
+      );
+      process.exit(1);
+    }
+    if (options.package && regexes.length) {
+      process.stderr.write(
+        'Option --package conflicts with supplied test regex\n',
+      );
+      process.exit(1);
+    }
+
     const { default: test } = await import('./test');
 
     // proxy simplified options to testOptions
@@ -218,7 +266,7 @@ program
   .option('--verbose', 'Run yarn commands with --verbose set')
   .action(async ({ fix }: { fix: boolean }) => {
     const { check } = await import('./check');
-    await check(fix);
+    await check({ fix });
     logger.log(chalk.green('Success!'));
   });
 
@@ -245,13 +293,23 @@ program
     await port(relativePath);
   });
 
+const lintStagedFlag = '--staged';
 program
   .command('lint [regexes...]')
   .option(
     '--all',
     'Only lint diffed files from your remote origin default branch (e.g. main or master)',
   )
-  .option('--fix', 'Fix the lint errors wherever possible')
+  .option(
+    '--fix',
+    `Fix the lint errors wherever possible, restages changes if run with ${lintStagedFlag}`,
+  )
+  .addOption(
+    new Option(
+      lintStagedFlag,
+      'Only lint files that have been staged to be committed',
+    ).conflicts('all'),
+  )
   .description('Lints the codebase')
   .action(async (regexes: string[], options: LintOptions) => {
     const { default: lint } = await import('./lint');

@@ -3,10 +3,11 @@ import * as tmp from 'tmp';
 import * as fs from 'fs-extra';
 import rimraf from 'rimraf';
 
-import { ModularPackageJson } from '../utils/isModularType';
 import * as getModularRoot from '../utils/getModularRoot';
 import { port } from '../port';
 import { initModularFolder } from '../init';
+
+import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
 jest.mock('../utils/getModularRoot');
 
@@ -182,6 +183,7 @@ describe('Porting a react app into a modular project', () => {
       );
     });
   });
+
   describe('when modular root has the targeted app dependency', () => {
     it('should not add it to the new app package.json', async () => {
       fs.writeJsonSync(
@@ -215,6 +217,7 @@ describe('Porting a react app into a modular project', () => {
       );
     });
   });
+
   describe('when modular root has the targeted app dev dependency', () => {
     it('should not add it to the new app package.json', async () => {
       fs.writeJsonSync(

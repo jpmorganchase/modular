@@ -3,31 +3,50 @@ parent: Commands
 title: modular add
 ---
 
-# `modular add <packagePath>`
+# `modular add <packageName>`
 
-Adds a new package by creating a new workspace at `packages/<packagePath>`
+Adds a new package by creating a new workspace at `packages/<packageName>`,
+omitting the scope if the package is
+[scoped](https://docs.npmjs.com/cli/v8/using-npm/scope). If `--path <somePath>`
+is specified, create the workspace at `<somePath>/<packageName>`.
 
-(i.e. `modular add my-app` would create a package in `packages/my-app` and
-`modular add libs/lib-a` would create a package in `packages/libs/lib-a`)
+(i.e. `modular add my-app` would create a package in `packages/my-app`,
+`modular add @scoped/my-scoped-app` would create a package in
+`packages/my-scoped-app` and `modular add lib-a --path libs` would create a
+package in `libs/lib-a`)
 
-Packages can currently be one of 3 types:
+Packages can currently be one of the following types:
 
-- A standalone application. This corresponds to a single `create-react-app`
+- A standalone `app`. This corresponds to a static Single Page Application (SPA)
   project in a workspace. Inside this workspace, you can import packages from
   other workspaces freely, and features like jsx and typechecking work out of
   the box.
 
-- A View, which is a package that exports a React component by default. Views
-  are primary, top-level components in `modular`. Read more about Views in
-  [this explainer](../concepts/views.md).
+- An `esm-view`, which is a package that typically exports a React component by
+  default. ESM Views are built as ES modules that can be `import`ed at runtime
+  by a host to implement a [micro frontend](../concepts/microfrontends.md)
+  architecture or started as a normal standalone application. See also
+  [the view building reference](../esm-views/index.md)
 
-- A typical javascript package. You can use this to create any other kind of
+- A `view`, which is a package that exports a React component by default. Read
+  more about Views in [this explainer](../concepts/views.md).
+
+- A generic JavaScript `package`. You can use this to create any other kind of
   utility, tool, or whatever your needs require you to do. As an example, you
   could build a node.js server inside one of these.
 
 ## Options:
 
+`--path`: Optionally set the directory in which the workspace is created. If the
+provided path is outside (i.e., not a descendant) of the paths specified in
+[the `workspaces` field](https://classic.yarnpkg.com/lang/en/docs/workspaces/#toc-how-to-use-it)
+of the root `package.json`, the command will fail
+
 `--prefer-offline`: Uses offline yarn cache when possible
 
 `--verbose`: Run yarn commands with --verbose set and sets
 `MODULAR_LOGGER_DEBUG` to true
+
+`--template <templateName>`: Use the package `templateName` from the repository
+or the registry as a template for the new package. Find more information about
+Modular templates [in this page](../concepts/templates.md)

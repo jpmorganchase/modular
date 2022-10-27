@@ -1,9 +1,11 @@
 import * as esbuild from 'esbuild';
+import { parsePackageName } from '../../utils/parsePackageName';
 import type { Dependency } from '@schemastore/package';
 
 export function createRewriteDependenciesPlugin(
   externalDependencies: Dependency,
   externalResolutions: Dependency,
+  selectiveCDNResolutions: Dependency,
   target?: string[],
 ): esbuild.Plugin {
   const externalCdnTemplate =
@@ -22,7 +24,15 @@ export function createRewriteDependenciesPlugin(
         externalCdnTemplate
           .replace('[name]', name)
           .replace('[version]', version ?? externalResolutions[name])
-          .replace('[resolution]', externalResolutions[name]),
+          .replace('[resolution]', externalResolutions[name])
+          .replace(
+            '[selectiveCDNResolutions]',
+            selectiveCDNResolutions
+              ? Object.entries(selectiveCDNResolutions)
+                  .map(([key, value]) => `${key}@${value}`)
+                  .join(',')
+              : '',
+          ),
       ];
     }),
   );
@@ -43,7 +53,7 @@ export function createRewriteDependenciesPlugin(
           if (dependencyUrl) {
             // Rewrite the path taking the submodule into account
             const path = `${dependencyUrl}${submodule ? `/${submodule}` : ''}`;
-            if (submodule.endsWith('.css')) {
+            if (submodule?.endsWith('.css')) {
               // This is a global CSS import from the CDN.
               if (target && target.every((target) => target === 'esnext')) {
                 // If target is esnext we can use CSS module scripts - https://web.dev/css-module-scripts/
@@ -129,17 +139,4 @@ export function createRewriteDependenciesPlugin(
     },
   };
   return dependencyRewritePlugin;
-}
-
-const packageRegex =
-  /^(@[a-z0-9-~][a-z0-9-._~]*)?\/?([a-z0-9-~][a-z0-9-._~]*)\/?(.*)/;
-function parsePackageName(name: string) {
-  const parsedName = packageRegex.exec(name);
-  if (!parsedName) {
-    throw new Error(`Can't parse package name: ${name}`);
-  }
-  /* eslint-disable @typescript-eslint/no-unused-vars */
-  const [_, scope, module, submodule] = parsedName;
-  const dependencyName = (scope ? `${scope}/` : '') + module;
-  return { dependencyName, scope, module, submodule };
 }

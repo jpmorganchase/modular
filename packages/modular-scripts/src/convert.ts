@@ -1,17 +1,18 @@
+import * as path from 'path';
+
 import type { IncludeDefinition as TSConfig } from '@schemastore/tsconfig';
 import type { Dependency } from '@schemastore/package';
+import type { ModularPackageJson } from '@modular-scripts/modular-types';
+
 import execa from 'execa';
-import * as fs from 'fs-extra';
-import * as path from 'path';
-import rimraf from 'rimraf';
 import { paramCase as toParamCase } from 'change-case';
-import {
-  ModularPackageJson,
-  isValidModularRootPackageJson,
-} from './utils/isModularType';
-import * as logger from './utils/logger';
+import * as fs from 'fs-extra';
+import rimraf from 'rimraf';
+
 import { check } from './check';
+import { isValidModularRootPackageJson } from './check/verifyModularRootPackageJson';
 import { cleanGit, stashChanges } from './utils/gitActions';
+import * as logger from './utils/logger';
 
 process.on('SIGINT', () => {
   stashChanges();
@@ -163,7 +164,7 @@ export async function convert(cwd: string = process.cwd()): Promise<void> {
     });
 
     logger.log('Validating your modular project...');
-    await check();
+    await check({ fix: false, target: cwd });
   } catch (err) {
     logger.error(err as string);
     stashChanges();

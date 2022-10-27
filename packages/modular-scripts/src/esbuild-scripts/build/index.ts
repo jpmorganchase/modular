@@ -22,6 +22,7 @@ export default async function build(
   paths: Paths,
   externalDependencies: Dependency,
   externalResolutions: Dependency,
+  selectiveCDNResolutions: Dependency,
   type: 'app' | 'esm-view',
 ) {
   const modularRoot = getModularRoot();
@@ -46,6 +47,7 @@ export default async function build(
               createRewriteDependenciesPlugin(
                 externalDependencies,
                 externalResolutions,
+                selectiveCDNResolutions,
                 browserTarget,
               ),
             ],

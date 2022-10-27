@@ -1,5 +1,324 @@
 # modular-scripts
 
+## 3.4.1
+
+### Patch Changes
+
+- [#2184](https://github.com/jpmorganchase/modular/pull/2184)
+  [`32adac4`](https://github.com/jpmorganchase/modular/commit/32adac4b4371feec0c3ecf941f3df7b79f0b2069)
+  Thanks [@steveukx](https://github.com/steveukx)! - Set a doctype for the
+  template used when starting an ESM view
+
+## 3.4.0
+
+### Minor Changes
+
+- [#2145](https://github.com/jpmorganchase/modular/pull/2145)
+  [`a17e9df`](https://github.com/jpmorganchase/modular/commit/a17e9dfae3dcf7d94c415278b4a87892de1c3854)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Selective
+  test on workspace name with the --package option
+
+* [#2111](https://github.com/jpmorganchase/modular/pull/2111)
+  [`deaee2c`](https://github.com/jpmorganchase/modular/commit/deaee2cf0c6cd74200236d886f6baadee089196e)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Improve
+  the way modular add creates new workspaces, add the custom `--path` option,
+  factor out addPackage tests
+
+- [#2169](https://github.com/jpmorganchase/modular/pull/2169)
+  [`32f4a4d`](https://github.com/jpmorganchase/modular/commit/32f4a4d0b109d116f985e4f29908faf20090837e)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Allow
+  workspaces outside the `packages` directory
+
+### Patch Changes
+
+- [#2158](https://github.com/jpmorganchase/modular/pull/2158)
+  [`09a3e02`](https://github.com/jpmorganchase/modular/commit/09a3e0267952daa2112c6bae77fb0f2bd6c647d9)
+  Thanks [@joshwooding](https://github.com/joshwooding)! - Remove
+  @types/semver-regex
+
+* [#2135](https://github.com/jpmorganchase/modular/pull/2135)
+  [`305cff2`](https://github.com/jpmorganchase/modular/commit/305cff287a4eaa812ed92cf810b15d8198230a8f)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump semver-regex
+  from 3.1.3 to 3.1.4
+
+- [#2087](https://github.com/jpmorganchase/modular/pull/2087)
+  [`8c8570a`](https://github.com/jpmorganchase/modular/commit/8c8570a33d320a5e4bfb3f615b81a0509050dc50)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump dotenv from
+  16.0.1 to 16.0.2
+
+* [#2159](https://github.com/jpmorganchase/modular/pull/2159)
+  [`70470c0`](https://github.com/jpmorganchase/modular/commit/70470c0ad53729554ed286ee69829f157135dd80)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Refactor
+  modular config into readable parts
+
+- [#2156](https://github.com/jpmorganchase/modular/pull/2156)
+  [`432392b`](https://github.com/jpmorganchase/modular/commit/432392bfcfd4a6f482429329c1dc1cc0535ddcf6)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump address from
+  1.2.0 to 1.2.1
+
+* [#2011](https://github.com/jpmorganchase/modular/pull/2011)
+  [`3c199ff`](https://github.com/jpmorganchase/modular/commit/3c199ff2c41d4b7fd0dff4c9f62f04b12012a0a3)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump postcss from
+  8.4.14 to 8.4.16
+
+- [#2177](https://github.com/jpmorganchase/modular/pull/2177)
+  [`8311ade`](https://github.com/jpmorganchase/modular/commit/8311ade225d977db2f6a91a14b915f55674b1eee)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Modular
+  type as an additional property in workspace resolver
+
+* [#1975](https://github.com/jpmorganchase/modular/pull/1975)
+  [`2f9d6b8`](https://github.com/jpmorganchase/modular/commit/2f9d6b8062a526dce6ebefeb93ea5f435a46b474)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump webpack from
+  5.73.0 to 5.74.0
+
+- [#2137](https://github.com/jpmorganchase/modular/pull/2137)
+  [`33ffaf8`](https://github.com/jpmorganchase/modular/commit/33ffaf8946264faab10e3ab3e5467f984cd2690e)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump strip-ansi
+  from 6.0.0 to 6.0.1
+
+* [#1949](https://github.com/jpmorganchase/modular/pull/1949)
+  [`00ac6bc`](https://github.com/jpmorganchase/modular/commit/00ac6bc8553fa9963db12407e7be9849a583f3c5)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump commander
+  from 9.3.0 to 9.4.0
+
+- [#1950](https://github.com/jpmorganchase/modular/pull/1950)
+  [`e41effa`](https://github.com/jpmorganchase/modular/commit/e41effa5a6ff62929688acc37bc948199ad0aa7f)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump ws from 8.8.0
+  to 8.8.1
+
+* [#1959](https://github.com/jpmorganchase/modular/pull/1959)
+  [`b3fa5fd`](https://github.com/jpmorganchase/modular/commit/b3fa5fd86398b0626f1e5498c5003cac5361ce50)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  fork-ts-checker-webpack-plugin from 7.2.11 to 7.2.13
+
+- [#1853](https://github.com/jpmorganchase/modular/pull/1853)
+  [`b42ae90`](https://github.com/jpmorganchase/modular/commit/b42ae904a98aa4290626a31b731985250182719b)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump resolve from
+  1.21.0 to 1.22.1
+
+- Updated dependencies
+  [[`db7acd0`](https://github.com/jpmorganchase/modular/commit/db7acd0d2fa0b896f99a0e7f4c745c8e0b790325),
+  [`8311ade`](https://github.com/jpmorganchase/modular/commit/8311ade225d977db2f6a91a14b915f55674b1eee)]:
+  - @modular-scripts/workspace-resolver@1.2.0
+
+## 3.3.2
+
+### Patch Changes
+
+- [#2131](https://github.com/jpmorganchase/modular/pull/2131)
+  [`e765c13`](https://github.com/jpmorganchase/modular/commit/e765c13e812b26a7d76e8e2010f67947bf11cfe6)
+  Thanks [@cheemcheem](https://github.com/cheemcheem)! - Fix bug in lint
+  --staged --fix where deleted files would fail the lint.
+
+## 3.3.1
+
+### Patch Changes
+
+- [#2093](https://github.com/jpmorganchase/modular/pull/2093)
+  [`8e955c8`](https://github.com/jpmorganchase/modular/commit/8e955c82e357ed8e8aeb728866fa187851450122)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Export
+  computeAncestorWorkspaces
+
+- Updated dependencies
+  [[`8e955c8`](https://github.com/jpmorganchase/modular/commit/8e955c82e357ed8e8aeb728866fa187851450122)]:
+  - @modular-scripts/workspace-resolver@1.1.0
+
+## 3.3.0
+
+### Minor Changes
+
+- [#2051](https://github.com/jpmorganchase/modular/pull/2051)
+  [`f6a0f9a`](https://github.com/jpmorganchase/modular/commit/f6a0f9ae168ec3202a66c0a0adb4887a43b4432c)
+  Thanks [@cheemcheem](https://github.com/cheemcheem)! - Add --staged flag to
+  modular lint
+
+* [#2027](https://github.com/jpmorganchase/modular/pull/2027)
+  [`0b054b5`](https://github.com/jpmorganchase/modular/commit/0b054b5a950aa652fd5f7d59be238cd67ac934ef)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Add new
+  options for selective testing: `--ancestors`, `--changed`, `--compareBranch`
+
+## 3.2.0
+
+### Minor Changes
+
+- [#2015](https://github.com/jpmorganchase/modular/pull/2015)
+  [`c9af2ad`](https://github.com/jpmorganchase/modular/commit/c9af2ad64ba9b8110464b381f7d170203ecf1eac)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Add
+  function to detect changed workspaces
+
+* [#2001](https://github.com/jpmorganchase/modular/pull/2001)
+  [`12d9ea0`](https://github.com/jpmorganchase/modular/commit/12d9ea09a754af478470c8cdb1dc7114f53fd5c3)
+  Thanks [@sgb-io](https://github.com/sgb-io)! - Integrate new yarn-agnostic
+  workspace resolver
+
+### Patch Changes
+
+- [#1928](https://github.com/jpmorganchase/modular/pull/1928)
+  [`0a3bcfb`](https://github.com/jpmorganchase/modular/commit/0a3bcfb7640119a7fa5108e514d2f6855f8d5ad5)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Add
+  template docs and correct command help description for the --template option
+
+* [#1926](https://github.com/jpmorganchase/modular/pull/1926)
+  [`3e95003`](https://github.com/jpmorganchase/modular/commit/3e950034d47c8cacdf07ff0014feac373a83947d)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  postcss-loader from 7.0.0 to 7.0.1
+
+- [#1896](https://github.com/jpmorganchase/modular/pull/1896)
+  [`bedef0a`](https://github.com/jpmorganchase/modular/commit/bedef0a04f83eb2de58dcb35ae04b4c44b38aa14)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump npm-packlist
+  from 5.1.0 to 5.1.1
+
+* [#1889](https://github.com/jpmorganchase/modular/pull/1889)
+  [`9ecf69a`](https://github.com/jpmorganchase/modular/commit/9ecf69a121568879dbcc292c0ad48471be57b662)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump filesize from
+  9.0.1 to 9.0.11
+
+- [#1998](https://github.com/jpmorganchase/modular/pull/1998)
+  [`603b149`](https://github.com/jpmorganchase/modular/commit/603b14954959cf717e1fc2935862c8fd9baacee0)
+  Thanks [@sgb-io](https://github.com/sgb-io)! - Bump esbuild from 0.14.42 to
+  0.14.51
+
+* [#1897](https://github.com/jpmorganchase/modular/pull/1897)
+  [`23d5e33`](https://github.com/jpmorganchase/modular/commit/23d5e332c0955216b6741b54202e655820828a33)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  webpack-dev-server from 4.9.2 to 4.9.3
+
+- [#1978](https://github.com/jpmorganchase/modular/pull/1978)
+  [`b2c9f74`](https://github.com/jpmorganchase/modular/commit/b2c9f74a0542a726d202a68c06bc1bae5c1df541)
+  Thanks [@sgb-io](https://github.com/sgb-io)! - Introduce
+  @modular-scripts/modular-types and @modular-scripts/workspace-resolver
+
+* [#1879](https://github.com/jpmorganchase/modular/pull/1879)
+  [`f8bfdc6`](https://github.com/jpmorganchase/modular/commit/f8bfdc600c2b90bdbc9791febc85840515aca562)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump sass-loader
+  from 13.0.0 to 13.0.2
+
+- [#1998](https://github.com/jpmorganchase/modular/pull/1998)
+  [`603b149`](https://github.com/jpmorganchase/modular/commit/603b14954959cf717e1fc2935862c8fd9baacee0)
+  Thanks [@sgb-io](https://github.com/sgb-io)! - Read `compilerOptions.jsx` when
+  type checking to support the new React JSX transform.
+
+- Updated dependencies
+  [[`051ecf7`](https://github.com/jpmorganchase/modular/commit/051ecf7d257f883268abe73fd082d25615888906),
+  [`12d9ea0`](https://github.com/jpmorganchase/modular/commit/12d9ea09a754af478470c8cdb1dc7114f53fd5c3),
+  [`b2c9f74`](https://github.com/jpmorganchase/modular/commit/b2c9f74a0542a726d202a68c06bc1bae5c1df541)]:
+  - @modular-scripts/workspace-resolver@1.0.0
+
+## 3.1.5
+
+### Patch Changes
+
+- [#1903](https://github.com/jpmorganchase/modular/pull/1903)
+  [`aa68e0e`](https://github.com/jpmorganchase/modular/commit/aa68e0e86ec6fe841538ca7f667e3dcaea8adb69)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Fix paths
+  issue with "modular start" and esm-views on windows
+
+* [#1910](https://github.com/jpmorganchase/modular/pull/1910)
+  [`d35167c`](https://github.com/jpmorganchase/modular/commit/d35167c1dd6bf555ccbfb4a15252faa08346d739)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Fix
+  `app`s and `esm-view`s building and starting with esbuild mode on Windows
+
+## 3.1.4
+
+### Patch Changes
+
+- [#1872](https://github.com/jpmorganchase/modular/pull/1872)
+  [`e48bf7e`](https://github.com/jpmorganchase/modular/commit/e48bf7e53c810a4ba7828791447d2dad0351f6a0)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Support
+  selective version resolutions in esm-views via `[selectiveCDNResolutions]`
+  template token.
+
+## 3.1.3
+
+### Patch Changes
+
+- [#1792](https://github.com/jpmorganchase/modular/pull/1792)
+  [`f8ef4e7`](https://github.com/jpmorganchase/modular/commit/f8ef4e7331e3a3639104ded6d34d07da628fb436)
+  Thanks [@benpryke](https://github.com/benpryke)! - fix: support object type
+  for package.json workspaces field
+
+* [#1765](https://github.com/jpmorganchase/modular/pull/1765)
+  [`de0a7ce`](https://github.com/jpmorganchase/modular/commit/de0a7ce917cf3eb45ddd0379bfcec545252889b8)
+  Thanks [@origami-z](https://github.com/origami-z)! - Upgrade svgr to v6 for
+  Webpack
+
+- [#1865](https://github.com/jpmorganchase/modular/pull/1865)
+  [`ad9a85c`](https://github.com/jpmorganchase/modular/commit/ad9a85c05fd03ec6d50edd439ef389eb652ad53a)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Fix files
+  not added when using a template with `modular add` on Windows
+
+## 3.1.2
+
+### Patch Changes
+
+- [#1825](https://github.com/jpmorganchase/modular/pull/1825)
+  [`ceb837d`](https://github.com/jpmorganchase/modular/commit/ceb837d11a366f1dd203f36eca4af1843f40478d)
+  Thanks [@joshwooding](https://github.com/joshwooding)! - Add yarn 3 support
+  for `modular add`
+
+* [#1821](https://github.com/jpmorganchase/modular/pull/1821)
+  [`61f6e36`](https://github.com/jpmorganchase/modular/commit/61f6e363d80a9a26d00705a4237d7fb8836e5acd)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Fix
+  package resolutions for local (workspace) dependencies - this fixes the
+  `build`, `start` and `analyze` commands when an esm-view or an app has
+  workspace dependencies.
+
+## 3.1.1
+
+### Patch Changes
+
+- [#1793](https://github.com/jpmorganchase/modular/pull/1793)
+  [`89ca8a7`](https://github.com/jpmorganchase/modular/commit/89ca8a748d5e8569f9967d274dc7221c0823d19e)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Correctly
+  parse v3 lockfiles for `modular analyze`
+
+## 3.1.0
+
+### Minor Changes
+
+- [#1711](https://github.com/jpmorganchase/modular/pull/1711)
+  [`813c941`](https://github.com/jpmorganchase/modular/commit/813c94180efa36af3dce849e11544485a7b84a87)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Add the
+  modular analyze command
+
+* [#1686](https://github.com/jpmorganchase/modular/pull/1686)
+  [`da4eeed`](https://github.com/jpmorganchase/modular/commit/da4eeedd97d5388ef09d14140e5d96d146239813)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Add
+  `esm-view` modular type
+
+### Patch Changes
+
+- [#1675](https://github.com/jpmorganchase/modular/pull/1675)
+  [`95225cb`](https://github.com/jpmorganchase/modular/commit/95225cb80273b02d42d8460e365251ca3c7f61a6)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump express from
+  4.18.0 to 4.18.1
+
+* [#1757](https://github.com/jpmorganchase/modular/pull/1757)
+  [`1e72dc4`](https://github.com/jpmorganchase/modular/commit/1e72dc4278dafda57765d1b49b9a3aa02007931f)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Webpack
+  build: Support CSS from CDN in esm-views
+
+- [#1677](https://github.com/jpmorganchase/modular/pull/1677)
+  [`52b8a4c`](https://github.com/jpmorganchase/modular/commit/52b8a4ce3ddd330158b35cb3f25d03cc27778641)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump address from
+  1.1.2 to 1.2.0
+
+* [#1693](https://github.com/jpmorganchase/modular/pull/1693)
+  [`7c6369b`](https://github.com/jpmorganchase/modular/commit/7c6369b57b7772ac25939b6f8722164684f90c05)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Adds the
+  [resolution] tag in the CDN template to point to the pinned version as
+  resolved from yarn.lock.
+
+- [#1717](https://github.com/jpmorganchase/modular/pull/1717)
+  [`7c70b3b`](https://github.com/jpmorganchase/modular/commit/7c70b3bc9309a2407fa408f31c3752671d056d16)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump
+  builtin-modules from 3.2.0 to 3.3.0
+
+* [#1671](https://github.com/jpmorganchase/modular/pull/1671)
+  [`ee04d32`](https://github.com/jpmorganchase/modular/commit/ee04d324c423f65f462dd1d2b9cb462873665f04)
+  Thanks [@dependabot](https://github.com/apps/dependabot)! - Bump ws from 8.5.0
+  to 8.6.0
+
 ## 3.0.2
 
 ### Patch Changes
@@ -318,7 +637,8 @@
 
 - [#1112](https://github.com/jpmorganchase/modular/pull/1112)
   [`d08e4c2`](https://github.com/jpmorganchase/modular/commit/d08e4c2b15db93ef2adde961651254491db94140)
-  Thanks [@joshwooding](https://github.com/joshwooding)! - Support yarn v3
+  Thanks [@joshwooding](https://github.com/joshwooding)! - ~~Support yarn v3~~
+  Support yarn v3 workspaces
 
 * [#1150](https://github.com/jpmorganchase/modular/pull/1150)
   [`8b0826e`](https://github.com/jpmorganchase/modular/commit/8b0826e8cedf580bcf9c7a51866195e430ba3ddb)

@@ -2,13 +2,15 @@ import * as path from 'path';
 import type * as esbuild from 'esbuild';
 
 import getModularRoot from '../../utils/getModularRoot';
+import { normalizeToPosix } from './formatPath';
 import type { Paths } from '../../utils/createPaths';
 
 export const sanitizeFileName = (pathName: string): string => {
+  const normalizedPathName = normalizeToPosix(pathName);
   if (['.css', '.css.map'].some((ext) => pathName.endsWith(ext))) {
-    return pathName.replace('/js/', '/css/');
+    return normalizedPathName.replace('/js/', '/css/');
   } else {
-    return pathName;
+    return normalizedPathName;
   }
 };
 

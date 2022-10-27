@@ -116,7 +116,7 @@ describe('when working with a NODE_ENV app', () => {
         .toMatchInlineSnapshot(`
         "node-env-app
         ├─ favicon.ico #6pu3rg
-        ├─ index.html #yth8pd
+        ├─ index.html #1g8070q
         ├─ logo192.png #1nez7vk
         ├─ logo512.png #1hwqvcc
         ├─ manifest.json #19gah8o
@@ -124,12 +124,12 @@ describe('when working with a NODE_ENV app', () => {
         ├─ robots.txt #1sjb8b3
         └─ static
            └─ js
-              ├─ index-FG4XHKNZ.js #449tgl
-              └─ index-FG4XHKNZ.js.map #j51j3v"
+              ├─ index-AOVVUWA4.js #6j61pf
+              └─ index-AOVVUWA4.js.map #j51j3v"
       `);
     });
 
-    it('can generate a js/index-FG4XHKNZ.js', async () => {
+    it('can generate a js/index-AOVVUWA4.js', async () => {
       expect(
         prettier.format(
           String(
@@ -140,12 +140,12 @@ describe('when working with a NODE_ENV app', () => {
                 'node-env-app',
                 'static',
                 'js',
-                'index-FG4XHKNZ.js',
+                'index-AOVVUWA4.js',
               ),
             ),
           ),
           {
-            filepath: 'index-FG4XHKNZ.js',
+            filepath: 'index-AOVVUWA4.js',
           },
         ),
       ).toMatchSnapshot();

@@ -1,0 +1,21 @@
+{
+  "name": "clean-workspace-2",
+  "version": "1.0.0",
+  "author": "App Frameworks team",
+  "license": "MIT",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/**"
+    ],
+    "nohoist": [
+      "foo"
+    ]
+  },
+  "modular": {
+    "type": "root"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
+  }
+}

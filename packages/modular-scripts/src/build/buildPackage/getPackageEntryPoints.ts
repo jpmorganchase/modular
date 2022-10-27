@@ -1,14 +1,15 @@
-import type { JSONSchemaForNPMPackageJsonFiles } from '@schemastore/package';
 import * as path from 'path';
 import * as fse from 'fs-extra';
 
 import getModularRoot from '../../utils/getModularRoot';
 import getPackageMetadata from '../../utils/getPackageMetadata';
 
+import type { ModularPackageJson } from '@modular-scripts/modular-types';
+
 export function getMain(
   packagePath: string,
   includePrivate: boolean,
-  packageJson: JSONSchemaForNPMPackageJsonFiles | undefined,
+  packageJson: ModularPackageJson | undefined,
 ): string {
   let main: string | undefined;
 

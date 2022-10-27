@@ -4,7 +4,7 @@ nav_order: 10
 
 # Configuration
 
-Modular has minimal configuration because of it's philosophy. However there is a
+Modular has minimal configuration because of its philosophy. However there is a
 set of minimum configuration required.
 
 ## `package.json#modular`
@@ -39,6 +39,11 @@ generated view map with `modular-views.macro`. Read more about Views in
 ### `"app"`
 
 This type identifies a standalone application that can be started or built.
+
+### `"esm-view"`
+
+This type identifies an ESM view that can be started in standalone mode, built
+and imported dynamically by an host application.
 
 ### `"package"`
 
