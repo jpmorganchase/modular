@@ -8,7 +8,9 @@ import type { CoreProperties, Dependency } from '@schemastore/package';
 import getModularRoot from './getModularRoot';
 import getLocation from './getLocation';
 import getWorkspaceInfo, { WorkspaceInfo } from './getWorkspaceInfo';
+import { parsePackageName } from './parsePackageName';
 import * as logger from './logger';
+import type { ParsedPackage } from './parsePackageName';
 interface DependencyResolution {
   manifest: Dependency;
   resolutions: Dependency;
@@ -19,8 +21,9 @@ interface DependencyResolutionWithErrors extends DependencyResolution {
 }
 type LockFileEntries = Record<string, { version: string }>;
 
-const npmPackageMatcher =
-  /^(@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*/;
+interface ParsedPackageInfo extends ParsedPackage {
+  extension: string;
+}
 
 /* Get dependencies from import / require declarations, since they could be hoisted to the root workspace. Exclude test files. */
 function analyzeDependencies(workspaceLocation: string) {
@@ -30,25 +33,30 @@ function analyzeDependencies(workspaceLocation: string) {
   );
 
   const dependencySet = new Set<string>();
-  const styleImportsSet = new Set<string>();
+  const rawImports: Map<string, ParsedPackageInfo> = new Map();
 
   project.getSourceFiles().forEach((sourceFile) =>
     sourceFile.getImportDeclarations().forEach((declaration) => {
       const moduleSpecifier = declaration.getModuleSpecifierValue();
-      const packageName = npmPackageMatcher.exec(moduleSpecifier)?.[0];
-      if (packageName) {
-        dependencySet.add(packageName);
-      }
-      const fileExtension = path.extname(moduleSpecifier);
-      if (packageName && fileExtension === '.css') {
-        styleImportsSet.add(moduleSpecifier);
+      const { dependencyName, scope, module, submodule } =
+        parsePackageName(moduleSpecifier);
+      if (dependencyName) {
+        dependencySet.add(dependencyName);
+        const extension = path.extname(moduleSpecifier);
+        rawImports.set(moduleSpecifier, {
+          dependencyName,
+          scope,
+          module,
+          submodule,
+          extension,
+        });
       }
     }),
   );
 
   return {
     dependencies: Array.from(dependencySet),
-    styleImports: Array.from(styleImportsSet),
+    rawImports,
   };
 }
 
@@ -56,7 +64,7 @@ export async function getPackageDependencies(target: string): Promise<{
   manifest: Dependency;
   resolutions: Dependency;
   selectiveCDNResolutions: Dependency;
-  styleImports: string[];
+  rawImports: Map<string, ParsedPackageInfo>;
 }> {
   // This function is based on the assumption that nested package are not supported, so dependencies can be either declared in the
   // target's package.json or hoisted up to the workspace root.
@@ -121,7 +129,7 @@ export async function getPackageDependencies(target: string): Promise<{
     selectiveCDNResolutions,
     manifest: resolvedPackageDependencies.manifest,
     resolutions: resolvedPackageDependencies.resolutions,
-    styleImports: dependenciesfromSource.styleImports,
+    rawImports: dependenciesfromSource.rawImports,
   };
 }
 

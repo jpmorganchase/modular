@@ -15,7 +15,9 @@ export function createRewriteDependenciesPlugin(
           // Get name and eventual submodule to construct the url
           const { dependencyName, submodule } = parsePackageName(args.path);
           // Find dependency name (no submodule) in the pre-built import map
-          const dependencyUrl = importMap.get(dependencyName) as string;
+          const dependencyUrl = dependencyName
+            ? (importMap.get(dependencyName) as string)
+            : undefined;
           if (dependencyUrl) {
             // Rewrite the path taking the submodule into account
             const path = `${dependencyUrl}${submodule ? `/${submodule}` : ''}`;

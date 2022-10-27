@@ -102,7 +102,10 @@ async function buildStandalone(
     manifest: packageDependencies,
     resolutions: packageResolutions,
     selectiveCDNResolutions,
+    rawImports,
   } = await getPackageDependencies(target);
+
+  console.log(rawImports);
 
   // Get workspace info to automatically bundle workspace dependencies
   const workspaceInfo = await getWorkspaceInfo();
