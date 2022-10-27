@@ -16,7 +16,7 @@ import createEsbuildBrowserslistTarget from './utils/createEsbuildBrowserslistTa
 import prompts from 'prompts';
 import { getPackageDependencies } from './utils/getPackageDependencies';
 import { filterDependencies } from './utils/filterDependencies';
-import { rewriteDependencies } from './esbuild-scripts/utils/rewriteDependencies';
+import { rewriteDependencies } from './utils/rewriteDependencies';
 
 async function start(packageName: string): Promise<void> {
   let target = packageName;

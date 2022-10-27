@@ -37,7 +37,7 @@ import {
   esbuildMeasureFileSizesBeforeBuild,
 } from './esbuildFileSizeReporter';
 import { getPackageDependencies } from '../utils/getPackageDependencies';
-import { rewriteDependencies } from '../esbuild-scripts/utils/rewriteDependencies'; // TODO: move
+import { rewriteDependencies } from '../utils/rewriteDependencies';
 
 async function buildStandalone(
   target: string,
