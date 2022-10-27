@@ -34,7 +34,7 @@ describe('createEsbuildBrowserslistTarget', () => {
     const result = createEsbuildBrowserslistTarget(process.cwd());
     expect(result).toMatchInlineSnapshot(`
       Array [
-        "chrome106",
+        "chrome107",
         "firefox106",
         "safari16.1",
       ]
@@ -59,7 +59,7 @@ describe('createEsbuildBrowserslistTarget', () => {
     const result = createEsbuildBrowserslistTarget(process.cwd());
     expect(result).toMatchInlineSnapshot(`
       Array [
-        "chrome106",
+        "chrome107",
         "firefox106",
         "safari16.1",
       ]
@@ -84,7 +84,7 @@ describe('createEsbuildBrowserslistTarget', () => {
     const result = createEsbuildBrowserslistTarget(process.cwd());
     expect(result).toMatchInlineSnapshot(`
       Array [
-        "chrome106",
+        "chrome107",
         "firefox106",
         "safari16.1",
       ]
