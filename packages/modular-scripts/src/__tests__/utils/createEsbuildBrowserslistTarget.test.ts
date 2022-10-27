@@ -34,9 +34,9 @@ describe('createEsbuildBrowserslistTarget', () => {
     const result = createEsbuildBrowserslistTarget(process.cwd());
     expect(result).toMatchInlineSnapshot(`
       Array [
-        "chrome101",
-        "firefox99",
-        "safari15.4",
+        "chrome106",
+        "firefox106",
+        "safari16.1",
       ]
     `);
   });
@@ -59,9 +59,9 @@ describe('createEsbuildBrowserslistTarget', () => {
     const result = createEsbuildBrowserslistTarget(process.cwd());
     expect(result).toMatchInlineSnapshot(`
       Array [
-        "chrome101",
-        "firefox99",
-        "safari15.4",
+        "chrome106",
+        "firefox106",
+        "safari16.1",
       ]
     `);
   });
@@ -84,9 +84,9 @@ describe('createEsbuildBrowserslistTarget', () => {
     const result = createEsbuildBrowserslistTarget(process.cwd());
     expect(result).toMatchInlineSnapshot(`
       Array [
-        "chrome101",
-        "firefox99",
-        "safari15.4",
+        "chrome106",
+        "firefox106",
+        "safari16.1",
       ]
     `);
   });
