@@ -1,4 +1,5 @@
 import type { Dependency } from '@schemastore/package';
+import { parsePackageName } from './parsePackageName';
 
 const externalCdnTemplate =
   process.env.EXTERNAL_CDN_TEMPLATE ??
@@ -10,7 +11,7 @@ interface RewriteDependenciesParams {
   selectiveCDNResolutions: Dependency;
 }
 
-export function rewriteDependencies({
+export function getImportMap({
   externalDependencies,
   externalResolutions,
   selectiveCDNResolutions,
@@ -50,4 +51,19 @@ export function rewriteDependencies({
   );
 
   return importMap;
+}
+
+export function rewriteModuleSpecifier(
+  importMap: Map<string, string>,
+  moduleSpecifier: string,
+): string | undefined {
+  const { dependencyName, submodule } = parsePackageName(moduleSpecifier);
+  // Find dependency name (no submodule) in the pre-built import map
+  const dependencyUrl = dependencyName
+    ? (importMap.get(dependencyName) as string)
+    : undefined;
+  if (dependencyUrl) {
+    // Rewrite the path taking the submodule into account
+    return `${dependencyUrl}${submodule ? `/${submodule}` : ''}`;
+  }
 }

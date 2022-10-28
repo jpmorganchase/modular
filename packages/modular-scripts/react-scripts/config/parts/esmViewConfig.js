@@ -46,6 +46,10 @@ function createExternalRewriter(dependencyMap) {
   return function rewriteExternals({ request }, callback) {
     const parsedModule = parsePackageName(request);
 
+    // TODO: this functionality is duplicated from
+    // packages/modular-scripts/src/utils/getImportMap.ts and packages/modular-scripts/src/esbuild-scripts/plugins/rewriteDependenciesPlugin.ts
+    // When this configuration file is ported to typescript, use only one version.
+
     // If the module is absolute and it is in the import map, we want to externalise it
     if (
       parsedModule &&
@@ -55,7 +59,6 @@ function createExternalRewriter(dependencyMap) {
       !request.endsWith('.css')
     ) {
       const { dependencyName, submodule } = parsedModule;
-
       const toRewrite = `${dependencyMap[dependencyName]}${
         submodule ? `/${submodule}` : ''
       }`;

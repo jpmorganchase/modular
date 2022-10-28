@@ -37,7 +37,7 @@ import {
   esbuildMeasureFileSizesBeforeBuild,
 } from './esbuildFileSizeReporter';
 import { getPackageDependencies } from '../utils/getPackageDependencies';
-import { rewriteDependencies } from '../utils/rewriteDependencies';
+import { getImportMap, rewriteModuleSpecifier } from '../utils/getImportMap';
 
 async function buildStandalone(
   target: string,
@@ -105,8 +105,6 @@ async function buildStandalone(
     rawImports,
   } = await getPackageDependencies(target);
 
-  console.log(rawImports);
-
   // Get workspace info to automatically bundle workspace dependencies
   const workspaceInfo = await getWorkspaceInfo();
   // Split dependencies between external and bundled
@@ -144,15 +142,28 @@ async function buildStandalone(
 
   let jsEntryPoint: string | undefined;
   let cssEntryPoint: string | undefined;
+
   let importMap: Map<string, string> | undefined;
+  let styleImports: Set<string> | undefined;
 
   if (!isApp) {
-    // Rewrite dependencies. This is only needed for esm-views.
-    importMap = rewriteDependencies({
+    // Generate an import map from dependencies that will not be bundled. This is only needed for esm-views.
+    const dependencyMap = getImportMap({
       externalDependencies,
       externalResolutions,
       selectiveCDNResolutions,
     });
+
+    // Generate a list of CSS urls to embed in the synthetic index and output package.json.
+    const cssImportList = [...rawImports]
+      .filter((moduleSpecifier) => moduleSpecifier.endsWith('.css'))
+      .map((cssModuleSpecifier) =>
+        rewriteModuleSpecifier(dependencyMap, cssModuleSpecifier),
+      )
+      .filter(Boolean) as string[];
+
+    importMap = dependencyMap;
+    styleImports = new Set(cssImportList);
   }
 
   if (isEsbuild) {
@@ -226,7 +237,11 @@ async function buildStandalone(
 
     // Create synthetic index
     const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
-    const html = createSyntheticIndex({ cssEntryPoint, replacements: env.raw });
+    const html = createSyntheticIndex({
+      cssEntryPoint,
+      replacements: env.raw,
+      styleImports,
+    });
     await fs.writeFile(
       path.join(paths.appBuild, 'index.html'),
       await minimize.minify(html, {

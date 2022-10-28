@@ -16,7 +16,7 @@ import createEsbuildBrowserslistTarget from './utils/createEsbuildBrowserslistTa
 import prompts from 'prompts';
 import { getPackageDependencies } from './utils/getPackageDependencies';
 import { filterDependencies } from './utils/filterDependencies';
-import { rewriteDependencies } from './utils/rewriteDependencies';
+import { getImportMap } from './utils/getImportMap';
 
 async function start(packageName: string): Promise<void> {
   let target = packageName;
@@ -111,7 +111,7 @@ async function start(packageName: string): Promise<void> {
 
   if (isEsmView) {
     // Rewrite dependencies. This is only needed for esm-views.
-    importMap = rewriteDependencies({
+    importMap = getImportMap({
       externalDependencies,
       externalResolutions,
       selectiveCDNResolutions,

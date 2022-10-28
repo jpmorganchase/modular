@@ -10,7 +10,6 @@ import getLocation from './getLocation';
 import getWorkspaceInfo, { WorkspaceInfo } from './getWorkspaceInfo';
 import { parsePackageName } from './parsePackageName';
 import * as logger from './logger';
-import type { ParsedPackage } from './parsePackageName';
 interface DependencyResolution {
   manifest: Dependency;
   resolutions: Dependency;
@@ -21,10 +20,6 @@ interface DependencyResolutionWithErrors extends DependencyResolution {
 }
 type LockFileEntries = Record<string, { version: string }>;
 
-interface ParsedPackageInfo extends ParsedPackage {
-  extension: string;
-}
-
 /* Get dependencies from import / require declarations, since they could be hoisted to the root workspace. Exclude test files. */
 function analyzeDependencies(workspaceLocation: string) {
   const project = new Project();
@@ -33,30 +28,22 @@ function analyzeDependencies(workspaceLocation: string) {
   );
 
   const dependencySet = new Set<string>();
-  const rawImports: Map<string, ParsedPackageInfo> = new Map();
+  const rawImportSet: Set<string> = new Set();
 
   project.getSourceFiles().forEach((sourceFile) =>
     sourceFile.getImportDeclarations().forEach((declaration) => {
       const moduleSpecifier = declaration.getModuleSpecifierValue();
-      const { dependencyName, scope, module, submodule } =
-        parsePackageName(moduleSpecifier);
+      const { dependencyName } = parsePackageName(moduleSpecifier);
       if (dependencyName) {
         dependencySet.add(dependencyName);
-        const extension = path.extname(moduleSpecifier);
-        rawImports.set(moduleSpecifier, {
-          dependencyName,
-          scope,
-          module,
-          submodule,
-          extension,
-        });
+        rawImportSet.add(moduleSpecifier);
       }
     }),
   );
 
   return {
     dependencies: Array.from(dependencySet),
-    rawImports,
+    rawImports: rawImportSet,
   };
 }
 
@@ -64,7 +51,7 @@ export async function getPackageDependencies(target: string): Promise<{
   manifest: Dependency;
   resolutions: Dependency;
   selectiveCDNResolutions: Dependency;
-  rawImports: Map<string, ParsedPackageInfo>;
+  rawImports: Set<string>;
 }> {
   // This function is based on the assumption that nested package are not supported, so dependencies can be either declared in the
   // target's package.json or hoisted up to the workspace root.

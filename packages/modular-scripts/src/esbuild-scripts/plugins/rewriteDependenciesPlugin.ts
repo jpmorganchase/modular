@@ -1,5 +1,5 @@
 import * as esbuild from 'esbuild';
-import { parsePackageName } from '../../utils/parsePackageName';
+import { rewriteModuleSpecifier } from '../../utils/getImportMap';
 
 export function createRewriteDependenciesPlugin(
   importMap: Map<string, string>,
@@ -12,17 +12,12 @@ export function createRewriteDependenciesPlugin(
       build.onResolve(
         { filter: /^[a-z0-9-~]|@/, namespace: 'file' },
         (args) => {
-          // Get name and eventual submodule to construct the url
-          const { dependencyName, submodule } = parsePackageName(args.path);
-          // Find dependency name (no submodule) in the pre-built import map
-          const dependencyUrl = dependencyName
-            ? (importMap.get(dependencyName) as string)
-            : undefined;
-          if (dependencyUrl) {
+          // Construct the full url from import map
+          const path = rewriteModuleSpecifier(importMap, args.path);
+          if (path) {
             // Rewrite the path taking the submodule into account
-            const path = `${dependencyUrl}${submodule ? `/${submodule}` : ''}`;
-            if (submodule?.endsWith('.css')) {
-              // This is a global CSS import from the CDN.
+            if (path.endsWith('.css')) {
+              // This is a global CSS import from the CDN. Mark for rewriting with a placeholder.
               return {
                 path,
                 namespace: 'rewritable-css-import',
