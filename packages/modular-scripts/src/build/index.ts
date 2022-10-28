@@ -287,6 +287,7 @@ async function buildStandalone(
       bundledDependencies: targetPackageJson.bundledDependencies,
       module: jsEntryPoint ? paths.publicUrlOrPath + jsEntryPoint : undefined,
       style: cssEntryPoint ? paths.publicUrlOrPath + cssEntryPoint : undefined,
+      'style-cdn': styleImports?.size ? [...styleImports] : undefined,
     },
     { spaces: 2 },
   );
