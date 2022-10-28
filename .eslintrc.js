@@ -17,6 +17,15 @@ module.exports = {
   },
   overrides: [
     {
+      files: ['**/__fixtures__/**'],
+      rules: {
+        'import/no-extraneous-dependencies': [
+          'error',
+          { devDependencies: true },
+        ],
+      },
+    },
+    {
       files: [
         '**/*.test.*',
         '**/__tests__/**',
