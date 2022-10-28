@@ -1,5 +1,5 @@
-import type { Dependency } from '@schemastore/package';
 import { parsePackageName } from './parsePackageName';
+import type { Dependency } from '@schemastore/package';
 
 const externalCdnTemplate =
   process.env.EXTERNAL_CDN_TEMPLATE ??

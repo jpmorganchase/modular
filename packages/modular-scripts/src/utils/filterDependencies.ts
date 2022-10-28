@@ -12,29 +12,18 @@ interface FilteredDependencies {
 // Filter out dependencies that are in blocklist
 export function filterDependencies({
   dependencies,
-  isApp,
   workspaceInfo,
 }: {
   dependencies: Dependency;
-  isApp: boolean;
   workspaceInfo: WorkspaceInfo;
 }): FilteredDependencies {
-  if (isApp) {
-    return {
-      bundled: dependencies,
-      external: {},
-    };
-  }
+  const externalBlockList = process.env.EXTERNAL_BLOCK_LIST
+    ? process.env.EXTERNAL_BLOCK_LIST.split(',')
+    : undefined;
 
-  const externalBlockList =
-    process.env.EXTERNAL_BLOCK_LIST && !isApp
-      ? process.env.EXTERNAL_BLOCK_LIST.split(',')
-      : undefined;
-
-  const externalAllowList =
-    process.env.EXTERNAL_ALLOW_LIST && !isApp
-      ? process.env.EXTERNAL_ALLOW_LIST.split(',')
-      : undefined;
+  const externalAllowList = process.env.EXTERNAL_ALLOW_LIST
+    ? process.env.EXTERNAL_ALLOW_LIST.split(',')
+    : undefined;
 
   return partitionDependencies({
     dependencies,

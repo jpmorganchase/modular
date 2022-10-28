@@ -14,9 +14,7 @@ import createPaths from './utils/createPaths';
 import * as logger from './utils/logger';
 import createEsbuildBrowserslistTarget from './utils/createEsbuildBrowserslistTarget';
 import prompts from 'prompts';
-import { getPackageDependencies } from './utils/getPackageDependencies';
-import { filterDependencies } from './utils/filterDependencies';
-import { getImportMap } from './utils/getImportMap';
+import { getDependencyInfo } from './utils/getDependencyInfo';
 
 async function start(packageName: string): Promise<void> {
   let target = packageName;
@@ -72,23 +70,15 @@ async function start(packageName: string): Promise<void> {
     process.env.USE_MODULAR_ESBUILD &&
     process.env.USE_MODULAR_ESBUILD === 'true';
 
+  // Retrieve dependency info for target to inform the build process
   const {
-    manifest: packageDependencies,
-    resolutions: packageResolutions,
-    selectiveCDNResolutions,
-  } = await getPackageDependencies(target);
-  const { external: externalDependencies, bundled: bundledDependencies } =
-    filterDependencies({
-      dependencies: packageDependencies,
-      isApp: !isEsmView,
-      workspaceInfo,
-    });
-  const { external: externalResolutions, bundled: bundledResolutions } =
-    filterDependencies({
-      dependencies: packageResolutions,
-      isApp: !isEsmView,
-      workspaceInfo,
-    });
+    importMap,
+    styleImports,
+    bundledDependencies,
+    bundledResolutions,
+    externalDependencies,
+    externalResolutions,
+  } = await getDependencyInfo(target);
 
   logger.debug(
     `These are the external dependencies and their resolutions: ${JSON.stringify(
@@ -107,16 +97,7 @@ async function start(packageName: string): Promise<void> {
     )}`,
   );
 
-  let importMap;
-
-  if (isEsmView) {
-    // Rewrite dependencies. This is only needed for esm-views.
-    importMap = getImportMap({
-      externalDependencies,
-      externalResolutions,
-      selectiveCDNResolutions,
-    });
-  }
+  console.log(styleImports);
 
   // If you want to use webpack then we'll always use webpack. But if you've indicated
   // you want esbuild - then we'll switch you to the new fancy world.
