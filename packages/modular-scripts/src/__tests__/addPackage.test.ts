@@ -2,11 +2,11 @@ import execa from 'execa';
 import rimraf from 'rimraf';
 import path from 'path';
 import fs from 'fs-extra';
+import tree from 'tree-view-for-tests';
 
 import getModularRoot from '../utils/getModularRoot';
 
 import type { CoreProperties } from '@schemastore/package';
-import getAllFiles from '../utils/getAllFiles';
 import { createModularTestContext, mockInstallTemplates } from '../test/utils';
 
 const modularRoot = getModularRoot();
@@ -30,7 +30,6 @@ function modular(str: string, opts: Record<string, unknown> = {}) {
   return execa('yarnpkg', ['modular', ...str.split(' ')], {
     cwd: tempModularRepo,
     cleanup: true,
-    stdio: 'inherit',
     ...opts,
   });
 }
@@ -120,35 +119,32 @@ describe('When adding a module from a template without a files filter', () => {
   afterAll(cleanup);
 
   it('generates the package.json', async () => {
-    const manifest = (await fs.readJSON(
-      path.join(newModulePath, 'package.json'),
-    )) as CoreProperties;
-
     // Expect name to be as set by command, and type as set by template
-    expect(JSON.stringify(manifest, null, 2)).toMatchInlineSnapshot(`
-      "{
-        \\"name\\": \\"no-filter-module\\",
-        \\"private\\": true,
-        \\"modular\\": {
-          \\"type\\": \\"app\\"
+    expect(await fs.readJSON(path.join(newModulePath, 'package.json')))
+      .toMatchInlineSnapshot(`
+      Object {
+        "modular": Object {
+          "type": "app",
         },
-        \\"version\\": \\"1.0.0\\"
-      }"
+        "name": "no-filter-module",
+        "private": true,
+        "version": "1.0.0",
+      }
     `);
   });
 
   it("copies all files in the template's package.json files field", () => {
-    let files = getAllFiles(newModulePath);
-    files = files.map((file) => file.substring(file.lastIndexOf('/')));
-    expect(files).toMatchInlineSnapshot(`
-      Array [
-        "/CHANGELOG.md",
-        "/package.json",
-        "/robots.txt",
-        "/no-filter.test.ts",
-        "/index.tsx",
-        "/tsconfig.json",
-      ]
+    expect(tree(newModulePath)).toMatchInlineSnapshot(`
+      "no-filter-module
+      ├─ CHANGELOG.md
+      ├─ package.json
+      ├─ public
+      │  └─ robots.txt #1sjb8b3
+      ├─ src
+      │  ├─ __tests__
+      │  │  └─ no-filter.test.ts #ez9wna
+      │  └─ index.tsx #1woe74n
+      └─ tsconfig.json #6rw46b"
     `);
   });
 });
@@ -162,33 +158,29 @@ describe('When adding a module from a template with a files filter', () => {
   afterAll(cleanup);
 
   it('generates the package.json', async () => {
-    const manifest = (await fs.readJSON(
-      path.join(newModulePath, 'package.json'),
-    )) as CoreProperties;
-
     // Expect name to be as set by command, and type as set by template
-    expect(JSON.stringify(manifest, null, 2)).toMatchInlineSnapshot(`
-      "{
-        \\"name\\": \\"filter-module\\",
-        \\"private\\": true,
-        \\"modular\\": {
-          \\"type\\": \\"app\\"
+    expect(await fs.readJson(path.join(newModulePath, 'package.json')))
+      .toMatchInlineSnapshot(`
+      Object {
+        "modular": Object {
+          "type": "app",
         },
-        \\"version\\": \\"1.0.0\\"
-      }"
+        "name": "filter-module",
+        "private": true,
+        "version": "1.0.0",
+      }
     `);
   });
 
   it("copies only files declared in the template's package.json files field, and the package.json itself", () => {
-    let files = getAllFiles(newModulePath);
-    files = files.map((file) => file.substring(file.lastIndexOf('/')));
-    expect(files).toMatchInlineSnapshot(`
-      Array [
-        "/package.json",
-        "/filter.test.ts",
-        "/index.tsx",
-        "/tsconfig.json",
-      ]
+    expect(tree(newModulePath)).toMatchInlineSnapshot(`
+      "filter-module
+      ├─ package.json
+      ├─ src
+      │  ├─ __tests__
+      │  │  └─ filter.test.ts #ez9wna
+      │  └─ index.tsx #1woe74n
+      └─ tsconfig.json #6rw46b"
     `);
   });
 });
