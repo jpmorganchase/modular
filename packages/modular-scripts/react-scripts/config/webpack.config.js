@@ -35,6 +35,10 @@ const dependencyMap = process.env.MODULAR_IMPORT_MAP
   ? JSON.parse(process.env.MODULAR_IMPORT_MAP)
   : {};
 
+const useReactCreateRoot = JSON.parse(
+  process.env.MODULAR_USE_REACT_CREATE_ROOT,
+);
+
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
 
@@ -78,6 +82,7 @@ module.exports = function (webpackEnv) {
         dependencyMap,
         paths,
         isEnvProduction,
+        useReactCreateRoot,
       });
 
   // Specific configuration based on build type (production, development)

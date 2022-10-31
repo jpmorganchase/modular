@@ -1,4 +1,5 @@
 import { paramCase as toParamCase } from 'change-case';
+import semver from 'semver';
 
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import isModularType from './utils/isModularType';
@@ -107,6 +108,11 @@ async function start(packageName: string): Promise<void> {
     )}`,
   );
 
+  const reactVersion = externalResolutions?.['react'];
+  const useReactCreateRoot = Boolean(
+    reactVersion && semver.gte(reactVersion, '18.0.0'),
+  );
+
   let importMap;
 
   if (isEsmView) {
@@ -124,7 +130,7 @@ async function start(packageName: string): Promise<void> {
     const { default: startEsbuildApp } = await import(
       './esbuild-scripts/start'
     );
-    await startEsbuildApp(target, !isEsmView, importMap);
+    await startEsbuildApp(target, !isEsmView, importMap, useReactCreateRoot);
   } else {
     const startScript = require.resolve(
       'modular-scripts/react-scripts/scripts/start.js',
@@ -147,6 +153,7 @@ async function start(packageName: string): Promise<void> {
         MODULAR_PACKAGE_NAME: targetName,
         MODULAR_IS_APP: JSON.stringify(!isEsmView),
         MODULAR_IMPORT_MAP: JSON.stringify(Object.fromEntries(importMap || [])),
+        MODULAR_USE_REACT_CREATE_ROOT: JSON.stringify(useReactCreateRoot),
       },
     });
   }

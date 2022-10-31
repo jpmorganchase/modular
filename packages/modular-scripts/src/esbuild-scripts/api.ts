@@ -9,10 +9,15 @@ import { normalizeToPosix } from './utils/formatPath';
 
 type FileType = '.css' | '.js';
 
-export function createViewTrampoline(
-  fileName: string,
-  importMap: Map<string, string> | undefined,
-): string {
+export function createViewTrampoline({
+  fileName,
+  importMap,
+  useReactCreateRoot,
+}: {
+  fileName: string;
+  importMap: Map<string, string> | undefined;
+  useReactCreateRoot: boolean;
+}): string {
   const fileRelativePath = `./${fileName}`;
 
   const reactDomCdnLocation = importMap?.get('react-dom');
@@ -26,7 +31,14 @@ export function createViewTrampoline(
     );
   }
 
-  return `import ReactDOM from "${reactDomCdnLocation}";
+  return useReactCreateRoot
+    ? `import { createRoot } from "${reactDomCdnLocation}/client";
+import React from "${reactCdnLocation}";
+import Component from "${fileRelativePath}";
+var container = document.getElementById("root");
+var root = createRoot(container);
+root.render(React.createElement(Component, null));`
+    : `import ReactDOM from "${reactDomCdnLocation}";
 import React from "${reactCdnLocation}";
 import Component from "${fileRelativePath}";
 var DOMRoot = document.getElementById("root");

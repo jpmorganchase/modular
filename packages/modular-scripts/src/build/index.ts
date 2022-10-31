@@ -2,6 +2,7 @@ import { paramCase as toParamCase } from 'change-case';
 import chalk from 'chalk';
 import * as fs from 'fs-extra';
 import * as path from 'path';
+import semver from 'semver';
 import * as minimize from 'html-minifier-terser';
 import type { CoreProperties } from '@schemastore/package';
 import type { ModularType } from '@modular-scripts/modular-types';
@@ -137,6 +138,12 @@ async function buildStandalone(
     )}`,
   );
 
+  // React >= 18 needs a different way of instantiating rendering. Find out if the project needs it.
+  const reactVersion = externalResolutions?.['react'];
+  const useReactCreateRoot = Boolean(
+    reactVersion && semver.gte(reactVersion, '18.0.0'),
+  );
+
   const browserTarget = createEsbuildBrowserslistTarget(targetDirectory);
 
   let jsEntryPoint: string | undefined;
@@ -241,10 +248,11 @@ async function buildStandalone(
     );
 
     // Create and write trampoline file
-    const trampolineContent = createViewTrampoline(
-      path.basename(jsEntryPoint),
+    const trampolineContent = createViewTrampoline({
+      fileName: path.basename(jsEntryPoint),
       importMap,
-    );
+      useReactCreateRoot,
+    });
 
     const trampolinePath = `${paths.appBuild}/static/js/_trampoline.js`;
     await fs.writeFile(trampolinePath, trampolineContent);
