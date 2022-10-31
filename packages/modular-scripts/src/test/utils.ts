@@ -7,6 +7,7 @@ import { promisify } from 'util';
 
 import getModularRoot from '../utils/getModularRoot';
 import type { ModularPackageJson } from '@modular-scripts/modular-types';
+import { mkdirSync } from 'fs';
 
 const rimraf = promisify(_rimraf);
 
@@ -57,11 +58,10 @@ export async function addFixturePackage(
 }
 
 /**
- * Creates a temporary Modular repo with the provided templates 'installed' and Modular node_modules symlinked
- * @param templatesPath Path to fixture to copy in
+ * Creates a temporary Modular repo with Modular node_modules symlinked
  * @returns Path to temporary directory
  */
-export function createModularTestContext(templatesPath: string): string {
+export function createModularTestContext(): string {
   // Modular node_modules are copied in the parent folder
   const tempDir = tmp.dirSync().name;
   fs.symlinkSync(
@@ -71,21 +71,7 @@ export function createModularTestContext(templatesPath: string): string {
 
   // Actual mock modular repo is nested underneath so that it can have it's own node_modules
   const tempModularRepo = path.join(tempDir, 'temp_repo');
-  const tempTemplatesPath = path.join(tempModularRepo, 'templates');
-
-  // Copy in the templates
-  fs.copySync(templatesPath, tempTemplatesPath);
-
-  // Symlink the templates into node_modules
-  const tempRepoNodeModules = path.join(tempModularRepo, 'node_modules');
-  fs.mkdirSync(tempRepoNodeModules);
-  const templates = fs.readdirSync(tempTemplatesPath);
-  templates.forEach((template) =>
-    fs.symlinkSync(
-      path.join(tempTemplatesPath, template),
-      path.join(tempRepoNodeModules, template),
-    ),
-  );
+  mkdirSync(tempModularRepo);
 
   // Create mock modular package.json
   const packageJson: Partial<ModularPackageJson> = {
@@ -113,4 +99,31 @@ export function createModularTestContext(templatesPath: string): string {
     spaces: 2,
   });
   return tempModularRepo;
+}
+
+/**
+ * Mocks the installation of templates in the provided modular repo
+ * Copies them into a Templates workspace and symlinks them in node_modules
+ * @param templatesPath Path to directory containing templates
+ * @param modularRepo Modular repo in which to install them
+ */
+export function mockInstallTemplates(
+  templatesPath: string,
+  modularRepo: string,
+): void {
+  const tempTemplatesPath = path.join(modularRepo, 'templates');
+
+  // Copy in the templates
+  fs.copySync(templatesPath, tempTemplatesPath);
+
+  // Symlink the templates into node_modules
+  const tempRepoNodeModules = path.join(modularRepo, 'node_modules');
+  fs.mkdirSync(tempRepoNodeModules);
+  const templates = fs.readdirSync(tempTemplatesPath);
+  templates.forEach((template) =>
+    fs.symlinkSync(
+      path.join(tempTemplatesPath, template),
+      path.join(tempRepoNodeModules, template),
+    ),
+  );
 }

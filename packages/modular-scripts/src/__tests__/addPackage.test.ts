@@ -7,20 +7,16 @@ import getModularRoot from '../utils/getModularRoot';
 
 import type { CoreProperties } from '@schemastore/package';
 import getAllFiles from '../utils/getAllFiles';
-import { createModularTestContext } from '../test/utils';
+import { createModularTestContext, mockInstallTemplates } from '../test/utils';
 
 const modularRoot = getModularRoot();
 
-const templatesPath = path.join(modularRoot, '__fixtures__', 'templates');
-
-// Copy app template needed for tests to fixtures
-fs.copySync(
-  path.join(modularRoot, 'packages', 'modular-template-app'),
-  path.join(templatesPath, 'modular-template-app'),
-);
-
-const tempModularRepo = createModularTestContext(templatesPath);
+// Setup temporary test context
+const tempModularRepo = createModularTestContext();
 const packagesPath = path.join(tempModularRepo, 'packages');
+
+const templatesPath = path.join(modularRoot, '__fixtures__', 'templates');
+mockInstallTemplates(templatesPath, tempModularRepo);
 
 /**
  * Reset 'packages' workspace in temporary Modular Repo
