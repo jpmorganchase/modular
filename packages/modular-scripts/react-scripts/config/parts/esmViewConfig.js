@@ -1,6 +1,7 @@
 'use strict';
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { parsePackageName } = require('../utils/esmUtils');
+const dedent = require('dedent');
 const path = require('path');
 
 function createConfig({
@@ -84,17 +85,19 @@ function getVirtualTrampoline(paths, useReactCreateRoot) {
 
   const entryPointPath = `./${relativeEntrypointPath}`;
   const content = useReactCreateRoot
-    ? `import { createRoot } from "react-dom/client";
-import React from "react";
-import Component from "${entryPointPath}";
-const container = document.getElementById("root");
-const root = createRoot(container);
-root.render(React.createElement(Component, null));`
-    : `import ReactDOM from "react-dom"
-import React from "react";
-import Component from "${entryPointPath}";
-const DOMRoot = document.getElementById("root");
-ReactDOM.render(React.createElement(Component, null), DOMRoot);`;
+    ? // use the new createRoot API with React >= 18. The old one is backwards compatible, but will warn on develop.
+      dedent(`import { createRoot } from "react-dom/client";
+            import React from "react";
+            import Component from "${entryPointPath}";
+            const container = document.getElementById("root");
+            const root = createRoot(container);
+            root.render(React.createElement(Component, null));`)
+    : // use the old ReactDOM.render API with React < 18.
+      dedent(`import ReactDOM from "react-dom"
+            import React from "react";
+            import Component from "${entryPointPath}";
+            const DOMRoot = document.getElementById("root");
+            ReactDOM.render(React.createElement(Component, null), DOMRoot);`);
 
   const base64 = Buffer.from(content).toString('base64');
   return `./src/_trampoline.js!=!data:text/javascript;base64,${base64}`;
