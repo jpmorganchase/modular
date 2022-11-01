@@ -98,23 +98,6 @@ async function start(packageName: string): Promise<void> {
     )}`,
   );
 
-  logger.debug(
-    `These are the external dependencies and their resolutions: ${JSON.stringify(
-      {
-        externalDependencies,
-        externalResolutions,
-      },
-    )}`,
-  );
-  logger.debug(
-    `These are the bundled dependencies and their resolutions: ${JSON.stringify(
-      {
-        bundledDependencies,
-        bundledResolutions,
-      },
-    )}`,
-  );
-
   const useReactCreateRoot = isReactNewApi(externalResolutions);
 
   // If you want to use webpack then we'll always use webpack. But if you've indicated
