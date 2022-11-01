@@ -19,7 +19,7 @@ import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowsersli
 export default async function build(
   target: string,
   paths: Paths,
-  importMap: Map<string, string> | undefined,
+  importMap: Map<string, string>,
   type: 'app' | 'esm-view',
 ) {
   const modularRoot = getModularRoot();
@@ -32,7 +32,7 @@ export default async function build(
   const browserTarget = createEsbuildBrowserslistTarget(paths.appPath);
 
   let plugins;
-  if (!isApp && importMap) {
+  if (!isApp) {
     plugins = [createRewriteDependenciesPlugin(importMap, browserTarget)];
   }
 

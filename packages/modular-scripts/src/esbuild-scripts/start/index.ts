@@ -63,7 +63,7 @@ class DevServer {
   private port: number;
 
   private isApp: boolean; // TODO maybe it's better to pass the type here
-  private importMap: Map<string, string> | undefined;
+  private importMap: Map<string, string>;
   private useReactCreateRoot: boolean;
 
   constructor(
@@ -72,7 +72,7 @@ class DevServer {
     host: string,
     port: number,
     isApp: boolean,
-    importMap: Map<string, string> | undefined,
+    importMap: Map<string, string>,
     useReactCreateRoot: boolean,
   ) {
     this.paths = paths;
@@ -194,7 +194,7 @@ class DevServer {
     const browserTarget = createEsbuildBrowserslistTarget(this.paths.appPath);
 
     let plugins;
-    if (!this.isApp && this.importMap) {
+    if (!this.isApp) {
       plugins = [
         createRewriteDependenciesPlugin(this.importMap, browserTarget),
       ];
@@ -367,7 +367,7 @@ class DevServer {
 export default async function start(
   target: string,
   isApp: boolean,
-  importMap: Map<string, string> | undefined,
+  importMap: Map<string, string>,
   useReactCreateRoot: boolean,
 ): Promise<void> {
   const paths = await createPaths(target);

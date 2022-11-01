@@ -143,7 +143,7 @@ async function buildStandalone(
 
   let jsEntryPoint: string | undefined;
   let cssEntryPoint: string | undefined;
-  let importMap: Map<string, string> | undefined;
+  let importMap: Map<string, string> = new Map();
 
   if (!isApp) {
     // Rewrite dependencies. This is only needed for esm-views.

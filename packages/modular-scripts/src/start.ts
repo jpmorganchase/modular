@@ -110,7 +110,7 @@ async function start(packageName: string): Promise<void> {
 
   const useReactCreateRoot = isReactNewApi(externalResolutions);
 
-  let importMap;
+  let importMap: Map<string, string> = new Map();
 
   if (isEsmView) {
     // Rewrite dependencies. This is only needed for esm-views.
