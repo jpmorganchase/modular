@@ -34,7 +34,6 @@ import sanitizeMetafile, { sanitizeFileName } from '../utils/sanitizeMetafile';
 import getModularRoot from '../../utils/getModularRoot';
 import { createRewriteDependenciesPlugin } from '../plugins/rewriteDependenciesPlugin';
 import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowserslistTarget';
-import type { Dependency } from '@schemastore/package';
 import { normalizeToPosix } from '../utils/formatPath';
 
 const RUNTIME_DIR = path.join(__dirname, 'runtime');
@@ -64,9 +63,8 @@ class DevServer {
   private port: number;
 
   private isApp: boolean; // TODO maybe it's better to pass the type here
-  private dependencies: Dependency;
-  private resolutions: Dependency;
-  private selectiveCDNResolutions: Dependency;
+  private importMap: Map<string, string>;
+  private useReactCreateRoot: boolean;
 
   constructor(
     paths: Paths,
@@ -74,18 +72,16 @@ class DevServer {
     host: string,
     port: number,
     isApp: boolean,
-    dependencies: Dependency,
-    resolutions: Dependency,
-    selectiveCDNResolutions: Dependency,
+    importMap: Map<string, string>,
+    useReactCreateRoot: boolean,
   ) {
     this.paths = paths;
     this.urls = urls;
     this.host = host;
     this.port = port;
     this.isApp = isApp;
-    this.dependencies = dependencies;
-    this.resolutions = resolutions;
-    this.selectiveCDNResolutions = selectiveCDNResolutions;
+    this.importMap = importMap;
+    this.useReactCreateRoot = useReactCreateRoot;
 
     this.firstCompilePromise = new Promise<void>((resolve) => {
       this.firstCompilePromiseResolve = resolve;
@@ -196,6 +192,14 @@ class DevServer {
 
   baseEsbuildConfig = memoize(() => {
     const browserTarget = createEsbuildBrowserslistTarget(this.paths.appPath);
+
+    let plugins;
+    if (!this.isApp) {
+      plugins = [
+        createRewriteDependenciesPlugin(this.importMap, browserTarget),
+      ];
+    }
+
     return createEsbuildConfig(this.paths, {
       write: false,
       minify: false,
@@ -203,16 +207,7 @@ class DevServer {
       chunkNames: 'static/js/[name]',
       assetNames: 'static/media/[name]',
       target: browserTarget,
-      plugins: this.isApp
-        ? undefined
-        : [
-            createRewriteDependenciesPlugin(
-              this.dependencies,
-              this.resolutions,
-              this.selectiveCDNResolutions,
-              browserTarget,
-            ),
-          ],
+      plugins,
     });
   });
 
@@ -295,22 +290,19 @@ class DevServer {
     }
   };
 
-  handleTrampoline: RequestHandler = async (
+  handleTrampoline: RequestHandler = (
     _: http.IncomingMessage,
     res: http.ServerResponse,
   ) => {
     res.setHeader('content-type', 'application/javascript');
     res.writeHead(200);
-    const baseConfig = this.baseEsbuildConfig();
-    const trampolineBuildResult = await createViewTrampoline(
-      'index.js',
-      this.paths.appSrc,
-      this.dependencies,
-      this.resolutions,
-      this.selectiveCDNResolutions,
-      baseConfig.target as string[],
-    );
-    res.end(trampolineBuildResult.outputFiles[0].text);
+
+    const trampolineBuildResult = createViewTrampoline({
+      fileName: 'index.js',
+      importMap: this.importMap,
+      useReactCreateRoot: this.useReactCreateRoot,
+    });
+    res.end(trampolineBuildResult);
   };
 
   private serveEsbuild = (
@@ -375,9 +367,8 @@ class DevServer {
 export default async function start(
   target: string,
   isApp: boolean,
-  packageDependencies: Dependency,
-  packageResolutions: Dependency,
-  selectiveCDNResolutions: Dependency,
+  importMap: Map<string, string>,
+  useReactCreateRoot: boolean,
 ): Promise<void> {
   const paths = await createPaths(target);
   const host = getHost();
@@ -394,9 +385,8 @@ export default async function start(
     host,
     port,
     isApp,
-    packageDependencies,
-    packageResolutions,
-    selectiveCDNResolutions,
+    importMap,
+    useReactCreateRoot,
   );
 
   const server = await devServer.start();

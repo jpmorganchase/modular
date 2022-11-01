@@ -16,6 +16,8 @@ import createEsbuildBrowserslistTarget from './utils/createEsbuildBrowserslistTa
 import prompts from 'prompts';
 import { getPackageDependencies } from './utils/getPackageDependencies';
 import { filterDependencies } from './utils/filterDependencies';
+import { rewriteDependencies } from './utils/rewriteDependencies';
+import { isReactNewApi } from './utils/isReactNewApi';
 
 async function start(packageName: string): Promise<void> {
   let target = packageName;
@@ -89,19 +91,43 @@ async function start(packageName: string): Promise<void> {
       workspaceInfo,
     });
 
+  logger.debug(
+    `These are the external dependencies and their resolutions: ${JSON.stringify(
+      {
+        externalDependencies,
+        externalResolutions,
+      },
+    )}`,
+  );
+  logger.debug(
+    `These are the bundled dependencies and their resolutions: ${JSON.stringify(
+      {
+        bundledDependencies,
+        bundledResolutions,
+      },
+    )}`,
+  );
+
+  const useReactCreateRoot = isReactNewApi(externalResolutions);
+
+  let importMap: Map<string, string> = new Map();
+
+  if (isEsmView) {
+    // Rewrite dependencies. This is only needed for esm-views.
+    importMap = rewriteDependencies({
+      externalDependencies,
+      externalResolutions,
+      selectiveCDNResolutions,
+    });
+  }
+
   // If you want to use webpack then we'll always use webpack. But if you've indicated
   // you want esbuild - then we'll switch you to the new fancy world.
   if (!useWebpack || useEsbuild) {
     const { default: startEsbuildApp } = await import(
       './esbuild-scripts/start'
     );
-    await startEsbuildApp(
-      target,
-      !isEsmView,
-      externalDependencies,
-      externalResolutions,
-      selectiveCDNResolutions,
-    );
+    await startEsbuildApp(target, !isEsmView, importMap, useReactCreateRoot);
   } else {
     const startScript = require.resolve(
       'modular-scripts/react-scripts/scripts/start.js',
@@ -123,17 +149,8 @@ async function start(packageName: string): Promise<void> {
         MODULAR_PACKAGE: target,
         MODULAR_PACKAGE_NAME: targetName,
         MODULAR_IS_APP: JSON.stringify(!isEsmView),
-        MODULAR_PACKAGE_DEPS: JSON.stringify({
-          externalDependencies,
-          bundledDependencies,
-        }),
-        MODULAR_PACKAGE_RESOLUTIONS: JSON.stringify({
-          externalResolutions,
-          bundledResolutions,
-        }),
-        MODULAR_PACKAGE_SELECTIVE_CDN_RESOLUTIONS: JSON.stringify(
-          selectiveCDNResolutions,
-        ),
+        MODULAR_IMPORT_MAP: JSON.stringify(Object.fromEntries(importMap || [])),
+        MODULAR_USE_REACT_CREATE_ROOT: JSON.stringify(useReactCreateRoot),
       },
     });
   }

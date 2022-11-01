@@ -20,10 +20,8 @@ const {
   createConfig: createProductionConfig,
 } = require('./parts/productionConfig');
 const { createConfig: createBaseConfig } = require('./parts/baseConfig');
-const { createExternalDependenciesMap } = require('./utils/esmUtils');
 
 const isApp = process.env.MODULAR_IS_APP === 'true';
-const isEsmView = !isApp;
 
 // If it's an app, set it at ESBUILD_TARGET_FACTORY or default to es2015
 // If it's not an app it's an ESM view, then we need es2020
@@ -33,18 +31,13 @@ const esbuildTargetFactory = isApp
     : 'es2015'
   : 'es2020';
 
-const { externalDependencies } = process.env.MODULAR_PACKAGE_DEPS
-  ? JSON.parse(process.env.MODULAR_PACKAGE_DEPS)
+const dependencyMap = process.env.MODULAR_IMPORT_MAP
+  ? JSON.parse(process.env.MODULAR_IMPORT_MAP)
   : {};
 
-const { externalResolutions } = process.env.MODULAR_PACKAGE_RESOLUTIONS
-  ? JSON.parse(process.env.MODULAR_PACKAGE_RESOLUTIONS)
-  : {};
-
-const selectiveCDNResolutions = process.env
-  .MODULAR_PACKAGE_SELECTIVE_CDN_RESOLUTIONS
-  ? JSON.parse(process.env.MODULAR_PACKAGE_SELECTIVE_CDN_RESOLUTIONS)
-  : {};
+const useReactCreateRoot = process.env.MODULAR_USE_REACT_CREATE_ROOT
+  ? JSON.parse(process.env.MODULAR_USE_REACT_CREATE_ROOT)
+  : false;
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -59,26 +52,7 @@ const useTypeScript = fs.existsSync(paths.appTsConfig);
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
 module.exports = function (webpackEnv) {
-  const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
-  const isEsmViewDevelopment = isEsmView & isEnvDevelopment;
-
-  // This is needed if we're serving a ESM view in development node, since it won't be defined in the view dependencies.
-  if (isEsmViewDevelopment && externalDependencies.react) {
-    externalDependencies['react-dom'] = externalDependencies.react;
-  }
-  if (isEsmViewDevelopment && externalResolutions.react) {
-    externalResolutions['react-dom'] = externalResolutions.react;
-  }
-
-  // Create a map of external dependencies if we're building a ESM view
-  const dependencyMap = isEsmView
-    ? createExternalDependenciesMap({
-        externalDependencies,
-        externalResolutions,
-        selectiveCDNResolutions,
-      })
-    : {};
 
   // Variable used for enabling profiling in Production
   // passed into alias object. Uses a flag if passed into the build command
@@ -108,6 +82,7 @@ module.exports = function (webpackEnv) {
         dependencyMap,
         paths,
         isEnvProduction,
+        useReactCreateRoot,
       });
 
   // Specific configuration based on build type (production, development)
