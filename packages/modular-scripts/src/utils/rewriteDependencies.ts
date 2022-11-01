@@ -4,6 +4,14 @@ const externalCdnTemplate =
   process.env.EXTERNAL_CDN_TEMPLATE ??
   'https://cdn.skypack.dev/[name]@[version]';
 
+/**
+ * Rewrite maps of package,version to package,CDN URL
+ * @param  {Dependency} externalDependencies An object mapping package names to version as specified in the workspace or the root's package.json (ranges allowed).
+ * @param  {Dependency} externalResolutions An object mapping package names to version as specified in the lockfile (only exact versions).
+ * @param  {Dependency} selectiveCDNResolutions An object mapping package names to selective dependency resolutions, as specified by the resolution field in the package.json (see https://classic.yarnpkg.com/lang/en/docs/selective-version-resolutions/).
+ * @return {importMap} A Map mapping package names to the correspondent CDN URL to rewrite, according to the template contained in EXTERNAL_CDN_TEMPLATE.
+ */
+
 interface RewriteDependenciesParams {
   externalDependencies: Dependency;
   externalResolutions: Dependency;
