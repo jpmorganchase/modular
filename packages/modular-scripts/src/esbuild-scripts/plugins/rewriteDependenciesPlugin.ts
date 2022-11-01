@@ -1,5 +1,5 @@
 import * as esbuild from 'esbuild';
-import { rewriteModuleSpecifier } from '../../utils/getImportMap';
+import { rewriteModuleSpecifier } from '../../utils/buildImportMap';
 
 export function createRewriteDependenciesPlugin(
   importMap: Map<string, string>,

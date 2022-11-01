@@ -1,6 +1,6 @@
 import { filterDependencies } from './filterDependencies';
 import { getPackageDependencies } from './getPackageDependencies';
-import { getImportMap, rewriteModuleSpecifier } from './getImportMap';
+import { buildImportMap, rewriteModuleSpecifier } from './buildImportMap';
 import getWorkspaceInfo from './getWorkspaceInfo';
 import type { Dependency } from '@schemastore/package';
 
@@ -35,7 +35,7 @@ export async function getDependencyInfo(target: string): Promise<{
       workspaceInfo,
     });
 
-  const importMap = getImportMap({
+  const importMap = buildImportMap({
     externalDependencies,
     externalResolutions,
     selectiveCDNResolutions,
