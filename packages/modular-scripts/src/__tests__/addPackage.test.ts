@@ -134,7 +134,11 @@ describe('When adding a module from a template without a files filter', () => {
   });
 
   it("copies all files in the template's package.json files field", () => {
-    expect(tree(newModulePath)).toMatchInlineSnapshot(`
+    expect(
+      tree(newModulePath, {
+        hashIgnores: ['CHANGELOG.md', 'package.json', 'tsconfig.json'],
+      }),
+    ).toMatchInlineSnapshot(`
       "no-filter-module
       ├─ CHANGELOG.md
       ├─ package.json
@@ -144,7 +148,7 @@ describe('When adding a module from a template without a files filter', () => {
       │  ├─ __tests__
       │  │  └─ no-filter.test.ts #ez9wna
       │  └─ index.tsx #1woe74n
-      └─ tsconfig.json #6rw46b"
+      └─ tsconfig.json"
     `);
   });
 });
@@ -173,14 +177,18 @@ describe('When adding a module from a template with a files filter', () => {
   });
 
   it("copies only files declared in the template's package.json files field, and the package.json itself", () => {
-    expect(tree(newModulePath)).toMatchInlineSnapshot(`
+    expect(
+      tree(newModulePath, {
+        hashIgnores: ['CHANGELOG.md', 'package.json', 'tsconfig.json'],
+      }),
+    ).toMatchInlineSnapshot(`
       "filter-module
       ├─ package.json
       ├─ src
       │  ├─ __tests__
       │  │  └─ filter.test.ts #ez9wna
       │  └─ index.tsx #1woe74n
-      └─ tsconfig.json #6rw46b"
+      └─ tsconfig.json"
     `);
   });
 });
