@@ -24,7 +24,7 @@ function createConfig({
   };
 }
 
-function createPluginConfig({ isEnvProduction }) {
+function createPluginConfig({ isEnvProduction, styleImports }) {
   return {
     plugins: [
       // We need to provide a synthetic index.html in case we're starting a ESM view
@@ -36,6 +36,12 @@ function createPluginConfig({ isEnvProduction }) {
               inject: true,
               templateContent: `
                 <!DOCTYPE html>
+                <head>
+                  ${styleImports?.map(
+                    (importUrl) =>
+                      `<link rel="stylesheet" href="${importUrl}"></script>`,
+                  )}
+                </head>
                 <html>
                   <body>
                     <div id="root"></div>

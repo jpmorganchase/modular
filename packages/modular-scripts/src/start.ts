@@ -98,8 +98,6 @@ async function start(packageName: string): Promise<void> {
     )}`,
   );
 
-  console.log(styleImports);
-
   logger.debug(
     `These are the external dependencies and their resolutions: ${JSON.stringify(
       {
@@ -149,6 +147,7 @@ async function start(packageName: string): Promise<void> {
         MODULAR_IS_APP: JSON.stringify(!isEsmView),
         MODULAR_IMPORT_MAP: JSON.stringify(Object.fromEntries(importMap || [])),
         MODULAR_USE_REACT_CREATE_ROOT: JSON.stringify(useReactCreateRoot),
+        MODULAR_STYLE_IMPORT_MAPS: JSON.stringify([...styleImports]),
       },
     });
   }

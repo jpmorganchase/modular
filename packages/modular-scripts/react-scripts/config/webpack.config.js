@@ -26,18 +26,15 @@ const isApp = process.env.MODULAR_IS_APP === 'true';
 // If it's an app, set it at ESBUILD_TARGET_FACTORY or default to es2015
 // If it's not an app it's an ESM view, then we need es2020
 const esbuildTargetFactory = isApp
-  ? process.env.ESBUILD_TARGET_FACTORY
-    ? JSON.parse(process.env.ESBUILD_TARGET_FACTORY)
-    : 'es2015'
+  ? getEnvironmentVariable('ESBUILD_TARGET_FACTORY', 'es2015')
   : 'es2020';
 
-const dependencyMap = process.env.MODULAR_IMPORT_MAP
-  ? JSON.parse(process.env.MODULAR_IMPORT_MAP)
-  : {};
-
-const useReactCreateRoot = process.env.MODULAR_USE_REACT_CREATE_ROOT
-  ? JSON.parse(process.env.MODULAR_USE_REACT_CREATE_ROOT)
-  : false;
+const dependencyMap = getEnvironmentVariable('MODULAR_IMPORT_MAP', {});
+const useReactCreateRoot = getEnvironmentVariable(
+  'MODULAR_USE_REACT_CREATE_ROOT',
+  false,
+);
+const styleImports = getEnvironmentVariable('MODULAR_STYLE_IMPORT_MAPS', []);
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -99,6 +96,7 @@ module.exports = function (webpackEnv) {
     isEnvProduction,
     shouldUseSourceMap,
     useTypeScript,
+    styleImports,
   });
 
   // Merge all configurations into the final one
@@ -154,3 +152,8 @@ module.exports = function (webpackEnv) {
 
   return webpackConfig;
 };
+
+function getEnvironmentVariable(varName, defaultValue) {
+  if (process.env[varName]) return JSON.parse(process.env[varName]);
+  return defaultValue;
+}
