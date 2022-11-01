@@ -1,5 +1,4 @@
 import { paramCase as toParamCase } from 'change-case';
-import semver from 'semver';
 
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import isModularType from './utils/isModularType';
@@ -18,6 +17,7 @@ import prompts from 'prompts';
 import { getPackageDependencies } from './utils/getPackageDependencies';
 import { filterDependencies } from './utils/filterDependencies';
 import { rewriteDependencies } from './utils/rewriteDependencies';
+import { isReactNewApi } from './utils/isReactNewApi';
 
 async function start(packageName: string): Promise<void> {
   let target = packageName;
@@ -108,10 +108,7 @@ async function start(packageName: string): Promise<void> {
     )}`,
   );
 
-  const reactVersion = externalResolutions?.['react'];
-  const useReactCreateRoot = Boolean(
-    reactVersion && semver.gte(reactVersion, '18.0.0'),
-  );
+  const useReactCreateRoot = isReactNewApi(externalResolutions);
 
   let importMap;
 
