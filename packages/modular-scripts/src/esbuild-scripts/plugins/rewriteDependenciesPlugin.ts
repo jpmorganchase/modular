@@ -3,7 +3,6 @@ import { rewriteModuleSpecifier } from '../../utils/getImportMap';
 
 export function createRewriteDependenciesPlugin(
   importMap: Map<string, string>,
-  target?: string[],
 ): esbuild.Plugin {
   const dependencyRewritePlugin: esbuild.Plugin = {
     name: 'dependency-rewrite',

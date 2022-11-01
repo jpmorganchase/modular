@@ -15,6 +15,7 @@ import * as logger from './utils/logger';
 import createEsbuildBrowserslistTarget from './utils/createEsbuildBrowserslistTarget';
 import prompts from 'prompts';
 import { getDependencyInfo } from './utils/getDependencyInfo';
+import { isReactNewApi } from './utils/isReactNewApi';
 
 async function start(packageName: string): Promise<void> {
   let target = packageName;
@@ -99,13 +100,32 @@ async function start(packageName: string): Promise<void> {
 
   console.log(styleImports);
 
+  logger.debug(
+    `These are the external dependencies and their resolutions: ${JSON.stringify(
+      {
+        externalDependencies,
+        externalResolutions,
+      },
+    )}`,
+  );
+  logger.debug(
+    `These are the bundled dependencies and their resolutions: ${JSON.stringify(
+      {
+        bundledDependencies,
+        bundledResolutions,
+      },
+    )}`,
+  );
+
+  const useReactCreateRoot = isReactNewApi(externalResolutions);
+
   // If you want to use webpack then we'll always use webpack. But if you've indicated
   // you want esbuild - then we'll switch you to the new fancy world.
   if (!useWebpack || useEsbuild) {
     const { default: startEsbuildApp } = await import(
       './esbuild-scripts/start'
     );
-    await startEsbuildApp(target, !isEsmView, importMap);
+    await startEsbuildApp(target, !isEsmView, importMap, useReactCreateRoot);
   } else {
     const startScript = require.resolve(
       'modular-scripts/react-scripts/scripts/start.js',
@@ -128,6 +148,7 @@ async function start(packageName: string): Promise<void> {
         MODULAR_PACKAGE_NAME: targetName,
         MODULAR_IS_APP: JSON.stringify(!isEsmView),
         MODULAR_IMPORT_MAP: JSON.stringify(Object.fromEntries(importMap || [])),
+        MODULAR_USE_REACT_CREATE_ROOT: JSON.stringify(useReactCreateRoot),
       },
     });
   }

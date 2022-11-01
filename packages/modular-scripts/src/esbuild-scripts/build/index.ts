@@ -33,7 +33,7 @@ export default async function build(
 
   let plugins;
   if (!isApp && importMap) {
-    plugins = [createRewriteDependenciesPlugin(importMap, browserTarget)];
+    plugins = [createRewriteDependenciesPlugin(importMap)];
   }
 
   try {

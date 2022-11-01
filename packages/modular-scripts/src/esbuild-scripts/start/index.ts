@@ -64,6 +64,7 @@ class DevServer {
 
   private isApp: boolean; // TODO maybe it's better to pass the type here
   private importMap: Map<string, string> | undefined;
+  private useReactCreateRoot: boolean;
 
   constructor(
     paths: Paths,
@@ -72,6 +73,7 @@ class DevServer {
     port: number,
     isApp: boolean,
     importMap: Map<string, string> | undefined,
+    useReactCreateRoot: boolean,
   ) {
     this.paths = paths;
     this.urls = urls;
@@ -79,6 +81,7 @@ class DevServer {
     this.port = port;
     this.isApp = isApp;
     this.importMap = importMap;
+    this.useReactCreateRoot = useReactCreateRoot;
 
     this.firstCompilePromise = new Promise<void>((resolve) => {
       this.firstCompilePromiseResolve = resolve;
@@ -192,9 +195,7 @@ class DevServer {
 
     let plugins;
     if (!this.isApp && this.importMap) {
-      plugins = [
-        createRewriteDependenciesPlugin(this.importMap, browserTarget),
-      ];
+      plugins = [createRewriteDependenciesPlugin(this.importMap)];
     }
 
     return createEsbuildConfig(this.paths, {
@@ -293,10 +294,12 @@ class DevServer {
   ) => {
     res.setHeader('content-type', 'application/javascript');
     res.writeHead(200);
-    const trampolineBuildResult = createViewTrampoline(
-      'index.js',
-      this.importMap,
-    );
+
+    const trampolineBuildResult = createViewTrampoline({
+      fileName: 'index.js',
+      importMap: this.importMap,
+      useReactCreateRoot: this.useReactCreateRoot,
+    });
     res.end(trampolineBuildResult);
   };
 
@@ -363,6 +366,7 @@ export default async function start(
   target: string,
   isApp: boolean,
   importMap: Map<string, string> | undefined,
+  useReactCreateRoot: boolean,
 ): Promise<void> {
   const paths = await createPaths(target);
   const host = getHost();
@@ -373,7 +377,15 @@ export default async function start(
     port,
     paths.publicUrlOrPath.slice(0, -1),
   );
-  const devServer = new DevServer(paths, urls, host, port, isApp, importMap);
+  const devServer = new DevServer(
+    paths,
+    urls,
+    host,
+    port,
+    isApp,
+    importMap,
+    useReactCreateRoot,
+  );
 
   const server = await devServer.start();
 

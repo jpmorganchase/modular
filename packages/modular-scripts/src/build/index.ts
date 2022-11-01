@@ -35,6 +35,7 @@ import {
   esbuildMeasureFileSizesBeforeBuild,
 } from './esbuildFileSizeReporter';
 import { getDependencyInfo } from '../utils/getDependencyInfo';
+import { isReactNewApi } from '../utils/isReactNewApi';
 
 async function buildStandalone(
   target: string,
@@ -123,6 +124,7 @@ async function buildStandalone(
     )}`,
   );
 
+  const useReactCreateRoot = isReactNewApi(externalResolutions);
   const browserTarget = createEsbuildBrowserslistTarget(targetDirectory);
 
   let jsEntryPoint: string | undefined;
@@ -156,6 +158,7 @@ async function buildStandalone(
         MODULAR_PACKAGE_NAME: targetName,
         MODULAR_IS_APP: JSON.stringify(isApp),
         MODULAR_IMPORT_MAP: JSON.stringify(Object.fromEntries(importMap || [])),
+        MODULAR_USE_REACT_CREATE_ROOT: JSON.stringify(useReactCreateRoot),
       },
     });
 
@@ -221,10 +224,11 @@ async function buildStandalone(
     );
 
     // Create and write trampoline file
-    const trampolineContent = createViewTrampoline(
-      path.basename(jsEntryPoint),
+    const trampolineContent = createViewTrampoline({
+      fileName: path.basename(jsEntryPoint),
       importMap,
-    );
+      useReactCreateRoot,
+    });
 
     const trampolinePath = `${paths.appBuild}/static/js/_trampoline.js`;
     await fs.writeFile(trampolinePath, trampolineContent);

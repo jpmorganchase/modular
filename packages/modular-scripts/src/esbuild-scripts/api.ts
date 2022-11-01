@@ -1,6 +1,7 @@
 import * as esbuild from 'esbuild';
 import * as fs from 'fs-extra';
 import * as parse5 from 'parse5';
+import dedent from 'dedent';
 import escapeStringRegexp from 'escape-string-regexp';
 import type { Paths } from '../utils/createPaths';
 import getModularRoot from '../utils/getModularRoot';
@@ -9,10 +10,15 @@ import { normalizeToPosix } from './utils/formatPath';
 
 type FileType = '.css' | '.js';
 
-export function createViewTrampoline(
-  fileName: string,
-  importMap: Map<string, string> | undefined,
-): string {
+export function createViewTrampoline({
+  fileName,
+  importMap,
+  useReactCreateRoot,
+}: {
+  fileName: string;
+  importMap: Map<string, string> | undefined;
+  useReactCreateRoot: boolean;
+}): string {
   const fileRelativePath = `./${fileName}`;
 
   const reactDomCdnLocation = importMap?.get('react-dom');
@@ -26,11 +32,20 @@ export function createViewTrampoline(
     );
   }
 
-  return `import ReactDOM from "${reactDomCdnLocation}";
-import React from "${reactCdnLocation}";
-import Component from "${fileRelativePath}";
-var DOMRoot = document.getElementById("root");
-ReactDOM.render(React.createElement(Component, null), DOMRoot);`;
+  return useReactCreateRoot
+    ? // use the new createRoot API with React >= 18. The old one is backwards compatible, but will warn on develop.
+      dedent(`import { createRoot } from "${reactDomCdnLocation}/client";
+              import React from "${reactCdnLocation}";
+              import Component from "${fileRelativePath}";
+              var container = document.getElementById("root");
+              var root = createRoot(container);
+              root.render(React.createElement(Component, null));`)
+    : // use the old ReactDOM.render API with React < 18.
+      dedent(`import ReactDOM from "${reactDomCdnLocation}";
+              import React from "${reactCdnLocation}";
+              import Component from "${fileRelativePath}";
+              var DOMRoot = document.getElementById("root");
+              ReactDOM.render(React.createElement(Component, null), DOMRoot);`);
 }
 
 export function getEntryPoint(
