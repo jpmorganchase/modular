@@ -12,8 +12,7 @@ import LineFilterOutStream from './utils/LineFilterOutStream';
 import { parsePackageName } from './utils/parsePackageName';
 import { getWorkspaceInfo } from './utils/getWorkspaceInfo';
 import { isInWorkspaces } from './utils/isInWorkspaces';
-import packlist from 'npm-packlist';
-import Arborist from '@npmcli/arborist';
+import globby from 'globby';
 
 import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
@@ -215,22 +214,29 @@ async function addPackage({
   // Create new package directory
   await fs.mkdirp(newPackagePath);
 
-  const arborist = new Arborist({ path: templatePath });
-  const tree = await arborist.loadActual();
-  const filesToCopy = await packlist(tree);
-
-  filesToCopy.forEach((file) => {
-    if (file !== 'package.json')
-      fs.copySync(
-        path.join(templatePath, file),
-        path.join(newPackagePath, file),
-      );
+  // Copy files from template directory to new package directory
+  await fs.copy(templatePath, newPackagePath, {
+    recursive: true,
+    filter(src) {
+      return !(path.basename(src) === 'package.json');
+    },
   });
 
   const packageFilePaths = getAllFiles(newPackagePath);
 
+  // If we get our package locally we need to allowlist files like yarn publish does
+  // If package.json specifies "files" to include, filter, otherwise allow all files
+  const packageAllowlist = globby
+    .sync(modularTemplatePackageJson.files || ['**'], {
+      cwd: newPackagePath,
+      absolute: true,
+    })
+    .map((filePath) => path.normalize(filePath));
+
   for (const packageFilePath of packageFilePaths) {
-    if (/\.(ts|tsx|js|jsx|json|md|txt)$/i.test(packageFilePath)) {
+    if (!packageAllowlist.includes(packageFilePath)) {
+      fs.removeSync(packageFilePath);
+    } else if (/\.(ts|tsx|js|jsx|json|md|txt)$/i.test(packageFilePath)) {
       fs.writeFileSync(
         packageFilePath,
         fs
