@@ -123,7 +123,13 @@ async function start(packageName: string): Promise<void> {
     const { default: startEsbuildApp } = await import(
       './esbuild-scripts/start'
     );
-    await startEsbuildApp(target, !isEsmView, importMap, useReactCreateRoot);
+    await startEsbuildApp({
+      target,
+      isApp: !isEsmView,
+      importMap,
+      useReactCreateRoot,
+      styleImports,
+    });
   } else {
     const startScript = require.resolve(
       'modular-scripts/react-scripts/scripts/start.js',

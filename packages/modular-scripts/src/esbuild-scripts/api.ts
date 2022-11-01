@@ -85,6 +85,7 @@ export async function createIndex({
   includeRuntime,
   indexContent,
   includeTrampoline,
+  styleImports,
 }: {
   paths: Paths;
   metafile: esbuild.Metafile | undefined;
@@ -92,6 +93,7 @@ export async function createIndex({
   includeRuntime: boolean;
   indexContent?: string;
   includeTrampoline?: boolean;
+  styleImports?: Set<string>;
 }): Promise<string> {
   const index =
     indexContent ?? (await fs.readFile(paths.appHtml, { encoding: 'utf-8' }));
@@ -109,6 +111,7 @@ export async function createIndex({
     replacements,
     includeRuntime,
     includeTrampoline,
+    styleImports,
   });
 }
 
