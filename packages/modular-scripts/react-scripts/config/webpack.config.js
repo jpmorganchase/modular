@@ -35,9 +35,9 @@ const dependencyMap = process.env.MODULAR_IMPORT_MAP
   ? JSON.parse(process.env.MODULAR_IMPORT_MAP)
   : {};
 
-const useReactCreateRoot = JSON.parse(
-  process.env.MODULAR_USE_REACT_CREATE_ROOT,
-);
+const useReactCreateRoot = process.env.MODULAR_USE_REACT_CREATE_ROOT
+  ? JSON.parse(process.env.MODULAR_USE_REACT_CREATE_ROOT)
+  : false;
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';

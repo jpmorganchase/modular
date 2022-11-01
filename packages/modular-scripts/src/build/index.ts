@@ -187,6 +187,7 @@ async function buildStandalone(
         MODULAR_PACKAGE_NAME: targetName,
         MODULAR_IS_APP: JSON.stringify(isApp),
         MODULAR_IMPORT_MAP: JSON.stringify(Object.fromEntries(importMap || [])),
+        MODULAR_USE_REACT_CREATE_ROOT: JSON.stringify(useReactCreateRoot),
       },
     });
 
