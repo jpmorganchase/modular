@@ -32,7 +32,7 @@ function cleanup() {
 
 function modular(str: string, opts: Record<string, unknown> = {}) {
   return execa('yarnpkg', ['modular', ...str.split(' '), '--verbose'], {
-    cwd: modularRoot,
+    cwd: tempModularRepo,
     cleanup: true,
     stdio: 'inherit',
     ...opts,
