@@ -13,6 +13,10 @@ const modularRoot = getModularRoot();
 
 // Setup temporary test context
 const tempModularRepo = createModularTestContext();
+console.log(`Temp Modular Repo: ${tempModularRepo}`);
+if (fs.existsSync(tempModularRepo)) {
+  console.log('Exists');
+}
 const packagesPath = path.join(tempModularRepo, 'packages');
 
 const templatesPath = path.join(modularRoot, '__fixtures__', 'templates');
