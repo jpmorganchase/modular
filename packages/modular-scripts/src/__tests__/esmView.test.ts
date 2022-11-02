@@ -28,6 +28,7 @@ const { getNodeText } = queries;
 // These tests must be executed sequentially with `--runInBand`.
 
 const packagesPath = path.join(getModularRoot(), 'packages');
+const distPath = path.join(getModularRoot(), 'dist');
 
 function modular(str: string, opts: Record<string, unknown> = {}) {
   return execa('yarnpkg', ['modular', ...str.split(' ')], {
@@ -299,6 +300,24 @@ describe('modular-scripts', () => {
       outputJsEntrypointPath = manifestInfo.jsEntrypointPath;
     });
 
+    it('THEN a manifest is generated with the style-cdn field pointing to the external CSS dependency, rewritten to CDN', async () => {
+      const outputManifest = path.join(distPath, targetedView, 'package.json');
+      const manifestContent = (await fs.readJSON(
+        outputManifest,
+      )) as CoreProperties;
+      expect(manifestContent['style-cdn']).toEqual([
+        'https://mycustomcdn.net/regular-table@^0.5.6/dist/css/material.css',
+      ]);
+    });
+
+    it('THEN the synthetic index.html has a style tags pointing to the external CSS dependencies, rewritten to CDN', async () => {
+      const outputIndex = path.join(distPath, targetedView, 'index.html');
+      const indexContent = await fs.readFile(outputIndex, 'utf-8');
+      expect(indexContent).toContain(
+        '<link rel="stylesheet"href="https://mycustomcdn.net/regular-table@^0.5.6/dist/css/material.css">',
+      );
+    });
+
     it('THEN rewrites the dependencies', async () => {
       const baseDir = path.join(
         modularRoot,
@@ -316,6 +335,8 @@ describe('modular-scripts', () => {
       expect(indexFile).toContain(
         `https://mycustomcdn.net/lodash.merge@^4.6.2`,
       );
+      // CSS external dependencies are not rewritten in the source
+      expect(indexFile).not.toContain('material.css');
     });
 
     it('THEN matches the entrypoint snapshot', async () => {
