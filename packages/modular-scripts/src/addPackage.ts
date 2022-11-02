@@ -157,7 +157,9 @@ async function addPackage({
 
   try {
     logger.log(`Looking for template ${templateName} in project...`);
-    templatePackageJsonPath = require.resolve(installedPackageJsonPath);
+    templatePackageJsonPath = require.resolve(installedPackageJsonPath, {
+      paths: [modularRoot],
+    });
   } catch (e) {
     logger.log(
       `Installing template package ${templateName} from registry, this may take a moment...`,
@@ -185,7 +187,9 @@ async function addPackage({
     }
 
     await templateInstallSubprocess;
-    templatePackageJsonPath = require.resolve(installedPackageJsonPath);
+    templatePackageJsonPath = require.resolve(installedPackageJsonPath, {
+      paths: [modularRoot],
+    });
   }
 
   const modularTemplatePackageJson = (await fs.readJSON(

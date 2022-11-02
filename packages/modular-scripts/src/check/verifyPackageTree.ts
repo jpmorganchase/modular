@@ -15,6 +15,7 @@ import type {
   JSONSchemaForNPMPackageJsonFiles as PackageJson,
 } from '@schemastore/package';
 import * as logger from '../utils/logger';
+import getModularRoot from '../utils/getModularRoot';
 
 const DEPS_TO_CHECK = [
   // These are packages most likely to break in practice.
@@ -47,7 +48,9 @@ export async function check(): Promise<boolean> {
   });
   // Verify we don't have other versions up the tree
   const startDirectory = path.dirname(
-    require.resolve('modular-scripts/package.json'),
+    require.resolve('modular-scripts/package.json', {
+      paths: [getModularRoot()],
+    }),
   );
 
   for (const dep of DEPS_TO_CHECK) {
@@ -57,7 +60,7 @@ export async function check(): Promise<boolean> {
     // in which case we want to bail out
     while (currentDir !== path.resolve('/')) {
       currentDir = path.resolve(currentDir, '..');
-
+      console.log(currentDir);
       const maybeNodeModules = path.resolve(currentDir, 'node_modules');
       if (!fs.existsSync(maybeNodeModules)) {
         continue;
