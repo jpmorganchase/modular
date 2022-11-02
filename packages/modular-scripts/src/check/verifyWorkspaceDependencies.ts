@@ -6,20 +6,20 @@ import * as logger from '../utils/logger';
 
 export async function check(target?: string): Promise<boolean> {
   let valid = true;
-
+  console.log('Running workspace dependencies check');
   const modularRoot = getModularRoot();
-
+  console.log(`Modular root per workspace deps: ${modularRoot}`);
   // ensure that workspaces are setup correctly with yarn
   // init is a special case where we don't already need to be in a modular repository
   // in this case there's no use checking the workspaces yet because we're setting
   // up a new folder
   const workspace = await getWorkspaceInfo(target);
-
   /**
    * Validate the structure of the workspace to ensure there's no mismatched dependencies and that
    * all the workspaces are valid modular package types.
    */
   for (const [packageName, packageInfo] of Object.entries(workspace)) {
+    console.log(`Package Name: ${packageName}`);
     if (packageInfo.mismatchedWorkspaceDependencies.length) {
       logger.error(
         `${packageName} has mismatchedWorkspaceDependencies ${packageInfo.mismatchedWorkspaceDependencies.join(
