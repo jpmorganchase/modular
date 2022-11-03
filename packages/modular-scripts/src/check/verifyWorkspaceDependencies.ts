@@ -19,7 +19,6 @@ export async function check(target?: string): Promise<boolean> {
    * all the workspaces are valid modular package types.
    */
   for (const [packageName, packageInfo] of Object.entries(workspace)) {
-    console.log(`Package Name: ${packageName}`);
     if (packageInfo.mismatchedWorkspaceDependencies.length) {
       logger.error(
         `${packageName} has mismatchedWorkspaceDependencies ${packageInfo.mismatchedWorkspaceDependencies.join(

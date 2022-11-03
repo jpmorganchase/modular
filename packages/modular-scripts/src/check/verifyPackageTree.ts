@@ -52,7 +52,7 @@ export async function check(): Promise<boolean> {
       paths: [getModularRoot()],
     }),
   );
-
+  let logOutCount = 0;
   for (const dep of DEPS_TO_CHECK) {
     let currentDir = startDirectory;
 
@@ -60,7 +60,10 @@ export async function check(): Promise<boolean> {
     // in which case we want to bail out
     while (currentDir !== path.resolve('/')) {
       currentDir = path.resolve(currentDir, '..');
-      console.log(currentDir);
+      if (logOutCount < 1000) {
+        console.log(currentDir);
+        logOutCount++;
+      }
       const maybeNodeModules = path.resolve(currentDir, 'node_modules');
       if (!fs.existsSync(maybeNodeModules)) {
         continue;
