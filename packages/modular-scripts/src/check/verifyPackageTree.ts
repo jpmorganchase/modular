@@ -58,7 +58,9 @@ export async function check(): Promise<boolean> {
 
     // We've reached the root of the modular repo
     // in which case we want to bail out
-    while (currentDir !== path.resolve('/')) {
+    // Stop if we've reached the drive's root
+    const root = path.parse(startDirectory).root;
+    while (currentDir !== path.resolve('/') && currentDir !== root) {
       currentDir = path.resolve(currentDir, '..');
       if (logOutCount < 1000) {
         console.log(currentDir);
