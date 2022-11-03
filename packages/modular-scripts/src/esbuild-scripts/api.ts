@@ -165,7 +165,7 @@ function compileIndex({
     [...styleImports].forEach((importUrl) =>
       head.childNodes.push(
         ...parse5.parseFragment(
-          `<link rel="stylesheet" href="${importUrl}"></script>`,
+          `<link rel="stylesheet" href="${importUrl}" />`,
         ).childNodes,
       ),
     );
