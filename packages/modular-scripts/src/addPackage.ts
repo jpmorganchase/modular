@@ -300,6 +300,12 @@ function getNewPackageDetails({
   targetPath: string;
 }) {
   const { module } = parsePackageName(name);
+
+  if (!module) {
+    throw new Error(
+      `Package name "${name}" is invalid: can't parse module name.`,
+    );
+  }
   const packageDir = path.join(module);
   const componentName = toPascalCase(module);
   const packagePath = path.resolve(path.join(targetPath, packageDir));

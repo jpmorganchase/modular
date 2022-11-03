@@ -10,8 +10,6 @@ import * as logger from '../utils/logger';
 import getModularRoot from '../utils/getModularRoot';
 import actionPreflightCheck from '../utils/actionPreflightCheck';
 import { getModularType } from '../utils/isModularType';
-import { filterDependencies } from '../utils/filterDependencies';
-import getWorkspaceInfo from '../utils/getWorkspaceInfo';
 import execAsync from '../utils/execAsync';
 import getLocation from '../utils/getLocation';
 import { setupEnvForDirectory } from '../utils/setupEnv';
@@ -36,8 +34,7 @@ import {
   createEsbuildAssets,
   esbuildMeasureFileSizesBeforeBuild,
 } from './esbuildFileSizeReporter';
-import { getPackageDependencies } from '../utils/getPackageDependencies';
-import { rewriteDependencies } from '../utils/rewriteDependencies';
+import { getDependencyInfo } from '../utils/getDependencyInfo';
 import { isReactNewApi } from '../utils/isReactNewApi';
 
 async function buildStandalone(
@@ -97,29 +94,18 @@ async function buildStandalone(
   }
 
   let assets: Asset[];
-  logger.debug('Extracting dependencies from source code...');
-  // Retrieve dependencies for target to inform the build process
-  const {
-    manifest: packageDependencies,
-    resolutions: packageResolutions,
-    selectiveCDNResolutions,
-  } = await getPackageDependencies(target);
+  logger.debug('Extracting dependency info from source code...');
 
-  // Get workspace info to automatically bundle workspace dependencies
-  const workspaceInfo = await getWorkspaceInfo();
-  // Split dependencies between external and bundled
-  const { external: externalDependencies, bundled: bundledDependencies } =
-    filterDependencies({
-      dependencies: packageDependencies,
-      isApp,
-      workspaceInfo,
-    });
-  const { external: externalResolutions, bundled: bundledResolutions } =
-    filterDependencies({
-      dependencies: packageResolutions,
-      isApp,
-      workspaceInfo,
-    });
+  // Retrieve dependency info for target to inform the build process
+  const {
+    importMap,
+    styleImports,
+    packageDependencies,
+    bundledDependencies,
+    bundledResolutions,
+    externalDependencies,
+    externalResolutions,
+  } = await getDependencyInfo(target);
 
   logger.debug(
     `These are the external dependencies and their resolutions: ${JSON.stringify(
@@ -143,16 +129,6 @@ async function buildStandalone(
 
   let jsEntryPoint: string | undefined;
   let cssEntryPoint: string | undefined;
-  let importMap: Map<string, string> = new Map();
-
-  if (!isApp) {
-    // Rewrite dependencies. This is only needed for esm-views.
-    importMap = rewriteDependencies({
-      externalDependencies,
-      externalResolutions,
-      selectiveCDNResolutions,
-    });
-  }
 
   if (isEsbuild) {
     const { default: buildEsbuildApp } = await import(
@@ -226,7 +202,11 @@ async function buildStandalone(
 
     // Create synthetic index
     const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
-    const html = createSyntheticIndex({ cssEntryPoint, replacements: env.raw });
+    const html = createSyntheticIndex({
+      cssEntryPoint,
+      replacements: env.raw,
+      styleImports,
+    });
     await fs.writeFile(
       path.join(paths.appBuild, 'index.html'),
       await minimize.minify(html, {
@@ -258,21 +238,21 @@ async function buildStandalone(
   const targetPackageJson = (await fs.readJSON(
     path.join(targetDirectory, 'package.json'),
   )) as CoreProperties;
-  targetPackageJson.dependencies = packageDependencies;
-  targetPackageJson.bundledDependencies = Object.keys(bundledDependencies);
-
   // Copy selected fields of package.json over
-  await fs.writeJSON(
+  fs.writeJSON(
     path.join(paths.appBuild, 'package.json'),
     {
       name: targetPackageJson.name,
       version: targetPackageJson.version,
       license: targetPackageJson.license,
       modular: targetPackageJson.modular,
-      dependencies: targetPackageJson.dependencies,
-      bundledDependencies: targetPackageJson.bundledDependencies,
+      dependencies: packageDependencies,
+      bundledDependencies: isApp
+        ? Object.keys(packageDependencies)
+        : Object.keys(bundledResolutions),
       module: jsEntryPoint ? paths.publicUrlOrPath + jsEntryPoint : undefined,
       style: cssEntryPoint ? paths.publicUrlOrPath + cssEntryPoint : undefined,
+      styleImports: styleImports?.size ? [...styleImports] : undefined,
     },
     { spaces: 2 },
   );

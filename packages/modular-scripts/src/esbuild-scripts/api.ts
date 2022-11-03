@@ -85,6 +85,7 @@ export async function createIndex({
   includeRuntime,
   indexContent,
   includeTrampoline,
+  styleImports,
 }: {
   paths: Paths;
   metafile: esbuild.Metafile | undefined;
@@ -92,6 +93,7 @@ export async function createIndex({
   includeRuntime: boolean;
   indexContent?: string;
   includeTrampoline?: boolean;
+  styleImports?: Set<string>;
 }): Promise<string> {
   const index =
     indexContent ?? (await fs.readFile(paths.appHtml, { encoding: 'utf-8' }));
@@ -109,21 +111,25 @@ export async function createIndex({
     replacements,
     includeRuntime,
     includeTrampoline,
+    styleImports,
   });
 }
 
 export function createSyntheticIndex({
   cssEntryPoint,
   replacements,
+  styleImports,
 }: {
   cssEntryPoint: string | undefined;
   replacements: Record<string, string>;
+  styleImports?: Set<string>;
 }): string {
   return compileIndex({
     indexContent: indexFile,
     cssEntryPoint,
     replacements,
     includeTrampoline: true,
+    styleImports,
   });
 }
 
@@ -134,6 +140,7 @@ function compileIndex({
   replacements,
   includeRuntime,
   includeTrampoline,
+  styleImports,
 }: {
   indexContent: string;
   cssEntryPoint?: string;
@@ -141,6 +148,7 @@ function compileIndex({
   replacements: Record<string, string>;
   includeRuntime?: boolean;
   includeTrampoline?: boolean;
+  styleImports?: Set<string>;
 }) {
   const page = parse5.parse(indexContent);
   const html = page.childNodes.find(
@@ -152,6 +160,15 @@ function compileIndex({
   const body = html.childNodes.find(
     (node) => node.nodeName === 'body',
   ) as parse5.Element;
+
+  if (styleImports) {
+    [...styleImports].forEach((importUrl) =>
+      head.childNodes.push(
+        ...parse5.parseFragment(`<link rel="stylesheet" href="${importUrl}" />`)
+          .childNodes,
+      ),
+    );
+  }
 
   if (cssEntryPoint) {
     head.childNodes.push(

@@ -14,9 +14,7 @@ import createPaths from './utils/createPaths';
 import * as logger from './utils/logger';
 import createEsbuildBrowserslistTarget from './utils/createEsbuildBrowserslistTarget';
 import prompts from 'prompts';
-import { getPackageDependencies } from './utils/getPackageDependencies';
-import { filterDependencies } from './utils/filterDependencies';
-import { rewriteDependencies } from './utils/rewriteDependencies';
+import { getDependencyInfo } from './utils/getDependencyInfo';
 import { isReactNewApi } from './utils/isReactNewApi';
 
 async function start(packageName: string): Promise<void> {
@@ -73,23 +71,15 @@ async function start(packageName: string): Promise<void> {
     process.env.USE_MODULAR_ESBUILD &&
     process.env.USE_MODULAR_ESBUILD === 'true';
 
+  // Retrieve dependency info for target to inform the build process
   const {
-    manifest: packageDependencies,
-    resolutions: packageResolutions,
-    selectiveCDNResolutions,
-  } = await getPackageDependencies(target);
-  const { external: externalDependencies, bundled: bundledDependencies } =
-    filterDependencies({
-      dependencies: packageDependencies,
-      isApp: !isEsmView,
-      workspaceInfo,
-    });
-  const { external: externalResolutions, bundled: bundledResolutions } =
-    filterDependencies({
-      dependencies: packageResolutions,
-      isApp: !isEsmView,
-      workspaceInfo,
-    });
+    importMap,
+    styleImports,
+    bundledDependencies,
+    bundledResolutions,
+    externalDependencies,
+    externalResolutions,
+  } = await getDependencyInfo(target);
 
   logger.debug(
     `These are the external dependencies and their resolutions: ${JSON.stringify(
@@ -110,24 +100,19 @@ async function start(packageName: string): Promise<void> {
 
   const useReactCreateRoot = isReactNewApi(externalResolutions);
 
-  let importMap: Map<string, string> = new Map();
-
-  if (isEsmView) {
-    // Rewrite dependencies. This is only needed for esm-views.
-    importMap = rewriteDependencies({
-      externalDependencies,
-      externalResolutions,
-      selectiveCDNResolutions,
-    });
-  }
-
   // If you want to use webpack then we'll always use webpack. But if you've indicated
   // you want esbuild - then we'll switch you to the new fancy world.
   if (!useWebpack || useEsbuild) {
     const { default: startEsbuildApp } = await import(
       './esbuild-scripts/start'
     );
-    await startEsbuildApp(target, !isEsmView, importMap, useReactCreateRoot);
+    await startEsbuildApp({
+      target,
+      isApp: !isEsmView,
+      importMap,
+      useReactCreateRoot,
+      styleImports,
+    });
   } else {
     const startScript = require.resolve(
       'modular-scripts/react-scripts/scripts/start.js',
@@ -151,6 +136,7 @@ async function start(packageName: string): Promise<void> {
         MODULAR_IS_APP: JSON.stringify(!isEsmView),
         MODULAR_IMPORT_MAP: JSON.stringify(Object.fromEntries(importMap || [])),
         MODULAR_USE_REACT_CREATE_ROOT: JSON.stringify(useReactCreateRoot),
+        MODULAR_STYLE_IMPORT_MAPS: JSON.stringify([...styleImports]),
       },
     });
   }

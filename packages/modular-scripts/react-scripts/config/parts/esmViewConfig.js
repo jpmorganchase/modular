@@ -24,7 +24,7 @@ function createConfig({
   };
 }
 
-function createPluginConfig({ isEnvProduction }) {
+function createPluginConfig({ isEnvProduction, styleImports }) {
   return {
     plugins: [
       // We need to provide a synthetic index.html in case we're starting a ESM view
@@ -36,6 +36,12 @@ function createPluginConfig({ isEnvProduction }) {
               inject: true,
               templateContent: `
                 <!DOCTYPE html>
+                <head>
+                  ${styleImports?.map(
+                    (importUrl) =>
+                      `<link rel="stylesheet" href="${importUrl}"></script>`,
+                  )}
+                </head>
                 <html>
                   <body>
                     <div id="root"></div>
@@ -54,6 +60,10 @@ function createExternalRewriter(dependencyMap) {
   return function rewriteExternals({ request }, callback) {
     const parsedModule = parsePackageName(request);
 
+    // TODO: this functionality is duplicated from
+    // packages/modular-scripts/src/utils/getImportMap.ts and packages/modular-scripts/src/esbuild-scripts/plugins/rewriteDependenciesPlugin.ts
+    // When this configuration file is ported to typescript, use only one version.
+
     // If the module is absolute and it is in the import map, we want to externalise it
     if (
       parsedModule &&
@@ -63,7 +73,6 @@ function createExternalRewriter(dependencyMap) {
       !request.endsWith('.css')
     ) {
       const { dependencyName, submodule } = parsedModule;
-
       const toRewrite = `${dependencyMap[dependencyName]}${
         submodule ? `/${submodule}` : ''
       }`;

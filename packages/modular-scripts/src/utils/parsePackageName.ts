@@ -1,6 +1,13 @@
 export const packageRegex =
   /^(@[a-z0-9-~][a-z0-9-._~]*)?\/?([a-z0-9-~][a-z0-9-._~]*)\/?(.*)/;
 
+export interface ParsedPackage {
+  dependencyName?: string;
+  scope?: string;
+  module?: string;
+  submodule?: string;
+}
+
 /**
  * @typedef {Object} ParsedPackage
  * @property {string} dependencyName - The package scope (if present) and name - example: "@scoped/pkg"
@@ -15,16 +22,9 @@ export const packageRegex =
  * @return {ParsedPackage} The parsed package name.
  */
 
-export function parsePackageName(name: string): {
-  dependencyName: string;
-  scope?: string;
-  module: string;
-  submodule: string;
-} {
+export function parsePackageName(name: string): ParsedPackage {
   const parsedName = packageRegex.exec(name);
-  if (!parsedName) {
-    throw new Error(`Can't parse package name: ${name}`);
-  }
+  if (!parsedName) return {};
   const [scope, module, submodule] = parsedName.slice(1);
   const dependencyName = (scope ? `${scope}/` : '') + module;
   return { dependencyName, scope, module, submodule };

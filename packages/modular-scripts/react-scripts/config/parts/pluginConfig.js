@@ -35,6 +35,7 @@ module.exports = function createPluginConfig({
   isEnvProduction,
   shouldUseSourceMap,
   useTypeScript,
+  styleImports,
 }) {
   const isEnvDevelopment = !isEnvProduction;
 
@@ -45,7 +46,10 @@ module.exports = function createPluginConfig({
     paths,
   });
 
-  const esmViewPlugins = createEsmViewPluginConfig({ isEnvProduction });
+  const esmViewPlugins = createEsmViewPluginConfig({
+    isEnvProduction,
+    styleImports,
+  });
 
   const developmentPlugins = createDevelopmentPluginConfig({ paths });
 

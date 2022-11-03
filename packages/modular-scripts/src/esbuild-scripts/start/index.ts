@@ -63,18 +63,29 @@ class DevServer {
   private port: number;
 
   private isApp: boolean; // TODO maybe it's better to pass the type here
-  private importMap: Map<string, string>;
+  private importMap: Map<string, string> | undefined;
   private useReactCreateRoot: boolean;
+  private styleImports: Set<string>;
 
-  constructor(
-    paths: Paths,
-    urls: InstructionURLS,
-    host: string,
-    port: number,
-    isApp: boolean,
-    importMap: Map<string, string>,
-    useReactCreateRoot: boolean,
-  ) {
+  constructor({
+    paths,
+    urls,
+    host,
+    port,
+    isApp,
+    importMap,
+    useReactCreateRoot,
+    styleImports,
+  }: {
+    paths: Paths;
+    urls: InstructionURLS;
+    host: string;
+    port: number;
+    isApp: boolean;
+    importMap: Map<string, string> | undefined;
+    useReactCreateRoot: boolean;
+    styleImports: Set<string>;
+  }) {
     this.paths = paths;
     this.urls = urls;
     this.host = host;
@@ -82,6 +93,7 @@ class DevServer {
     this.isApp = isApp;
     this.importMap = importMap;
     this.useReactCreateRoot = useReactCreateRoot;
+    this.styleImports = styleImports;
 
     this.firstCompilePromise = new Promise<void>((resolve) => {
       this.firstCompilePromiseResolve = resolve;
@@ -194,10 +206,8 @@ class DevServer {
     const browserTarget = createEsbuildBrowserslistTarget(this.paths.appPath);
 
     let plugins;
-    if (!this.isApp) {
-      plugins = [
-        createRewriteDependenciesPlugin(this.importMap, browserTarget),
-      ];
+    if (!this.isApp && this.importMap) {
+      plugins = [createRewriteDependenciesPlugin(this.importMap)];
     }
 
     return createEsbuildConfig(this.paths, {
@@ -285,6 +295,7 @@ class DevServer {
           includeRuntime: true,
           indexContent: indexFile,
           includeTrampoline: true,
+          styleImports: this.styleImports,
         }),
       );
     }
@@ -364,12 +375,19 @@ class DevServer {
   };
 }
 
-export default async function start(
-  target: string,
-  isApp: boolean,
-  importMap: Map<string, string>,
-  useReactCreateRoot: boolean,
-): Promise<void> {
+export default async function start({
+  target,
+  isApp,
+  importMap,
+  useReactCreateRoot,
+  styleImports,
+}: {
+  target: string;
+  isApp: boolean;
+  importMap: Map<string, string> | undefined;
+  useReactCreateRoot: boolean;
+  styleImports: Set<string>;
+}): Promise<void> {
   const paths = await createPaths(target);
   const host = getHost();
   const port = await getPort(host);
@@ -379,7 +397,7 @@ export default async function start(
     port,
     paths.publicUrlOrPath.slice(0, -1),
   );
-  const devServer = new DevServer(
+  const devServer = new DevServer({
     paths,
     urls,
     host,
@@ -387,7 +405,8 @@ export default async function start(
     isApp,
     importMap,
     useReactCreateRoot,
-  );
+    styleImports,
+  });
 
   const server = await devServer.start();
 
