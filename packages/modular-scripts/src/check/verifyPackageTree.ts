@@ -33,6 +33,7 @@ export async function check(): Promise<boolean> {
   const ownPackageJson = require('modular-scripts/package.json') as PackageJson;
   const dependencies: Dependency = ownPackageJson.dependencies || {};
   const expectedVersionsByDep: Record<string, string> = {};
+
   // Gather wanted deps
   DEPS_TO_CHECK.forEach((dep) => {
     const expectedVersion = dependencies[dep];
@@ -46,13 +47,14 @@ export async function check(): Promise<boolean> {
     }
     expectedVersionsByDep[dep] = expectedVersion;
   });
+
   // Verify we don't have other versions up the tree
   const startDirectory = path.dirname(
     require.resolve('modular-scripts/package.json', {
       paths: [getModularRoot()],
     }),
   );
-  let logOutCount = 0;
+
   for (const dep of DEPS_TO_CHECK) {
     let currentDir = startDirectory;
 
@@ -62,10 +64,7 @@ export async function check(): Promise<boolean> {
     const root = path.parse(startDirectory).root;
     while (currentDir !== path.resolve('/') && currentDir !== root) {
       currentDir = path.resolve(currentDir, '..');
-      if (logOutCount < 1000) {
-        console.log(currentDir);
-        logOutCount++;
-      }
+
       const maybeNodeModules = path.resolve(currentDir, 'node_modules');
       if (!fs.existsSync(maybeNodeModules)) {
         continue;
