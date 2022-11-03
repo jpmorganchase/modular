@@ -300,12 +300,12 @@ describe('modular-scripts', () => {
       outputJsEntrypointPath = manifestInfo.jsEntrypointPath;
     });
 
-    it('THEN a manifest is generated with the style-cdn field pointing to the external CSS dependency, rewritten to CDN', async () => {
+    it('THEN a manifest is generated with the styleImports field pointing to the external CSS dependency, rewritten to CDN', async () => {
       const outputManifest = path.join(distPath, targetedView, 'package.json');
       const manifestContent = (await fs.readJSON(
         outputManifest,
       )) as CoreProperties;
-      expect(manifestContent['style-cdn']).toEqual([
+      expect(manifestContent['styleImports']).toEqual([
         'https://mycustomcdn.net/regular-table@^0.5.6/dist/css/material.css',
       ]);
     });

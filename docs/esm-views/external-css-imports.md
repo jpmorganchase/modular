@@ -11,7 +11,7 @@ CSS imports pointing to an external package (for example:
 ) will be rewritten to a CDN URL (for example, using Skypack,
 `https://cdn.skypack.dev/regular-table@[version]/dist/css/material.css`) and:
 
-- Listed in the `style-cdn` array field in the output manifest, so that the
+- Listed in the `styleImports` array field in the output manifest, so that the
   loader (often a host application) can scan the manifest and load the CSS in a
   collaborative way (for example, a host application can ensure that styles
   required by many esm-views are loaded only once).

@@ -15,10 +15,10 @@ of added / modified fields:
   `"style": "static/css/main.c6ac0a5c.css"`), useful for a host application to
   dynamically load the styles and add them to the page `<head>` or the
   [adopted stylesheet](https://wicg.github.io/construct-stylesheets/#using-constructed-stylesheets).
-- [`style-cdn`](./external-css-imports.md): An array of external CSS resources
-  that the esm-view needs to import. Useful for host applications to load
-  external CSS collaboratively (i.e. deduplicate common CSS when loading many
-  esm-views)
+- [`styleImports`](./external-css-imports.md): An array of external CSS
+  resources that the esm-view needs to import. Useful for host applications to
+  load external CSS collaboratively (i.e. deduplicate common CSS when loading
+  many esm-views)
 - [`module`](https://github.com/dherman/defense-of-dot-js/blob/f31319be735b21739756b87d551f6711bd7aa283/proposal.md):
   the location of the js bundle (example:
   `"module": "static/js/main.5077b483.js"`), useful for a host application to

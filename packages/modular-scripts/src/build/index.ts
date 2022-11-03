@@ -252,7 +252,7 @@ async function buildStandalone(
         : Object.keys(bundledResolutions),
       module: jsEntryPoint ? paths.publicUrlOrPath + jsEntryPoint : undefined,
       style: cssEntryPoint ? paths.publicUrlOrPath + cssEntryPoint : undefined,
-      'style-cdn': styleImports?.size ? [...styleImports] : undefined,
+      styleImports: styleImports?.size ? [...styleImports] : undefined,
     },
     { spaces: 2 },
   );
