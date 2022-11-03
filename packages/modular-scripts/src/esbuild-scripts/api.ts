@@ -164,9 +164,8 @@ function compileIndex({
   if (styleImports) {
     [...styleImports].forEach((importUrl) =>
       head.childNodes.push(
-        ...parse5.parseFragment(
-          `<link rel="stylesheet" href="${importUrl}" />`,
-        ).childNodes,
+        ...parse5.parseFragment(`<link rel="stylesheet" href="${importUrl}" />`)
+          .childNodes,
       ),
     );
   }
