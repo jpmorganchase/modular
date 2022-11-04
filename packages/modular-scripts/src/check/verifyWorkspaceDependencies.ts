@@ -6,15 +6,12 @@ import * as logger from '../utils/logger';
 
 export async function check(target?: string): Promise<boolean> {
   let valid = true;
-
   const modularRoot = getModularRoot();
-
   // ensure that workspaces are setup correctly with yarn
   // init is a special case where we don't already need to be in a modular repository
   // in this case there's no use checking the workspaces yet because we're setting
   // up a new folder
   const workspace = await getWorkspaceInfo(target);
-
   /**
    * Validate the structure of the workspace to ensure there's no mismatched dependencies and that
    * all the workspaces are valid modular package types.

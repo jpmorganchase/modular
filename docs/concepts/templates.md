@@ -13,6 +13,11 @@ either used implicitly (every modular `type` has a default template) or provided
 explicitly to `modular add`, either interactively or via the `--template`
 option.
 
+Templates can either be defined and used locally within your workspace, or
+published to the NPM registry to be shared with the community. When using
+`modular add` and specifying a custom template, modular will first search your
+workspace for the template before checking the registry.
+
 # Examples
 
 ```bash
@@ -54,6 +59,9 @@ and optionally publish it to the NPM registry for other teams to use. The
 selection at the interactive prompt), will search for a package whose name
 equals to the provided template option in the current workspace packages. If
 such a package is not found, Modular will try to install it with Yarn.
+
+It's important to make sure all dependencies required by the template are in the
+template's package.json when publishing it to the registry.
 
 ## How to find community templates
 

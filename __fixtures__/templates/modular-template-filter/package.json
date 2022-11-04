@@ -1,0 +1,15 @@
+{
+  "name": "modular-template-filter",
+  "version": "0.0.1",
+  "exports": {
+    "./package.json": "./package.json"
+  },
+  "modular": {
+    "type": "template",
+    "templateType": "app"
+  },
+  "files": [
+    "src"
+  ],
+  "license": "Apache-2.0"
+}

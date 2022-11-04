@@ -1,7 +1,6 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import validate from 'validate-npm-package-name';
-import globby from 'globby';
 import { pascalCase as toPascalCase } from 'change-case';
 import prompts from 'prompts';
 import getModularRoot from './utils/getModularRoot';
@@ -13,6 +12,8 @@ import LineFilterOutStream from './utils/LineFilterOutStream';
 import { parsePackageName } from './utils/parsePackageName';
 import { getWorkspaceInfo } from './utils/getWorkspaceInfo';
 import { isInWorkspaces } from './utils/isInWorkspaces';
+import packlist from 'npm-packlist';
+import Arborist from '@npmcli/arborist';
 
 import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
@@ -137,11 +138,11 @@ async function addPackage({
 
   const modularRoot = getModularRoot();
 
-  const { componentName, packagePath } = getNewPackageDetails({
+  const { componentName, packagePath: newPackagePath } = getNewPackageDetails({
     name,
     targetPath: pathArg || path.join(modularRoot, packagesRoot),
   });
-  await validatePackageDetails(name, packagePath, pathArg);
+  await validatePackageDetails(name, newPackagePath, pathArg);
 
   const packageType = templateNameArg ?? (await promptForType(typeArg));
   const templateName = await promptForTemplate(templateNameArg || packageType);
@@ -152,12 +153,17 @@ async function addPackage({
   // Try and find the modular template package. If it's already been installed
   // in the project then continue without needing to do an install.
   // else we will fetch it from the yarn registry.
-  let newModularPackageJsonPath;
+  let templatePackageJsonPath;
 
   try {
-    newModularPackageJsonPath = require.resolve(installedPackageJsonPath);
+    logger.log(`Looking for template ${templateName} in project...`);
+    templatePackageJsonPath = require.resolve(installedPackageJsonPath, {
+      paths: [modularRoot],
+    });
   } catch (e) {
-    logger.log('Installing package template, this may take a moment...');
+    logger.log(
+      `Installing template package ${templateName} from registry, this may take a moment...`,
+    );
     const yarnAddArgs = ['add', templateName];
 
     if (isYarnV1) {
@@ -181,11 +187,13 @@ async function addPackage({
     }
 
     await templateInstallSubprocess;
-    newModularPackageJsonPath = require.resolve(installedPackageJsonPath);
+    templatePackageJsonPath = require.resolve(installedPackageJsonPath, {
+      paths: [modularRoot],
+    });
   }
 
   const modularTemplatePackageJson = (await fs.readJSON(
-    newModularPackageJsonPath,
+    templatePackageJsonPath,
   )) as ModularPackageJson;
 
   const modularType = modularTemplatePackageJson?.modular?.type as string;
@@ -203,30 +211,26 @@ async function addPackage({
     );
   }
 
-  const packageTypePath = path.dirname(newModularPackageJsonPath);
-  // create a new package source folder
-  await fs.mkdirp(packagePath);
-  await fs.copy(packageTypePath, packagePath, {
-    recursive: true,
-    filter(src) {
-      return !(path.basename(src) === 'package.json');
-    },
+  const templatePath = path.dirname(templatePackageJsonPath);
+  // Create new package directory
+  await fs.mkdirp(newPackagePath);
+
+  const arborist = new Arborist({ path: templatePath });
+  const tree = await arborist.loadActual();
+  const filesToCopy = await packlist(tree);
+
+  filesToCopy.forEach((file) => {
+    if (file !== 'package.json')
+      fs.copySync(
+        path.join(templatePath, file),
+        path.join(newPackagePath, file),
+      );
   });
 
-  const packageFilePaths = getAllFiles(packagePath);
-
-  // If we get our package locally we need to allowlist files like yarn publish does
-  const packageAllowlist = globby
-    .sync(modularTemplatePackageJson.files || ['*'], {
-      cwd: packagePath,
-      absolute: true,
-    })
-    .map((filePath) => path.normalize(filePath));
+  const packageFilePaths = getAllFiles(newPackagePath);
 
   for (const packageFilePath of packageFilePaths) {
-    if (!packageAllowlist.includes(packageFilePath)) {
-      fs.removeSync(packageFilePath);
-    } else if (/\.(ts|tsx|js|jsx|json|md|txt)$/i.test(packageFilePath)) {
+    if (/\.(ts|tsx|js|jsx|json|md|txt)$/i.test(packageFilePath)) {
       fs.writeFileSync(
         packageFilePath,
         fs
@@ -238,7 +242,7 @@ async function addPackage({
   }
 
   await fs.writeJson(
-    path.join(packagePath, 'package.json'),
+    path.join(newPackagePath, 'package.json'),
     {
       name,
       private: modularTemplateType === 'app',
@@ -257,9 +261,9 @@ async function addPackage({
   if (modularTemplateType === 'app') {
     // add a tsconfig, because CRA expects it
     await fs.writeJSON(
-      path.join(packagePath, 'tsconfig.json'),
+      path.join(newPackagePath, 'tsconfig.json'),
       {
-        extends: path.relative(packagePath, modularRoot) + '/tsconfig.json',
+        extends: path.relative(newPackagePath, modularRoot) + '/tsconfig.json',
       },
       { spaces: 2 },
     );

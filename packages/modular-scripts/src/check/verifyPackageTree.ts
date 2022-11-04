@@ -15,6 +15,7 @@ import type {
   JSONSchemaForNPMPackageJsonFiles as PackageJson,
 } from '@schemastore/package';
 import * as logger from '../utils/logger';
+import getModularRoot from '../utils/getModularRoot';
 
 const DEPS_TO_CHECK = [
   // These are packages most likely to break in practice.
@@ -32,6 +33,7 @@ export async function check(): Promise<boolean> {
   const ownPackageJson = require('modular-scripts/package.json') as PackageJson;
   const dependencies: Dependency = ownPackageJson.dependencies || {};
   const expectedVersionsByDep: Record<string, string> = {};
+
   // Gather wanted deps
   DEPS_TO_CHECK.forEach((dep) => {
     const expectedVersion = dependencies[dep];
@@ -45,9 +47,12 @@ export async function check(): Promise<boolean> {
     }
     expectedVersionsByDep[dep] = expectedVersion;
   });
+
   // Verify we don't have other versions up the tree
   const startDirectory = path.dirname(
-    require.resolve('modular-scripts/package.json'),
+    require.resolve('modular-scripts/package.json', {
+      paths: [getModularRoot()],
+    }),
   );
 
   for (const dep of DEPS_TO_CHECK) {
@@ -55,7 +60,9 @@ export async function check(): Promise<boolean> {
 
     // We've reached the root of the modular repo
     // in which case we want to bail out
-    while (currentDir !== path.resolve('/')) {
+    // Stop if we've reached the drive's root
+    const root = path.parse(startDirectory).root;
+    while (currentDir !== path.resolve('/') && currentDir !== root) {
       currentDir = path.resolve(currentDir, '..');
 
       const maybeNodeModules = path.resolve(currentDir, 'node_modules');
