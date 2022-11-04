@@ -7,6 +7,7 @@
   "engines": {
     "node": "^14.17.0 || >=16.0.0"
   },
+  "repository": "https://github.com/jpmorganchase/modular.git",
   "scripts": {
     "format": "prettier --write .",
     "lint": "yarn modular lint",

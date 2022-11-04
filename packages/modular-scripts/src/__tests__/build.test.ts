@@ -41,6 +41,11 @@ describe('WHEN building with preserve modules', () => {
         "module": "dist-es/index.js",
         "name": "sample-async-package",
         "private": false,
+        "repository": Object {
+          "directory": "packages/sample-async-package",
+          "type": "git",
+          "url": "https://github.com/jpmorganchase/modular.git",
+        },
         "typings": "dist-types/index.d.ts",
         "version": "1.0.0",
       }
