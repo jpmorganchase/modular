@@ -58,7 +58,8 @@ export async function addFixturePackage(
 }
 
 /**
- * Creates a temporary Modular repo with Modular node_modules symlinked
+ * Creates a temporary Modular repo test environment with a default package.json and an empty packages workspace
+ * Modular node_modules is symlinked in the parent directory to provide all required dependencies without installing them
  * @returns Path to temporary directory
  */
 export function createModularTestContext(): string {
@@ -69,7 +70,7 @@ export function createModularTestContext(): string {
     path.join(tempDir, 'node_modules'),
   );
 
-  // Actual mock modular repo is nested underneath so that it can have it's own node_modules
+  // Actual mock modular repo is nested in the temp directory so that it can have its own clean node_modules
   const tempModularRepo = path.join(tempDir, 'temp_repo');
   mkdirSync(tempModularRepo);
 
@@ -98,32 +99,32 @@ export function createModularTestContext(): string {
   fs.writeJSONSync(path.join(tempModularRepo, 'package.json'), packageJson, {
     spaces: 2,
   });
+
   return tempModularRepo;
 }
 
 /**
- * Mocks the installation of templates in the provided modular repo
- * Copies them into a Templates workspace and symlinks them in node_modules
- * @param templatesPath Path to directory containing templates
+ * Mocks the installation of a template in the provided modular repo
+ * Copies it into a Templates workspace and symlinks them in node_modules so that it can be picked up by moudlar add
+ * @param templatePath Path to directory containing templates
  * @param modularRepo Modular repo in which to install them
  */
-export function mockInstallTemplates(
-  templatesPath: string,
+export function mockInstallTemplate(
+  templatePath: string,
   modularRepo: string,
 ): void {
   const tempTemplatesPath = path.join(modularRepo, 'templates');
+  const templateName = path.basename(templatePath);
 
-  // Copy in the templates
-  fs.copySync(templatesPath, tempTemplatesPath);
+  // Copy the template into the temporary repo
+  fs.copySync(templatePath, path.join(tempTemplatesPath, templateName));
 
   // Symlink the templates into node_modules
   const tempRepoNodeModules = path.join(modularRepo, 'node_modules');
-  fs.mkdirSync(tempRepoNodeModules);
-  const templates = fs.readdirSync(tempTemplatesPath);
-  templates.forEach((template) =>
-    fs.symlinkSync(
-      path.join(tempTemplatesPath, template),
-      path.join(tempRepoNodeModules, template),
-    ),
+  if (!fs.existsSync(tempRepoNodeModules)) fs.mkdirSync(tempRepoNodeModules);
+
+  fs.symlinkSync(
+    path.join(tempTemplatesPath, templateName),
+    path.join(tempRepoNodeModules, templateName),
   );
 }

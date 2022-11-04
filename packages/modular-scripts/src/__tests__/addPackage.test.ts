@@ -1,5 +1,4 @@
 import execa from 'execa';
-import rimraf from 'rimraf';
 import path from 'path';
 import fs from 'fs-extra';
 import tree from 'tree-view-for-tests';
@@ -7,31 +6,30 @@ import tree from 'tree-view-for-tests';
 import getModularRoot from '../utils/getModularRoot';
 
 import type { CoreProperties } from '@schemastore/package';
-import { createModularTestContext, mockInstallTemplates } from '../test/utils';
+import { createModularTestContext, mockInstallTemplate } from '../test/utils';
 
 const modularRoot = getModularRoot();
 
-// Setup temporary test context
-const tempModularRepo = createModularTestContext();
-console.log(`Temp Modular Repo: ${tempModularRepo}`);
-if (fs.existsSync(tempModularRepo)) {
-  console.log('Exists');
-}
-const packagesPath = path.join(tempModularRepo, 'packages');
-
+// Template Paths
 const templatesPath = path.join(modularRoot, '__fixtures__', 'templates');
-mockInstallTemplates(templatesPath, tempModularRepo);
+const appTemplatePath = path.join(templatesPath, 'modular-template-app');
+const filterTemplatePath = path.join(templatesPath, 'modular-template-filter');
+const noFilterTemplatePath = path.join(
+  templatesPath,
+  'modular-template-no-filter',
+);
 
-/**
- * Reset 'packages' workspace in temporary Modular Repo
- */
-function cleanup() {
-  rimraf.sync(packagesPath);
-  fs.mkdirSync(packagesPath);
+// Setup temporary test context
+let tempModularRepo: string;
+let tempPackagesPath: string;
+
+function generateTempModularRepo() {
+  tempModularRepo = createModularTestContext();
+  tempPackagesPath = path.join(tempModularRepo, 'packages');
 }
 
 function modular(str: string, opts: Record<string, unknown> = {}) {
-  return execa('yarnpkg', ['modular', ...str.split(' '), '--verbose'], {
+  return execa('yarnpkg', ['modular', ...str.split(' ')], {
     cwd: tempModularRepo,
     cleanup: true,
     stdio: 'inherit',
@@ -41,6 +39,8 @@ function modular(str: string, opts: Record<string, unknown> = {}) {
 
 describe('When setting a base directory for an app', () => {
   it('fails if trying to add an app outside the "workspaces" directories', async () => {
+    generateTempModularRepo();
+    mockInstallTemplate(appTemplatePath, tempModularRepo);
     await expect(
       modular(
         'add @scoped/will-not-create-app --path some/other/basepath --unstable-type app',
@@ -51,14 +51,14 @@ describe('When setting a base directory for an app', () => {
 
 describe('When working with a scoped app', () => {
   beforeAll(async () => {
+    generateTempModularRepo();
+    mockInstallTemplate(appTemplatePath, tempModularRepo);
     await modular('add @scoped/sample-app --unstable-type app');
   });
 
-  afterAll(cleanup);
-
   it('creates the app in the expected directory, with the expected name', async () => {
     const manifest = (await fs.readJSON(
-      path.join(packagesPath, 'sample-app', 'package.json'),
+      path.join(tempPackagesPath, 'sample-app', 'package.json'),
     )) as CoreProperties;
     expect(manifest.name).toEqual('@scoped/sample-app');
   });
@@ -86,16 +86,22 @@ describe('When working with a scoped app', () => {
 
 describe('When working with an app installed in a custom directory', () => {
   beforeAll(async () => {
+    generateTempModularRepo();
+    mockInstallTemplate(appTemplatePath, tempModularRepo);
     await modular(
       'add @scoped/sample-app --unstable-type app --path packages/nested/scoped',
     );
   });
 
-  afterAll(cleanup);
-
   it('creates the app in the custom directory, with the expected name', async () => {
     const manifest = (await fs.readJSON(
-      path.join(packagesPath, 'nested', 'scoped', 'sample-app', 'package.json'),
+      path.join(
+        tempPackagesPath,
+        'nested',
+        'scoped',
+        'sample-app',
+        'package.json',
+      ),
     )) as CoreProperties;
     expect(manifest.name).toEqual('@scoped/sample-app');
   });
@@ -116,12 +122,13 @@ describe('When working with an app installed in a custom directory', () => {
 });
 
 describe('When adding a module from a template without a files filter', () => {
-  const newModulePath = path.join(packagesPath, 'no-filter-module');
+  let newModulePath: string;
   beforeAll(async () => {
+    generateTempModularRepo();
+    mockInstallTemplate(noFilterTemplatePath, tempModularRepo);
+    newModulePath = path.join(tempPackagesPath, 'no-filter-module');
     await modular('add no-filter-module --template no-filter');
   });
-
-  afterAll(cleanup);
 
   it('generates the package.json', async () => {
     // Expect name to be as set by command, and type as set by template
@@ -159,12 +166,13 @@ describe('When adding a module from a template without a files filter', () => {
 });
 
 describe('When adding a module from a template with a files filter', () => {
-  const newModulePath = path.join(packagesPath, 'filter-module');
+  let newModulePath: string;
   beforeAll(async () => {
+    generateTempModularRepo();
+    mockInstallTemplate(filterTemplatePath, tempModularRepo);
+    newModulePath = path.join(tempPackagesPath, 'filter-module');
     await modular('add filter-module --template filter');
   });
-
-  afterAll(cleanup);
 
   it('generates the package.json', async () => {
     // Expect name to be as set by command, and type as set by template
