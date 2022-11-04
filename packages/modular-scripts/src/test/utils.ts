@@ -58,8 +58,10 @@ export async function addFixturePackage(
 }
 
 /**
- * Creates a temporary Modular repo test environment with a default package.json and an empty packages workspace
- * Modular node_modules is symlinked in the parent directory to provide all required dependencies without installing them
+ * Creates a temporary Modular repo test environment with a default package.json and an empty packages workspace.
+ * Modular node_modules is symlinked in the parent directory to provide all required dependencies without installing them.
+ *
+ * Use to create a clean context to run tests in where you can call `yarn modular` commands.
  * @returns Path to temporary directory
  */
 export function createModularTestContext(): string {
@@ -104,8 +106,9 @@ export function createModularTestContext(): string {
 }
 
 /**
- * Mocks the installation of a template in the provided modular repo
- * Copies it into a Templates workspace and symlinks them in node_modules so that it can be picked up by moudlar add
+ * Mocks the installation of a template in the provided modular repo to avoid running `yarn` or installing it from a registry.
+ *
+ * Copies the template into a Templates workspace and symlinks them in node_modules so that it can be picked up by moudlar add.
  * @param templatePath Path to directory containing templates
  * @param modularRepo Modular repo in which to install them
  */
