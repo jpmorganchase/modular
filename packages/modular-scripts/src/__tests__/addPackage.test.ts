@@ -19,7 +19,7 @@ const noFilterTemplatePath = path.join(
   'modular-template-no-filter',
 );
 
-// Temporary test context paths set by generateTempModularRepo
+// Temporary test context paths set by createTempModularRepoWithTemplate()
 let tempModularRepo: string;
 let tempPackagesPath: string;
 
