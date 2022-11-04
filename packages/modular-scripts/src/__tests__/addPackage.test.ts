@@ -19,13 +19,20 @@ const noFilterTemplatePath = path.join(
   'modular-template-no-filter',
 );
 
-// Setup temporary test context
+// Temporary test context paths set by generateTempModularRepo
 let tempModularRepo: string;
 let tempPackagesPath: string;
 
-function generateTempModularRepo() {
+/**
+ * Calls createModularTestContext to generate a temporary modular repo for testing in
+ * Sets temporary repo paths used by tests
+ *
+ * Run before each test to create a clean test environment
+ */
+function createTempModularRepoWithTemplate(appTemplatePath: string) {
   tempModularRepo = createModularTestContext();
   tempPackagesPath = path.join(tempModularRepo, 'packages');
+  mockInstallTemplate(appTemplatePath, tempModularRepo);
 }
 
 function modular(str: string, opts: Record<string, unknown> = {}) {
@@ -39,8 +46,7 @@ function modular(str: string, opts: Record<string, unknown> = {}) {
 
 describe('When setting a base directory for an app', () => {
   it('fails if trying to add an app outside the "workspaces" directories', async () => {
-    generateTempModularRepo();
-    mockInstallTemplate(appTemplatePath, tempModularRepo);
+    createTempModularRepoWithTemplate(appTemplatePath);
     await expect(
       modular(
         'add @scoped/will-not-create-app --path some/other/basepath --unstable-type app',
@@ -51,8 +57,7 @@ describe('When setting a base directory for an app', () => {
 
 describe('When working with a scoped app', () => {
   beforeAll(async () => {
-    generateTempModularRepo();
-    mockInstallTemplate(appTemplatePath, tempModularRepo);
+    createTempModularRepoWithTemplate(appTemplatePath);
     await modular('add @scoped/sample-app --unstable-type app');
   });
 
@@ -86,8 +91,7 @@ describe('When working with a scoped app', () => {
 
 describe('When working with an app installed in a custom directory', () => {
   beforeAll(async () => {
-    generateTempModularRepo();
-    mockInstallTemplate(appTemplatePath, tempModularRepo);
+    createTempModularRepoWithTemplate(appTemplatePath);
     await modular(
       'add @scoped/sample-app --unstable-type app --path packages/nested/scoped',
     );
@@ -124,8 +128,7 @@ describe('When working with an app installed in a custom directory', () => {
 describe('When adding a module from a template without a files filter', () => {
   let newModulePath: string;
   beforeAll(async () => {
-    generateTempModularRepo();
-    mockInstallTemplate(noFilterTemplatePath, tempModularRepo);
+    createTempModularRepoWithTemplate(noFilterTemplatePath);
     newModulePath = path.join(tempPackagesPath, 'no-filter-module');
     await modular('add no-filter-module --template no-filter');
   });
@@ -168,8 +171,7 @@ describe('When adding a module from a template without a files filter', () => {
 describe('When adding a module from a template with a files filter', () => {
   let newModulePath: string;
   beforeAll(async () => {
-    generateTempModularRepo();
-    mockInstallTemplate(filterTemplatePath, tempModularRepo);
+    createTempModularRepoWithTemplate(filterTemplatePath);
     newModulePath = path.join(tempPackagesPath, 'filter-module');
     await modular('add filter-module --template filter');
   });
