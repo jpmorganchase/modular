@@ -14,15 +14,12 @@ import createEsbuildConfig from '../config/createEsbuildConfig';
 import getModularRoot from '../../utils/getModularRoot';
 import sanitizeMetafile from '../utils/sanitizeMetafile';
 import { createRewriteDependenciesPlugin } from '../plugins/rewriteDependenciesPlugin';
-import type { Dependency } from '@schemastore/package';
 import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowserslistTarget';
 
 export default async function build(
   target: string,
   paths: Paths,
-  externalDependencies: Dependency,
-  externalResolutions: Dependency,
-  selectiveCDNResolutions: Dependency,
+  importMap: Map<string, string> | undefined,
   type: 'app' | 'esm-view',
 ) {
   const modularRoot = getModularRoot();
@@ -34,6 +31,11 @@ export default async function build(
 
   const browserTarget = createEsbuildBrowserslistTarget(paths.appPath);
 
+  let plugins;
+  if (!isApp && importMap) {
+    plugins = [createRewriteDependenciesPlugin(importMap)];
+  }
+
   try {
     const buildResult = await esbuild.build(
       createEsbuildConfig(paths, {
@@ -41,16 +43,7 @@ export default async function build(
         chunkNames: 'static/js/[name]-[hash]',
         assetNames: 'static/media/[name]-[hash]',
         target: browserTarget,
-        plugins: isApp
-          ? undefined
-          : [
-              createRewriteDependenciesPlugin(
-                externalDependencies,
-                externalResolutions,
-                selectiveCDNResolutions,
-                browserTarget,
-              ),
-            ],
+        plugins,
       }),
     );
 

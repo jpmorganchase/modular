@@ -15,28 +15,9 @@ module.exports.pitch = function () {
   const { descriptionData } = info;
   const dependency = dependencyMap[descriptionData.name];
 
+  // Rewrite to noop placeholder: dependency will be written in output package.json
+  // and generated index.html, no need to load it in the page
   if (dependency) {
-    // The submodule bit is the relative path in the resolver data. Use URL to normalize paths.
-    const submodule = this._module.resourceResolveData.relativePath;
-    const dependencyPath = new URL(dependency).pathname;
-    const dependencyUrl = submodule
-      ? new URL(`${dependencyPath}/${submodule}`, dependency).href
-      : dependency;
-    return generateStyleInjector(dependencyUrl);
+    return `/* Placeholder for ${dependency} - see package.json */`;
   }
 };
-
-function generateStyleInjector(url) {
-  return `
-  const link = document.createElement('link');
-  link.rel = 'stylesheet'; 
-  link.type = 'text/css';
-  link.href = '${url}'; 
-  if (!document.head) {
-    const newHead = document.createElement('head');
-    document.documentElement.insertBefore(newHead, document.body || null);
-  }
-  const head = document.head;
-  head.appendChild(link); 
-  `;
-}

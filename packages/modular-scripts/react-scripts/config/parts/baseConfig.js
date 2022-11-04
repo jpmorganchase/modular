@@ -213,7 +213,6 @@ function createConfig({
                     ? shouldUseSourceMap
                     : isEnvDevelopment,
                 },
-
                 includeEsmLoader: isEsmView,
                 dependencyMap,
                 isEnvProduction,

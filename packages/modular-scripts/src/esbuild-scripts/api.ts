@@ -1,77 +1,51 @@
 import * as esbuild from 'esbuild';
 import * as fs from 'fs-extra';
 import * as parse5 from 'parse5';
+import dedent from 'dedent';
 import escapeStringRegexp from 'escape-string-regexp';
-
-import { createRewriteDependenciesPlugin } from './plugins/rewriteDependenciesPlugin';
 import type { Paths } from '../utils/createPaths';
 import getModularRoot from '../utils/getModularRoot';
 import * as path from 'path';
-import type { Dependency } from '@schemastore/package';
 import { normalizeToPosix } from './utils/formatPath';
 
 type FileType = '.css' | '.js';
 
-export async function createViewTrampoline(
-  fileName: string,
-  srcPath: string,
-  dependencies: Dependency,
-  resolutions: Dependency,
-  selectiveCDNResolutions: Dependency,
-  browserTarget: string[],
-): Promise<esbuild.BuildResult & { outputFiles: esbuild.OutputFile[] }> {
+export function createViewTrampoline({
+  fileName,
+  importMap,
+  useReactCreateRoot,
+}: {
+  fileName: string;
+  importMap: Map<string, string> | undefined;
+  useReactCreateRoot: boolean;
+}): string {
   const fileRelativePath = `./${fileName}`;
 
-  const trampolineTemplate = `
-import ReactDOM from 'react-dom'
-import React from 'react'
-import Component from '${fileRelativePath}'
-const DOMRoot = document.getElementById('root');
-ReactDOM.render(<Component />, DOMRoot);`;
+  const reactDomCdnLocation = importMap?.get('react-dom');
+  const reactCdnLocation = importMap?.get('react');
 
-  const fileRegexp = new RegExp(String.raw`^${escapeRegex(fileRelativePath)}$`);
+  if (!reactCdnLocation || !reactDomCdnLocation) {
+    throw new Error(
+      `react (${reactCdnLocation ?? 'undefined'}) or react-dom (${
+        reactDomCdnLocation ?? 'undefined'
+      }) location not specified. are you sure you have them in your package.json?`,
+    );
+  }
 
-  // Build the trampoline on the fly, from stdin
-  const buildResult = await esbuild.build({
-    stdin: {
-      contents: trampolineTemplate,
-      resolveDir: srcPath,
-      sourcefile: '_trampoline.tsx',
-      loader: 'tsx',
-    },
-    format: 'esm',
-    bundle: true,
-    write: false,
-    target: browserTarget,
-    plugins: [
-      // See https://github.com/evanw/esbuild/issues/456
-      {
-        name: 'import-path',
-        setup(build) {
-          build.onResolve({ filter: fileRegexp }, (args) => {
-            return { path: args.path, external: true };
-          });
-        },
-      },
-      createRewriteDependenciesPlugin(
-        {
-          ...dependencies,
-          'react-dom': dependencies['react-dom'] ?? dependencies.react,
-        },
-        {
-          ...resolutions,
-          'react-dom': resolutions['react-dom'] ?? resolutions.react,
-        },
-        selectiveCDNResolutions,
-      ),
-    ],
-  });
-
-  return buildResult;
-}
-
-function escapeRegex(s: string) {
-  return s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+  return useReactCreateRoot
+    ? // use the new createRoot API with React >= 18. The old one is backwards compatible, but will warn on develop.
+      dedent(`import { createRoot } from "${reactDomCdnLocation}/client";
+              import React from "${reactCdnLocation}";
+              import Component from "${fileRelativePath}";
+              var container = document.getElementById("root");
+              var root = createRoot(container);
+              root.render(React.createElement(Component, null));`)
+    : // use the old ReactDOM.render API with React < 18.
+      dedent(`import ReactDOM from "${reactDomCdnLocation}";
+              import React from "${reactCdnLocation}";
+              import Component from "${fileRelativePath}";
+              var DOMRoot = document.getElementById("root");
+              ReactDOM.render(React.createElement(Component, null), DOMRoot);`);
 }
 
 export function getEntryPoint(
@@ -111,6 +85,7 @@ export async function createIndex({
   includeRuntime,
   indexContent,
   includeTrampoline,
+  styleImports,
 }: {
   paths: Paths;
   metafile: esbuild.Metafile | undefined;
@@ -118,6 +93,7 @@ export async function createIndex({
   includeRuntime: boolean;
   indexContent?: string;
   includeTrampoline?: boolean;
+  styleImports?: Set<string>;
 }): Promise<string> {
   const index =
     indexContent ?? (await fs.readFile(paths.appHtml, { encoding: 'utf-8' }));
@@ -135,21 +111,25 @@ export async function createIndex({
     replacements,
     includeRuntime,
     includeTrampoline,
+    styleImports,
   });
 }
 
 export function createSyntheticIndex({
   cssEntryPoint,
   replacements,
+  styleImports,
 }: {
   cssEntryPoint: string | undefined;
   replacements: Record<string, string>;
+  styleImports?: Set<string>;
 }): string {
   return compileIndex({
     indexContent: indexFile,
     cssEntryPoint,
     replacements,
     includeTrampoline: true,
+    styleImports,
   });
 }
 
@@ -160,6 +140,7 @@ function compileIndex({
   replacements,
   includeRuntime,
   includeTrampoline,
+  styleImports,
 }: {
   indexContent: string;
   cssEntryPoint?: string;
@@ -167,6 +148,7 @@ function compileIndex({
   replacements: Record<string, string>;
   includeRuntime?: boolean;
   includeTrampoline?: boolean;
+  styleImports?: Set<string>;
 }) {
   const page = parse5.parse(indexContent);
   const html = page.childNodes.find(
@@ -178,6 +160,15 @@ function compileIndex({
   const body = html.childNodes.find(
     (node) => node.nodeName === 'body',
   ) as parse5.Element;
+
+  if (styleImports) {
+    [...styleImports].forEach((importUrl) =>
+      head.childNodes.push(
+        ...parse5.parseFragment(`<link rel="stylesheet" href="${importUrl}" />`)
+          .childNodes,
+      ),
+    );
+  }
 
   if (cssEntryPoint) {
     head.childNodes.push(
