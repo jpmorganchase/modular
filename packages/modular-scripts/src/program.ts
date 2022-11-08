@@ -95,18 +95,11 @@ program
       const { default: build } = await import('./build');
       logger.log('building packages at:', packagePaths.join(', '));
 
-      for (let i = 0; i < packagePaths.length; i++) {
-        try {
-          await build(
-            packagePaths[i],
-            JSON.parse(options.preserveModules) as boolean,
-            options.private,
-          );
-        } catch (err) {
-          logger.error(`building ${packagePaths[i]} failed`);
-          throw err;
-        }
-      }
+      await build(
+        packagePaths,
+        JSON.parse(options.preserveModules) as boolean,
+        options.private,
+      );
     },
   );
 
