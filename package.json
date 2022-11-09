@@ -95,7 +95,7 @@
   },
   "resolutions": {
     "esbuild": "0.14.51",
-    "source-map": "^0.7.0"
+    "v8-to-istanbul": "^9.0.0"
   },
   "jest": {
     "coveragePathIgnorePatterns": [
