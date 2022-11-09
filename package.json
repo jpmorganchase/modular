@@ -94,7 +94,8 @@
     "typescript": "4.8.3"
   },
   "resolutions": {
-    "esbuild": "0.14.51"
+    "esbuild": "0.14.51",
+    "source-map": "^0.7.0"
   },
   "jest": {
     "coveragePathIgnorePatterns": [
