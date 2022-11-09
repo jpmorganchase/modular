@@ -84,22 +84,42 @@ program
   )
   .option('--verbose', 'Run yarn commands with --verbose set')
   .option('--private', 'Enable the building of private packages', false)
+  .option(
+    '--changed',
+    'Build only for workspaces that have changed compared to the branch specified in --compareBranch',
+    false,
+  )
+  .option(
+    '--compareBranch <branch>',
+    "Specifies the branch to use with the --changed flag. If not specified, Modular will use the repo's default branch",
+  )
   .action(
     async (
       packagePaths: string[],
       options: {
         preserveModules: string;
         private: boolean;
+        changed: boolean;
+        compareBranch?: string;
       },
     ) => {
       const { default: build } = await import('./build');
       logger.log('building packages at:', packagePaths.join(', '));
 
-      await build(
+      if (options.compareBranch && !options.changed) {
+        process.stderr.write(
+          "Option --compareBranch doesn't make sense without option --changed\n",
+        );
+        process.exit(1);
+      }
+
+      await build({
         packagePaths,
-        JSON.parse(options.preserveModules) as boolean,
-        options.private,
-      );
+        preserveModules: JSON.parse(options.preserveModules) as boolean,
+        private: options.private,
+        changed: options.changed,
+        compareBranch: options.compareBranch,
+      });
     },
   );
 

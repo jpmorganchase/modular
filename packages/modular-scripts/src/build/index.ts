@@ -267,11 +267,26 @@ async function buildStandalone(
   );
 }
 
-async function build(
-  targets: string[],
+async function build({
+  packagePaths: targets,
   preserveModules = true,
-  includePrivate = false,
-): Promise<void> {
+  private: includePrivate,
+  changed,
+  compareBranch,
+}: {
+  packagePaths: string[];
+  preserveModules: boolean;
+  private: boolean;
+  changed: boolean;
+  compareBranch: string;
+}): Promise<void> {
+  if (changed) {
+    console.log(
+      'TODO: implement selective build with changed and compareBranch',
+      changed,
+      compareBranch,
+    );
+  }
   for (const target of targets) {
     try {
       const targetDirectory = await getLocation(target);
