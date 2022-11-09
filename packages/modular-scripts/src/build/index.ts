@@ -268,23 +268,30 @@ async function buildStandalone(
 }
 
 async function build(
-  target: string,
+  targets: string[],
   preserveModules = true,
   includePrivate = false,
 ): Promise<void> {
-  const targetDirectory = await getLocation(target);
+  for (const target of targets) {
+    try {
+      const targetDirectory = await getLocation(target);
 
-  await setupEnvForDirectory(targetDirectory);
+      await setupEnvForDirectory(targetDirectory);
 
-  const targetType = getModularType(targetDirectory);
-  if (targetType === 'app' || targetType === 'esm-view') {
-    await buildStandalone(target, targetType);
-  } else {
-    const { buildPackage } = await import('./buildPackage');
-    // ^ we do a dynamic import here to defer the module's initial side effects
-    // till when it's actually needed (i.e. now)
+      const targetType = getModularType(targetDirectory);
+      if (targetType === 'app' || targetType === 'esm-view') {
+        await buildStandalone(target, targetType);
+      } else {
+        const { buildPackage } = await import('./buildPackage');
+        // ^ we do a dynamic import here to defer the module's loading
+        // till when it's actually needed
 
-    await buildPackage(target, preserveModules, includePrivate);
+        await buildPackage(target, preserveModules, includePrivate);
+      }
+    } catch (err) {
+      logger.error(`building ${target} failed`);
+      throw err;
+    }
   }
 }
 
