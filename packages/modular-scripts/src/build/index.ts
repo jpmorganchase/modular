@@ -283,8 +283,8 @@ async function build(
         await buildStandalone(target, targetType);
       } else {
         const { buildPackage } = await import('./buildPackage');
-        // ^ we do a dynamic import here to defer the module's initial side effects
-        // till when it's actually needed (i.e. now)
+        // ^ we do a dynamic import here to defer the module's loading
+        // till when it's actually needed
 
         await buildPackage(target, preserveModules, includePrivate);
       }
