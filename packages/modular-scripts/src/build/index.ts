@@ -289,6 +289,11 @@ async function build({
     compareBranch,
   });
 
+  if (!selectBuildTargets) {
+    process.stdout.write('No changed workspaces found\n');
+    process.exit(0);
+  }
+
   logger.debug(
     `Building the following workspaces in order: ${JSON.stringify(
       selectedTargets,
@@ -335,12 +340,11 @@ async function selectBuildTargets({
   const [, buildTargetMap] = await getChangedWorkspacesContent(compareBranch);
   const targetsToBuild = Object.keys(buildTargetMap);
 
-  logger.debug(`Select changed workspaces: ${JSON.stringify(targetsToBuild)}`);
-
   if (!targetsToBuild.length) {
-    process.stdout.write('No changed workspaces found\n');
-    process.exit(0);
+    return [];
   }
+
+  logger.debug(`Select changed workspaces: ${JSON.stringify(targetsToBuild)}`);
 
   const targetEntriesWithOrder = [
     ...traverseWorkspaceRelations(targetsToBuild, allWorkspacesMap).entries(),
