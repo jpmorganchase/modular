@@ -5,7 +5,7 @@
     "packages/**"
   ],
   "engines": {
-    "node": "^14.18.0 || >=16.0.0 || >=18.0.0"
+    "node": "^14.18.0 || >=16.10.0 || >=18.0.0"
   },
   "repository": "https://github.com/jpmorganchase/modular.git",
   "scripts": {
