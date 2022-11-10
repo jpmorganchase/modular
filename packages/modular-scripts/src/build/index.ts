@@ -3,6 +3,7 @@ import chalk from 'chalk';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as minimize from 'html-minifier-terser';
+import { traverseWorkspaceRelations } from '@modular-scripts/workspace-resolver';
 import type { CoreProperties } from '@schemastore/package';
 import type { ModularType } from '@modular-scripts/modular-types';
 
@@ -10,6 +11,8 @@ import * as logger from '../utils/logger';
 import getModularRoot from '../utils/getModularRoot';
 import actionPreflightCheck from '../utils/actionPreflightCheck';
 import { getModularType } from '../utils/isModularType';
+import { getAllWorkspaces } from '../utils/getAllWorkspaces';
+import { getChangedWorkspacesContent } from '../utils/getChangedWorkspaces';
 import execAsync from '../utils/execAsync';
 import getLocation from '../utils/getLocation';
 import { setupEnvForDirectory } from '../utils/setupEnv';
@@ -278,7 +281,7 @@ async function build({
   preserveModules: boolean;
   private: boolean;
   changed: boolean;
-  compareBranch: string;
+  compareBranch?: string;
 }): Promise<void> {
   if (changed) {
     console.log(
@@ -287,7 +290,19 @@ async function build({
       compareBranch,
     );
   }
-  for (const target of targets) {
+  const selectedTargets = await selectBuildTargets({
+    targets,
+    changed,
+    compareBranch,
+  });
+
+  logger.debug(
+    `Building the following workspaces in order: ${JSON.stringify(
+      selectedTargets,
+    )}`,
+  );
+
+  for (const target of selectedTargets) {
     try {
       const targetDirectory = await getLocation(target);
 
@@ -308,6 +323,45 @@ async function build({
       throw err;
     }
   }
+}
+
+async function selectBuildTargets({
+  targets,
+  changed,
+  compareBranch,
+}: {
+  targets: string[];
+  changed: boolean;
+  compareBranch?: string;
+}): Promise<string[]> {
+  if (!changed) {
+    return targets;
+  }
+
+  const [, allWorkspacesMap] = await getAllWorkspaces(getModularRoot());
+  const [, buildTargetMap] = await getChangedWorkspacesContent(compareBranch);
+  const targetsToBuild = Object.keys(buildTargetMap);
+
+  logger.debug(`Select changed workspaces: ${JSON.stringify(targetsToBuild)}`);
+
+  if (!targetsToBuild.length) {
+    process.stdout.write('No changed workspaces found\n');
+    process.exit(0);
+  }
+
+  const targetEntriesWithOrder = [
+    ...traverseWorkspaceRelations(targetsToBuild, allWorkspacesMap).entries(),
+  ];
+
+  logger.debug(
+    `Computing order of changed workspaces: ${JSON.stringify(
+      targetEntriesWithOrder,
+    )}`,
+  );
+
+  return targetEntriesWithOrder
+    .sort((a, b) => a[1] - b[1])
+    .map(([packageName]) => packageName);
 }
 
 export default actionPreflightCheck(build);
