@@ -283,13 +283,6 @@ async function build({
   changed: boolean;
   compareBranch?: string;
 }): Promise<void> {
-  if (changed) {
-    console.log(
-      'TODO: implement selective build with changed and compareBranch',
-      changed,
-      compareBranch,
-    );
-  }
   const selectedTargets = await selectBuildTargets({
     targets,
     changed,
