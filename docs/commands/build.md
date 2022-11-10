@@ -3,12 +3,10 @@ parent: Commands
 title: modular build
 ---
 
-# `modular build <packageName>`
+# `modular build <packages...>`
 
-Searches by the name of the package indicated in the `package.json` file in the
-workspace and runs
-[`react-scripts build`](https://create-react-app.dev/docs/production-build)
-against that package.
+Search workspaces based on their `name` field in the `package.json` and build
+them according to their respective `modular.type`.
 
 The output directory for built artifacts is `dist/`, which has a flat structure
 of modular package names. Each built app/view/package is added to the `dist/` as
