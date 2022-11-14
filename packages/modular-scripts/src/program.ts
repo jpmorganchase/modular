@@ -7,6 +7,7 @@ import commander, { Option } from 'commander';
 import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import type { TestOptions } from './test';
 import type { LintOptions } from './lint';
+import { testOptions } from './test/jestOptions';
 
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import * as logger from './utils/logger';
@@ -64,7 +65,7 @@ program
 
 program
   .command('analyze <package-name>')
-  .description(`Analyze the dependencies of a package.`)
+
   .action(async (packageName: string) => {
     const { default: analyze } = await import('./analyze');
     return analyze({
@@ -102,17 +103,6 @@ program
       );
     },
   );
-
-interface JestOption {
-  default?: boolean | string;
-  description: string;
-  type: 'boolean' | 'string';
-}
-type JestOptions = Record<string, JestOption>;
-
-const testOptions =
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  (require('jest-cli/build/cli/args.js') as { options: JestOptions }).options;
 
 interface CLITestOptions extends TestOptions {
   U: boolean;

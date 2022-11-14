@@ -7,6 +7,7 @@ import type { Paths } from '../utils/createPaths';
 import getModularRoot from '../utils/getModularRoot';
 import * as path from 'path';
 import { normalizeToPosix } from './utils/formatPath';
+import { Element } from 'parse5/dist/tree-adapters/default';
 
 type FileType = '.css' | '.js';
 
@@ -153,13 +154,13 @@ function compileIndex({
   const page = parse5.parse(indexContent);
   const html = page.childNodes.find(
     (node) => node.nodeName === 'html',
-  ) as parse5.Element;
+  ) as Element;
   const head = html.childNodes.find(
     (node) => node.nodeName === 'head',
-  ) as parse5.Element;
+  ) as Element;
   const body = html.childNodes.find(
     (node) => node.nodeName === 'body',
-  ) as parse5.Element;
+  ) as Element;
 
   if (styleImports) {
     [...styleImports].forEach((importUrl) =>

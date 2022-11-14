@@ -89,9 +89,7 @@ async function test(
   const { createJestConfig } = await import('./config');
   cleanArgv.push(
     '--config',
-    `"${JSON.stringify(
-      createJestConfig({ reporters, testResultsProcessor }),
-    )}"`,
+    `${JSON.stringify(createJestConfig({ reporters, testResultsProcessor }))}`,
   );
 
   let resolvedEnv;

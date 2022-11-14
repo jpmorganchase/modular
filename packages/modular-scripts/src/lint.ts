@@ -51,13 +51,13 @@ async function lint(
     displayName: 'lint',
     rootDir: modularRoot,
     testMatch: targetedFiles,
-    testPathIgnorePatterns: ['/node_modules/', '/dist/'],
+    testPathIgnorePatterns: ['/node_modules/', '/dist/', '/__fixtures__/'],
   };
 
   const testArgs = [
     ...regexes,
     '--config',
-    `"${JSON.stringify(jestEslintConfig)}"`,
+    `${JSON.stringify(jestEslintConfig)}`,
   ];
 
   const testBin = await resolveAsBin('jest-cli');

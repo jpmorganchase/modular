@@ -80,6 +80,7 @@
     "execa": "5.1.1",
     "husky": "8.0.1",
     "is-ci": "2.0.0",
+    "jest-environment-jsdom": "^29.3.1",
     "lint-staged": "12.4.1",
     "micromatch": "4.0.5",
     "patch-package": "^6.4.7",
