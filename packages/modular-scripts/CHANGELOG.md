@@ -1,5 +1,52 @@
 # modular-scripts
 
+## 3.5.0
+
+### Minor Changes
+
+- [#2161](https://github.com/jpmorganchase/modular/pull/2161)
+  [`d9bed41`](https://github.com/jpmorganchase/modular/commit/d9bed41704439b0e1e7ba5ebe6028b88e739721a)
+  Thanks [@joshwooding](https://github.com/joshwooding)! - Add repository
+  information to the built artefact's package.json
+
+* [#2186](https://github.com/jpmorganchase/modular/pull/2186)
+  [`b438dcc`](https://github.com/jpmorganchase/modular/commit/b438dcc3d358f1494859156b17314303f3323c85)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - CSS from
+  CDN is not injected in page, but listed in output package.json + synthetic
+  index.html
+
+### Patch Changes
+
+- [#2161](https://github.com/jpmorganchase/modular/pull/2161)
+  [`d9bed41`](https://github.com/jpmorganchase/modular/commit/d9bed41704439b0e1e7ba5ebe6028b88e739721a)
+  Thanks [@joshwooding](https://github.com/joshwooding)! - Add repository
+  details to the built artefact's package.json
+
+* [#2190](https://github.com/jpmorganchase/modular/pull/2190)
+  [`caf75ab`](https://github.com/jpmorganchase/modular/commit/caf75ab0f9638f6e13a34eecc66907391cdf0484)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Fixed `modular add`
+  from template not copying all template files when no "files" field is
+  specified in the package.json - now using npm-packlist for this Added tests
+  for adding from templates Refactored addPackage tests to use a temp directory
+  outside the repository and improve performance by avoiding yarn commands in
+  favour of mocking the behaviour Added more descriptive log messages when
+  running `modular add` with a local template
+
+- [#2187](https://github.com/jpmorganchase/modular/pull/2187)
+  [`7faf49e`](https://github.com/jpmorganchase/modular/commit/7faf49e46e1db697c2430c62b1f93d4fcc1c4dc3)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Factor
+  out CDN rewriting function
+
+* [#2201](https://github.com/jpmorganchase/modular/pull/2201)
+  [`f79847a`](https://github.com/jpmorganchase/modular/commit/f79847ae2921969f991a50b8fe1e8595a61d6e49)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Mention
+  multiple package builds in the docs
+
+- [#2192](https://github.com/jpmorganchase/modular/pull/2192)
+  [`d952fbd`](https://github.com/jpmorganchase/modular/commit/d952fbd71b88d264a8588858cc2e141936234f58)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Update
+  caniuse db for browserlist
+
 ## 3.4.1
 
 ### Patch Changes
