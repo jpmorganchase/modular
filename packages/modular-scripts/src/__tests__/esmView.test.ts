@@ -162,12 +162,12 @@ describe('modular-scripts', () => {
       const { module: _, ...manifest } = outputManifest;
       // Omit module from manifest as we test it separately, in a more informative way
       expect(manifest).toMatchInlineSnapshot(`
-        Object {
-          "bundledDependencies": Array [],
-          "dependencies": Object {
+        {
+          "bundledDependencies": [],
+          "dependencies": {
             "react": "17.0.2",
           },
-          "modular": Object {
+          "modular": {
             "type": "esm-view",
           },
           "name": "sample-esm-view",
