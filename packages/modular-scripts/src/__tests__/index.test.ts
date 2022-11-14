@@ -201,24 +201,24 @@ describe('modular-scripts', () => {
           path.join(modularRoot, 'dist', 'sample-view', 'package.json'),
         ),
       ).toMatchInlineSnapshot(`
-        Object {
-          "dependencies": Object {
+        {
+          "dependencies": {
             "react": "17.0.2",
           },
-          "files": Array [
+          "files": [
             "dist-cjs",
             "dist-es",
             "dist-types",
             "README.md",
           ],
           "main": "dist-cjs/index.js",
-          "modular": Object {
+          "modular": {
             "type": "view",
           },
           "module": "dist-es/index.js",
           "name": "sample-view",
           "private": false,
-          "repository": Object {
+          "repository": {
             "directory": "packages/sample-view",
             "type": "git",
             "url": "https://github.com/jpmorganchase/modular.git",
@@ -304,7 +304,7 @@ describe('modular-scripts', () => {
         │  ├─ index2.js #urz4k4
         │  └─ index2.js.map #1p2gdzx
         ├─ dist-types
-        │  └─ index.d.ts #1vloh7q
+        │  └─ index.d.ts #obuyms
         └─ package.json"
       `);
     });
@@ -355,22 +355,22 @@ describe('modular-scripts', () => {
           path.join(modularRoot, 'dist', 'sample-package', 'package.json'),
         ),
       ).toMatchInlineSnapshot(`
-        Object {
-          "dependencies": Object {},
-          "files": Array [
+        {
+          "dependencies": {},
+          "files": [
             "dist-cjs",
             "dist-es",
             "dist-types",
             "README.md",
           ],
           "main": "dist-cjs/index.js",
-          "modular": Object {
+          "modular": {
             "type": "package",
           },
           "module": "dist-es/index.js",
           "name": "sample-package",
           "private": false,
-          "repository": Object {
+          "repository": {
             "directory": "packages/sample-package",
             "type": "git",
             "url": "https://github.com/jpmorganchase/modular.git",
@@ -436,22 +436,22 @@ describe('modular-scripts', () => {
           ),
         ),
       ).toMatchInlineSnapshot(`
-        Object {
-          "dependencies": Object {},
-          "files": Array [
+        {
+          "dependencies": {},
+          "files": [
             "dist-cjs",
             "dist-es",
             "dist-types",
             "README.md",
           ],
           "main": "dist-cjs/nested-sample-package.cjs.js",
-          "modular": Object {
+          "modular": {
             "type": "package",
           },
           "module": "dist-es/nested-sample-package.es.js",
           "name": "@nested/sample-package",
           "private": false,
-          "repository": Object {
+          "repository": {
             "directory": "packages/nested/sample-package",
             "type": "git",
             "url": "https://github.com/jpmorganchase/modular.git",
