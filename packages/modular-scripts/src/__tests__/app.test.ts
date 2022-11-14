@@ -91,9 +91,9 @@ describe('when working with a NODE_ENV app', () => {
       └─ static
          └─ js
             ├─ main.a482480b.js #1xwb1v
-            ├─ main.a482480b.js.map #1vulei2
+            ├─ main.a482480b.js.map #wh4kdy
             ├─ runtime-main.97707f9d.js #15lezt9
-            └─ runtime-main.97707f9d.js.map #12i5ddp"
+            └─ runtime-main.97707f9d.js.map #1yg8f1m"
     `);
   });
 
@@ -152,11 +152,11 @@ describe('When working with a npm scoped app', () => {
          ├─ js
          │  ├─ 316.74c894ba.js #euj72k
          │  ├─ 316.74c894ba.js.LICENSE.txt #eplx8h
-         │  ├─ 316.74c894ba.js.map #13g05b6
+         │  ├─ 316.74c894ba.js.map #3k9wqz
          │  ├─ main.b44531b6.js #16ahtqz
-         │  ├─ main.b44531b6.js.map #15ijphv
+         │  ├─ main.b44531b6.js.map #n69bgw
          │  ├─ runtime-main.de012fdc.js #1qz643h
-         │  └─ runtime-main.de012fdc.js.map #ntuwq4
+         │  └─ runtime-main.de012fdc.js.map #g5ojr6
          └─ media
             └─ logo.103b5fa18196d5665a7e12318285c916.svg #1okqmlj"
     `);
@@ -371,11 +371,11 @@ describe('when working with a non-scoped app', () => {
          ├─ js
          │  ├─ 316.394ef80b.js #1mv4xg9
          │  ├─ 316.394ef80b.js.LICENSE.txt #eplx8h
-         │  ├─ 316.394ef80b.js.map #b33pzn
+         │  ├─ 316.394ef80b.js.map #o90ydx
          │  ├─ main.abe6afa1.js #t9np46
-         │  ├─ main.abe6afa1.js.map #nchh6d
+         │  ├─ main.abe6afa1.js.map #15q2td3
          │  ├─ runtime-main.e92969dd.js #1is98ey
-         │  └─ runtime-main.e92969dd.js.map #19haxsp
+         │  └─ runtime-main.e92969dd.js.map #pq512s
          └─ media
             └─ logo.103b5fa18196d5665a7e12318285c916.svg #1okqmlj"
     `);
@@ -612,11 +612,11 @@ describe('When working with an app added in a custom directory', () => {
          ├─ js
          │  ├─ 350.44eb2511.js #4ubhrm
          │  ├─ 350.44eb2511.js.LICENSE.txt #eplx8h
-         │  ├─ 350.44eb2511.js.map #1icgdim
+         │  ├─ 350.44eb2511.js.map #1yro3n5
          │  ├─ main.fba21b67.js #16haxht
-         │  ├─ main.fba21b67.js.map #14bnapx
+         │  ├─ main.fba21b67.js.map #1tgakei
          │  ├─ runtime-main.cef70e6c.js #1f77948
-         │  └─ runtime-main.cef70e6c.js.map #u0erug
+         │  └─ runtime-main.cef70e6c.js.map #13ge77z
          └─ media
             └─ logo.103b5fa18196d5665a7e12318285c916.svg #1okqmlj"
     `);
