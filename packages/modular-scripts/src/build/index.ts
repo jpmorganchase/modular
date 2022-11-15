@@ -340,7 +340,9 @@ async function selectBuildTargets({
 
   const [, allWorkspacesMap] = await getAllWorkspaces(getModularRoot());
   const [, buildTargetMap] = await getChangedWorkspacesContent(compareBranch);
-  const targetsToBuild = Object.keys(buildTargetMap);
+  const targetsToBuild = [
+    ...new Set(targets.concat(Object.keys(buildTargetMap))),
+  ];
 
   if (!targetsToBuild.length) {
     return [];
