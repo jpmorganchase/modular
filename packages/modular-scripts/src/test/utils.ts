@@ -134,10 +134,14 @@ export function mockInstallTemplate(
 }
 
 /**
- * TODO: description
+ * Run the Modular cli present at the root path `modularFolder` with a working directory of `cwd`
+ * passing an array of `modularArguments`
  *
- * @param TODO: something
- * @param TODO: something else
+ * Useful to run modular from source in a different directory (usually a temp directory created for tests)
+ *
+ * @param  modularFolder The root folder in which the modular repo resides
+ * @param cwd The target working directory where we want to run Modular
+ * @param modularArguments A list of command-line arguments
  */
 export function runLocalModular(
   modularFolder: string,
