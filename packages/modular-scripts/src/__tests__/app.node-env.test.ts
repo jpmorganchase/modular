@@ -70,9 +70,9 @@ describe('when working with a NODE_ENV app', () => {
         └─ static
            └─ js
               ├─ main.a482480b.js #1xwb1v
-              ├─ main.a482480b.js.map #re9pek
+              ├─ main.a482480b.js.map #4bcy8y
               ├─ runtime-main.97707f9d.js #15lezt9
-              └─ runtime-main.97707f9d.js.map #12i5ddp"
+              └─ runtime-main.97707f9d.js.map #1yg8f1m"
       `);
     });
 

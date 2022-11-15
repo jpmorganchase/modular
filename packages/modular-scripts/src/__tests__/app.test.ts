@@ -346,7 +346,7 @@ describe('when working with a non-scoped app', () => {
       │  ├─ App.css #1o0zosm
       │  ├─ App.tsx #igvgtx
       │  ├─ __tests__
-      │  │  └─ App.test.tsx #16urcos
+      │  │  └─ App.test.tsx #1u72nad
       │  ├─ index.css #o7sk21
       │  ├─ index.tsx #zdn6mw
       │  ├─ logo.svg #1okqmlj
