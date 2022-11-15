@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import * as path from 'path';
 import * as tmp from 'tmp';
 import * as fs from 'fs-extra';
