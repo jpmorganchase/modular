@@ -209,8 +209,6 @@ describe('modular-scripts', () => {
             "dist-cjs",
             "dist-es",
             "dist-types",
-            "README.md",
-            "LICENSE",
           ],
           "main": "dist-cjs/index.js",
           "modular": Object {
@@ -363,8 +361,6 @@ describe('modular-scripts', () => {
             "dist-cjs",
             "dist-es",
             "dist-types",
-            "README.md",
-            "LICENSE",
           ],
           "main": "dist-cjs/index.js",
           "modular": Object {
@@ -446,8 +442,6 @@ describe('modular-scripts', () => {
             "dist-cjs",
             "dist-es",
             "dist-types",
-            "README.md",
-            "LICENSE",
           ],
           "main": "dist-cjs/nested-sample-package.cjs.js",
           "modular": Object {

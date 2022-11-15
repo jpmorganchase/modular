@@ -32,8 +32,6 @@ describe('WHEN building with preserve modules', () => {
           "dist-cjs",
           "dist-es",
           "dist-types",
-          "README.md",
-          "LICENSE",
         ],
         "main": "dist-cjs/index.js",
         "modular": Object {
