@@ -137,8 +137,8 @@ describe('When adding a module from a template without a files filter', () => {
     // Expect name to be as set by command, and type as set by template
     expect(await fs.readJSON(path.join(newModulePath, 'package.json')))
       .toMatchInlineSnapshot(`
-      Object {
-        "modular": Object {
+      {
+        "modular": {
           "type": "app",
         },
         "name": "no-filter-module",
@@ -180,8 +180,8 @@ describe('When adding a module from a template with a files filter', () => {
     // Expect name to be as set by command, and type as set by template
     expect(await fs.readJson(path.join(newModulePath, 'package.json')))
       .toMatchInlineSnapshot(`
-      Object {
-        "modular": Object {
+      {
+        "modular": {
           "type": "app",
         },
         "name": "filter-module",

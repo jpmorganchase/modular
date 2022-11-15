@@ -26,22 +26,22 @@ describe('WHEN building with preserve modules', () => {
         path.join(modularRoot, 'dist', packageName, 'package.json'),
       ),
     ).toMatchInlineSnapshot(`
-      Object {
-        "dependencies": Object {},
-        "files": Array [
+      {
+        "dependencies": {},
+        "files": [
           "dist-cjs",
           "dist-es",
           "dist-types",
           "README.md",
         ],
         "main": "dist-cjs/index.js",
-        "modular": Object {
+        "modular": {
           "type": "package",
         },
         "module": "dist-es/index.js",
         "name": "sample-async-package",
         "private": false,
-        "repository": Object {
+        "repository": {
           "directory": "packages/sample-async-package",
           "type": "git",
           "url": "https://github.com/jpmorganchase/modular.git",

@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import execa from 'execa';
 import { exec } from 'child_process';
 import rimraf from 'rimraf';

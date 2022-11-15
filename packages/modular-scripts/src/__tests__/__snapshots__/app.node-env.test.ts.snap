@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`when working with a NODE_ENV app WHEN building with esbuild can generate a js/index-AOVVUWA4.js 1`] = `
-"console.log(\\"production\\");
+"console.log("production");
 //# sourceMappingURL=/static/js/index-AOVVUWA4.js.map
 "
 `;
