@@ -326,10 +326,12 @@ async function build({
 async function selectBuildTargets({
   targets,
   changed,
+  descendants,
   compareBranch,
 }: {
   targets: string[];
   changed: boolean;
+  descendants?: boolean;
   compareBranch?: string;
 }): Promise<string[]> {
   if (!changed) {
@@ -358,7 +360,10 @@ async function selectBuildTargets({
 
   return targetEntriesWithOrder
     .sort((a, b) => a[1] - b[1])
-    .map(([packageName]) => packageName);
+    .map(([packageName]) => packageName)
+    .filter((packageName) =>
+      descendants ? true : targetsToBuild.includes(packageName),
+    );
 }
 
 export default actionPreflightCheck(build);

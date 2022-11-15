@@ -62,4 +62,27 @@ describe('--changed builds all the changed packages in order', () => {
     expect(result.stderr).toBeFalsy();
     expect(result.stdout).toContain('No changed workspaces found');
   });
+
+  it('builds changed (uncommitted) packages', () => {
+    fs.appendFileSync(
+      path.join(tempModularRepo, '/packages/b/src/index.ts'),
+      "\n// Comment to package b's source",
+    );
+    fs.appendFileSync(
+      path.join(tempModularRepo, '/packages/c/src/index.ts'),
+      "\n// Comment to package c's source",
+    );
+
+    const result = runLocalModular(currentModularFolder, tempModularRepo, [
+      'build',
+      '--changed',
+    ]);
+
+    expect(result.stderr).toBeFalsy();
+    expect(result.stdout).toContain('building b');
+    expect(result.stdout).toContain('building c');
+    expect(result.stdout).not.toContain('building a');
+    expect(result.stdout).not.toContain('building d');
+    expect(result.stdout).not.toContain('building e');
+  });
 });
