@@ -289,8 +289,8 @@ async function build({
     compareBranch,
   });
 
-  if (!selectBuildTargets) {
-    process.stdout.write('No changed workspaces found\n');
+  if (!selectedTargets.length) {
+    logger.log('No changed workspaces found');
     process.exit(0);
   }
 

@@ -132,3 +132,30 @@ export function mockInstallTemplate(
     path.join(tempRepoNodeModules, templateName),
   );
 }
+
+/**
+ * TODO: description
+ *
+ * @param TODO: something
+ * @param TODO: something else
+ */
+export function runLocalModular(
+  modularFolder: string,
+  cwd: string,
+  modularArguments: string[],
+): execa.ExecaSyncReturnValue<string> {
+  return execa.sync(
+    path.join(modularFolder, '/node_modules/.bin/ts-node'),
+    [
+      path.join(modularFolder, '/packages/modular-scripts/src/cli.ts'),
+      ...modularArguments,
+    ],
+    {
+      cwd,
+      env: {
+        ...process.env,
+        CI: 'true',
+      },
+    },
+  );
+}

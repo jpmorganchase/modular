@@ -73,7 +73,7 @@ program
   });
 
 program
-  .command('build <packages...>')
+  .command('build [packages...]')
   .description(
     'Build a list of packages (multiple package names can be supplied separated by space)',
   )
@@ -104,7 +104,15 @@ program
       },
     ) => {
       const { default: build } = await import('./build');
-      logger.log('building packages at:', packagePaths.join(', '));
+
+      options.changed
+        ? logger.log('Building changed packages')
+        : logger.log('Building packages at:', packagePaths.join(', '));
+
+      if (!packagePaths.length && !options.changed) {
+        process.stderr.write("error: missing required argument 'packages'");
+        process.exit(1);
+      }
 
       if (options.compareBranch && !options.changed) {
         process.stderr.write(
