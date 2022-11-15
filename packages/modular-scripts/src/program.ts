@@ -90,6 +90,11 @@ program
     false,
   )
   .option(
+    '--descendants',
+    'Build only for workspaces that descend from the specified packages (can be combined with --changed)',
+    false,
+  )
+  .option(
     '--compareBranch <branch>',
     "Specifies the branch to use with the --changed flag. If not specified, Modular will use the repo's default branch",
   )
@@ -101,6 +106,7 @@ program
         private: boolean;
         changed: boolean;
         compareBranch?: string;
+        descendants: boolean;
       },
     ) => {
       const { default: build } = await import('./build');
@@ -127,6 +133,7 @@ program
         private: options.private,
         changed: options.changed,
         compareBranch: options.compareBranch,
+        descendants: options.descendants,
       });
     },
   );

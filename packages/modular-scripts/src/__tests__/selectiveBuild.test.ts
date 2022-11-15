@@ -54,13 +54,43 @@ describe('--changed builds all the changed packages in order', () => {
     });
   });
 
-  it('builds nothing if everything committed', () => {
+  it('builds nothing when everything committed', () => {
     const result = runLocalModular(currentModularFolder, tempModularRepo, [
       'build',
       '--changed',
     ]);
     expect(result.stderr).toBeFalsy();
     expect(result.stdout).toContain('No changed workspaces found');
+  });
+
+  it('builds multiple packages', () => {
+    const result = runLocalModular(currentModularFolder, tempModularRepo, [
+      'build',
+      'e',
+      'a',
+    ]);
+
+    expect(result.stderr).toBeFalsy();
+    expect(result.stdout).not.toContain('building b');
+    expect(result.stdout).not.toContain('building c');
+    expect(result.stdout).toContain('building e');
+    expect(result.stdout).toContain('building a');
+    expect(result.stdout).not.toContain('building d');
+  });
+
+  it('builds a single package and its descendants', () => {
+    const result = runLocalModular(currentModularFolder, tempModularRepo, [
+      'build',
+      'b',
+      '--descendants',
+    ]);
+
+    expect(result.stderr).toBeFalsy();
+    expect(result.stdout).toContain('building b');
+    expect(result.stdout).not.toContain('building e');
+    expect(result.stdout).not.toContain('building a');
+    expect(result.stdout).toContain('building d');
+    expect(result.stdout).toContain('building c');
   });
 
   it('builds changed (uncommitted) packages', () => {
@@ -87,15 +117,6 @@ describe('--changed builds all the changed packages in order', () => {
   });
 
   it('builds changed (uncommitted) packages + packages that are explicitly specified', () => {
-    fs.appendFileSync(
-      path.join(tempModularRepo, '/packages/b/src/index.ts'),
-      "\n// Comment to package b's source",
-    );
-    fs.appendFileSync(
-      path.join(tempModularRepo, '/packages/c/src/index.ts'),
-      "\n// Comment to package c's source",
-    );
-
     const result = runLocalModular(currentModularFolder, tempModularRepo, [
       'build',
       'e',

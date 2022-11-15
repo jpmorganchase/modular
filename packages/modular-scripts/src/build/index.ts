@@ -274,12 +274,14 @@ async function build({
   packagePaths: targets,
   preserveModules = true,
   private: includePrivate,
+  descendants,
   changed,
   compareBranch,
 }: {
   packagePaths: string[];
   preserveModules: boolean;
   private: boolean;
+  descendants: boolean;
   changed: boolean;
   compareBranch?: string;
 }): Promise<void> {
@@ -287,6 +289,7 @@ async function build({
     targets,
     changed,
     compareBranch,
+    descendants,
   });
 
   if (!selectedTargets.length) {
@@ -331,25 +334,27 @@ async function selectBuildTargets({
 }: {
   targets: string[];
   changed: boolean;
-  descendants?: boolean;
+  descendants: boolean;
   compareBranch?: string;
 }): Promise<string[]> {
-  if (!changed) {
-    return targets;
+  const [, allWorkspacesMap] = await getAllWorkspaces(getModularRoot());
+  let changedTargets: string[] = [];
+
+  if (changed) {
+    const [, buildTargetMap] = await getChangedWorkspacesContent(compareBranch);
+    changedTargets = Object.keys(buildTargetMap);
+    logger.debug(
+      `Select changed workspaces: ${JSON.stringify(changedTargets)}`,
+    );
   }
 
-  const [, allWorkspacesMap] = await getAllWorkspaces(getModularRoot());
-  const [, buildTargetMap] = await getChangedWorkspacesContent(compareBranch);
-  const targetsToBuild = [
-    ...new Set(targets.concat(Object.keys(buildTargetMap))),
-  ];
+  const targetsToBuild = [...new Set(targets.concat(changedTargets))];
 
   if (!targetsToBuild.length) {
     return [];
   }
 
-  logger.debug(`Select changed workspaces: ${JSON.stringify(targetsToBuild)}`);
-
+  // Calculate the build order in any case; traverseWorkspaceRelations automatically selects the descendants for a "full" build
   const targetEntriesWithOrder = [
     ...traverseWorkspaceRelations(targetsToBuild, allWorkspacesMap).entries(),
   ];
@@ -360,12 +365,15 @@ async function selectBuildTargets({
     )}`,
   );
 
-  return targetEntriesWithOrder
-    .sort((a, b) => a[1] - b[1])
-    .map(([packageName]) => packageName)
-    .filter((packageName) =>
-      descendants ? true : targetsToBuild.includes(packageName),
-    );
+  return (
+    targetEntriesWithOrder
+      .sort((a, b) => a[1] - b[1])
+      .map(([packageName]) => packageName)
+      // Filter out descendants if we don't explicitly need them, maintaining the build order in case of multiple packages to build
+      .filter(
+        (packageName) => descendants || targetsToBuild.includes(packageName),
+      )
+  );
 }
 
 export default actionPreflightCheck(build);
