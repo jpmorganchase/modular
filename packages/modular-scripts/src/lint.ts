@@ -51,7 +51,7 @@ async function lint(
     displayName: 'lint',
     rootDir: modularRoot,
     testMatch: targetedFiles,
-    testPathIgnorePatterns: ['/node_modules/', '/dist/', '/__fixtures__/'],
+    testPathIgnorePatterns: ['/node_modules/', '/dist/'],
   };
 
   const testArgs = [
