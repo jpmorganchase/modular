@@ -76,7 +76,7 @@ describe('--changed builds all the changed packages in order', () => {
     expect(result.stdout).toContain('building e');
     expect(result.stdout).toContain('building a');
     expect(result.stdout).not.toContain('building d');
-    expect(getBuildOrder(result.stdout)).toEqual(['e', 'a']);
+    expect(getBuildOrder(result.stdout)).toEqual(['a', 'e']);
   });
 
   it('builds a single package and its descendants', () => {
@@ -92,7 +92,7 @@ describe('--changed builds all the changed packages in order', () => {
     expect(result.stdout).not.toContain('building a');
     expect(result.stdout).toContain('building d');
     expect(result.stdout).toContain('building c');
-    expect(getBuildOrder(result.stdout)).toEqual(['b', 'c', 'd']);
+    expect(getBuildOrder(result.stdout)).toEqual(['d', 'c', 'b']);
   });
 
   it('builds multiple packages and their descendants', () => {
@@ -109,7 +109,7 @@ describe('--changed builds all the changed packages in order', () => {
     expect(result.stdout).toContain('building a');
     expect(result.stdout).toContain('building d');
     expect(result.stdout).toContain('building c');
-    expect(getBuildOrder(result.stdout)).toEqual(['a', 'b', 'c', 'd']);
+    expect(getBuildOrder(result.stdout)).toEqual(['d', 'c', 'b', 'a']);
   });
 
   it('builds changed (uncommitted) packages', () => {
@@ -133,7 +133,7 @@ describe('--changed builds all the changed packages in order', () => {
     expect(result.stdout).not.toContain('building a');
     expect(result.stdout).not.toContain('building d');
     expect(result.stdout).not.toContain('building e');
-    expect(getBuildOrder(result.stdout)).toEqual(['b', 'c']);
+    expect(getBuildOrder(result.stdout)).toEqual(['c', 'b']);
   });
 
   it('builds changed (uncommitted) packages + packages that are explicitly specified', () => {
@@ -149,7 +149,7 @@ describe('--changed builds all the changed packages in order', () => {
     expect(result.stdout).toContain('building e');
     expect(result.stdout).not.toContain('building a');
     expect(result.stdout).not.toContain('building d');
-    expect(getBuildOrder(result.stdout)).toEqual(['e', 'b', 'c']);
+    expect(getBuildOrder(result.stdout)).toEqual(['c', 'b', 'e']);
   });
 
   it('builds changed (uncommitted) packages and their descendants', () => {
@@ -165,7 +165,7 @@ describe('--changed builds all the changed packages in order', () => {
     expect(result.stdout).not.toContain('building a');
     expect(result.stdout).toContain('building d');
     expect(result.stdout).toContain('building c');
-    expect(getBuildOrder(result.stdout)).toEqual(['b', 'c', 'd']);
+    expect(getBuildOrder(result.stdout)).toEqual(['d', 'c', 'b']);
   });
 });
 

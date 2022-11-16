@@ -91,7 +91,12 @@ program
   )
   .option(
     '--descendants',
-    'Build only for workspaces that descend from the specified packages (can be combined with --changed)',
+    'Additionally build workspaces that descend from the specified packages (can be combined with --changed)',
+    false,
+  )
+  .option(
+    '--ancestors',
+    'Additionally build workspaces that are ancestors of the specified packages (can be combined with --changed)',
     false,
   )
   .option(
@@ -106,6 +111,7 @@ program
         private: boolean;
         changed: boolean;
         compareBranch?: string;
+        ancestors: boolean;
         descendants: boolean;
       },
     ) => {
@@ -133,6 +139,7 @@ program
         private: options.private,
         changed: options.changed,
         compareBranch: options.compareBranch,
+        ancestors: options.ancestors,
         descendants: options.descendants,
       });
     },

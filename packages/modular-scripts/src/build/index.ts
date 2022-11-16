@@ -3,7 +3,6 @@ import chalk from 'chalk';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as minimize from 'html-minifier-terser';
-import { traverseWorkspaceRelations } from '@modular-scripts/workspace-resolver';
 import type { CoreProperties } from '@schemastore/package';
 import type { ModularType } from '@modular-scripts/modular-types';
 
@@ -11,10 +10,9 @@ import * as logger from '../utils/logger';
 import getModularRoot from '../utils/getModularRoot';
 import actionPreflightCheck from '../utils/actionPreflightCheck';
 import { getModularType } from '../utils/isModularType';
-import { getAllWorkspaces } from '../utils/getAllWorkspaces';
-import { getChangedWorkspacesContent } from '../utils/getChangedWorkspaces';
 import execAsync from '../utils/execAsync';
 import getLocation from '../utils/getLocation';
+import { selectWorkspaces } from '../utils/selectWorkspaces';
 import { setupEnvForDirectory } from '../utils/setupEnv';
 import createPaths from '../utils/createPaths';
 import printHostingInstructions from './printHostingInstructions';
@@ -274,6 +272,7 @@ async function build({
   packagePaths: targets,
   preserveModules = true,
   private: includePrivate,
+  ancestors,
   descendants,
   changed,
   compareBranch,
@@ -281,15 +280,17 @@ async function build({
   packagePaths: string[];
   preserveModules: boolean;
   private: boolean;
+  ancestors: boolean;
   descendants: boolean;
   changed: boolean;
   compareBranch?: string;
 }): Promise<void> {
-  const selectedTargets = await selectBuildTargets({
+  const selectedTargets = await selectWorkspaces({
     targets,
     changed,
     compareBranch,
     descendants,
+    ancestors,
   });
 
   if (!selectedTargets.length) {
@@ -324,56 +325,6 @@ async function build({
       throw err;
     }
   }
-}
-
-async function selectBuildTargets({
-  targets,
-  changed,
-  descendants,
-  compareBranch,
-}: {
-  targets: string[];
-  changed: boolean;
-  descendants: boolean;
-  compareBranch?: string;
-}): Promise<string[]> {
-  const [, allWorkspacesMap] = await getAllWorkspaces(getModularRoot());
-  let changedTargets: string[] = [];
-
-  if (changed) {
-    const [, buildTargetMap] = await getChangedWorkspacesContent(compareBranch);
-    changedTargets = Object.keys(buildTargetMap);
-    logger.debug(
-      `Select changed workspaces: ${JSON.stringify(changedTargets)}`,
-    );
-  }
-
-  const targetsToBuild = [...new Set(targets.concat(changedTargets))];
-
-  if (!targetsToBuild.length) {
-    return [];
-  }
-
-  // Calculate the build order in any case; traverseWorkspaceRelations automatically selects the descendants for a "full" build
-  const targetEntriesWithOrder = [
-    ...traverseWorkspaceRelations(targetsToBuild, allWorkspacesMap).entries(),
-  ];
-
-  logger.debug(
-    `Computing order of changed workspaces: ${JSON.stringify(
-      targetEntriesWithOrder,
-    )}`,
-  );
-
-  return (
-    targetEntriesWithOrder
-      .sort((a, b) => a[1] - b[1])
-      .map(([packageName]) => packageName)
-      // Filter out descendants if we don't explicitly need them, maintaining the build order in case of multiple packages to build
-      .filter(
-        (packageName) => descendants || targetsToBuild.includes(packageName),
-      )
-  );
 }
 
 export default actionPreflightCheck(build);
