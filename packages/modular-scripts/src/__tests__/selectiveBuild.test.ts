@@ -71,11 +71,6 @@ describe('--changed builds all the changed packages in order', () => {
     ]);
 
     expect(result.stderr).toBeFalsy();
-    expect(result.stdout).not.toContain('building b');
-    expect(result.stdout).not.toContain('building c');
-    expect(result.stdout).toContain('building e');
-    expect(result.stdout).toContain('building a');
-    expect(result.stdout).not.toContain('building d');
     expect(getBuildOrder(result.stdout)).toEqual(['a', 'e']);
   });
 
@@ -87,12 +82,18 @@ describe('--changed builds all the changed packages in order', () => {
     ]);
 
     expect(result.stderr).toBeFalsy();
-    expect(result.stdout).toContain('building b');
-    expect(result.stdout).not.toContain('building e');
-    expect(result.stdout).not.toContain('building a');
-    expect(result.stdout).toContain('building d');
-    expect(result.stdout).toContain('building c');
     expect(getBuildOrder(result.stdout)).toEqual(['d', 'c', 'b']);
+  });
+
+  it('builds a single package and its ancestors', () => {
+    const result = runLocalModular(currentModularFolder, tempModularRepo, [
+      'build',
+      'b',
+      '--ancestors',
+    ]);
+
+    expect(result.stderr).toBeFalsy();
+    expect(getBuildOrder(result.stdout)).toEqual(['b', 'a', 'e']);
   });
 
   it('builds multiple packages and their descendants', () => {
@@ -104,12 +105,19 @@ describe('--changed builds all the changed packages in order', () => {
     ]);
 
     expect(result.stderr).toBeFalsy();
-    expect(result.stdout).toContain('building b');
-    expect(result.stdout).not.toContain('building e');
-    expect(result.stdout).toContain('building a');
-    expect(result.stdout).toContain('building d');
-    expect(result.stdout).toContain('building c');
     expect(getBuildOrder(result.stdout)).toEqual(['d', 'c', 'b', 'a']);
+  });
+
+  it('builds multiple packages and their ancestors', () => {
+    const result = runLocalModular(currentModularFolder, tempModularRepo, [
+      'build',
+      'd',
+      'a',
+      '--ancestors',
+    ]);
+
+    expect(result.stderr).toBeFalsy();
+    expect(getBuildOrder(result.stdout)).toEqual(['d', 'c', 'b', 'a', 'e']);
   });
 
   it('builds changed (uncommitted) packages', () => {
@@ -128,11 +136,6 @@ describe('--changed builds all the changed packages in order', () => {
     ]);
 
     expect(result.stderr).toBeFalsy();
-    expect(result.stdout).toContain('building b');
-    expect(result.stdout).toContain('building c');
-    expect(result.stdout).not.toContain('building a');
-    expect(result.stdout).not.toContain('building d');
-    expect(result.stdout).not.toContain('building e');
     expect(getBuildOrder(result.stdout)).toEqual(['c', 'b']);
   });
 
@@ -144,11 +147,6 @@ describe('--changed builds all the changed packages in order', () => {
     ]);
 
     expect(result.stderr).toBeFalsy();
-    expect(result.stdout).toContain('building b');
-    expect(result.stdout).toContain('building c');
-    expect(result.stdout).toContain('building e');
-    expect(result.stdout).not.toContain('building a');
-    expect(result.stdout).not.toContain('building d');
     expect(getBuildOrder(result.stdout)).toEqual(['c', 'b', 'e']);
   });
 
@@ -160,12 +158,18 @@ describe('--changed builds all the changed packages in order', () => {
     ]);
 
     expect(result.stderr).toBeFalsy();
-    expect(result.stdout).toContain('building b');
-    expect(result.stdout).not.toContain('building e');
-    expect(result.stdout).not.toContain('building a');
-    expect(result.stdout).toContain('building d');
-    expect(result.stdout).toContain('building c');
     expect(getBuildOrder(result.stdout)).toEqual(['d', 'c', 'b']);
+  });
+
+  it('builds changed (uncommitted) packages and their ancestors', () => {
+    const result = runLocalModular(currentModularFolder, tempModularRepo, [
+      'build',
+      '--changed',
+      '--ancestors',
+    ]);
+
+    expect(result.stderr).toBeFalsy();
+    expect(getBuildOrder(result.stdout)).toEqual(['c', 'b', 'a', 'e']);
   });
 });
 
