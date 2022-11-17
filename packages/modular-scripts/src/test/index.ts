@@ -9,6 +9,7 @@ import { getAllWorkspaces } from '../utils/getAllWorkspaces';
 import { getChangedWorkspaces } from '../utils/getChangedWorkspaces';
 import { resolveAsBin } from '../utils/resolveAsBin';
 import * as logger from '../utils/logger';
+import * as tmp from 'tmp';
 import type {
   WorkspaceContent,
   ModularWorkspacePackage,
@@ -86,9 +87,14 @@ async function test(
   // create argv from jest Options
   const cleanArgv: string[] = [];
 
-  // pass in path to configuration file
+  // pass in jest configuration
   const { createJestConfig } = await import('./config');
-  const tempConfigPath = path.join(getModularRoot(), 'temp-config.json');
+
+  // Only used when running on Windows
+  const tempConfigPath = path.join(tmp.dirSync().name, 'temp-jest-config.json');
+
+  // Windows: pass in configuration as a file as jest won't accept "" around the object and Windows doesn't accept JSON object {} passed directly
+  // Any other plaform pass config directly to command
   if (process.platform === 'win32') {
     writeJSONSync(
       tempConfigPath,
