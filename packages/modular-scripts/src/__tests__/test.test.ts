@@ -3,6 +3,7 @@ import path from 'path';
 import fs from 'fs-extra';
 import tmp from 'tmp';
 import getModularRoot from '../utils/getModularRoot';
+import { runLocalModular } from '../test/utils';
 
 function setupTests(fixturesFolder: string) {
   const files = fs.readdirSync(path.join(fixturesFolder));
@@ -129,7 +130,7 @@ describe('Modular test command', () => {
 
     // These expects run in a single test, serially for performance reasons (the setup time is quite long)
     it('finds no unchanged using --changed / finds changed after modifying some workspaces / finds ancestors using --ancestors', () => {
-      const resultUnchanged = runRemoteModularTest(
+      const resultUnchanged = runLocalModular(
         currentModularFolder,
         randomOutputFolder,
         ['test', '--changed'],
@@ -145,7 +146,7 @@ describe('Modular test command', () => {
         "\n// Comment to package c's source",
       );
 
-      const resultChanged = runRemoteModularTest(
+      const resultChanged = runLocalModular(
         currentModularFolder,
         randomOutputFolder,
         ['test', '--changed'],
@@ -163,7 +164,7 @@ describe('Modular test command', () => {
         'packages/b/src/__tests__/b.test.ts',
       );
 
-      const resultChangedWithAncestors = runRemoteModularTest(
+      const resultChangedWithAncestors = runLocalModular(
         currentModularFolder,
         randomOutputFolder,
         ['test', '--changed', '--ancestors'],
@@ -220,7 +221,7 @@ describe('Modular test command', () => {
 
     // Run in a single test, serially for performance reasons (the setup time is quite long)
     it('finds --package after specifying a valid workspaces / finds ancestors using --ancestors', () => {
-      const resultPackages = runRemoteModularTest(
+      const resultPackages = runLocalModular(
         currentModularFolder,
         randomOutputFolder,
         ['test', '--package', 'b', '--package', 'c'],
@@ -238,7 +239,7 @@ describe('Modular test command', () => {
         'packages/b/src/__tests__/b.test.ts',
       );
 
-      const resultPackagesWithAncestors = runRemoteModularTest(
+      const resultPackagesWithAncestors = runLocalModular(
         currentModularFolder,
         randomOutputFolder,
         ['test', '--ancestors', '--package', 'b', '--package', 'c'],
@@ -398,24 +399,3 @@ describe('Modular test command', () => {
     });
   });
 });
-
-function runRemoteModularTest(
-  modularFolder: string,
-  cwd: string,
-  modularArguments: string[],
-) {
-  return execa.sync(
-    path.join(modularFolder, '/node_modules/.bin/ts-node'),
-    [
-      path.join(modularFolder, '/packages/modular-scripts/src/cli.ts'),
-      ...modularArguments,
-    ],
-    {
-      cwd,
-      env: {
-        ...process.env,
-        CI: 'true',
-      },
-    },
-  );
-}

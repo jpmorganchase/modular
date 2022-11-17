@@ -1,0 +1,13 @@
+{
+  "name": "a",
+  "private": false,
+  "modular": {
+    "type": "package"
+  },
+  "main": "./src/index.ts",
+  "version": "1.0.0",
+  "dependencies": {
+    "b": "1.0.0",
+    "c": "1.0.0"
+  }
+}
