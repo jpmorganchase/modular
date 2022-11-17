@@ -87,10 +87,14 @@ async function test(
 
   // pass in path to configuration file
   const { createJestConfig } = await import('./config');
-  cleanArgv.push(
-    '--config',
-    `${JSON.stringify(createJestConfig({ reporters, testResultsProcessor }))}`,
-  );
+  const jestConfigString = `${JSON.stringify(
+    createJestConfig({ reporters, testResultsProcessor }),
+  )}`;
+  const jestConfigFormatted =
+    process.platform === 'win32'
+      ? `"${jestConfigString}"`
+      : `${jestConfigString}`;
+  cleanArgv.push('--config', jestConfigFormatted);
 
   let resolvedEnv;
   try {

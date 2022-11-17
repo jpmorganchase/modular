@@ -54,12 +54,12 @@ async function lint(
     testPathIgnorePatterns: ['/node_modules/', '/dist/'],
   };
   console.log(`PLATFORM: ${process.platform}`);
-  const jestConfig =
+  const jestEslintConfigFormatted =
     process.platform === 'win32'
       ? `"${JSON.stringify(jestEslintConfig)}"`
       : `${JSON.stringify(jestEslintConfig)}`;
 
-  const testArgs = [...regexes, '--config', jestConfig];
+  const testArgs = [...regexes, '--config', jestEslintConfigFormatted];
 
   const testBin = await resolveAsBin('jest-cli');
 
