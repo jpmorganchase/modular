@@ -53,7 +53,7 @@ async function lint(
     testMatch: targetedFiles,
     testPathIgnorePatterns: ['/node_modules/', '/dist/'],
   };
-
+  console.log(`PLATFORM: ${process.platform}`);
   const jestConfig =
     process.platform === 'win32'
       ? `"${JSON.stringify(jestEslintConfig)}"`
