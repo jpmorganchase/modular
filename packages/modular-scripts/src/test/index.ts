@@ -14,7 +14,7 @@ import type {
   WorkspaceContent,
   ModularWorkspacePackage,
 } from '@modular-scripts/modular-types';
-import { removeSync, writeJSONSync } from 'fs-extra';
+import { writeJSONSync } from 'fs-extra';
 
 export interface TestOptions {
   ancestors: boolean;
@@ -215,9 +215,6 @@ async function test(
     // ✕ Modular test did not pass
     throw new Error('\u2715 Modular test did not pass');
   }
-
-  // Clean up temp config file
-  removeSync(tempConfigPath);
 }
 
 // This function takes all the selective options, validates them and returns a subset of workspaces to test
