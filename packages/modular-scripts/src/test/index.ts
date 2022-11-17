@@ -8,13 +8,11 @@ import getModularRoot from '../utils/getModularRoot';
 import { getAllWorkspaces } from '../utils/getAllWorkspaces';
 import { getChangedWorkspaces } from '../utils/getChangedWorkspaces';
 import { resolveAsBin } from '../utils/resolveAsBin';
-import { writeJsonSync, rmdirSync } from 'fs-extra';
 import * as logger from '../utils/logger';
 import type {
   WorkspaceContent,
   ModularWorkspacePackage,
 } from '@modular-scripts/modular-types';
-import { modularRoot } from '../../react-scripts/config/paths';
 
 export interface TestOptions {
   ancestors: boolean;
@@ -88,14 +86,7 @@ async function test(
   const cleanArgv: string[] = [];
 
   // pass in path to configuration file
-  const { createJestConfig } = await import('./config');
-  const configFile = path.join(modularRoot, 'tmp-config', 'jest.config.json');
-  writeJsonSync(
-    configFile,
-    createJestConfig({ reporters, testResultsProcessor }),
-  );
-
-  cleanArgv.push('--config', configFile);
+  cleanArgv.push('--config', './config');
 
   let resolvedEnv;
   try {
@@ -202,9 +193,6 @@ async function test(
     // ✕ Modular test did not pass
     throw new Error('\u2715 Modular test did not pass');
   }
-
-  // Clean up config file
-  rmdirSync(path.join(modularRoot, 'tmp-config'), { recursive: true });
 }
 
 // This function takes all the selective options, validates them and returns a subset of workspaces to test
