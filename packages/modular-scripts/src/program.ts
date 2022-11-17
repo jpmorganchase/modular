@@ -96,7 +96,7 @@ program
   )
   .option(
     '--ancestors',
-    'Additionally build workspaces that are directly or indirectly depended on by the specified packages (can be combined with --changed)',
+    'Additionally build workspaces that directly or indirectly depend on the specified packages (can be combined with --changed)',
     false,
   )
   .option(
