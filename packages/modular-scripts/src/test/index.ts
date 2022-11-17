@@ -13,6 +13,7 @@ import type {
   WorkspaceContent,
   ModularWorkspacePackage,
 } from '@modular-scripts/modular-types';
+import { removeSync, writeJSONSync } from 'fs-extra';
 
 export interface TestOptions {
   ancestors: boolean;
@@ -86,7 +87,22 @@ async function test(
   const cleanArgv: string[] = [];
 
   // pass in path to configuration file
-  cleanArgv.push('--config', './config');
+  const { createJestConfig } = await import('./config');
+  const tempConfigPath = path.join(getModularRoot(), 'temp-config.json');
+  if (process.platform === 'win32') {
+    writeJSONSync(
+      tempConfigPath,
+      createJestConfig({ reporters, testResultsProcessor }),
+    );
+    cleanArgv.push('--config', `${tempConfigPath}`);
+  } else {
+    cleanArgv.push(
+      '--config',
+      `${JSON.stringify(
+        createJestConfig({ reporters, testResultsProcessor }),
+      )}`,
+    );
+  }
 
   let resolvedEnv;
   try {
@@ -193,6 +209,9 @@ async function test(
     // ✕ Modular test did not pass
     throw new Error('\u2715 Modular test did not pass');
   }
+
+  // Clean up temp config file
+  removeSync(tempConfigPath);
 }
 
 // This function takes all the selective options, validates them and returns a subset of workspaces to test
