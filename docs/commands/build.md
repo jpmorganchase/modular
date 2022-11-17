@@ -36,8 +36,7 @@ have changed when using the `changed` option. If this option is used without
 
 `--descendants`: Build the packages specified by the `[packages...]` argument
 and/or the `--changed` option and additionally build all their descendants (i.e.
-the packages that have a direct or indirect dependency on them) in dependency
-order.
+the packages they directly or indirectly depend on) in dependency order.
 
 `--ancestors`: Build the packages specified by the `[packages...]` argument
 and/or the `--changed` option and additionally build all their ancestors (i.e.
@@ -46,8 +45,52 @@ order.
 
 ## Dependency selection and build order examples
 
-We'll be using this configuration of internal (workspace) dependencies in the
-following examples.
+We'll be using this package manifests in our Modular monorepo for the following
+examples:
+
+```js
+{
+  "name": "a",
+  "dependencies": {
+    "b": "*",
+    "c": "*",
+    "react": ">16.8.0",
+    // ...
+  }
+}
+
+{
+  "name": "b",
+  "dependencies": {
+    "c": "*",
+    "react": ">16.8.0",
+    // ...
+  }
+}
+
+{
+  "name": "c",
+  "dependencies": {
+    "d": "*",
+    // ...
+  }
+}
+
+{
+  "name": "d",
+  "dependencies": {}
+}
+
+{
+  "name": "e",
+  "dependencies": {
+    "a": "*",
+    // ...
+  }
+}
+```
+
+Which internally are filtered into this set of `WorkspaceDependencyObject`s:
 
 ```js
 {

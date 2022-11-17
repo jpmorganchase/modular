@@ -139,19 +139,19 @@ export function mockInstallTemplate(
  *
  * Useful to run modular from source in a different directory (usually a temp directory created for tests)
  *
- * @param  modularFolder The root folder in which the modular repo resides
+ * @param modularToRun The root modular repo folder containing the modular-scripts to run
  * @param cwd The target working directory where we want to run Modular
  * @param modularArguments A list of command-line arguments
  */
 export function runLocalModular(
-  modularFolder: string,
+  modularToRun: string,
   cwd: string,
   modularArguments: string[],
 ): execa.ExecaSyncReturnValue<string> {
   return execa.sync(
-    path.join(modularFolder, '/node_modules/.bin/ts-node'),
+    path.join(modularToRun, '/node_modules/.bin/ts-node'),
     [
-      path.join(modularFolder, '/packages/modular-scripts/src/cli.ts'),
+      path.join(modularToRun, '/packages/modular-scripts/src/cli.ts'),
       ...modularArguments,
     ],
     {

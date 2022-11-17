@@ -91,12 +91,12 @@ program
   )
   .option(
     '--descendants',
-    'Additionally build workspaces that descend from the specified packages (can be combined with --changed)',
+    'Additionally build workspaces that the specified packages directly or indirectly depend on (can be combined with --changed)',
     false,
   )
   .option(
     '--ancestors',
-    'Additionally build workspaces that are ancestors of the specified packages (can be combined with --changed)',
+    'Additionally build workspaces that are directly or indirectly depended on by the specified packages (can be combined with --changed)',
     false,
   )
   .option(

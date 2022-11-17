@@ -5,7 +5,12 @@ import getModularRoot from './getModularRoot';
 import { getAllWorkspaces } from './getAllWorkspaces';
 import type { WorkspaceContent } from '@modular-scripts/modular-types';
 
-// This function returns a WorkspaceContent containing all the changed workspaces, compared to targetBranch
+/**
+ * Return a WorkspaceContent containing all the changed workspaces, compared to a targetBranch
+ *
+ * @param targetBranch The branch to compare the current branch to select the changed workspaces
+ */
+
 export async function getChangedWorkspacesContent(
   targetBranch: string | undefined,
 ): Promise<WorkspaceContent> {
