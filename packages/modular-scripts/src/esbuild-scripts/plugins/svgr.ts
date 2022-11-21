@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as fs from 'fs-extra';
 import esbuild from 'esbuild';
 import { createRequire } from 'module';
@@ -12,14 +10,21 @@ import { normalizeToPosix } from '../utils/formatPath';
 const svgrOptions: svgr.Config = {
   template(
     variables: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       imports: any;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       interfaces: any;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       componentName: any;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       props: any;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       jsx: any;
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     { tpl }: any,
-  ): any {
+  ) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
     return tpl`
   ${variables.imports};
   
@@ -27,7 +32,7 @@ const svgrOptions: svgr.Config = {
   
   export function ${variables.componentName}(${variables.props}) {
     return (
-      ${variables.jsx}s
+      ${variables.jsx}
     );
   }
   `;
