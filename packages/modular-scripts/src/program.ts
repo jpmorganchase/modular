@@ -65,7 +65,7 @@ program
 
 program
   .command('analyze <package-name>')
-
+  .description(`Analyze the dependencies of a package.`)
   .action(async (packageName: string) => {
     const { default: analyze } = await import('./analyze');
     return analyze({
