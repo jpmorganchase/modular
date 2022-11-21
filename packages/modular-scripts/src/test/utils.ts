@@ -1,6 +1,6 @@
 import _rimraf from 'rimraf';
 import execa from 'execa';
-import fs from 'fs-extra';
+import fs, { writeJSONSync } from 'fs-extra';
 import path from 'path';
 import * as tmp from 'tmp';
 import { promisify } from 'util';
@@ -8,6 +8,7 @@ import { promisify } from 'util';
 import getModularRoot from '../utils/getModularRoot';
 import type { ModularPackageJson } from '@modular-scripts/modular-types';
 import { mkdirSync } from 'fs';
+import type { Config } from '@jest/types';
 
 const rimraf = promisify(_rimraf);
 
@@ -131,4 +132,24 @@ export function mockInstallTemplate(
     path.join(tempTemplatesPath, templateName),
     path.join(tempRepoNodeModules, templateName),
   );
+}
+
+/**
+ * Generates the Jest --config flag contents to pass when calling Jest based on config JSON provided
+ *
+ * - On Mac, it will provide a stringyfied version of the config JSON provided
+ *
+ * - On Windows, it will write the config JSON to a file in a temp directory and provde the path to pass
+ */
+export function generateJestConfig(jestConfig: Config.InitialOptions): string {
+  if (process.platform === 'win32') {
+    const tempConfigPath = path.join(
+      tmp.dirSync().name,
+      'temp-jest-config.json',
+    );
+    writeJSONSync(tempConfigPath, jestConfig);
+    return `${tempConfigPath}`;
+  } else {
+    return `${JSON.stringify(jestConfig)}`;
+  }
 }

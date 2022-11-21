@@ -9,12 +9,11 @@ import { getAllWorkspaces } from '../utils/getAllWorkspaces';
 import { getChangedWorkspaces } from '../utils/getChangedWorkspaces';
 import { resolveAsBin } from '../utils/resolveAsBin';
 import * as logger from '../utils/logger';
-import * as tmp from 'tmp';
 import type {
   WorkspaceContent,
   ModularWorkspacePackage,
 } from '@modular-scripts/modular-types';
-import { writeJSONSync } from 'fs-extra';
+import { generateJestConfig } from './utils';
 
 export interface TestOptions {
   ancestors: boolean;
@@ -89,26 +88,10 @@ async function test(
 
   // pass in jest configuration
   const { createJestConfig } = await import('./config');
-
-  // Only used when running on Windows
-  const tempConfigPath = path.join(tmp.dirSync().name, 'temp-jest-config.json');
-
-  // Windows: pass in configuration as a file as jest won't accept "" around the object and Windows doesn't accept JSON object {} passed directly
-  // Any other plaform pass config directly to command
-  if (process.platform === 'win32') {
-    writeJSONSync(
-      tempConfigPath,
-      createJestConfig({ reporters, testResultsProcessor }),
-    );
-    cleanArgv.push('--config', `${tempConfigPath}`);
-  } else {
-    cleanArgv.push(
-      '--config',
-      `${JSON.stringify(
-        createJestConfig({ reporters, testResultsProcessor }),
-      )}`,
-    );
-  }
+  cleanArgv.push(
+    '--config',
+    generateJestConfig(createJestConfig({ reporters, testResultsProcessor })),
+  );
 
   let resolvedEnv;
   try {

@@ -8,8 +8,7 @@ import getModularRoot from './utils/getModularRoot';
 import execAsync from './utils/execAsync';
 import { addFiles, getDiffedFiles, getStagedFiles } from './utils/gitActions';
 import * as logger from './utils/logger';
-import * as tmp from 'tmp';
-import { writeJSONSync } from 'fs-extra';
+import { generateJestConfig } from './test/utils';
 export interface LintOptions {
   all: boolean;
   fix: boolean;
@@ -55,21 +54,11 @@ async function lint(
     testPathIgnorePatterns: ['/node_modules/', '/dist/'],
   };
 
-  // Only used when running on Windows
-  const tempConfigPath = path.join(
-    tmp.dirSync().name,
-    'temp-jest-eslint-config.json',
-  );
-
-  // Windows: pass in configuration as a file as jest won't accept "" around the object and Windows doesn't accept JSON object {} passed directly
-  // Any other plaform pass config directly to command
-  let testArgs: string[];
-  if (process.platform === 'win32') {
-    writeJSONSync(tempConfigPath, jestEslintConfig);
-    testArgs = [...regexes, '--config', tempConfigPath];
-  } else {
-    testArgs = [...regexes, '--config', JSON.stringify(jestEslintConfig)];
-  }
+  const testArgs = [
+    ...regexes,
+    '--config',
+    generateJestConfig(jestEslintConfig),
+  ];
 
   const testBin = await resolveAsBin('jest-cli');
 
