@@ -147,7 +147,7 @@ program
   .option('--updateSnapshot, -u', testOptions.updateSnapshot.description)
   .option('--verbose', testOptions.verbose.description)
   .option('--watch', testOptions.watch.description)
-  .option('--watchAll [value]', testOptions.watchAll.description, !isCI)
+  .option('--watchAll [value]', testOptions.watchAll.description, false)
   .option('--bail [value]', testOptions.bail.description, isCI)
   .option('--clearCache', testOptions.clearCache.description)
   .option('--logHeapUsage', testOptions.logHeapUsage.description)
