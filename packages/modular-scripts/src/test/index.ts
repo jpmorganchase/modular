@@ -13,6 +13,7 @@ import type {
   WorkspaceContent,
   ModularWorkspacePackage,
 } from '@modular-scripts/modular-types';
+import { generateJestConfig } from './utils';
 
 export interface TestOptions {
   ancestors: boolean;
@@ -85,13 +86,11 @@ async function test(
   // create argv from jest Options
   const cleanArgv: string[] = [];
 
-  // pass in path to configuration file
+  // pass in jest configuration
   const { createJestConfig } = await import('./config');
   cleanArgv.push(
     '--config',
-    `"${JSON.stringify(
-      createJestConfig({ reporters, testResultsProcessor }),
-    )}"`,
+    generateJestConfig(createJestConfig({ reporters, testResultsProcessor })),
   );
 
   let resolvedEnv;

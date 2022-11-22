@@ -98,7 +98,7 @@ describe('modular-scripts', () => {
         ├─ package.json
         └─ src
            ├─ __tests__
-           │  └─ index.test.tsx #slarlz
+           │  └─ index.test.tsx #1ul24q9
            └─ index.tsx #19kersg"
       `);
     });
@@ -201,24 +201,24 @@ describe('modular-scripts', () => {
           path.join(modularRoot, 'dist', 'sample-view', 'package.json'),
         ),
       ).toMatchInlineSnapshot(`
-        Object {
-          "dependencies": Object {
+        {
+          "dependencies": {
             "react": "17.0.2",
           },
-          "files": Array [
+          "files": [
             "dist-cjs",
             "dist-es",
             "dist-types",
             "README.md",
           ],
           "main": "dist-cjs/index.js",
-          "modular": Object {
+          "modular": {
             "type": "view",
           },
           "module": "dist-es/index.js",
           "name": "sample-view",
           "private": false,
-          "repository": Object {
+          "repository": {
             "directory": "packages/sample-view",
             "type": "git",
             "url": "https://github.com/jpmorganchase/modular.git",
@@ -297,14 +297,14 @@ describe('modular-scripts', () => {
         │  ├─ index.js #p1m6x9
         │  ├─ index.js.map #16jes1h
         │  ├─ index2.js #dbk75e
-        │  └─ index2.js.map #11cwgsp
+        │  └─ index2.js.map #1mldv0
         ├─ dist-es
         │  ├─ index.js #tcl83f
         │  ├─ index.js.map #yz1h1d
         │  ├─ index2.js #urz4k4
-        │  └─ index2.js.map #1w4fdrj
+        │  └─ index2.js.map #1p2gdzx
         ├─ dist-types
-        │  └─ index.d.ts #1vloh7q
+        │  └─ index.d.ts #obuyms
         └─ package.json"
       `);
     });
@@ -355,22 +355,22 @@ describe('modular-scripts', () => {
           path.join(modularRoot, 'dist', 'sample-package', 'package.json'),
         ),
       ).toMatchInlineSnapshot(`
-        Object {
-          "dependencies": Object {},
-          "files": Array [
+        {
+          "dependencies": {},
+          "files": [
             "dist-cjs",
             "dist-es",
             "dist-types",
             "README.md",
           ],
           "main": "dist-cjs/index.js",
-          "modular": Object {
+          "modular": {
             "type": "package",
           },
           "module": "dist-es/index.js",
           "name": "sample-package",
           "private": false,
-          "repository": Object {
+          "repository": {
             "directory": "packages/sample-package",
             "type": "git",
             "url": "https://github.com/jpmorganchase/modular.git",
@@ -389,12 +389,12 @@ describe('modular-scripts', () => {
         │  ├─ index.js #p1m6x9
         │  ├─ index.js.map #16jes1h
         │  ├─ index2.js #6y6kyx
-        │  └─ index2.js.map #10ij9v
+        │  └─ index2.js.map #14fansi
         ├─ dist-es
         │  ├─ index.js #tcl83f
         │  ├─ index.js.map #yz1h1d
         │  ├─ index2.js #hx36fq
-        │  └─ index2.js.map #bbrfkq
+        │  └─ index2.js.map #1s1miqv
         ├─ dist-types
         │  └─ index.d.ts #f68aj
         └─ package.json"
@@ -436,22 +436,22 @@ describe('modular-scripts', () => {
           ),
         ),
       ).toMatchInlineSnapshot(`
-        Object {
-          "dependencies": Object {},
-          "files": Array [
+        {
+          "dependencies": {},
+          "files": [
             "dist-cjs",
             "dist-es",
             "dist-types",
             "README.md",
           ],
           "main": "dist-cjs/nested-sample-package.cjs.js",
-          "modular": Object {
+          "modular": {
             "type": "package",
           },
           "module": "dist-es/nested-sample-package.es.js",
           "name": "@nested/sample-package",
           "private": false,
-          "repository": Object {
+          "repository": {
             "directory": "packages/nested/sample-package",
             "type": "git",
             "url": "https://github.com/jpmorganchase/modular.git",
@@ -468,10 +468,10 @@ describe('modular-scripts', () => {
         "nested-sample-package
         ├─ dist-cjs
         │  ├─ nested-sample-package.cjs.js #kv2xzp
-        │  └─ nested-sample-package.cjs.js.map #bgpzsg
+        │  └─ nested-sample-package.cjs.js.map #1vw1uze
         ├─ dist-es
         │  ├─ nested-sample-package.es.js #11z6hlv
-        │  └─ nested-sample-package.es.js.map #14mne6l
+        │  └─ nested-sample-package.es.js.map #1nblmnq
         ├─ dist-types
         │  └─ index.d.ts #f68aj
         └─ package.json"

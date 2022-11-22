@@ -7,6 +7,7 @@ import commander, { Option } from 'commander';
 import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import type { TestOptions } from './test';
 import type { LintOptions } from './lint';
+import { testOptions } from './test/jestOptions';
 
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import * as logger from './utils/logger';
@@ -103,17 +104,6 @@ program
     },
   );
 
-interface JestOption {
-  default?: boolean | string;
-  description: string;
-  type: 'boolean' | 'string';
-}
-type JestOptions = Record<string, JestOption>;
-
-const testOptions =
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  (require('jest-cli/build/cli/args.js') as { options: JestOptions }).options;
-
 interface CLITestOptions extends TestOptions {
   U: boolean;
 }
@@ -157,7 +147,7 @@ program
   .option('--updateSnapshot, -u', testOptions.updateSnapshot.description)
   .option('--verbose', testOptions.verbose.description)
   .option('--watch', testOptions.watch.description)
-  .option('--watchAll [value]', testOptions.watchAll.description, !isCI)
+  .option('--watchAll [value]', testOptions.watchAll.description, false)
   .option('--bail [value]', testOptions.bail.description, isCI)
   .option('--clearCache', testOptions.clearCache.description)
   .option('--logHeapUsage', testOptions.logHeapUsage.description)

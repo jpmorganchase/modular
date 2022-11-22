@@ -5,9 +5,9 @@ name: Windows Test
 
 on:
   push:
-    branches: [main, 'release/**']
+    branches: [main, 'release/**', feature/v4]
   pull_request:
-    branches: [main, 'release/**']
+    branches: [main, 'release/**', feature/v4]
 
 jobs:
   Test:
@@ -20,7 +20,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest]
-        node-version: ['14.17.0', '16.x']
+        node-version: ['14.18.0', '16.x', '18.x']
 
     steps:
       - uses: actions/checkout@v3

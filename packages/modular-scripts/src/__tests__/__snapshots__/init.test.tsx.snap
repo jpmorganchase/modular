@@ -9,34 +9,34 @@ exports[`Creating a new modular folder should have an empty yarn.lock 1`] = `
 `;
 
 exports[`Creating a new modular folder should make a new repo with the right name and properties 1`] = `
-Object {
+{
   "author": "",
-  "browserslist": Object {
-    "development": Array [
+  "browserslist": {
+    "development": [
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version",
     ],
-    "production": Array [
+    "production": [
       ">0.2%",
       "not dead",
       "not op_mini all",
     ],
   },
   "description": "",
-  "keywords": Array [],
+  "keywords": [],
   "license": "MIT",
   "main": "index.js",
-  "modular": Object {
+  "modular": {
     "type": "root",
   },
   "name": "test-modular-app",
   "private": true,
-  "scripts": Object {
-    "test": "echo \\"Error: no test specified\\" && exit 1",
+  "scripts": {
+    "test": "echo "Error: no test specified" && exit 1",
   },
   "version": "1.0.0",
-  "workspaces": Array [
+  "workspaces": [
     "packages/**",
   ],
 }

@@ -26,22 +26,22 @@ describe('WHEN building with preserve modules', () => {
         path.join(modularRoot, 'dist', packageName, 'package.json'),
       ),
     ).toMatchInlineSnapshot(`
-      Object {
-        "dependencies": Object {},
-        "files": Array [
+      {
+        "dependencies": {},
+        "files": [
           "dist-cjs",
           "dist-es",
           "dist-types",
           "README.md",
         ],
         "main": "dist-cjs/index.js",
-        "modular": Object {
+        "modular": {
           "type": "package",
         },
         "module": "dist-es/index.js",
         "name": "sample-async-package",
         "private": false,
-        "repository": Object {
+        "repository": {
           "directory": "packages/sample-async-package",
           "type": "git",
           "url": "https://github.com/jpmorganchase/modular.git",
@@ -60,16 +60,16 @@ describe('WHEN building with preserve modules', () => {
       │  ├─ index.js #p1m6x9
       │  ├─ index.js.map #16jes1h
       │  ├─ index2.js #1gdggtn
-      │  ├─ index2.js.map #r11rcb
+      │  ├─ index2.js.map #4wjwha
       │  ├─ runAsync.js #kr3qrh
-      │  └─ runAsync.js.map #19q2dqp
+      │  └─ runAsync.js.map #1552hj
       ├─ dist-es
       │  ├─ index.js #tcl83f
       │  ├─ index.js.map #yz1h1d
       │  ├─ index2.js #67jtpf
-      │  ├─ index2.js.map #1pcnly9
+      │  ├─ index2.js.map #1l63dzb
       │  ├─ runAsync.js #1tt0e7o
-      │  └─ runAsync.js.map #1tlnsv0
+      │  └─ runAsync.js.map #4pcbd
       ├─ dist-types
       │  ├─ index.d.ts #12l2tmi
       │  └─ runAsync.d.ts #1iek7az
@@ -177,12 +177,12 @@ describe('WHEN building packages with private cross-package dependencies', () =>
       │  ├─ index.js #1m9v9ya
       │  ├─ index.js.map #79ot9r
       │  ├─ index2.js #q6vf2j
-      │  └─ index2.js.map #10q3jzt
+      │  └─ index2.js.map #ug9tqq
       ├─ dist-es
       │  ├─ index.js #3qxwo1
       │  ├─ index.js.map #yz1h1d
       │  ├─ index2.js #14be4lv
-      │  └─ index2.js.map #jfjxet
+      │  └─ index2.js.map #ffeudh
       ├─ dist-types
       │  └─ index.d.ts #6hjmh9
       └─ package.json"

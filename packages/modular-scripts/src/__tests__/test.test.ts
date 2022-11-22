@@ -46,7 +46,7 @@ describe('Modular test command', () => {
         try {
           await execa(
             'yarnpkg',
-            ['modular', 'test', 'test/InvalidTest.test.ts'],
+            ['modular', 'test', 'test/InvalidTest.test.ts', '--watchAll=false'],
             {
               all: true,
               cleanup: true,
@@ -65,7 +65,7 @@ describe('Modular test command', () => {
         try {
           await execa(
             'yarnpkg',
-            ['modular', 'test', 'test/ValidTest.test.ts'],
+            ['modular', 'test', 'test/ValidTest.test.ts', '--watchAll=false'],
             {
               all: true,
               cleanup: true,

@@ -1,9 +1,9 @@
 name: 'Validate'
 on:
   push:
-    branches: [main, 'release/**']
+    branches: [main, 'release/**', feature/v4]
   pull_request:
-    branches: [main, 'release/**']
+    branches: [main, 'release/**', feature/v4]
 
 jobs:
   check-yarn-lock-registry:

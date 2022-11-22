@@ -89,7 +89,7 @@ describe('Converting a react app to modular app', () => {
       ├─ App.css #1o0zosm
       ├─ App.tsx #c80ven
       ├─ __tests__
-      │  └─ App.test.tsx #16urcos
+      │  └─ App.test.tsx #1u72nad
       ├─ index.css #o7sk21
       ├─ index.tsx #zdn6mw
       ├─ logo.svg #1okqmlj

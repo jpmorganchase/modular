@@ -12,9 +12,9 @@ exports[`create-modular-react-app WHEN it sets up a project with prefer Offline 
           "version": "0.1.0",
         }
        1`] = `
-Object {
+{
   "author": "?",
-  "modular": Object {
+  "modular": {
     "type": "app",
   },
   "name": "app",
@@ -83,21 +83,21 @@ exports[`create-modular-react-app WHEN it sets up a project with prefer Offline 
           ],
         }
        1`] = `
-Object {
+{
   "author": "?",
-  "browserslist": Object {
-    "development": Array [
+  "browserslist": {
+    "development": [
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version",
     ],
-    "production": Array [
+    "production": [
       ">0.2%",
       "not dead",
       "not op_mini all",
     ],
   },
-  "dependencies": Object {
+  "dependencies": {
     "@testing-library/dom": "?",
     "@testing-library/jest-dom": "?",
     "@testing-library/react": "?",
@@ -114,23 +114,23 @@ Object {
     "react-dom": "?",
     "typescript": "?",
   },
-  "eslintConfig": Object {
+  "eslintConfig": {
     "extends": "modular-app",
   },
   "license": "MIT",
   "main": "index.js",
-  "modular": Object {
+  "modular": {
     "type": "root",
   },
   "name": "test-repo",
-  "prettier": Object {
+  "prettier": {
     "printWidth": 80,
     "proseWrap": "always",
     "singleQuote": true,
     "trailingComma": "all",
   },
   "private": true,
-  "scripts": Object {
+  "scripts": {
     "build": "modular build",
     "lint": "eslint . --ext .js,.ts,.tsx",
     "prettier": "prettier --write .",
@@ -138,7 +138,7 @@ Object {
     "test": "modular test",
   },
   "version": "1.0.0",
-  "workspaces": Array [
+  "workspaces": [
     "packages/**",
   ],
 }
@@ -236,9 +236,9 @@ exports[`create-modular-react-app WHEN setting a project with defaults Sets up a
             "version": "0.1.0",
           }
          1`] = `
-Object {
+{
   "author": "?",
-  "modular": Object {
+  "modular": {
     "type": "app",
   },
   "name": "app",
@@ -307,21 +307,21 @@ exports[`create-modular-react-app WHEN setting a project with defaults Sets up t
             ],
           }
          1`] = `
-Object {
+{
   "author": "?",
-  "browserslist": Object {
-    "development": Array [
+  "browserslist": {
+    "development": [
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version",
     ],
-    "production": Array [
+    "production": [
       ">0.2%",
       "not dead",
       "not op_mini all",
     ],
   },
-  "dependencies": Object {
+  "dependencies": {
     "@testing-library/dom": "?",
     "@testing-library/jest-dom": "?",
     "@testing-library/react": "?",
@@ -338,23 +338,23 @@ Object {
     "react-dom": "?",
     "typescript": "?",
   },
-  "eslintConfig": Object {
+  "eslintConfig": {
     "extends": "modular-app",
   },
   "license": "MIT",
   "main": "index.js",
-  "modular": Object {
+  "modular": {
     "type": "root",
   },
   "name": "test-repo",
-  "prettier": Object {
+  "prettier": {
     "printWidth": 80,
     "proseWrap": "always",
     "singleQuote": true,
     "trailingComma": "all",
   },
   "private": true,
-  "scripts": Object {
+  "scripts": {
     "build": "modular build",
     "lint": "eslint . --ext .js,.ts,.tsx",
     "prettier": "prettier --write .",
@@ -362,7 +362,7 @@ Object {
     "test": "modular test",
   },
   "version": "1.0.0",
-  "workspaces": Array [
+  "workspaces": [
     "packages/**",
   ],
 }
