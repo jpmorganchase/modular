@@ -77,6 +77,7 @@ export default function createEsbuildConfig(
     publicPath: paths.publicUrlOrPath,
     nodePaths: (process.env.NODE_PATH || '').split(path.delimiter),
     ...partialConfig,
+    splitting: true,
     // this was merged previously; do not override.
     external,
   };
