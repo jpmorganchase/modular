@@ -2,6 +2,11 @@
   "name": "modular-scripts",
   "version": "3.6.0",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jpmorganchase/modular.git",
+    "directory": "packages/modular-scripts"
+  },
   "bin": {
     "modular": "dist-cjs/cli.js"
   },
