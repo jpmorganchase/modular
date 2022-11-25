@@ -35,7 +35,7 @@ describe('createEsbuildBrowserslistTarget', () => {
     expect(result).toMatchInlineSnapshot(`
       [
         "chrome107",
-        "firefox106",
+        "firefox107",
         "safari16.1",
       ]
     `);
@@ -60,7 +60,7 @@ describe('createEsbuildBrowserslistTarget', () => {
     expect(result).toMatchInlineSnapshot(`
       [
         "chrome107",
-        "firefox106",
+        "firefox107",
         "safari16.1",
       ]
     `);
@@ -85,7 +85,7 @@ describe('createEsbuildBrowserslistTarget', () => {
     expect(result).toMatchInlineSnapshot(`
       [
         "chrome107",
-        "firefox106",
+        "firefox107",
         "safari16.1",
       ]
     `);
