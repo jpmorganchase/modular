@@ -5,6 +5,7 @@ export default function memoize<R, T extends (...args: any[]) => R>(f: T): T {
 
   const g = (...args: any[]) => {
     if (!memory.has(args.join())) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       memory.set(args.join(), f(...args));
     }
 

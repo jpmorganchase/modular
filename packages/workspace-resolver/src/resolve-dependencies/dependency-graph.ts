@@ -68,6 +68,7 @@ export function invertDependencyDirection(
       }
     });
     return output;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   }, Object.create(null));
 }
 
