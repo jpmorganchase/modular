@@ -10,7 +10,7 @@ import tmp from 'tmp';
 async function readCensoredPackageJson(
   packageJsonPath: string,
 ): Promise<unknown> {
-  /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return */
+  /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return */
   function censorDiffering(packageJson: any): any {
     packageJson.author = '?';
 
@@ -340,7 +340,7 @@ describe('create-modular-react-app', () => {
     });
 
     it('should create a project without git metadata', () => {
-      expect(fs.existsSync(path.join(destination, '.git'))).toEqual(false);
+      expect(fs.existsSync(path.join(destination, '.git'))).toBe(false);
     });
   });
 
@@ -357,7 +357,7 @@ describe('create-modular-react-app', () => {
     });
 
     it('SHOULD create a project prefer offline without git metadata', () => {
-      expect(fs.existsSync(path.join(destination, '.git'))).toEqual(false);
+      expect(fs.existsSync(path.join(destination, '.git'))).toBe(false);
     });
   });
 });
