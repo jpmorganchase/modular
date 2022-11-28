@@ -2,6 +2,7 @@
 
 const path = require('path');
 const fs = require('fs');
+const globby = require('globby');
 const getPublicUrlOrPath = require('../../react-dev-utils/getPublicUrlOrPath');
 
 if (!process.env.MODULAR_ROOT) {
@@ -77,6 +78,16 @@ const resolveModule = (resolveFn, filePath) => {
   return resolveFn(`${filePath}.js`);
 };
 
+const rootManifest = require(resolveModular('package.json'));
+const workspaceDefinitions =
+  (Array.isArray(rootManifest?.workspaces)
+    ? rootManifest?.workspaces
+    : rootManifest?.workspaces?.packages) || [];
+const workspaceDirectories = globby.sync(
+  workspaceDefinitions.map(resolveModular),
+  { onlyDirectories: true },
+);
+
 // config after eject: we're in ./config/
 module.exports = {
   appPath: resolveApp('.'),
@@ -86,8 +97,8 @@ module.exports = {
   appIndexJs: resolveModule(resolveApp, 'src/index'),
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
-  modularSrc: [
-    resolveModular('packages'),
+  includeDirectories: [
+    workspaceDirectories,
     resolveModular('node_modules/.modular'),
   ],
   appTsConfig: resolveApp('tsconfig.json'),
