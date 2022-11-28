@@ -55,7 +55,7 @@ describe('Modular test command', () => {
         } catch (error) {
           errorNumber = (error as ExecaError).exitCode;
         }
-        expect(errorNumber).toEqual(1);
+        expect(errorNumber).toBe(1);
       });
     });
 
@@ -74,7 +74,7 @@ describe('Modular test command', () => {
         } catch (error) {
           errorNumber = (error as ExecaError).exitCode;
         }
-        expect(errorNumber).toEqual(0);
+        expect(errorNumber).toBe(0);
       });
     });
   });
@@ -286,7 +286,7 @@ describe('Modular test command', () => {
       } catch (error) {
         errorNumber = (error as ExecaError).exitCode;
       }
-      expect(errorNumber).toEqual(1);
+      expect(errorNumber).toBe(1);
     });
 
     it('errors when specifying --package with a non-existing workspace', async () => {
@@ -303,7 +303,7 @@ describe('Modular test command', () => {
       } catch (error) {
         capturedError = error as ExecaError;
       }
-      expect(capturedError?.exitCode).toEqual(1);
+      expect(capturedError?.exitCode).toBe(1);
       expect(capturedError?.stderr).toContain(
         `Package non-existing was specified, but Modular couldn't find it`,
       );
@@ -329,7 +329,7 @@ describe('Modular test command', () => {
       } catch (error) {
         capturedError = error as ExecaError;
       }
-      expect(capturedError?.exitCode).toEqual(1);
+      expect(capturedError?.exitCode).toBe(1);
       expect(capturedError?.stderr).toContain(
         `Option --package conflicts with supplied test regex`,
       );
@@ -355,7 +355,7 @@ describe('Modular test command', () => {
       } catch (error) {
         capturedError = error as ExecaError;
       }
-      expect(capturedError?.exitCode).toEqual(1);
+      expect(capturedError?.exitCode).toBe(1);
       expect(capturedError?.stderr).toContain(
         `Option --package conflicts with supplied test regex`,
       );
@@ -375,7 +375,7 @@ describe('Modular test command', () => {
       } catch (error) {
         capturedError = error as ExecaError;
       }
-      expect(capturedError?.exitCode).toEqual(1);
+      expect(capturedError?.exitCode).toBe(1);
       expect(capturedError?.stderr).toContain(
         `Option --changed conflicts with supplied test regex`,
       );
@@ -391,7 +391,7 @@ describe('Modular test command', () => {
       } catch (error) {
         capturedError = error as ExecaError;
       }
-      expect(capturedError?.exitCode).toEqual(1);
+      expect(capturedError?.exitCode).toBe(1);
       expect(capturedError?.stderr).toContain(
         `Option --compareBranch doesn't make sense without option --changed`,
       );

@@ -412,7 +412,7 @@ describe('modular-scripts', () => {
           fs
             .statSync(path.join(modularRoot, 'dist', 'sample-package', value))
             .isFile(),
-        ).toEqual(true);
+        ).toBe(true);
       },
     );
   });
@@ -496,7 +496,7 @@ describe('modular-scripts', () => {
               path.join(modularRoot, 'dist', 'nested-sample-package', value),
             )
             .isFile(),
-        ).toEqual(true);
+        ).toBe(true);
       },
     );
   });
