@@ -561,7 +561,7 @@ describe('when working with a non-scoped app', () => {
       if (devServer) {
         // this is the problematic bit, it leaves hanging node processes
         // despite closing the parent process. Only happens in tests!
-        devServer.kill();
+        void devServer.kill();
       }
     }
 

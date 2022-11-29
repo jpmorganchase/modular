@@ -154,7 +154,7 @@ describe('modular-scripts', () => {
       if (devServer) {
         // this is the problematic bit, it leaves hanging node processes
         // despite closing the parent process. Only happens in tests!
-        devServer.kill();
+        void devServer.kill();
       }
       if (port) {
         // kill all processes listening to the dev server port

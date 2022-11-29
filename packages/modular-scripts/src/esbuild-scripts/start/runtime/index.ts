@@ -59,7 +59,7 @@ interface WebSocketMessage {
 }
 
 connection.onmessage = (m: MessageEvent) => {
-  const message = JSON.parse(m.data as string) as WebSocketMessage;
+  const message = m.data as WebSocketMessage;
   const { building, result } = message;
 
   if (building) {

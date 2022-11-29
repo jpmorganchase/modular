@@ -82,8 +82,7 @@ export async function getPackageDependencies(target: string): Promise<{
 
   // Package dependencies can be either local to the package or in the root package (hoisted)
   const packageDeps = Object.assign(
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    Object.create(null),
+    Object.create(null) as Record<string, unknown>,
     rootManifest.devDependencies,
     rootManifest.dependencies,
     targetManifest.devDependencies,

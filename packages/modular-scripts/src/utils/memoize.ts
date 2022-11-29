@@ -3,9 +3,8 @@
 export default function memoize<R, T extends (...args: any[]) => R>(f: T): T {
   const memory = new Map<string, R>();
 
-  const g = (...args: any[]) => {
+  const g = (...args: unknown[]) => {
     if (!memory.has(args.join())) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       memory.set(args.join(), f(...args));
     }
 

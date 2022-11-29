@@ -15,7 +15,7 @@ const modularRoot = getModularRoot();
 
 const START_APP_TIMEOUT = 60 * 1000;
 export interface DevServer {
-  kill: () => void;
+  kill: () => execa.ExecaChildProcess<string>;
 }
 
 export async function startApp(
@@ -113,7 +113,6 @@ export async function startApp(
   // starts above, but don't want to wait until the
   // process itself finishes.
   return {
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     kill: () => {
       devServer.kill('SIGKILL');
       return devServer;
