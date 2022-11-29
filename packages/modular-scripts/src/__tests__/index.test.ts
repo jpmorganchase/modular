@@ -110,7 +110,7 @@ describe('modular-scripts', () => {
         ├─ package.json
         └─ src
            ├─ __tests__
-           │  ├─ index.test.ts #1qvvmz7
+           │  ├─ index.test.ts #1t39yxy
            │  └─ mock-util.tsx #rjzbd3
            └─ index.ts #1woe74n"
       `);
@@ -123,7 +123,7 @@ describe('modular-scripts', () => {
         ├─ package.json
         └─ src
            ├─ __tests__
-           │  └─ index.test.ts #1qvvmz7
+           │  └─ index.test.ts #1t39yxy
            └─ index.ts #1woe74n"
       `);
     });
@@ -154,7 +154,7 @@ describe('modular-scripts', () => {
       if (devServer) {
         // this is the problematic bit, it leaves hanging node processes
         // despite closing the parent process. Only happens in tests!
-        devServer.kill();
+        void devServer.kill();
       }
       if (port) {
         // kill all processes listening to the dev server port
@@ -412,7 +412,7 @@ describe('modular-scripts', () => {
           fs
             .statSync(path.join(modularRoot, 'dist', 'sample-package', value))
             .isFile(),
-        ).toEqual(true);
+        ).toBe(true);
       },
     );
   });
@@ -496,7 +496,7 @@ describe('modular-scripts', () => {
               path.join(modularRoot, 'dist', 'nested-sample-package', value),
             )
             .isFile(),
-        ).toEqual(true);
+        ).toBe(true);
       },
     );
   });

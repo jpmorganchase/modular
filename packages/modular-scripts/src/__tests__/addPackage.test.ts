@@ -65,7 +65,7 @@ describe('When working with a scoped app', () => {
     const manifest = (await fs.readJSON(
       path.join(tempPackagesPath, 'sample-app', 'package.json'),
     )) as CoreProperties;
-    expect(manifest.name).toEqual('@scoped/sample-app');
+    expect(manifest.name).toBe('@scoped/sample-app');
   });
 
   it('fails if trying to add another app with the same name', async () => {
@@ -107,7 +107,7 @@ describe('When working with an app installed in a custom directory', () => {
         'package.json',
       ),
     )) as CoreProperties;
-    expect(manifest.name).toEqual('@scoped/sample-app');
+    expect(manifest.name).toBe('@scoped/sample-app');
   });
 
   it('fails if trying to add another app with the same name in the default path', async () => {

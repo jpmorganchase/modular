@@ -221,7 +221,7 @@ program
 
 interface InitOptions {
   y: boolean;
-  preferOffline: string;
+  preferOffline: boolean;
   verbose: boolean;
 }
 
@@ -233,11 +233,7 @@ program
   .option('--verbose', 'Run yarn commands with --verbose set')
   .action(async (options: InitOptions) => {
     const { default: initWorkspace } = await import('./init');
-    await initWorkspace(
-      options.y,
-      JSON.parse(options.preferOffline),
-      options.verbose,
-    );
+    await initWorkspace(options.y, options.preferOffline, options.verbose);
   });
 
 program
@@ -271,7 +267,7 @@ program
   .description(
     'Ports the react app in specified directory over into the current modular project as a modular app',
   )
-  .action(async (relativePath) => {
+  .action(async (relativePath: string) => {
     const { port } = await import('./port');
     await port(relativePath);
   });

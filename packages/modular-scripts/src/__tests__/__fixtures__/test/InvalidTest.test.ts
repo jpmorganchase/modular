@@ -1,7 +1,7 @@
 // eslint-disable-next-line jest/no-disabled-tests
 describe.skip('A failing test', () => {
   it('should fail', () => {
-    expect(true).toEqual(false);
+    expect(true).toBe(false);
   });
 });
 

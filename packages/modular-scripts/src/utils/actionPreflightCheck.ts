@@ -17,6 +17,7 @@ function actionPreflightCheck(fn: ModularAction): ModularAction {
       );
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     return fn(...args);
   };
 

@@ -15,7 +15,7 @@ const modularRoot = getModularRoot();
 
 const START_APP_TIMEOUT = 60 * 1000;
 export interface DevServer {
-  kill: () => void;
+  kill: () => execa.ExecaChildProcess<string>;
 }
 
 export async function startApp(

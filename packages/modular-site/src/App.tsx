@@ -20,6 +20,7 @@ import './App.css';
 const worker = perspective.shared_worker();
 
 async function getTable(): Promise<Table> {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const req = fetch(superstore);
   const resp = await req;
   const buffer = await resp.arrayBuffer();

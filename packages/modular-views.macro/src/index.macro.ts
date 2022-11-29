@@ -29,6 +29,7 @@ function getWorkspaces(): Array<[string, { location: string }]> {
     });
 
     const workspaces: Array<[string, { location: string }]> = Object.entries(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       JSON.parse(output.stdout),
     );
 

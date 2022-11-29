@@ -24,10 +24,10 @@ describe('@modular-scripts/workspace-resolver', () => {
     it('resolves a clean workspace, detecting modular packages as appropriate', async () => {
       const projectRoot = path.join(fixturesPath, 'clean-workspace-1');
       const [allPackages] = await resolveWorkspace(projectRoot, projectRoot);
-      expect(allPackages.has('clean-workspace-1')).toEqual(true);
-      expect(allPackages.has('app-one')).toEqual(true);
-      expect(allPackages.has('package-one')).toEqual(true);
-      expect(allPackages.has('package-two')).toEqual(true);
+      expect(allPackages.has('clean-workspace-1')).toBe(true);
+      expect(allPackages.has('app-one')).toBe(true);
+      expect(allPackages.has('package-one')).toBe(true);
+      expect(allPackages.has('package-two')).toBe(true);
     });
 
     // This covers the alternative object workspaces syntax that yarn supports
@@ -35,21 +35,21 @@ describe('@modular-scripts/workspace-resolver', () => {
     it('resolves a clean workspace (using object workspaces syntax)', async () => {
       const projectRoot = path.join(fixturesPath, 'clean-workspace-2');
       const [allPackages] = await resolveWorkspace(projectRoot, projectRoot);
-      expect(allPackages.has('clean-workspace-2')).toEqual(true);
-      expect(allPackages.has('app-one')).toEqual(true);
-      expect(allPackages.has('package-one')).toEqual(true);
-      expect(allPackages.has('package-two')).toEqual(true);
+      expect(allPackages.has('clean-workspace-2')).toBe(true);
+      expect(allPackages.has('app-one')).toBe(true);
+      expect(allPackages.has('package-one')).toBe(true);
+      expect(allPackages.has('package-two')).toBe(true);
     });
 
     it('resolves a clean workspace (using workspace ranges)', async () => {
       const projectRoot = path.join(fixturesPath, 'clean-workspace-3');
       const [allPackages] = await resolveWorkspace(projectRoot, projectRoot);
-      expect(allPackages.has('clean-workspace-3')).toEqual(true);
-      expect(allPackages.has('app-one')).toEqual(true);
-      expect(allPackages.has('package-one')).toEqual(true);
-      expect(allPackages.has('package-two')).toEqual(true);
-      expect(allPackages.has('package-three')).toEqual(true);
-      expect(allPackages.has('package-four')).toEqual(true);
+      expect(allPackages.has('clean-workspace-3')).toBe(true);
+      expect(allPackages.has('app-one')).toBe(true);
+      expect(allPackages.has('package-one')).toBe(true);
+      expect(allPackages.has('package-two')).toBe(true);
+      expect(allPackages.has('package-three')).toBe(true);
+      expect(allPackages.has('package-four')).toBe(true);
     });
 
     it('does not support nested modular roots', async () => {
@@ -66,8 +66,8 @@ describe('@modular-scripts/workspace-resolver', () => {
         }
       }
 
-      expect(thrown).toEqual(true);
-      expect(message).toEqual(
+      expect(thrown).toBe(true);
+      expect(message).toBe(
         'Nested modular roots are currently not supported by Modular',
       );
     });
@@ -86,8 +86,8 @@ describe('@modular-scripts/workspace-resolver', () => {
         }
       }
 
-      expect(thrown).toEqual(true);
-      expect(message).toEqual(
+      expect(thrown).toBe(true);
+      expect(message).toBe(
         'Nested workspaces are currently not supported by Modular',
       );
     });
@@ -106,8 +106,8 @@ describe('@modular-scripts/workspace-resolver', () => {
         }
       }
 
-      expect(thrown).toEqual(true);
-      expect(message).toEqual(
+      expect(thrown).toBe(true);
+      expect(message).toBe(
         'Nested workspaces are currently not supported by Modular',
       );
     });
@@ -126,8 +126,8 @@ describe('@modular-scripts/workspace-resolver', () => {
         }
       }
 
-      expect(thrown).toEqual(true);
-      expect(message).toEqual(
+      expect(thrown).toBe(true);
+      expect(message).toBe(
         'The package at packages/app-one/package.json does not have a valid name. Modular requires workspace packages to have a name.',
       );
     });
@@ -146,8 +146,8 @@ describe('@modular-scripts/workspace-resolver', () => {
         }
       }
 
-      expect(thrown).toEqual(true);
-      expect(message).toEqual(
+      expect(thrown).toBe(true);
+      expect(message).toBe(
         'The package "app-one" has an invalid version. Modular requires workspace packages to have a version.',
       );
     });
@@ -155,26 +155,26 @@ describe('@modular-scripts/workspace-resolver', () => {
     it('supports type property', async () => {
       const projectRoot = path.join(fixturesPath, 'non-modular-workspace-1');
       const [allPackages] = await resolveWorkspace(projectRoot, projectRoot);
-      expect(allPackages.has('non-modular-workspace-1')).toEqual(true);
-      expect(allPackages.has('app-one')).toEqual(true);
+      expect(allPackages.has('non-modular-workspace-1')).toBe(true);
+      expect(allPackages.has('app-one')).toBe(true);
       expect(allPackages.get('app-one')?.modular).toEqual({
         type: 'app',
       });
       expect(allPackages.get('app-one')?.type).toBe('app');
-      expect(allPackages.has('package-one')).toEqual(true);
+      expect(allPackages.has('package-one')).toBe(true);
       expect(allPackages.get('package-one')?.modular).toEqual({
         type: 'package',
       });
       expect(allPackages.get('package-one')?.type).toBe('package');
-      expect(allPackages.has('package-extraneous-1')).toEqual(true);
+      expect(allPackages.has('package-extraneous-1')).toBe(true);
       expect(allPackages.get('package-extraneous-1')?.modular).toBeUndefined();
       expect(allPackages.get('package-extraneous-1')?.type).toBeUndefined();
-      expect(allPackages.has('package-extraneous-2')).toEqual(true);
+      expect(allPackages.has('package-extraneous-2')).toBe(true);
       expect(allPackages.get('package-extraneous-2')?.modular).toEqual({
         anotherProperty: 'value',
       });
       expect(allPackages.get('package-extraneous-2')?.type).toBeUndefined();
-      expect(allPackages.has('package-extraneous-3')).toEqual(true);
+      expect(allPackages.has('package-extraneous-3')).toBe(true);
       expect(allPackages.get('package-extraneous-3')?.modular).toEqual({
         type: '',
       });

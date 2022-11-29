@@ -59,6 +59,12 @@ interface WebSocketMessage {
 }
 
 connection.onmessage = (m: MessageEvent) => {
+  if (typeof m.data !== 'string') {
+    // This shouldn't ever happen
+    throw new Error(
+      "Data from WebSocket Message Event not a string, can't parse",
+    );
+  }
   const message = JSON.parse(m.data) as WebSocketMessage;
   const { building, result } = message;
 
