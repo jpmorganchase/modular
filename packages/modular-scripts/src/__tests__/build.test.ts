@@ -1,8 +1,16 @@
+import execa from 'execa';
 import tree from 'tree-view-for-tests';
 import path from 'path';
 import fs from 'fs-extra';
 
-import { addFixturePackage, cleanup, modular } from '../test/utils';
+import {
+  addFixturePackage,
+  cleanup,
+  modular,
+  createModularTestContext,
+  runLocalModular,
+} from '../test/utils';
+
 import getModularRoot from '../utils/getModularRoot';
 
 const modularRoot = getModularRoot();
@@ -187,5 +195,71 @@ describe('WHEN building packages with private cross-package dependencies', () =>
       │  └─ index.d.ts #6hjmh9
       └─ package.json"
     `);
+  });
+});
+
+describe('modular build supports custom workspaces', () => {
+  const fixturesFolder = path.join(
+    getModularRoot(),
+    '__fixtures__',
+    'custom-workspace-root',
+  );
+
+  // Temporary test context paths set by createTempModularRepoWithTemplate()
+  let tempModularRepo: string;
+
+  beforeAll(() => {
+    tempModularRepo = createModularTestContext();
+    console.log({ tempModularRepo });
+    fs.copySync(fixturesFolder, tempModularRepo);
+
+    // Create git repo & commit
+    if (process.env.GIT_AUTHOR_NAME && process.env.GIT_AUTHOR_EMAIL) {
+      execa.sync('git', [
+        'config',
+        '--global',
+        'user.email',
+        `"${process.env.GIT_AUTHOR_EMAIL}"`,
+      ]);
+      execa.sync('git', [
+        'config',
+        '--global',
+        'user.name',
+        `"${process.env.GIT_AUTHOR_NAME}"`,
+      ]);
+    }
+    execa.sync('git', ['init'], {
+      cwd: tempModularRepo,
+    });
+
+    execa.sync('yarn', {
+      cwd: tempModularRepo,
+    });
+
+    execa.sync('git', ['add', '.'], {
+      cwd: tempModularRepo,
+    });
+
+    execa.sync('git', ['commit', '-am', '"First commit"'], {
+      cwd: tempModularRepo,
+    });
+  });
+
+  it('builds an app in a different workspace directory', () => {
+    const result = runLocalModular(modularRoot, tempModularRepo, [
+      'build',
+      'app',
+    ]);
+    expect(result.stderr).toBeFalsy();
+    expect(result.stdout).toContain('Compiled successfully.');
+  });
+
+  it('builds a package in a different workspace directory', () => {
+    const result = runLocalModular(modularRoot, tempModularRepo, [
+      'build',
+      'alpha',
+    ]);
+    expect(result.stderr).toBeFalsy();
+    expect(result.stdout).toContain('built alpha');
   });
 });
