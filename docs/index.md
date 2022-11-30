@@ -38,20 +38,22 @@ It supports three flags:
 
 ## Commands
 
-- [`init`](./commands/init.md)
 - [`workspace`](./commands/workspace.md)
 - [`check`](./commands/check.md)
 - [`add`](./commands/add.md)
 - [`start`](./commands/start.md)
 - [`test`](./commands/test.md)
 - [`build`](./commands/build.md)
-- [`convert`](./commands/convert.md)
-- [`port`](./commands/port.md)
 - [`typecheck`](./commands/typecheck.md)
 - [`lint`](./commands/lint.md)
-- [`rename`](./commands/rename.md)
 
 ## Concepts
 
 - [Views](./concepts/views.md)
 - [Linting](./concepts/linting.md)
+
+## How to
+
+- [`Create a Template`](./how-to/create-template.md)
+- [`Convert Existing React App`](./how-to/convert-react-app.md)
+- [`Rename a Modular Package`](./how-to/rename-package.md)

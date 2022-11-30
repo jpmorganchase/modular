@@ -219,23 +219,6 @@ program
     }),
   );
 
-interface InitOptions {
-  y: boolean;
-  preferOffline: boolean;
-  verbose: boolean;
-}
-
-program
-  .command('init')
-  .description('Initialize a new modular root in the current folder')
-  .option('-y', 'equivalent to the -y flag in NPM')
-  .option('--prefer-offline [value]', 'delegate to offline cache first', true)
-  .option('--verbose', 'Run yarn commands with --verbose set')
-  .action(async (options: InitOptions) => {
-    const { default: initWorkspace } = await import('./init');
-    await initWorkspace(options.y, options.preferOffline, options.verbose);
-  });
-
 program
   .command('check')
   .description(
@@ -247,29 +230,6 @@ program
     const { check } = await import('./check');
     await check({ fix });
     logger.log(chalk.green('Success!'));
-  });
-
-program
-  .command('convert')
-  .description('Converts react app in current directory into a modular package')
-  .action(async () => {
-    const { convert } = await import('./convert');
-    await convert();
-    logger.log(
-      chalk.green('Successfully converted your app into a modular app!'),
-    );
-  });
-
-// TODO: enhancement - should take a type option (app, view, package)
-// port are only available for apps right now
-program
-  .command('port <relativePath>')
-  .description(
-    'Ports the react app in specified directory over into the current modular project as a modular app',
-  )
-  .action(async (relativePath: string) => {
-    const { port } = await import('./port');
-    await port(relativePath);
   });
 
 const lintStagedFlag = '--staged';
@@ -302,15 +262,6 @@ program
   .action(async () => {
     const { default: typecheck } = await import('./typecheck');
     await typecheck();
-  });
-
-program
-  .command('rename <oldPackageName> <newPackageName>')
-  .description(`Rename a package.`)
-  .option('--verbose', 'Enables verbose logging within modular.')
-  .action(async (oldPackageName: string, newPackageName: string) => {
-    const { default: rename } = await import('./rename');
-    await rename(oldPackageName, newPackageName);
   });
 
 interface ServeOptions {
