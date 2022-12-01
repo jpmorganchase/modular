@@ -2,4 +2,4 @@
 "modular-scripts": patch
 ---
 
-Fix `modular build` crashing when Webpack is used and workspace is not in `packages`.
+Fix `modular build` crashing when the selected workspace(s) are not in `packages`.
