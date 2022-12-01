@@ -210,7 +210,6 @@ describe('modular build supports custom workspaces', () => {
 
   beforeAll(() => {
     tempModularRepo = createModularTestContext();
-    console.log({ tempModularRepo });
     fs.copySync(fixturesFolder, tempModularRepo);
 
     // Create git repo & commit
