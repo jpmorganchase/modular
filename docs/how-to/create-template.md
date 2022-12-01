@@ -7,17 +7,17 @@ title: Create Template
 # Create a Modular Template
 
 To create a [Modular Template](../concepts/templates.md), start with any Modular
-package type for which you want to create a template for (App/Package/etc). The
-package's contents will be copied into any new package created using the
-template.
+package type for which you want to create a template for (`app`, `package`,
+etc). The package's contents will be copied into any new package created using
+the template.
 
 To convert the package into a template, make the following changes to the
 package's package.json:
 
-- Change `"modular" "type"` field to `"template"`
-- Add `"templateType"` field to `"modular"` with the package's Modular type.
+- Change `modular.type` field to `"template"`
+- Add `modular.templateType` with the desired target package type
 
-Example esm-view template package.json modular field:
+Example configuration for a template that generates esm-views.
 
 ```json
 {
