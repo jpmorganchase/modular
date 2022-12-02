@@ -55,5 +55,5 @@ It supports three flags:
 ## How to
 
 - [`Create a Template`](./how-to/create-template.md)
-- [`Convert Existing React App`](./how-to/convert-react-app.md)
+- [`Convert Existing CRA Project`](./how-to/convert-react-app.md)
 - [`Rename a Modular Package`](./how-to/rename-package.md)

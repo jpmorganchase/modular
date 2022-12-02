@@ -17,7 +17,7 @@ package's package.json:
 - Change `modular.type` field to `"template"`
 - Add `modular.templateType` with the desired target package type
 
-Example configuration for a template that generates esm-views.
+Example configuration for a template that generates `esm-view`s.
 
 ```json
 {
@@ -28,6 +28,6 @@ Example configuration for a template that generates esm-views.
 }
 ```
 
-Optionally, include a `"files"` array containing any files that Modular should
-include from the template when creating a new package using it. If not
+Optionally, include a `files` array pattern containing any files that Modular
+should include from the template when creating a new package using it. If not
 specified, Modular will include all files.
