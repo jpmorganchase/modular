@@ -10,7 +10,7 @@ To convert an existing [Create React App](https://create-react-app.dev/) project
 into a Modular app, start by creating a new Modular project as shown in the
 [getting started documentation](../index.md):
 
-` yarn create modular-react-app my-new-modular-project`
+`yarn create modular-react-app my-new-modular-project`
 
 Once created:
 

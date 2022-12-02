@@ -29,5 +29,16 @@ Example configuration for a template that generates `esm-view`s.
 ```
 
 Optionally, include a `files` array pattern containing any files that Modular
-should include from the template when creating a new package using it. If not
-specified, Modular will include all files.
+should include from the template when creating a new package using it. Example:
+
+```json
+{
+  "files": [
+    "path/to/file-to-include-1.tsx",
+    "path/to/file-to-include-2.ts",
+    "folder-to-include"
+  ]
+}
+```
+
+If not specified, Modular will include all files.
