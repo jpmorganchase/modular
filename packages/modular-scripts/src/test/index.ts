@@ -6,7 +6,7 @@ import { ExecaError } from 'execa';
 import execAsync from '../utils/execAsync';
 import getModularRoot from '../utils/getModularRoot';
 import { getAllWorkspaces } from '../utils/getAllWorkspaces';
-import { getChangedWorkspaces } from '../utils/getChangedWorkspaces';
+import { getChangedWorkspacesContent } from '../utils/getChangedWorkspaces';
 import { resolveAsBin } from '../utils/resolveAsBin';
 import * as logger from '../utils/logger';
 import type {
@@ -253,17 +253,6 @@ async function computeSelectiveRegexes({
   );
 
   return computeTestsRegexes(resultWorkspaceContent);
-}
-
-// This function returns a WorkspaceContent containing all the changed workspaces, compared to targetBranch
-async function getChangedWorkspacesContent(targetBranch: string | undefined) {
-  const allWorkspaces = await getAllWorkspaces(getModularRoot());
-  // Get the changed workspaces compared to our target branch
-  const changedWorkspaces = await getChangedWorkspaces(
-    allWorkspaces,
-    targetBranch,
-  );
-  return changedWorkspaces;
 }
 
 // This function returns a WorkspaceContent from an array of workspace names

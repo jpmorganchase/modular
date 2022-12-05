@@ -1,5 +1,14 @@
 # modular-scripts
 
+## 3.6.0
+
+### Minor Changes
+
+- [#2202](https://github.com/jpmorganchase/modular/pull/2202)
+  [`d98802f`](https://github.com/jpmorganchase/modular/commit/d98802fa0cd421955cc40b88fcef300e49653d5d)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Selective
+  build support
+
 ## 3.5.0
 
 ### Minor Changes

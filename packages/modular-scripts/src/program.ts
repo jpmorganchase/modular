@@ -74,7 +74,7 @@ program
   });
 
 program
-  .command('build <packages...>')
+  .command('build [packages...]')
   .description(
     'Build a list of packages (multiple package names can be supplied separated by space)',
   )
@@ -85,22 +85,64 @@ program
   )
   .option('--verbose', 'Run yarn commands with --verbose set')
   .option('--private', 'Enable the building of private packages', false)
+  .option(
+    '--changed',
+    'Build only for workspaces that have changed compared to the branch specified in --compareBranch',
+    false,
+  )
+  .option(
+    '--descendants',
+    'Additionally build workspaces that the specified packages directly or indirectly depend on (can be combined with --changed)',
+    false,
+  )
+  .option(
+    '--ancestors',
+    'Additionally build workspaces that directly or indirectly depend on the specified packages (can be combined with --changed)',
+    false,
+  )
+  .option(
+    '--compareBranch <branch>',
+    "Specifies the branch to use with the --changed flag. If not specified, Modular will use the repo's default branch",
+  )
   .action(
     async (
       packagePaths: string[],
       options: {
         preserveModules: string;
         private: boolean;
+        changed: boolean;
+        compareBranch?: string;
+        ancestors: boolean;
+        descendants: boolean;
       },
     ) => {
       const { default: build } = await import('./build');
-      logger.log('building packages at:', packagePaths.join(', '));
 
-      await build(
+      options.changed
+        ? logger.log('Building changed packages')
+        : logger.log('Building packages at:', packagePaths.join(', '));
+
+      if (!packagePaths.length && !options.changed) {
+        process.stderr.write("error: missing required argument 'packages'");
+        process.exit(1);
+      }
+
+      if (options.compareBranch && !options.changed) {
+        process.stderr.write(
+          "Option --compareBranch doesn't make sense without option --changed\n",
+        );
+        process.exit(1);
+      }
+
+      await build({
         packagePaths,
-        JSON.parse(options.preserveModules) as boolean,
-        options.private,
-      );
+        preserveModules: JSON.parse(options.preserveModules) as boolean,
+        private: options.private,
+        changed: options.changed,
+        compareBranch: options.compareBranch,
+        ancestors: options.ancestors,
+        descendants: options.descendants,
+      });
     },
   );
 

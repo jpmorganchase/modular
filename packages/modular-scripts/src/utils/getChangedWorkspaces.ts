@@ -2,7 +2,26 @@ import path from 'path';
 import pkgUp from 'pkg-up';
 import { getDiffedFiles } from './gitActions';
 import getModularRoot from './getModularRoot';
+import { getAllWorkspaces } from './getAllWorkspaces';
 import type { WorkspaceContent } from '@modular-scripts/modular-types';
+
+/**
+ * Return a WorkspaceContent containing all the changed workspaces, compared to a targetBranch
+ *
+ * @param targetBranch The branch to compare the current branch to select the changed workspaces
+ */
+
+export async function getChangedWorkspacesContent(
+  targetBranch: string | undefined,
+): Promise<WorkspaceContent> {
+  const allWorkspaces = await getAllWorkspaces(getModularRoot());
+  // Get the changed workspaces compared to our target branch
+  const changedWorkspaces = await getChangedWorkspaces(
+    allWorkspaces,
+    targetBranch,
+  );
+  return changedWorkspaces;
+}
 
 // Gets a list of changed files, then maps them to their workspace and returns a subset of WorkspaceContent
 export async function getChangedWorkspaces(
