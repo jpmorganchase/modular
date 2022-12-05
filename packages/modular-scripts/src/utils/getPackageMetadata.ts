@@ -23,13 +23,15 @@ function distinct<T>(arr: T[]): T[] {
 async function getPackageMetadata() {
   const modularRoot = getModularRoot();
 
+  const rootPackageJson = fse.readJSONSync(
+    path.join(modularRoot, 'package.json'),
+  ) as ModularPackageJson;
+
+  // workspace definitions
+  const rootPackageWorkspaceDefinitions = rootPackageJson.workspaces;
+
   // dependencies defined at the root
-  const rootPackageJsonDependencies =
-    (
-      fse.readJSONSync(
-        path.join(modularRoot, 'package.json'),
-      ) as ModularPackageJson
-    ).dependencies || {};
+  const rootPackageJsonDependencies = rootPackageJson.dependencies || {};
 
   // let's populate the above three
   const [workspaces] = await getAllWorkspaces();
@@ -101,6 +103,7 @@ async function getPackageMetadata() {
 
   return {
     packageNames,
+    rootPackageWorkspaceDefinitions,
     rootPackageJsonDependencies,
     packageJsons,
     typescriptConfig,

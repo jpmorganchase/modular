@@ -12,6 +12,7 @@ import actionPreflightCheck from '../utils/actionPreflightCheck';
 import { getModularType } from '../utils/isModularType';
 import execAsync from '../utils/execAsync';
 import getLocation from '../utils/getLocation';
+import { selectWorkspaces } from '../utils/selectWorkspaces';
 import { setupEnvForDirectory } from '../utils/setupEnv';
 import createPaths from '../utils/createPaths';
 import printHostingInstructions from './printHostingInstructions';
@@ -267,12 +268,43 @@ async function buildStandalone(
   );
 }
 
-async function build(
-  targets: string[],
+async function build({
+  packagePaths: targets,
   preserveModules = true,
-  includePrivate = false,
-): Promise<void> {
-  for (const target of targets) {
+  private: includePrivate,
+  ancestors,
+  descendants,
+  changed,
+  compareBranch,
+}: {
+  packagePaths: string[];
+  preserveModules: boolean;
+  private: boolean;
+  ancestors: boolean;
+  descendants: boolean;
+  changed: boolean;
+  compareBranch?: string;
+}): Promise<void> {
+  const selectedTargets = await selectWorkspaces({
+    targets,
+    changed,
+    compareBranch,
+    descendants,
+    ancestors,
+  });
+
+  if (!selectedTargets.length) {
+    logger.log('No changed workspaces found');
+    process.exit(0);
+  }
+
+  logger.debug(
+    `Building the following workspaces in order: ${JSON.stringify(
+      selectedTargets,
+    )}`,
+  );
+
+  for (const target of selectedTargets) {
     try {
       const targetDirectory = await getLocation(target);
 

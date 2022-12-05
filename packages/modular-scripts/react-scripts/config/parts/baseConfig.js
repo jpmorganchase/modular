@@ -168,7 +168,7 @@ function createConfig({
             // Process application JS with esbuild.
             {
               test: /\.(js|mjs|jsx)$/,
-              include: paths.modularSrc,
+              include: paths.includeDirectories,
               loader: require.resolve('esbuild-loader'),
               options: {
                 implementation: require('esbuild'),
@@ -178,7 +178,7 @@ function createConfig({
             },
             {
               test: /\.ts$/,
-              include: paths.modularSrc,
+              include: paths.includeDirectories,
               loader: require.resolve('esbuild-loader'),
               options: {
                 implementation: require('esbuild'),
@@ -188,7 +188,7 @@ function createConfig({
             },
             {
               test: /\.tsx$/,
-              include: paths.modularSrc,
+              include: paths.includeDirectories,
               loader: require.resolve('esbuild-loader'),
               options: {
                 implementation: require('esbuild'),

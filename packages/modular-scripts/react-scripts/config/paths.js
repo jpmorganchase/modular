@@ -2,6 +2,7 @@
 
 const path = require('path');
 const fs = require('fs');
+const globby = require('globby');
 const getPublicUrlOrPath = require('../../react-dev-utils/getPublicUrlOrPath');
 
 if (!process.env.MODULAR_ROOT) {
@@ -77,6 +78,21 @@ const resolveModule = (resolveFn, filePath) => {
   return resolveFn(`${filePath}.js`);
 };
 
+// Get the workspaces field from the manifest to calculate the possible workspace directories
+const rootManifest = require(resolveModular('package.json'));
+const workspaceDefinitions =
+  (Array.isArray(rootManifest?.workspaces)
+    ? rootManifest?.workspaces
+    : rootManifest?.workspaces?.packages) || [];
+
+// Calculate all the possible workspace directories. We need to convert paths to posix separator to feed it into globby
+// and convert back to native separator after
+const workspaceDirectories = globby
+  .sync(workspaceDefinitions.map(resolveModular).map(toPosix), {
+    onlyDirectories: true,
+  })
+  .map(fromPosix);
+
 // config after eject: we're in ./config/
 module.exports = {
   appPath: resolveApp('.'),
@@ -86,8 +102,8 @@ module.exports = {
   appIndexJs: resolveModule(resolveApp, 'src/index'),
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
-  modularSrc: [
-    resolveModular('packages'),
+  includeDirectories: [
+    workspaceDirectories,
     resolveModular('node_modules/.modular'),
   ],
   appTsConfig: resolveApp('tsconfig.json'),
@@ -101,3 +117,11 @@ module.exports = {
 };
 
 module.exports.moduleFileExtensions = moduleFileExtensions;
+
+function toPosix(pathString) {
+  return pathString.split(path.sep).join(path.posix.sep);
+}
+
+function fromPosix(pathString) {
+  return pathString.split(path.posix.sep).join(path.sep);
+}

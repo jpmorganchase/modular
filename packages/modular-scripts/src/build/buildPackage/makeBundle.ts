@@ -36,6 +36,7 @@ export async function makeBundle(
   const modularRoot = getModularRoot();
   const metadata = await getPackageMetadata();
   const {
+    rootPackageWorkspaceDefinitions,
     rootPackageJsonDependencies,
     packageJsons,
     packageJsonsByPackagePath,
@@ -59,6 +60,10 @@ export async function makeBundle(
   logger.log(`building ${packageName}...`);
 
   const target = createEsbuildBrowserslistTarget(packagePath);
+
+  const includeDirectories = Array.isArray(rootPackageWorkspaceDefinitions)
+    ? rootPackageWorkspaceDefinitions
+    : rootPackageWorkspaceDefinitions?.packages ?? [];
 
   const bundle = await rollup.rollup({
     input: path.join(modularRoot, packagePath, main),
@@ -86,7 +91,7 @@ export async function makeBundle(
       esbuild({
         target,
         minify: false,
-        include: [`packages/**/*`],
+        include: includeDirectories,
         exclude: 'node_modules/**',
       }),
       postcss({ extract: false }),
