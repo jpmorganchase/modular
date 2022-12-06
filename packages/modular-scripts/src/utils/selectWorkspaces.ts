@@ -15,10 +15,18 @@ import getModularRoot from './getModularRoot';
  * @property {boolean} ancestors - Whether to additionally select packages that are ancestors of (i.e.: [in]directly depend on) the selected packages
  * @property {boolean} descendants - Whether to additionally select packages that descend from (i.e.: are [in]directly depended on by) the selected packages
  * @property {string?} compareBranch - The git branch to compare with when "changed"  is specified
+ * @property {boolean} buildOrder - Select packages in build order
  */
 
 /**
  * Select target packages in workspaces, optionally including changed, ancestors and descendant packages
+ *
+ *  Please note that the build order algorithm can't calculate build order if there's a cycle in the dependency graph,
+ *  so circular dependencies will throw unless they only involve packages that don't get built (i.e. "source" `modular.type`s).
+ *  Please also note that circular dependencies can always be fixed by creating an additional package that contains the common parts,
+ *  and that they are considered a code smell + a source of many issues (e.g. https://nodejs.org/api/modules.html#modules_cycles)
+ *  and they make your code fragile towards refactoring, so please don't introduce them in your monorepository.
+ *
  * @param  {TargetOptions} name The target options to configure selection
  * @return {Promise<string[]>} A distinct list of selected package names
  */
@@ -29,6 +37,7 @@ interface TargetOptions {
   ancestors: boolean;
   descendants: boolean;
   compareBranch?: string;
+  buildOrder: boolean;
 }
 
 export async function selectWorkspaces({
@@ -37,8 +46,11 @@ export async function selectWorkspaces({
   ancestors,
   descendants,
   compareBranch,
+  buildOrder,
 }: TargetOptions): Promise<string[]> {
-  const [, allWorkspacesMap] = await getAllWorkspaces(getModularRoot());
+  const [allWorkspacePackages, allWorkspacesMap] = await getAllWorkspaces(
+    getModularRoot(),
+  );
   let changedTargets: string[] = [];
 
   if (changed) {
@@ -70,12 +82,47 @@ export async function selectWorkspaces({
 
   packageScope = [...new Set(packageScope)];
 
-  // traverseWorkspaceRelations will walk the graph and generate the whole ordering needed to build a package
+  if (!buildOrder) return packageScope;
+
+  // We want to select packages in build order. The build order algorithm gives up if there's a cycle in the dependency graph
+  // (since it can't know what to build first if A depends on B but B depends on A), so we can allow cycles only if they involve packages that are not built
+  // (i.e. "source" `modular.type`s). Please note that dependency cycles can always be fixed by creating an additional package that contains the common parts,
+  // and that circular dependencies are a source of many additional issues.
+
+  // First of we create an utility function to determine if a package is buildable, based on the workspace packages info
+  const isWorkspaceBuildable = (name: string) => {
+    const type = allWorkspacePackages.get(name)?.modular?.type;
+    return type && ['app', 'esm-view', 'package', 'view'].includes(type);
+  };
+
+  // The package scope is reduced to buildable packages
+  packageScope = packageScope.filter(isWorkspaceBuildable);
+
+  // The package graph is reduced to a graph where all vertices are buildable.
+  // To do that, we need to first filter the vertices, then filter the edges that might be pointing to a non-buildable vertex
+  const buildableWorkspacesMap = Object.fromEntries(
+    Object.entries(allWorkspacesMap)
+      .filter(([name]) => isWorkspaceBuildable(name))
+      .map(([name, workspace]) => {
+        return [
+          name,
+          {
+            ...workspace,
+            workspaceDependencies:
+              workspace.workspaceDependencies.filter(isWorkspaceBuildable),
+          },
+        ];
+      }),
+  );
+
+  // traverseWorkspaceRelations will walk the given graph (in this case, the graph of all buildable packages) and generate the whole ordering needed to build a package
   // which means that it will possibly expand the scope (it just generates the dependency order starting from a dependency subset but taking into account the whole dependency graph)
-  // this means that we can build in order even manually selected subsets of packages (like: "the user wants to select only a and b, but execute tasks on them in order"),
-  // but it also means we need to filter out all the unwanted packages later.
+  // this means that we can generate an order from any strict subset of packages, but we need to filter out all the unwanted packages later.
   const targetEntriesWithOrder = [
-    ...traverseWorkspaceRelations(packageScope, allWorkspacesMap).entries(),
+    ...traverseWorkspaceRelations(
+      packageScope,
+      buildableWorkspacesMap,
+    ).entries(),
   ];
 
   return (

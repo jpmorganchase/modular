@@ -1,6 +1,11 @@
 import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 
-export type ModularTemplateType = 'app' | 'esm-view' | 'view' | 'package';
+export type ModularTemplateType =
+  | 'app'
+  | 'esm-view'
+  | 'view'
+  | 'package'
+  | 'source';
 export type PackageType = ModularTemplateType | 'template';
 export type UnknownType = 'unknown';
 

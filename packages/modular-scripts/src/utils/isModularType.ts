@@ -14,6 +14,7 @@ export const packageTypes: PackageType[] = [
   'view',
   'package',
   'template',
+  'source',
 ];
 export const ModularTypes: ModularType[] = (
   packageTypes as ModularType[]

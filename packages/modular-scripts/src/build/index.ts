@@ -291,6 +291,7 @@ async function build({
     compareBranch,
     descendants,
     ancestors,
+    buildOrder: true,
   });
 
   if (!selectedTargets.length) {
