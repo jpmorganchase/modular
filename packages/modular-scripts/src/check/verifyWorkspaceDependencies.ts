@@ -1,7 +1,7 @@
 import * as path from 'path';
 import getModularRoot from '../utils/getModularRoot';
 import getWorkspaceInfo from '../utils/getWorkspaceInfo';
-import { getModularType, isValidModularType } from '../utils/isModularType';
+import { getModularType, isValidModularType } from '../utils/packageTypes';
 import * as logger from '../utils/logger';
 
 export async function check(target?: string): Promise<boolean> {

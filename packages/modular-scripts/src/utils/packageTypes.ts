@@ -1,4 +1,5 @@
-import * as path from 'path';
+import path from 'path';
+import fs from 'fs-extra';
 
 import type {
   ModularType,
@@ -6,16 +7,24 @@ import type {
   ModularPackageJson,
 } from '@modular-scripts/modular-types';
 
-import * as fs from 'fs-extra';
+interface PackageTypeDefinition {
+  build: boolean;
+  test: boolean;
+}
 
-export const packageTypes: PackageType[] = [
-  'app',
-  'esm-view',
-  'view',
-  'package',
-  'template',
-  'source',
-];
+type PackageTypeDefinitions = { [Type in PackageType]: PackageTypeDefinition };
+
+const packageTypeDefinitions: PackageTypeDefinitions = {
+  app: { build: true, test: true },
+  'esm-view': { build: true, test: true },
+  view: { build: true, test: true },
+  package: { build: true, test: true },
+  template: { build: false, test: false },
+  source: { build: false, test: true },
+};
+
+export const packageTypes = Object.keys(packageTypeDefinitions);
+
 export const ModularTypes: ModularType[] = (
   packageTypes as ModularType[]
 ).concat(['root']);
@@ -39,4 +48,8 @@ export default function isModularType(dir: string, type: PackageType): boolean {
 
 export function isValidModularType(dir: string): boolean {
   return ModularTypes.includes(getModularType(dir) as ModularType);
+}
+
+export function isBuildable(type: PackageType): boolean {
+  return packageTypeDefinitions[type].build;
 }

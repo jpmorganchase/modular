@@ -9,7 +9,7 @@ import type { ModularType } from '@modular-scripts/modular-types';
 import * as logger from '../utils/logger';
 import getModularRoot from '../utils/getModularRoot';
 import actionPreflightCheck from '../utils/actionPreflightCheck';
-import { getModularType } from '../utils/isModularType';
+import { getModularType } from '../utils/packageTypes';
 import execAsync from '../utils/execAsync';
 import getLocation from '../utils/getLocation';
 import { selectWorkspaces } from '../utils/selectWorkspaces';

@@ -1,7 +1,7 @@
 import { paramCase as toParamCase } from 'change-case';
 
 import actionPreflightCheck from './utils/actionPreflightCheck';
-import isModularType from './utils/isModularType';
+import isModularType from './utils/packageTypes';
 import execAsync from './utils/execAsync';
 import getLocation from './utils/getLocation';
 import stageView from './utils/stageView';
