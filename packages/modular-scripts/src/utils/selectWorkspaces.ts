@@ -3,7 +3,7 @@ import {
   computeAncestorSet,
   traverseWorkspaceRelations,
 } from '@modular-scripts/workspace-resolver';
-import { isBuildable } from './packageTypes';
+import { isBuildableModularType } from './packageTypes';
 import { getAllWorkspaces } from './getAllWorkspaces';
 import { getChangedWorkspacesContent } from './getChangedWorkspaces';
 import getModularRoot from './getModularRoot';
@@ -84,7 +84,7 @@ export async function selectWorkspaces({
   // We want to remove all the non-buildable packages from the package scope. Create a filter predicate that looks up to the package map
   const isWorkspaceBuildable = (name: string) => {
     const type = allWorkspacePackages.get(name)?.modular?.type;
-    return type && isBuildable(type as PackageType);
+    return type && isBuildableModularType(type as PackageType);
   };
 
   packageScope = [...new Set(packageScope)].filter(isWorkspaceBuildable);
