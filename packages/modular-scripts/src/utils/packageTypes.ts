@@ -34,7 +34,7 @@ export function getModularType(dir: string): ModularType | undefined {
   const packageJsonPath = path.join(dir, 'package.json');
   if (fs.existsSync(packageJsonPath)) {
     const packageJson = fs.readJsonSync(packageJsonPath) as ModularPackageJson;
-    return packageJson.modular?.type || 'package';
+    return packageJson.modular?.type;
   }
 }
 
@@ -47,8 +47,8 @@ export function isModularType(dir: string, type: PackageType): boolean {
   return false;
 }
 
-export function isValidModularType(dir: string): boolean {
-  return ModularTypes.includes(getModularType(dir) as ModularType);
+export function isValidModularType(type: string): boolean {
+  return ModularTypes.includes(type as ModularType);
 }
 
 export function isBuildableModularType(type: PackageType): boolean {
