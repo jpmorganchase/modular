@@ -10,17 +10,18 @@ import type {
 interface PackageTypeDefinition {
   buildable: boolean;
   testable: boolean;
+  startable: boolean;
 }
 
 type PackageTypeDefinitions = { [Type in PackageType]: PackageTypeDefinition };
 
 const packageTypeDefinitions: PackageTypeDefinitions = {
-  app: { buildable: true, testable: true },
-  'esm-view': { buildable: true, testable: true },
-  view: { buildable: true, testable: true },
-  package: { buildable: true, testable: true },
-  template: { buildable: false, testable: false },
-  source: { buildable: false, testable: true },
+  app: { buildable: true, testable: true, startable: true },
+  'esm-view': { buildable: true, testable: true, startable: true },
+  view: { buildable: true, testable: true, startable: true },
+  package: { buildable: true, testable: true, startable: false },
+  template: { buildable: false, testable: false, startable: false },
+  source: { buildable: false, testable: true, startable: false },
 };
 
 export const packageTypes = Object.keys(packageTypeDefinitions);
@@ -52,4 +53,8 @@ export function isValidModularType(dir: string): boolean {
 
 export function isBuildableModularType(type: PackageType): boolean {
   return packageTypeDefinitions[type].buildable;
+}
+
+export function isStartableModularType(type: PackageType): boolean {
+  return packageTypeDefinitions[type].startable;
 }

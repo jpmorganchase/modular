@@ -1,7 +1,10 @@
 import { paramCase as toParamCase } from 'change-case';
 
 import actionPreflightCheck from './utils/actionPreflightCheck';
-import isModularType from './utils/packageTypes';
+import isModularType, {
+  getModularType,
+  isStartableModularType,
+} from './utils/packageTypes';
 import execAsync from './utils/execAsync';
 import getLocation from './utils/getLocation';
 import stageView from './utils/stageView';
@@ -16,6 +19,7 @@ import createEsbuildBrowserslistTarget from './utils/createEsbuildBrowserslistTa
 import prompts from 'prompts';
 import { getDependencyInfo } from './utils/getDependencyInfo';
 import { isReactNewApi } from './utils/isReactNewApi';
+import type { PackageType } from '@modular-scripts/modular-types';
 
 async function start(packageName: string): Promise<void> {
   let target = packageName;
@@ -40,9 +44,14 @@ async function start(packageName: string): Promise<void> {
 
   await setupEnvForDirectory(targetPath);
 
-  if (isModularType(targetPath, 'package')) {
+  const modularType = getModularType(targetPath);
+  if (!modularType || !isStartableModularType(modularType as PackageType)) {
     throw new Error(
-      `The package at ${targetPath} is not a valid modular app or view.`,
+      `The package at ${targetPath} can't be started because ${
+        modularType
+          ? `has Modular type "${modularType}"`
+          : `has no Modular type`
+      }.`,
     );
   }
 
