@@ -18,6 +18,7 @@ type ModularPackageJson = PackageJson & {
 };
 
 function getWorkspaces(): Array<[string, { location: string }]> {
+  // TODO: pm.workspaces();
   const { stdout: yarnVersion } = execa.sync('yarnpkg', ['--version']);
 
   if (yarnVersion.startsWith('1.')) {

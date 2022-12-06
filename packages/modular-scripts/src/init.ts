@@ -59,6 +59,7 @@ export async function initModularFolder(
     yarnArgs.push('--prefer-offline');
   }
   await execAsync('yarnpkg', yarnArgs, { cwd: folder });
+  // TODO pm.refresh({ cwd: folder })
 
   logger.log('Modular repository initialized!');
 }

@@ -164,6 +164,9 @@ async function addPackage({
     logger.log(
       `Installing template package ${templateName} from registry, this may take a moment...`,
     );
+
+    // TODO:
+    // TODO: pm.addWorkspaceDependencies([templateName], {cwd: modularRoot});
     const yarnAddArgs = ['add', templateName];
 
     if (isYarnV1) {

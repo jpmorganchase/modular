@@ -1,0 +1,6 @@
+{
+  "extends": "modular-scripts/tsconfig.json",
+  "compilerOptions": {
+    "isolatedModules": false
+  }
+}

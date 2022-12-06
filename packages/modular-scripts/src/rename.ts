@@ -85,6 +85,7 @@ async function rename(
 
     logger.log(`Refreshing packages`);
     execa.sync('yarnpkg', ['--silent'], { cwd: getModularRoot() });
+    // TODO: pm.refresh({ cwd: getModularRoot() })
   } catch (err) {
     logger.error(err as string);
     stashChanges();
