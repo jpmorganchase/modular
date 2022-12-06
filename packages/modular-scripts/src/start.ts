@@ -1,7 +1,8 @@
 import { paramCase as toParamCase } from 'change-case';
 
 import actionPreflightCheck from './utils/actionPreflightCheck';
-import isModularType, {
+import {
+  isModularType,
   getModularType,
   isStartableModularType,
 } from './utils/packageTypes';

@@ -38,7 +38,7 @@ export function getModularType(dir: string): ModularType | undefined {
   }
 }
 
-export default function isModularType(dir: string, type: PackageType): boolean {
+export function isModularType(dir: string, type: PackageType): boolean {
   const packageJsonPath = path.join(dir, 'package.json');
   if (fs.existsSync(packageJsonPath)) {
     const packageJson = fs.readJsonSync(packageJsonPath) as ModularPackageJson;
