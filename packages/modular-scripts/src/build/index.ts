@@ -295,7 +295,7 @@ async function build({
   });
 
   if (!selectedTargets.length) {
-    logger.log('No changed workspaces found');
+    logger.log('No workspaces to build');
     process.exit(0);
   }
 

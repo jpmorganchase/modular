@@ -80,23 +80,20 @@ export async function selectWorkspaces({
     packageScope = packageScope.concat([...ancestorsSet]);
   }
 
-  packageScope = [...new Set(packageScope)];
-
-  if (!buildOrder) return packageScope;
-
-  // We want to select packages in build order. The build order algorithm gives up if there's a cycle in the dependency graph
-  // (since it can't know what to build first if A depends on B but B depends on A), so we can allow cycles only if they involve packages that are not built
-  // (i.e. "source" `modular.type`s). Please note that dependency cycles can always be fixed by creating an additional package that contains the common parts,
-  // and that circular dependencies are a source of many additional issues.
-
-  // First of we create an utility function to determine if a package is buildable, based on the workspace packages info
+  // We want to remove all the non-buildable packages from the package scope. Create a filter predicate that looks up to the package map
   const isWorkspaceBuildable = (name: string) => {
     const type = allWorkspacePackages.get(name)?.modular?.type;
     return type && ['app', 'esm-view', 'package', 'view'].includes(type);
   };
 
-  // The package scope is reduced to buildable packages
-  packageScope = packageScope.filter(isWorkspaceBuildable);
+  packageScope = [...new Set(packageScope)].filter(isWorkspaceBuildable);
+
+  if (!buildOrder) return packageScope;
+
+  // Since buildOrder is true, we want to select packages in build order. The build order algorithm gives up if there's a cycle in the dependency graph
+  // (since it can't know what to build first if A depends on B but B depends on A), so we can allow cycles only if they involve packages that are not built
+  // (i.e. "source" `modular.type`s). Please note that dependency cycles can always be fixed by creating an additional package that contains the common parts,
+  // and that circular dependencies are a source of many additional issues.
 
   // The package graph is reduced to a graph where all vertices are buildable.
   // To do that, we need to first filter the vertices, then filter the edges that might be pointing to a non-buildable vertex
