@@ -37,24 +37,13 @@ import {
 } from './esbuildFileSizeReporter';
 import { getDependencyInfo } from '../utils/getDependencyInfo';
 import { isReactNewApi } from '../utils/isReactNewApi';
+import { utilizeEsbuild } from '../utils/config';
 
 async function buildStandalone(
   target: string,
   type: Extract<ModularType, 'app' | 'esm-view'>,
 ) {
-  // True if there's no preference set - or the preference is for webpack.
-  const useWebpack =
-    !process.env.USE_MODULAR_WEBPACK ||
-    process.env.USE_MODULAR_WEBPACK === 'true';
-
-  // True if the preferene IS set and the preference is esbuid.
-  const useEsbuild =
-    process.env.USE_MODULAR_ESBUILD &&
-    process.env.USE_MODULAR_ESBUILD === 'true';
-
-  // If you want to use webpack then we'll always use webpack. But if you've indicated
-  // you want esbuild - then we'll switch you to the new fancy world.
-  const isEsbuild = !useWebpack || useEsbuild;
+  const isEsbuild = await utilizeEsbuild();
 
   // Setup Paths
   const modularRoot = getModularRoot();
@@ -132,6 +121,7 @@ async function buildStandalone(
   let cssEntryPoint: string | undefined;
 
   if (isEsbuild) {
+    logger.debug('Building with esbuild');
     const { default: buildEsbuildApp } = await import(
       '../esbuild-scripts/build'
     );
@@ -140,6 +130,7 @@ async function buildStandalone(
     cssEntryPoint = getEntryPoint(paths, result, '.css');
     assets = createEsbuildAssets(paths, result);
   } else {
+    logger.debug('Building with Webpack');
     // create-react-app doesn't support plain module outputs yet,
     // so --preserve-modules has no effect here
 
