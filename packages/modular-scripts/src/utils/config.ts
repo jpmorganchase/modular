@@ -32,8 +32,8 @@ type ConfigObjectKey = keyof ConfigObject;
 /**
  * Get the configured value for a given configuration field.
  * Rejects if no configuration file is present or the queired field is not present.
- * @param configEntry Field containing the configuration variable
- * @returns Value of configuration variable queried if present
+ * @param configEntry Field containing the configuration variable to read
+ * @returns Value of configuration field queried if present
  */
 export async function getConfiguration(
   configEntry: ConfigObjectKey,
