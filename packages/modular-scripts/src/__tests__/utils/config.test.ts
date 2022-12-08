@@ -42,7 +42,7 @@ describe('A simple modular repo with a .modular.js config file', () => {
   it('builds using webpack if the environment variable is provided as it overrides the config', async () => {
     const result = await modular(`build test-app --verbose`, tempModularRepo, {
       env: {
-        USE_MODULAR_WEBPACK: 'true',
+        USE_MODULAR_ESBUILD: 'false',
       },
     });
     expect(result.stdout).toContain('Building with Webpack');

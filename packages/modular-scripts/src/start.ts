@@ -16,7 +16,7 @@ import createEsbuildBrowserslistTarget from './utils/createEsbuildBrowserslistTa
 import prompts from 'prompts';
 import { getDependencyInfo } from './utils/getDependencyInfo';
 import { isReactNewApi } from './utils/isReactNewApi';
-import { utilizeEsbuild } from './utils/config';
+import { getConfiguration } from './utils/config';
 
 async function start(packageName: string): Promise<void> {
   let target = packageName;
@@ -93,7 +93,7 @@ async function start(packageName: string): Promise<void> {
 
   // If you want to use webpack then we'll always use webpack. But if you've indicated
   // you want esbuild - then we'll switch you to the new fancy world.
-  if (await utilizeEsbuild()) {
+  if (getConfiguration('useModularEsbuild') as boolean) {
     const { default: startEsbuildApp } = await import(
       './esbuild-scripts/start'
     );

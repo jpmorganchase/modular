@@ -1,9 +1,8 @@
 import { parsePackageName } from './parsePackageName';
 import type { Dependency } from '@schemastore/package';
+import { getConfiguration } from './config';
 
-const externalCdnTemplate =
-  process.env.EXTERNAL_CDN_TEMPLATE ??
-  'https://cdn.skypack.dev/[name]@[version]';
+const externalCdnTemplate = getConfiguration('externalCdnTemplate') as string;
 
 interface BuildImportMapParams {
   externalDependencies: Dependency;
