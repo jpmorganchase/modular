@@ -36,9 +36,10 @@ const config = {
   useModularEsbuild: {
     default: false,
     override:
-      process.env.USE_MODULAR_ESBUILD === undefined
-        ? undefined
-        : process.env.USE_MODULAR_ESBUILD === 'true',
+      process.env.USE_MODULAR_ESBUILD === 'true' ||
+      process.env.USE_MODULAR_ESBUILD === 'false'
+        ? process.env.USE_MODULAR_ESBUILD === 'true'
+        : undefined,
   },
   externalCdnTemplate: {
     default: 'https://cdn.skypack.dev/[name]@[version]',
