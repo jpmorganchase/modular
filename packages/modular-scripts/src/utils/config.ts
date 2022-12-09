@@ -42,7 +42,7 @@ const config = {
         : undefined,
   },
   externalCdnTemplate: {
-    default: 'https://cdn.skypack.dev/[name]@[version]',
+    default: 'https://esm.sh/[name]@[version]',
     override: process.env.EXTERNAL_CDN_TEMPLATE,
   },
 };
