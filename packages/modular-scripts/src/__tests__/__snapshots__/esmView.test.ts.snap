@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`modular-scripts WHEN building a esm-view THEN matches the entrypoint snapshot 1`] = `
-"import * as t from "https://cdn.skypack.dev/react@17.0.2";
+"import * as t from "https://esm.sh/react@17.0.2";
 function e() {
   return t.createElement(
     "div",
