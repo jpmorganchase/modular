@@ -11,7 +11,10 @@ async function getRelativePathInRepo(packagePath: string) {
     ['rev-parse', '--show-toplevel'],
     { stdout: 'pipe' },
   );
-  return path.relative(gitRepoPath, packagePath);
+  return path
+    .relative(gitRepoPath, packagePath)
+    .split(path.win32.sep)
+    .join(path.posix.sep);
 }
 
 export async function getRepositoryField(packagePath: string) {
