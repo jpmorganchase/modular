@@ -40,7 +40,6 @@ describe('WHEN building with preserve modules', () => {
           "dist-cjs",
           "dist-es",
           "dist-types",
-          "README.md",
         ],
         "main": "dist-cjs/index.js",
         "modular": Object {
@@ -64,6 +63,7 @@ describe('WHEN building with preserve modules', () => {
     expect(tree(path.join(modularRoot, 'dist', packageName)))
       .toMatchInlineSnapshot(`
       "sample-async-package
+      ├─ LICENSE #1gat5ri
       ├─ dist-cjs
       │  ├─ index.js #p1m6x9
       │  ├─ index.js.map #16jes1h
@@ -181,6 +181,7 @@ describe('WHEN building packages with private cross-package dependencies', () =>
     expect(tree(path.join(modularRoot, 'dist', dependentPackage)))
       .toMatchInlineSnapshot(`
       "sample-depending-package
+      ├─ LICENSE #1gat5ri
       ├─ dist-cjs
       │  ├─ index.js #1m9v9ya
       │  ├─ index.js.map #79ot9r

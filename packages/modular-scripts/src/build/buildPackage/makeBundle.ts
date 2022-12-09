@@ -312,12 +312,15 @@ export async function makeBundle(
       ...packageJson.dependencies,
       ...localImports,
     },
+    /**
+     * Certain files are always included, regardless of settings.
+     * https://docs.npmjs.com/cli/v9/configuring-npm/package-json#files
+     */
     files: distinct([
       ...(packageJson.files || []),
       'dist-cjs',
       'dist-es',
       'dist-types',
-      'README.md',
     ]),
   };
 }
