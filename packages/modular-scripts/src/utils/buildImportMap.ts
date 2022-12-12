@@ -1,8 +1,8 @@
 import { parsePackageName } from './parsePackageName';
 import type { Dependency } from '@schemastore/package';
-import { getConfiguration } from './config';
+import { getConfig } from './config';
 
-const externalCdnTemplate = getConfiguration('externalCdnTemplate') as string;
+const externalCdnTemplate = getConfig('externalCdnTemplate') as string;
 
 interface BuildImportMapParams {
   externalDependencies: Dependency;

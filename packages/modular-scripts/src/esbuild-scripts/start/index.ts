@@ -35,6 +35,7 @@ import getModularRoot from '../../utils/getModularRoot';
 import { createRewriteDependenciesPlugin } from '../plugins/rewriteDependenciesPlugin';
 import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowserslistTarget';
 import { normalizeToPosix } from '../utils/formatPath';
+import { getConfig } from '../../utils/config';
 
 const RUNTIME_DIR = path.join(__dirname, 'runtime');
 class DevServer {
@@ -392,7 +393,7 @@ export default async function start({
   const host = getHost();
   const port = await getPort(host);
   const urls = prepareUrls(
-    process.env.HTTPS === 'true' ? 'https' : 'http',
+    (getConfig('https') as boolean) ? 'https' : 'http',
     host,
     port,
     paths.publicUrlOrPath.slice(0, -1),

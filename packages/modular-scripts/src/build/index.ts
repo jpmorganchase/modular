@@ -37,13 +37,13 @@ import {
 } from './esbuildFileSizeReporter';
 import { getDependencyInfo } from '../utils/getDependencyInfo';
 import { isReactNewApi } from '../utils/isReactNewApi';
-import { getConfiguration } from '../utils/config';
+import { getConfig } from '../utils/config';
 
 async function buildStandalone(
   target: string,
   type: Extract<ModularType, 'app' | 'esm-view'>,
 ) {
-  const isEsbuild = getConfiguration('useModularEsbuild') as boolean;
+  const isEsbuild = getConfig('useModularEsbuild') as boolean;
 
   // Setup Paths
   const modularRoot = getModularRoot();

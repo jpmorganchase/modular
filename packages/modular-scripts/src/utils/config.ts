@@ -27,6 +27,9 @@ const configResult = explorer.search(path.join(modularRoot, 'package.json'));
 interface ConfigObject {
   useModularEsbuild: boolean | null;
   externalCdnTemplate: string | null;
+  externalBlockList: string[] | null;
+  externalAllowList: string[] | null;
+  https: boolean | null;
 }
 
 /**
@@ -45,6 +48,25 @@ const config = {
     default: 'https://esm.sh/[name]@[version]',
     override: process.env.EXTERNAL_CDN_TEMPLATE,
   },
+  externalBlockList: {
+    default: [],
+    override: process.env.EXTERNAL_BLOCK_LIST
+      ? process.env.EXTERNAL_BLOCK_LIST.split(',')
+      : undefined,
+  },
+  externalAllowList: {
+    default: ['**'],
+    override: process.env.EXTERNAL_ALLOW_LIST
+      ? process.env.EXTERNAL_ALLOW_LIST.split(',')
+      : undefined,
+  },
+  https: {
+    default: false,
+    override:
+      process.env.HTTPS === 'true' || process.env.HTTPS === 'false'
+        ? process.env.HTTPS === 'true'
+        : undefined,
+  },
 };
 
 type ConfigObjectKey = keyof typeof config;
@@ -59,11 +81,11 @@ type ConfigObjectKey = keyof typeof config;
  *
  * Although return type can be many things, we can use 'as' with confidence to restrict it to the type we're querying:
  *
- * - 'useModularEsbuild' will always be a boolean, so we can do getConfiguration('useModularEsbuild') as boolean
+ * - 'useModularEsbuild' will always be a boolean, so we can do getConfig('useModularEsbuild') as boolean
  */
-export function getConfiguration(
+export function getConfig(
   configEntry: ConfigObjectKey,
-): string | boolean {
+): string | boolean | string[] {
   const overrideValue = config[configEntry].override;
   const defaultValue = config[configEntry].default;
   if (overrideValue !== undefined) {
