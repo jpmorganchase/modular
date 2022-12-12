@@ -24,6 +24,7 @@ const isCI = require('is-ci');
 const paths = require('../config/paths');
 const configFactory = require('../config/webpack.config');
 const createDevServerConfig = require('../config/webpackDevServer.config');
+const { getConfig } = require('../../src/utils/config');
 
 const isInteractive = process.stdout.isTTY;
 
@@ -60,7 +61,7 @@ choosePort(HOST, DEFAULT_PORT)
       level: 'none',
     };
 
-    const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
+    const protocol = getConfig('https') ? 'https' : 'http';
     const appName = require(paths.appPackageJson).name;
 
     const useTypeScript = !isCI && fs.existsSync(paths.appTsConfig);

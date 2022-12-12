@@ -5,6 +5,7 @@ const path = require('path');
 const crypto = require('crypto');
 const chalk = require('chalk');
 const paths = require('./paths');
+const { getConfig } = require('../../src/utils/config');
 
 // Ensure the certificate and key provided are valid and if not
 // throw an easy to debug error
@@ -46,8 +47,8 @@ function readEnvFile(file, type) {
 // Get the https config
 // Return cert files if provided in env, otherwise just true or false
 function getHttpsConfig() {
-  const { SSL_CRT_FILE, SSL_KEY_FILE, HTTPS } = process.env;
-  const isHttps = HTTPS === 'true';
+  const isHttps = getConfig('https');
+  const { SSL_CRT_FILE, SSL_KEY_FILE } = process.env;
 
   if (isHttps && SSL_CRT_FILE && SSL_KEY_FILE) {
     const crtFile = path.resolve(paths.appPath, SSL_CRT_FILE);
