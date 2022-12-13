@@ -2,13 +2,15 @@ import chalk from 'chalk';
 
 import memoize from '../../../utils/memoize';
 import * as logger from '../../../utils/logger';
+import { getConfig } from '../../../utils/config';
 
 const getHost = memoize(() => {
-  if (process.env.HOST) {
+  const HOST = getConfig('host') as string;
+  if (HOST !== '0.0.0.0') {
     logger.log(
       chalk.cyan(
         `Attempting to bind to HOST environment variable: ${chalk.yellow(
-          chalk.bold(process.env.HOST),
+          chalk.bold(HOST),
         )}`,
       ),
     );
@@ -20,7 +22,7 @@ const getHost = memoize(() => {
     );
     logger.log();
   }
-  return process.env.HOST || '0.0.0.0';
+  return HOST;
 });
 
 export default getHost;

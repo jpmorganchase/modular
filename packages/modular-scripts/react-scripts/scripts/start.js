@@ -7,6 +7,8 @@ process.on('unhandledRejection', (err) => {
   throw err;
 });
 
+require('ts-node/register');
+const { getConfig } = require('../../src/utils/config');
 const fs = require('fs');
 const chalk = require('chalk');
 const webpack = require('webpack');
@@ -24,19 +26,17 @@ const isCI = require('is-ci');
 const paths = require('../config/paths');
 const configFactory = require('../config/webpack.config');
 const createDevServerConfig = require('../config/webpackDevServer.config');
-const { getConfig } = require('../../src/utils/config');
-
 const isInteractive = process.stdout.isTTY;
 
 // Tools like Cloud9 rely on this.
 const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3000;
-const HOST = process.env.HOST || '0.0.0.0';
+const HOST = getConfig('host');
 
-if (process.env.HOST) {
+if (HOST !== '0.0.0.0') {
   log(
     chalk.cyan(
       `Attempting to bind to HOST environment variable: ${chalk.yellow(
-        chalk.bold(process.env.HOST),
+        chalk.bold(HOST),
       )}`,
     ),
   );

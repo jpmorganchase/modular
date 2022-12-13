@@ -30,6 +30,7 @@ interface ConfigObject {
   externalBlockList: string[] | null;
   externalAllowList: string[] | null;
   https: boolean | null;
+  host: string | null;
 }
 
 /**
@@ -66,6 +67,10 @@ const config = {
       process.env.HTTPS === 'true' || process.env.HTTPS === 'false'
         ? process.env.HTTPS === 'true'
         : undefined,
+  },
+  host: {
+    default: '0.0.0.0',
+    override: process.env.HOST,
   },
 };
 
