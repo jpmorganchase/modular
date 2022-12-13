@@ -7,7 +7,7 @@ process.on('unhandledRejection', (err) => {
   throw err;
 });
 
-require('ts-node/register');
+require('ts-node').register();
 const { getConfig } = require('../../src/utils/config');
 const fs = require('fs');
 const chalk = require('chalk');
