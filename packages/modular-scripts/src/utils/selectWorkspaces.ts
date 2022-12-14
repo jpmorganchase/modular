@@ -7,7 +7,7 @@ import { isBuildableModularType } from './packageTypes';
 import { getAllWorkspaces } from './getAllWorkspaces';
 import { getChangedWorkspacesContent } from './getChangedWorkspaces';
 import getModularRoot from './getModularRoot';
-import { PackageType } from '@modular-scripts/modular-types';
+import { PackageType, WorkspaceMap } from '@modular-scripts/modular-types';
 
 /**
  * @typedef {Object} TargetOptions
@@ -16,20 +16,6 @@ import { PackageType } from '@modular-scripts/modular-types';
  * @property {boolean} ancestors - Whether to additionally select packages that are ancestors of (i.e.: [in]directly depend on) the selected packages
  * @property {boolean} descendants - Whether to additionally select packages that descend from (i.e.: are [in]directly depended on by) the selected packages
  * @property {string?} compareBranch - The git branch to compare with when "changed"  is specified
- * @property {boolean} buildOrder - Select packages in build order
- */
-
-/**
- * Select target packages in workspaces, optionally including changed, ancestors and descendant packages
- *
- *  Please note that the build order algorithm can't calculate build order if there's a cycle in the dependency graph,
- *  so circular dependencies will throw unless they only involve packages that don't get built (i.e. "source" `modular.type`s).
- *  Please also note that circular dependencies can always be fixed by creating an additional package that contains the common parts,
- *  and that they are considered a code smell + a source of many issues (e.g. https://nodejs.org/api/modules.html#modules_cycles)
- *  and they make your code fragile towards refactoring, so please don't introduce them in your monorepository.
- *
- * @param  {TargetOptions} name The target options to configure selection
- * @return {Promise<string[]>} A distinct list of selected package names
  */
 
 interface TargetOptions {
@@ -38,59 +24,49 @@ interface TargetOptions {
   ancestors: boolean;
   descendants: boolean;
   compareBranch?: string;
-  buildOrder: boolean;
 }
 
-export async function selectWorkspaces({
-  targets,
-  changed,
-  ancestors,
-  descendants,
-  compareBranch,
-  buildOrder,
-}: TargetOptions): Promise<string[]> {
-  const [allWorkspacePackages, allWorkspacesMap] = await getAllWorkspaces(
-    getModularRoot(),
-  );
-  let changedTargets: string[] = [];
+/**
+ * Select all target packages in workspaces in random order, optionally including changed, ancestors and descendant packages
+ *
+ * This method will not throw, even if there are circular dependencies in the graph
+ *
+ * @param  {TargetOptions} options The target options to configure selection
+ * @return {Promise<string[]>} A distinct list of selected package names
+ */
 
-  if (changed) {
-    const [, buildTargetMap] = await getChangedWorkspacesContent(compareBranch);
-    changedTargets = Object.keys(buildTargetMap);
-  }
+export async function selectWorkspaces(
+  options: TargetOptions,
+): Promise<string[]> {
+  return [...new Set((await computeWorkspaceSelection(options)).packageScope)];
+}
 
-  const targetsToBuild = [...new Set(targets.concat(changedTargets))];
+/**
+ * Select buildable target packages in workspaces in build order, optionally including changed, ancestors and descendant packages
+ *
+ * Please note that the build order algorithm can't calculate build order if there's a cycle in the dependency graph,
+ * so circular dependencies will throw unless they only involve packages that don't get built (i.e. "source" `modular.type`s).
+ * Please also note that circular dependencies can always be fixed by creating an additional package that contains the common parts,
+ * and that they are considered a code smell + a source of many issues (e.g. https://nodejs.org/api/modules.html#modules_cycles)
+ * and they make your code fragile towards refactoring, so please don't introduce them in your monorepository.
+ *
+ * @param  {TargetOptions} options The target options to configure selection
+ * @return {Promise<string[]>} A distinct list of selected buildable package names, in build order
+ */
 
-  if (!targetsToBuild.length) {
-    return [];
-  }
-
-  // Calculate the package scope, i.e. the deduped array of all the packages we need to generate an ordering graph for.
-  // We need to remember ancestor and descendant sets in order to select them later.
-  let ancestorsSet: Set<string> = new Set();
-  let descendantsSet: Set<string> = new Set();
-  let packageScope = targetsToBuild;
-
-  if (descendants) {
-    descendantsSet = computeDescendantSet(targetsToBuild, allWorkspacesMap);
-    packageScope = packageScope.concat([...descendantsSet]);
-  }
-
-  if (ancestors) {
-    ancestorsSet = computeAncestorSet(targetsToBuild, allWorkspacesMap);
-    packageScope = packageScope.concat([...ancestorsSet]);
-  }
-
-  // We want to remove all the non-buildable packages from the package scope. Create a filter predicate that looks up to the package map
-  const isWorkspaceBuildable = (name: string) => {
-    const type = allWorkspacePackages.get(name)?.modular?.type;
-    return type && isBuildableModularType(type as PackageType);
-  };
-
-  packageScope = [...new Set(packageScope)].filter(isWorkspaceBuildable);
-
-  if (!buildOrder) return packageScope;
-
+export async function selectBuildableWorkspaces(
+  options: TargetOptions,
+): Promise<string[]> {
+  const { ancestors, descendants } = options;
+  const {
+    packageScope,
+    isBuildable,
+    allWorkspacesMap,
+    descendantsSet,
+    ancestorsSet,
+    targetsToBuild,
+  } = await computeWorkspaceSelection(options);
+  const buildablePackageScope = [...new Set(packageScope)].filter(isBuildable);
   // Since buildOrder is true, we want to select packages in build order. The build order algorithm gives up if there's a cycle in the dependency graph
   // (since it can't know what to build first if A depends on B but B depends on A), so we can allow cycles only if they involve packages that are not built
   // (i.e. "source" `modular.type`s). Please note that dependency cycles can always be fixed by creating an additional package that contains the common parts,
@@ -100,14 +76,14 @@ export async function selectWorkspaces({
   // To do that, we need to first filter the vertices, then filter the edges that might be pointing to a non-buildable vertex
   const buildableWorkspacesMap = Object.fromEntries(
     Object.entries(allWorkspacesMap)
-      .filter(([name]) => isWorkspaceBuildable(name))
+      .filter(([name]) => isBuildable(name))
       .map(([name, workspace]) => {
         return [
           name,
           {
             ...workspace,
             workspaceDependencies:
-              workspace.workspaceDependencies.filter(isWorkspaceBuildable),
+              workspace.workspaceDependencies.filter(isBuildable),
           },
         ];
       }),
@@ -118,7 +94,7 @@ export async function selectWorkspaces({
   // this means that we can generate an order from any strict subset of packages, but we need to filter out all the unwanted packages later.
   const targetEntriesWithOrder = [
     ...traverseWorkspaceRelations(
-      packageScope,
+      buildablePackageScope,
       buildableWorkspacesMap,
     ).entries(),
   ];
@@ -136,4 +112,70 @@ export async function selectWorkspaces({
           targetsToBuild.includes(packageName),
       )
   );
+}
+
+/**
+ * Common data structures to calculate package selection
+ */
+async function computeWorkspaceSelection({
+  targets,
+  changed,
+  ancestors,
+  descendants,
+  compareBranch,
+}: TargetOptions): Promise<{
+  packageScope: string[];
+  isBuildable: (name: string) => boolean | undefined;
+  allWorkspacesMap: WorkspaceMap;
+  ancestorsSet: Set<string>;
+  descendantsSet: Set<string>;
+  targetsToBuild: string[];
+}> {
+  const [allWorkspacePackages, allWorkspacesMap] = await getAllWorkspaces(
+    getModularRoot(),
+  );
+  let changedTargets: string[] = [];
+
+  if (changed) {
+    const [, buildTargetMap] = await getChangedWorkspacesContent(compareBranch);
+    changedTargets = Object.keys(buildTargetMap);
+  }
+
+  const targetsToBuild = [...new Set(targets.concat(changedTargets))];
+
+  // We want to remove all the non-buildable packages from the package scope. Create a filter predicate that looks up to the package map
+  const isBuildable = (name: string) => {
+    const type = allWorkspacePackages.get(name)?.modular?.type;
+    return type && isBuildableModularType(type as PackageType);
+  };
+
+  let ancestorsSet: Set<string> = new Set();
+  let descendantsSet: Set<string> = new Set();
+  let packageScope: string[] = [];
+
+  if (targetsToBuild.length) {
+    // Calculate the package scope, i.e. the deduped array of all the packages we need to generate an ordering graph for.
+    // We need to remember ancestor and descendant sets in order to select them later.
+
+    packageScope = targetsToBuild;
+
+    if (descendants) {
+      descendantsSet = computeDescendantSet(targetsToBuild, allWorkspacesMap);
+      packageScope = packageScope.concat([...descendantsSet]);
+    }
+
+    if (ancestors) {
+      ancestorsSet = computeAncestorSet(targetsToBuild, allWorkspacesMap);
+      packageScope = packageScope.concat([...ancestorsSet]);
+    }
+  }
+
+  return {
+    packageScope,
+    isBuildable,
+    allWorkspacesMap,
+    ancestorsSet,
+    descendantsSet,
+    targetsToBuild,
+  };
 }

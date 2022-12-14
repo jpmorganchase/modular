@@ -12,7 +12,7 @@ import actionPreflightCheck from '../utils/actionPreflightCheck';
 import { getModularType } from '../utils/packageTypes';
 import execAsync from '../utils/execAsync';
 import getLocation from '../utils/getLocation';
-import { selectWorkspaces } from '../utils/selectWorkspaces';
+import { selectBuildableWorkspaces } from '../utils/selectWorkspaces';
 import { setupEnvForDirectory } from '../utils/setupEnv';
 import createPaths from '../utils/createPaths';
 import printHostingInstructions from './printHostingInstructions';
@@ -285,13 +285,12 @@ async function build({
   changed: boolean;
   compareBranch?: string;
 }): Promise<void> {
-  const selectedTargets = await selectWorkspaces({
+  const selectedTargets = await selectBuildableWorkspaces({
     targets,
     changed,
     compareBranch,
     descendants,
     ancestors,
-    buildOrder: true,
   });
 
   if (!selectedTargets.length) {
