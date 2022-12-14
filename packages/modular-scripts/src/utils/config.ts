@@ -29,8 +29,6 @@ interface ConfigObject {
   externalCdnTemplate: string | null;
   externalBlockList: string[] | null;
   externalAllowList: string[] | null;
-  https: boolean | null;
-  host: string | null;
 }
 
 /**
@@ -60,17 +58,6 @@ const config = {
     override: process.env.EXTERNAL_ALLOW_LIST
       ? process.env.EXTERNAL_ALLOW_LIST.split(',')
       : undefined,
-  },
-  https: {
-    default: false,
-    override:
-      process.env.HTTPS === 'true' || process.env.HTTPS === 'false'
-        ? process.env.HTTPS === 'true'
-        : undefined,
-  },
-  host: {
-    default: '0.0.0.0',
-    override: process.env.HOST,
   },
 };
 
