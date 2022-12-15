@@ -10,7 +10,7 @@ import getModularRoot from './getModularRoot';
 import { PackageType, WorkspaceMap } from '@modular-scripts/modular-types';
 
 /**
- * @typedef {Object} TargetOptions
+ * @typedef {Object} SelectOptions
  * @property {string[]} targets - An array of package names to select
  * @property {boolean} changed - Whether to additionally select packages that have changes, compared to "compareBranch"
  * @property {boolean} ancestors - Whether to additionally select packages that are ancestors of (i.e.: [in]directly depend on) the selected packages
@@ -18,7 +18,7 @@ import { PackageType, WorkspaceMap } from '@modular-scripts/modular-types';
  * @property {string?} compareBranch - The git branch to compare with when "changed"  is specified
  */
 
-interface TargetOptions {
+interface SelectOptions {
   targets: string[];
   changed: boolean;
   ancestors: boolean;
@@ -26,17 +26,21 @@ interface TargetOptions {
   compareBranch?: string;
 }
 
+interface SelectBuildableOptions extends SelectOptions {
+  dangerouslyIgnoreCircularDependencies?: boolean;
+}
+
 /**
  * Select all target packages in workspaces in random order, optionally including changed, ancestors and descendant packages
  *
  * This method will not throw, even if there are circular dependencies in the graph
  *
- * @param  {TargetOptions} options The target options to configure selection
+ * @param  {SelectOptions} options The target options to configure selection
  * @return {Promise<string[]>} A distinct list of selected package names
  */
 
 export async function selectWorkspaces(
-  options: TargetOptions,
+  options: SelectOptions,
 ): Promise<string[]> {
   return [...new Set((await computeWorkspaceSelection(options)).packageScope)];
 }
@@ -50,14 +54,15 @@ export async function selectWorkspaces(
  * and that they are considered a code smell + a source of many issues (e.g. https://nodejs.org/api/modules.html#modules_cycles)
  * and they make your code fragile towards refactoring, so please don't introduce them in your monorepository.
  *
- * @param  {TargetOptions} options The target options to configure selection
+ * @param  {SelectBuildableOptions} options The target options to configure selection
  * @return {Promise<string[]>} A distinct list of selected buildable package names, in build order
  */
 
 export async function selectBuildableWorkspaces(
-  options: TargetOptions,
+  options: SelectBuildableOptions,
 ): Promise<string[]> {
-  const { ancestors, descendants } = options;
+  const { ancestors, descendants, dangerouslyIgnoreCircularDependencies } =
+    options;
   const {
     packageScope,
     isBuildable,
@@ -66,6 +71,13 @@ export async function selectBuildableWorkspaces(
     ancestorsSet,
     targetsToBuild,
   } = await computeWorkspaceSelection(options);
+  if (!dangerouslyIgnoreCircularDependencies) {
+    // Here we're using traverseWorkspaceRelations to warn us if there's at least one cyclical dependency in the graph
+    // Since the dependency graph can be disconnected, it makes only sense to calculate cycles in the context
+    // of a subset of packages we want to build (aka the package scope)
+    void traverseWorkspaceRelations(packageScope, allWorkspacesMap);
+  }
+
   const buildablePackageScope = [...new Set(packageScope)].filter(isBuildable);
   // Since buildOrder is true, we want to select packages in build order. The build order algorithm gives up if there's a cycle in the dependency graph
   // (since it can't know what to build first if A depends on B but B depends on A), so we can allow cycles only if they involve packages that are not built
@@ -123,7 +135,7 @@ async function computeWorkspaceSelection({
   ancestors,
   descendants,
   compareBranch,
-}: TargetOptions): Promise<{
+}: SelectOptions): Promise<{
   packageScope: string[];
   isBuildable: (name: string) => boolean | undefined;
   allWorkspacesMap: WorkspaceMap;

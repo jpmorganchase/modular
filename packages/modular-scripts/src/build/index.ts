@@ -276,6 +276,7 @@ async function build({
   descendants,
   changed,
   compareBranch,
+  dangerouslyIgnoreCircularDependencies,
 }: {
   packagePaths: string[];
   preserveModules: boolean;
@@ -284,6 +285,7 @@ async function build({
   descendants: boolean;
   changed: boolean;
   compareBranch?: string;
+  dangerouslyIgnoreCircularDependencies: boolean;
 }): Promise<void> {
   const selectedTargets = await selectBuildableWorkspaces({
     targets,
@@ -291,6 +293,7 @@ async function build({
     compareBranch,
     descendants,
     ancestors,
+    dangerouslyIgnoreCircularDependencies,
   });
 
   if (!selectedTargets.length) {
