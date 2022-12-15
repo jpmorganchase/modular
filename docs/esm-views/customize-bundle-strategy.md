@@ -7,7 +7,8 @@ title: Customize bundling strategy
 # Customize bundling / rewriting strategy
 
 By default, all external dependencies are rewritten to a CDN URL and none is
-bundled. This logic can be controlled using two environment variables:
+bundled. This logic can be controlled using two environment variables or by
+using a [modular configuration file](../configuration.md).:
 
 1. `EXTERNAL_ALLOW_LIST` is a comma-separated string that specifies which
    dependencies are allowed to be rewritten to the CDN; if not specified, its

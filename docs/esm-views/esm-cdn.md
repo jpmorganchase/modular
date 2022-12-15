@@ -27,7 +27,8 @@ evaluated only once, it plays well with stateful libraries.
 # Customise the ESM CDN
 
 You can specify a CDN template to rewrite dependencies using the environment
-variable `EXTERNAL_CDN_TEMPLATE`.
+variable `EXTERNAL_CDN_TEMPLATE`, or by using a
+[modular configuration file](../configuration.md).
 
 For example:
 
