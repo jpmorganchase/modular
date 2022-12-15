@@ -37,7 +37,7 @@ const useReactCreateRoot = getEnvironmentVariable(
 const styleImports = getEnvironmentVariable('MODULAR_STYLE_IMPORT_MAPS', []);
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
-const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
+const shouldUseSourceMap = process.env.INTERNAL_GENERATE_SOURCEMAP !== 'false';
 
 const imageInlineSizeLimit = parseInt(
   process.env.IMAGE_INLINE_SIZE_LIMIT || '10000',

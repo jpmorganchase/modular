@@ -29,6 +29,8 @@ interface ConfigObject {
   externalCdnTemplate: string | null;
   externalBlockList: string[] | null;
   externalAllowList: string[] | null;
+  publicUrl: string | null;
+  generateSourceMap: boolean | null;
 }
 
 /**
@@ -59,6 +61,18 @@ const config = {
       ? process.env.EXTERNAL_ALLOW_LIST.split(',')
       : undefined,
   },
+  publicUrl: {
+    default: undefined,
+    override: process.env.PUBLIC_URL,
+  },
+  generateSourceMap: {
+    default: true,
+    override:
+      process.env.GENERATE_SOURCEMAP === 'true' ||
+      process.env.GENERATE_SOURCEMAP === 'false'
+        ? process.env.GENERATE_SOURCEMAP === 'true'
+        : undefined,
+  },
 };
 
 type ConfigObjectKey = keyof typeof config;
@@ -77,7 +91,7 @@ type ConfigObjectKey = keyof typeof config;
  */
 export function getConfig(
   configEntry: ConfigObjectKey,
-): string | boolean | string[] {
+): string | boolean | string[] | undefined {
   const overrideValue = config[configEntry].override;
   const defaultValue = config[configEntry].default;
   if (overrideValue !== undefined) {
@@ -86,7 +100,10 @@ export function getConfig(
     // Error if configuration doesn't match our interface?
     const loadedConfig = configResult.config as ConfigObject;
     const configValue = loadedConfig[configEntry];
-    if (configValue !== null && typeof configValue === typeof defaultValue) {
+    if (
+      configValue !== null &&
+      (typeof configValue === typeof defaultValue || configValue === undefined)
+    ) {
       return configValue;
     }
   }
