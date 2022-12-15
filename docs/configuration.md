@@ -39,44 +39,56 @@ module.exports = {
 };
 ```
 
-### useModularEsbuild
+### **useModularEsbuild**
 
-`boolean`
+**Type**: `boolean`
+
+**Default**: `false` - Uses [Webpack](https://webpack.js.org/)
 
 Use esbuild instead of default Webpack. Only affects Views and ESM Views.
 
-### externalCdnTemplate
+### **externalCdnTemplate**
 
-`string`
+**Type**: `string`
+
+**Default**: `https://esm.sh/[name]@[version]` - [esm.sh](https://esm.sh/)
 
 Template to resolve the URL used to fetch packages from a CDN. Defaults to
 esm.sh. Only applies to ESM Views.
 
-### externalBlockList
+### **externalBlockList**
 
-`string[]`
+**Type**: `string[]`
+
+**Default**: `[]` - No packages
 
 Packages that should be bundled and not fetched from a CDN. Avoid using this
 unless absolutely necessary. Defaults to none. Only applies to ESM Views.
 
-### externalAllowList
+### **externalAllowList**
 
-`string[]`
+**Type**: `string[]`
+
+**Default**: `[**]` - All packages
 
 Packages that should be fetched from a CDN. Avoid changing this unless
 absolutely necessary. Defaults to all packages. Only applies to ESM Views.
 
-### publicUrl
+### **publicUrl**
 
-`string`
+**Type**: `string`
+
+**Default**: `''` - No Public URL
 
 Same as Create React App PUBLIC_URL. Instead of assuming the application is
 hosted in the web server's root or subpath specified by homepage in
 package.json, assets will be referenced to the URL provided.
 
-### generateSourceMap
+### **generateSourceMap**
 
-`boolean`
+**Type**: `boolean`
+
+**Default**: `true`
 
 Should build process generate a source map - can be disabled for performance
 reasons. Source maps are resource heavy and can cause out of memory issue for
