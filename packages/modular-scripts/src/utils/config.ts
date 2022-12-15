@@ -62,7 +62,7 @@ const config = {
       : undefined,
   },
   publicUrl: {
-    default: undefined,
+    default: '',
     override: process.env.PUBLIC_URL,
   },
   generateSourceMap: {
@@ -91,7 +91,7 @@ type ConfigObjectKey = keyof typeof config;
  */
 export function getConfig(
   configEntry: ConfigObjectKey,
-): string | boolean | string[] | undefined {
+): string | boolean | string[] {
   const overrideValue = config[configEntry].override;
   const defaultValue = config[configEntry].default;
   if (overrideValue !== undefined) {
@@ -100,10 +100,7 @@ export function getConfig(
     // Error if configuration doesn't match our interface?
     const loadedConfig = configResult.config as ConfigObject;
     const configValue = loadedConfig[configEntry];
-    if (
-      configValue !== null &&
-      (typeof configValue === typeof defaultValue || configValue === undefined)
-    ) {
+    if (configValue !== null && typeof configValue === typeof defaultValue) {
       return configValue;
     }
   }

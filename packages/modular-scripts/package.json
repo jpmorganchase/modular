@@ -36,6 +36,7 @@
     "@rollup/plugin-node-resolve": "13.3.0",
     "@svgr/core": "6.2.1",
     "@svgr/webpack": "6.2.1",
+    "@types/lodash": "^4.14.191",
     "@types/micromatch": "4.0.2",
     "@types/npmcli__arborist": "^5.6.0",
     "@types/yarnpkg__lockfile": "^1.1.5",

@@ -5,6 +5,7 @@ import * as path from 'path';
 import getPublicUrlOrPath from './getPublicUrlOrPath';
 import getModularRoot from './getModularRoot';
 import getLocation from './getLocation';
+import { getConfig } from './config';
 export interface Paths {
   modularRoot: string;
   publicUrlOrPath: string;
@@ -47,10 +48,11 @@ export default async function createPaths(target: string): Promise<Paths> {
   // single-page apps that may serve index.html for nested URLs like /todos/42.
   // We can't use a relative path in HTML because we don't want to load something
   // like /todos/42/static/js/bundle.7289d.js. We have to know the root.
+  const publicUrl = getConfig('publicUrl') as string;
   const publicUrlOrPath = getPublicUrlOrPath(
     process.env.NODE_ENV === 'development',
     (fs.readJSONSync(resolveApp('package.json')) as AppPackageJson).homepage,
-    process.env.PUBLIC_URL,
+    publicUrl === '' ? undefined : publicUrl,
   );
 
   const moduleFileExtensions = [
