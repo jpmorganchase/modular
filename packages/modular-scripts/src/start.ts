@@ -128,8 +128,6 @@ async function start(packageName: string): Promise<void> {
         MODULAR_IMPORT_MAP: JSON.stringify(Object.fromEntries(importMap || [])),
         MODULAR_USE_REACT_CREATE_ROOT: JSON.stringify(useReactCreateRoot),
         MODULAR_STYLE_IMPORT_MAPS: JSON.stringify([...styleImports]),
-        INTERNAL_PUBLIC_URL: getConfig('publicUrl') as string,
-        INTERNAL_GENERATE_SOURCEMAP: getConfig('generateSourceMap') as string,
       },
     });
   }

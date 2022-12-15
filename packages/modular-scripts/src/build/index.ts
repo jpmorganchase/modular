@@ -151,8 +151,6 @@ async function buildStandalone(
         MODULAR_IS_APP: JSON.stringify(isApp),
         MODULAR_IMPORT_MAP: JSON.stringify(Object.fromEntries(importMap || [])),
         MODULAR_USE_REACT_CREATE_ROOT: JSON.stringify(useReactCreateRoot),
-        INTERNAL_PUBLIC_URL: getConfig('publicUrl') as string,
-        INTERNAL_GENERATE_SOURCEMAP: getConfig('generateSourceMap') as string,
       },
     });
 
