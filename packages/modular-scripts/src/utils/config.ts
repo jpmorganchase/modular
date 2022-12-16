@@ -93,8 +93,6 @@ const configResult: null | { config: Partial<Config> } = explorer.search(
  * - the default value if neither environment variable nor the config file are provided
  */
 export function getConfig<T extends keyof ConfigDefs>(key: T): Config[T] {
-  const configValue: Config[T] | undefined = configResult
-    ? configResult.config[key]
-    : undefined;
+  const configValue = configResult ? configResult.config[key] : undefined;
   return defs[key].override ?? configValue ?? defs[key].default;
 }
