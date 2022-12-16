@@ -4,8 +4,9 @@ nav_order: 10
 
 # Configuration
 
-Modular has minimal configuration because of its philosophy. However there is a
-set of minimum configuration required.
+Because of its philosophy, Modular has a restricted set of configurable
+behaviours. Additionally it requires some minimal configuration within the
+`package.json`s in the repository, all handled by Modular itself.
 
 ## Configuration File
 
@@ -62,8 +63,11 @@ esm.sh. Only applies to ESM Views.
 
 **Default**: `[]` - No packages
 
-Packages that should be bundled and not fetched from a CDN. Avoid using this
-unless absolutely necessary. Defaults to none. Only applies to ESM Views.
+Packages that should be bundled and not fetched from a CDN. We recommend
+allowing all packages to be handled by the CDN, except for particular cases
+where they would not work correctly. See
+[known-limitations](./esm-views/known-limitations.md). Defaults to none. Only
+applies to ESM Views.
 
 ### **externalAllowList**
 
@@ -71,8 +75,10 @@ unless absolutely necessary. Defaults to none. Only applies to ESM Views.
 
 **Default**: `[**]` - All packages
 
-Packages that should be fetched from a CDN. Avoid changing this unless
-absolutely necessary. Defaults to all packages. Only applies to ESM Views.
+Packages that should be fetched from a CDN. We recommend allowing all packages
+to be handled by the CDN, except for particular cases where they would not work
+correctly. See [known-limitations](./esm-views/known-limitations.md). Defaults
+to all packages. Only applies to ESM Views.
 
 ### **publicUrl**
 
