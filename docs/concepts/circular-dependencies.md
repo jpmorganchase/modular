@@ -27,7 +27,7 @@ If your circular dependencies involve packages that never get built (namely,
 `modular.type: source` packages), Modular can still calculate the correct build
 order by removing them from the dependency graph. By default, `modular build`
 will still refuse to build any build graph that contains a circular dependency,
-but this behaviour can be overrided by specifying the
+but this behaviour can be overridden by specifying the
 `--dangerouslyIgnoreCircularDependencies` flag. Please note that `modular build`
 will still fail if the cycle involves two or more buildable (i.e. non-`source`)
 packages. This doesn't solve all the other issues linked to
