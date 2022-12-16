@@ -28,12 +28,18 @@ Packages can currently be one of the following types:
   architecture or started as a normal standalone application. See also
   [the view building reference](../esm-views/index.md)
 
-- A `view`, which is a package that exports a React component by default. Read
+- A `view`, which is a `package` that exports a React component by default. Read
   more about Views in [this explainer](../concepts/views.md).
 
-- A generic JavaScript `package`. You can use this to create any other kind of
-  utility, tool, or whatever your needs require you to do. As an example, you
-  could build a node.js server inside one of these.
+- A generic JavaScript `package`. You can use this to create a library with an
+  entry point that gets transpiled to Common JS and ES Module format when built.
+  Packages can be [built](../commands/build.md) but not
+  [start](../commands/start.md)ed by Modular.
+
+- A `source`, which is a shared package that is imported by other packages from
+  source (i.e. directly importing its source), and it's never built standalone
+  or published. This kind of package is never [built](../commands/build.md) or
+  [start](../commands/start.md)ed by Modular.
 
 ## Options:
 

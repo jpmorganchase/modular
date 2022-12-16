@@ -1,0 +1,17 @@
+{
+  "name": "modular-template-source",
+  "version": "1.0.0",
+  "exports": {
+    "./package.json": "./package.json"
+  },
+  "main": "./src/index.ts",
+  "modular": {
+    "type": "template",
+    "templateType": "source"
+  },
+  "license": "Apache-2.0",
+  "files": [
+    "README.md",
+    "src"
+  ]
+}
