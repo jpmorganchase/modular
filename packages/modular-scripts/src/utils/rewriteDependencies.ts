@@ -1,7 +1,7 @@
 import type { Dependency } from '@schemastore/package';
 import { getConfig } from './config';
 
-const externalCdnTemplate = getConfig('externalCdnTemplate') as string;
+const externalCdnTemplate = getConfig('externalCdnTemplate');
 
 /**
  * Rewrite maps of package,version to package,CDN URL

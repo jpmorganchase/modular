@@ -43,7 +43,7 @@ async function buildStandalone(
   target: string,
   type: Extract<ModularType, 'app' | 'esm-view'>,
 ) {
-  const isEsbuild = getConfig('useModularEsbuild') as boolean;
+  const isEsbuild = getConfig('useModularEsbuild');
 
   // Setup Paths
   const modularRoot = getModularRoot();
@@ -151,7 +151,7 @@ async function buildStandalone(
         MODULAR_IS_APP: JSON.stringify(isApp),
         MODULAR_IMPORT_MAP: JSON.stringify(Object.fromEntries(importMap || [])),
         MODULAR_USE_REACT_CREATE_ROOT: JSON.stringify(useReactCreateRoot),
-        INTERNAL_PUBLIC_URL: getConfig('publicUrl') as string,
+        INTERNAL_PUBLIC_URL: getConfig('publicUrl'),
         INTERNAL_GENERATE_SOURCEMAP: String(getConfig('generateSourceMap')),
       },
     });

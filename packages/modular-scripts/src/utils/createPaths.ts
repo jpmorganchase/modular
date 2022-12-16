@@ -48,7 +48,7 @@ export default async function createPaths(target: string): Promise<Paths> {
   // single-page apps that may serve index.html for nested URLs like /todos/42.
   // We can't use a relative path in HTML because we don't want to load something
   // like /todos/42/static/js/bundle.7289d.js. We have to know the root.
-  const publicUrl = getConfig('publicUrl') as string;
+  const publicUrl = getConfig('publicUrl');
   const publicUrlOrPath = getPublicUrlOrPath(
     process.env.NODE_ENV === 'development',
     (fs.readJSONSync(resolveApp('package.json')) as AppPackageJson).homepage,

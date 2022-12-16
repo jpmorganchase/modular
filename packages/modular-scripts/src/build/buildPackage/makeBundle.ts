@@ -108,7 +108,7 @@ export async function makeBundle(
 
   const outputOptions: rollup.OutputOptions = {
     freeze: false,
-    sourcemap: getConfig('generateSourceMap') as boolean,
+    sourcemap: getConfig('generateSourceMap'),
     sourcemapPathTransform(relativeSourcePath: string, sourceMapPath: string) {
       // make source map input files relative to the `${packagePath}/dist-${format}` within
       // the package directory

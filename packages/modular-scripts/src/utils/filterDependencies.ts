@@ -18,9 +18,9 @@ export function filterDependencies({
   dependencies: Dependency;
   workspaceInfo: WorkspaceInfo;
 }): FilteredDependencies {
-  const externalBlockList = getConfig('externalBlockList') as string[];
+  const externalBlockList = getConfig('externalBlockList');
 
-  const externalAllowList = getConfig('externalAllowList') as string[];
+  const externalAllowList = getConfig('externalAllowList');
 
   return partitionDependencies({
     dependencies,

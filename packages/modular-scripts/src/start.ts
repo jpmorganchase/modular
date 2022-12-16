@@ -93,7 +93,7 @@ async function start(packageName: string): Promise<void> {
 
   // If you want to use webpack then we'll always use webpack. But if you've indicated
   // you want esbuild - then we'll switch you to the new fancy world.
-  if (getConfig('useModularEsbuild') as boolean) {
+  if (getConfig('useModularEsbuild')) {
     const { default: startEsbuildApp } = await import(
       './esbuild-scripts/start'
     );
@@ -128,7 +128,7 @@ async function start(packageName: string): Promise<void> {
         MODULAR_IMPORT_MAP: JSON.stringify(Object.fromEntries(importMap || [])),
         MODULAR_USE_REACT_CREATE_ROOT: JSON.stringify(useReactCreateRoot),
         MODULAR_STYLE_IMPORT_MAPS: JSON.stringify([...styleImports]),
-        INTERNAL_PUBLIC_URL: getConfig('publicUrl') as string,
+        INTERNAL_PUBLIC_URL: getConfig('publicUrl'),
         INTERNAL_GENERATE_SOURCEMAP: String(getConfig('generateSourceMap')),
       },
     });

@@ -24,7 +24,7 @@ const configResult = explorer.search(path.join(modularRoot, 'package.json'));
 /**
  * Configuration file interface
  */
-interface ConfigObject {
+interface Config {
   useModularEsbuild: boolean | null;
   externalCdnTemplate: string | null;
   externalBlockList: string[] | null;
@@ -33,10 +33,17 @@ interface ConfigObject {
   generateSourceMap: boolean | null;
 }
 
+type ConfigDefs = {
+  [Key in keyof Config]: {
+    default: Exclude<Config[Key], null>;
+    override: undefined | Exclude<Config[Key], null>;
+  };
+};
+
 /**
  * Defaults and env variable overrides
  */
-const config = {
+const defs: ConfigDefs = {
   useModularEsbuild: {
     default: false,
     override:
@@ -75,8 +82,6 @@ const config = {
   },
 };
 
-type ConfigObjectKey = keyof typeof config;
-
 /**
  * Get the configured value for a given configuration field.
  * @param configEntry Field containing the configuration variable to read
@@ -84,25 +89,16 @@ type ConfigObjectKey = keyof typeof config;
  * - the override environment variable if configured
  * - the value stated in the config file if provided
  * - the default value if neither environment variable nor the config file are provided
- *
- * Although return type can be many things, we can use 'as' with confidence to restrict it to the type we're querying:
- *
- * - 'useModularEsbuild' will always be a boolean, so we can do getConfig('useModularEsbuild') as boolean
  */
-export function getConfig(
-  configEntry: ConfigObjectKey,
-): string | boolean | string[] {
-  const overrideValue = config[configEntry].override;
-  const defaultValue = config[configEntry].default;
-  if (overrideValue !== undefined) {
-    return overrideValue;
-  } else if (configResult) {
-    // Error if configuration doesn't match our interface?
-    const loadedConfig = configResult.config as ConfigObject;
-    const configValue = loadedConfig[configEntry];
-    if (configValue !== null && typeof configValue === typeof defaultValue) {
-      return configValue;
+export function getConfig<T extends keyof ConfigDefs>(
+  key: T,
+): Exclude<Config[T], null> {
+  let configValue;
+  if (configResult) {
+    const loadedConfig = configResult.config as Config;
+    if (typeof loadedConfig[key] === typeof defs[key].default) {
+      configValue = loadedConfig[key] as Exclude<Config[T], null>;
     }
   }
-  return defaultValue;
+  return defs[key].override ?? configValue ?? defs[key].default;
 }
