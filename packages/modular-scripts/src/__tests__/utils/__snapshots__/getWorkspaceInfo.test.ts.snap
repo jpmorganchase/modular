@@ -93,7 +93,7 @@ Object {
 
 exports[`getWorkspaceInfo 9`] = `
 Object {
-  "location": "packages/modular-template-view",
+  "location": "packages/modular-template-source",
   "mismatchedWorkspaceDependencies": Array [],
   "public": true,
   "type": "template",
@@ -104,10 +104,10 @@ Object {
 
 exports[`getWorkspaceInfo 10`] = `
 Object {
-  "location": "packages/modular-types",
+  "location": "packages/modular-template-view",
   "mismatchedWorkspaceDependencies": Array [],
   "public": true,
-  "type": "package",
+  "type": "template",
   "version": Any<String>,
   "workspaceDependencies": Array [],
 }
@@ -115,7 +115,7 @@ Object {
 
 exports[`getWorkspaceInfo 11`] = `
 Object {
-  "location": "packages/modular-views.macro",
+  "location": "packages/modular-types",
   "mismatchedWorkspaceDependencies": Array [],
   "public": true,
   "type": "package",
@@ -126,6 +126,17 @@ Object {
 
 exports[`getWorkspaceInfo 12`] = `
 Object {
+  "location": "packages/modular-views.macro",
+  "mismatchedWorkspaceDependencies": Array [],
+  "public": true,
+  "type": "package",
+  "version": Any<String>,
+  "workspaceDependencies": Array [],
+}
+`;
+
+exports[`getWorkspaceInfo 13`] = `
+Object {
   "location": "packages/tree-view-for-tests",
   "mismatchedWorkspaceDependencies": Array [],
   "public": false,
@@ -135,7 +146,7 @@ Object {
 }
 `;
 
-exports[`getWorkspaceInfo 13`] = `
+exports[`getWorkspaceInfo 14`] = `
 Object {
   "location": "packages/workspace-resolver",
   "mismatchedWorkspaceDependencies": Array [],
