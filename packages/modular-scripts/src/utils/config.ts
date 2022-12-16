@@ -16,21 +16,16 @@ const searchPlaces = [
   `modular.config.cjs`,
 ];
 
-// Look for configuration file
-const modularRoot = getModularRoot();
-const explorer = cosmiconfigSync('modular', { searchPlaces });
-const configResult = explorer.search(path.join(modularRoot, 'package.json'));
-
 /**
  * Configuration file interface
  */
 interface Config {
-  useModularEsbuild: boolean | null;
-  externalCdnTemplate: string | null;
-  externalBlockList: string[] | null;
-  externalAllowList: string[] | null;
-  publicUrl: string | null;
-  generateSourceMap: boolean | null;
+  useModularEsbuild: boolean;
+  externalCdnTemplate: string;
+  externalBlockList: string[];
+  externalAllowList: string[];
+  publicUrl: string;
+  generateSourceMap: boolean;
 }
 
 type ConfigDefs = {
@@ -82,6 +77,13 @@ const defs: ConfigDefs = {
   },
 };
 
+// Look for configuration file
+const modularRoot = getModularRoot();
+const explorer = cosmiconfigSync('modular', { searchPlaces });
+const configResult: null | { config: Partial<Config> } = explorer.search(
+  path.join(modularRoot, 'package.json'),
+);
+
 /**
  * Get the configured value for a given configuration field.
  * @param configEntry Field containing the configuration variable to read
@@ -95,9 +97,9 @@ export function getConfig<T extends keyof ConfigDefs>(
 ): Exclude<Config[T], null> {
   let configValue;
   if (configResult) {
-    const loadedConfig = configResult.config as Config;
-    if (typeof loadedConfig[key] === typeof defs[key].default) {
-      configValue = loadedConfig[key] as Exclude<Config[T], null>;
+    const loadedConfigValue = configResult.config[key];
+    if (typeof loadedConfigValue === typeof defs[key].default) {
+      configValue = loadedConfigValue as Exclude<Config[T], null>;
     }
   }
   return defs[key].override ?? configValue ?? defs[key].default;
