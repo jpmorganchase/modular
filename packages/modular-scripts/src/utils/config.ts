@@ -30,8 +30,8 @@ interface Config {
 
 type ConfigDefs = {
   [Key in keyof Config]: {
-    default: Exclude<Config[Key], null>;
-    override: undefined | Exclude<Config[Key], null>;
+    default: Config[Key];
+    override: undefined | Config[Key];
   };
 };
 
@@ -92,15 +92,9 @@ const configResult: null | { config: Partial<Config> } = explorer.search(
  * - the value stated in the config file if provided
  * - the default value if neither environment variable nor the config file are provided
  */
-export function getConfig<T extends keyof ConfigDefs>(
-  key: T,
-): Exclude<Config[T], null> {
-  let configValue;
-  if (configResult) {
-    const loadedConfigValue = configResult.config[key];
-    if (typeof loadedConfigValue === typeof defs[key].default) {
-      configValue = loadedConfigValue as Exclude<Config[T], null>;
-    }
-  }
+export function getConfig<T extends keyof ConfigDefs>(key: T): Config[T] {
+  const configValue: Config[T] | undefined = configResult
+    ? configResult.config[key]
+    : undefined;
   return defs[key].override ?? configValue ?? defs[key].default;
 }
