@@ -10,7 +10,6 @@ exports[`getWorkspaceInfo 1`] = `
   "workspaceDependencies": [],
 }
 `;
-
 exports[`getWorkspaceInfo 2`] = `
 {
   "location": "packages/eslint-config-modular-app",
@@ -21,7 +20,6 @@ exports[`getWorkspaceInfo 2`] = `
   "workspaceDependencies": [],
 }
 `;
-
 exports[`getWorkspaceInfo 3`] = `
 {
   "location": "packages/modular-scripts",
@@ -35,19 +33,7 @@ exports[`getWorkspaceInfo 3`] = `
   ],
 }
 `;
-
 exports[`getWorkspaceInfo 4`] = `
-{
-  "location": "packages/modular-site",
-  "mismatchedWorkspaceDependencies": [],
-  "public": false,
-  "type": "app",
-  "version": Any<String>,
-  "workspaceDependencies": [],
-}
-`;
-
-exports[`getWorkspaceInfo 5`] = `
 {
   "location": "packages/modular-template-app",
   "mismatchedWorkspaceDependencies": [],
@@ -57,8 +43,7 @@ exports[`getWorkspaceInfo 5`] = `
   "workspaceDependencies": [],
 }
 `;
-
-exports[`getWorkspaceInfo 6`] = `
+exports[`getWorkspaceInfo 5`] = `
 {
   "location": "packages/modular-template-esm-view",
   "mismatchedWorkspaceDependencies": [],
@@ -68,8 +53,7 @@ exports[`getWorkspaceInfo 6`] = `
   "workspaceDependencies": [],
 }
 `;
-
-exports[`getWorkspaceInfo 7`] = `
+exports[`getWorkspaceInfo 6`] = `
 {
   "location": "packages/modular-template-node-env-app",
   "mismatchedWorkspaceDependencies": [],
@@ -79,8 +63,7 @@ exports[`getWorkspaceInfo 7`] = `
   "workspaceDependencies": [],
 }
 `;
-
-exports[`getWorkspaceInfo 8`] = `
+exports[`getWorkspaceInfo 7`] = `
 {
   "location": "packages/modular-template-package",
   "mismatchedWorkspaceDependencies": [],
@@ -90,8 +73,7 @@ exports[`getWorkspaceInfo 8`] = `
   "workspaceDependencies": [],
 }
 `;
-
-exports[`getWorkspaceInfo 9`] = `
+exports[`getWorkspaceInfo 8`] = `
 {
   "location": "packages/modular-template-view",
   "mismatchedWorkspaceDependencies": [],
@@ -101,8 +83,7 @@ exports[`getWorkspaceInfo 9`] = `
   "workspaceDependencies": [],
 }
 `;
-
-exports[`getWorkspaceInfo 10`] = `
+exports[`getWorkspaceInfo 9`] = `
 {
   "location": "packages/modular-types",
   "mismatchedWorkspaceDependencies": [],
@@ -112,8 +93,7 @@ exports[`getWorkspaceInfo 10`] = `
   "workspaceDependencies": [],
 }
 `;
-
-exports[`getWorkspaceInfo 11`] = `
+exports[`getWorkspaceInfo 10`] = `
 {
   "location": "packages/modular-views.macro",
   "mismatchedWorkspaceDependencies": [],
@@ -123,8 +103,7 @@ exports[`getWorkspaceInfo 11`] = `
   "workspaceDependencies": [],
 }
 `;
-
-exports[`getWorkspaceInfo 12`] = `
+exports[`getWorkspaceInfo 11`] = `
 {
   "location": "packages/tree-view-for-tests",
   "mismatchedWorkspaceDependencies": [],
@@ -134,8 +113,7 @@ exports[`getWorkspaceInfo 12`] = `
   "workspaceDependencies": [],
 }
 `;
-
-exports[`getWorkspaceInfo 13`] = `
+exports[`getWorkspaceInfo 12`] = `
 {
   "location": "packages/workspace-resolver",
   "mismatchedWorkspaceDependencies": [],
