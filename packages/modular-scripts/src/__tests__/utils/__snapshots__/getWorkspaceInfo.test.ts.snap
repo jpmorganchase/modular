@@ -38,10 +38,10 @@ exports[`getWorkspaceInfo 3`] = `
 
 exports[`getWorkspaceInfo 4`] = `
 {
-  "location": "packages/modular-template-app",
+  "location": "packages/modular-site",
   "mismatchedWorkspaceDependencies": [],
-  "public": true,
-  "type": "template",
+  "public": false,
+  "type": "app",
   "version": Any<String>,
   "workspaceDependencies": [],
 }
@@ -49,7 +49,7 @@ exports[`getWorkspaceInfo 4`] = `
 
 exports[`getWorkspaceInfo 5`] = `
 {
-  "location": "packages/modular-template-esm-view",
+  "location": "packages/modular-template-app",
   "mismatchedWorkspaceDependencies": [],
   "public": true,
   "type": "template",
@@ -60,6 +60,17 @@ exports[`getWorkspaceInfo 5`] = `
 
 exports[`getWorkspaceInfo 6`] = `
 {
+  "location": "packages/modular-template-esm-view",
+  "mismatchedWorkspaceDependencies": [],
+  "public": true,
+  "type": "template",
+  "version": Any<String>,
+  "workspaceDependencies": [],
+}
+`;
+
+exports[`getWorkspaceInfo 7`] = `
+{
   "location": "packages/modular-template-node-env-app",
   "mismatchedWorkspaceDependencies": [],
   "public": false,
@@ -69,7 +80,7 @@ exports[`getWorkspaceInfo 6`] = `
 }
 `;
 
-exports[`getWorkspaceInfo 7`] = `
+exports[`getWorkspaceInfo 8`] = `
 {
   "location": "packages/modular-template-package",
   "mismatchedWorkspaceDependencies": [],
@@ -80,7 +91,7 @@ exports[`getWorkspaceInfo 7`] = `
 }
 `;
 
-exports[`getWorkspaceInfo 8`] = `
+exports[`getWorkspaceInfo 9`] = `
 {
   "location": "packages/modular-template-view",
   "mismatchedWorkspaceDependencies": [],
@@ -91,7 +102,7 @@ exports[`getWorkspaceInfo 8`] = `
 }
 `;
 
-exports[`getWorkspaceInfo 9`] = `
+exports[`getWorkspaceInfo 10`] = `
 {
   "location": "packages/modular-types",
   "mismatchedWorkspaceDependencies": [],
@@ -102,7 +113,7 @@ exports[`getWorkspaceInfo 9`] = `
 }
 `;
 
-exports[`getWorkspaceInfo 10`] = `
+exports[`getWorkspaceInfo 11`] = `
 {
   "location": "packages/modular-views.macro",
   "mismatchedWorkspaceDependencies": [],
@@ -113,7 +124,7 @@ exports[`getWorkspaceInfo 10`] = `
 }
 `;
 
-exports[`getWorkspaceInfo 11`] = `
+exports[`getWorkspaceInfo 12`] = `
 {
   "location": "packages/tree-view-for-tests",
   "mismatchedWorkspaceDependencies": [],
@@ -124,7 +135,7 @@ exports[`getWorkspaceInfo 11`] = `
 }
 `;
 
-exports[`getWorkspaceInfo 12`] = `
+exports[`getWorkspaceInfo 13`] = `
 {
   "location": "packages/workspace-resolver",
   "mismatchedWorkspaceDependencies": [],
