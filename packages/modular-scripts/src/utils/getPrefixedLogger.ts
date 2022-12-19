@@ -11,7 +11,7 @@ function _getPrefixedLogger(target: string): Logger {
       logger.clear();
     },
     debug: (...args: Parameters<typeof logger.log>) => {
-      logger.log(prefix, ...args);
+      logger.debug(prefix, ...args);
     },
     log: (...args: Parameters<typeof logger.log>) => {
       return logger.log(prefix, ...args);

@@ -209,7 +209,6 @@ describe('modular-scripts', () => {
             "dist-cjs",
             "dist-es",
             "dist-types",
-            "README.md",
           ],
           "main": "dist-cjs/index.js",
           "modular": {
@@ -293,6 +292,7 @@ describe('modular-scripts', () => {
       expect(tree(path.join(modularRoot, 'dist', 'sample-view')))
         .toMatchInlineSnapshot(`
         "sample-view
+        ├─ LICENSE #1gat5ri
         ├─ dist-cjs
         │  ├─ index.js #p1m6x9
         │  ├─ index.js.map #16jes1h
@@ -361,7 +361,6 @@ describe('modular-scripts', () => {
             "dist-cjs",
             "dist-es",
             "dist-types",
-            "README.md",
           ],
           "main": "dist-cjs/index.js",
           "modular": {
@@ -385,6 +384,7 @@ describe('modular-scripts', () => {
       expect(tree(path.join(modularRoot, 'dist', 'sample-package')))
         .toMatchInlineSnapshot(`
         "sample-package
+        ├─ LICENSE #1gat5ri
         ├─ dist-cjs
         │  ├─ index.js #p1m6x9
         │  ├─ index.js.map #16jes1h
@@ -442,7 +442,6 @@ describe('modular-scripts', () => {
             "dist-cjs",
             "dist-es",
             "dist-types",
-            "README.md",
           ],
           "main": "dist-cjs/nested-sample-package.cjs.js",
           "modular": {
@@ -466,6 +465,7 @@ describe('modular-scripts', () => {
       expect(tree(path.join(modularRoot, 'dist', 'nested-sample-package')))
         .toMatchInlineSnapshot(`
         "nested-sample-package
+        ├─ LICENSE #1gat5ri
         ├─ dist-cjs
         │  ├─ nested-sample-package.cjs.js #kv2xzp
         │  └─ nested-sample-package.cjs.js.map #1vw1uze
