@@ -92,9 +92,12 @@ export function createJestConfig(
     testPathIgnorePatterns: ['/node_modules/', '/dist/'],
     rootDir: absolutePackagesPath,
     roots: ['<rootDir>'],
-    testMatch: ['<rootDir>/**/src/**/*.{spec,test}.{js,ts,tsx}'],
+    testMatch: ['<rootDir>/**/src/**/*.{spec,test}.{js,jsx,ts,tsx}'],
     coverageDirectory: path.resolve(modularRoot, 'coverage'),
-    collectCoverageFrom: ['<rootDir>/**/src/**/*.{js,ts,tsx}', '!**/*.d.ts'],
+    collectCoverageFrom: [
+      '<rootDir>/**/src/**/*.{js,jsx,ts,tsx}',
+      '!**/*.d.ts',
+    ],
     coveragePathIgnorePatterns: [
       '/__tests__/',
       '/node_modules/',
@@ -102,13 +105,13 @@ export function createJestConfig(
     ],
     setupFiles: defaults.setupFiles.concat(
       globby
-        .sync(`setupEnvironment.{js,ts,tsx}`, {
+        .sync(`setupEnvironment.{js,jsx,ts,tsx}`, {
           cwd: absoluteModularGlobalConfigsPath,
         })
         .map((f) => path.join(absoluteModularGlobalConfigsPath, f)),
     ),
     setupFilesAfterEnv: globby
-      .sync(`setupTests.{js,ts,tsx}`, {
+      .sync(`setupTests.{js,jsx,ts,tsx}`, {
         cwd: absoluteModularGlobalConfigsPath,
       })
       .map((f) => path.join(absoluteModularGlobalConfigsPath, f)),
