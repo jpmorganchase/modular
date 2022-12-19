@@ -3,6 +3,7 @@ import * as semver from 'semver';
 import * as logger from './logger';
 import type { Dependency } from '@schemastore/package';
 import type { WorkspaceInfo } from './getWorkspaceInfo';
+import { getConfig } from './config';
 
 interface FilteredDependencies {
   external: Dependency;
@@ -17,13 +18,9 @@ export function filterDependencies({
   dependencies: Dependency;
   workspaceInfo: WorkspaceInfo;
 }): FilteredDependencies {
-  const externalBlockList = process.env.EXTERNAL_BLOCK_LIST
-    ? process.env.EXTERNAL_BLOCK_LIST.split(',')
-    : undefined;
+  const externalBlockList = getConfig('externalBlockList');
 
-  const externalAllowList = process.env.EXTERNAL_ALLOW_LIST
-    ? process.env.EXTERNAL_ALLOW_LIST.split(',')
-    : undefined;
+  const externalAllowList = getConfig('externalAllowList');
 
   return partitionDependencies({
     dependencies,

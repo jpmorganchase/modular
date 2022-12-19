@@ -20,6 +20,7 @@ import getRelativeLocation from '../../utils/getRelativeLocation';
 import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowserslistTarget';
 
 import type { ModularPackageJson } from '@modular-scripts/modular-types';
+import { getConfig } from '../../utils/config';
 
 const outputDirectory = 'dist';
 const extensions = ['.ts', '.tsx', '.js', '.jsx'];
@@ -107,7 +108,7 @@ export async function makeBundle(
 
   const outputOptions: rollup.OutputOptions = {
     freeze: false,
-    sourcemap: true, // TODO: read this off env
+    sourcemap: getConfig('generateSourceMap'),
     sourcemapPathTransform(relativeSourcePath: string, sourceMapPath: string) {
       // make source map input files relative to the `${packagePath}/dist-${format}` within
       // the package directory
