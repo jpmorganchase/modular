@@ -46,7 +46,9 @@ const resolveModular = (relativePath) =>
 const publicUrlOrPath = getPublicUrlOrPath(
   process.env.NODE_ENV === 'development',
   require(resolveApp('package.json')).homepage,
-  process.env.PUBLIC_URL,
+  process.env.INTERNAL_PUBLIC_URL === ''
+    ? undefined
+    : process.env.INTERNAL_PUBLIC_URL,
 );
 
 const buildPath = path.join(modularRoot, 'dist', modularPackageName);

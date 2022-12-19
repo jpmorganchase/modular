@@ -9,6 +9,7 @@ import * as logger from '../../utils/logger';
 import moduleScopePlugin from '../plugins/moduleScopePlugin';
 import svgrPlugin from '../plugins/svgr';
 import workerFactoryPlugin from '../plugins/workerFactoryPlugin';
+import { getConfig } from '../../utils/config';
 
 export default function createEsbuildConfig(
   paths: Paths,
@@ -46,7 +47,7 @@ export default function createEsbuildConfig(
     resolveExtensions: paths.moduleFileExtensions.map(
       (extension) => `.${extension}`,
     ),
-    sourcemap: true,
+    sourcemap: getConfig('generateSourceMap'),
     loader: {
       // loaders for images which are supported as files
       '.avif': 'file',
