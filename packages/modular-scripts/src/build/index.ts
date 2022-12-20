@@ -9,10 +9,10 @@ import type { ModularType } from '@modular-scripts/modular-types';
 import * as logger from '../utils/logger';
 import getModularRoot from '../utils/getModularRoot';
 import actionPreflightCheck from '../utils/actionPreflightCheck';
-import { getModularType } from '../utils/isModularType';
+import { getModularType } from '../utils/packageTypes';
 import execAsync from '../utils/execAsync';
 import getLocation from '../utils/getLocation';
-import { selectWorkspaces } from '../utils/selectWorkspaces';
+import { selectBuildableWorkspaces } from '../utils/selectWorkspaces';
 import { setupEnvForDirectory } from '../utils/setupEnv';
 import createPaths from '../utils/createPaths';
 import printHostingInstructions from './printHostingInstructions';
@@ -276,6 +276,7 @@ async function build({
   descendants,
   changed,
   compareBranch,
+  dangerouslyIgnoreCircularDependencies,
 }: {
   packagePaths: string[];
   preserveModules: boolean;
@@ -284,17 +285,19 @@ async function build({
   descendants: boolean;
   changed: boolean;
   compareBranch?: string;
+  dangerouslyIgnoreCircularDependencies: boolean;
 }): Promise<void> {
-  const selectedTargets = await selectWorkspaces({
+  const selectedTargets = await selectBuildableWorkspaces({
     targets,
     changed,
     compareBranch,
     descendants,
     ancestors,
+    dangerouslyIgnoreCircularDependencies,
   });
 
   if (!selectedTargets.length) {
-    logger.log('No changed workspaces found');
+    logger.log('No workspaces to build');
     process.exit(0);
   }
 

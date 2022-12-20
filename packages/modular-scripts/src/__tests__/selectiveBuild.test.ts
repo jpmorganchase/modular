@@ -60,7 +60,7 @@ describe('--changed builds all the changed packages in order', () => {
       '--changed',
     ]);
     expect(result.stderr).toBeFalsy();
-    expect(result.stdout).toContain('No changed workspaces found');
+    expect(result.stdout).toContain('No workspaces to build');
   });
 
   it('builds multiple packages', () => {

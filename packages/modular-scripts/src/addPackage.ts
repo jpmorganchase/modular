@@ -72,6 +72,11 @@ async function promptForType(type: string | void) {
         value: 'esm-view',
       },
       { title: 'A micro-frontend React container (app)', value: 'app' },
+      {
+        title:
+          'A package containing shared source code which is imported by other packages (source)',
+        value: 'source',
+      },
       { title: 'Choose my own template', value: CUSTOM_TEMPLATE },
     ],
     initial: 0,
@@ -157,10 +162,14 @@ async function addPackage({
 
   try {
     logger.log(`Looking for template ${templateName} in project...`);
+    console.log(`require.resolve(${installedPackageJsonPath}, {
+      paths: [${modularRoot}],
+    });`);
     templatePackageJsonPath = require.resolve(installedPackageJsonPath, {
       paths: [modularRoot],
     });
   } catch (e) {
+    console.log(e);
     logger.log(
       `Installing template package ${templateName} from registry, this may take a moment...`,
     );
