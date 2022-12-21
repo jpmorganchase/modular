@@ -6,6 +6,91 @@ exports[`when working with a NODE_ENV app WHEN building with esbuild can generat
 "
 `;
 
+exports[`when working with a NODE_ENV app WHEN building with webpack can generate a index.html 1`] = `
+"<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-modular-app"
+    />
+    <link rel="apple-touch-icon" href="/logo192.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <title>React App</title>
+    <script>
+      (() => {
+        "use strict";
+        var r = {},
+          e = {};
+        function n(o) {
+          var t = e[o];
+          if (void 0 !== t) return t.exports;
+          var a = (e[o] = { exports: {} });
+          return r[o](a, a.exports, n), a.exports;
+        }
+        (n.m = r),
+          (() => {
+            var r = [];
+            n.O = (e, o, t, a) => {
+              if (!o) {
+                var p = 1 / 0;
+                for (f = 0; f < r.length; f++) {
+                  for (var [o, t, a] = r[f], v = !0, i = 0; i < o.length; i++)
+                    (!1 & a || p >= a) &&
+                    Object.keys(n.O).every((r) => n.O[r](o[i]))
+                      ? o.splice(i--, 1)
+                      : ((v = !1), a < p && (p = a));
+                  if (v) {
+                    r.splice(f--, 1);
+                    var s = t();
+                    void 0 !== s && (e = s);
+                  }
+                }
+                return e;
+              }
+              a = a || 0;
+              for (var f = r.length; f > 0 && r[f - 1][2] > a; f--)
+                r[f] = r[f - 1];
+              r[f] = [o, t, a];
+            };
+          })(),
+          (n.o = (r, e) => Object.prototype.hasOwnProperty.call(r, e)),
+          (() => {
+            var r = { 252: 0 };
+            n.O.j = (e) => 0 === r[e];
+            var e = (e, o) => {
+                var t,
+                  a,
+                  [p, v, i] = o,
+                  s = 0;
+                if (p.some((e) => 0 !== r[e])) {
+                  for (t in v) n.o(v, t) && (n.m[t] = v[t]);
+                  if (i) var f = i(n);
+                }
+                for (e && e(o); s < p.length; s++)
+                  (a = p[s]), n.o(r, a) && r[a] && r[a][0](), (r[a] = 0);
+                return n.O(f);
+              },
+              o = (self.webpackChunknode_env_app =
+                self.webpackChunknode_env_app || []);
+            o.forEach(e.bind(null, 0)), (o.push = e.bind(null, o.push.bind(o)));
+          })();
+      })();
+    </script>
+    <script defer="defer" src="/static/js/main.5d879077.js"></script>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>
+"
+`;
+
 exports[`when working with a NODE_ENV app WHEN building with webpack can generate a js/main.5d879077.js 1`] = `
 ""use strict";
 (self.webpackChunknode_env_app = self.webpackChunknode_env_app || []).push([
