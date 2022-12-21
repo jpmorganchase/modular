@@ -189,14 +189,22 @@ export function runLocalModular(
   );
 }
 
-// TODO: Merge this and above function
-export function runModular(
+/**
+ * Run modular with the specified arguments, skipping modular checks for performance reasons
+ *
+ */
+export function runModularStreamlined(
   cwd: string,
-  str: string,
+  args: string,
   opts: Record<string, unknown> = {},
 ) {
-  return execa('yarnpkg', ['modular', ...str.split(' ')], {
+  return execa('yarnpkg', ['modular', ...args.split(' ')], {
     cwd: cwd,
+    env: {
+      ...process.env,
+      SKIP_MODULAR_STARTUP_CHECK: 'true',
+      SKIP_PREFLIGHT_CHECK: 'true',
+    },
     stdio: 'inherit',
     cleanup: true,
     ...opts,

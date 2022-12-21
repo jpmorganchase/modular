@@ -2,7 +2,7 @@ import tree from 'tree-view-for-tests';
 import path from 'path';
 import fs from 'fs-extra';
 import prettier from 'prettier';
-import { createModularTestContext, runModular } from '../test/utils';
+import { createModularTestContext, runModularStreamlined } from '../test/utils';
 
 // These tests must be executed sequentially with `--runInBand`.
 
@@ -12,8 +12,8 @@ let tempModularRepo: string;
 describe('when working with a NODE_ENV app', () => {
   describe('WHEN building with webpack', () => {
     beforeAll(async () => {
-      await addNodeEnvApp();
-      await runModular(tempModularRepo, 'build node-env-app');
+      await setupNodeEnvApp();
+      await runModularStreamlined(tempModularRepo, 'build node-env-app');
     });
 
     it('can build a app', () => {
@@ -62,8 +62,8 @@ describe('when working with a NODE_ENV app', () => {
 
   describe('WHEN building with esbuild', () => {
     beforeAll(async () => {
-      await addNodeEnvApp();
-      await runModular(tempModularRepo, 'build node-env-app', {
+      await setupNodeEnvApp();
+      await runModularStreamlined(tempModularRepo, 'build node-env-app', {
         env: {
           USE_MODULAR_ESBUILD: 'true',
         },
@@ -112,9 +112,15 @@ describe('when working with a NODE_ENV app', () => {
   });
 });
 
-async function addNodeEnvApp(): Promise<void> {
+/**
+ * Create temp modular repo and add an app called node-env-app
+ */
+async function setupNodeEnvApp(): Promise<void> {
   tempModularRepo = createModularTestContext();
-  await runModular(tempModularRepo, 'add node-env-app --unstable-type app');
+  await runModularStreamlined(
+    tempModularRepo,
+    'add node-env-app --unstable-type app',
+  );
 
   await fs.writeFile(
     path.join(tempModularRepo, 'packages', 'node-env-app', 'src', 'index.ts'),

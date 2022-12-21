@@ -5,7 +5,7 @@ import getModularRoot from '../utils/getModularRoot';
 import {
   createModularTestContext,
   mockInstallTemplate,
-  runModular,
+  runModularStreamlined,
 } from '../test/utils';
 import type { CoreProperties } from '@schemastore/package';
 
@@ -40,7 +40,7 @@ describe('When setting a base directory for an app', () => {
   it('fails if trying to add an app outside the "workspaces" directories', async () => {
     createTempModularRepoWithTemplate(appTemplatePath);
     await expect(
-      runModular(
+      runModularStreamlined(
         tempModularRepo,
         'add @scoped/will-not-create-app --path some/other/basepath --unstable-type app',
       ),
@@ -51,7 +51,7 @@ describe('When setting a base directory for an app', () => {
 describe('When working with a scoped app', () => {
   beforeAll(async () => {
     createTempModularRepoWithTemplate(appTemplatePath);
-    await runModular(
+    await runModularStreamlined(
       tempModularRepo,
       'add @scoped/sample-app --unstable-type app',
     );
@@ -66,13 +66,16 @@ describe('When working with a scoped app', () => {
 
   it('fails if trying to add another app with the same name', async () => {
     await expect(
-      runModular(tempModularRepo, 'add @scoped/sample-app --unstable-type app'),
+      runModularStreamlined(
+        tempModularRepo,
+        'add @scoped/sample-app --unstable-type app',
+      ),
     ).rejects.toThrow();
   });
 
   it('fails trying to add another app with the same name in another path', async () => {
     await expect(
-      runModular(
+      runModularStreamlined(
         tempModularRepo,
         'add @scoped/sample-app --unstable-type app --path packages/wont/happen',
       ),
@@ -81,7 +84,10 @@ describe('When working with a scoped app', () => {
 
   it('fails trying to add another app in the same path (as scope is discarded)', async () => {
     await expect(
-      runModular(tempModularRepo, 'add sample-app --unstable-type app'),
+      runModularStreamlined(
+        tempModularRepo,
+        'add sample-app --unstable-type app',
+      ),
     ).rejects.toThrow();
   });
 });
@@ -89,7 +95,7 @@ describe('When working with a scoped app', () => {
 describe('When working with an app installed in a custom directory', () => {
   beforeAll(async () => {
     createTempModularRepoWithTemplate(appTemplatePath);
-    await runModular(
+    await runModularStreamlined(
       tempModularRepo,
       'add @scoped/sample-app --unstable-type app --path packages/nested/scoped',
     );
@@ -110,13 +116,16 @@ describe('When working with an app installed in a custom directory', () => {
 
   it('fails if trying to add another app with the same name in the default path', async () => {
     await expect(
-      runModular(tempModularRepo, 'add @scoped/sample-app --unstable-type app'),
+      runModularStreamlined(
+        tempModularRepo,
+        'add @scoped/sample-app --unstable-type app',
+      ),
     ).rejects.toThrow();
   });
 
   it('fails trying to add another app in the same path (as scope is discarded)', async () => {
     await expect(
-      runModular(
+      runModularStreamlined(
         tempModularRepo,
         'add sample-app --unstable-type app --path packages/nested/scoped',
       ),
@@ -129,7 +138,7 @@ describe('When adding a module from a template without a files filter', () => {
   beforeAll(async () => {
     createTempModularRepoWithTemplate(noFilterTemplatePath);
     newModulePath = path.join(tempPackagesPath, 'no-filter-module');
-    await runModular(
+    await runModularStreamlined(
       tempModularRepo,
       'add no-filter-module --template no-filter',
     );
@@ -175,7 +184,10 @@ describe('When adding a module from a template with a files filter', () => {
   beforeAll(async () => {
     createTempModularRepoWithTemplate(filterTemplatePath);
     newModulePath = path.join(tempPackagesPath, 'filter-module');
-    await runModular(tempModularRepo, 'add filter-module --template filter');
+    await runModularStreamlined(
+      tempModularRepo,
+      'add filter-module --template filter',
+    );
   });
 
   it('generates the package.json', async () => {
