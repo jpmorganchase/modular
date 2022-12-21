@@ -188,3 +188,17 @@ export function runLocalModular(
     },
   );
 }
+
+// TODO: Merge this and above function
+export function runModular(
+  cwd: string,
+  str: string,
+  opts: Record<string, unknown> = {},
+) {
+  return execa('yarnpkg', ['modular', ...str.split(' ')], {
+    cwd: cwd,
+    stdio: 'inherit',
+    cleanup: true,
+    ...opts,
+  });
+}

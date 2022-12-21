@@ -1,35 +1,30 @@
-import execa from 'execa';
 import tree from 'tree-view-for-tests';
 import path from 'path';
 import fs from 'fs-extra';
 import prettier from 'prettier';
-import { createModularTestContext } from '../test/utils';
+import { createModularTestContext, runModular } from '../test/utils';
 
 // These tests must be executed sequentially with `--runInBand`.
 
 const tempModularRepo = createModularTestContext();
 const packagesPath = path.join(tempModularRepo, 'packages');
 
-function modular(str: string, opts: Record<string, unknown> = {}) {
-  return execa('yarnpkg', ['modular', ...str.split(' ')], {
-    cwd: tempModularRepo,
-    cleanup: true,
-    // @ts-ignore
-    env: {
-      USE_MODULAR_ESBUILD: 'true',
-    },
-    ...opts,
-  });
-}
-
 describe('when working with an app', () => {
   beforeAll(async () => {
-    await modular('add sample-esbuild-app --unstable-type app', {
-      stdio: 'inherit',
-    });
+    await runModular(
+      tempModularRepo,
+      'add sample-esbuild-app --unstable-type app',
+      {
+        env: {
+          USE_MODULAR_ESBUILD: 'true',
+        },
+      },
+    );
 
-    await modular('build sample-esbuild-app', {
-      stdio: 'inherit',
+    await runModular(tempModularRepo, 'build sample-esbuild-app', {
+      env: {
+        USE_MODULAR_ESBUILD: 'true',
+      },
     });
   });
 
