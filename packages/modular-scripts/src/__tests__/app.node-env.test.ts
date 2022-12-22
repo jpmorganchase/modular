@@ -38,28 +38,7 @@ describe('when working with a NODE_ENV app', () => {
     //   `);
     // });
 
-    // it('can generate a js/main.5d879077.js', async () => {
-    //   expect(
-    //     prettier.format(
-    //       String(
-    //         await fs.readFile(
-    //           path.join(
-    //             tempModularRepo,
-    //             'dist',
-    //             'node-env-app',
-    //             'static',
-    //             'js',
-    //             'main.5d879077.js',
-    //           ),
-    //         ),
-    //       ),
-    //       {
-    //         filepath: 'main.5d879077.js',
-    //       },
-    //     ),
-    //   ).toMatchSnapshot();
-    // });
-    it('can generate a /static/js/main.c42f5e48.js', async () => {
+    it('can generate a js/main.5d879077.js.map', async () => {
       expect(
         String(
           await fs.readFile(
@@ -69,14 +48,13 @@ describe('when working with a NODE_ENV app', () => {
               'node-env-app',
               'static',
               'js',
-              'main.c42f5e48.js',
+              'main.c42f5e48.js.map',
             ),
           ),
         ),
       ).toMatchSnapshot();
     });
   });
-
   describe('WHEN building with esbuild', () => {
     beforeAll(async () => {
       await setupNodeEnvApp();
