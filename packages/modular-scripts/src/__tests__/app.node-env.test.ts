@@ -59,17 +59,19 @@ describe('when working with a NODE_ENV app', () => {
     //     ),
     //   ).toMatchSnapshot();
     // });
-    it('can generate a index.html', async () => {
+    it('can generate a /static/js/main.c42f5e48.js', async () => {
       expect(
-        prettier.format(
-          String(
-            await fs.readFile(
-              path.join(tempModularRepo, 'dist', 'node-env-app', 'index.html'),
+        String(
+          await fs.readFile(
+            path.join(
+              tempModularRepo,
+              'dist',
+              'node-env-app',
+              'static',
+              'js',
+              'main.c42f5e48.js',
             ),
           ),
-          {
-            filepath: 'index.html',
-          },
         ),
       ).toMatchSnapshot();
     });
