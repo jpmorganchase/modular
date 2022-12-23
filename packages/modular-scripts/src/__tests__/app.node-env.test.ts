@@ -36,7 +36,7 @@ describe('when working with a NODE_ENV app', () => {
     //           ├─ runtime-main.97707f9d.js #15lezt9
     //           └─ runtime-main.97707f9d.js.map #1yg8f1m"
     //   `);
-    // });
+    // }); c42f5e48
 
     it('can generate a js/main.5d879077.js.map', async () => {
       expect(
@@ -48,7 +48,23 @@ describe('when working with a NODE_ENV app', () => {
               'node-env-app',
               'static',
               'js',
-              'main.c42f5e48.js.map',
+              'main.5d879077.js.map',
+            ),
+          ),
+        ),
+      ).toMatchSnapshot();
+    });
+    it('can generate a js/main.5d879077.js', async () => {
+      expect(
+        String(
+          await fs.readFile(
+            path.join(
+              tempModularRepo,
+              'dist',
+              'node-env-app',
+              'static',
+              'js',
+              'main.5d879077.js',
             ),
           ),
         ),
