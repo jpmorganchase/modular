@@ -1,12 +1,9 @@
-import * as path from 'path';
-import getModularRoot from '../utils/getModularRoot';
 import getWorkspaceInfo from '../utils/getWorkspaceInfo';
-import { getModularType, isValidModularType } from '../utils/isModularType';
+import { isValidModularType } from '../utils/packageTypes';
 import * as logger from '../utils/logger';
 
 export async function check(target?: string): Promise<boolean> {
   let valid = true;
-  const modularRoot = getModularRoot();
   // ensure that workspaces are setup correctly with yarn
   // init is a special case where we don't already need to be in a modular repository
   // in this case there's no use checking the workspaces yet because we're setting
@@ -26,13 +23,11 @@ export async function check(target?: string): Promise<boolean> {
       valid = false;
     }
 
-    if (!isValidModularType(path.join(modularRoot, packageInfo.location))) {
+    if (!isValidModularType(packageInfo.type)) {
       logger.error(
         `${packageName} at ${
           packageInfo.location
-        } is not a valid modular type - Found ${
-          getModularType(packageInfo.location) as string
-        }`,
+        } is not a valid modular type - Found ${packageInfo.type as string}`,
       );
       valid = false;
     }

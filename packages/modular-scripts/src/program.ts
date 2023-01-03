@@ -104,6 +104,11 @@ program
     '--compareBranch <branch>',
     "Specifies the branch to use with the --changed flag. If not specified, Modular will use the repo's default branch",
   )
+  .option(
+    '--dangerouslyIgnoreCircularDependencies',
+    "Ignore circular dependency checks if your graph has one or more circular dependencies involving 'source' types, then warn. The build will still fail if circular dependencies involve more than one buildable package. Circular dependencies can be always refactored to remove cycles. This switch is dangerous and should be used sparingly and only temporarily.",
+    false,
+  )
   .action(
     async (
       packagePaths: string[],
@@ -114,6 +119,7 @@ program
         compareBranch?: string;
         ancestors: boolean;
         descendants: boolean;
+        dangerouslyIgnoreCircularDependencies: boolean;
       },
     ) => {
       const { default: build } = await import('./build');
@@ -134,6 +140,14 @@ program
         process.exit(1);
       }
 
+      if (options.dangerouslyIgnoreCircularDependencies) {
+        // Warn. Users should never use this, but if they use it, they should have cycles limited to "source" packages
+        // and they should do this in a temporary way (for example, to onboard large projects).
+        logger.warn(
+          `You chose to dangerously ignore cycles in the dependency graph. Builds will still fail if a cycle is found involving two or more buildable packages. Please note that the use of this flag is not recommended. It's always possible to break a cyclic dependency by creating an additional dependency that contains the common code.`,
+        );
+      }
+
       await build({
         packagePaths,
         preserveModules: JSON.parse(options.preserveModules) as boolean,
@@ -142,6 +156,8 @@ program
         compareBranch: options.compareBranch,
         ancestors: options.ancestors,
         descendants: options.descendants,
+        dangerouslyIgnoreCircularDependencies:
+          options.dangerouslyIgnoreCircularDependencies,
       });
     },
   );
