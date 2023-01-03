@@ -5,10 +5,3 @@ exports[`when working with a NODE_ENV app WHEN building with esbuild can generat
 //# sourceMappingURL=/static/js/index-L2US6VEL.js.map
 "
 `;
-
-exports[`when working with a NODE_ENV app WHEN building with webpack can generate a js/main.5d879077.js 1`] = `
-""use strict";(self.webpackChunknode_env_app=self.webpackChunknode_env_app||[]).push([[179],{361:()=>{console.log("production")}},e=>{var n;n=361,e(e.s=n)}]);
-//# sourceMappingURL=main.5d879077.js.map"
-`;
-
-exports[`when working with a NODE_ENV app WHEN building with webpack can generate a js/main.5d879077.js.map 1`] = `"{"version":3,"file":"static/js/main.5d879077.js","mappings":"qGACMA,QAAQC,IAAI,a","sources":["index.ts"],"sourcesContent":["\\n      console.log(process.env.NODE_ENV);\\n      export {};\\n      "],"names":["console","log"],"sourceRoot":""}"`;
