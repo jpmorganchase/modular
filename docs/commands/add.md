@@ -15,30 +15,50 @@ is specified, create the workspace at `<somePath>/<packageName>`.
 `packages/my-scoped-app` and `modular add lib-a --path libs` would create a
 package in `libs/lib-a`)
 
-Packages can currently be one of the following types:
+Packages can be one of the following types:
 
-- A standalone `app`. This corresponds to a static Single Page Application (SPA)
-  project in a workspace. Inside this workspace, you can import packages from
-  other workspaces freely, and features like jsx and typechecking work out of
-  the box.
+### Standalone (bundled) package types
 
-- An `esm-view`, which is a package that typically exports a React component by
-  default. ESM Views are built as ES modules that can be `import`ed at runtime
-  by a host to implement a [micro frontend](../concepts/microfrontends.md)
-  architecture or started as a normal standalone application. See also
-  [the view building reference](../esm-views/index.md)
+These package types are built with [Webpack v5](https://webpack.js.org/) or, if
+specified in the [configuration](../configuration.md),
+[esbuild](https://esbuild.github.io/). Modules imported in the source these
+package types are bundled in the final result or, in case of `esm-view`s, they
+can be rewritten to an [external ESM CDN](../esm-views/esm-cdn.md).
 
-- A `view`, which is a `package` that exports a React component by default. Read
-  more about Views in [this explainer](../concepts/views.md).
+- `app`. This package type corresponds to a static Single Page Application (SPA)
+  project in a workspace. It's possible to specify a custom `index.html` file
+  and public asstets in the `public` directory.
 
-- A generic JavaScript `package`. You can use this to create a library with an
-  entry point that gets transpiled to Common JS and ES Module format when built.
-  Packages can be [built](../commands/build.md) but not
-  [start](../commands/start.md)ed by Modular.
+- `esm-view`. This package type is an app that gets built as an ES module that
+  can be imported at runtime. `esm-view`s are typically used to implement a
+  [micro-frontend](../concepts/microfrontends.md) architecture. `esm-views`,
+  when [built](./build.md) or [started](./start.md) will also generate a
+  `index.html` file that tries to load the ES Module and render its default
+  export as a React component onto the DOM (standalone mode). See also
+  [the esm-view reference](../esm-views/index.md) for an in-depth introduction.
 
-- A `source`, which is a shared package that is imported by other packages from
-  source (i.e. directly importing its source), and it's never built standalone
-  or published. This kind of package is never [built](../commands/build.md) or
+### Library package types
+
+These package types are either built with
+[Rollup.js](https://rollupjs.org/guide/en/) as CJS and ES Modules or, in case of
+`source` modules, they are not built at all. Packages with these types get
+normally published to NPM or get imported by other packages in the monorepo. For
+this reason, files are transpiled separately on buld and external dependencies
+are never "pulled in" (no bundling).
+
+- `package`. This is a generic package with a single entry point. It's normally
+  used to create a publishable library that gets transpiled to Common JS and ES
+  Module format when built. Packages can be [built](../commands/build.md) but
+  not [start](../commands/start.md)ed by Modular.
+
+- `view`. This is a `package` that exports a default React component. Views are
+  built exactly like `package`s, but, since Modular knows that the default
+  export can be rendered, `view`s can be [`modular start`](../start.md)ed to
+  preview them locally.
+
+- `source`. A shared package that is imported by other package types in the
+  monorepo, directly specifying one or more of its source files. This kind of
+  package can be never [built](../commands/build.md) or
   [start](../commands/start.md)ed by Modular.
 
 ## Options:
