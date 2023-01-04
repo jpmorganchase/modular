@@ -5,17 +5,21 @@ title: modular add
 
 # `modular add <packageName>`
 
-Adds a new package by creating a new workspace at `packages/<packageName>`,
-omitting the scope if the package is
+Adds a new package by creating a new package at the workspace located at
+`packages/<packageName>`, omitting the scope if the package is
 [scoped](https://docs.npmjs.com/cli/v8/using-npm/scope). If `--path <somePath>`
-is specified, create the workspace at `<somePath>/<packageName>`.
+is specified, the command creates the workspace at `<somePath>/<packageName>`.
 
 (i.e. `modular add my-app` would create a package in `packages/my-app`,
 `modular add @scoped/my-scoped-app` would create a package in
 `packages/my-scoped-app` and `modular add lib-a --path libs` would create a
 package in `libs/lib-a`)
 
-Packages can be one of the following types:
+The `modular add` command prompts the user to choose the Modular `type` of the
+package it's about to create. The next section briefly describes the various
+types that can be created by the `modular add` command. For an in-depth
+discussion of the available package types and their characteristics, please see
+[this page](../concepts/package-types.md).
 
 ### Standalone (bundled) package types
 
