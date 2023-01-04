@@ -12,7 +12,7 @@ parent: Concepts
 | `source`   | No              | No              | Yes            | Yes            | N/A                        | N/A - never built                            | N/A - don't need the concept of entrypoint since this package is never built                                                                                                                                                                                                                     |
 | `template` | No              | No              | Yes            | Yes            | Depends on the target type | N/A - never built                            | N/A - don't need the concept of entrypoint since this is a special type of package used by `modular add` which is never built directly                                                                                                                                                           |
 
-# App
+## App
 
 Modular `app`s are Typescript and React-based Single Page Applications (SPA)
 built with [Webpack v5](https://webpack.js.org/) (by default) or
@@ -53,16 +53,18 @@ server runs on port 3000, serving the app with an additional runtime layer that
 provides developer experience functionalities like hot reloading and on-screen
 error overlay.
 
-# ESM View
+## ESM View
 
-Modular `esm-view`s are similar to `app`s with a number of important
-differences: they are compiled as ES Modules and all their external `import`s
-are rewritten to point to an [ESM CDN](../esm-views/esm-cdn.md). Like apps, they
-are be built with the same Webpack or esbuild configuration and support the same
-functionality. Unlike apps, they don't allow the user to specify a custom
-`index.html`, they don't support the `public` folder and they expect their
-entrypoint (`src/index.tsx`) to not `render` to the DOm, but to export
-something, typically a React Component.
+Modular `esm-view`s are similar to `app`s with some essential differences: they
+are compiled as [ES
+Modules(https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)]
+and all their external `import`s are rewritten to point to an
+[ESM CDN](../esm-views/esm-cdn.md). Like apps, they are be built with the same
+Webpack or esbuild configuration and support the same functionalities. Unlike
+apps, they don't allow the user to specify a custom `index.html`, they don't
+include a `public` folder in the build and they expect their entrypoint
+(`src/index.tsx`) to not `render` to the DOM, but to export something, typically
+a React Component.
 
 Esm Views are Modular's type of choice to implement the
 [micro-frontend](../concepts/microfrontends.md) pattern. They typically expect
@@ -85,8 +87,92 @@ resulting output is an optimized site that can be either served statically
 loader), or dynamically imported by another ESM view. The js and CSS
 entrypoints, in the second case, are linked in the
 [generated manifest file](../esm-views/output-package-manifest.md), that the
-loading application can fetch and examine before loading the `esm-view`. When
-building an ESM View, all "local" code (files in `src`) is bundled in a single
-blob that can be split into different files. All external dependencies are
-rewritten to an external CDN by default and don't get bundled, although this
-behavior is [configurable](../configuration.md).
+loading code can fetch and examine before loading the `esm-view`. When building
+an ESM View, all "local" code (files in `src`) is bundled in a single blob that
+can be split into different files. All external dependencies are rewritten to an
+external CDN by default and don't get bundled, although this behavior is
+[configurable](../configuration.md).
+
+## Package
+
+Modular `package`s are generic, publishable libraries with a single entrypoint
+file. They are built with [Rollup.js](https://rollupjs.org/guide/en/) and they
+are not bundled in a single blob; files required directly or indirectly from the
+entry point are separately transpiled as CJS Modules and ES Modules (althought
+it's not a 1:1 correspondance: the compilation process typically creates
+additional files to normalize exports). External dependencies are not included
+in the compilation output, but they are copied in the output `package.json` to
+be eventually consumed by a bundler. Modular calculates the package entrypoint
+by looking at the `main` field in the package's `package.json`; by default,
+`modular add`ing a new package sets it as `"./src/index.ts"`, but it's possible
+to manually modify it. Packages can be [`test`](../commands/test.md)ed and
+[`built`](../commands/build.md) by Modular but, since they don't necessarily
+export UI functionality, they can't be [`start`](../commands/start.md)ed. If you
+need a piece of publishable UI (React) code that can be previewed locally, you
+hould use `view`s.
+
+### Build output
+
+This is what the build output of a Modular `package` looks like:
+
+```
+<modular-root>/dist/<your-package-name>
+├── dist-cjs
+|  ├── index.js
+|  ├── index.js.map
+|  ├── index2.js
+|  └── index2.js.map
+├── dist-es
+|  ├── index.js
+|  ├── index.js.map
+|  ├── index2.js
+|  └── index2.js.map
+├── dist-types
+|  └── index.d.ts
+└── package.json
+```
+
+Modular transpiles the `package` starting from its entrypoint twice: once with a
+target format of [CommonJS](https://nodejs.org/api/modules.html) in the
+`dist-cjs` directory and once with a target format of
+[ES Modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules),
+in the `dist-es` directory. The output `package.json` links both compiled
+entrypoints respectively in the
+[`main`](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#main) and
+[`module`](https://github.com/dherman/defense-of-dot-js/blob/master/proposal.md)
+field.
+
+Modular also extracts types from the source and outputs them in the `dist-types`
+directory, linking them in the
+[`typings`](https://www.typescriptlang.org/docs/handbook/declaration-files/publishing.html)
+manifest field. Here's an example of an output `package.json` generated when
+building a Modular `package`:
+
+```json
+{
+  "name": "<your-package-name>",
+  "private": false,
+  "modular": {
+    "type": "package"
+  },
+  "main": "dist-cjs/index.js",
+  "version": "1.0.0",
+  "module": "dist-es/index.js",
+  "typings": "dist-types/index.d.ts",
+  "dependencies": {},
+  "files": ["dist-cjs", "dist-es", "dist-types", "README.md"]
+}
+```
+
+### When to use packages
+
+Modular `package`s are meant to provide re-usable functionality that can be
+published to third-party registries (like
+[the npm registry](https://www.npmjs.com/)) out-of-the-box; to underline this,
+Modular will, for example, refuse to work with packages that have the
+[`private`](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#private)
+field set. You should use packages when _there is a need to consume their build
+output_; if you just need to share some source code inside your monorepo but you
+don't need to publish it externally, you should use the `source` type instead.
+
+## View
