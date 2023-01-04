@@ -1,25 +1,79 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`when working with a NODE_ENV app WHEN building with esbuild can generate a js/index-AOVVUWA4.js 1`] = `
+exports[`when working with a NODE_ENV app WHEN building with esbuild can generate a js/index-L2US6VEL.js 1`] = `
 "console.log("production");
-//# sourceMappingURL=/static/js/index-AOVVUWA4.js.map
+//# sourceMappingURL=/static/js/index-L2US6VEL.js.map
 "
 `;
 
-exports[`when working with a NODE_ENV app WHEN building with webpack can generate a js/main.a482480b.js 1`] = `
-""use strict";
-(self.webpackChunknode_env_app = self.webpackChunknode_env_app || []).push([
-  [179],
-  {
-    908: () => {
-      console.log("production");
+exports[`when working with a NODE_ENV app WHEN building with webpack can generate a main.js 1`] = `
+""use strict";(self.webpackChunknode_env_app=self.webpackChunknode_env_app||[]).push([[179],{361:()=>{console.log("production")}},e=>{var n;n=361,e(e.s=n)}]);
+//# sourceMappingURL=main.5d879077.js.map"
+`;
+
+exports[`when working with a NODE_ENV app WHEN building with webpack can generate a main.js.map 1`] = `"{"version":3,"file":"static/js/main.5d879077.js","mappings":"qGACMA,QAAQC,IAAI,a","sources":["index.ts"],"sourcesContent":["\\n      console.log(process.env.NODE_ENV);\\n      export {};\\n      "],"names":["console","log"],"sourceRoot":""}"`;
+
+exports[`when working with a NODE_ENV app WHEN building with webpack can generate a manifest.json 1`] = `
+"{
+  "short_name": "React App",
+  "name": "Create React App Sample",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
     },
-  },
-  (e) => {
-    var n;
-    (n = 908), e((e.s = n));
-  },
-]);
-//# sourceMappingURL=main.a482480b.js.map
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
 "
+`;
+
+exports[`when working with a NODE_ENV app WHEN building with webpack can generate a package.json 1`] = `
+"{
+  "name": "node-env-app",
+  "version": "1.0.0",
+  "modular": {
+    "type": "app"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "bundledDependencies": [
+    "react",
+    "react-dom"
+  ],
+  "module": "/static/js/main.5d879077.js"
+}
+"
+`;
+
+exports[`when working with a NODE_ENV app WHEN building with webpack can generate asset manifest 1`] = `
+"{
+  "files": {
+    "main.js": "/static/js/main.5d879077.js",
+    "runtime-main.js": "/static/js/runtime-main.97707f9d.js",
+    "index.html": "/index.html",
+    "main.5d879077.js.map": "/static/js/main.5d879077.js.map",
+    "runtime-main.97707f9d.js.map": "/static/js/runtime-main.97707f9d.js.map"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.97707f9d.js",
+    "static/js/main.5d879077.js"
+  ]
+}"
 `;
