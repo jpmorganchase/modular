@@ -99,12 +99,17 @@ module.exports = function (webpackEnv) {
     styleImports,
   });
 
+  const optimizationConfig = {
+    optimization: { chunkIds: 'deterministic', moduleIds: 'deterministic' },
+  };
+
   // Merge all configurations into the final one
   const webpackConfig = merge([
     baseConfig,
     modularTypeConfiguration,
     buildTypeConfiguration,
     pluginConfig,
+    optimizationConfig,
   ]);
 
   // These dependencies are so widely used for us (JPM) that it makes sense to install
