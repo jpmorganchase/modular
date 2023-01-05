@@ -50,7 +50,7 @@ describe('when working with a NODE_ENV app', () => {
 
       await runModularStreamlined(modularRoot, 'build node-env-app');
     });
-
+    afterAll(cleanup);
     it('can build a app', () => {
       expect(tree(path.join(modularRoot, 'dist', 'node-env-app')))
         .toMatchInlineSnapshot(`
