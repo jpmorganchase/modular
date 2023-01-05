@@ -84,7 +84,7 @@ serves them as ES modules on the fly.
 Esm Views can be built using [`modular build`](../commands/build.md): the
 resulting output is an optimized site that can be either served statically
 (using a synthetically-generated `index.html` file and a `_trampoline.js`
-loader), or dynamically imported by another ESM view. The js and CSS
+loader), or dynamically imported by another ESM view. The JS and CSS
 entrypoints, in the second case, are linked in the
 [generated manifest file](../esm-views/output-package-manifest.md), that the
 loading code can fetch and examine before loading the `esm-view`. When building
