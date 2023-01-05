@@ -19,7 +19,7 @@ import puppeteer from 'puppeteer';
 
 import { startApp, DevServer } from './start-app';
 import type { CoreProperties } from '@schemastore/package';
-import { runModularStreamlined } from '../test/utils';
+import { runModularStreamlined, modular } from '../test/utils';
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
 const { getNodeText } = queries;
@@ -79,9 +79,9 @@ describe('when working with a NODE_ENV app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'node-env-app')))
       .toMatchInlineSnapshot(`
       "node-env-app
-      ├─ asset-manifest.json #1tslp45
+      ├─ asset-manifest.json #5npfrr
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #1mo9b1m
+      ├─ index.html #9j6678
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -89,10 +89,10 @@ describe('when working with a NODE_ENV app', () => {
       ├─ robots.txt #1sjb8b3
       └─ static
          └─ js
-            ├─ main.ed06689d.js #fhv6bj
-            ├─ main.ed06689d.js.map #7m5pab
-            ├─ runtime-main.61e0d312.js #13gmjdw
-            └─ runtime-main.61e0d312.js.map #17efux7"
+            ├─ main.a482480b.js #1xwb1v
+            ├─ main.a482480b.js.map #wh4kdy
+            ├─ runtime-main.97707f9d.js #15lezt9
+            └─ runtime-main.97707f9d.js.map #1yg8f1m"
     `);
   });
 
@@ -140,9 +140,9 @@ describe('When working with a npm scoped app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'scoped-sample-app')))
       .toMatchInlineSnapshot(`
       "scoped-sample-app
-      ├─ asset-manifest.json #1sd81fg
+      ├─ asset-manifest.json #1uspk39
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #1mleewn
+      ├─ index.html #ysfmfn
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -153,13 +153,13 @@ describe('When working with a npm scoped app', () => {
          │  ├─ main.1a7488ce.css #x701i6
          │  └─ main.1a7488ce.css.map #z36y5v
          ├─ js
-         │  ├─ main.cc95cb0d.js #5xzsed
-         │  ├─ main.cc95cb0d.js.map #yi4ha0
-         │  ├─ runtime-main.a4aef198.js #vm1sz0
-         │  ├─ runtime-main.a4aef198.js.map #1ua5e77
-         │  ├─ vendors-node_modules_react-dom_index_js.7d6c922e.js #jcr907
-         │  ├─ vendors-node_modules_react-dom_index_js.7d6c922e.js.LICENSE.txt #eplx8h
-         │  └─ vendors-node_modules_react-dom_index_js.7d6c922e.js.map #plqwlj
+         │  ├─ 316.74c894ba.js #euj72k
+         │  ├─ 316.74c894ba.js.LICENSE.txt #eplx8h
+         │  ├─ 316.74c894ba.js.map #3k9wqz
+         │  ├─ main.b44531b6.js #16ahtqz
+         │  ├─ main.b44531b6.js.map #n69bgw
+         │  ├─ runtime-main.de012fdc.js #1qz643h
+         │  └─ runtime-main.de012fdc.js.map #g5ojr6
          └─ media
             └─ logo.103b5fa18196d5665a7e12318285c916.svg #1okqmlj"
     `);
@@ -363,9 +363,9 @@ describe('when working with a non-scoped app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'sample-app')))
       .toMatchInlineSnapshot(`
       "sample-app
-      ├─ asset-manifest.json #7r5st4
+      ├─ asset-manifest.json #620pei
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #1bd3aum
+      ├─ index.html #1vp7lky
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -376,13 +376,13 @@ describe('when working with a non-scoped app', () => {
          │  ├─ main.1a7488ce.css #x701i6
          │  └─ main.1a7488ce.css.map #z36y5v
          ├─ js
-         │  ├─ main.e98a5e0b.js #1yv2cos
-         │  ├─ main.e98a5e0b.js.map #1595vk6
-         │  ├─ runtime-main.7afcf58a.js #837t3b
-         │  ├─ runtime-main.7afcf58a.js.map #1k6j0t9
-         │  ├─ vendors-node_modules_react-dom_index_js.75b11de0.js #4pg52k
-         │  ├─ vendors-node_modules_react-dom_index_js.75b11de0.js.LICENSE.txt #eplx8h
-         │  └─ vendors-node_modules_react-dom_index_js.75b11de0.js.map #7hbdk7
+         │  ├─ 316.394ef80b.js #1mv4xg9
+         │  ├─ 316.394ef80b.js.LICENSE.txt #eplx8h
+         │  ├─ 316.394ef80b.js.map #o90ydx
+         │  ├─ main.abe6afa1.js #t9np46
+         │  ├─ main.abe6afa1.js.map #15q2td3
+         │  ├─ runtime-main.e92969dd.js #1is98ey
+         │  └─ runtime-main.e92969dd.js.map #pq512s
          └─ media
             └─ logo.103b5fa18196d5665a7e12318285c916.svg #1okqmlj"
     `);
@@ -506,17 +506,13 @@ describe('when working with a non-scoped app', () => {
   });
 
   it('can execute tests', async () => {
-    const output = await runModularStreamlined(
-      modularRoot,
-      'test sample-app --watchAll false',
-      {
-        all: true,
-        reject: false,
-        env: {
-          CI: 'true',
-        },
+    const output = await modular('test sample-app --watchAll false', {
+      all: true,
+      reject: false,
+      env: {
+        CI: 'true',
       },
-    );
+    });
 
     // TODO: Passing CI=true *should* remove all the coloring stuff,
     // it's weird that it doesn't. To workaround it, I've manually
@@ -609,9 +605,9 @@ describe('When working with an app added in a custom directory', () => {
     expect(tree(path.join(modularRoot, 'dist', 'scoped-custom-app')))
       .toMatchInlineSnapshot(`
       "scoped-custom-app
-      ├─ asset-manifest.json #1ee2t53
+      ├─ asset-manifest.json #dvvkwh
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #12svhi5
+      ├─ index.html #6iz8a6
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -622,13 +618,13 @@ describe('When working with an app added in a custom directory', () => {
          │  ├─ main.1a7488ce.css #x701i6
          │  └─ main.1a7488ce.css.map #z36y5v
          ├─ js
-         │  ├─ main.78f42426.js #8769pb
-         │  ├─ main.78f42426.js.map #1z01jlk
-         │  ├─ runtime-main.7e043d2a.js #14joi1z
-         │  ├─ runtime-main.7e043d2a.js.map #177xfe7
-         │  ├─ vendors-node_modules_react-dom_index_js.9229d296.js #1llst3d
-         │  ├─ vendors-node_modules_react-dom_index_js.9229d296.js.LICENSE.txt #eplx8h
-         │  └─ vendors-node_modules_react-dom_index_js.9229d296.js.map #1eledvn
+         │  ├─ 350.44eb2511.js #4ubhrm
+         │  ├─ 350.44eb2511.js.LICENSE.txt #eplx8h
+         │  ├─ 350.44eb2511.js.map #1yro3n5
+         │  ├─ main.fba21b67.js #16haxht
+         │  ├─ main.fba21b67.js.map #1tgakei
+         │  ├─ runtime-main.cef70e6c.js #1f77948
+         │  └─ runtime-main.cef70e6c.js.map #13ge77z
          └─ media
             └─ logo.103b5fa18196d5665a7e12318285c916.svg #1okqmlj"
     `);

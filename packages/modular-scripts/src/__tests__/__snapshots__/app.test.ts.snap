@@ -4,21 +4,21 @@ exports[`When working with a npm scoped app can generate a asset-manifest 1`] = 
 "{
   "files": {
     "main.css": "/static/css/main.1a7488ce.css",
-    "main.js": "/static/js/main.cc95cb0d.js",
-    "runtime-main.js": "/static/js/runtime-main.a4aef198.js",
-    "static/js/vendors-node_modules_react-dom_index_js.7d6c922e.js": "/static/js/vendors-node_modules_react-dom_index_js.7d6c922e.js",
+    "main.js": "/static/js/main.b44531b6.js",
+    "runtime-main.js": "/static/js/runtime-main.de012fdc.js",
+    "static/js/316.74c894ba.js": "/static/js/316.74c894ba.js",
     "static/media/logo.svg": "/static/media/logo.103b5fa18196d5665a7e12318285c916.svg",
     "index.html": "/index.html",
     "main.1a7488ce.css.map": "/static/css/main.1a7488ce.css.map",
-    "main.cc95cb0d.js.map": "/static/js/main.cc95cb0d.js.map",
-    "runtime-main.a4aef198.js.map": "/static/js/runtime-main.a4aef198.js.map",
-    "vendors-node_modules_react-dom_index_js.7d6c922e.js.map": "/static/js/vendors-node_modules_react-dom_index_js.7d6c922e.js.map"
+    "main.b44531b6.js.map": "/static/js/main.b44531b6.js.map",
+    "runtime-main.de012fdc.js.map": "/static/js/runtime-main.de012fdc.js.map",
+    "316.74c894ba.js.map": "/static/js/316.74c894ba.js.map"
   },
   "entrypoints": [
-    "static/js/runtime-main.a4aef198.js",
-    "static/js/vendors-node_modules_react-dom_index_js.7d6c922e.js",
+    "static/js/runtime-main.de012fdc.js",
+    "static/js/316.74c894ba.js",
     "static/css/main.1a7488ce.css",
-    "static/js/main.cc95cb0d.js"
+    "static/js/main.b44531b6.js"
   ]
 }"
 `;
@@ -8565,67 +8565,64 @@ exports[`When working with a npm scoped app can generate a index.html 1`] = `
         "use strict";
         var r = {},
           e = {};
-        function a(o) {
-          var p = e[o];
-          if (void 0 !== p) return p.exports;
-          var n = (e[o] = { exports: {} });
-          return r[o](n, n.exports, a), n.exports;
+        function o(p) {
+          var a = e[p];
+          if (void 0 !== a) return a.exports;
+          var t = (e[p] = { exports: {} });
+          return r[p](t, t.exports, o), t.exports;
         }
-        (a.m = r),
+        (o.m = r),
           (() => {
             var r = [];
-            a.O = (e, o, p, n) => {
-              if (!o) {
-                var t = 1 / 0;
+            o.O = (e, p, a, t) => {
+              if (!p) {
+                var n = 1 / 0;
                 for (v = 0; v < r.length; v++) {
-                  for (var [o, p, n] = r[v], s = !0, i = 0; i < o.length; i++)
-                    (!1 & n || t >= n) &&
-                    Object.keys(a.O).every((r) => a.O[r](o[i]))
-                      ? o.splice(i--, 1)
-                      : ((s = !1), n < t && (t = n));
+                  for (var [p, a, t] = r[v], s = !0, l = 0; l < p.length; l++)
+                    (!1 & t || n >= t) &&
+                    Object.keys(o.O).every((r) => o.O[r](p[l]))
+                      ? p.splice(l--, 1)
+                      : ((s = !1), t < n && (n = t));
                   if (s) {
                     r.splice(v--, 1);
-                    var l = p();
-                    void 0 !== l && (e = l);
+                    var i = a();
+                    void 0 !== i && (e = i);
                   }
                 }
                 return e;
               }
-              n = n || 0;
-              for (var v = r.length; v > 0 && r[v - 1][2] > n; v--)
+              t = t || 0;
+              for (var v = r.length; v > 0 && r[v - 1][2] > t; v--)
                 r[v] = r[v - 1];
-              r[v] = [o, p, n];
+              r[v] = [p, a, t];
             };
           })(),
-          (a.o = (r, e) => Object.prototype.hasOwnProperty.call(r, e)),
-          (a.p = "/"),
+          (o.o = (r, e) => Object.prototype.hasOwnProperty.call(r, e)),
+          (o.p = "/"),
           (() => {
-            var r = { "runtime-main": 0 };
-            a.O.j = (e) => 0 === r[e];
-            var e = (e, o) => {
-                var p,
-                  n,
-                  [t, s, i] = o,
-                  l = 0;
-                if (t.some((e) => 0 !== r[e])) {
-                  for (p in s) a.o(s, p) && (a.m[p] = s[p]);
-                  if (i) var v = i(a);
+            var r = { 252: 0 };
+            o.O.j = (e) => 0 === r[e];
+            var e = (e, p) => {
+                var a,
+                  t,
+                  [n, s, l] = p,
+                  i = 0;
+                if (n.some((e) => 0 !== r[e])) {
+                  for (a in s) o.o(s, a) && (o.m[a] = s[a]);
+                  if (l) var v = l(o);
                 }
-                for (e && e(o); l < t.length; l++)
-                  (n = t[l]), a.o(r, n) && r[n] && r[n][0](), (r[n] = 0);
-                return a.O(v);
+                for (e && e(p); i < n.length; i++)
+                  (t = n[i]), o.o(r, t) && r[t] && r[t][0](), (r[t] = 0);
+                return o.O(v);
               },
-              o = (self.webpackChunk_scoped_sample_app =
+              p = (self.webpackChunk_scoped_sample_app =
                 self.webpackChunk_scoped_sample_app || []);
-            o.forEach(e.bind(null, 0)), (o.push = e.bind(null, o.push.bind(o)));
+            p.forEach(e.bind(null, 0)), (p.push = e.bind(null, p.push.bind(p)));
           })();
       })();
     </script>
-    <script
-      defer="defer"
-      src="/static/js/vendors-node_modules_react-dom_index_js.7d6c922e.js"
-    ></script>
-    <script defer="defer" src="/static/js/main.cc95cb0d.js"></script>
+    <script defer="defer" src="/static/js/316.74c894ba.js"></script>
+    <script defer="defer" src="/static/js/main.b44531b6.js"></script>
     <link href="/static/css/main.1a7488ce.css" rel="stylesheet" />
   </head>
   <body>
@@ -8669,21 +8666,21 @@ exports[`When working with an app added in a custom directory can generate a ass
 "{
   "files": {
     "main.css": "/static/css/main.1a7488ce.css",
-    "main.js": "/static/js/main.78f42426.js",
-    "runtime-main.js": "/static/js/runtime-main.7e043d2a.js",
-    "static/js/vendors-node_modules_react-dom_index_js.9229d296.js": "/static/js/vendors-node_modules_react-dom_index_js.9229d296.js",
+    "main.js": "/static/js/main.fba21b67.js",
+    "runtime-main.js": "/static/js/runtime-main.cef70e6c.js",
+    "static/js/350.44eb2511.js": "/static/js/350.44eb2511.js",
     "static/media/logo.svg": "/static/media/logo.103b5fa18196d5665a7e12318285c916.svg",
     "index.html": "/index.html",
     "main.1a7488ce.css.map": "/static/css/main.1a7488ce.css.map",
-    "main.78f42426.js.map": "/static/js/main.78f42426.js.map",
-    "runtime-main.7e043d2a.js.map": "/static/js/runtime-main.7e043d2a.js.map",
-    "vendors-node_modules_react-dom_index_js.9229d296.js.map": "/static/js/vendors-node_modules_react-dom_index_js.9229d296.js.map"
+    "main.fba21b67.js.map": "/static/js/main.fba21b67.js.map",
+    "runtime-main.cef70e6c.js.map": "/static/js/runtime-main.cef70e6c.js.map",
+    "350.44eb2511.js.map": "/static/js/350.44eb2511.js.map"
   },
   "entrypoints": [
-    "static/js/runtime-main.7e043d2a.js",
-    "static/js/vendors-node_modules_react-dom_index_js.9229d296.js",
+    "static/js/runtime-main.cef70e6c.js",
+    "static/js/350.44eb2511.js",
     "static/css/main.1a7488ce.css",
-    "static/js/main.78f42426.js"
+    "static/js/main.fba21b67.js"
   ]
 }"
 `;
@@ -17231,54 +17228,54 @@ exports[`When working with an app added in a custom directory can generate a ind
         var r = {},
           e = {};
         function o(t) {
-          var n = e[t];
-          if (void 0 !== n) return n.exports;
+          var p = e[t];
+          if (void 0 !== p) return p.exports;
           var a = (e[t] = { exports: {} });
           return r[t](a, a.exports, o), a.exports;
         }
         (o.m = r),
           (() => {
             var r = [];
-            o.O = (e, t, n, a) => {
+            o.O = (e, t, p, a) => {
               if (!t) {
-                var p = 1 / 0;
-                for (v = 0; v < r.length; v++) {
-                  for (var [t, n, a] = r[v], s = !0, i = 0; i < t.length; i++)
-                    (!1 & a || p >= a) &&
+                var n = 1 / 0;
+                for (c = 0; c < r.length; c++) {
+                  for (var [t, p, a] = r[c], s = !0, i = 0; i < t.length; i++)
+                    (!1 & a || n >= a) &&
                     Object.keys(o.O).every((r) => o.O[r](t[i]))
                       ? t.splice(i--, 1)
-                      : ((s = !1), a < p && (p = a));
+                      : ((s = !1), a < n && (n = a));
                   if (s) {
-                    r.splice(v--, 1);
-                    var u = n();
-                    void 0 !== u && (e = u);
+                    r.splice(c--, 1);
+                    var v = p();
+                    void 0 !== v && (e = v);
                   }
                 }
                 return e;
               }
               a = a || 0;
-              for (var v = r.length; v > 0 && r[v - 1][2] > a; v--)
-                r[v] = r[v - 1];
-              r[v] = [t, n, a];
+              for (var c = r.length; c > 0 && r[c - 1][2] > a; c--)
+                r[c] = r[c - 1];
+              r[c] = [t, p, a];
             };
           })(),
           (o.o = (r, e) => Object.prototype.hasOwnProperty.call(r, e)),
           (o.p = "/"),
           (() => {
-            var r = { "runtime-main": 0 };
+            var r = { 252: 0 };
             o.O.j = (e) => 0 === r[e];
             var e = (e, t) => {
-                var n,
+                var p,
                   a,
-                  [p, s, i] = t,
-                  u = 0;
-                if (p.some((e) => 0 !== r[e])) {
-                  for (n in s) o.o(s, n) && (o.m[n] = s[n]);
-                  if (i) var v = i(o);
+                  [n, s, i] = t,
+                  v = 0;
+                if (n.some((e) => 0 !== r[e])) {
+                  for (p in s) o.o(s, p) && (o.m[p] = s[p]);
+                  if (i) var c = i(o);
                 }
-                for (e && e(t); u < p.length; u++)
-                  (a = p[u]), o.o(r, a) && r[a] && r[a][0](), (r[a] = 0);
-                return o.O(v);
+                for (e && e(t); v < n.length; v++)
+                  (a = n[v]), o.o(r, a) && r[a] && r[a][0](), (r[a] = 0);
+                return o.O(c);
               },
               t = (self.webpackChunk_scoped_custom_app =
                 self.webpackChunk_scoped_custom_app || []);
@@ -17286,11 +17283,8 @@ exports[`When working with an app added in a custom directory can generate a ind
           })();
       })();
     </script>
-    <script
-      defer="defer"
-      src="/static/js/vendors-node_modules_react-dom_index_js.9229d296.js"
-    ></script>
-    <script defer="defer" src="/static/js/main.78f42426.js"></script>
+    <script defer="defer" src="/static/js/350.44eb2511.js"></script>
+    <script defer="defer" src="/static/js/main.fba21b67.js"></script>
     <link href="/static/css/main.1a7488ce.css" rel="stylesheet" />
   </head>
   <body>
@@ -17352,21 +17346,21 @@ exports[`when working with a non-scoped app can generate a asset-manifest 1`] = 
 "{
   "files": {
     "main.css": "/static/css/main.1a7488ce.css",
-    "main.js": "/static/js/main.e98a5e0b.js",
-    "runtime-main.js": "/static/js/runtime-main.7afcf58a.js",
-    "static/js/vendors-node_modules_react-dom_index_js.75b11de0.js": "/static/js/vendors-node_modules_react-dom_index_js.75b11de0.js",
+    "main.js": "/static/js/main.abe6afa1.js",
+    "runtime-main.js": "/static/js/runtime-main.e92969dd.js",
+    "static/js/316.394ef80b.js": "/static/js/316.394ef80b.js",
     "static/media/logo.svg": "/static/media/logo.103b5fa18196d5665a7e12318285c916.svg",
     "index.html": "/index.html",
     "main.1a7488ce.css.map": "/static/css/main.1a7488ce.css.map",
-    "main.e98a5e0b.js.map": "/static/js/main.e98a5e0b.js.map",
-    "runtime-main.7afcf58a.js.map": "/static/js/runtime-main.7afcf58a.js.map",
-    "vendors-node_modules_react-dom_index_js.75b11de0.js.map": "/static/js/vendors-node_modules_react-dom_index_js.75b11de0.js.map"
+    "main.abe6afa1.js.map": "/static/js/main.abe6afa1.js.map",
+    "runtime-main.e92969dd.js.map": "/static/js/runtime-main.e92969dd.js.map",
+    "316.394ef80b.js.map": "/static/js/316.394ef80b.js.map"
   },
   "entrypoints": [
-    "static/js/runtime-main.7afcf58a.js",
-    "static/js/vendors-node_modules_react-dom_index_js.75b11de0.js",
+    "static/js/runtime-main.e92969dd.js",
+    "static/js/316.394ef80b.js",
     "static/css/main.1a7488ce.css",
-    "static/js/main.e98a5e0b.js"
+    "static/js/main.abe6afa1.js"
   ]
 }"
 `;
@@ -25798,67 +25792,64 @@ exports[`when working with a non-scoped app can generate a index.html 1`] = `
         "use strict";
         var r = {},
           e = {};
-        function a(n) {
-          var t = e[n];
-          if (void 0 !== t) return t.exports;
-          var o = (e[n] = { exports: {} });
-          return r[n](o, o.exports, a), o.exports;
+        function a(o) {
+          var p = e[o];
+          if (void 0 !== p) return p.exports;
+          var t = (e[o] = { exports: {} });
+          return r[o](t, t.exports, a), t.exports;
         }
         (a.m = r),
           (() => {
             var r = [];
-            a.O = (e, n, t, o) => {
-              if (!n) {
-                var p = 1 / 0;
+            a.O = (e, o, p, t) => {
+              if (!o) {
+                var n = 1 / 0;
                 for (v = 0; v < r.length; v++) {
-                  for (var [n, t, o] = r[v], i = !0, s = 0; s < n.length; s++)
-                    (!1 & o || p >= o) &&
-                    Object.keys(a.O).every((r) => a.O[r](n[s]))
-                      ? n.splice(s--, 1)
-                      : ((i = !1), o < p && (p = o));
-                  if (i) {
+                  for (var [o, p, t] = r[v], s = !0, l = 0; l < o.length; l++)
+                    (!1 & t || n >= t) &&
+                    Object.keys(a.O).every((r) => a.O[r](o[l]))
+                      ? o.splice(l--, 1)
+                      : ((s = !1), t < n && (n = t));
+                  if (s) {
                     r.splice(v--, 1);
-                    var l = t();
-                    void 0 !== l && (e = l);
+                    var i = p();
+                    void 0 !== i && (e = i);
                   }
                 }
                 return e;
               }
-              o = o || 0;
-              for (var v = r.length; v > 0 && r[v - 1][2] > o; v--)
+              t = t || 0;
+              for (var v = r.length; v > 0 && r[v - 1][2] > t; v--)
                 r[v] = r[v - 1];
-              r[v] = [n, t, o];
+              r[v] = [o, p, t];
             };
           })(),
           (a.o = (r, e) => Object.prototype.hasOwnProperty.call(r, e)),
           (a.p = "/"),
           (() => {
-            var r = { "runtime-main": 0 };
+            var r = { 252: 0 };
             a.O.j = (e) => 0 === r[e];
-            var e = (e, n) => {
-                var t,
-                  o,
-                  [p, i, s] = n,
-                  l = 0;
-                if (p.some((e) => 0 !== r[e])) {
-                  for (t in i) a.o(i, t) && (a.m[t] = i[t]);
-                  if (s) var v = s(a);
+            var e = (e, o) => {
+                var p,
+                  t,
+                  [n, s, l] = o,
+                  i = 0;
+                if (n.some((e) => 0 !== r[e])) {
+                  for (p in s) a.o(s, p) && (a.m[p] = s[p]);
+                  if (l) var v = l(a);
                 }
-                for (e && e(n); l < p.length; l++)
-                  (o = p[l]), a.o(r, o) && r[o] && r[o][0](), (r[o] = 0);
+                for (e && e(o); i < n.length; i++)
+                  (t = n[i]), a.o(r, t) && r[t] && r[t][0](), (r[t] = 0);
                 return a.O(v);
               },
-              n = (self.webpackChunksample_app =
+              o = (self.webpackChunksample_app =
                 self.webpackChunksample_app || []);
-            n.forEach(e.bind(null, 0)), (n.push = e.bind(null, n.push.bind(n)));
+            o.forEach(e.bind(null, 0)), (o.push = e.bind(null, o.push.bind(o)));
           })();
       })();
     </script>
-    <script
-      defer="defer"
-      src="/static/js/vendors-node_modules_react-dom_index_js.75b11de0.js"
-    ></script>
-    <script defer="defer" src="/static/js/main.e98a5e0b.js"></script>
+    <script defer="defer" src="/static/js/316.394ef80b.js"></script>
+    <script defer="defer" src="/static/js/main.abe6afa1.js"></script>
     <link href="/static/css/main.1a7488ce.css" rel="stylesheet" />
   </head>
   <body>
