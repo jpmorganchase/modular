@@ -31,7 +31,7 @@ can be rewritten to an [external ESM CDN](../esm-views/esm-cdn.md).
 
 - `app`. This package type corresponds to a static Single Page Application (SPA)
   project in a workspace. It's possible to specify a custom `index.html` file
-  and public asstets in the `public` directory.
+  and public assets in the `public` directory.
 
 - `esm-view`. This package type is an app that gets built as an ES module that
   can be imported at runtime. `esm-view`s are typically used to implement a
