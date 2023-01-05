@@ -25,7 +25,8 @@ scratch, as well as commands to add and manage further modules.
 Bootstraps a new project, configured to use
 [Yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces/).
 
-This also creates a workspace named 'app' which is a new modular app written in
+This also creates a workspace named 'app' which is a new
+[modular app](./concepts/package-types.md) written in
 [TypeScript](https://www.typescriptlang.org/).
 
 It supports three flags:
@@ -49,7 +50,9 @@ It supports three flags:
 
 ## Concepts
 
-- [Views](./concepts/views.md)
+- [Micro-frontends](./concepts/microfrontends.md)
+- [Package types](./concepts/package-types.md)
+- [configuration](./configuration.md)
 - [Linting](./concepts/linting.md)
 
 ## How to
