@@ -26,8 +26,10 @@ discussion of the available package types and their characteristics, please see
 These package types are built with [Webpack v5](https://webpack.js.org/) or, if
 specified in the [configuration](../configuration.md),
 [esbuild](https://esbuild.github.io/). Modules imported in the source these
-package types are bundled in the final result or, in case of `esm-view`s, they
-can be rewritten to an [external ESM CDN](../esm-views/esm-cdn.md).
+package types are bundled in the final result (in case of `esm-view`s, only
+local modules get bundled, and external dependencies are rewritten to use an
+external ESM CDN. [This section](../esm-views/index.md) explains the process in
+more depth).
 
 - `app`. This package type corresponds to a static Single Page Application (SPA)
   project in a workspace. It's possible to specify a custom `index.html` file
