@@ -14,7 +14,7 @@ parent: Concepts
 
 ## App
 
-Modular `app`s are Typescript and React based Single Page Applications (SPA)
+Modular `app`s are TypeScript and React-based Single Page Applications (SPAs)
 built with [Webpack v5](https://webpack.js.org/) (by default) or
 [esbuild](https://esbuild.github.io/) (by turning on `useModularEsbuild` in
 [the configuration](../configuration.md)).
