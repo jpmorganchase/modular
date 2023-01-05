@@ -56,7 +56,7 @@ separately on buld and external dependencies are never "pulled in" (no
 bundling).
 
 - `package`. This is a generic package with a single entry point. It's normally
-  used to create a publishable library that gets transpiled to Common JS and ES
+  used to create a publishable library that gets transpiled to CommonJS and ES
   Module format when built. Packages can be [built](../commands/build.md) but
   not [start](../commands/start.md)ed by Modular.
 
