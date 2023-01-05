@@ -1,7 +1,5 @@
 import execa from 'execa';
 import { exec } from 'child_process';
-import { promisify } from 'util';
-import _rimraf from 'rimraf';
 import tree from 'tree-view-for-tests';
 import path from 'path';
 import fs from 'fs-extra';
@@ -13,63 +11,42 @@ import {
 import prettier from 'prettier';
 import puppeteer from 'puppeteer';
 
-import getModularRoot from '../utils/getModularRoot';
 import { normalizeToPosix } from '../esbuild-scripts/utils/formatPath';
 import { startApp, DevServer } from './start-app';
 import type { CoreProperties } from '@schemastore/package';
+import { createModularTestContext, runModularStreamlined } from '../test/utils';
 
-const rimraf = promisify(_rimraf);
-
-const modularRoot = getModularRoot();
+// Temporary text context paths
+let tempModularRepo: string;
+let tempPackagesPath: string;
+let tempDistPath: string;
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
 const { getNodeText } = queries;
 
 // These tests must be executed sequentially with `--runInBand`.
 
-const packagesPath = path.join(getModularRoot(), 'packages');
-const distPath = path.join(getModularRoot(), 'dist');
-
-function modular(str: string, opts: Record<string, unknown> = {}) {
-  return execa('yarnpkg', ['modular', ...str.split(' ')], {
-    cwd: modularRoot,
-    cleanup: true,
-    ...opts,
-  });
-}
-
-async function cleanup() {
-  await rimraf(path.join(packagesPath, 'sample-esm-view'));
-  await rimraf(path.join(modularRoot, 'dist/sample-esm-view'));
-  // run yarn so yarn.lock gets reset
-  await execa('yarnpkg', ['--silent'], {
-    cwd: modularRoot,
-  });
-}
-
 const targetedView = 'sample-esm-view';
 
 describe('modular-scripts', () => {
   beforeAll(async () => {
-    await cleanup();
-    await modular(
+    tempModularRepo = createModularTestContext();
+    tempPackagesPath = path.join(tempModularRepo, 'packages');
+    tempDistPath = path.join(tempModularRepo, 'dist');
+    await runModularStreamlined(
+      tempModularRepo,
       'add sample-esm-view --unstable-type esm-view --unstable-name sample-esm-view',
-      { stdio: 'inherit' },
     );
 
     await fs.copyFile(
       path.join(__dirname, 'TestEsmView.test-tsx'),
-      path.join(packagesPath, targetedView, 'src', 'index.tsx'),
+      path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
     );
-  });
-
-  afterAll(async () => {
-    await cleanup();
   });
 
   describe('Adds packages correctly', () => {
     it('can add a esm-view', () => {
-      expect(tree(path.join(packagesPath, 'sample-esm-view')))
+      expect(tree(path.join(tempPackagesPath, 'sample-esm-view')))
         .toMatchInlineSnapshot(`
         "sample-esm-view
         ├─ package.json
@@ -147,8 +124,7 @@ describe('modular-scripts', () => {
     let outputJsEntrypoint: string;
 
     beforeAll(async () => {
-      await modular('build sample-esm-view', {
-        stdio: 'inherit',
+      await runModularStreamlined(tempModularRepo, 'build sample-esm-view', {
         env: {
           USE_MODULAR_ESBUILD: 'true',
         },
@@ -165,7 +141,7 @@ describe('modular-scripts', () => {
         {
           "bundledDependencies": [],
           "dependencies": {
-            "react": "17.0.2",
+            "react": "^18.2.0",
           },
           "modular": {
             "type": "esm-view",
@@ -179,7 +155,7 @@ describe('modular-scripts', () => {
     it('THEN matches the entrypoint snapshot', async () => {
       const { module: moduleEntryPoint } = outputManifest;
       const packageEntryPointPath = path.join(
-        modularRoot,
+        tempModularRepo,
         'dist',
         'sample-esm-view',
         moduleEntryPoint as string,
@@ -201,8 +177,7 @@ describe('modular-scripts', () => {
     let outputJsEntrypointPath: string;
 
     beforeAll(async () => {
-      await modular('build sample-esm-view', {
-        stdio: 'inherit',
+      await runModularStreamlined(tempModularRepo, 'build sample-esm-view', {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
@@ -216,7 +191,7 @@ describe('modular-scripts', () => {
 
     it('THEN rewrites the dependencies according to the template string', async () => {
       const baseDir = path.join(
-        modularRoot,
+        tempModularRepo,
         'dist',
         'sample-esm-view',
         'static',
@@ -229,14 +204,14 @@ describe('modular-scripts', () => {
       const indexFile = (
         await fs.readFile(path.join(baseDir, outputJsEntrypoint))
       ).toString();
-      expect(trampolineFile).toContain(`https://mycustomcdn.net/react@1`);
-      expect(trampolineFile).toContain(`https://mycustomcdn.net/react-dom@1`);
-      expect(indexFile).toContain(`https://mycustomcdn.net/react@1`);
+      expect(trampolineFile).toContain(`https://mycustomcdn.net/react@`);
+      expect(trampolineFile).toContain(`https://mycustomcdn.net/react-dom@^`);
+      expect(indexFile).toContain(`https://mycustomcdn.net/react@`);
     });
 
     it('THEN matches the entrypoint snapshot', async () => {
       const packageEntryPointPath = path.join(
-        modularRoot,
+        tempModularRepo,
         'dist',
         'sample-esm-view',
         outputJsEntrypointPath,
@@ -259,11 +234,11 @@ describe('modular-scripts', () => {
     beforeAll(async () => {
       await fs.copyFile(
         path.join(__dirname, 'TestViewPackages.test-tsx'),
-        path.join(packagesPath, targetedView, 'src', 'index.tsx'),
+        path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
       );
 
       const packageJsonPath = path.join(
-        packagesPath,
+        tempPackagesPath,
         targetedView,
         'package.json',
       );
@@ -283,12 +258,11 @@ describe('modular-scripts', () => {
       );
 
       await execa('yarnpkg', [], {
-        cwd: modularRoot,
+        cwd: tempModularRepo,
         cleanup: true,
       });
 
-      await modular('build sample-esm-view', {
-        stdio: 'inherit',
+      await runModularStreamlined(tempModularRepo, 'build sample-esm-view', {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
@@ -301,7 +275,11 @@ describe('modular-scripts', () => {
     });
 
     it('THEN a manifest is generated with the styleImports field pointing to the external CSS dependency, rewritten to CDN', async () => {
-      const outputManifest = path.join(distPath, targetedView, 'package.json');
+      const outputManifest = path.join(
+        tempDistPath,
+        targetedView,
+        'package.json',
+      );
       const manifestContent = (await fs.readJSON(
         outputManifest,
       )) as CoreProperties;
@@ -311,7 +289,7 @@ describe('modular-scripts', () => {
     });
 
     it('THEN the synthetic index.html has a style tags pointing to the external CSS dependencies, rewritten to CDN', async () => {
-      const outputIndex = path.join(distPath, targetedView, 'index.html');
+      const outputIndex = path.join(tempDistPath, targetedView, 'index.html');
       const indexContent = await fs.readFile(outputIndex, 'utf-8');
       expect(indexContent).toContain(
         '<link rel="stylesheet"href="https://mycustomcdn.net/regular-table@^0.5.6/dist/css/material.css">',
@@ -320,8 +298,7 @@ describe('modular-scripts', () => {
 
     it('THEN rewrites the dependencies', async () => {
       const baseDir = path.join(
-        modularRoot,
-        'dist',
+        tempDistPath,
         'sample-esm-view',
         'static',
         'js',
@@ -330,7 +307,7 @@ describe('modular-scripts', () => {
       const indexFile = (
         await fs.readFile(path.join(baseDir, outputJsEntrypoint))
       ).toString();
-      expect(indexFile).toContain(`https://mycustomcdn.net/react@1`);
+      expect(indexFile).toContain(`https://mycustomcdn.net/react@`);
       expect(indexFile).toContain(`https://mycustomcdn.net/lodash@^4.17.21`);
       expect(indexFile).toContain(
         `https://mycustomcdn.net/lodash.merge@^4.6.2`,
@@ -341,8 +318,7 @@ describe('modular-scripts', () => {
 
     it('THEN matches the entrypoint snapshot', async () => {
       const packageEntryPointPath = path.join(
-        modularRoot,
-        'dist',
+        tempDistPath,
         'sample-esm-view',
         outputJsEntrypointPath,
       );
@@ -364,11 +340,11 @@ describe('modular-scripts', () => {
     beforeAll(async () => {
       await fs.copyFile(
         path.join(__dirname, 'TestViewPackages.test-tsx'),
-        path.join(packagesPath, targetedView, 'src', 'index.tsx'),
+        path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
       );
 
       const packageJsonPath = path.join(
-        packagesPath,
+        tempPackagesPath,
         targetedView,
         'package.json',
       );
@@ -388,12 +364,11 @@ describe('modular-scripts', () => {
       );
 
       await execa('yarnpkg', [], {
-        cwd: modularRoot,
+        cwd: tempModularRepo,
         cleanup: true,
       });
 
-      await modular('build sample-esm-view', {
-        stdio: 'inherit',
+      await runModularStreamlined(tempModularRepo, 'build sample-esm-view', {
         env: {
           EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
         },
@@ -406,8 +381,7 @@ describe('modular-scripts', () => {
 
     it('THEN rewrites the dependencies', async () => {
       const baseDir = path.join(
-        modularRoot,
-        'dist',
+        tempDistPath,
         'sample-esm-view',
         'static',
         'js',
@@ -416,7 +390,7 @@ describe('modular-scripts', () => {
       const indexFile = (
         await fs.readFile(path.join(baseDir, outputJsEntrypoint))
       ).toString();
-      expect(indexFile).toContain(`https://mycustomcdn.net/react@1`);
+      expect(indexFile).toContain(`https://mycustomcdn.net/react@`);
       expect(indexFile).toContain(`https://mycustomcdn.net/lodash@^4.17.21`);
       expect(indexFile).toContain(
         `https://mycustomcdn.net/lodash.merge@^4.6.2`,
@@ -425,8 +399,7 @@ describe('modular-scripts', () => {
 
     it('THEN matches the entrypoint snapshot', async () => {
       const packageEntryPointPath = path.join(
-        modularRoot,
-        'dist',
+        tempDistPath,
         'sample-esm-view',
         outputJsEntrypointPath,
       );
@@ -448,11 +421,11 @@ describe('modular-scripts', () => {
     beforeAll(async () => {
       await fs.copyFile(
         path.join(__dirname, 'TestViewPackages.test-tsx'),
-        path.join(packagesPath, targetedView, 'src', 'index.tsx'),
+        path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
       );
 
       const packageJsonPath = path.join(
-        packagesPath,
+        tempPackagesPath,
         targetedView,
         'package.json',
       );
@@ -476,12 +449,11 @@ describe('modular-scripts', () => {
       );
 
       await execa('yarnpkg', [], {
-        cwd: modularRoot,
+        cwd: tempModularRepo,
         cleanup: true,
       });
 
-      await modular('build sample-esm-view', {
-        stdio: 'inherit',
+      await runModularStreamlined(tempModularRepo, 'build sample-esm-view', {
         env: {
           EXTERNAL_CDN_TEMPLATE:
             'https://mycustomcdn.net/[name]@[version]?selectiveDeps=[selectiveCDNResolutions]',
@@ -494,8 +466,7 @@ describe('modular-scripts', () => {
 
     it('THEN rewrites the dependencies', async () => {
       const baseDir = path.join(
-        modularRoot,
-        'dist',
+        tempDistPath,
         'sample-esm-view',
         'static',
         'js',
@@ -515,8 +486,7 @@ describe('modular-scripts', () => {
 
     it('THEN matches the entrypoint snapshot', async () => {
       const packageEntryPointPath = path.join(
-        modularRoot,
-        'dist',
+        tempDistPath,
         'sample-esm-view',
         outputJsEntrypointPath,
       );
@@ -538,11 +508,11 @@ describe('modular-scripts', () => {
     beforeAll(async () => {
       await fs.copyFile(
         path.join(__dirname, 'TestViewPackages.test-tsx'),
-        path.join(packagesPath, targetedView, 'src', 'index.tsx'),
+        path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
       );
 
       const packageJsonPath = path.join(
-        packagesPath,
+        tempPackagesPath,
         targetedView,
         'package.json',
       );
@@ -566,12 +536,11 @@ describe('modular-scripts', () => {
       );
 
       await execa('yarnpkg', [], {
-        cwd: modularRoot,
+        cwd: tempModularRepo,
         cleanup: true,
       });
 
-      await modular('build sample-esm-view', {
-        stdio: 'inherit',
+      await runModularStreamlined(tempModularRepo, 'build sample-esm-view', {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           EXTERNAL_CDN_TEMPLATE:
@@ -586,8 +555,7 @@ describe('modular-scripts', () => {
 
     it('THEN rewrites the dependencies', async () => {
       const baseDir = path.join(
-        modularRoot,
-        'dist',
+        tempDistPath,
         'sample-esm-view',
         'static',
         'js',
@@ -607,8 +575,7 @@ describe('modular-scripts', () => {
 
     it('THEN matches the entrypoint snapshot', async () => {
       const packageEntryPointPath = path.join(
-        modularRoot,
-        'dist',
+        tempDistPath,
         'sample-esm-view',
         outputJsEntrypointPath,
       );
@@ -630,11 +597,11 @@ describe('modular-scripts', () => {
     beforeAll(async () => {
       await fs.copyFile(
         path.join(__dirname, 'TestViewPackages.test-tsx'),
-        path.join(packagesPath, targetedView, 'src', 'index.tsx'),
+        path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
       );
 
       const packageJsonPath = path.join(
-        packagesPath,
+        tempPackagesPath,
         targetedView,
         'package.json',
       );
@@ -654,12 +621,11 @@ describe('modular-scripts', () => {
       );
 
       await execa('yarnpkg', [], {
-        cwd: modularRoot,
+        cwd: tempModularRepo,
         cleanup: true,
       });
 
-      await modular('build sample-esm-view', {
-        stdio: 'inherit',
+      await runModularStreamlined(tempModularRepo, 'build sample-esm-view', {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[resolution]',
@@ -673,8 +639,7 @@ describe('modular-scripts', () => {
 
     it('THEN rewrites the dependencies', async () => {
       const baseDir = path.join(
-        modularRoot,
-        'dist',
+        tempDistPath,
         'sample-esm-view',
         'static',
         'js',
@@ -684,14 +649,13 @@ describe('modular-scripts', () => {
         await fs.readFile(path.join(baseDir, outputJsEntrypoint))
       ).toString();
 
-      expect(indexFile).toContain(`https://mycustomcdn.net/react@1`);
+      expect(indexFile).toContain(`https://mycustomcdn.net/react@`);
       expect(indexFile).toContain(`https://mycustomcdn.net/lodash@4`);
     });
 
     it('THEN matches the entrypoint snapshot', async () => {
       const packageEntryPointPath = path.join(
-        modularRoot,
-        'dist',
+        tempDistPath,
         'sample-esm-view',
         outputJsEntrypointPath,
       );
@@ -713,11 +677,11 @@ describe('modular-scripts', () => {
     beforeAll(async () => {
       await fs.copyFile(
         path.join(__dirname, 'TestViewPackages.test-tsx'),
-        path.join(packagesPath, targetedView, 'src', 'index.tsx'),
+        path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
       );
 
       const packageJsonPath = path.join(
-        packagesPath,
+        tempPackagesPath,
         targetedView,
         'package.json',
       );
@@ -737,12 +701,11 @@ describe('modular-scripts', () => {
       );
 
       await execa('yarnpkg', [], {
-        cwd: modularRoot,
+        cwd: tempModularRepo,
         cleanup: true,
       });
 
-      await modular('build sample-esm-view', {
-        stdio: 'inherit',
+      await runModularStreamlined(tempModularRepo, 'build sample-esm-view', {
         env: {
           EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[resolution]',
         },
@@ -755,8 +718,7 @@ describe('modular-scripts', () => {
 
     it('THEN rewrites the dependencies', async () => {
       const baseDir = path.join(
-        modularRoot,
-        'dist',
+        tempDistPath,
         'sample-esm-view',
         'static',
         'js',
@@ -765,14 +727,13 @@ describe('modular-scripts', () => {
       const indexFile = (
         await fs.readFile(path.join(baseDir, outputJsEntrypoint))
       ).toString();
-      expect(indexFile).toContain(`https://mycustomcdn.net/react@1`);
+      expect(indexFile).toContain(`https://mycustomcdn.net/react@`);
       expect(indexFile).toContain(`https://mycustomcdn.net/lodash@4`);
     });
 
     it('THEN matches the entrypoint snapshot', async () => {
       const packageEntryPointPath = path.join(
-        modularRoot,
-        'dist',
+        tempDistPath,
         'sample-esm-view',
         outputJsEntrypointPath,
       );
@@ -792,8 +753,7 @@ describe('modular-scripts', () => {
     let outputJsEntrypointPath: string;
 
     beforeAll(async () => {
-      await modular('build sample-esm-view', {
-        stdio: 'inherit',
+      await runModularStreamlined(tempModularRepo, 'build sample-esm-view', {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
@@ -808,8 +768,7 @@ describe('modular-scripts', () => {
 
     it('THEN rewrites only the dependencies that are not specified in the blocklist', async () => {
       const baseDir = path.join(
-        modularRoot,
-        'dist',
+        tempDistPath,
         'sample-esm-view',
         'static',
         'js',
@@ -827,7 +786,7 @@ describe('modular-scripts', () => {
       expect(
         (
           (await fs.readJson(
-            path.join(modularRoot, 'dist', 'sample-esm-view', 'package.json'),
+            path.join(tempDistPath, 'sample-esm-view', 'package.json'),
           )) as CoreProperties
         ).bundledDependencies,
       ).toEqual(['lodash', 'lodash.merge']);
@@ -835,8 +794,7 @@ describe('modular-scripts', () => {
 
     it('THEN matches the entrypoint snapshot', async () => {
       const packageEntryPointPath = path.join(
-        modularRoot,
-        'dist',
+        tempDistPath,
         'sample-esm-view',
         outputJsEntrypointPath,
       );
@@ -856,8 +814,7 @@ describe('modular-scripts', () => {
     let outputJsEntrypointPath: string;
 
     beforeAll(async () => {
-      await modular('build sample-esm-view', {
-        stdio: 'inherit',
+      await runModularStreamlined(tempModularRepo, 'build sample-esm-view', {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
@@ -872,8 +829,7 @@ describe('modular-scripts', () => {
 
     it('THEN rewrites only the dependencies that are not specified in the blocklist', async () => {
       const baseDir = path.join(
-        modularRoot,
-        'dist',
+        tempDistPath,
         'sample-esm-view',
         'static',
         'js',
@@ -892,7 +848,7 @@ describe('modular-scripts', () => {
       expect(
         (
           (await fs.readJson(
-            path.join(modularRoot, 'dist', 'sample-esm-view', 'package.json'),
+            path.join(tempDistPath, 'sample-esm-view', 'package.json'),
           )) as CoreProperties
         ).bundledDependencies,
       ).toEqual(['lodash', 'lodash.merge']);
@@ -900,8 +856,7 @@ describe('modular-scripts', () => {
 
     it('THEN matches the entrypoint snapshot', async () => {
       const packageEntryPointPath = path.join(
-        modularRoot,
-        'dist',
+        tempDistPath,
         'sample-esm-view',
         outputJsEntrypointPath,
       );
@@ -921,8 +876,7 @@ describe('modular-scripts', () => {
     let outputJsEntrypointPath: string;
 
     beforeAll(async () => {
-      await modular('build sample-esm-view', {
-        stdio: 'inherit',
+      await runModularStreamlined(tempModularRepo, 'build sample-esm-view', {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
@@ -937,8 +891,7 @@ describe('modular-scripts', () => {
 
     it('THEN rewrites only the dependencies that are not specified in the blocklist', async () => {
       const baseDir = path.join(
-        modularRoot,
-        'dist',
+        tempDistPath,
         'sample-esm-view',
         'static',
         'js',
@@ -956,7 +909,7 @@ describe('modular-scripts', () => {
       expect(
         (
           (await fs.readJson(
-            path.join(modularRoot, 'dist', 'sample-esm-view', 'package.json'),
+            path.join(tempDistPath, 'sample-esm-view', 'package.json'),
           )) as CoreProperties
         ).bundledDependencies,
       ).toEqual(['lodash', 'lodash.merge', 'regular-table']);
@@ -964,8 +917,7 @@ describe('modular-scripts', () => {
 
     it('THEN matches the entrypoint snapshot', async () => {
       const packageEntryPointPath = path.join(
-        modularRoot,
-        'dist',
+        tempDistPath,
         'sample-esm-view',
         outputJsEntrypointPath,
       );
@@ -985,8 +937,7 @@ describe('modular-scripts', () => {
     let outputJsEntrypointPath: string;
 
     beforeAll(async () => {
-      await modular('build sample-esm-view', {
-        stdio: 'inherit',
+      await runModularStreamlined(tempModularRepo, 'build sample-esm-view', {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           PUBLIC_URL: '/public/path/',
@@ -1007,8 +958,7 @@ describe('modular-scripts', () => {
 
     it('THEN matches the entrypoint snapshot', async () => {
       const packageEntryPointPath = path.join(
-        modularRoot,
-        'dist',
+        tempDistPath,
         'sample-esm-view',
         'static',
         'js',
@@ -1029,8 +979,7 @@ describe('modular-scripts', () => {
     let outputJsEntrypointPath: string;
 
     beforeAll(async () => {
-      await modular('build sample-esm-view', {
-        stdio: 'inherit',
+      await runModularStreamlined(tempModularRepo, 'build sample-esm-view', {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           PUBLIC_URL: './',
@@ -1052,7 +1001,7 @@ describe('modular-scripts', () => {
 
 async function getPackageOutputManifest(target: string) {
   const manifest = (await fs.readJson(
-    path.join(modularRoot, 'dist', target, 'package.json'),
+    path.join(tempDistPath, target, 'package.json'),
   )) as CoreProperties;
 
   if (!manifest.module) {
