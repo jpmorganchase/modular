@@ -6,7 +6,7 @@ import fs from 'fs-extra';
 import {
   addFixturePackage,
   cleanup,
-  modular,
+  runModularStreamlined,
   createModularTestContext,
   runLocalModular,
 } from '../test/utils';
@@ -21,9 +21,13 @@ describe('WHEN building with preserve modules', () => {
   beforeAll(async () => {
     await cleanup([packageName]);
     await addFixturePackage(packageName);
-    await modular(`build ${packageName} --preserve-modules`, {
-      stdio: 'inherit',
-    });
+    await runModularStreamlined(
+      modularRoot,
+      `build ${packageName} --preserve-modules`,
+      {
+        stdio: 'inherit',
+      },
+    );
   });
 
   afterAll(async () => await cleanup([packageName]));
@@ -167,16 +171,24 @@ describe('WHEN building packages with private cross-package dependencies', () =>
   it('THEN the build fails by default', () => {
     return expect(
       async () =>
-        await modular(`build ${dependentPackage} --preserve-modules`, {
-          stdio: 'inherit',
-        }),
+        await runModularStreamlined(
+          modularRoot,
+          `build ${dependentPackage} --preserve-modules`,
+          {
+            stdio: 'inherit',
+          },
+        ),
     ).rejects.toThrow();
   });
 
   it('THEN the build passes if the --private option is used', async () => {
-    await modular(`build ${dependentPackage} --preserve-modules --private`, {
-      stdio: 'inherit',
-    });
+    await runModularStreamlined(
+      modularRoot,
+      `build ${dependentPackage} --preserve-modules --private`,
+      {
+        stdio: 'inherit',
+      },
+    );
 
     expect(tree(path.join(modularRoot, 'dist', dependentPackage)))
       .toMatchInlineSnapshot(`
