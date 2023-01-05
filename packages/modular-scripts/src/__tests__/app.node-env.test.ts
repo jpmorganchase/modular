@@ -1,4 +1,3 @@
-/* eslint-disable jest/no-commented-out-tests */
 import tree from 'tree-view-for-tests';
 import path from 'path';
 import fs from 'fs-extra';
@@ -9,26 +8,56 @@ import {
   runModularStreamlined,
 } from '../test/utils';
 import getModularRoot from '../utils/getModularRoot';
+import rimraf from 'rimraf';
+import execa from 'execa';
 
 // These tests must be executed sequentially with `--runInBand`.
 
 // Temporary test context paths set by createModularTestContext()
 let tempModularRepo: string;
 
+const modularRoot = getModularRoot();
+
+const packagesPath = path.join(getModularRoot(), 'packages');
+
+function cleanup() {
+  rimraf.sync(path.join(packagesPath, 'node-env-app'));
+  rimraf.sync(path.join(modularRoot, 'dist/node-env-app'));
+
+  // run yarn so yarn.lock gets reset
+  return execa.sync('yarnpkg', ['--silent'], {
+    cwd: modularRoot,
+  });
+}
+
 describe('when working with a NODE_ENV app', () => {
   describe('WHEN building with webpack', () => {
     beforeAll(async () => {
-      await setupNodeEnvApp();
-      await runModularStreamlined(tempModularRepo, 'build node-env-app');
+      cleanup();
+      await runModularStreamlined(
+        modularRoot,
+        'add node-env-app --unstable-type app',
+      );
+
+      await fs.writeFile(
+        path.join(modularRoot, 'packages', 'node-env-app', 'src', 'index.ts'),
+        `
+      console.log(process.env.NODE_ENV);
+      export {};
+    `,
+      );
+      rimraf.sync(path.join(modularRoot, 'dist/node-env-app'));
+
+      await runModularStreamlined(modularRoot, 'build node-env-app');
     });
 
     it('can build a app', () => {
-      expect(tree(path.join(tempModularRepo, 'dist', 'node-env-app')))
+      expect(tree(path.join(modularRoot, 'dist', 'node-env-app')))
         .toMatchInlineSnapshot(`
         "node-env-app
-        ├─ asset-manifest.json #1tslp45
+        ├─ asset-manifest.json #5npfrr
         ├─ favicon.ico #6pu3rg
-        ├─ index.html #1mo9b1m
+        ├─ index.html #9j6678
         ├─ logo192.png #1nez7vk
         ├─ logo512.png #1hwqvcc
         ├─ manifest.json #19gah8o
@@ -36,110 +65,33 @@ describe('when working with a NODE_ENV app', () => {
         ├─ robots.txt #1sjb8b3
         └─ static
            └─ js
-              ├─ main.ed06689d.js #fhv6bj
-              ├─ main.ed06689d.js.map #gsgq3i
-              ├─ runtime-main.61e0d312.js #13gmjdw
-              └─ runtime-main.61e0d312.js.map #17efux7"
+              ├─ main.a482480b.js #1xwb1v
+              ├─ main.a482480b.js.map #4bcy8y
+              ├─ runtime-main.97707f9d.js #15lezt9
+              └─ runtime-main.97707f9d.js.map #1yg8f1m"
       `);
     });
-
-    it('can generate a manifest.json', async () => {
+    it('can generate a js/main.5d879077.js', async () => {
       expect(
-        String(
-          await fs.readFile(
-            path.join(tempModularRepo, 'dist', 'node-env-app', 'manifest.json'),
-          ),
-        ),
-      ).toMatchSnapshot();
-    });
-    it('can generate a package.json', async () => {
-      expect(
-        String(
-          await fs.readFile(
-            path.join(tempModularRepo, 'dist', 'node-env-app', 'package.json'),
-          ),
-        ),
-      ).toMatchSnapshot();
-    });
-    it('can generate a main.js', async () => {
-      expect(
-        String(
-          await fs.readFile(
-            path.join(
-              tempModularRepo,
-              'dist',
-              'node-env-app',
-              'static',
-              'js',
-              'main.ed06689d.js',
+        prettier.format(
+          String(
+            await fs.readFile(
+              path.join(
+                modularRoot,
+                'dist',
+                'node-env-app',
+                'static',
+                'js',
+                'main.a482480b.js',
+              ),
             ),
           ),
+          {
+            filepath: 'main.a482480b.js',
+          },
         ),
       ).toMatchSnapshot();
     });
-    it('can generate a main.js.map', async () => {
-      expect(
-        String(
-          await fs.readFile(
-            path.join(
-              tempModularRepo,
-              'dist',
-              'node-env-app',
-              'static',
-              'js',
-              'main.ed06689d.js.map',
-            ),
-          ),
-        ),
-      ).toMatchSnapshot();
-    });
-    it('can generate asset manifest', async () => {
-      expect(
-        String(
-          await fs.readFile(
-            path.join(
-              tempModularRepo,
-              'dist',
-              'node-env-app',
-              'asset-manifest.json',
-            ),
-          ),
-        ),
-      ).toMatchSnapshot();
-    });
-
-    // it('can generate a js/main.5d879077.js.map', async () => {
-    //   expect(
-    //     String(
-    //       await fs.readFile(
-    //         path.join(
-    //           tempModularRepo,
-    //           'dist',
-    //           'node-env-app',
-    //           'static',
-    //           'js',
-    //           'main.c42f5e48.js.map',
-    //         ),
-    //       ),
-    //     ),
-    //   ).toMatchSnapshot();
-    // });
-    // it('can generate a js/main.5d879077.js', async () => {
-    //   expect(
-    //     String(
-    //       await fs.readFile(
-    //         path.join(
-    //           tempModularRepo,
-    //           'dist',
-    //           'node-env-app',
-    //           'static',
-    //           'js',
-    //           'main.c42f5e48.js',
-    //         ),
-    //       ),
-    //     ),
-    //   ).toMatchSnapshot();
-    // });
   });
   describe('WHEN building with esbuild', () => {
     beforeAll(async () => {
