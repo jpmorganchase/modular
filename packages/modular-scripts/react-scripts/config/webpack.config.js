@@ -100,7 +100,7 @@ module.exports = function (webpackEnv) {
   });
 
   const optimizationConfig = {
-    optimization: { chunkIds: 'deterministic', moduleIds: 'deterministic' },
+    optimization: { chunkIds: 'named', moduleIds: 'named' },
   };
 
   // Merge all configurations into the final one

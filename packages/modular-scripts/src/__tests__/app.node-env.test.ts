@@ -26,9 +26,9 @@ describe('when working with a NODE_ENV app', () => {
       expect(tree(path.join(tempModularRepo, 'dist', 'node-env-app')))
         .toMatchInlineSnapshot(`
         "node-env-app
-        ├─ asset-manifest.json #1oz8cie
+        ├─ asset-manifest.json #1tslp45
         ├─ favicon.ico #6pu3rg
-        ├─ index.html #8yl21p
+        ├─ index.html #1mo9b1m
         ├─ logo192.png #1nez7vk
         ├─ logo512.png #1hwqvcc
         ├─ manifest.json #19gah8o
@@ -36,10 +36,10 @@ describe('when working with a NODE_ENV app', () => {
         ├─ robots.txt #1sjb8b3
         └─ static
            └─ js
-              ├─ main.5d879077.js #u1fxs5
-              ├─ main.5d879077.js.map #158jj7c
-              ├─ runtime-main.97707f9d.js #15lezt9
-              └─ runtime-main.97707f9d.js.map #1yg8f1m"
+              ├─ main.ed06689d.js #fhv6bj
+              ├─ main.ed06689d.js.map #gsgq3i
+              ├─ runtime-main.61e0d312.js #13gmjdw
+              └─ runtime-main.61e0d312.js.map #17efux7"
       `);
     });
 
@@ -71,7 +71,7 @@ describe('when working with a NODE_ENV app', () => {
               'node-env-app',
               'static',
               'js',
-              'main.5d879077.js',
+              'main.ed06689d.js',
             ),
           ),
         ),
@@ -87,7 +87,7 @@ describe('when working with a NODE_ENV app', () => {
               'node-env-app',
               'static',
               'js',
-              'main.5d879077.js.map',
+              'main.ed06689d.js.map',
             ),
           ),
         ),

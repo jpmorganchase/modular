@@ -7,11 +7,11 @@ exports[`when working with a NODE_ENV app WHEN building with esbuild can generat
 `;
 
 exports[`when working with a NODE_ENV app WHEN building with webpack can generate a main.js 1`] = `
-""use strict";(self.webpackChunknode_env_app=self.webpackChunknode_env_app||[]).push([[179],{361:()=>{console.log("production")}},e=>{var n;n=361,e(e.s=n)}]);
-//# sourceMappingURL=main.5d879077.js.map"
+""use strict";(self.webpackChunknode_env_app=self.webpackChunknode_env_app||[]).push([["main"],{"./src/index.ts":()=>{console.log("production")}},e=>{var n;n="./src/index.ts",e(e.s=n)}]);
+//# sourceMappingURL=main.ed06689d.js.map"
 `;
 
-exports[`when working with a NODE_ENV app WHEN building with webpack can generate a main.js.map 1`] = `"{"version":3,"file":"static/js/main.5d879077.js","mappings":"qGACMA,QAAQC,IAAI,a","sources":["index.ts"],"sourcesContent":["\\n      console.log(process.env.NODE_ENV);\\n      export {};\\n      "],"names":["console","log"],"sourceRoot":""}"`;
+exports[`when working with a NODE_ENV app WHEN building with webpack can generate a main.js.map 1`] = `"{"version":3,"file":"static/js/main.ed06689d.js","mappings":"qHACMA,QAAQC,IAAI,a","sources":["index.ts"],"sourcesContent":["\\n      console.log(process.env.NODE_ENV);\\n      export {};\\n      "],"names":["console","log"],"sourceRoot":""}"`;
 
 exports[`when working with a NODE_ENV app WHEN building with webpack can generate a manifest.json 1`] = `
 "{
@@ -57,7 +57,7 @@ exports[`when working with a NODE_ENV app WHEN building with webpack can generat
     "react",
     "react-dom"
   ],
-  "module": "/static/js/main.5d879077.js"
+  "module": "/static/js/main.ed06689d.js"
 }
 "
 `;
@@ -65,15 +65,15 @@ exports[`when working with a NODE_ENV app WHEN building with webpack can generat
 exports[`when working with a NODE_ENV app WHEN building with webpack can generate asset manifest 1`] = `
 "{
   "files": {
-    "main.js": "/static/js/main.5d879077.js",
-    "runtime-main.js": "/static/js/runtime-main.97707f9d.js",
+    "main.js": "/static/js/main.ed06689d.js",
+    "runtime-main.js": "/static/js/runtime-main.61e0d312.js",
     "index.html": "/index.html",
-    "main.5d879077.js.map": "/static/js/main.5d879077.js.map",
-    "runtime-main.97707f9d.js.map": "/static/js/runtime-main.97707f9d.js.map"
+    "main.ed06689d.js.map": "/static/js/main.ed06689d.js.map",
+    "runtime-main.61e0d312.js.map": "/static/js/runtime-main.61e0d312.js.map"
   },
   "entrypoints": [
-    "static/js/runtime-main.97707f9d.js",
-    "static/js/main.5d879077.js"
+    "static/js/runtime-main.61e0d312.js",
+    "static/js/main.ed06689d.js"
   ]
 }"
 `;
