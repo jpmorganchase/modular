@@ -30,13 +30,15 @@ Apps support pretty much all the functionalities from
 some important differences:
 
 - [ejecting](https://create-react-app.dev/docs/available-scripts/#npm-run-eject)
-  is not supported
+  is not supported. As an opinionated tool, Modular tries to offer an uniform
+  way of building applications, although feedback on our build configuration is
+  welcome!
 - [template support](../concepts/templates.md) is integrated in the
   [`modular add`](../commands/add.md) command. Modular templates are not
   guaranteed to be compatible with CRA templates.
 - Source files are loaded with the more performant
   [`esbuild-loader`](https://github.com/privatenumber/esbuild-loader) in the
-  Webpack configuration, and Babel plugins are not supported.
+  Webpack configuration. for this reason, Babel plugins are not supported.
 - [Local proxies](https://create-react-app.dev/docs/proxying-api-requests-in-development/)
   are supported, but [esbuild mode](../configuration.md) doesn't support the
   `package.json` `proxy` field. The more flexible
