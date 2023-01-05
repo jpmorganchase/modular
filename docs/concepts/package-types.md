@@ -38,7 +38,7 @@ some important differences:
   guaranteed to be compatible with CRA templates.
 - Source files are loaded with the more performant
   [`esbuild-loader`](https://github.com/privatenumber/esbuild-loader) in the
-  Webpack configuration. for this reason, Babel plugins are not supported.
+  Webpack configuration. For this reason, Babel plugins are not supported.
 - [Local proxies](https://create-react-app.dev/docs/proxying-api-requests-in-development/)
   are supported, but [esbuild mode](../configuration.md) doesn't support the
   `package.json` `proxy` field. The more flexible
