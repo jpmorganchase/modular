@@ -19356,51 +19356,51 @@ exports[`modular-scripts WHEN building a esm-view with a series of CDN selective
 "import * as e from "https://mycustomcdn.net/react@17.0.2?selectiveDeps=react@17.0.2,url-join@5.0.0";
 import * as t from "https://mycustomcdn.net/lodash@^4.17.21?selectiveDeps=react@17.0.2,url-join@5.0.0/get";
 import * as r from "https://mycustomcdn.net/lodash.merge@^4.6.2?selectiveDeps=react@17.0.2,url-join@5.0.0";
-import * as n from "https://mycustomcdn.net/lodash@^4.17.21?selectiveDeps=react@17.0.2,url-join@5.0.0";
-var o = { 545: () => {} },
-  a = {};
-function c(e) {
-  var t = a[e];
+import * as s from "https://mycustomcdn.net/lodash@^4.17.21?selectiveDeps=react@17.0.2,url-join@5.0.0";
+var a = { "../../node_modules/regular-table/dist/css/material.css": () => {} },
+  n = {};
+function o(e) {
+  var t = n[e];
   if (void 0 !== t) return t.exports;
-  var r = (a[e] = { exports: {} });
-  return o[e](r, r.exports, c), r.exports;
+  var r = (n[e] = { exports: {} });
+  return a[e](r, r.exports, o), r.exports;
 }
-(c.d = (e, t) => {
+(o.d = (e, t) => {
   for (var r in t)
-    c.o(t, r) &&
-      !c.o(e, r) &&
+    o.o(t, r) &&
+      !o.o(e, r) &&
       Object.defineProperty(e, r, { enumerable: !0, get: t[r] });
 }),
-  (c.o = (e, t) => Object.prototype.hasOwnProperty.call(e, t));
-var s = {};
+  (o.o = (e, t) => Object.prototype.hasOwnProperty.call(e, t));
+var c = {};
 (() => {
-  c.d(s, { Z: () => u });
-  const o = ((e) => {
-    var t = {};
-    return c.d(t, e), t;
-  })({ createElement: () => e.createElement });
+  o.d(c, { Z: () => u });
   const a = ((e) => {
     var t = {};
-    return c.d(t, e), t;
+    return o.d(t, e), t;
+  })({ createElement: () => e.createElement });
+  const n = ((e) => {
+    var t = {};
+    return o.d(t, e), t;
   })({ default: () => t.default });
   const l = ((e) => {
     var t = {};
-    return c.d(t, e), t;
+    return o.d(t, e), t;
   })({ default: () => r.default });
   const d = ((e) => {
     var t = {};
-    return c.d(t, e), t;
-  })({ difference: () => n.difference });
-  c(545);
+    return o.d(t, e), t;
+  })({ difference: () => s.difference });
+  o("../../node_modules/regular-table/dist/css/material.css");
   function u() {
-    return o.createElement(
+    return a.createElement(
       "div",
       null,
-      o.createElement(
+      a.createElement(
         "pre",
         null,
         JSON.stringify({
-          get: a.default,
+          get: n.default,
           merge: l.default,
           difference: d.difference,
         })
@@ -19408,7 +19408,7 @@ var s = {};
     );
   }
 })();
-var l = s.Z;
+var l = c.Z;
 export { l as default };
 "
 `;
@@ -19437,60 +19437,60 @@ exports[`modular-scripts WHEN building a esm-view with resolutions and webpack T
 "import * as e from "https://mycustomcdn.net/react@17.0.2";
 import * as t from "https://mycustomcdn.net/lodash@4.17.21/get";
 import * as r from "https://mycustomcdn.net/lodash.merge@4.6.2";
-import * as n from "https://mycustomcdn.net/lodash@4.17.21";
-var o = { 545: () => {} },
-  a = {};
-function d(e) {
-  var t = a[e];
+import * as a from "https://mycustomcdn.net/lodash@4.17.21";
+var n = { "../../node_modules/regular-table/dist/css/material.css": () => {} },
+  o = {};
+function s(e) {
+  var t = o[e];
   if (void 0 !== t) return t.exports;
-  var r = (a[e] = { exports: {} });
-  return o[e](r, r.exports, d), r.exports;
+  var r = (o[e] = { exports: {} });
+  return n[e](r, r.exports, s), r.exports;
 }
-(d.d = (e, t) => {
+(s.d = (e, t) => {
   for (var r in t)
-    d.o(t, r) &&
-      !d.o(e, r) &&
+    s.o(t, r) &&
+      !s.o(e, r) &&
       Object.defineProperty(e, r, { enumerable: !0, get: t[r] });
 }),
-  (d.o = (e, t) => Object.prototype.hasOwnProperty.call(e, t));
-var c = {};
+  (s.o = (e, t) => Object.prototype.hasOwnProperty.call(e, t));
+var d = {};
 (() => {
-  d.d(c, { Z: () => m });
+  s.d(d, { Z: () => m });
+  const n = ((e) => {
+    var t = {};
+    return s.d(t, e), t;
+  })({ createElement: () => e.createElement });
   const o = ((e) => {
     var t = {};
-    return d.d(t, e), t;
-  })({ createElement: () => e.createElement });
-  const a = ((e) => {
-    var t = {};
-    return d.d(t, e), t;
+    return s.d(t, e), t;
   })({ default: () => t.default });
-  const s = ((e) => {
+  const c = ((e) => {
     var t = {};
-    return d.d(t, e), t;
+    return s.d(t, e), t;
   })({ default: () => r.default });
-  const f = ((e) => {
+  const l = ((e) => {
     var t = {};
-    return d.d(t, e), t;
-  })({ difference: () => n.difference });
-  d(545);
+    return s.d(t, e), t;
+  })({ difference: () => a.difference });
+  s("../../node_modules/regular-table/dist/css/material.css");
   function m() {
-    return o.createElement(
+    return n.createElement(
       "div",
       null,
-      o.createElement(
+      n.createElement(
         "pre",
         null,
         JSON.stringify({
-          get: a.default,
-          merge: s.default,
-          difference: f.difference,
+          get: o.default,
+          merge: c.default,
+          difference: l.difference,
         })
       )
     );
   }
 })();
-var s = c.Z;
-export { s as default };
+var c = d.Z;
+export { c as default };
 "
 `;
 
@@ -19518,59 +19518,59 @@ exports[`modular-scripts WHEN building a esm-view with various kinds of package 
 "import * as e from "https://mycustomcdn.net/react@17.0.2";
 import * as t from "https://mycustomcdn.net/lodash@^4.17.21/get";
 import * as r from "https://mycustomcdn.net/lodash.merge@^4.6.2";
-import * as n from "https://mycustomcdn.net/lodash@^4.17.21";
-var o = { 545: () => {} },
-  a = {};
-function d(e) {
-  var t = a[e];
+import * as a from "https://mycustomcdn.net/lodash@^4.17.21";
+var n = { "../../node_modules/regular-table/dist/css/material.css": () => {} },
+  o = {};
+function s(e) {
+  var t = o[e];
   if (void 0 !== t) return t.exports;
-  var r = (a[e] = { exports: {} });
-  return o[e](r, r.exports, d), r.exports;
+  var r = (o[e] = { exports: {} });
+  return n[e](r, r.exports, s), r.exports;
 }
-(d.d = (e, t) => {
+(s.d = (e, t) => {
   for (var r in t)
-    d.o(t, r) &&
-      !d.o(e, r) &&
+    s.o(t, r) &&
+      !s.o(e, r) &&
       Object.defineProperty(e, r, { enumerable: !0, get: t[r] });
 }),
-  (d.o = (e, t) => Object.prototype.hasOwnProperty.call(e, t));
-var c = {};
+  (s.o = (e, t) => Object.prototype.hasOwnProperty.call(e, t));
+var d = {};
 (() => {
-  d.d(c, { Z: () => m });
+  s.d(d, { Z: () => m });
+  const n = ((e) => {
+    var t = {};
+    return s.d(t, e), t;
+  })({ createElement: () => e.createElement });
   const o = ((e) => {
     var t = {};
-    return d.d(t, e), t;
-  })({ createElement: () => e.createElement });
-  const a = ((e) => {
-    var t = {};
-    return d.d(t, e), t;
+    return s.d(t, e), t;
   })({ default: () => t.default });
-  const s = ((e) => {
+  const c = ((e) => {
     var t = {};
-    return d.d(t, e), t;
+    return s.d(t, e), t;
   })({ default: () => r.default });
-  const f = ((e) => {
+  const l = ((e) => {
     var t = {};
-    return d.d(t, e), t;
-  })({ difference: () => n.difference });
-  d(545);
+    return s.d(t, e), t;
+  })({ difference: () => a.difference });
+  s("../../node_modules/regular-table/dist/css/material.css");
   function m() {
-    return o.createElement(
+    return n.createElement(
       "div",
       null,
-      o.createElement(
+      n.createElement(
         "pre",
         null,
         JSON.stringify({
-          get: a.default,
-          merge: s.default,
-          difference: f.difference,
+          get: o.default,
+          merge: c.default,
+          difference: l.difference,
         })
       )
     );
   }
 })();
-var s = c.Z;
-export { s as default };
+var c = d.Z;
+export { c as default };
 "
 `;
