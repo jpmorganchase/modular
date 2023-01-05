@@ -6,7 +6,7 @@ title: Modular
 <div align="center">
   <h1><img height="38px" width="44px" style="height: 38px; max-width: 44px" src="https://raw.githubusercontent.com/jpmorganchase/modular/main/docs/img/modular-hero.svg"> &nbsp; Modular</h1>
 
-  <p><strong>Scaled Web Engineering</strong>. Where Libraries, Views & apps coexist together and tooling is a first-class citizen.</p>
+  <p><strong>Scaled Web Engineering</strong>. Where Libraries, micro-frontends & apps coexist together and tooling is a first-class citizen.</p>
 </div>
 
 `modular` is a collection of tools and guidance to enable UI development at
@@ -49,7 +49,9 @@ It supports three flags:
 
 ## Concepts
 
-- [Views](./concepts/views.md)
+- [Micro-frontends](./concepts/microfrontends.md)
+- [Configuration](./configuration.md)
+- [Templates](./concepts/templates.md)
 - [Linting](./concepts/linting.md)
 
 ## How to
