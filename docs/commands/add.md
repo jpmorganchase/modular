@@ -48,11 +48,12 @@ more depth).
 ### Library package types
 
 These package types are either built with
-[Rollup.js](https://rollupjs.org/guide/en/) as CommonJS and ES Modules or, in case of
-`source` modules, they are not built at all. Packages with these types get
-normally published to NPM or get imported by other packages in the monorepo. For
-this reason, files are transpiled separately on buld and external dependencies
-are never "pulled in" (no bundling).
+[Rollup.js](https://rollupjs.org/guide/en/) as CommonJS and ES Modules or, in
+case of `source` modules, they are not built at all. Library package types get
+typically published to NPM (`package` and `view` types) or get imported by other
+packages in the monorepo (`source` type). For this reason, files are transpiled
+separately on buld and external dependencies are never "pulled in" (no
+bundling).
 
 - `package`. This is a generic package with a single entry point. It's normally
   used to create a publishable library that gets transpiled to Common JS and ES
