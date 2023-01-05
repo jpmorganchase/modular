@@ -103,7 +103,7 @@ Modular `package`s are generic, publishable libraries with a single entrypoint
 file. They are built with [Rollup.js](https://rollupjs.org/guide/en/) and they
 are not bundled in a single blob; files required directly or indirectly from the
 entry point are separately transpiled as CommonJS Modules and ES Modules (although
-it's not a 1:1 correspondance: the compilation process typically creates
+it's not a 1:1 correspondence: the compilation process typically creates
 additional files to normalize exports). External dependencies are not included
 in the compilation output, but they are copied in the output `package.json` to
 be eventually consumed by a bundler. Modular calculates the package entrypoint
