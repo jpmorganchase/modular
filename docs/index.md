@@ -16,6 +16,10 @@ repository by many teams.
 It provides a `modular` CLI to scaffold and develop a new application from
 scratch, as well as commands to add and manage further modules.
 
+## Pre-requisites
+
+See the [compatibility page](./compatibility.md).
+
 ## Getting Started
 
 ```bash
