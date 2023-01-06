@@ -162,9 +162,6 @@ async function addPackage({
 
   try {
     logger.log(`Looking for template ${templateName} in project...`);
-    console.log(`require.resolve(${installedPackageJsonPath}, {
-      paths: [${modularRoot}],
-    });`);
     templatePackageJsonPath = require.resolve(installedPackageJsonPath, {
       paths: [modularRoot],
     });
