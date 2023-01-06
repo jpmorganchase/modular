@@ -1,9 +1,10 @@
 ---
-parent: Concepts
-title: Modular Templates
+parent: Package Types
+nav_order: 60
+title: template
 ---
 
-# Templates
+# Template
 
 Templates are a special kind of Modular package, defined by the
 `modular: { type: template, "templateType": "..." }` fields in their
@@ -44,12 +45,13 @@ are maintained by the Modular team in the
 published to the NPM registry. This is a list of default templates, linked to
 the correspondent type and NPM package:
 
-| Modular type | Template                                                                                                           | NPM Package                                                     |
-| ------------ | ------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------- |
-| app          | [modular-template-app](https://github.com/jpmorganchase/modular/tree/main/packages/modular-template-app)           | [Link](https://www.npmjs.com/package/modular-template-app)      |
-| esm-view     | [modular-template-esm-view](https://github.com/jpmorganchase/modular/tree/main/packages/modular-template-esm-view) | [Link](https://www.npmjs.com/package/modular-template-esm-view) |
-| package      | [modular-template-package](https://github.com/jpmorganchase/modular/tree/main/packages/modular-template-package)   | [Link](https://www.npmjs.com/package/modular-template-package)  |
-| view         | [modular-template-view](https://github.com/jpmorganchase/modular/tree/main/packages/modular-template-view)         | [Link](https://www.npmjs.com/package/modular-template-view)     |
+| Modular type              | Template                                                                                                           | NPM Package                                                     |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------- |
+| [app](./app.md)           | [modular-template-app](https://github.com/jpmorganchase/modular/tree/main/packages/modular-template-app)           | [Link](https://www.npmjs.com/package/modular-template-app)      |
+| [esm-view](./esm-view.md) | [modular-template-esm-view](https://github.com/jpmorganchase/modular/tree/main/packages/modular-template-esm-view) | [Link](https://www.npmjs.com/package/modular-template-esm-view) |
+| [package](./package.md)   | [modular-template-package](https://github.com/jpmorganchase/modular/tree/main/packages/modular-template-package)   | [Link](https://www.npmjs.com/package/modular-template-package)  |
+| [view](./view.md)         | [modular-template-view](https://github.com/jpmorganchase/modular/tree/main/packages/modular-template-view)         | [Link](https://www.npmjs.com/package/modular-template-view)     |
+| [source](./source.md)     | [modular-template-source](https://github.com/jpmorganchase/modular/tree/main/packages/modular-template-source)     | [Link](https://www.npmjs.com/package/modular-template-source)   |
 
 # Community templates
 

@@ -30,7 +30,7 @@ Bootstraps a new project, configured to use
 [Yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces/).
 
 This also creates a workspace named 'app' which is a new
-[modular app](./concepts/package-types.md) written in
+[modular app](.//package-types.md) written in
 [TypeScript](https://www.typescriptlang.org/).
 
 It supports three flags:
@@ -56,8 +56,7 @@ It supports three flags:
 
 - [Micro-frontends](./concepts/microfrontends.md)
 - [Configuration](./configuration.md)
-- [Package types](./concepts/package-types.md)
-- [Templates](./concepts/templates.md)
+- [Package types](.//package-types.md)
 - [Linting](./concepts/linting.md)
 
 ## How to

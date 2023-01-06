@@ -5,12 +5,11 @@ parent: Concepts
 
 # Version Control in a Modular Repository
 
-Modular's primary focus is on the build & testing of your packages and
-applications. It's not concerned with how you run CI or version the artefacts
-built by it.
+Modular's primary objective is to provide frictionless
+[build](../commands/build.md) and [test](../commands/test.md) functionality for
+your micro-frontend monorepo.
 
-There's a multitude of packages and tools out there which you can use to version
-the packages within your repository. Modular internally uses
-[`changesets`](https://github.com/atlassian/changesets), a tool written by
-Atlassian which applies changeset files to generate the new versions of
+How you version the built artifacts and run your CI pipelines is up to you, but
+we recommend [`changesets`](https://github.com/atlassian/changesets), a tool
+written by Atlassian which uses changeset files to generate new versions of
 packages.

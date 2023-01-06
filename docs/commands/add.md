@@ -19,7 +19,7 @@ The `modular add` command prompts the user to choose the Modular `type` of the
 package it's about to create. The next section briefly describes the various
 types that can be created by the `modular add` command. For an in-depth
 discussion of the available package types and their characteristics, please see
-[this page](../concepts/package-types.md).
+[this page](..//package-types.md).
 
 ### Standalone (bundled) package types
 
@@ -34,8 +34,7 @@ more depth).
 - `app`. This package type corresponds to a static Single Page Application (SPA)
   project in a workspace. It's possible to specify a custom `index.html` file
   and public assets in the `public` directory. See
-  [this page](../concepts/package-types.md/#app) for more information about
-  apps.
+  [this page](..//package-types.md/#app) for more information about apps.
 
 - `esm-view`. This package type is an app that gets built as an ES module that
   can be imported at runtime. `esm-view`s are typically used to implement a
@@ -84,4 +83,4 @@ of the root `package.json`, the command will fail
 
 `--template <templateName>`: Use the package `templateName` from the repository
 or the registry as a template for the new package. Find more information about
-Modular templates [in this page](../concepts/templates.md)
+Modular templates [in this page](../package-types/template.md)
