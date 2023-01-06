@@ -53,3 +53,9 @@ yarn-error.log*
 .tsbuildinfo
 *.tsbuildinfo
 
+# Local Jekyll preview of docs
+docs/_site
+docs/.bundle
+docs/vendor
+docs/Gemfile*
+

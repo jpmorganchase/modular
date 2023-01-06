@@ -4,6 +4,16 @@ has_children: true
 nav_order: 5
 ---
 
+<head>
+    <style>
+        .table-wrapper th,td {
+            min-width: 0;
+        }
+    </style>
+</head>
+
+# Package types
+
 Modular can build several different kinds of packages. We refer to each package
 type as a Modular type, and each has different features. The table below
 summarises the compatibility of each Modular type with Modular commands and

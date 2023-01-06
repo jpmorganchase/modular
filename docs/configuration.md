@@ -117,7 +117,7 @@ _e.g._
 
 The `package.json#modular.type` can be `"root"`, `"app"`, `"view"`,
 `"esm-view"`, `"source"`, `"template"` or `"package"`. Read more about Modular
-types in [this explainer](/docs//package-types.md).
+types in [this explainer](/docs/package-types).
 
 ### `"root"`
 

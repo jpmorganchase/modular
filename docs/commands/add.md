@@ -19,7 +19,7 @@ The `modular add` command prompts the user to choose the Modular `type` of the
 package it's about to create. The next section briefly describes the various
 types that can be created by the `modular add` command. For an in-depth
 discussion of the available package types and their characteristics, please see
-[this page](..//package-types.md).
+[this page](../package-types/index.md).
 
 ### Standalone (bundled) package types
 
@@ -31,18 +31,19 @@ local modules get bundled, and external dependencies are rewritten to use an
 external ESM CDN. [This section](../esm-views/index.md) explains the process in
 more depth).
 
-- `app`. This package type corresponds to a static Single Page Application (SPA)
-  project in a workspace. It's possible to specify a custom `index.html` file
-  and public assets in the `public` directory. See
-  [this page](..//package-types.md/#app) for more information about apps.
+- [`app`](../package-types/app.md). This package type corresponds to a static
+  Single Page Application (SPA) project in a workspace. It's possible to specify
+  a custom `index.html` file and public assets in the `public` directory. See
+  [this page](../package-types/#app) for more information about apps.
 
-- `esm-view`. This package type is an app that gets built as an ES module that
-  can be imported at runtime. `esm-view`s are typically used to implement a
-  [micro-frontend](../concepts/microfrontends.md) architecture. `esm-views`,
-  when [built](./build.md) or [started](./start.md) will also generate a
-  `index.html` file that tries to load the ES Module and render its default
-  export as a React component onto the DOM (standalone mode). See also
-  [the esm-view reference](../esm-views/index.md) for an in-depth introduction.
+- [`esm-view`](../package-types/esm-view.md). This package type is an app that
+  gets built as an ES module that can be imported at runtime. `esm-view`s are
+  typically used to implement a [micro-frontend](../concepts/microfrontends.md)
+  architecture. `esm-views`, when [built](./build.md) or [started](./start.md)
+  will also generate a `index.html` file that tries to load the ES Module and
+  render its default export as a React component onto the DOM (standalone mode).
+  See also [the esm-view reference](../esm-views/index.md) for an in-depth
+  introduction.
 
 ### Library package types
 
@@ -54,20 +55,21 @@ packages in the monorepo (`source` type). For this reason, files are transpiled
 separately on build and external dependencies are never "pulled in" (i.e. not
 included in a bundle).
 
-- `package`. This is a generic package with a single entry point. It's normally
-  used to create a publishable library that gets transpiled to CommonJS and ES
-  Module format when built. Packages can be [built](../commands/build.md) but
-  not [start](../commands/start.md)ed by Modular.
+- [`package`](../package-types/package.md). This is a generic package with a
+  single entry point. It's normally used to create a publishable library that
+  gets transpiled to CommonJS and ES Module format when built. Packages can be
+  [built](../commands/build.md) but not [start](../commands/start.md)ed by
+  Modular.
 
-- `view`. This is a `package` that exports a default React component. Views are
-  built exactly like `package`s, but, since Modular knows that the default
-  export can be rendered, `view`s can be [`modular start`](../start.md)ed to
-  preview them locally.
+- [`view`](../package-types/view.md). This is a `package` that exports a default
+  React component. Views are built exactly like `package`s, but, since Modular
+  knows that the default export can be rendered, `view`s can be
+  [`modular start`](../start.md)ed to preview them locally.
 
-- `source`. A shared package that is imported by other package types in the
-  monorepo, directly specifying one or more of its source files. This kind of
-  package can be never [built](../commands/build.md) or
-  [start](../commands/start.md)ed by Modular.
+- [`source`](../package-types/source.md). A shared package that is imported by
+  other package types in the monorepo, directly specifying one or more of its
+  source files. This kind of package can be never [built](../commands/build.md)
+  or [start](../commands/start.md)ed by Modular.
 
 ## Options:
 
