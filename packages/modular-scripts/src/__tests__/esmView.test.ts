@@ -76,9 +76,13 @@ describe('modular-scripts', () => {
 
       browser = await puppeteer.launch(launchArgs);
       port = '4000';
-      devServer = await startApp(targetedView, {
-        env: { PORT: port, USE_MODULAR_ESBUILD: 'true' },
-      });
+      devServer = await startApp(
+        targetedView,
+        {
+          env: { PORT: port, USE_MODULAR_ESBUILD: 'true' },
+        },
+        tempModularRepo,
+      );
     });
 
     afterAll(async () => {
