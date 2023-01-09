@@ -118,37 +118,3 @@ _e.g._
 The `package.json#modular.type` can be `"root"`, `"app"`, `"view"`,
 `"esm-view"`, `"source"`, `"template"` or `"package"`. Read more about Modular
 types in [this explainer](/docs/package-types).
-
-### `"root"`
-
-This type identifies the root of the project.
-
-### `"app"`
-
-This type identifies a standalone Single Page Application (SPA) that can be
-started locally or built.
-
-### `"esm-view"`
-
-This type identifies an ESM application that can be started in standalone mode,
-built and imported dynamically by another `esm-view`.
-
-### `"package"`
-
-This type identifies a library that is built for consumption by other types and
-can be published to a registry like npm out of the box.
-
-### `"view"`
-
-This type identifies a `"package"` that by convention exports a single React
-component as its default export (and for this reason can be previewed locally).
-
-### `"source"`
-
-This type identifies a library that is built for consumption by other types
-directly from its source.
-
-### `"template"`
-
-This type identifies a template package, i.e. a package that provides a
-blueprint for `modular add` to create packages.
