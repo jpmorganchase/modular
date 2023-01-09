@@ -127,7 +127,7 @@ To run your ESM View locally on a development server, run
 [start](../commands/start.md):
 
 ```bash
-modular start my-app-name
+modular start my-esm-view-name
 ```
 
 This causes a developer server to run on port 3000, serving the ESM View with an
