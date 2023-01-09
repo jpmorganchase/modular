@@ -140,9 +140,8 @@ can be published to a registry like npm out of the box.
 
 ### `"view"`
 
-This type identifies a module like `"package"`, that by convention exports a
-single React component as its default export (and for this reason can be
-previewed locally).
+This type identifies a `"package"` that by convention exports a single React
+component as its default export (and for this reason can be previewed locally).
 
 ### `"source"`
 
