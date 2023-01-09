@@ -1049,7 +1049,7 @@ describe('modular-scripts', () => {
   });
 
   describe('WHEN building a esm-view specifying a PUBLIC_URL', () => {
-    // let outputJsEntrypoint: string;
+    let outputJsEntrypoint: string;
     let outputJsEntrypointPath: string;
 
     beforeAll(async () => {
@@ -1062,7 +1062,7 @@ describe('modular-scripts', () => {
       });
 
       const manifestInfo = await getPackageOutputManifest('sample-esm-view');
-      // outputJsEntrypoint = manifestInfo.jsEntrypointName;
+      outputJsEntrypoint = manifestInfo.jsEntrypointName;
       outputJsEntrypointPath = manifestInfo.jsEntrypointPath;
     });
 
@@ -1074,10 +1074,11 @@ describe('modular-scripts', () => {
 
     it('THEN outputs a JS entrypoint file', () => {
       const packageEntryPointPath = path.join(
-        tempModularRepo,
-        'dist',
+        tempDistPath,
         'sample-esm-view',
-        outputJsEntrypointPath,
+        'static',
+        'js',
+        outputJsEntrypoint,
       );
       expect(fs.existsSync(packageEntryPointPath)).toBeTruthy();
     });
