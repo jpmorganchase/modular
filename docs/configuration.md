@@ -46,7 +46,7 @@ module.exports = {
 
 **Default**: `false` - Uses [Webpack](https://webpack.js.org/)
 
-Use esbuild instead of default Webpack. Only affects Views and ESM Views.
+Use esbuild instead of default Webpack. Only affects Apps and ESM Views.
 
 ### **externalCdnTemplate**
 
