@@ -28,16 +28,17 @@ modular start my-view-name
 ```
 
 This causes a developer server to run on port 3000, serving the default export
-of the view entry-point with an additional runtime layer that provides developer
+of the View entry-point with an additional runtime layer that provides developer
 experience functionalities like hot reloading and on-screen error overlay.
 
 ## Entry-point
 
 The entry-point for a View is configurable; Modular discovers it by looking at
 the `main` field in the View's `package.json`; by default, `modular add`ing a
-new view sets it as `"./src/index.tsx"`, but it's possible to manually modify
+new View sets it as `"./src/index.tsx"`, but it's possible to manually modify
 it. The entry-point of a View needs to export a React component as default for
 the `start` command to work.
+
 
 ## Template
 
