@@ -6,10 +6,10 @@ title: Create Template
 
 # Create a Modular Template
 
-To create a [Modular Template](../concepts/templates.md), start with any Modular
-package type for which you want to create a template for (`app`, `package`,
-etc). The package's contents will be copied into any new package created using
-the template.
+To create a [Modular Template](../package-types/template.md), start with any
+Modular package type for which you want to create a template for (`app`,
+`package`, etc). The package's contents will be copied into any new package
+created using the template.
 
 To convert the package into a template, make the following changes to the
 package's package.json:

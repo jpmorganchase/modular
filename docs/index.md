@@ -29,7 +29,8 @@ See the [compatibility page](./compatibility.md).
 Bootstraps a new project, configured to use
 [Yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces/).
 
-This also creates a workspace named 'app' which is a new modular app written in
+This also creates a workspace named 'app' which is a new
+[modular app](./package-types) written in
 [TypeScript](https://www.typescriptlang.org/).
 
 It supports three flags:
@@ -42,20 +43,20 @@ It supports three flags:
 
 ## Commands
 
-- [`workspace`](./commands/workspace.md)
-- [`check`](./commands/check.md)
 - [`add`](./commands/add.md)
+- [`build`](./commands/build.md)
 - [`start`](./commands/start.md)
 - [`test`](./commands/test.md)
-- [`build`](./commands/build.md)
 - [`typecheck`](./commands/typecheck.md)
 - [`lint`](./commands/lint.md)
+- [`workspace`](./commands/workspace.md)
+- [`check`](./commands/check.md)
 
 ## Concepts
 
 - [Micro-frontends](./concepts/microfrontends.md)
 - [Configuration](./configuration.md)
-- [Templates](./concepts/templates.md)
+- [Package types](./package-types)
 - [Linting](./concepts/linting.md)
 
 ## How to

@@ -115,30 +115,6 @@ _e.g._
 }
 ```
 
-The `package.json#modular.type` can be `"root"`, `"app"`, `"view"` or
-`"package"`.
-
-### `"root"`
-
-This type identifies the root of the project.
-
-### `"view"`
-
-This type identifies modules that export a single React component as their
-default export. `modular` makes these modules available via a dynamically
-generated view map with `modular-views.macro`. Read more about Views in
-[this explainer](/docs/concepts/views.md).
-
-### `"app"`
-
-This type identifies a standalone application that can be started or built.
-
-### `"esm-view"`
-
-This type identifies an ESM view that can be started in standalone mode, built
-and imported dynamically by an host application.
-
-### `"package"`
-
-This type identifies a regular package (e.g. a library that can be used by other
-`"view"` or `"app"` modules).
+The `package.json#modular.type` can be `"root"`, `"app"`, `"view"`,
+`"esm-view"`, `"source"`, `"template"` or `"package"`. Read more about Modular
+types in [this explainer](/docs/package-types).
