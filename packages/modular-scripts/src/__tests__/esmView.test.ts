@@ -1,4 +1,3 @@
-/* eslint-disable jest/no-commented-out-tests */
 import execa from 'execa';
 import { exec } from 'child_process';
 import tree from 'tree-view-for-tests';
@@ -167,25 +166,6 @@ describe('modular-scripts', () => {
       );
       expect(fs.existsSync(packageEntryPointPath)).toBeTruthy();
     });
-    // TO-DO: Uncomment when Webpack builds become deterministic again (https://github.com/jpmorganchase/modular/pull/2249)
-    // it('THEN matches the entrypoint snapshot', async () => {
-    //   const { module: moduleEntryPoint } = outputManifest;
-    //   const packageEntryPointPath = path.join(
-    //     tempModularRepo,
-    //     'dist',
-    //     'sample-esm-view',
-    //     moduleEntryPoint as string,
-    //   );
-    //   // Strip the last line to remove the source maps, which may vary according to the underlying OS terminator
-    //   const entrypointWithoutSources = stripSourceMapLine(
-    //     await fs.readFile(packageEntryPointPath, 'utf8'),
-    //   );
-    //   expect(
-    //     prettier.format(entrypointWithoutSources, {
-    //       filepath: outputJsEntrypoint,
-    //     }),
-    //   ).toMatchSnapshot();
-    // });
   });
 
   describe('WHEN building a esm-view with a custom ESM CDN', () => {
@@ -234,23 +214,6 @@ describe('modular-scripts', () => {
       );
       expect(fs.existsSync(packageEntryPointPath)).toBeTruthy();
     });
-    // TO-DO: Uncomment when Webpack builds become deterministic again (https://github.com/jpmorganchase/modular/pull/2249)
-    // it('THEN matches the entrypoint snapshot', async () => {
-    //   const packageEntryPointPath = path.join(
-    //     tempModularRepo,
-    //     'dist',
-    //     'sample-esm-view',
-    //     outputJsEntrypoint,
-    //   );
-    //   const entrypointWithoutSources = stripSourceMapLine(
-    //     await fs.readFile(packageEntryPointPath, 'utf8'),
-    //   );
-    //   expect(
-    //     prettier.format(entrypointWithoutSources, {
-    //       filepath: outputJsEntrypoint,
-    //     }),
-    //   ).toMatchSnapshot();
-    // });
   });
 
   describe('WHEN building a esm-view with various kinds of package dependencies with esbuild', () => {
@@ -351,22 +314,6 @@ describe('modular-scripts', () => {
       );
       expect(fs.existsSync(packageEntryPointPath)).toBeTruthy();
     });
-    // TO-DO: Uncomment when Webpack builds become deterministic again (https://github.com/jpmorganchase/modular/pull/2249)
-    // it('THEN matches the entrypoint snapshot', async () => {
-    //   const packageEntryPointPath = path.join(
-    //     tempDistPath,
-    //     'sample-esm-view',
-    //     outputJsEntrypointPath,
-    //   );
-    //   const entrypointWithoutSources = stripSourceMapLine(
-    //     await fs.readFile(packageEntryPointPath, 'utf8'),
-    //   );
-    //   expect(
-    //     prettier.format(entrypointWithoutSources, {
-    //       filepath: outputJsEntrypoint,
-    //     }),
-    //   ).toMatchSnapshot();
-    // });
   });
 
   describe('WHEN building a esm-view with various kinds of package dependencies with webpack', () => {
@@ -442,22 +389,6 @@ describe('modular-scripts', () => {
       );
       expect(fs.existsSync(packageEntryPointPath)).toBeTruthy();
     });
-    // TO-DO: Uncomment when Webpack builds become deterministic again (https://github.com/jpmorganchase/modular/pull/2249)
-    // it('THEN matches the entrypoint snapshot', async () => {
-    //   const packageEntryPointPath = path.join(
-    //     tempDistPath,
-    //     'sample-esm-view',
-    //     outputJsEntrypointPath,
-    //   );
-    //   const entrypointWithoutSources = stripSourceMapLine(
-    //     await fs.readFile(packageEntryPointPath, 'utf8'),
-    //   );
-    //   expect(
-    //     prettier.format(entrypointWithoutSources, {
-    //       filepath: outputJsEntrypoint,
-    //     }),
-    //   ).toMatchSnapshot();
-    // });
   });
 
   describe('WHEN building a esm-view with a series of CDN selective dependency resolutions with the resolution field with webpack', () => {
@@ -539,22 +470,6 @@ describe('modular-scripts', () => {
       );
       expect(fs.existsSync(packageEntryPointPath)).toBeTruthy();
     });
-    // TO-DO: Uncomment when Webpack builds become deterministic again (https://github.com/jpmorganchase/modular/pull/2249)
-    // it('THEN matches the entrypoint snapshot', async () => {
-    //   const packageEntryPointPath = path.join(
-    //     tempDistPath,
-    //     'sample-esm-view',
-    //     outputJsEntrypointPath,
-    //   );
-    //   const entrypointWithoutSources = stripSourceMapLine(
-    //     await fs.readFile(packageEntryPointPath, 'utf8'),
-    //   );
-    //   expect(
-    //     prettier.format(entrypointWithoutSources, {
-    //       filepath: outputJsEntrypoint,
-    //     }),
-    //   ).toMatchSnapshot();
-    // });
   });
 
   describe('WHEN building a esm-view with a series of CDN selective dependency resolutions with the resolution field with esbuild', () => {
@@ -638,22 +553,6 @@ describe('modular-scripts', () => {
       );
       expect(fs.existsSync(packageEntryPointPath)).toBeTruthy();
     });
-    // TO-DO: Uncomment when Webpack builds become deterministic again (https://github.com/jpmorganchase/modular/pull/2249)
-    // it('THEN matches the entrypoint snapshot', async () => {
-    //   const packageEntryPointPath = path.join(
-    //     tempDistPath,
-    //     'sample-esm-view',
-    //     outputJsEntrypointPath,
-    //   );
-    //   const entrypointWithoutSources = stripSourceMapLine(
-    //     await fs.readFile(packageEntryPointPath, 'utf8'),
-    //   );
-    //   expect(
-    //     prettier.format(entrypointWithoutSources, {
-    //       filepath: outputJsEntrypoint,
-    //     }),
-    //   ).toMatchSnapshot();
-    // });
   });
 
   describe('WHEN building a esm-view with resolutions', () => {
@@ -728,22 +627,6 @@ describe('modular-scripts', () => {
       );
       expect(fs.existsSync(packageEntryPointPath)).toBeTruthy();
     });
-    // TO-DO: Uncomment when Webpack builds become deterministic again (https://github.com/jpmorganchase/modular/pull/2249)
-    // it('THEN matches the entrypoint snapshot', async () => {
-    //   const packageEntryPointPath = path.join(
-    //     tempDistPath,
-    //     'sample-esm-view',
-    //     outputJsEntrypointPath,
-    //   );
-    //   const entrypointWithoutSources = stripSourceMapLine(
-    //     await fs.readFile(packageEntryPointPath, 'utf8'),
-    //   );
-    //   expect(
-    //     prettier.format(entrypointWithoutSources, {
-    //       filepath: outputJsEntrypoint,
-    //     }),
-    //   ).toMatchSnapshot();
-    // });
   });
 
   describe('WHEN building a esm-view with resolutions and webpack', () => {
@@ -816,22 +699,6 @@ describe('modular-scripts', () => {
       );
       expect(fs.existsSync(packageEntryPointPath)).toBeTruthy();
     });
-    // TO-DO: Uncomment when Webpack builds become deterministic again (https://github.com/jpmorganchase/modular/pull/2249)
-    // it('THEN matches the entrypoint snapshot', async () => {
-    //   const packageEntryPointPath = path.join(
-    //     tempDistPath,
-    //     'sample-esm-view',
-    //     outputJsEntrypointPath,
-    //   );
-    //   const entrypointWithoutSources = stripSourceMapLine(
-    //     await fs.readFile(packageEntryPointPath, 'utf8'),
-    //   );
-    //   expect(
-    //     prettier.format(entrypointWithoutSources, {
-    //       filepath: outputJsEntrypoint,
-    //     }),
-    //   ).toMatchSnapshot();
-    // });
   });
 
   describe('WHEN building a esm-view specifying a dependency to not being rewritten', () => {
@@ -887,22 +754,6 @@ describe('modular-scripts', () => {
       );
       expect(fs.existsSync(packageEntryPointPath)).toBeTruthy();
     });
-    // TO-DO: Uncomment when Webpack builds become deterministic again (https://github.com/jpmorganchase/modular/pull/2249)
-    // it('THEN matches the entrypoint snapshot', async () => {
-    //   const packageEntryPointPath = path.join(
-    //     tempDistPath,
-    //     'sample-esm-view',
-    //     outputJsEntrypointPath,
-    //   );
-    //   const entrypointWithoutSources = stripSourceMapLine(
-    //     await fs.readFile(packageEntryPointPath, 'utf8'),
-    //   );
-    //   expect(
-    //     prettier.format(entrypointWithoutSources, {
-    //       filepath: outputJsEntrypoint,
-    //     }),
-    //   ).toMatchSnapshot();
-    // });
   });
 
   describe('WHEN building a esm-view specifying a dependency to not being rewritten using wildcards', () => {
@@ -959,22 +810,6 @@ describe('modular-scripts', () => {
       );
       expect(fs.existsSync(packageEntryPointPath)).toBeTruthy();
     });
-    // TO-DO: Uncomment when Webpack builds become deterministic again (https://github.com/jpmorganchase/modular/pull/2249)
-    // it('THEN matches the entrypoint snapshot', async () => {
-    //   const packageEntryPointPath = path.join(
-    //     tempDistPath,
-    //     'sample-esm-view',
-    //     outputJsEntrypointPath,
-    //   );
-    //   const entrypointWithoutSources = stripSourceMapLine(
-    //     await fs.readFile(packageEntryPointPath, 'utf8'),
-    //   );
-    //   expect(
-    //     prettier.format(entrypointWithoutSources, {
-    //       filepath: outputJsEntrypoint,
-    //     }),
-    //   ).toMatchSnapshot();
-    // });
   });
 
   describe('WHEN building a esm-view specifying a dependency to not being rewritten using allow list and wildcards', () => {
@@ -1030,22 +865,6 @@ describe('modular-scripts', () => {
       );
       expect(fs.existsSync(packageEntryPointPath)).toBeTruthy();
     });
-    // TO-DO: Uncomment when Webpack builds become deterministic again (https://github.com/jpmorganchase/modular/pull/2249)
-    // it('THEN matches the entrypoint snapshot', async () => {
-    //   const packageEntryPointPath = path.join(
-    //     tempDistPath,
-    //     'sample-esm-view',
-    //     outputJsEntrypointPath,
-    //   );
-    //   const entrypointWithoutSources = stripSourceMapLine(
-    //     await fs.readFile(packageEntryPointPath, 'utf8'),
-    //   );
-    //   expect(
-    //     prettier.format(entrypointWithoutSources, {
-    //       filepath: outputJsEntrypoint,
-    //     }),
-    //   ).toMatchSnapshot();
-    // });
   });
 
   describe('WHEN building a esm-view specifying a PUBLIC_URL', () => {
@@ -1082,24 +901,6 @@ describe('modular-scripts', () => {
       );
       expect(fs.existsSync(packageEntryPointPath)).toBeTruthy();
     });
-    // TO-DO: Uncomment when Webpack builds become deterministic again (https://github.com/jpmorganchase/modular/pull/2249)
-    // it('THEN matches the entrypoint snapshot', async () => {
-    //   const packageEntryPointPath = path.join(
-    //     tempDistPath,
-    //     'sample-esm-view',
-    //     'static',
-    //     'js',
-    //     outputJsEntrypoint,
-    //   );
-    //   const entrypointWithoutSources = stripSourceMapLine(
-    //     await fs.readFile(packageEntryPointPath, 'utf8'),
-    //   );
-    //   expect(
-    //     prettier.format(entrypointWithoutSources, {
-    //       filepath: outputJsEntrypoint,
-    //     }),
-    //   ).toMatchSnapshot();
-    // });
   });
 
   describe('WHEN building a esm-view specifying a PUBLIC_URL and the path is ./', () => {
@@ -1140,7 +941,3 @@ async function getPackageOutputManifest(target: string) {
 
   return { manifest, jsEntrypointName, jsEntrypointPath };
 }
-
-// function stripSourceMapLine(content: string) {
-//   return content.replace(/\/\/# sourceMappingURL.*$/gm, '');
-// }
