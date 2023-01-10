@@ -334,6 +334,7 @@ describe('when working with a non-scoped app', () => {
   it('can add an app', () => {
     expect(tree(path.join(packagesPath, 'sample-app'))).toMatchInlineSnapshot(`
       "sample-app
+      ├─ README.md #q1sonk
       ├─ package.json
       ├─ public
       │  ├─ favicon.ico #6pu3rg
