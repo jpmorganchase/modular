@@ -107,10 +107,6 @@ export function createModularTestContext(): string {
   fs.writeJSONSync(path.join(tempModularRepo, 'package.json'), packageJson, {
     spaces: 2,
   });
-  fs.copySync(
-    path.join(modularRoot, 'yarn.lock'),
-    path.join(tempModularRepo, 'yarn.lock'),
-  );
   return tempModularRepo;
 }
 

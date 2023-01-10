@@ -68,9 +68,7 @@ describe('when working with a NODE_ENV app', () => {
     `,
     );
 
-    await runModularStreamlined(modularRoot, 'build node-env-app', {
-      stdio: 'inherit',
-    });
+    await runModularStreamlined(modularRoot, 'build node-env-app');
   });
 
   afterAll(cleanup);
@@ -129,9 +127,7 @@ describe('When working with a npm scoped app', () => {
       },
     );
 
-    await runModularStreamlined(modularRoot, 'build @scoped/sample-app', {
-      stdio: 'inherit',
-    });
+    await runModularStreamlined(modularRoot, 'build @scoped/sample-app');
   });
 
   afterAll(cleanup);

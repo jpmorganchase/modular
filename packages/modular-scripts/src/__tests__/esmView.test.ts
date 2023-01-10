@@ -177,19 +177,15 @@ describe('modular-scripts', () => {
     });
 
     it('THEN rewrites the dependencies according to the template string', async () => {
-      const buildStaticJsPath = getBuildStaticJsDirPath();
       const trampolineFile = (
-        await fs.readFile(path.join(buildStaticJsPath, '_trampoline.js'))
-      ).toString();
-
-      const indexFile = (
         await fs.readFile(
-          path.join(getBuildStaticJsDirPath(), buildOutputJsEntrypoint),
+          path.join(getBuildStaticJsDirPath(), '_trampoline.js'),
         )
       ).toString();
+
       expect(trampolineFile).toContain(`https://mycustomcdn.net/react@`);
       expect(trampolineFile).toContain(`https://mycustomcdn.net/react-dom@^`);
-      expect(indexFile).toContain(`https://mycustomcdn.net/react@`);
+      expect(await getIndexFile()).toContain(`https://mycustomcdn.net/react@`);
     });
 
     it('THEN outputs a JS entrypoint file', () => {
@@ -204,21 +200,13 @@ describe('modular-scripts', () => {
         path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
       );
 
-      const packageJsonPath = getPackageJsonPath();
-      const packageJson = (await fs.readJSON(
-        packageJsonPath,
-      )) as CoreProperties;
-
-      await fs.writeJSON(
-        packageJsonPath,
-        Object.assign(packageJson, {
-          dependencies: {
-            lodash: '^4.17.21',
-            'lodash.merge': '^4.6.2',
-            'regular-table': '^0.5.6',
-          },
-        }),
-      );
+      await addToPackageJson({
+        dependencies: {
+          lodash: '^4.17.21',
+          'lodash.merge': '^4.6.2',
+          'regular-table': '^0.5.6',
+        },
+      });
 
       await runYarn();
 
@@ -234,14 +222,7 @@ describe('modular-scripts', () => {
     });
 
     it('THEN a manifest is generated with the styleImports field pointing to the external CSS dependency, rewritten to CDN', async () => {
-      const outputManifest = path.join(
-        tempDistPath,
-        targetedView,
-        'package.json',
-      );
-      const manifestContent = (await fs.readJSON(
-        outputManifest,
-      )) as CoreProperties;
+      const manifestContent = await getBuildOutputPackageJson();
       expect(manifestContent['styleImports']).toEqual([
         'https://mycustomcdn.net/regular-table@^0.5.6/dist/css/material.css',
       ]);
@@ -256,11 +237,7 @@ describe('modular-scripts', () => {
     });
 
     it('THEN rewrites the dependencies', async () => {
-      const indexFile = (
-        await fs.readFile(
-          path.join(getBuildStaticJsDirPath(), buildOutputJsEntrypoint),
-        )
-      ).toString();
+      const indexFile = await getIndexFile();
       expect(indexFile).toContain(`https://mycustomcdn.net/react@`);
       expect(indexFile).toContain(`https://mycustomcdn.net/lodash@^4.17.21`);
       expect(indexFile).toContain(
@@ -282,21 +259,13 @@ describe('modular-scripts', () => {
         path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
       );
 
-      const packageJsonPath = getPackageJsonPath();
-      const packageJson = (await fs.readJSON(
-        packageJsonPath,
-      )) as CoreProperties;
-
-      await fs.writeJSON(
-        packageJsonPath,
-        Object.assign(packageJson, {
-          dependencies: {
-            lodash: '^4.17.21',
-            'lodash.merge': '^4.6.2',
-            'regular-table': '^0.5.6',
-          },
-        }),
-      );
+      await addToPackageJson({
+        dependencies: {
+          lodash: '^4.17.21',
+          'lodash.merge': '^4.6.2',
+          'regular-table': '^0.5.6',
+        },
+      });
 
       await runYarn();
 
@@ -311,11 +280,7 @@ describe('modular-scripts', () => {
     });
 
     it('THEN rewrites the dependencies', async () => {
-      const indexFile = (
-        await fs.readFile(
-          path.join(getBuildStaticJsDirPath(), buildOutputJsEntrypoint),
-        )
-      ).toString();
+      const indexFile = await getIndexFile();
       expect(indexFile).toContain(`https://mycustomcdn.net/react@`);
       expect(indexFile).toContain(`https://mycustomcdn.net/lodash@^4.17.21`);
       expect(indexFile).toContain(
@@ -335,25 +300,17 @@ describe('modular-scripts', () => {
         path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
       );
 
-      const packageJsonPath = getPackageJsonPath();
-      const packageJson = (await fs.readJSON(
-        packageJsonPath,
-      )) as CoreProperties;
-
-      await fs.writeJSON(
-        packageJsonPath,
-        Object.assign(packageJson, {
-          dependencies: {
-            lodash: '^4.17.21',
-            'lodash.merge': '^4.6.2',
-            'regular-table': '^0.5.6',
-          },
-          resolutions: {
-            react: '17.0.2',
-            'url-join': '5.0.0',
-          },
-        }),
-      );
+      await addToPackageJson({
+        dependencies: {
+          lodash: '^4.17.21',
+          'lodash.merge': '^4.6.2',
+          'regular-table': '^0.5.6',
+        },
+        resolutions: {
+          react: '17.0.2',
+          'url-join': '5.0.0',
+        },
+      });
 
       await runYarn();
 
@@ -368,11 +325,7 @@ describe('modular-scripts', () => {
     });
 
     it('THEN rewrites the dependencies', async () => {
-      const indexFile = (
-        await fs.readFile(
-          path.join(getBuildStaticJsDirPath(), buildOutputJsEntrypoint),
-        )
-      ).toString();
+      const indexFile = await getIndexFile();
 
       expect(indexFile).toContain(
         `https://mycustomcdn.net/lodash@^4.17.21?selectiveDeps=react@17.0.2,url-join@5.0.0`,
@@ -394,25 +347,17 @@ describe('modular-scripts', () => {
         path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
       );
 
-      const packageJsonPath = getPackageJsonPath();
-      const packageJson = (await fs.readJSON(
-        packageJsonPath,
-      )) as CoreProperties;
-
-      await fs.writeJSON(
-        packageJsonPath,
-        Object.assign(packageJson, {
-          dependencies: {
-            lodash: '^4.17.21',
-            'lodash.merge': '^4.6.2',
-            'regular-table': '^0.5.6',
-          },
-          resolutions: {
-            react: '17.0.2',
-            'url-join': '5.0.0',
-          },
-        }),
-      );
+      await addToPackageJson({
+        dependencies: {
+          lodash: '^4.17.21',
+          'lodash.merge': '^4.6.2',
+          'regular-table': '^0.5.6',
+        },
+        resolutions: {
+          react: '17.0.2',
+          'url-join': '5.0.0',
+        },
+      });
 
       await runYarn();
 
@@ -429,11 +374,7 @@ describe('modular-scripts', () => {
     });
 
     it('THEN rewrites the dependencies', async () => {
-      const indexFile = (
-        await fs.readFile(
-          path.join(getBuildStaticJsDirPath(), buildOutputJsEntrypoint),
-        )
-      ).toString();
+      const indexFile = await getIndexFile();
 
       expect(indexFile).toContain(
         `https://mycustomcdn.net/lodash@^4.17.21?selectiveDeps=react@17.0.2,url-join@5.0.0`,
@@ -455,21 +396,13 @@ describe('modular-scripts', () => {
         path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
       );
 
-      const packageJsonPath = getPackageJsonPath();
-      const packageJson = (await fs.readJSON(
-        packageJsonPath,
-      )) as CoreProperties;
-
-      await fs.writeJSON(
-        packageJsonPath,
-        Object.assign(packageJson, {
-          dependencies: {
-            lodash: '^4.17.21',
-            'lodash.merge': '^4.6.2',
-            'regular-table': '^0.5.6',
-          },
-        }),
-      );
+      await addToPackageJson({
+        dependencies: {
+          lodash: '^4.17.21',
+          'lodash.merge': '^4.6.2',
+          'regular-table': '^0.5.6',
+        },
+      });
 
       await runYarn();
 
@@ -485,11 +418,7 @@ describe('modular-scripts', () => {
     });
 
     it('THEN rewrites the dependencies', async () => {
-      const indexFile = (
-        await fs.readFile(
-          path.join(getBuildStaticJsDirPath(), buildOutputJsEntrypoint),
-        )
-      ).toString();
+      const indexFile = await getIndexFile();
 
       expect(indexFile).toContain(`https://mycustomcdn.net/react@`);
       expect(indexFile).toContain(`https://mycustomcdn.net/lodash@4`);
@@ -507,21 +436,13 @@ describe('modular-scripts', () => {
         path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
       );
 
-      const packageJsonPath = getPackageJsonPath();
-      const packageJson = (await fs.readJSON(
-        packageJsonPath,
-      )) as CoreProperties;
-
-      await fs.writeJSON(
-        packageJsonPath,
-        Object.assign(packageJson, {
-          dependencies: {
-            lodash: '^4.17.21',
-            'lodash.merge': '^4.6.2',
-            'regular-table': '^0.5.6',
-          },
-        }),
-      );
+      await addToPackageJson({
+        dependencies: {
+          lodash: '^4.17.21',
+          'lodash.merge': '^4.6.2',
+          'regular-table': '^0.5.6',
+        },
+      });
 
       await runYarn();
 
@@ -536,11 +457,7 @@ describe('modular-scripts', () => {
     });
 
     it('THEN rewrites the dependencies', async () => {
-      const indexFile = (
-        await fs.readFile(
-          path.join(getBuildStaticJsDirPath(), buildOutputJsEntrypoint),
-        )
-      ).toString();
+      const indexFile = await getIndexFile();
       expect(indexFile).toContain(`https://mycustomcdn.net/react@`);
       expect(indexFile).toContain(`https://mycustomcdn.net/lodash@4`);
     });
@@ -565,24 +482,17 @@ describe('modular-scripts', () => {
     });
 
     it('THEN rewrites only the dependencies that are not specified in the blocklist', async () => {
-      const indexFile = (
-        await fs.readFile(
-          path.join(getBuildStaticJsDirPath(), buildOutputJsEntrypoint),
-        )
-      ).toString();
+      const indexFile = await getIndexFile();
       expect(indexFile).toContain(`https://mycustomcdn.net/react@`);
       expect(indexFile).not.toContain(`https://mycustomcdn.net/lodash@`);
       expect(indexFile).not.toContain(`https://mycustomcdn.net/lodash.merge@`);
     });
 
     it('THEN expects the correct bundledDependencies in package.json', async () => {
-      expect(
-        (
-          (await fs.readJson(
-            path.join(tempDistPath, targetedView, 'package.json'),
-          )) as CoreProperties
-        ).bundledDependencies,
-      ).toEqual(['lodash', 'lodash.merge']);
+      expect((await getBuildOutputPackageJson()).bundledDependencies).toEqual([
+        'lodash',
+        'lodash.merge',
+      ]);
     });
 
     it('THEN outputs a JS entrypoint file', () => {
@@ -605,11 +515,7 @@ describe('modular-scripts', () => {
     });
 
     it('THEN rewrites only the dependencies that are not specified in the blocklist', async () => {
-      const indexFile = (
-        await fs.readFile(
-          path.join(getBuildStaticJsDirPath(), buildOutputJsEntrypoint),
-        )
-      ).toString();
+      const indexFile = await getIndexFile();
 
       expect(indexFile).toContain(`https://mycustomcdn.net/react@`);
       expect(indexFile).not.toContain(`https://mycustomcdn.net/lodash@`);
@@ -617,13 +523,10 @@ describe('modular-scripts', () => {
     });
 
     it('THEN expects the correct bundledDependencies in package.json', async () => {
-      expect(
-        (
-          (await fs.readJson(
-            path.join(tempDistPath, targetedView, 'package.json'),
-          )) as CoreProperties
-        ).bundledDependencies,
-      ).toEqual(['lodash', 'lodash.merge']);
+      expect((await getBuildOutputPackageJson()).bundledDependencies).toEqual([
+        'lodash',
+        'lodash.merge',
+      ]);
     });
 
     it('THEN outputs a JS entrypoint file', () => {
@@ -646,24 +549,18 @@ describe('modular-scripts', () => {
     });
 
     it('THEN rewrites only the dependencies that are not specified in the blocklist', async () => {
-      const indexFile = (
-        await fs.readFile(
-          path.join(getBuildStaticJsDirPath(), buildOutputJsEntrypoint),
-        )
-      ).toString();
+      const indexFile = await getIndexFile();
       expect(indexFile).toContain(`https://mycustomcdn.net/react@`);
       expect(indexFile).not.toContain(`https://mycustomcdn.net/lodash@`);
       expect(indexFile).not.toContain(`https://mycustomcdn.net/lodash.merge@`);
     });
 
     it('THEN expects the correct bundledDependencies in package.json', async () => {
-      expect(
-        (
-          (await fs.readJson(
-            path.join(tempDistPath, targetedView, 'package.json'),
-          )) as CoreProperties
-        ).bundledDependencies,
-      ).toEqual(['lodash', 'lodash.merge', 'regular-table']);
+      expect((await getBuildOutputPackageJson()).bundledDependencies).toEqual([
+        'lodash',
+        'lodash.merge',
+        'regular-table',
+      ]);
     });
 
     it('THEN outputs a JS entrypoint file', () => {
@@ -750,7 +647,7 @@ async function buildSampleEsmView(
 ): Promise<execa.ExecaReturnValue<string>> {
   return await runModularStreamlined(
     tempModularRepo,
-    'build sample-esm-view',
+    'build sample-esm-view --verbose',
     opts,
   );
 }
@@ -765,6 +662,21 @@ function getPackageJsonPath(): string {
 
 function getBuildStaticJsDirPath(): string {
   return path.join(tempDistPath, targetedView, 'static', 'js');
+}
+
+async function getIndexFile(): Promise<string> {
+  return (
+    await fs.readFile(
+      path.join(getBuildStaticJsDirPath(), buildOutputJsEntrypoint),
+    )
+  ).toString();
+}
+
+async function addToPackageJson(content: CoreProperties) {
+  const packageJsonPath = getPackageJsonPath();
+  const packageJson = (await fs.readJSON(packageJsonPath)) as CoreProperties;
+
+  await fs.writeJSON(packageJsonPath, Object.assign(packageJson, content));
 }
 
 async function runYarn() {
