@@ -1,6 +1,6 @@
 # `PackageName__`
 
-This is a `Modular Package`(https://modular.js.org/package-types/package)
+This is a [Modular Package](https://modular.js.org/package-types/package)
 
 ## Build
 

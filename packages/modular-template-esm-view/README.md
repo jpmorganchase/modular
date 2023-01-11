@@ -1,6 +1,6 @@
 # `PackageName__`
 
-This is a `Modular ESM View`(https://modular.js.org/package-types/esm-view)
+This is a [Modular ESM View](https://modular.js.org/package-types/esm-view)
 
 ## Build
 

@@ -1,6 +1,6 @@
 # `PackageName__`
 
-This is a `Modular View`(https://modular.js.org/package-types/view)
+This is a [Modular View](https://modular.js.org/package-types/view)
 
 # View
 

@@ -1,6 +1,6 @@
 # `PackageName__`
 
-This is a `Modular Source package`(https://modular.js.org/package-types/source)
+This is a [Modular Source package](https://modular.js.org/package-types/source)
 
 # Build
 

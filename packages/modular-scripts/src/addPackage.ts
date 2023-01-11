@@ -162,9 +162,6 @@ async function addPackage({
 
   try {
     logger.log(`Looking for template ${templateName} in project...`);
-    console.log(`require.resolve(${installedPackageJsonPath}, {
-      paths: [${modularRoot}],
-    });`);
     templatePackageJsonPath = require.resolve(installedPackageJsonPath, {
       paths: [modularRoot],
     });
@@ -214,7 +211,11 @@ async function addPackage({
 
   const modularTemplateType = modularTemplatePackageJson?.modular
     ?.templateType as string;
-  if (!['app', 'esm-view', 'view', 'package'].includes(modularTemplateType)) {
+  if (
+    !['app', 'esm-view', 'view', 'source', 'package'].includes(
+      modularTemplateType,
+    )
+  ) {
     throw new Error(
       `${templateName} has modular type: ${modularTemplateType}, which does not exist, please use update this template`,
     );
@@ -227,6 +228,9 @@ async function addPackage({
   const arborist = new Arborist({ path: templatePath });
   const tree = await arborist.loadActual();
   const filesToCopy = await packlist(tree);
+
+  console.log(templatePath);
+  console.log(JSON.stringify(filesToCopy, null, 2));
 
   filesToCopy.forEach((file) => {
     if (file !== 'package.json')
