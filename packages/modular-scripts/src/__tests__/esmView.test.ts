@@ -72,7 +72,7 @@ describe('modular-scripts', () => {
       expect(tree(path.join(packagesPath, 'sample-esm-view')))
         .toMatchInlineSnapshot(`
         "sample-esm-view
-        ├─ README.md #11jixqp
+        ├─ README.md #lr4tm5
         ├─ package.json
         └─ src
            ├─ EsmView.css #x6onxt

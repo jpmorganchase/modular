@@ -95,7 +95,7 @@ describe('modular-scripts', () => {
       expect(tree(path.join(packagesPath, 'sample-view')))
         .toMatchInlineSnapshot(`
         "sample-view
-        ├─ README.md #1d62r94
+        ├─ README.md #dei1vf
         ├─ package.json
         └─ src
            ├─ __tests__
@@ -108,7 +108,7 @@ describe('modular-scripts', () => {
       expect(tree(path.join(packagesPath, 'sample-package')))
         .toMatchInlineSnapshot(`
         "sample-package
-        ├─ README.md #u8jki5
+        ├─ README.md #y1pubb
         ├─ package.json
         └─ src
            ├─ __tests__
@@ -122,7 +122,7 @@ describe('modular-scripts', () => {
       expect(tree(path.join(packagesPath, 'nested/sample-package')))
         .toMatchInlineSnapshot(`
         "sample-package
-        ├─ README.md #14st2yo
+        ├─ README.md #18abj74
         ├─ package.json
         └─ src
            ├─ __tests__
