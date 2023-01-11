@@ -158,54 +158,37 @@ export function generateJestConfig(jestConfig: Config.InitialOptions): string {
 }
 
 /**
- * Run the Modular cli present at the root path `modularFolder` with a working directory of `cwd`
- * passing an array of `modularArguments`
+ * Run the main repo's modular cli with the specified arguments, skipping modular checks by default to improve performance
  *
- * Useful to run modular from source in a different directory (usually a temp directory created for tests)
- *
- * @param modularToRun The root modular repo folder containing the modular-scripts to run
- * @param cwd The target working directory where we want to run Modular
- * @param modularArguments A list of command-line arguments
+ * @param cwd Where to run modular
+ * @param args String of arguments to pass to modular
+ * @param opts Options to pass to execa
+ * @param stdio Override 'inherit' defailt stdio option
+ * @param skipChecks Override 'true' default to skipping startup and preflight checks
  */
-export function runLocalModular(
-  modularToRun: string,
-  cwd: string,
-  modularArguments: string[],
-): execa.ExecaSyncReturnValue<string> {
-  return execa.sync(
-    path.join(modularToRun, '/node_modules/.bin/ts-node'),
-    [
-      path.join(modularToRun, '/packages/modular-scripts/src/cli.ts'),
-      ...modularArguments,
-    ],
-    {
-      cwd,
-      env: {
-        ...process.env,
-        CI: 'true',
-      },
-    },
-  );
-}
-
-/**
- * Run modular with the specified arguments, skipping modular checks for performance reasons
- *
- */
-export function runModularStreamlined(
+export function runModularUnsafe(
   cwd: string,
   args: string,
   opts: Record<string, unknown> = {},
-) {
-  return execa('yarnpkg', ['modular', ...args.split(' ')], {
-    cwd: cwd,
-    env: {
-      ...process.env,
-      SKIP_MODULAR_STARTUP_CHECK: 'true',
-      SKIP_PREFLIGHT_CHECK: 'true',
+  stdio: 'inherit' | 'pipe' | 'ignore' = 'inherit',
+  skipChecks: 'true' | 'false' = 'true',
+): execa.ExecaSyncReturnValue<string> {
+  return execa.sync(
+    path.join(modularRoot, '/node_modules/.bin/ts-node'),
+    [
+      path.join(modularRoot, '/packages/modular-scripts/src/cli.ts'),
+      ...args.split(' '),
+    ],
+    {
+      cwd: cwd,
+      env: {
+        ...process.env,
+        SKIP_MODULAR_STARTUP_CHECK: skipChecks,
+        SKIP_PREFLIGHT_CHECK: skipChecks,
+      },
+      stdio: stdio,
+      cleanup: true,
+      ...opts,
     },
-    stdio: 'inherit',
-    cleanup: true,
-    ...opts,
-  });
+  );
 }

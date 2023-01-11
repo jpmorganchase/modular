@@ -6,9 +6,8 @@ import fs from 'fs-extra';
 import {
   addFixturePackage,
   cleanup,
-  runModularStreamlined,
+  runModularUnsafe,
   createModularTestContext,
-  runLocalModular,
 } from '../test/utils';
 
 import getModularRoot from '../utils/getModularRoot';
@@ -21,13 +20,9 @@ describe('WHEN building with preserve modules', () => {
   beforeAll(async () => {
     await cleanup([packageName]);
     await addFixturePackage(packageName);
-    await runModularStreamlined(
-      modularRoot,
-      `build ${packageName} --preserve-modules`,
-      {
-        stdio: 'inherit',
-      },
-    );
+    runModularUnsafe(modularRoot, `build ${packageName} --preserve-modules`, {
+      stdio: 'inherit',
+    });
   });
 
   afterAll(async () => await cleanup([packageName]));
@@ -169,25 +164,18 @@ describe('WHEN building packages with private cross-package dependencies', () =>
   afterAll(async () => await cleanup([dependentPackage, libraryPackage]));
 
   it('THEN the build fails by default', () => {
-    return expect(
-      async () =>
-        await runModularStreamlined(
-          modularRoot,
-          `build ${dependentPackage} --preserve-modules`,
-          {
-            stdio: 'inherit',
-          },
-        ),
+    return expect(() =>
+      runModularUnsafe(
+        modularRoot,
+        `build ${dependentPackage} --preserve-modules`,
+      ),
     ).rejects.toThrow();
   });
 
-  it('THEN the build passes if the --private option is used', async () => {
-    await runModularStreamlined(
+  it('THEN the build passes if the --private option is used', () => {
+    runModularUnsafe(
       modularRoot,
       `build ${dependentPackage} --preserve-modules --private`,
-      {
-        stdio: 'inherit',
-      },
     );
 
     expect(tree(path.join(modularRoot, 'dist', dependentPackage)))
@@ -258,19 +246,13 @@ describe('modular build supports custom workspaces', () => {
   });
 
   it('builds an app in a different workspace directory', () => {
-    const result = runLocalModular(modularRoot, tempModularRepo, [
-      'build',
-      'app',
-    ]);
+    const result = runModularUnsafe(tempModularRepo, 'build app');
     expect(result.stderr).toBeFalsy();
     expect(result.stdout).toContain('Compiled successfully.');
   });
 
   it('builds a package in a different workspace directory', () => {
-    const result = runLocalModular(modularRoot, tempModularRepo, [
-      'build',
-      'alpha',
-    ]);
+    const result = runModularUnsafe(tempModularRepo, 'build alpha');
     expect(result.stderr).toBeFalsy();
     expect(result.stdout).toContain('built alpha');
   });

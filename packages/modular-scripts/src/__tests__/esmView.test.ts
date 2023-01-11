@@ -13,7 +13,7 @@ import puppeteer from 'puppeteer';
 import { normalizeToPosix } from '../esbuild-scripts/utils/formatPath';
 import { startApp, DevServer } from './start-app';
 import type { CoreProperties } from '@schemastore/package';
-import { createModularTestContext, runModularStreamlined } from '../test/utils';
+import { createModularTestContext, runModularUnsafe } from '../test/utils';
 
 // Temporary text context paths
 let tempModularRepo: string;
@@ -36,7 +36,7 @@ describe('modular-scripts', () => {
     tempModularRepo = createModularTestContext();
     tempPackagesPath = path.join(tempModularRepo, 'packages');
     tempDistPath = path.join(tempModularRepo, 'dist');
-    await runModularStreamlined(
+    runModularUnsafe(
       tempModularRepo,
       'add sample-esm-view --unstable-type esm-view --unstable-name sample-esm-view',
     );
@@ -130,7 +130,7 @@ describe('modular-scripts', () => {
     let buildOutputPackageJson: CoreProperties;
 
     beforeAll(async () => {
-      await buildSampleEsmView(tempModularRepo, {
+      buildSampleEsmView(tempModularRepo, {
         env: {
           USE_MODULAR_ESBUILD: 'true',
         },
@@ -169,7 +169,7 @@ describe('modular-scripts', () => {
 
   describe('WHEN building a esm-view with a custom ESM CDN', () => {
     beforeAll(async () => {
-      await buildSampleEsmView(tempModularRepo, {
+      buildSampleEsmView(tempModularRepo, {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
@@ -220,7 +220,7 @@ describe('modular-scripts', () => {
 
       await runYarn();
 
-      await buildSampleEsmView(tempModularRepo, {
+      buildSampleEsmView(tempModularRepo, {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
@@ -286,7 +286,7 @@ describe('modular-scripts', () => {
 
       await runYarn();
 
-      await buildSampleEsmView(tempModularRepo, {
+      buildSampleEsmView(tempModularRepo, {
         env: {
           EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
         },
@@ -338,7 +338,7 @@ describe('modular-scripts', () => {
 
       await runYarn();
 
-      await buildSampleEsmView(tempModularRepo, {
+      buildSampleEsmView(tempModularRepo, {
         env: {
           EXTERNAL_CDN_TEMPLATE:
             'https://mycustomcdn.net/[name]@[version]?selectiveDeps=[selectiveCDNResolutions]',
@@ -392,7 +392,7 @@ describe('modular-scripts', () => {
 
       await runYarn();
 
-      await buildSampleEsmView(tempModularRepo, {
+      buildSampleEsmView(tempModularRepo, {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           EXTERNAL_CDN_TEMPLATE:
@@ -444,7 +444,7 @@ describe('modular-scripts', () => {
 
       await runYarn();
 
-      await buildSampleEsmView(tempModularRepo, {
+      buildSampleEsmView(tempModularRepo, {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[resolution]',
@@ -491,7 +491,7 @@ describe('modular-scripts', () => {
 
       await runYarn();
 
-      await buildSampleEsmView(tempModularRepo, {
+      buildSampleEsmView(tempModularRepo, {
         env: {
           EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[resolution]',
         },
@@ -521,7 +521,7 @@ describe('modular-scripts', () => {
 
   describe('WHEN building a esm-view specifying a dependency to not being rewritten', () => {
     beforeAll(async () => {
-      await buildSampleEsmView(tempModularRepo, {
+      buildSampleEsmView(tempModularRepo, {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
@@ -560,7 +560,7 @@ describe('modular-scripts', () => {
 
   describe('WHEN building a esm-view specifying a dependency to not being rewritten using wildcards', () => {
     beforeAll(async () => {
-      await buildSampleEsmView(tempModularRepo, {
+      buildSampleEsmView(tempModularRepo, {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
@@ -600,7 +600,7 @@ describe('modular-scripts', () => {
 
   describe('WHEN building a esm-view specifying a dependency to not being rewritten using allow list and wildcards', () => {
     beforeAll(async () => {
-      await buildSampleEsmView(tempModularRepo, {
+      buildSampleEsmView(tempModularRepo, {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
@@ -639,7 +639,7 @@ describe('modular-scripts', () => {
 
   describe('WHEN building a esm-view specifying a PUBLIC_URL', () => {
     beforeAll(async () => {
-      await buildSampleEsmView(tempModularRepo, {
+      buildSampleEsmView(tempModularRepo, {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           PUBLIC_URL: '/public/path/',
@@ -670,7 +670,7 @@ describe('modular-scripts', () => {
 
   describe('WHEN building a esm-view specifying a PUBLIC_URL and the path is ./', () => {
     beforeAll(async () => {
-      await buildSampleEsmView(tempModularRepo, {
+      buildSampleEsmView(tempModularRepo, {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           PUBLIC_URL: './',
@@ -715,15 +715,11 @@ async function getBuildOutputPackageJson(
   )) as CoreProperties;
 }
 
-async function buildSampleEsmView(
+function buildSampleEsmView(
   cwd: string,
   opts?: Record<string, unknown>,
-): Promise<execa.ExecaReturnValue<string>> {
-  return await runModularStreamlined(
-    cwd,
-    `build ${targetedView} --verbose`,
-    opts,
-  );
+): execa.ExecaSyncReturnValue<string> {
+  return runModularUnsafe(cwd, `build ${targetedView} --verbose`, opts);
 }
 
 function getPackageEntryPointPath(

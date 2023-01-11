@@ -2,8 +2,7 @@ import execa, { ExecaError } from 'execa';
 import path from 'path';
 import fs from 'fs-extra';
 import tmp from 'tmp';
-import getModularRoot from '../utils/getModularRoot';
-import { runLocalModular } from '../test/utils';
+import { runModularUnsafe } from '../test/utils';
 
 function setupTests(fixturesFolder: string) {
   const files = fs.readdirSync(path.join(fixturesFolder));
@@ -91,7 +90,6 @@ describe('Modular test command', () => {
       'ghost-testing',
     );
 
-    const currentModularFolder = getModularRoot();
     let randomOutputFolder: string;
 
     beforeEach(() => {
@@ -130,10 +128,9 @@ describe('Modular test command', () => {
 
     // These expects run in a single test, serially for performance reasons (the setup time is quite long)
     it('finds no unchanged using --changed / finds changed after modifying some workspaces / finds ancestors using --ancestors', () => {
-      const resultUnchanged = runLocalModular(
-        currentModularFolder,
+      const resultUnchanged = runModularUnsafe(
         randomOutputFolder,
-        ['test', '--changed'],
+        'test --changed',
       );
       expect(resultUnchanged.stdout).toContain('No changed workspaces found');
 
@@ -146,10 +143,9 @@ describe('Modular test command', () => {
         "\n// Comment to package c's source",
       );
 
-      const resultChanged = runLocalModular(
-        currentModularFolder,
+      const resultChanged = runModularUnsafe(
         randomOutputFolder,
-        ['test', '--changed'],
+        'test --changed',
       );
       expect(resultChanged.stderr).toContain(
         'packages/c/src/__tests__/utils/c-nested.test.ts',
@@ -164,10 +160,9 @@ describe('Modular test command', () => {
         'packages/b/src/__tests__/b.test.ts',
       );
 
-      const resultChangedWithAncestors = runLocalModular(
-        currentModularFolder,
+      const resultChangedWithAncestors = runModularUnsafe(
         randomOutputFolder,
-        ['test', '--changed', '--ancestors'],
+        'test --changed --ancestors',
       );
       expect(resultChangedWithAncestors.stderr).toContain(
         'packages/c/src/__tests__/utils/c-nested.test.ts',
@@ -207,7 +202,6 @@ describe('Modular test command', () => {
       'ghost-testing',
     );
 
-    const currentModularFolder = getModularRoot();
     let randomOutputFolder: string;
 
     beforeEach(() => {
@@ -221,10 +215,9 @@ describe('Modular test command', () => {
 
     // Run in a single test, serially for performance reasons (the setup time is quite long)
     it('finds --package after specifying a valid workspaces / finds ancestors using --ancestors', () => {
-      const resultPackages = runLocalModular(
-        currentModularFolder,
+      const resultPackages = runModularUnsafe(
         randomOutputFolder,
-        ['test', '--package', 'b', '--package', 'c'],
+        'test --package b --package c',
       );
       expect(resultPackages.stderr).toContain(
         'packages/c/src/__tests__/utils/c-nested.test.ts',
@@ -239,10 +232,9 @@ describe('Modular test command', () => {
         'packages/b/src/__tests__/b.test.ts',
       );
 
-      const resultPackagesWithAncestors = runLocalModular(
-        currentModularFolder,
+      const resultPackagesWithAncestors = runModularUnsafe(
         randomOutputFolder,
-        ['test', '--ancestors', '--package', 'b', '--package', 'c'],
+        'test --ancestors --package b --package c',
       );
       expect(resultPackagesWithAncestors.stderr).toContain(
         'packages/c/src/__tests__/utils/c-nested.test.ts',

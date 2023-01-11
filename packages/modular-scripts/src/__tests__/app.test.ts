@@ -19,7 +19,7 @@ import puppeteer from 'puppeteer';
 
 import { startApp, DevServer } from './start-app';
 import type { CoreProperties } from '@schemastore/package';
-import { runModularStreamlined, modular } from '../test/utils';
+import { runModularUnsafe, modular } from '../test/utils';
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
 const { getNodeText } = queries;
@@ -54,10 +54,7 @@ afterAll(cleanup);
 
 describe('when working with a NODE_ENV app', () => {
   beforeAll(async () => {
-    await runModularStreamlined(
-      modularRoot,
-      'add node-env-app --unstable-type app',
-    );
+    runModularUnsafe(modularRoot, 'add node-env-app --unstable-type app');
 
     await fs.writeFile(
       path.join(modularRoot, 'packages', 'node-env-app', 'src', 'index.ts'),
@@ -68,7 +65,7 @@ describe('when working with a NODE_ENV app', () => {
     `,
     );
 
-    await runModularStreamlined(modularRoot, 'build node-env-app');
+    runModularUnsafe(modularRoot, 'build node-env-app');
   });
 
   afterAll(cleanup);
@@ -118,8 +115,8 @@ describe('when working with a NODE_ENV app', () => {
 });
 
 describe('When working with a npm scoped app', () => {
-  beforeAll(async () => {
-    await runModularStreamlined(
+  beforeAll(() => {
+    runModularUnsafe(
       modularRoot,
       'add @scoped/sample-app --unstable-type app',
       {
@@ -127,7 +124,7 @@ describe('When working with a npm scoped app', () => {
       },
     );
 
-    await runModularStreamlined(modularRoot, 'build @scoped/sample-app');
+    runModularUnsafe(modularRoot, 'build @scoped/sample-app');
   });
 
   afterAll(cleanup);
@@ -311,11 +308,9 @@ describe('When working with a npm scoped app', () => {
 
 describe('when working with a non-scoped app', () => {
   beforeAll(async () => {
-    await runModularStreamlined(
-      modularRoot,
-      'add sample-app --unstable-type app',
-      { stdio: 'inherit' },
-    );
+    runModularUnsafe(modularRoot, 'add sample-app --unstable-type app', {
+      stdio: 'inherit',
+    });
 
     // Let's replace the App module with something of our own
     // with a test specific element we can introspect
@@ -324,7 +319,7 @@ describe('when working with a non-scoped app', () => {
       path.join(packagesPath, 'sample-app', 'src', 'App.tsx'),
     );
 
-    await runModularStreamlined(modularRoot, 'build sample-app', {
+    runModularUnsafe(modularRoot, 'build sample-app', {
       stdio: 'inherit',
     });
   });
@@ -581,8 +576,8 @@ describe('when working with a non-scoped app', () => {
 });
 
 describe('When working with an app added in a custom directory', () => {
-  beforeAll(async () => {
-    await runModularStreamlined(
+  beforeAll(() => {
+    runModularUnsafe(
       modularRoot,
       'add @scoped/custom-app --unstable-type app --path packages/custom/scoped/',
       {
@@ -590,7 +585,7 @@ describe('When working with an app added in a custom directory', () => {
       },
     );
 
-    await runModularStreamlined(modularRoot, 'build @scoped/custom-app', {
+    runModularUnsafe(modularRoot, 'build @scoped/custom-app', {
       stdio: 'inherit',
     });
   });
