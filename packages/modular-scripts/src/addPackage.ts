@@ -229,9 +229,6 @@ async function addPackage({
   const tree = await arborist.loadActual();
   const filesToCopy = await packlist(tree);
 
-  console.log(templatePath);
-  console.log(JSON.stringify(filesToCopy, null, 2));
-
   filesToCopy.forEach((file) => {
     if (file !== 'package.json')
       fs.copySync(

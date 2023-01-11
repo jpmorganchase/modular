@@ -102,6 +102,7 @@ export function createModularTestContext(): string {
       react: '^18.2.0',
       'react-dom': '^18.2.0',
     },
+    packageManager: 'yarn@1.22.19',
   };
 
   fs.writeJSONSync(path.join(tempModularRepo, 'package.json'), packageJson, {
