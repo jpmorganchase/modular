@@ -200,6 +200,7 @@ exports[`create-modular-react-app WHEN it sets up a project with prefer Offline 
 │  └─ setupTests.ts #bnjknz
 ├─ package.json
 ├─ packages
+│  ├─ README.md #11apaz5
 │  └─ app
 │     ├─ package.json
 │     ├─ public
@@ -423,6 +424,7 @@ exports[`create-modular-react-app WHEN setting a project with defaults should cr
 │  └─ setupTests.ts #bnjknz
 ├─ package.json
 ├─ packages
+│  ├─ README.md #11apaz5
 │  └─ app
 │     ├─ package.json
 │     ├─ public
