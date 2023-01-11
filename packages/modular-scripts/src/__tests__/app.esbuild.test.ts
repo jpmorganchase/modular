@@ -53,7 +53,7 @@ describe('when working with an app', () => {
     expect(tree(path.join(packagesPath, 'sample-esbuild-app')))
       .toMatchInlineSnapshot(`
       "sample-esbuild-app
-      ├─ README.md #60da46
+      ├─ README.md #g3sy9z
       ├─ package.json
       ├─ public
       │  ├─ favicon.ico #6pu3rg
