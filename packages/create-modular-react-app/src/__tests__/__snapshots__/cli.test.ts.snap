@@ -17,6 +17,7 @@ exports[`Creating a new modular app via the CLI should create the right tree 1`]
 │  └─ setupTests.ts #bnjknz
 ├─ package.json
 ├─ packages
+│  ├─ README.md #11apaz5
 │  └─ app
 │     ├─ package.json
 │     ├─ public
@@ -57,6 +58,7 @@ exports[`Creating a new modular app via the CLI with --empty should create the r
 │  └─ setupTests.ts #bnjknz
 ├─ package.json
 ├─ packages
+│  └─ README.md #11apaz5
 ├─ tsconfig.json #1h72lkd
 └─ yarn.lock"
 `;
