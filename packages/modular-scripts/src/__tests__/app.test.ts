@@ -116,14 +116,7 @@ describe('when working with a NODE_ENV app', () => {
 
 describe('When working with a npm scoped app', () => {
   beforeAll(() => {
-    runModularUnsafe(
-      modularRoot,
-      'add @scoped/sample-app --unstable-type app',
-      {
-        stdio: 'inherit',
-      },
-    );
-
+    runModularUnsafe(modularRoot, 'add @scoped/sample-app --unstable-type app');
     runModularUnsafe(modularRoot, 'build @scoped/sample-app');
   });
 
@@ -308,9 +301,7 @@ describe('When working with a npm scoped app', () => {
 
 describe('when working with a non-scoped app', () => {
   beforeAll(async () => {
-    runModularUnsafe(modularRoot, 'add sample-app --unstable-type app', {
-      stdio: 'inherit',
-    });
+    runModularUnsafe(modularRoot, 'add sample-app --unstable-type app');
 
     // Let's replace the App module with something of our own
     // with a test specific element we can introspect
@@ -319,9 +310,7 @@ describe('when working with a non-scoped app', () => {
       path.join(packagesPath, 'sample-app', 'src', 'App.tsx'),
     );
 
-    runModularUnsafe(modularRoot, 'build sample-app', {
-      stdio: 'inherit',
-    });
+    runModularUnsafe(modularRoot, 'build sample-app');
   });
 
   afterAll(cleanup);
@@ -584,14 +573,8 @@ describe('When working with an app added in a custom directory', () => {
     runModularUnsafe(
       modularRoot,
       'add @scoped/custom-app --unstable-type app --path packages/custom/scoped/',
-      {
-        stdio: 'inherit',
-      },
     );
-
-    runModularUnsafe(modularRoot, 'build @scoped/custom-app', {
-      stdio: 'inherit',
-    });
+    runModularUnsafe(modularRoot, 'build @scoped/custom-app');
   });
 
   afterAll(cleanup);
