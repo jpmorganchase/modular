@@ -14,17 +14,6 @@ const rimraf = promisify(_rimraf);
 
 const modularRoot = getModularRoot();
 
-export function modular(
-  str: string,
-  opts: Record<string, unknown> = {},
-): execa.ExecaChildProcess<string> {
-  return execa('yarnpkg', ['modular', ...str.split(' ')], {
-    cwd: modularRoot,
-    cleanup: true,
-    ...opts,
-  });
-}
-
 export async function cleanup(packageNames: Array<string>): Promise<void> {
   const packagesPath = path.join(modularRoot, 'packages');
   const distPath = path.join(modularRoot, 'dist');
@@ -45,7 +34,7 @@ export async function addFixturePackage(
   options: { copy: boolean } = { copy: true },
 ): Promise<void> {
   const packageSrcDir = path.join(modularRoot, 'packages', name, 'src');
-  await modular(`add ${name} --unstable-type package`, {
+  await runModular(modularRoot, `add ${name} --unstable-type package`, {
     stdio: 'inherit',
   });
   await fs.emptyDir(packageSrcDir);

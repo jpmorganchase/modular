@@ -16,24 +16,20 @@ describe('Modular test command', () => {
     let tempModularRepo: string;
 
     beforeEach(() => {
-      const fixturesFolder = path.join('__fixtures__', 'test');
       tempModularRepo = createModularTestContext();
-      const rootFixtureFolder = path.join(__dirname, fixturesFolder);
-      const tempFixtureFolder = path.join(
+      const fixturesFolder = path.join(__dirname, '__fixtures__', 'test');
+      const relativeFixturePath = fixturesFolder.replace(modularRoot, '');
+      const tempFixturesFolder = path.join(
         tempModularRepo,
-        'packages',
-        'modular-scripts',
-        'src',
-        '__tests__',
-        fixturesFolder,
+        relativeFixturePath,
       );
-      fs.mkdirsSync(tempFixtureFolder);
-      const files = fs.readdirSync(path.join(rootFixtureFolder));
+      fs.mkdirsSync(tempFixturesFolder);
+      const files = fs.readdirSync(path.join(fixturesFolder));
       files.forEach((file) => {
         fs.writeFileSync(
-          path.join(tempFixtureFolder, file),
+          path.join(tempFixturesFolder, file),
           fs
-            .readFileSync(path.join(rootFixtureFolder, file), 'utf-8')
+            .readFileSync(path.join(fixturesFolder, file), 'utf-8')
             .replace('describe.skip', 'describe'),
         );
       });

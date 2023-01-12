@@ -19,7 +19,7 @@ import puppeteer from 'puppeteer';
 
 import { startApp, DevServer } from './start-app';
 import type { CoreProperties } from '@schemastore/package';
-import { runModularUnsafe, modular } from '../test/utils';
+import { runModular, runModularUnsafe } from '../test/utils';
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
 const { getNodeText } = queries;
@@ -497,13 +497,17 @@ describe('when working with a non-scoped app', () => {
   });
 
   it('can execute tests', async () => {
-    const output = await modular('test sample-app --watchAll false', {
-      all: true,
-      reject: false,
-      env: {
-        CI: 'true',
+    const output = await runModular(
+      getModularRoot(),
+      'test sample-app --watchAll false',
+      {
+        all: true,
+        reject: false,
+        env: {
+          CI: 'true',
+        },
       },
-    });
+    );
 
     // TODO: Passing CI=true *should* remove all the coloring stuff,
     // it's weird that it doesn't. To workaround it, I've manually
