@@ -5,22 +5,16 @@ import execa from 'execa';
 import { createModularTestContext } from '../test/utils';
 import getModularRoot from '../utils/getModularRoot';
 
+const modularRoot = getModularRoot();
 const fixturesFolder = path.join(__dirname, '__fixtures__', 'lint');
+const relativeFixturePath = fixturesFolder.replace(modularRoot, '');
 
 // Temporary text context paths
 let tempModularRepo: string;
 
 function setupLintErrors(): string[] {
   tempModularRepo = createModularTestContext();
-  const tempFixturesFolder = path.join(
-    tempModularRepo,
-    'packages',
-    'modular-scripts',
-    'src',
-    '__tests__',
-    '__fixtures__',
-    'lint',
-  );
+  const tempFixturesFolder = path.join(tempModularRepo, relativeFixturePath);
   fs.mkdirsSync(tempFixturesFolder);
   const files = fs.readdirSync(fixturesFolder);
   return files.map((file) => {
@@ -103,7 +97,6 @@ describe('Modular lint', () => {
         {
           all: true,
           cleanup: true,
-          cwd: getModularRoot(),
         },
       );
       const modularLogs: string[] = result.stderr.split('\n');

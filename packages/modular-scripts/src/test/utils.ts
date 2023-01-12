@@ -159,7 +159,7 @@ export function generateJestConfig(jestConfig: Config.InitialOptions): string {
 
 /**
  * Run the main repo's modular cli with the specified arguments, skipping modular checks by default to improve performance
- * Should be used by most tests
+ * Should be used by most tests - logs from the process are inherited by default
  *
  * @param cwd Where to run modular
  * @param args String of arguments to pass to modular
