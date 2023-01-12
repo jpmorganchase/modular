@@ -68,7 +68,7 @@ export async function addFixturePackage(
  */
 export function createModularTestContext(): string {
   // Modular node_modules are copied in the parent folder
-  const tempDir = tmp.dirSync().name;
+  const tempDir = tmp.dirSync({ unsafeCleanup: true }).name;
   fs.symlinkSync(
     path.join(modularRoot, 'node_modules'),
     path.join(tempDir, 'node_modules'),
@@ -159,6 +159,7 @@ export function generateJestConfig(jestConfig: Config.InitialOptions): string {
 
 /**
  * Run the main repo's modular cli with the specified arguments, skipping modular checks by default to improve performance
+ * Should be used by most tests
  *
  * @param cwd Where to run modular
  * @param args String of arguments to pass to modular
@@ -180,13 +181,58 @@ export function runModularUnsafe(
       ...args.split(' '),
     ],
     {
-      cwd: cwd,
+      cwd,
       env: {
         ...process.env,
         SKIP_MODULAR_STARTUP_CHECK: skipChecks,
         SKIP_PREFLIGHT_CHECK: skipChecks,
+        CI: 'true',
       },
-      stdio: stdio,
+      stdio,
+      cleanup: true,
+      ...opts,
+    },
+  );
+}
+
+/**
+ * Wrapper of RunModularUnsafe that runs checks to make it safe & pipes output
+ * Skip checks is false by default when we pipe output as unsafe output includes warnings that Modular repository might be invalid
+ */
+export function runModularPipeLogs(
+  cwd: string,
+  args: string,
+  skipChecks: 'true' | 'false' = 'false',
+  opts: Record<string, unknown> = {},
+) {
+  return runModularUnsafe(cwd, args, opts, 'pipe', 'false');
+}
+
+/**
+ * Async alternative to runModularUnsafe
+ */
+export async function runModularUnsafeAsync(
+  cwd: string,
+  args: string,
+  opts: Record<string, unknown> = {},
+  stdio: 'inherit' | 'pipe' | 'ignore' = 'inherit',
+  skipChecks: 'true' | 'false' = 'true',
+) {
+  return execa(
+    path.join(modularRoot, '/node_modules/.bin/ts-node'),
+    [
+      path.join(modularRoot, '/packages/modular-scripts/src/cli.ts'),
+      ...args.split(' '),
+    ],
+    {
+      cwd,
+      env: {
+        ...process.env,
+        SKIP_MODULAR_STARTUP_CHECK: skipChecks,
+        SKIP_PREFLIGHT_CHECK: skipChecks,
+        CI: 'true',
+      },
+      stdio,
       cleanup: true,
       ...opts,
     },

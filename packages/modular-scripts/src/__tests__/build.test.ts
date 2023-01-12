@@ -8,6 +8,8 @@ import {
   cleanup,
   runModularUnsafe,
   createModularTestContext,
+  runModularPipeLogs,
+  runModularUnsafeAsync,
 } from '../test/utils';
 
 import getModularRoot from '../utils/getModularRoot';
@@ -20,9 +22,7 @@ describe('WHEN building with preserve modules', () => {
   beforeAll(async () => {
     await cleanup([packageName]);
     await addFixturePackage(packageName);
-    runModularUnsafe(modularRoot, `build ${packageName} --preserve-modules`, {
-      stdio: 'inherit',
-    });
+    runModularUnsafe(modularRoot, `build ${packageName} --preserve-modules`);
   });
 
   afterAll(async () => await cleanup([packageName]));
@@ -165,7 +165,7 @@ describe('WHEN building packages with private cross-package dependencies', () =>
 
   it('THEN the build fails by default', () => {
     return expect(() =>
-      runModularUnsafe(
+      runModularUnsafeAsync(
         modularRoot,
         `build ${dependentPackage} --preserve-modules`,
       ),
@@ -246,13 +246,13 @@ describe('modular build supports custom workspaces', () => {
   });
 
   it('builds an app in a different workspace directory', () => {
-    const result = runModularUnsafe(tempModularRepo, 'build app');
+    const result = runModularPipeLogs(tempModularRepo, 'build app');
     expect(result.stderr).toBeFalsy();
     expect(result.stdout).toContain('Compiled successfully.');
   });
 
   it('builds a package in a different workspace directory', () => {
-    const result = runModularUnsafe(tempModularRepo, 'build alpha');
+    const result = runModularPipeLogs(tempModularRepo, 'build alpha');
     expect(result.stderr).toBeFalsy();
     expect(result.stdout).toContain('built alpha');
   });

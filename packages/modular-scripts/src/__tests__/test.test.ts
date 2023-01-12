@@ -2,7 +2,7 @@ import execa, { ExecaError } from 'execa';
 import path from 'path';
 import fs from 'fs-extra';
 import tmp from 'tmp';
-import { runModularUnsafe } from '../test/utils';
+import { runModularPipeLogs } from '../test/utils';
 
 function setupTests(fixturesFolder: string) {
   const files = fs.readdirSync(path.join(fixturesFolder));
@@ -128,9 +128,10 @@ describe('Modular test command', () => {
 
     // These expects run in a single test, serially for performance reasons (the setup time is quite long)
     it('finds no unchanged using --changed / finds changed after modifying some workspaces / finds ancestors using --ancestors', () => {
-      const resultUnchanged = runModularUnsafe(
+      const resultUnchanged = runModularPipeLogs(
         randomOutputFolder,
         'test --changed',
+        'true',
       );
       expect(resultUnchanged.stdout).toContain('No changed workspaces found');
 
@@ -143,9 +144,10 @@ describe('Modular test command', () => {
         "\n// Comment to package c's source",
       );
 
-      const resultChanged = runModularUnsafe(
+      const resultChanged = runModularPipeLogs(
         randomOutputFolder,
         'test --changed',
+        'true',
       );
       expect(resultChanged.stderr).toContain(
         'packages/c/src/__tests__/utils/c-nested.test.ts',
@@ -160,7 +162,7 @@ describe('Modular test command', () => {
         'packages/b/src/__tests__/b.test.ts',
       );
 
-      const resultChangedWithAncestors = runModularUnsafe(
+      const resultChangedWithAncestors = runModularPipeLogs(
         randomOutputFolder,
         'test --changed --ancestors',
       );
@@ -215,9 +217,10 @@ describe('Modular test command', () => {
 
     // Run in a single test, serially for performance reasons (the setup time is quite long)
     it('finds --package after specifying a valid workspaces / finds ancestors using --ancestors', () => {
-      const resultPackages = runModularUnsafe(
+      const resultPackages = runModularPipeLogs(
         randomOutputFolder,
         'test --package b --package c',
+        'true',
       );
       expect(resultPackages.stderr).toContain(
         'packages/c/src/__tests__/utils/c-nested.test.ts',
@@ -232,9 +235,10 @@ describe('Modular test command', () => {
         'packages/b/src/__tests__/b.test.ts',
       );
 
-      const resultPackagesWithAncestors = runModularUnsafe(
+      const resultPackagesWithAncestors = runModularPipeLogs(
         randomOutputFolder,
         'test --ancestors --package b --package c',
+        'true',
       );
       expect(resultPackagesWithAncestors.stderr).toContain(
         'packages/c/src/__tests__/utils/c-nested.test.ts',

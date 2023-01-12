@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs-extra';
 
 import getModularRoot from '../utils/getModularRoot';
-import { createModularTestContext, runModularUnsafe } from '../test/utils';
+import { createModularTestContext, runModularPipeLogs } from '../test/utils';
 
 // Temporary test context paths set by createTempModularRepoWithTemplate()
 let tempModularRepo: string;
@@ -54,63 +54,36 @@ describe('--changed builds all the changed packages in order', () => {
   });
 
   it('builds nothing when everything committed', () => {
-    const result = runModularUnsafe(
-      tempModularRepo,
-      'build --changed',
-      {},
-      'pipe',
-      'false',
-    );
+    const result = runModularPipeLogs(tempModularRepo, 'build --changed');
     expect(result.stderr).toBeFalsy();
     expect(result.stdout).toContain('No workspaces to build');
   });
 
   it('builds multiple packages', () => {
-    const result = runModularUnsafe(
-      tempModularRepo,
-      'build e a',
-      {},
-      'pipe',
-      'false',
-    );
+    const result = runModularPipeLogs(tempModularRepo, 'build e a');
 
     expect(result.stderr).toBeFalsy();
     expect(getBuildOrder(result.stdout)).toEqual(['a', 'e']);
   });
 
   it('builds a single package and its descendants', () => {
-    const result = runModularUnsafe(
-      tempModularRepo,
-      'build b --descendants',
-      {},
-      'pipe',
-      'false',
-    );
+    const result = runModularPipeLogs(tempModularRepo, 'build b --descendants');
 
     expect(result.stderr).toBeFalsy();
     expect(getBuildOrder(result.stdout)).toEqual(['d', 'c', 'b']);
   });
 
   it('builds a single package and its ancestors', () => {
-    const result = runModularUnsafe(
-      tempModularRepo,
-      'build b --ancestors',
-      {},
-      'pipe',
-      'false',
-    );
+    const result = runModularPipeLogs(tempModularRepo, 'build b --ancestors');
 
     expect(result.stderr).toBeFalsy();
     expect(getBuildOrder(result.stdout)).toEqual(['b', 'a', 'e']);
   });
 
   it('builds multiple packages and their descendants', () => {
-    const result = runModularUnsafe(
+    const result = runModularPipeLogs(
       tempModularRepo,
       'build d a --descendants',
-      {},
-      'pipe',
-      'false',
     );
 
     expect(result.stderr).toBeFalsy();
@@ -118,13 +91,7 @@ describe('--changed builds all the changed packages in order', () => {
   });
 
   it('builds multiple packages and their ancestors', () => {
-    const result = runModularUnsafe(
-      tempModularRepo,
-      'build d a --ancestors',
-      {},
-      'pipe',
-      'false',
-    );
+    const result = runModularPipeLogs(tempModularRepo, 'build d a --ancestors');
 
     expect(result.stderr).toBeFalsy();
     expect(getBuildOrder(result.stdout)).toEqual(['d', 'c', 'b', 'a', 'e']);
@@ -140,38 +107,23 @@ describe('--changed builds all the changed packages in order', () => {
       "\n// Comment to package c's source",
     );
 
-    const result = runModularUnsafe(
-      tempModularRepo,
-      'build --changed',
-      {},
-      'pipe',
-      'false',
-    );
+    const result = runModularPipeLogs(tempModularRepo, 'build --changed');
 
     expect(result.stderr).toBeFalsy();
     expect(getBuildOrder(result.stdout)).toEqual(['c', 'b']);
   });
 
   it('builds changed (uncommitted) packages + packages that are explicitly specified', () => {
-    const result = runModularUnsafe(
-      tempModularRepo,
-      'build e --changed',
-      {},
-      'pipe',
-      'false',
-    );
+    const result = runModularPipeLogs(tempModularRepo, 'build e --changed');
 
     expect(result.stderr).toBeFalsy();
     expect(getBuildOrder(result.stdout)).toEqual(['c', 'b', 'e']);
   });
 
   it('builds changed (uncommitted) packages and their descendants', () => {
-    const result = runModularUnsafe(
+    const result = runModularPipeLogs(
       tempModularRepo,
       'build --changed --descendants',
-      {},
-      'pipe',
-      'false',
     );
 
     expect(result.stderr).toBeFalsy();
@@ -179,12 +131,9 @@ describe('--changed builds all the changed packages in order', () => {
   });
 
   it('builds changed (uncommitted) packages and their ancestors', () => {
-    const result = runModularUnsafe(
+    const result = runModularPipeLogs(
       tempModularRepo,
       'build --changed --ancestors',
-      {},
-      'pipe',
-      'false',
     );
 
     expect(result.stderr).toBeFalsy();
