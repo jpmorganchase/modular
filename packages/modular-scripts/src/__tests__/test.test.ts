@@ -2,42 +2,34 @@ import execa, { ExecaError } from 'execa';
 import path from 'path';
 import fs from 'fs-extra';
 import tmp from 'tmp';
-import { runModularPipeLogs } from '../test/utils';
-
-function setupTests(fixturesFolder: string) {
-  const files = fs.readdirSync(path.join(fixturesFolder));
-  files.forEach((file) => {
-    fs.writeFileSync(
-      path.join(fixturesFolder, file),
-      fs
-        .readFileSync(path.join(fixturesFolder, file), 'utf-8')
-        .replace('describe.skip', 'describe'),
-    );
-  });
-}
-
-function clearTests(fixturesFolder: string) {
-  const files = fs.readdirSync(path.join(fixturesFolder));
-  files.forEach((file) => {
-    fs.writeFileSync(
-      path.join(fixturesFolder, file),
-      fs
-        .readFileSync(path.join(fixturesFolder, file), 'utf-8')
-        .replace('describe', 'describe.skip'),
-    );
-  });
-}
+import { createModularTestContext, runModularPipeLogs } from '../test/utils';
 
 describe('Modular test command', () => {
   describe('test command succeeds on valid test and fails on invalid tests', () => {
-    const fixturesFolder = path.join(__dirname, '__fixtures__', 'test');
+    let tempModularRepo: string;
 
     beforeEach(() => {
-      setupTests(fixturesFolder);
-    });
-
-    afterEach(() => {
-      clearTests(fixturesFolder);
+      const fixturesFolder = path.join('__fixtures__', 'test');
+      tempModularRepo = createModularTestContext();
+      const rootFixtureFolder = path.join(__dirname, fixturesFolder);
+      const tempFixtureFolder = path.join(
+        tempModularRepo,
+        'packages',
+        'modular-scripts',
+        'src',
+        '__tests__',
+        fixturesFolder,
+      );
+      fs.mkdirsSync(tempFixtureFolder);
+      const files = fs.readdirSync(path.join(rootFixtureFolder));
+      files.forEach((file) => {
+        fs.writeFileSync(
+          path.join(tempFixtureFolder, file),
+          fs
+            .readFileSync(path.join(rootFixtureFolder, file), 'utf-8')
+            .replace('describe.skip', 'describe'),
+        );
+      });
     });
 
     describe('when the tests fail', () => {
@@ -48,6 +40,7 @@ describe('Modular test command', () => {
             'yarnpkg',
             ['modular', 'test', 'test/InvalidTest.test.ts', '--watchAll=false'],
             {
+              cwd: tempModularRepo,
               all: true,
               cleanup: true,
             },
@@ -67,6 +60,7 @@ describe('Modular test command', () => {
             'yarnpkg',
             ['modular', 'test', 'test/ValidTest.test.ts', '--watchAll=false'],
             {
+              cwd: tempModularRepo,
               all: true,
               cleanup: true,
             },

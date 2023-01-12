@@ -233,6 +233,7 @@ export async function runModularUnsafeAsync(
         CI: 'true',
       },
       stdio,
+      all: true,
       cleanup: true,
       ...opts,
     },
