@@ -107,6 +107,7 @@ with these exceptions:
   manifest `dependencies` and `main` fields will be overwritten by the
   template's respective manifest fields.
 - The strings `PackageName__` and `ComponentName__` present in any of the target
-  files will be overwritten, respectively, by the target package name as-is and
-  the target package name converted to `PascalCase` (the latter is useful for
-  source code template files where, for example, a React component is created).
+  files with extension `ts|tsx|js|jsx|json|md|txt` will be overwritten,
+  respectively, by the target package name as-is and the target package name
+  converted to `PascalCase` (the latter is useful for source code template files
+  where, for example, a React component is created).

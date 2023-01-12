@@ -1,5 +1,6 @@
 ---
-parent: Building your Apps
+parent: How To
+nav_order: 4
 title: Adding web workers
 ---
 
