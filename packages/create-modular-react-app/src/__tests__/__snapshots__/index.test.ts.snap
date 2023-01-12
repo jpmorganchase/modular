@@ -194,13 +194,13 @@ exports[`create-modular-react-app WHEN it sets up a project with prefer Offline 
 │  ├─ launch.json #1kk1omt
 │  └─ settings.json #xes41c
 ├─ .yarnrc #1orkcoz
-├─ README.md #1nksyzj
+├─ README.md #5vircs
 ├─ modular
 │  ├─ setupEnvironment.ts #m0s4vb
 │  └─ setupTests.ts #bnjknz
 ├─ package.json
 ├─ packages
-│  ├─ README.md #14bthrh
+│  ├─ README.md #11apaz5
 │  └─ app
 │     ├─ package.json
 │     ├─ public
@@ -418,13 +418,13 @@ exports[`create-modular-react-app WHEN setting a project with defaults should cr
 │  ├─ launch.json #1kk1omt
 │  └─ settings.json #xes41c
 ├─ .yarnrc #1orkcoz
-├─ README.md #1nksyzj
+├─ README.md #5vircs
 ├─ modular
 │  ├─ setupEnvironment.ts #m0s4vb
 │  └─ setupTests.ts #bnjknz
 ├─ package.json
 ├─ packages
-│  ├─ README.md #14bthrh
+│  ├─ README.md #11apaz5
 │  └─ app
 │     ├─ package.json
 │     ├─ public

@@ -8,7 +8,7 @@ title: view
 
 Modular `view`s are Modular [`package`s](./package.md) that, by convention,
 export a default React component. They are [created](../commands/add.md) with a
-default entry-point is `src/index.tsx` in their `package.json` and they are
+default entry-point of `src/index.tsx` in their `package.json` and they are
 built exactly like [`package`](./package.md) types. The only difference is that,
 since `view`s should always export a React component, they can be
 [`start`ed](../commands/start.md) to spawn a local developer server and render
@@ -20,25 +20,24 @@ Same as [`package`](./package.md/#build).
 
 ## Start
 
-To run your package locally on a development server, run
+To run your view locally on a development server, run
 [start](../commands/start.md):
 
 ```bash
-modular start my-package-name
+modular start my-view-name
 ```
 
-This causes a developer server to run on port 3000, serving the default export
-of the package entry-point with an additional runtime layer that provides
-developer experience functionalities like hot reloading and on-screen error
-overlay.
+This starts a developer server on port 3000, serving the default export of the
+View entry-point with an additional runtime layer that provides developer
+experience functionalities like hot reloading and on-screen error overlay.
 
 ## Entry-point
 
-The entry-point for a package is configurable; Modular discovers it by looking
-at the `main` field in the package's `package.json`; by default,
-`modular add`ing a new package sets it as `"./src/index.tsx"`, but it's possible
-to manually modify it. The entry-point of a View needs to export a React
-component as default for the start command to work.
+The entry-point for a View is configurable; Modular discovers it by looking at
+the `main` field in the View's `package.json`; by default, `modular add`ing a
+new View sets it as `"./src/index.tsx"`, but it's possible to manually modify
+it. The entry-point of a View needs to export a React component as default for
+the `start` command to work.
 
 ## Template
 
