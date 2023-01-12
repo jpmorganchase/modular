@@ -27,8 +27,8 @@ To run your view locally on a development server, run
 modular start my-view-name
 ```
 
-This causes a developer server to run on port 3000, serving the default export
-of the View entry-point with an additional runtime layer that provides developer
+This starts a developer server on port 3000, serving the default export of the
+View entry-point with an additional runtime layer that provides developer
 experience functionalities like hot reloading and on-screen error overlay.
 
 ## Entry-point

@@ -52,9 +52,9 @@ To run your app locally on a development server, run
 modular start my-app-name
 ```
 
-This causes a developer server to run on port 3000, serving the app with an
-additional runtime layer that provides developer experience functionalities like
-hot reloading and on-screen error overlay.
+This starts a developer server on port 3000, serving the app with an additional
+runtime layer that provides developer experience functionalities like hot
+reloading and on-screen error overlay.
 
 ## Entry-point
 

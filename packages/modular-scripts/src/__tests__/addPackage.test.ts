@@ -156,7 +156,7 @@ describe('When adding a module from a template without a files filter', () => {
     ).toMatchInlineSnapshot(`
       "no-filter-module
       ├─ CHANGELOG.md
-      ├─ README.md #jm69ih
+      ├─ README.md #13oulez
       ├─ package.json
       ├─ public
       │  └─ robots.txt #1sjb8b3
@@ -199,7 +199,7 @@ describe('When adding a module from a template with a files filter', () => {
       }),
     ).toMatchInlineSnapshot(`
       "filter-module
-      ├─ README.md #1l66cxg
+      ├─ README.md #13oulez
       ├─ package.json
       ├─ src
       │  ├─ __tests__
