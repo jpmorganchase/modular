@@ -2,7 +2,7 @@ import * as path from 'path';
 import * as fs from 'fs-extra';
 
 import execa from 'execa';
-import { createModularTestContext } from '../test/utils';
+import { createModularTestContext, runModular } from '../test/utils';
 import getModularRoot from '../utils/getModularRoot';
 
 const modularRoot = getModularRoot();
@@ -57,11 +57,7 @@ describe('Modular lint', () => {
       }
       let modularLogs: string[] = [];
       try {
-        await execa('yarnpkg', ['modular', 'lint', '__fixtures__/lint'], {
-          all: true,
-          cleanup: true,
-          cwd: tempModularRepo,
-        });
+        await runModular(tempModularRepo, 'lint __fixtures__/lint');
       } catch ({ stderr }) {
         modularLogs = (stderr as string).split('\n');
       }
@@ -72,11 +68,7 @@ describe('Modular lint', () => {
     it('should not pass lint test', async () => {
       let modularLogs: string[] = [];
       try {
-        await execa('yarnpkg', ['modular', 'lint', '__fixtures__/lint'], {
-          all: true,
-          cleanup: true,
-          cwd: tempModularRepo,
-        });
+        await runModular(tempModularRepo, 'lint __fixtures__/lint');
       } catch ({ stderr }) {
         modularLogs = (stderr as string).split('\n');
       }
@@ -91,14 +83,7 @@ describe('Modular lint', () => {
   describe('when the codebase does not have lint errors', () => {
     it('should pass the lint tests', async () => {
       const files = fs.readdirSync(fixturesFolder);
-      const result = await execa(
-        'yarnpkg',
-        ['modular', 'lint', '__fixtures__/lint'],
-        {
-          all: true,
-          cleanup: true,
-        },
-      );
+      const result = await runModular(modularRoot, 'lint __fixtures__/lint');
       const modularLogs: string[] = result.stderr.split('\n');
       expect(modularLogs).toContain(
         `Test Suites: ${files.length} passed, ${files.length} total`,
