@@ -3,7 +3,7 @@ parent: Commands
 title: modular test
 ---
 
-# `modular test`
+# `modular test [options] [regexes...]`
 
 `test` is an opinionated wrapper around [`jest`](https://jestjs.io/) which runs
 tests against the entire `modular` project. It comes with out-of-the-box

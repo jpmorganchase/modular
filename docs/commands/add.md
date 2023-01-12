@@ -3,7 +3,7 @@ parent: Commands
 title: modular add
 ---
 
-# `modular add <packageName>`
+# `modular add [options] [packageName]`
 
 Adds a new package by creating a new package at the workspace located at
 `packages/<packageName>`, omitting the scope if the package is
@@ -73,8 +73,9 @@ included in a bundle).
 
 ## Options:
 
-`--path`: Optionally set the directory in which the workspace is created. If the
-provided path is outside (i.e., not a descendant) of the paths specified in
+`--path <targetPath>`: Optionally set the directory in which the workspace is
+created. If the provided path is outside (i.e., not a descendant) of the paths
+specified in
 [the `workspaces` field](https://classic.yarnpkg.com/lang/en/docs/workspaces/#toc-how-to-use-it)
 of the root `package.json`, the command will fail
 

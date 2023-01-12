@@ -3,7 +3,7 @@ parent: Commands
 title: modular lint
 ---
 
-# `modular lint`
+# `modular lint [options] [regexes...]`
 
 `modular lint` will check the diff between the current branch and your remote
 origin default branch (i.e. `master` or `main`) and only lint the `.ts`, `.tsx`,
