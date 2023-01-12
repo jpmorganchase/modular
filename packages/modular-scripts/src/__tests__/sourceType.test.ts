@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs-extra';
 
 import getModularRoot from '../utils/getModularRoot';
-import { createModularTestContext, runModularUnsafe } from '../test/utils';
+import { createModularTestContext, runModularPipeLogs } from '../test/utils';
 
 // Temporary test context paths set by createTempModularRepoWithTemplate()
 let tempModularRepo: string;
@@ -27,19 +27,19 @@ describe('source types and circular dependencies', () => {
   });
 
   it('when building a source type, command succeeds but nothing is built', () => {
-    const result = runModularUnsafe(tempModularRepo, 'build d');
+    const result = runModularPipeLogs(tempModularRepo, 'build d');
     expect(result.stderr).toBeFalsy();
     expect(result.stdout).toContain('No workspaces to build');
   });
 
   it('when building a package that has a circular dependency, command fails', () => {
-    expect(() => runModularUnsafe(tempModularRepo, 'build b')).toThrow(
+    expect(() => runModularPipeLogs(tempModularRepo, 'build b')).toThrow(
       'Cycle detected, b -> c -> b',
     );
   });
 
   it('when building a package that has a circular dependency with the --dangerouslyIgnoreCircularDependencies flag set, command warns and succeeds if removing the source package from the graph removes the cycle', () => {
-    const result = runModularUnsafe(
+    const result = runModularPipeLogs(
       tempModularRepo,
       'build b --dangerouslyIgnoreCircularDependencies',
     );
@@ -52,7 +52,7 @@ describe('source types and circular dependencies', () => {
 
   it('when building a package that has a circular dependency with the --dangerouslyIgnoreCircularDependencies flag set, command still fails if removing the source package from the graph does not remove the cycle', () => {
     expect(() =>
-      runModularUnsafe(
+      runModularPipeLogs(
         tempModularRepo,
         'build a --dangerouslyIgnoreCircularDependencies',
       ),

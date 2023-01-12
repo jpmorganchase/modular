@@ -190,6 +190,7 @@ export function runModularUnsafe(
       },
       stdio,
       cleanup: true,
+      all: true,
       ...opts,
     },
   );
@@ -205,7 +206,7 @@ export function runModularPipeLogs(
   skipChecks: 'true' | 'false' = 'false',
   opts: Record<string, unknown> = {},
 ) {
-  return runModularUnsafe(cwd, args, opts, 'pipe', 'false');
+  return runModularUnsafe(cwd, args, opts, 'pipe', skipChecks);
 }
 
 /**
