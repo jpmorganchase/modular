@@ -40,7 +40,7 @@ module.exports = {
 };
 ```
 
-### **useModularEsbuild**
+### useModularEsbuild
 
 **Type**: `boolean`
 
@@ -48,7 +48,7 @@ module.exports = {
 
 Use esbuild instead of default Webpack. Only affects Apps and ESM Views.
 
-### **externalCdnTemplate**
+### externalCdnTemplate
 
 **Type**: `string`
 
@@ -57,7 +57,7 @@ Use esbuild instead of default Webpack. Only affects Apps and ESM Views.
 Template to resolve the URL used to fetch packages from a CDN. Defaults to
 esm.sh. Only applies to ESM Views.
 
-### **externalBlockList**
+### externalBlockList
 
 **Type**: `string[]`
 
@@ -69,7 +69,7 @@ where they would not work correctly. See
 [known-limitations](./esm-views/known-limitations.md). Defaults to none. Only
 applies to ESM Views.
 
-### **externalAllowList**
+### externalAllowList
 
 **Type**: `string[]`
 
@@ -80,7 +80,7 @@ to be handled by the CDN, except for particular cases where they would not work
 correctly. See [known-limitations](./esm-views/known-limitations.md). Defaults
 to all packages. Only applies to ESM Views.
 
-### **publicUrl**
+### publicUrl
 
 **Type**: `string`
 
@@ -90,7 +90,7 @@ Same as Create React App PUBLIC_URL. Instead of assuming the application is
 hosted in the web server's root or subpath specified by homepage in
 package.json, assets will be referenced to the URL provided.
 
-### **generateSourceMap**
+### generateSourceMap
 
 **Type**: `boolean`
 

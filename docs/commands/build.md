@@ -3,7 +3,7 @@ parent: Commands
 title: modular build
 ---
 
-# `modular build [packages...]`
+# `modular build [options] [packages...]`
 
 Search workspaces based on their `name` field in the `package.json` and build
 them according to their respective `modular.type`, in order of dependency (e.g.
