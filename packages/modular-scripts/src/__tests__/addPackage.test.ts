@@ -6,6 +6,7 @@ import {
   createModularTestContext,
   mockInstallTemplate,
   runModularUnsafe,
+  runModularUnsafeAsync,
 } from '../test/utils';
 import type { CoreProperties } from '@schemastore/package';
 
@@ -40,7 +41,7 @@ describe('When setting a base directory for an app', () => {
   it('fails if trying to add an app outside the "workspaces" directories', async () => {
     createTempModularRepoWithTemplate(appTemplatePath);
     await expect(
-      runModularUnsafe(
+      runModularUnsafeAsync(
         tempModularRepo,
         'add @scoped/will-not-create-app --path some/other/basepath --unstable-type app',
       ),
@@ -66,7 +67,7 @@ describe('When working with a scoped app', () => {
 
   it('fails if trying to add another app with the same name', async () => {
     await expect(
-      runModularUnsafe(
+      runModularUnsafeAsync(
         tempModularRepo,
         'add @scoped/sample-app --unstable-type app',
       ),
@@ -75,7 +76,7 @@ describe('When working with a scoped app', () => {
 
   it('fails trying to add another app with the same name in another path', async () => {
     await expect(
-      runModularUnsafe(
+      runModularUnsafeAsync(
         tempModularRepo,
         'add @scoped/sample-app --unstable-type app --path packages/wont/happen',
       ),
@@ -84,7 +85,10 @@ describe('When working with a scoped app', () => {
 
   it('fails trying to add another app in the same path (as scope is discarded)', async () => {
     await expect(
-      runModularUnsafe(tempModularRepo, 'add sample-app --unstable-type app'),
+      runModularUnsafeAsync(
+        tempModularRepo,
+        'add sample-app --unstable-type app',
+      ),
     ).rejects.toThrow();
   });
 });
@@ -113,7 +117,7 @@ describe('When working with an app installed in a custom directory', () => {
 
   it('fails if trying to add another app with the same name in the default path', async () => {
     await expect(
-      runModularUnsafe(
+      runModularUnsafeAsync(
         tempModularRepo,
         'add @scoped/sample-app --unstable-type app',
       ),
@@ -122,7 +126,7 @@ describe('When working with an app installed in a custom directory', () => {
 
   it('fails trying to add another app in the same path (as scope is discarded)', async () => {
     await expect(
-      runModularUnsafe(
+      runModularUnsafeAsync(
         tempModularRepo,
         'add sample-app --unstable-type app --path packages/nested/scoped',
       ),
