@@ -239,3 +239,19 @@ export async function runModularUnsafeAsync(
     },
   );
 }
+
+/**
+ * Runs `yarnpkg modular` in given directory with minimal configuration
+ */
+export async function runModular(
+  cwd: string,
+  args: string,
+  opts: Record<string, unknown> = {},
+) {
+  return execa('yarnpkg', ['modular', ...args.split(' ')], {
+    cwd,
+    all: true,
+    cleanup: true,
+    ...opts,
+  });
+}
