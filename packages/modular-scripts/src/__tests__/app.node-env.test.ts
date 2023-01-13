@@ -5,7 +5,7 @@ import prettier from 'prettier';
 import {
   createModularTestContext,
   mockInstallTemplate,
-  runModularUnsafe,
+  runModularForTests,
 } from '../test/utils';
 import getModularRoot from '../utils/getModularRoot';
 import rimraf from 'rimraf';
@@ -34,7 +34,7 @@ describe('when working with a NODE_ENV app', () => {
   describe('WHEN building with webpack', () => {
     beforeAll(async () => {
       cleanup();
-      runModularUnsafe(modularRoot, 'add node-env-app --unstable-type app');
+      runModularForTests(modularRoot, 'add node-env-app --unstable-type app');
 
       await fs.writeFile(
         path.join(modularRoot, 'packages', 'node-env-app', 'src', 'index.ts'),
@@ -45,7 +45,7 @@ describe('when working with a NODE_ENV app', () => {
       );
       rimraf.sync(path.join(modularRoot, 'dist/node-env-app'));
 
-      runModularUnsafe(modularRoot, 'build node-env-app');
+      runModularForTests(modularRoot, 'build node-env-app');
     });
     afterAll(cleanup);
     it('can build a app', () => {
@@ -93,7 +93,7 @@ describe('when working with a NODE_ENV app', () => {
   describe('WHEN building with esbuild', () => {
     beforeAll(async () => {
       await setupNodeEnvApp();
-      runModularUnsafe(tempModularRepo, 'build node-env-app', {
+      runModularForTests(tempModularRepo, 'build node-env-app', {
         env: {
           USE_MODULAR_ESBUILD: 'true',
         },
@@ -151,7 +151,7 @@ async function setupNodeEnvApp(): Promise<void> {
     path.join(getModularRoot(), '__fixtures__/templates'),
     tempModularRepo,
   );
-  runModularUnsafe(
+  runModularForTests(
     tempModularRepo,
     'add node-env-app --unstable-type modular-template-app',
   );

@@ -3,7 +3,7 @@ import path from 'path';
 import {
   createModularTestContext,
   runModularPipeLogs,
-  runModularUnsafe,
+  runModularForTests,
 } from '../../test/utils';
 import getModularRoot from '../../utils/getModularRoot';
 
@@ -16,7 +16,7 @@ let tempModularRepo: string;
 describe('A simple modular repo with a .modular.js config file', () => {
   beforeEach(() => {
     tempModularRepo = createModularTestContext();
-    runModularUnsafe(tempModularRepo, 'add test-app --unstable-type app');
+    runModularForTests(tempModularRepo, 'add test-app --unstable-type app');
     copyFileSync(
       path.join(configFixtures, '.modular.js'),
       path.join(tempModularRepo, '.modular.js'),

@@ -2,7 +2,7 @@ import tree from 'tree-view-for-tests';
 import path from 'path';
 import fs from 'fs-extra';
 import prettier from 'prettier';
-import { createModularTestContext, runModularUnsafe } from '../test/utils';
+import { createModularTestContext, runModularForTests } from '../test/utils';
 
 // These tests must be executed sequentially with `--runInBand`.
 
@@ -11,7 +11,7 @@ const packagesPath = path.join(tempModularRepo, 'packages');
 
 describe('when working with an app', () => {
   beforeAll(() => {
-    runModularUnsafe(
+    runModularForTests(
       tempModularRepo,
       'add sample-esbuild-app --unstable-type app',
       {
@@ -21,7 +21,7 @@ describe('when working with an app', () => {
       },
     );
 
-    runModularUnsafe(tempModularRepo, 'build sample-esbuild-app', {
+    runModularForTests(tempModularRepo, 'build sample-esbuild-app', {
       env: {
         USE_MODULAR_ESBUILD: 'true',
       },

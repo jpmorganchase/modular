@@ -19,7 +19,7 @@ import puppeteer from 'puppeteer';
 
 import { startApp, DevServer } from './start-app';
 import type { CoreProperties } from '@schemastore/package';
-import { runModular, runModularUnsafe } from '../test/utils';
+import { runYarnModular, runModularForTests } from '../test/utils';
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
 const { getNodeText } = queries;
@@ -54,7 +54,7 @@ afterAll(cleanup);
 
 describe('when working with a NODE_ENV app', () => {
   beforeAll(async () => {
-    runModularUnsafe(modularRoot, 'add node-env-app --unstable-type app');
+    runModularForTests(modularRoot, 'add node-env-app --unstable-type app');
 
     await fs.writeFile(
       path.join(modularRoot, 'packages', 'node-env-app', 'src', 'index.ts'),
@@ -65,7 +65,7 @@ describe('when working with a NODE_ENV app', () => {
     `,
     );
 
-    runModularUnsafe(modularRoot, 'build node-env-app');
+    runModularForTests(modularRoot, 'build node-env-app');
   });
 
   afterAll(cleanup);
@@ -116,8 +116,11 @@ describe('when working with a NODE_ENV app', () => {
 
 describe('When working with a npm scoped app', () => {
   beforeAll(() => {
-    runModularUnsafe(modularRoot, 'add @scoped/sample-app --unstable-type app');
-    runModularUnsafe(modularRoot, 'build @scoped/sample-app');
+    runModularForTests(
+      modularRoot,
+      'add @scoped/sample-app --unstable-type app',
+    );
+    runModularForTests(modularRoot, 'build @scoped/sample-app');
   });
 
   afterAll(cleanup);
@@ -301,7 +304,7 @@ describe('When working with a npm scoped app', () => {
 
 describe('when working with a non-scoped app', () => {
   beforeAll(async () => {
-    runModularUnsafe(modularRoot, 'add sample-app --unstable-type app');
+    runModularForTests(modularRoot, 'add sample-app --unstable-type app');
 
     // Let's replace the App module with something of our own
     // with a test specific element we can introspect
@@ -310,7 +313,7 @@ describe('when working with a non-scoped app', () => {
       path.join(packagesPath, 'sample-app', 'src', 'App.tsx'),
     );
 
-    runModularUnsafe(modularRoot, 'build sample-app');
+    runModularForTests(modularRoot, 'build sample-app');
   });
 
   afterAll(cleanup);
@@ -486,7 +489,7 @@ describe('when working with a non-scoped app', () => {
   });
 
   it('can execute tests', async () => {
-    const output = await runModular(
+    const output = await runYarnModular(
       getModularRoot(),
       'test sample-app --watchAll false',
       {
@@ -570,11 +573,11 @@ describe('when working with a non-scoped app', () => {
 
 describe('When working with an app added in a custom directory', () => {
   beforeAll(() => {
-    runModularUnsafe(
+    runModularForTests(
       modularRoot,
       'add @scoped/custom-app --unstable-type app --path packages/custom/scoped/',
     );
-    runModularUnsafe(modularRoot, 'build @scoped/custom-app');
+    runModularForTests(modularRoot, 'build @scoped/custom-app');
   });
 
   afterAll(cleanup);

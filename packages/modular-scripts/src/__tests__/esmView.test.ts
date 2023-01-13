@@ -13,7 +13,7 @@ import puppeteer from 'puppeteer';
 import { normalizeToPosix } from '../esbuild-scripts/utils/formatPath';
 import { startApp, DevServer } from './start-app';
 import type { CoreProperties } from '@schemastore/package';
-import { createModularTestContext, runModularUnsafe } from '../test/utils';
+import { createModularTestContext, runModularForTests } from '../test/utils';
 
 // Temporary text context paths
 let tempModularRepo: string;
@@ -36,7 +36,7 @@ describe('modular-scripts', () => {
     tempModularRepo = createModularTestContext();
     tempPackagesPath = path.join(tempModularRepo, 'packages');
     tempDistPath = path.join(tempModularRepo, 'dist');
-    runModularUnsafe(
+    runModularForTests(
       tempModularRepo,
       'add sample-esm-view --unstable-type esm-view --unstable-name sample-esm-view',
     );
@@ -719,7 +719,7 @@ function buildSampleEsmView(
   cwd: string,
   opts?: Record<string, unknown>,
 ): execa.ExecaSyncReturnValue<string> {
-  return runModularUnsafe(cwd, `build ${targetedView} --verbose`, opts);
+  return runModularForTests(cwd, `build ${targetedView} --verbose`, opts);
 }
 
 function getPackageEntryPointPath(

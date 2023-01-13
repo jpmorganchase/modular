@@ -4,7 +4,7 @@ import fs from 'fs-extra';
 import tmp from 'tmp';
 import {
   createModularTestContext,
-  runModular,
+  runYarnModular,
   runModularPipeLogs,
 } from '../test/utils';
 import getModularRoot from '../utils/getModularRoot';
@@ -39,7 +39,7 @@ describe('Modular test command', () => {
       it('should exit with an error', async () => {
         let errorNumber = 0;
         try {
-          await runModular(
+          await runYarnModular(
             tempModularRepo,
             'test test/InvalidTest.test.ts --watchAll=false',
           );
@@ -54,7 +54,7 @@ describe('Modular test command', () => {
       it('should exit with no error', async () => {
         let errorNumber = 0;
         try {
-          await runModular(
+          await runYarnModular(
             tempModularRepo,
             'test test/ValidTest.test.ts --watchAll=false',
           );
@@ -259,7 +259,7 @@ describe('Modular test command', () => {
     it('errors when specifying --package with --changed', async () => {
       let errorNumber;
       try {
-        await runModular(
+        await runYarnModular(
           modularRoot,
           'test --changed --package modular-scripts',
         );
@@ -272,7 +272,7 @@ describe('Modular test command', () => {
     it('errors when specifying --package with a non-existing workspace', async () => {
       let capturedError;
       try {
-        await runModular(modularRoot, 'test --package non-existing');
+        await runYarnModular(modularRoot, 'test --package non-existing');
       } catch (error) {
         capturedError = error as ExecaError;
       }
@@ -285,7 +285,7 @@ describe('Modular test command', () => {
     it('errors when specifying a regex with --packages', async () => {
       let capturedError;
       try {
-        await runModular(
+        await runYarnModular(
           modularRoot,
           'test memoize.test.ts --package modular-scripts',
         );
@@ -301,7 +301,7 @@ describe('Modular test command', () => {
     it('errors when specifying a regex with --package', async () => {
       let capturedError;
       try {
-        await runModular(
+        await runYarnModular(
           modularRoot,
           'test memoize.test.ts --package modular-scripts',
         );
@@ -317,7 +317,7 @@ describe('Modular test command', () => {
     it('errors when specifying a regex with --changed', async () => {
       let capturedError;
       try {
-        await runModular(modularRoot, 'test memoize.test.ts --changed');
+        await runYarnModular(modularRoot, 'test memoize.test.ts --changed');
       } catch (error) {
         capturedError = error as ExecaError;
       }
@@ -330,7 +330,7 @@ describe('Modular test command', () => {
     it('errors when specifying --compareBranch without --changed', async () => {
       let capturedError;
       try {
-        await runModular(modularRoot, 'test --compareBranch main');
+        await runYarnModular(modularRoot, 'test --compareBranch main');
       } catch (error) {
         capturedError = error as ExecaError;
       }

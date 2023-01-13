@@ -34,7 +34,7 @@ export async function addFixturePackage(
   options: { copy: boolean } = { copy: true },
 ): Promise<void> {
   const packageSrcDir = path.join(modularRoot, 'packages', name, 'src');
-  await runModular(modularRoot, `add ${name} --unstable-type package`, {
+  await runYarnModular(modularRoot, `add ${name} --unstable-type package`, {
     stdio: 'inherit',
   });
   await fs.emptyDir(packageSrcDir);
@@ -156,7 +156,7 @@ export function generateJestConfig(jestConfig: Config.InitialOptions): string {
  * @param stdio Override 'inherit' defailt stdio option
  * @param skipChecks Override 'true' default to skipping startup and preflight checks
  */
-export function runModularUnsafe(
+export function runModularForTests(
   cwd: string,
   args: string,
   opts: Record<string, unknown> = {},
@@ -186,7 +186,7 @@ export function runModularUnsafe(
 }
 
 /**
- * Wrapper of RunModularUnsafe that runs checks to make it safe & pipes output
+ * Wrapper of runModularForTests that runs checks to make it safe & pipes output
  * Skip checks is false by default when we pipe output as unsafe output includes warnings that Modular repository might be invalid
  */
 export function runModularPipeLogs(
@@ -195,13 +195,13 @@ export function runModularPipeLogs(
   skipChecks: 'true' | 'false' = 'false',
   opts: Record<string, unknown> = {},
 ) {
-  return runModularUnsafe(cwd, args, opts, 'pipe', skipChecks);
+  return runModularForTests(cwd, args, opts, 'pipe', skipChecks);
 }
 
 /**
- * Async alternative to runModularUnsafe
+ * Async alternative to runModularForTests
  */
-export async function runModularUnsafeAsync(
+export async function runModularForTestsAsync(
   cwd: string,
   args: string,
   opts: Record<string, unknown> = {},
@@ -233,7 +233,7 @@ export async function runModularUnsafeAsync(
 /**
  * Runs `yarnpkg modular` in given directory with minimal configuration
  */
-export async function runModular(
+export async function runYarnModular(
   cwd: string,
   args: string,
   opts: Record<string, unknown> = {},

@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
 import execa from 'execa';
-import { createModularTestContext, runModular } from '../test/utils';
+import { createModularTestContext, runYarnModular } from '../test/utils';
 import getModularRoot from '../utils/getModularRoot';
 
 const modularRoot = getModularRoot();
@@ -48,7 +48,7 @@ describe('Modular typecheck', () => {
         }
         let modularStdErr = '';
         try {
-          await runModular(tempModularRepo, 'typecheck');
+          await runYarnModular(tempModularRepo, 'typecheck');
         } catch ({ stderr }) {
           modularStdErr = stderr as string;
         }
@@ -73,7 +73,7 @@ describe('Modular typecheck', () => {
         }
         let modularStdErr = '';
         try {
-          await runModular(tempModularRepo, 'typecheck');
+          await runYarnModular(tempModularRepo, 'typecheck');
         } catch ({ stderr }) {
           modularStdErr = stderr as string;
         }
@@ -87,7 +87,7 @@ describe('Modular typecheck', () => {
   });
   describe('when there are no type errors', () => {
     it('should print a one line success message', async () => {
-      const result = await runModular(modularRoot, 'typecheck');
+      const result = await runYarnModular(modularRoot, 'typecheck');
       expect(result.stdout).toMatch('\u2713 Typecheck passed');
     });
   });

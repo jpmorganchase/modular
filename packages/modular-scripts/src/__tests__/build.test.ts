@@ -6,10 +6,10 @@ import fs from 'fs-extra';
 import {
   addFixturePackage,
   cleanup,
-  runModularUnsafe,
+  runModularForTests,
   createModularTestContext,
   runModularPipeLogs,
-  runModularUnsafeAsync,
+  runModularForTestsAsync,
 } from '../test/utils';
 
 import getModularRoot from '../utils/getModularRoot';
@@ -22,7 +22,7 @@ describe('WHEN building with preserve modules', () => {
   beforeAll(async () => {
     await cleanup([packageName]);
     await addFixturePackage(packageName);
-    runModularUnsafe(modularRoot, `build ${packageName} --preserve-modules`);
+    runModularForTests(modularRoot, `build ${packageName} --preserve-modules`);
   });
 
   afterAll(async () => await cleanup([packageName]));
@@ -165,7 +165,7 @@ describe('WHEN building packages with private cross-package dependencies', () =>
 
   it('THEN the build fails by default', () => {
     return expect(() =>
-      runModularUnsafeAsync(
+      runModularForTestsAsync(
         modularRoot,
         `build ${dependentPackage} --preserve-modules`,
       ),
@@ -173,7 +173,7 @@ describe('WHEN building packages with private cross-package dependencies', () =>
   });
 
   it('THEN the build passes if the --private option is used', () => {
-    runModularUnsafe(
+    runModularForTests(
       modularRoot,
       `build ${dependentPackage} --preserve-modules --private`,
     );
