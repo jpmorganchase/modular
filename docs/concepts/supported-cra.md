@@ -3,33 +3,33 @@ title: Supported CRA features
 parent: Concepts
 ---
 
-[Apps](../package-types/app.md) and [ESM Views](../package-types/esm-view.md) is
-compatible with some features from
-[Create React App](https://create-react-app.dev). This is a list of the features
-we support and:
+Modular [apps](../package-types/app.md) and
+[ESM Views](../package-types/esm-view.md) are compatible with a subset of
+features from [Create React App](https://create-react-app.dev):
 
 ## Templates
 
-[template support](../package-types/template.md) is integrated in the
-[`modular add`](../commands/add.md) command. Modular templates are not
-guaranteed to be compatible with CRA templates.
+[Template support](../package-types/template.md) is integrated in the
+[`modular add`](../commands/add.md) command. Although Modular templates work in
+a similar way to Create React App templates, they implement templating in a
+different context (different types of packages that live in the same repository)
+and they are not compatible with CRA templates.
 
 ## Proxies
 
-[Local proxies](https://create-react-app.dev/docs/proxying-api-requests-in-development/)
-are supported, but [esbuild mode](../configuration.md) doesn't support the
-`package.json` `proxy` field. The more flexible
+[Local development proxies](https://create-react-app.dev/docs/proxying-api-requests-in-development/)
+are supported, but [esbuild mode](../configuration.md#usemodularesbuild) doesn't
+support the `package.json` `proxy` field. The more flexible
 [manual proxy configration](https://create-react-app.dev/docs/proxying-api-requests-in-development/#configuring-the-proxy-manually)
 is supported in both Webpack and esbuild mode.
 
 ## Importing CSS / CSS Modules
 
 Importing CSS stylesheets in Modular apps and ESM Views works in the same way as
-it does
 [in Create React App](https://create-react-app.dev/docs/adding-a-stylesheet).
 
 [CSS Modules](https://github.com/css-modules/css-modules)
-[are also supported](https://create-react-app.dev/docs/adding-a-css-modules-stylesheet)
+[are also supported](https://create-react-app.dev/docs/adding-a-css-modules-stylesheet),
 but only in Webpack mode - imported classes are always `undefined` in
 [esbuild mode](../configuration.md/#usemodularesbuild).
 
