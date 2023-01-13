@@ -11,25 +11,7 @@ built with [Webpack v5](https://webpack.js.org/) (by default) or
 [esbuild](https://esbuild.github.io/) (by turning on `useModularEsbuild` in
 [the configuration](../configuration.md)).
 
-Apps support pretty much all the functionalities from
-[Create React App v5](https://create-react-app.dev/docs/custom-templates), with
-some important differences:
-
-- [ejecting](https://create-react-app.dev/docs/available-scripts/#npm-run-eject)
-  is not supported. As an opinionated tool, Modular tries to offer an uniform
-  way of building applications, although feedback on our build configuration is
-  welcome!
-- [template support](../package-types/template.md) is integrated in the
-  [`modular add`](../commands/add.md) command. Modular templates are not
-  guaranteed to be compatible with CRA templates.
-- Source files are loaded with the more performant
-  [`esbuild-loader`](https://github.com/privatenumber/esbuild-loader) in the
-  Webpack configuration. For this reason, Babel plugins are not supported.
-- [Local proxies](https://create-react-app.dev/docs/proxying-api-requests-in-development/)
-  are supported, but [esbuild mode](../configuration.md) doesn't support the
-  `package.json` `proxy` field. The more flexible
-  [manual proxy configration](https://create-react-app.dev/docs/proxying-api-requests-in-development/#configuring-the-proxy-manually)
-  is supported in both Webpack and esbuild mode.
+# TODO: link the CRA page
 
 ## Build
 
