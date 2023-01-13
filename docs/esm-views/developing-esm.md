@@ -1,7 +1,7 @@
 ---
 parent: ESM Views
 nav_order: 100
-title: Developing with ESM View
+title: Developing with ESM Views
 ---
 
 ## Differences between developing ESM Views and regular applications
