@@ -6,9 +6,10 @@ import fs from 'fs-extra';
 import {
   addFixturePackage,
   cleanup,
-  modular,
+  runModularForTests,
   createModularTestContext,
-  runLocalModular,
+  runModularPipeLogs,
+  runModularForTestsAsync,
 } from '../test/utils';
 
 import getModularRoot from '../utils/getModularRoot';
@@ -21,9 +22,7 @@ describe('WHEN building with preserve modules', () => {
   beforeAll(async () => {
     await cleanup([packageName]);
     await addFixturePackage(packageName);
-    await modular(`build ${packageName} --preserve-modules`, {
-      stdio: 'inherit',
-    });
+    runModularForTests(modularRoot, `build ${packageName} --preserve-modules`);
   });
 
   afterAll(async () => await cleanup([packageName]));
@@ -165,18 +164,19 @@ describe('WHEN building packages with private cross-package dependencies', () =>
   afterAll(async () => await cleanup([dependentPackage, libraryPackage]));
 
   it('THEN the build fails by default', () => {
-    return expect(
-      async () =>
-        await modular(`build ${dependentPackage} --preserve-modules`, {
-          stdio: 'inherit',
-        }),
+    return expect(() =>
+      runModularForTestsAsync(
+        modularRoot,
+        `build ${dependentPackage} --preserve-modules`,
+      ),
     ).rejects.toThrow();
   });
 
-  it('THEN the build passes if the --private option is used', async () => {
-    await modular(`build ${dependentPackage} --preserve-modules --private`, {
-      stdio: 'inherit',
-    });
+  it('THEN the build passes if the --private option is used', () => {
+    runModularForTests(
+      modularRoot,
+      `build ${dependentPackage} --preserve-modules --private`,
+    );
 
     expect(tree(path.join(modularRoot, 'dist', dependentPackage)))
       .toMatchInlineSnapshot(`
@@ -246,19 +246,13 @@ describe('modular build supports custom workspaces', () => {
   });
 
   it('builds an app in a different workspace directory', () => {
-    const result = runLocalModular(modularRoot, tempModularRepo, [
-      'build',
-      'app',
-    ]);
+    const result = runModularPipeLogs(tempModularRepo, 'build app');
     expect(result.stderr).toBeFalsy();
     expect(result.stdout).toContain('Compiled successfully.');
   });
 
   it('builds a package in a different workspace directory', () => {
-    const result = runLocalModular(modularRoot, tempModularRepo, [
-      'build',
-      'alpha',
-    ]);
+    const result = runModularPipeLogs(tempModularRepo, 'build alpha');
     expect(result.stderr).toBeFalsy();
     expect(result.stdout).toContain('built alpha');
   });

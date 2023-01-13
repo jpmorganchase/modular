@@ -19,6 +19,7 @@ import puppeteer from 'puppeteer';
 
 import { startApp, DevServer } from './start-app';
 import type { CoreProperties } from '@schemastore/package';
+import { runYarnModular, runModularForTests } from '../test/utils';
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
 const { getNodeText } = queries;
@@ -28,14 +29,6 @@ const modularRoot = getModularRoot();
 // These tests must be executed sequentially with `--runInBand`.
 
 const packagesPath = path.join(getModularRoot(), 'packages');
-
-function modular(str: string, opts: Record<string, unknown> = {}) {
-  return execa('yarnpkg', ['modular', ...str.split(' ')], {
-    cwd: modularRoot,
-    cleanup: true,
-    ...opts,
-  });
-}
 
 function cleanup() {
   rimraf.sync(path.join(packagesPath, 'node-env-app'));
@@ -61,7 +54,7 @@ afterAll(cleanup);
 
 describe('when working with a NODE_ENV app', () => {
   beforeAll(async () => {
-    await modular('add node-env-app --unstable-type app', { stdio: 'inherit' });
+    runModularForTests(modularRoot, 'add node-env-app --unstable-type app');
 
     await fs.writeFile(
       path.join(modularRoot, 'packages', 'node-env-app', 'src', 'index.ts'),
@@ -72,9 +65,7 @@ describe('when working with a NODE_ENV app', () => {
     `,
     );
 
-    await modular('build node-env-app', {
-      stdio: 'inherit',
-    });
+    runModularForTests(modularRoot, 'build node-env-app');
   });
 
   afterAll(cleanup);
@@ -124,14 +115,12 @@ describe('when working with a NODE_ENV app', () => {
 });
 
 describe('When working with a npm scoped app', () => {
-  beforeAll(async () => {
-    await modular('add @scoped/sample-app --unstable-type app', {
-      stdio: 'inherit',
-    });
-
-    await modular('build @scoped/sample-app', {
-      stdio: 'inherit',
-    });
+  beforeAll(() => {
+    runModularForTests(
+      modularRoot,
+      'add @scoped/sample-app --unstable-type app',
+    );
+    runModularForTests(modularRoot, 'build @scoped/sample-app');
   });
 
   afterAll(cleanup);
@@ -315,7 +304,7 @@ describe('When working with a npm scoped app', () => {
 
 describe('when working with a non-scoped app', () => {
   beforeAll(async () => {
-    await modular('add sample-app --unstable-type app', { stdio: 'inherit' });
+    runModularForTests(modularRoot, 'add sample-app --unstable-type app');
 
     // Let's replace the App module with something of our own
     // with a test specific element we can introspect
@@ -324,9 +313,7 @@ describe('when working with a non-scoped app', () => {
       path.join(packagesPath, 'sample-app', 'src', 'App.tsx'),
     );
 
-    await modular('build sample-app', {
-      stdio: 'inherit',
-    });
+    runModularForTests(modularRoot, 'build sample-app');
   });
 
   afterAll(cleanup);
@@ -503,13 +490,17 @@ describe('when working with a non-scoped app', () => {
   });
 
   it('can execute tests', async () => {
-    const output = await modular('test sample-app --watchAll false', {
-      all: true,
-      reject: false,
-      env: {
-        CI: 'true',
+    const output = await runYarnModular(
+      getModularRoot(),
+      'test sample-app --watchAll false',
+      {
+        all: true,
+        reject: false,
+        env: {
+          CI: 'true',
+        },
       },
-    });
+    );
 
     // TODO: Passing CI=true *should* remove all the coloring stuff,
     // it's weird that it doesn't. To workaround it, I've manually
@@ -582,17 +573,12 @@ describe('when working with a non-scoped app', () => {
 });
 
 describe('When working with an app added in a custom directory', () => {
-  beforeAll(async () => {
-    await modular(
+  beforeAll(() => {
+    runModularForTests(
+      modularRoot,
       'add @scoped/custom-app --unstable-type app --path packages/custom/scoped/',
-      {
-        stdio: 'inherit',
-      },
     );
-
-    await modular('build @scoped/custom-app', {
-      stdio: 'inherit',
-    });
+    runModularForTests(modularRoot, 'build @scoped/custom-app');
   });
 
   afterAll(cleanup);

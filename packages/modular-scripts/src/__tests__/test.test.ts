@@ -2,56 +2,46 @@ import execa, { ExecaError } from 'execa';
 import path from 'path';
 import fs from 'fs-extra';
 import tmp from 'tmp';
+import {
+  createModularTestContext,
+  runYarnModular,
+  runModularPipeLogs,
+} from '../test/utils';
 import getModularRoot from '../utils/getModularRoot';
-import { runLocalModular } from '../test/utils';
 
-function setupTests(fixturesFolder: string) {
-  const files = fs.readdirSync(path.join(fixturesFolder));
-  files.forEach((file) => {
-    fs.writeFileSync(
-      path.join(fixturesFolder, file),
-      fs
-        .readFileSync(path.join(fixturesFolder, file), 'utf-8')
-        .replace('describe.skip', 'describe'),
-    );
-  });
-}
-
-function clearTests(fixturesFolder: string) {
-  const files = fs.readdirSync(path.join(fixturesFolder));
-  files.forEach((file) => {
-    fs.writeFileSync(
-      path.join(fixturesFolder, file),
-      fs
-        .readFileSync(path.join(fixturesFolder, file), 'utf-8')
-        .replace('describe', 'describe.skip'),
-    );
-  });
-}
+const modularRoot = getModularRoot();
 
 describe('Modular test command', () => {
   describe('test command succeeds on valid test and fails on invalid tests', () => {
-    const fixturesFolder = path.join(__dirname, '__fixtures__', 'test');
+    let tempModularRepo: string;
 
     beforeEach(() => {
-      setupTests(fixturesFolder);
-    });
-
-    afterEach(() => {
-      clearTests(fixturesFolder);
+      tempModularRepo = createModularTestContext();
+      const fixturesFolder = path.join(__dirname, '__fixtures__', 'test');
+      const relativeFixturePath = fixturesFolder.replace(modularRoot, '');
+      const tempFixturesFolder = path.join(
+        tempModularRepo,
+        relativeFixturePath,
+      );
+      fs.mkdirsSync(tempFixturesFolder);
+      const files = fs.readdirSync(path.join(fixturesFolder));
+      files.forEach((file) => {
+        fs.writeFileSync(
+          path.join(tempFixturesFolder, file),
+          fs
+            .readFileSync(path.join(fixturesFolder, file), 'utf-8')
+            .replace('describe.skip', 'describe'),
+        );
+      });
     });
 
     describe('when the tests fail', () => {
       it('should exit with an error', async () => {
         let errorNumber = 0;
         try {
-          await execa(
-            'yarnpkg',
-            ['modular', 'test', 'test/InvalidTest.test.ts', '--watchAll=false'],
-            {
-              all: true,
-              cleanup: true,
-            },
+          await runYarnModular(
+            tempModularRepo,
+            'test test/InvalidTest.test.ts --watchAll=false',
           );
         } catch (error) {
           errorNumber = (error as ExecaError).exitCode;
@@ -64,13 +54,9 @@ describe('Modular test command', () => {
       it('should exit with no error', async () => {
         let errorNumber = 0;
         try {
-          await execa(
-            'yarnpkg',
-            ['modular', 'test', 'test/ValidTest.test.ts', '--watchAll=false'],
-            {
-              all: true,
-              cleanup: true,
-            },
+          await runYarnModular(
+            tempModularRepo,
+            'test test/ValidTest.test.ts --watchAll=false',
           );
         } catch (error) {
           errorNumber = (error as ExecaError).exitCode;
@@ -91,7 +77,6 @@ describe('Modular test command', () => {
       'ghost-testing',
     );
 
-    const currentModularFolder = getModularRoot();
     let randomOutputFolder: string;
 
     beforeEach(() => {
@@ -130,10 +115,10 @@ describe('Modular test command', () => {
 
     // These expects run in a single test, serially for performance reasons (the setup time is quite long)
     it('finds no unchanged using --changed / finds changed after modifying some workspaces / finds ancestors using --ancestors', () => {
-      const resultUnchanged = runLocalModular(
-        currentModularFolder,
+      const resultUnchanged = runModularPipeLogs(
         randomOutputFolder,
-        ['test', '--changed'],
+        'test --changed',
+        'true',
       );
       expect(resultUnchanged.stdout).toContain('No changed workspaces found');
 
@@ -146,10 +131,10 @@ describe('Modular test command', () => {
         "\n// Comment to package c's source",
       );
 
-      const resultChanged = runLocalModular(
-        currentModularFolder,
+      const resultChanged = runModularPipeLogs(
         randomOutputFolder,
-        ['test', '--changed'],
+        'test --changed',
+        'true',
       );
       expect(resultChanged.stderr).toContain(
         'packages/c/src/__tests__/utils/c-nested.test.ts',
@@ -164,10 +149,9 @@ describe('Modular test command', () => {
         'packages/b/src/__tests__/b.test.ts',
       );
 
-      const resultChangedWithAncestors = runLocalModular(
-        currentModularFolder,
+      const resultChangedWithAncestors = runModularPipeLogs(
         randomOutputFolder,
-        ['test', '--changed', '--ancestors'],
+        'test --changed --ancestors',
       );
       expect(resultChangedWithAncestors.stderr).toContain(
         'packages/c/src/__tests__/utils/c-nested.test.ts',
@@ -207,7 +191,6 @@ describe('Modular test command', () => {
       'ghost-testing',
     );
 
-    const currentModularFolder = getModularRoot();
     let randomOutputFolder: string;
 
     beforeEach(() => {
@@ -221,10 +204,10 @@ describe('Modular test command', () => {
 
     // Run in a single test, serially for performance reasons (the setup time is quite long)
     it('finds --package after specifying a valid workspaces / finds ancestors using --ancestors', () => {
-      const resultPackages = runLocalModular(
-        currentModularFolder,
+      const resultPackages = runModularPipeLogs(
         randomOutputFolder,
-        ['test', '--package', 'b', '--package', 'c'],
+        'test --package b --package c',
+        'true',
       );
       expect(resultPackages.stderr).toContain(
         'packages/c/src/__tests__/utils/c-nested.test.ts',
@@ -239,10 +222,10 @@ describe('Modular test command', () => {
         'packages/b/src/__tests__/b.test.ts',
       );
 
-      const resultPackagesWithAncestors = runLocalModular(
-        currentModularFolder,
+      const resultPackagesWithAncestors = runModularPipeLogs(
         randomOutputFolder,
-        ['test', '--ancestors', '--package', 'b', '--package', 'c'],
+        'test --ancestors --package b --package c',
+        'true',
       );
       expect(resultPackagesWithAncestors.stderr).toContain(
         'packages/c/src/__tests__/utils/c-nested.test.ts',
@@ -276,13 +259,9 @@ describe('Modular test command', () => {
     it('errors when specifying --package with --changed', async () => {
       let errorNumber;
       try {
-        await execa(
-          'yarnpkg',
-          ['modular', 'test', '--changed', '--package', 'modular-scripts'],
-          {
-            all: true,
-            cleanup: true,
-          },
+        await runYarnModular(
+          modularRoot,
+          'test --changed --package modular-scripts',
         );
       } catch (error) {
         errorNumber = (error as ExecaError).exitCode;
@@ -293,14 +272,7 @@ describe('Modular test command', () => {
     it('errors when specifying --package with a non-existing workspace', async () => {
       let capturedError;
       try {
-        await execa(
-          'yarnpkg',
-          ['modular', 'test', '--package', 'non-existing'],
-          {
-            all: true,
-            cleanup: true,
-          },
-        );
+        await runYarnModular(modularRoot, 'test --package non-existing');
       } catch (error) {
         capturedError = error as ExecaError;
       }
@@ -313,19 +285,9 @@ describe('Modular test command', () => {
     it('errors when specifying a regex with --packages', async () => {
       let capturedError;
       try {
-        await execa(
-          'yarnpkg',
-          [
-            'modular',
-            'test',
-            'memoize.test.ts',
-            '--package',
-            'modular-scripts',
-          ],
-          {
-            all: true,
-            cleanup: true,
-          },
+        await runYarnModular(
+          modularRoot,
+          'test memoize.test.ts --package modular-scripts',
         );
       } catch (error) {
         capturedError = error as ExecaError;
@@ -339,19 +301,9 @@ describe('Modular test command', () => {
     it('errors when specifying a regex with --package', async () => {
       let capturedError;
       try {
-        await execa(
-          'yarnpkg',
-          [
-            'modular',
-            'test',
-            'memoize.test.ts',
-            '--package',
-            'modular-scripts',
-          ],
-          {
-            all: true,
-            cleanup: true,
-          },
+        await runYarnModular(
+          modularRoot,
+          'test memoize.test.ts --package modular-scripts',
         );
       } catch (error) {
         capturedError = error as ExecaError;
@@ -365,14 +317,7 @@ describe('Modular test command', () => {
     it('errors when specifying a regex with --changed', async () => {
       let capturedError;
       try {
-        await execa(
-          'yarnpkg',
-          ['modular', 'test', 'memoize.test.ts', '--changed'],
-          {
-            all: true,
-            cleanup: true,
-          },
-        );
+        await runYarnModular(modularRoot, 'test memoize.test.ts --changed');
       } catch (error) {
         capturedError = error as ExecaError;
       }
@@ -385,10 +330,7 @@ describe('Modular test command', () => {
     it('errors when specifying --compareBranch without --changed', async () => {
       let capturedError;
       try {
-        await execa('yarnpkg', ['modular', 'test', '--compareBranch', 'main'], {
-          all: true,
-          cleanup: true,
-        });
+        await runYarnModular(modularRoot, 'test --compareBranch main');
       } catch (error) {
         capturedError = error as ExecaError;
       }
