@@ -38,6 +38,13 @@ across micro-frontends; for this reason, external dependencies are not bundled,
 but they are rewritten to a [configurable ESM CDN](../esm-views/esm-cdn.md) that
 serves them as ES modules on the fly.
 
+## Supported features
+
+ESM views support a subset of [Create React App](https://create-react-app.dev/)
+features that make sense in a monorepo context for a type of application that
+can be loaded at runtime. See [this page](../concepts/supported-cra.md) for a
+detailed list of supported features.
+
 ## Build
 
 To [build](../commands/build.md) your ESM View for deployment, run:

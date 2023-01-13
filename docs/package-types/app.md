@@ -11,7 +11,12 @@ built with [Webpack v5](https://webpack.js.org/) (by default) or
 [esbuild](https://esbuild.github.io/) (by turning on `useModularEsbuild` in
 [the configuration](../configuration.md)).
 
-# TODO: link the CRA page
+## Supported features
+
+Apps support a subset of [Create React App](https://create-react-app.dev/)
+features that make sense in a monorepo context. See
+[this page](../concepts/supported-cra.md) for a detailed list of supported
+features.
 
 ## Build
 
