@@ -167,7 +167,7 @@ interface CLITestOptions extends TestOptions {
 }
 
 program
-  .command('test [regexes...]')
+  .command('test [packages...]')
   .option(
     '--ancestors',
     'Additionally run tests for workspaces that depend on workspaces that have changed',
@@ -186,7 +186,10 @@ program
     '--compareBranch <branch>',
     "Specifies the branch to use with the --changed flag. If not specified, Modular will use the repo's default branch",
   )
-  .option('--package <packages...>', 'Specifies one or more packages to test')
+  .option(
+    '--regex <regexes...>',
+    'Specifies one or more test name regular expression',
+  )
   .option('--coverage', testOptions.coverage.description)
   .option('--forceExit', testOptions.forceExit.description)
   .option('--env <env>', testOptions.env.description, 'jsdom')
@@ -212,32 +215,21 @@ program
   .option('--no-cache', testOptions.cache.description)
   .allowUnknownOption()
   .description('Run tests over the codebase')
-  .action(async (regexes: string[], options: CLITestOptions) => {
-    if (options.ancestors && !options.changed && !options.package) {
-      process.stderr.write(
-        "Option --ancestors doesn't make sense without option --changed or option --package\n",
-      );
-      process.exit(1);
-    }
-    if (options.package && options.changed) {
-      process.stderr.write(
-        'Option --package conflicts with option --changed\n',
-      );
-      process.exit(1);
-    }
+  .action(async (packages: string[], options: CLITestOptions) => {
+    console.log(options, packages);
     if (options.compareBranch && !options.changed) {
       process.stderr.write(
         "Option --compareBranch doesn't make sense without option --changed\n",
       );
       process.exit(1);
     }
-    if (options.changed && regexes.length) {
+    if (options.changed && options.regex?.length) {
       process.stderr.write(
         'Option --changed conflicts with supplied test regex\n',
       );
       process.exit(1);
     }
-    if (options.package && regexes.length) {
+    if (packages.length && options.regex?.length) {
       process.stderr.write(
         'Option --package conflicts with supplied test regex\n',
       );
@@ -250,7 +242,7 @@ program
     const { U, ...testOptions } = options;
     testOptions.updateSnapshot = !!(options.updateSnapshot || U);
 
-    return test(testOptions, regexes);
+    return test(testOptions, packages);
   });
 
 program

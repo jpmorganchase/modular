@@ -41,7 +41,7 @@ describe('Modular test command', () => {
         try {
           await runYarnModular(
             tempModularRepo,
-            'test test/InvalidTest.test.ts --watchAll=false',
+            'test --regex test/InvalidTest.test.ts --watchAll=false',
           );
         } catch (error) {
           errorNumber = (error as ExecaError).exitCode;
@@ -56,7 +56,7 @@ describe('Modular test command', () => {
         try {
           await runYarnModular(
             tempModularRepo,
-            'test test/ValidTest.test.ts --watchAll=false',
+            'test --regex test/ValidTest.test.ts --watchAll=false',
           );
         } catch (error) {
           errorNumber = (error as ExecaError).exitCode;
@@ -203,10 +203,10 @@ describe('Modular test command', () => {
     });
 
     // Run in a single test, serially for performance reasons (the setup time is quite long)
-    it('finds --package after specifying a valid workspaces / finds ancestors using --ancestors', () => {
+    it('finds test after specifying a valid package / finds ancestors using --ancestors', () => {
       const resultPackages = runModularPipeLogs(
         randomOutputFolder,
-        'test --package b --package c',
+        'test b c',
         'true',
       );
       expect(resultPackages.stderr).toContain(
@@ -224,7 +224,7 @@ describe('Modular test command', () => {
 
       const resultPackagesWithAncestors = runModularPipeLogs(
         randomOutputFolder,
-        'test --ancestors --package b --package c',
+        'test b c  --ancestors',
         'true',
       );
       expect(resultPackagesWithAncestors.stderr).toContain(
@@ -256,74 +256,17 @@ describe('Modular test command', () => {
 
   describe('test command has error states', () => {
     // Run in a single test, serially for performance reasons (the setup time is quite long)
-    it('errors when specifying --package with --changed', async () => {
-      let errorNumber;
-      try {
-        await runYarnModular(
-          modularRoot,
-          'test --changed --package modular-scripts',
-        );
-      } catch (error) {
-        errorNumber = (error as ExecaError).exitCode;
-      }
-      expect(errorNumber).toBe(1);
-    });
 
-    it('errors when specifying --package with a non-existing workspace', async () => {
+    it('errors when specifying a non-existing workspace', async () => {
       let capturedError;
       try {
-        await runYarnModular(modularRoot, 'test --package non-existing');
+        await runYarnModular(modularRoot, 'test non-existing');
       } catch (error) {
         capturedError = error as ExecaError;
       }
       expect(capturedError?.exitCode).toBe(1);
       expect(capturedError?.stderr).toContain(
         `Package non-existing was specified, but Modular couldn't find it`,
-      );
-    });
-
-    it('errors when specifying a regex with --packages', async () => {
-      let capturedError;
-      try {
-        await runYarnModular(
-          modularRoot,
-          'test memoize.test.ts --package modular-scripts',
-        );
-      } catch (error) {
-        capturedError = error as ExecaError;
-      }
-      expect(capturedError?.exitCode).toBe(1);
-      expect(capturedError?.stderr).toContain(
-        `Option --package conflicts with supplied test regex`,
-      );
-    });
-
-    it('errors when specifying a regex with --package', async () => {
-      let capturedError;
-      try {
-        await runYarnModular(
-          modularRoot,
-          'test memoize.test.ts --package modular-scripts',
-        );
-      } catch (error) {
-        capturedError = error as ExecaError;
-      }
-      expect(capturedError?.exitCode).toBe(1);
-      expect(capturedError?.stderr).toContain(
-        `Option --package conflicts with supplied test regex`,
-      );
-    });
-
-    it('errors when specifying a regex with --changed', async () => {
-      let capturedError;
-      try {
-        await runYarnModular(modularRoot, 'test memoize.test.ts --changed');
-      } catch (error) {
-        capturedError = error as ExecaError;
-      }
-      expect(capturedError?.exitCode).toBe(1);
-      expect(capturedError?.stderr).toContain(
-        `Option --changed conflicts with supplied test regex`,
       );
     });
 

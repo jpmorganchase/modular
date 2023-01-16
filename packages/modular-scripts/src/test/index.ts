@@ -29,11 +29,11 @@ export interface TestOptions {
   logHeapUsage: boolean;
   maxWorkers: number;
   'no-cache': boolean;
+  regex: string[] | undefined;
   reporters: string[] | undefined;
   runInBand: boolean;
   onlyChanged: boolean;
   outputFile: string;
-  package: string[] | undefined;
   silent: boolean;
   testResultsProcessor: string | undefined;
   updateSnapshot: boolean;
@@ -67,14 +67,11 @@ function resolveJestDefaultEnvironment(name: string) {
   });
 }
 
-async function test(
-  options: TestOptions,
-  userRegexes?: string[],
-): Promise<void> {
+async function test(options: TestOptions, packages?: string[]): Promise<void> {
   const {
     ancestors,
     changed,
-    package: packages,
+    regex: userRegexes,
     compareBranch,
     debug,
     env,
@@ -141,6 +138,8 @@ async function test(
     );
     process.exit(0);
   }
+
+  console.log({ regexes });
 
   if (regexes?.length) {
     regexes.forEach((reg) => {
