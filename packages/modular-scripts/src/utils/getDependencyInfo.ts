@@ -3,6 +3,7 @@ import { getPackageDependencies } from './getPackageDependencies';
 import { buildImportMap, rewriteModuleSpecifier } from './buildImportMap';
 import getWorkspaceInfo from './getWorkspaceInfo';
 import type { Dependency } from '@schemastore/package';
+import getWorkspaceLocation from './getLocation';
 
 export async function getDependencyInfo(target: string): Promise<{
   importMap: Map<string, string>;
@@ -23,19 +24,22 @@ export async function getDependencyInfo(target: string): Promise<{
 
   // Get workspace info to automatically bundle workspace dependencies
   const workspaceInfo = await getWorkspaceInfo();
+
+  const workspacePath = await getWorkspaceLocation(target);
+
   // Split dependencies between external and bundled
   const { external: externalDependencies, bundled: bundledDependencies } =
-    filterDependencies({
+    filterDependencies(workspacePath, {
       dependencies: packageDependencies,
       workspaceInfo,
     });
   const { external: externalResolutions, bundled: bundledResolutions } =
-    filterDependencies({
+    filterDependencies(workspacePath, {
       dependencies: packageResolutions,
       workspaceInfo,
     });
 
-  const importMap = buildImportMap({
+  const importMap = buildImportMap(workspacePath, {
     externalDependencies,
     externalResolutions,
     selectiveCDNResolutions,

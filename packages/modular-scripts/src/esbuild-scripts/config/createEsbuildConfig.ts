@@ -47,7 +47,7 @@ export default function createEsbuildConfig(
     resolveExtensions: paths.moduleFileExtensions.map(
       (extension) => `.${extension}`,
     ),
-    sourcemap: getConfig('generateSourceMap'),
+    sourcemap: getConfig('generateSourceMap', paths.appPath),
     loader: {
       // loaders for images which are supported as files
       '.avif': 'file',

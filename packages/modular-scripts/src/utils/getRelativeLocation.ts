@@ -1,6 +1,8 @@
 import getWorkspaceInfo from './getWorkspaceInfo';
 
-export async function getRelativeLocation(name: string): Promise<string> {
+export async function getRelativeWorkspaceLocation(
+  name: string,
+): Promise<string> {
   const workspaceInfo = await getWorkspaceInfo();
   const workspace = workspaceInfo[name];
   if (workspace) {
@@ -15,4 +17,4 @@ export async function getRelativeLocation(name: string): Promise<string> {
   }
 }
 
-export default getRelativeLocation;
+export default getRelativeWorkspaceLocation;

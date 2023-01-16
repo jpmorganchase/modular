@@ -7,7 +7,7 @@ import {
   isStartableModularType,
 } from './utils/packageTypes';
 import execAsync from './utils/execAsync';
-import getLocation from './utils/getLocation';
+import getWorkspaceLocation from './utils/getLocation';
 import stageView from './utils/stageView';
 import getModularRoot from './utils/getModularRoot';
 import getWorkspaceInfo from './utils/getWorkspaceInfo';
@@ -42,7 +42,7 @@ async function start(packageName: string): Promise<void> {
     target = chosenTarget.value as string;
   }
 
-  let targetPath = await getLocation(target);
+  let targetPath = await getWorkspaceLocation(target);
 
   await setupEnvForDirectory(targetPath);
 
@@ -103,7 +103,7 @@ async function start(packageName: string): Promise<void> {
 
   // If you want to use webpack then we'll always use webpack. But if you've indicated
   // you want esbuild - then we'll switch you to the new fancy world.
-  if (getConfig('useModularEsbuild')) {
+  if (getConfig('useModularEsbuild', targetPath)) {
     const { default: startEsbuildApp } = await import(
       './esbuild-scripts/start'
     );
@@ -138,8 +138,10 @@ async function start(packageName: string): Promise<void> {
         MODULAR_IMPORT_MAP: JSON.stringify(Object.fromEntries(importMap || [])),
         MODULAR_USE_REACT_CREATE_ROOT: JSON.stringify(useReactCreateRoot),
         MODULAR_STYLE_IMPORT_MAPS: JSON.stringify([...styleImports]),
-        INTERNAL_PUBLIC_URL: getConfig('publicUrl'),
-        INTERNAL_GENERATE_SOURCEMAP: String(getConfig('generateSourceMap')),
+        INTERNAL_PUBLIC_URL: getConfig('publicUrl', targetPath),
+        INTERNAL_GENERATE_SOURCEMAP: String(
+          getConfig('generateSourceMap', targetPath),
+        ),
       },
     });
   }

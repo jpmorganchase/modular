@@ -19,7 +19,7 @@ describe('A simple modular repo with a .modular.js config file', () => {
     runModularForTests(tempModularRepo, 'add test-app --unstable-type app');
     copyFileSync(
       path.join(configFixtures, '.modular.js'),
-      path.join(tempModularRepo, '.modular.js'),
+      path.join(tempModularRepo, 'packages', 'test-app', '.modular.js'),
     );
   });
   it('builds using esbuild as specified in config file', () => {

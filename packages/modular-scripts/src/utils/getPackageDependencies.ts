@@ -6,7 +6,7 @@ import * as yaml from 'js-yaml';
 
 import type { CoreProperties, Dependency } from '@schemastore/package';
 import getModularRoot from './getModularRoot';
-import getLocation from './getLocation';
+import getWorkspaceLocation from './getLocation';
 import getWorkspaceInfo, { WorkspaceInfo } from './getWorkspaceInfo';
 import { parsePackageName } from './parsePackageName';
 import * as logger from './logger';
@@ -55,7 +55,7 @@ export async function getPackageDependencies(target: string): Promise<{
 }> {
   // This function is based on the assumption that nested package are not supported, so dependencies can be either declared in the
   // target's package.json or hoisted up to the workspace root.
-  const targetLocation = await getLocation(target);
+  const targetLocation = await getWorkspaceLocation(target);
   const workspaceInfo = await getWorkspaceInfo();
 
   const rootManifest = fs.readJSONSync(
