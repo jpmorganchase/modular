@@ -11,11 +11,13 @@ behaviours. Additionally it requires some minimal configuration within the
 ## Configuration File
 
 We allow a number of Modular behaviours to be configured via a dedicated Modular
-config file, `.modular.js`, located at the root of the repository.
+config file, `.modular.js`, located at the root of the individual package
+workspace you wish to configure, each package/workspace needing it's own
+configuration.
 
 We support the following file names/formats:
 
-- `modular` property within your `package.json`
+- `modular` property within the package's `package.json`
 - `.modular.js`
 - `.modularrc`
 - `.modularrc.json`
