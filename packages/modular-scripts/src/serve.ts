@@ -3,12 +3,12 @@ import * as fs from 'fs-extra';
 
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import createPaths from './utils/createPaths';
-import getLocation from './utils/getLocation';
+import getWorkspaceLocation from './utils/getLocation';
 import * as logger from './utils/logger';
 import { isModularType } from './utils/packageTypes';
 
 async function serve(target: string, port = 3000): Promise<void> {
-  const targetLocation = await getLocation(target);
+  const targetLocation = await getWorkspaceLocation(target);
 
   if (
     isModularType(targetLocation, 'app') ||

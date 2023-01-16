@@ -1,10 +1,15 @@
 import * as path from 'path';
 
 import getModularRoot from './getModularRoot';
-import getRelativeLocation from './getRelativeLocation';
+import getRelativeWorkspaceLocation from './getRelativeLocation';
 
-export async function getLocation(name: string): Promise<string> {
-  return path.join(getModularRoot(), await getRelativeLocation(name));
+/**
+ * Get absolute workspace path for a given workspace/package name
+ * @param name Name of the workspace
+ * @returns
+ */
+export async function getWorkspaceLocation(name: string): Promise<string> {
+  return path.join(getModularRoot(), await getRelativeWorkspaceLocation(name));
 }
 
-export default getLocation;
+export default getWorkspaceLocation;

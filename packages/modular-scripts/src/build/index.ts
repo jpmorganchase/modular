@@ -11,7 +11,7 @@ import getModularRoot from '../utils/getModularRoot';
 import actionPreflightCheck from '../utils/actionPreflightCheck';
 import { getModularType } from '../utils/packageTypes';
 import execAsync from '../utils/execAsync';
-import getLocation from '../utils/getLocation';
+import getWorkspaceLocation from '../utils/getLocation';
 import { selectBuildableWorkspaces } from '../utils/selectWorkspaces';
 import { setupEnvForDirectory } from '../utils/setupEnv';
 import createPaths from '../utils/createPaths';
@@ -43,15 +43,15 @@ async function buildStandalone(
   target: string,
   type: Extract<ModularType, 'app' | 'esm-view'>,
 ) {
-  const isEsbuild = getConfig('useModularEsbuild');
-
   // Setup Paths
   const modularRoot = getModularRoot();
-  const targetDirectory = await getLocation(target);
+  const targetDirectory = await getWorkspaceLocation(target);
   const targetName = toParamCase(target);
 
   const paths = await createPaths(target);
   const isApp = type === 'app';
+
+  const isEsbuild = getConfig('useModularEsbuild', targetDirectory);
 
   await checkBrowsers(targetDirectory);
 
@@ -151,8 +151,10 @@ async function buildStandalone(
         MODULAR_IS_APP: JSON.stringify(isApp),
         MODULAR_IMPORT_MAP: JSON.stringify(Object.fromEntries(importMap || [])),
         MODULAR_USE_REACT_CREATE_ROOT: JSON.stringify(useReactCreateRoot),
-        INTERNAL_PUBLIC_URL: getConfig('publicUrl'),
-        INTERNAL_GENERATE_SOURCEMAP: String(getConfig('generateSourceMap')),
+        INTERNAL_PUBLIC_URL: getConfig('publicUrl', targetDirectory),
+        INTERNAL_GENERATE_SOURCEMAP: String(
+          getConfig('generateSourceMap', targetDirectory),
+        ),
       },
     });
 
@@ -302,7 +304,7 @@ async function build({
 
   for (const target of selectedTargets) {
     try {
-      const targetDirectory = await getLocation(target);
+      const targetDirectory = await getWorkspaceLocation(target);
 
       await setupEnvForDirectory(targetDirectory);
 

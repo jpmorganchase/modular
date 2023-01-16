@@ -11,16 +11,18 @@ interface FilteredDependencies {
 }
 
 // Filter out dependencies that are in blocklist
-export function filterDependencies({
-  dependencies,
-  workspaceInfo,
-}: {
-  dependencies: Dependency;
-  workspaceInfo: WorkspaceInfo;
-}): FilteredDependencies {
-  const externalBlockList = getConfig('externalBlockList');
-
-  const externalAllowList = getConfig('externalAllowList');
+export function filterDependencies(
+  workspacePath: string,
+  {
+    dependencies,
+    workspaceInfo,
+  }: {
+    dependencies: Dependency;
+    workspaceInfo: WorkspaceInfo;
+  },
+): FilteredDependencies {
+  const externalBlockList = getConfig('externalBlockList', workspacePath);
+  const externalAllowList = getConfig('externalAllowList', workspacePath);
 
   return partitionDependencies({
     dependencies,

@@ -2,19 +2,22 @@ import { parsePackageName } from './parsePackageName';
 import type { Dependency } from '@schemastore/package';
 import { getConfig } from './config';
 
-const externalCdnTemplate = getConfig('externalCdnTemplate');
-
 interface BuildImportMapParams {
   externalDependencies: Dependency;
   externalResolutions: Dependency;
   selectiveCDNResolutions: Dependency;
 }
 
-export function buildImportMap({
-  externalDependencies,
-  externalResolutions,
-  selectiveCDNResolutions,
-}: BuildImportMapParams): Map<string, string> {
+export function buildImportMap(
+  workspacePath: string,
+  {
+    externalDependencies,
+    externalResolutions,
+    selectiveCDNResolutions,
+  }: BuildImportMapParams,
+): Map<string, string> {
+  const externalCdnTemplate = getConfig('externalCdnTemplate', workspacePath);
+
   // Add react-dom if only react is specified in the dependencies
   if (!externalDependencies['react-dom']) {
     externalDependencies['react-dom'] = externalDependencies['react'];
