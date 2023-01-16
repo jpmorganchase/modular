@@ -224,7 +224,7 @@ describe('Modular test command', () => {
 
       const resultPackagesWithAncestors = runModularPipeLogs(
         randomOutputFolder,
-        'test b c  --ancestors',
+        'test b c --ancestors',
         'true',
       );
       expect(resultPackagesWithAncestors.stderr).toContain(
