@@ -11,9 +11,8 @@ behaviours. Additionally it requires some minimal configuration within the
 ## Configuration File
 
 We allow a number of Modular behaviours to be configured via a dedicated Modular
-config file, `.modular.js`, located at the root of the individual
-package/workspace you wish to configure, each package needing it's own
-configuration.
+config file, `.modular.js`, that can be placed at the root of a
+workspace/package you wish to configure.
 
 We support the following file names/formats:
 
