@@ -1,12 +1,12 @@
 ---
 parent: ESM Views
 nav_order: 100
-title: Known limitations
+title: Developing with ESM Views
 ---
 
-# Known limitations of ESM Views
+## Differences between developing ESM Views and regular applications
 
-## Dependencies to be rewritten must be referenced in the esm-view code and its manifest
+### Dependencies to be rewritten must be referenced in the ESM View code and its manifest directly
 
 When a dependency is rewritten, modular:
 
@@ -25,11 +25,11 @@ When a dependency is rewritten, modular:
 This means that if a dependency is not referenced in the source code or the
 `package.json` of the esm-view, it won't be a candidate for rewriting: for
 performance reasons, Modular won't analyze the source code of workspace
-ependencies. For example: if your esm-view doesn't import React, but one of its
+dependencies. For example: if your esm-view doesn't import React, but one of its
 local (workspace) dependencies does, and React is in allow list, the React
 dependency **won't be a candidate for rewriting**.
 
-## Dependencies in the block list can still come from the CDN, if they are referenced in a CDN dependency
+### Dependencies in the block list can still come from the CDN, if they are referenced in a CDN dependency
 
 Suppose application `A` depends on package `B` and package `C`. Package `B` is
 an external dependency on allow list that depends on package `C`, and package
@@ -42,7 +42,7 @@ will come from the CDN as well** (CDN packages are pre-built to use the CDN for
 their own dependencies). The result, in this case, will be a bundle with two
 copies of C, one fetched from the CDN and one bundled in the application.
 
-## Peer dependencies are resolved at build time on the CDN
+### Peer dependencies are resolved at build time on the CDN
 
 ESM CDNs essentially perform two tasks before serving a package that is
 requested for the first time:
