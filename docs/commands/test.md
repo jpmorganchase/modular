@@ -3,7 +3,7 @@ parent: Commands
 title: modular test
 ---
 
-# `modular test [options] [regexes...]`
+# `modular test [options] [packages...]`
 
 `test` is an opinionated wrapper around [`jest`](https://jestjs.io/) which runs
 tests against the entire `modular` project. It comes with out-of-the-box
@@ -21,51 +21,55 @@ This contains the setup for tests corresponding to
 This contains the setup for tests corresponding to
 [`jest.config.js#setupFilesAfterEnv`](https://jestjs.io/docs/en/configuration#setupfilesafterenv-array).
 
-## Command line options
+## Command line options and arguments
+
+### Arguments
+
+`[packages ...]`: Packages is a list of packages that the user wants to run a
+test on. The specified set of oackages can be agumented by the selective test
+options (`--ancestors`, `--descendants` and `--changed`). Modular will take all
+the selected packages, generate regular expressions based on their location on
+disk and finally merge those regular expressions to the ones optionally
+specified by the user with the `--regex` option. The resulting set of regular
+expressions will be passed to the underlying Jest process and the identified
+test files will be run in non-predictable order. When `packages` is empty and no
+selective options have been specified (for example when running
+`yarn modular test`), all tests in the monorepo will be executed. When
+`packages` contains one or more non-existing package name, the non-existing
+packages will be ignored without an error. If any package or selective options
+has been defined but the final set of regular expressions is empty, Modular will
+write a message to `stdout` and exit with code `0`.
 
 ### Modular-specific options
 
-#### ancestors
+`--ancestors`: Test the packages specified by the `[packages...]` argument
+and/or the `--changed` option and additionally build all their ancestors (i.e.
+the packages that have a direct or indirect dependency on them).
 
-Default: `false`
+`--descendants`: Test the packages specified by the `[packages...]` argument
+and/or the `--changed` option and additionally test all their descendants (i.e.
+the packages they directly or indirectly depend on).
 
-Can be used only in combination with `changed` or the command will fail. If set,
-it will additionally execute tests for all the workspaces that (directly or
-indirectly) depend on the workspaces selected by `changed`.
+`--changed`: Test only packages whose workspaces contain the files that have
+changed. Files that have changed are calculated comparing the current state of
+the repository with the branch specified by `compareBranch` or, if
+`compareBranch` is not set, with the default git branch.
 
-#### changed
-
-Default: `false`
-
-Execute tests only for the workspaces that contain files that have changed.
-Files that have changed are calculated comparing the current state of the
-repository with the branch specified by `compareBranch` or, if `compareBranch`
-is not set, with the default git branch.
-
-#### debug
-
-Default: `false`
-
-Add the `--inspect-brk` option to the Node.js process executing Jest to allow a
-debugger to be attached to the running process. For more information,
+`--debug`: Add the `--inspect-brk` option to the Node.js process executing Jest
+to allow a debugger to be attached to the running process. For more information,
 [see the Node.js debugging guide](https://nodejs.org/en/docs/guides/debugging-getting-started/).
 
-#### compareBranch
+`--compareBranch <branch>`: Specify the comparison branch used to determine
+which files have changed when using the `changed` option. If this option is used
+without `changed`, the command will fail.
 
-Default: `undefined`
+`--regex <regexes...>`: Run all the tests for all the test files matching the
+specified regular expressions. Can be repeated to select more than one
+workspace. Can be combined with all the other selective options.
 
-Specify the comparison branch used to determine which files have changed when
-using the `changed` option. If this option is used without `changed`, the
-command will fail.
-
-#### package
-
-Default: `undefined`
-
-Run all the tests for the workspace with the specified package name. Can be
-repeated to select more than one workspace. Can be combined with the
-`--ancestors` option to test the specified workspace(s) plus all the workspaces
-that, directly or indirectly, depend on them. Conflicts with `--changed`.
+`--verbose`: Activate debug logging. Useful to see which packages have been
+selected and which regular expression and arguments have been passed to the
+underlying Jest process.
 
 ### Jest CLI Options
 

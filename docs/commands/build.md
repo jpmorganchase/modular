@@ -25,7 +25,7 @@ this-is-param-case) in `dist/`
 
 `--preserve-modules`: Preserve module structure in generated modules.
 
-`--changed`: Build only packages whose workspaces contain files that have
+`--changed`: Build only the packages whose workspaces contain files that have
 changed. Files that have changed are calculated comparing the current state of
 the repository with the branch specified by `compareBranch` or, if
 `compareBranch` is not set, with the default git branch.
