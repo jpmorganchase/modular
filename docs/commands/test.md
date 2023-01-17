@@ -36,9 +36,9 @@ identified test files will be run in non-predictable order. When `packages` is
 empty and no selective options have been specified (for example when running
 `yarn modular test`), all tests in the monorepo will be executed. When
 `packages` contains one or more non-existing package name, the non-existing
-packages will be ignored without an error. If any package or selective options
-has been defined but the final set of regular expressions is empty, Modular will
-write a message to `stdout` and exit with code `0`.
+packages will be ignored without an error. If any package or selective option
+have been defined but the final set of regular expressions is empty, Modular
+will write a message to `stdout` and exit with code `0`.
 
 ### Modular-specific options
 
