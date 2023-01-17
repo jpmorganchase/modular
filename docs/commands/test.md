@@ -26,14 +26,14 @@ This contains the setup for tests corresponding to
 ### Arguments
 
 `[packages ...]`: Packages is a list of packages that the user wants to run a
-test on. The specified set of oackages can be agumented by the selective test
-options (`--ancestors`, `--descendants` and `--changed`). Modular will take all
-the selected packages, generate regular expressions based on their location on
-disk and finally merge those regular expressions to the ones optionally
-specified by the user with the `--regex` option. The resulting set of regular
-expressions will be passed to the underlying Jest process and the identified
-test files will be run in non-predictable order. When `packages` is empty and no
-selective options have been specified (for example when running
+test on. The specified set of packages can be further agumented by the selective
+test options (`--ancestors`, `--descendants` and `--changed`). Modular will take
+all the selected packages, generate a list of regular expressions based on their
+location on disk and finally merge those regular expressions to the ones
+optionally specified by the user with the `--regex` option. The resulting set of
+regular expressions will be passed to the underlying Jest process and the
+identified test files will be run in non-predictable order. When `packages` is
+empty and no selective options have been specified (for example when running
 `yarn modular test`), all tests in the monorepo will be executed. When
 `packages` contains one or more non-existing package name, the non-existing
 packages will be ignored without an error. If any package or selective options
@@ -42,18 +42,19 @@ write a message to `stdout` and exit with code `0`.
 
 ### Modular-specific options
 
-`--ancestors`: Test the packages specified by the `[packages...]` argument
-and/or the `--changed` option and additionally build all their ancestors (i.e.
-the packages that have a direct or indirect dependency on them).
+`--ancestors`: Take the packages specified by the user via arguments or options
+and add their ancestors (i.e. the packages that have a direct or indirect
+dependency on them) to the test list.
 
-`--descendants`: Test the packages specified by the `[packages...]` argument
-and/or the `--changed` option and additionally test all their descendants (i.e.
-the packages they directly or indirectly depend on).
+`--descendants`: Take the packages specified by the user via arguments or
+options and add their descendants (i.e. the packages they directly or indirectly
+depend on) to the test list.
 
-`--changed`: Test only packages whose workspaces contain the files that have
-changed. Files that have changed are calculated comparing the current state of
-the repository with the branch specified by `compareBranch` or, if
-`compareBranch` is not set, with the default git branch.
+`--changed`: Take the packages specified by the user via arguments or options
+and add all the packages whose workspaces contain files that have changed,
+calculated comparing the current state of the git repository with the branch
+specified by `compareBranch` or, if `compareBranch` is not set, with the default
+branch.
 
 `--debug`: Add the `--inspect-brk` option to the Node.js process executing Jest
 to allow a debugger to be attached to the running process. For more information,
@@ -63,9 +64,8 @@ to allow a debugger to be attached to the running process. For more information,
 which files have changed when using the `changed` option. If this option is used
 without `changed`, the command will fail.
 
-`--regex <regexes...>`: Run all the tests for all the test files matching the
-specified regular expressions. Can be repeated to select more than one
-workspace. Can be combined with all the other selective options.
+`--regex <regexes...>`: Select all the test files matching the specified regular
+expressions. Can be combined with all the other selective options.
 
 `--verbose`: Activate debug logging. Useful to see which packages have been
 selected and which regular expression and arguments have been passed to the
