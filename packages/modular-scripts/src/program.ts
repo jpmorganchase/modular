@@ -174,6 +174,11 @@ program
     false,
   )
   .option(
+    '--descendants',
+    'Additionally run tests for workspaces that directly or indirectly depend on the specified packages (can be combined with --changed)',
+    false,
+  )
+  .option(
     '--debug',
     'Setup node.js debugger on the test process - equivalent of setting --inspect-brk on a node.js process',
     false,
@@ -216,7 +221,6 @@ program
   .allowUnknownOption()
   .description('Run tests over the codebase')
   .action(async (packages: string[], options: CLITestOptions) => {
-    console.log(options, packages);
     if (options.compareBranch && !options.changed) {
       process.stderr.write(
         "Option --compareBranch doesn't make sense without option --changed\n",
