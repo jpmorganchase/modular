@@ -180,6 +180,12 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
     ];
   }
 
+  logger.debug(
+    `Running ${testBin} with cwd: ${getModularRoot()} and args: ${JSON.stringify(
+      testArgs,
+    )}`,
+  );
+
   try {
     await execAsync(testBin, testArgs, {
       cwd: getModularRoot(),
