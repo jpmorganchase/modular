@@ -7,6 +7,7 @@ import {
   mockInstallTemplate,
   runModularForTests,
   runModularForTestsAsync,
+  runModularPipeLogs,
 } from '../test/utils';
 import type { CoreProperties } from '@schemastore/package';
 
@@ -219,5 +220,71 @@ describe('When adding a module from a template with a files filter', () => {
       │  └─ index.tsx #1woe74n
       └─ tsconfig.json"
     `);
+  });
+});
+
+describe('When creating a new modular project', () => {
+  beforeAll(() => {
+    tempModularRepo = createModularTestContext();
+  });
+  describe('When adding a new app type workspace from template', () => {
+    beforeAll(() => {
+      runModularForTests(tempModularRepo, 'add my-app --template app');
+    });
+    it('succesfully runs tests', () => {
+      const result = runModularPipeLogs(
+        tempModularRepo,
+        'test --package my-app',
+      );
+      expect(result.exitCode).toBe(0);
+    });
+  });
+  describe('When adding a new package type workspace from template', () => {
+    beforeAll(() => {
+      runModularForTests(tempModularRepo, 'add my-package --template package');
+    });
+    it('succesfully runs tests', () => {
+      const result = runModularPipeLogs(
+        tempModularRepo,
+        'test --package my-package',
+      );
+      expect(result.exitCode).toBe(0);
+    });
+  });
+});
+describe('When adding a new esm-view type workspace from template', () => {
+  beforeAll(() => {
+    runModularForTests(tempModularRepo, 'add my-esm-view --template esm-view');
+  });
+  it('succesfully runs tests', () => {
+    const result = runModularPipeLogs(
+      tempModularRepo,
+      'test --package my-esm-view',
+    );
+    expect(result.exitCode).toBe(0);
+  });
+});
+describe('When adding a new view type workspace from template', () => {
+  beforeAll(() => {
+    runModularForTests(tempModularRepo, 'add my-view --template view');
+  });
+  it('succesfully runs tests', () => {
+    const result = runModularPipeLogs(
+      tempModularRepo,
+      'test --package my-view',
+    );
+    expect(result.exitCode).toBe(0);
+  });
+});
+describe('When adding a new source type workspace from template', () => {
+  beforeAll(() => {
+    runModularForTests(tempModularRepo, 'add my-source --template source');
+  });
+  it('succesfully runs tests', () => {
+    const result = runModularPipeLogs(
+      tempModularRepo,
+      'test --package my-source',
+    );
+    expect(result.exitCode).toBe(0);
   });
 });
