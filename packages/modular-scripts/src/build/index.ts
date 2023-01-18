@@ -38,6 +38,7 @@ import {
 import { getDependencyInfo } from '../utils/getDependencyInfo';
 import { isReactNewApi } from '../utils/isReactNewApi';
 import { getConfig } from '../utils/config';
+import { getAllWorkspaces } from '../utils/getAllWorkspaces';
 
 async function buildStandalone(
   target: string,
@@ -262,7 +263,7 @@ async function buildStandalone(
 }
 
 async function build({
-  packagePaths: targets,
+  packagePaths,
   preserveModules = true,
   private: includePrivate,
   ancestors,
@@ -280,6 +281,14 @@ async function build({
   compareBranch?: string;
   dangerouslyIgnoreCircularDependencies: boolean;
 }): Promise<void> {
+  const isSelective =
+    changed || ancestors || descendants || packagePaths.length;
+
+  // targets are either the set of what's specified in the selective options or all the packages in the monorepo
+  const targets = isSelective
+    ? packagePaths
+    : [...(await getAllWorkspaces())[0].keys()];
+
   const selectedTargets = await selectBuildableWorkspaces({
     targets,
     changed,

@@ -128,11 +128,6 @@ program
         ? logger.log('Building changed packages')
         : logger.log('Building packages at:', packagePaths.join(', '));
 
-      if (!packagePaths.length && !options.changed) {
-        process.stderr.write("error: missing required argument 'packages'");
-        process.exit(1);
-      }
-
       if (options.compareBranch && !options.changed) {
         process.stderr.write(
           "Option --compareBranch doesn't make sense without option --changed\n",
