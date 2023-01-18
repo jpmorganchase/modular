@@ -96,6 +96,14 @@ export function createModularTestContext(): string {
   fs.writeJSONSync(path.join(tempModularRepo, 'package.json'), packageJson, {
     spaces: 2,
   });
+  fs.writeJSONSync(path.join(tempModularRepo, 'tsconfig.json'), {
+    extends: 'modular-scripts/tsconfig.json',
+    include: ['modular', 'packages/**/src'],
+  });
+  fs.copySync(
+    path.join(modularRoot, 'modular'),
+    path.join(tempModularRepo, 'modular'),
+  );
   return tempModularRepo;
 }
 
