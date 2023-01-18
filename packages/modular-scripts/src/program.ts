@@ -227,18 +227,6 @@ program
       );
       process.exit(1);
     }
-    if (options.changed && options.regex?.length) {
-      process.stderr.write(
-        'Option --changed conflicts with supplied test regex\n',
-      );
-      process.exit(1);
-    }
-    if (packages.length && options.regex?.length) {
-      process.stderr.write(
-        'Option --package conflicts with supplied test regex\n',
-      );
-      process.exit(1);
-    }
 
     const { default: test } = await import('./test');
 
