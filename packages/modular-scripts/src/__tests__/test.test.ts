@@ -41,7 +41,7 @@ describe('Modular test command', () => {
         try {
           await runYarnModular(
             tempModularRepo,
-            'test test/InvalidTest.test.ts --watchAll=false',
+            'test --regex test/InvalidTest.test.ts --watchAll=false',
           );
         } catch (error) {
           errorNumber = (error as ExecaError).exitCode;
@@ -56,7 +56,7 @@ describe('Modular test command', () => {
         try {
           await runYarnModular(
             tempModularRepo,
-            'test test/ValidTest.test.ts --watchAll=false',
+            'test --regex test/ValidTest.test.ts --watchAll=false',
           );
         } catch (error) {
           errorNumber = (error as ExecaError).exitCode;
@@ -120,7 +120,9 @@ describe('Modular test command', () => {
         'test --changed',
         'true',
       );
-      expect(resultUnchanged.stdout).toContain('No changed workspaces found');
+      expect(resultUnchanged.stdout).toContain(
+        'No workspaces found in selection',
+      );
 
       fs.appendFileSync(
         path.join(randomOutputFolder, '/packages/b/src/index.ts'),
@@ -136,47 +138,23 @@ describe('Modular test command', () => {
         'test --changed',
         'true',
       );
-      expect(resultChanged.stderr).toContain(
-        'packages/c/src/__tests__/utils/c-nested.test.ts',
-      );
-      expect(resultChanged.stderr).toContain(
-        'packages/c/src/__tests__/c.test.ts',
-      );
-      expect(resultChanged.stderr).toContain(
-        'packages/b/src/__tests__/utils/b-nested.test.ts',
-      );
-      expect(resultChanged.stderr).toContain(
-        'packages/b/src/__tests__/b.test.ts',
-      );
+      expect(resultChanged.stderr).toContain('c-nested.test.ts');
+      expect(resultChanged.stderr).toContain('c.test.ts');
+      expect(resultChanged.stderr).toContain('b-nested.test.ts');
+      expect(resultChanged.stderr).toContain('b.test.ts');
 
       const resultChangedWithAncestors = runModularPipeLogs(
         randomOutputFolder,
         'test --changed --ancestors',
       );
-      expect(resultChangedWithAncestors.stderr).toContain(
-        'packages/c/src/__tests__/utils/c-nested.test.ts',
-      );
-      expect(resultChangedWithAncestors.stderr).toContain(
-        'packages/c/src/__tests__/c.test.ts',
-      );
-      expect(resultChangedWithAncestors.stderr).toContain(
-        'packages/b/src/__tests__/utils/b-nested.test.ts',
-      );
-      expect(resultChangedWithAncestors.stderr).toContain(
-        'packages/b/src/__tests__/b.test.ts',
-      );
-      expect(resultChangedWithAncestors.stderr).toContain(
-        'packages/a/src/__tests__/utils/a-nested.test.ts',
-      );
-      expect(resultChangedWithAncestors.stderr).toContain(
-        'packages/a/src/__tests__/a.test.ts',
-      );
-      expect(resultChangedWithAncestors.stderr).toContain(
-        'packages/e/src/__tests__/utils/e-nested.test.ts',
-      );
-      expect(resultChangedWithAncestors.stderr).toContain(
-        'packages/e/src/__tests__/e.test.ts',
-      );
+      expect(resultChangedWithAncestors.stderr).toContain('c-nested.test.ts');
+      expect(resultChangedWithAncestors.stderr).toContain('c.test.ts');
+      expect(resultChangedWithAncestors.stderr).toContain('b-nested.test.ts');
+      expect(resultChangedWithAncestors.stderr).toContain('b.test.ts');
+      expect(resultChangedWithAncestors.stderr).toContain('a-nested.test.ts');
+      expect(resultChangedWithAncestors.stderr).toContain('a.test.ts');
+      expect(resultChangedWithAncestors.stderr).toContain('e-nested.test.ts');
+      expect(resultChangedWithAncestors.stderr).toContain('e.test.ts');
     });
   });
 
@@ -195,7 +173,7 @@ describe('Modular test command', () => {
 
     beforeEach(() => {
       // Create random dir
-      randomOutputFolder = tmp.dirSync({ unsafeCleanup: true }).name;
+      randomOutputFolder = createModularTestContext();
       fs.copySync(fixturesFolder, randomOutputFolder);
       execa.sync('yarn', {
         cwd: randomOutputFolder,
@@ -203,127 +181,75 @@ describe('Modular test command', () => {
     });
 
     // Run in a single test, serially for performance reasons (the setup time is quite long)
-    it('finds --package after specifying a valid workspaces / finds ancestors using --ancestors', () => {
+    it('finds test after specifying a valid package / finds ancestors using --ancestors', () => {
       const resultPackages = runModularPipeLogs(
         randomOutputFolder,
-        'test --package b --package c',
+        'test b c',
         'true',
       );
-      expect(resultPackages.stderr).toContain(
-        'packages/c/src/__tests__/utils/c-nested.test.ts',
-      );
-      expect(resultPackages.stderr).toContain(
-        'packages/c/src/__tests__/c.test.ts',
-      );
-      expect(resultPackages.stderr).toContain(
-        'packages/b/src/__tests__/utils/b-nested.test.ts',
-      );
-      expect(resultPackages.stderr).toContain(
-        'packages/b/src/__tests__/b.test.ts',
-      );
+      expect(resultPackages.stderr).toContain('c-nested.test.ts');
+      expect(resultPackages.stderr).toContain('c.test.ts');
+      expect(resultPackages.stderr).toContain('b-nested.test.ts');
+      expect(resultPackages.stderr).toContain('b.test.ts');
 
       const resultPackagesWithAncestors = runModularPipeLogs(
         randomOutputFolder,
-        'test --ancestors --package b --package c',
+        'test b c --ancestors',
         'true',
       );
-      expect(resultPackagesWithAncestors.stderr).toContain(
-        'packages/c/src/__tests__/utils/c-nested.test.ts',
+      expect(resultPackagesWithAncestors.stderr).toContain('c-nested.test.ts');
+      expect(resultPackagesWithAncestors.stderr).toContain('c.test.ts');
+      expect(resultPackagesWithAncestors.stderr).toContain('b-nested.test.ts');
+      expect(resultPackagesWithAncestors.stderr).toContain('b.test.ts');
+      expect(resultPackagesWithAncestors.stderr).toContain('a-nested.test.ts');
+      expect(resultPackagesWithAncestors.stderr).toContain('a.test.ts');
+      expect(resultPackagesWithAncestors.stderr).toContain('e-nested.test.ts');
+      expect(resultPackagesWithAncestors.stderr).toContain('e.test.ts');
+
+      const resultPackagesWithDescendants = runModularPipeLogs(
+        randomOutputFolder,
+        'test b c --descendants',
+        'true',
       );
-      expect(resultPackagesWithAncestors.stderr).toContain(
-        'packages/c/src/__tests__/c.test.ts',
+      expect(resultPackagesWithDescendants.stderr).toContain(
+        'c-nested.test.ts',
       );
-      expect(resultPackagesWithAncestors.stderr).toContain(
-        'packages/b/src/__tests__/utils/b-nested.test.ts',
+      expect(resultPackagesWithDescendants.stderr).toContain('c.test.ts');
+      expect(resultPackagesWithDescendants.stderr).toContain(
+        'd-nested.test.ts',
       );
-      expect(resultPackagesWithAncestors.stderr).toContain(
-        'packages/b/src/__tests__/b.test.ts',
+      expect(resultPackagesWithDescendants.stderr).toContain('d.test.ts');
+      expect(resultPackagesWithDescendants.stderr).toContain(
+        'b-nested.test.ts',
       );
-      expect(resultPackagesWithAncestors.stderr).toContain(
-        'packages/a/src/__tests__/utils/a-nested.test.ts',
+
+      const resultPackagesWithMixedRegex = runModularPipeLogs(
+        randomOutputFolder,
+        'test b c --descendants --regex a-nested.test.ts',
+        'true',
       );
-      expect(resultPackagesWithAncestors.stderr).toContain(
-        'packages/a/src/__tests__/a.test.ts',
-      );
-      expect(resultPackagesWithAncestors.stderr).toContain(
-        'packages/e/src/__tests__/utils/e-nested.test.ts',
-      );
-      expect(resultPackagesWithAncestors.stderr).toContain(
-        'packages/e/src/__tests__/e.test.ts',
-      );
+      expect(resultPackagesWithMixedRegex.stderr).toContain('c-nested.test.ts');
+      expect(resultPackagesWithMixedRegex.stderr).toContain('c.test.ts');
+      expect(resultPackagesWithMixedRegex.stderr).toContain('d-nested.test.ts');
+      expect(resultPackagesWithMixedRegex.stderr).toContain('d.test.ts');
+      expect(resultPackagesWithMixedRegex.stderr).toContain('b-nested.test.ts');
+      expect(resultPackagesWithMixedRegex.stderr).toContain('a-nested.test.ts');
+      expect(resultPackagesWithMixedRegex.stderr).not.toContain('a.test.ts');
     });
   });
 
   describe('test command has error states', () => {
     // Run in a single test, serially for performance reasons (the setup time is quite long)
-    it('errors when specifying --package with --changed', async () => {
-      let errorNumber;
-      try {
-        await runYarnModular(
-          modularRoot,
-          'test --changed --package modular-scripts',
-        );
-      } catch (error) {
-        errorNumber = (error as ExecaError).exitCode;
-      }
-      expect(errorNumber).toBe(1);
-    });
 
-    it('errors when specifying --package with a non-existing workspace', async () => {
-      let capturedError;
-      try {
-        await runYarnModular(modularRoot, 'test --package non-existing');
-      } catch (error) {
-        capturedError = error as ExecaError;
-      }
-      expect(capturedError?.exitCode).toBe(1);
-      expect(capturedError?.stderr).toContain(
-        `Package non-existing was specified, but Modular couldn't find it`,
+    it('does not error when specifying a non-existing workspace', async () => {
+      const capturedResult = await runYarnModular(
+        modularRoot,
+        'test non-existing',
       );
-    });
 
-    it('errors when specifying a regex with --packages', async () => {
-      let capturedError;
-      try {
-        await runYarnModular(
-          modularRoot,
-          'test memoize.test.ts --package modular-scripts',
-        );
-      } catch (error) {
-        capturedError = error as ExecaError;
-      }
-      expect(capturedError?.exitCode).toBe(1);
-      expect(capturedError?.stderr).toContain(
-        `Option --package conflicts with supplied test regex`,
-      );
-    });
-
-    it('errors when specifying a regex with --package', async () => {
-      let capturedError;
-      try {
-        await runYarnModular(
-          modularRoot,
-          'test memoize.test.ts --package modular-scripts',
-        );
-      } catch (error) {
-        capturedError = error as ExecaError;
-      }
-      expect(capturedError?.exitCode).toBe(1);
-      expect(capturedError?.stderr).toContain(
-        `Option --package conflicts with supplied test regex`,
-      );
-    });
-
-    it('errors when specifying a regex with --changed', async () => {
-      let capturedError;
-      try {
-        await runYarnModular(modularRoot, 'test memoize.test.ts --changed');
-      } catch (error) {
-        capturedError = error as ExecaError;
-      }
-      expect(capturedError?.exitCode).toBe(1);
-      expect(capturedError?.stderr).toContain(
-        `Option --changed conflicts with supplied test regex`,
+      expect(capturedResult?.exitCode).toBe(0);
+      expect(capturedResult?.stdout).toContain(
+        `No workspaces found in selection`,
       );
     });
 

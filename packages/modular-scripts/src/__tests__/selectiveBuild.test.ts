@@ -139,6 +139,13 @@ describe('--changed builds all the changed packages in order', () => {
     expect(result.stderr).toBeFalsy();
     expect(getBuildOrder(result.stdout)).toEqual(['c', 'b', 'a', 'e']);
   });
+
+  it('builds all packages if invoked without arguments / selective options', () => {
+    const result = runModularPipeLogs(tempModularRepo, 'build');
+
+    expect(result.stderr).toBeFalsy();
+    expect(getBuildOrder(result.stdout)).toEqual(['d', 'c', 'b', 'a', 'e']);
+  });
 });
 
 function getBuildOrder(output: string) {

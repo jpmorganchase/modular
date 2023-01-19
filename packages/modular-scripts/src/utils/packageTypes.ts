@@ -24,10 +24,8 @@ const packageTypeDefinitions: PackageTypeDefinitions = {
   source: { buildable: false, testable: true, startable: false },
 };
 
-export const packageTypes = Object.keys(packageTypeDefinitions);
-
 export const ModularTypes: ModularType[] = (
-  packageTypes as ModularType[]
+  Object.keys(packageTypeDefinitions) as ModularType[]
 ).concat(['root']);
 
 export function getModularType(dir: string): ModularType | undefined {
@@ -52,9 +50,9 @@ export function isValidModularType(type: string): boolean {
 }
 
 export function isBuildableModularType(type: PackageType): boolean {
-  return packageTypeDefinitions[type].buildable;
+  return Boolean(packageTypeDefinitions[type]?.buildable);
 }
 
 export function isStartableModularType(type: PackageType): boolean {
-  return packageTypeDefinitions[type].startable;
+  return Boolean(packageTypeDefinitions[type]?.startable);
 }

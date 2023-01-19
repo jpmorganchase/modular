@@ -13,6 +13,13 @@ The output directory for built artifacts is `dist/`, which has a flat structure
 of modular package names. Each built app/view/package is added to the `dist/` as
 its own folder.
 
+When `packages` is empty and no selective options have been specified (for
+example when running `yarn modular build`), all packages in the monorepo will be
+built. When `packages` contains one or more non-existing package name, the
+non-existing packages will be ignored without an error. If any package or
+selective option have been defined but the final set of regular expressions is
+empty, Modular will write a message to `stdout` and exit with code `0`.
+
 For views and packages, package names are transformed to `Param case` (e.g.
 this-is-param-case) in `dist/`
 
@@ -25,7 +32,7 @@ this-is-param-case) in `dist/`
 
 `--preserve-modules`: Preserve module structure in generated modules.
 
-`--changed`: Build only packages whose workspaces contain files that have
+`--changed`: Build only the packages whose workspaces contain files that have
 changed. Files that have changed are calculated comparing the current state of
 the repository with the branch specified by `compareBranch` or, if
 `compareBranch` is not set, with the default git branch.
