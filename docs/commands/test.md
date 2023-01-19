@@ -25,20 +25,16 @@ This contains the setup for tests corresponding to
 
 ### Arguments
 
-`[packages ...]`: Packages is a list of packages that the user wants to run a
-test on. The specified set of packages can be further agumented by the selective
-test options (`--ancestors`, `--descendants` and `--changed`). Modular will take
-all the selected packages, generate a list of regular expressions based on their
-location on disk and finally merge those regular expressions to the ones
-optionally specified by the user with the `--regex` option. The resulting set of
-regular expressions will be passed to the underlying Jest process and the
-identified test files will be run in non-predictable order. When `packages` is
-empty and no selective options have been specified (for example when running
-`yarn modular test`), all tests in the monorepo will be executed. When
-`packages` contains one or more non-existing package name, the non-existing
-packages will be ignored without an error. If any package or selective option
-have been defined but the final set of regular expressions is empty, Modular
-will write a message to `stdout` and exit with code `0`.
+`[packages ...]`: List of packages to test. Can be combined with multiple
+selective options (`--ancestors`, `--descendants`, `--changed` and `--regex`).
+Modular will generate a list of regular expressions that satisfies all options
+passed which are then passed to Jest. The tests will run in non-predictable
+order. When `packages` is empty and no selective options have been specified
+(for example when running `yarn modular test`), all tests in the monorepo will
+be executed. When `packages` contains one or more non-existing package name, the
+non-existing packages will be ignored without an error. If any package or
+selective option have been defined but the final set of regular expressions is
+empty, Modular will write a message to `stdout` and exit with code `0`.
 
 ### Modular-specific options
 
