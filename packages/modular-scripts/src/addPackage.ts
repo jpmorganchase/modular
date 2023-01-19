@@ -166,7 +166,7 @@ async function addPackage({
       paths: [modularRoot],
     });
   } catch (e) {
-    console.log(e);
+    logger.log(`Couldn't find ${templateName} in project`);
     logger.log(
       `Installing template package ${templateName} from registry, this may take a moment...`,
     );
