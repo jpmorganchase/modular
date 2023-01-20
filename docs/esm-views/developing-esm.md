@@ -4,6 +4,8 @@ nav_order: 100
 title: Developing with ESM Views
 ---
 
+# Developing with ESM Views
+
 ## Differences between developing ESM Views and regular applications
 
 ### Dependencies to be rewritten must be referenced in the ESM View code and its manifest directly

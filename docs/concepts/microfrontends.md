@@ -1,6 +1,10 @@
 ---
+title: Micro-frontends
+nav_order: 1
 parent: Concepts
 ---
+
+# Micro-frontends
 
 ## ESM micro frontends in Modular
 

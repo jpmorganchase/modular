@@ -48,14 +48,14 @@ It supports three flags:
 
 ## Commands
 
-- [`add`](./commands/add.md)
-- [`build`](./commands/build.md)
-- [`start`](./commands/start.md)
-- [`test`](./commands/test.md)
-- [`typecheck`](./commands/typecheck.md)
-- [`lint`](./commands/lint.md)
-- [`workspace`](./commands/workspace.md)
-- [`check`](./commands/check.md)
+- [add](./commands/add.md)
+- [build](./commands/build.md)
+- [start](./commands/start.md)
+- [test](./commands/test.md)
+- [typecheck](./commands/typecheck.md)
+- [lint](./commands/lint.md)
+- [workspace](./commands/workspace.md)
+- [check](./commands/check.md)
 
 ## Concepts
 
@@ -66,6 +66,6 @@ It supports three flags:
 
 ## How to
 
-- [`Convert Existing CRA Project`](./how-to/convert-react-app.md)
-- [`Create a Template`](./how-to/create-template.md)
-- [`Rename a Modular Package`](./how-to/rename-package.md)
+- [Convert Existing CRA Project](./how-to/convert-react-app.md)
+- [Create a Template](./how-to/create-template.md)
+- [Rename a Modular Package](./how-to/rename-package.md)
