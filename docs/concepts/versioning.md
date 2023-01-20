@@ -1,6 +1,7 @@
 ---
 title: Versioning Packages
 parent: Concepts
+nav_order: 400
 ---
 
 # Version Control in a Modular Repository

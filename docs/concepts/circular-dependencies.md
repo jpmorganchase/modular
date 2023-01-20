@@ -1,6 +1,7 @@
 ---
 title: Circular Dependencies
 parent: Concepts
+nav_order: 200
 ---
 
 # Circular dependencies and Modular
@@ -21,7 +22,7 @@ refactoring fragile: if a part of A depends on a part of B and an unrelated part
 of B depends on an unrelated part of A, refactoring code in A can make the
 require order in B fail and vice versa.
 
-## `--dangerouslyIgnoreCircularDependencies` escape hatch
+## Escape hatch: `--dangerouslyIgnoreCircularDependencies`
 
 If your circular dependencies involve packages that never get built (namely,
 `modular.type: source` packages), Modular can still calculate the correct build
@@ -36,12 +37,12 @@ production and always split you dependencies to avoid cycles.
 
 ## Examples
 
-### Cycle disappearing when `source` types are removed from the dependency graph (cycle between `package` and `source`)
+### Cycle disappearing when `source` types are removed from the dependency graph
 
 (assuming that `package` b is depending on `source` c and `source` c is
 depending on `package` b and `package` d):
 
-#### Without `--dangerouslyIgnoreCircularDependencies` the build fails
+Without `--dangerouslyIgnoreCircularDependencies` the build fails:
 
 ```bash
 > modular-dev build b --descendants
@@ -49,7 +50,7 @@ depending on `package` b and `package` d):
 [modular] Cycle detected, b -> c -> b
 ```
 
-#### With `--dangerouslyIgnoreCircularDependencies` the build warns but succeeds
+With `--dangerouslyIgnoreCircularDependencies` the build warns but succeeds:
 
 ```bash
 > modular-dev build b --descendants --dangerouslyIgnoreCircularDependencies
@@ -63,12 +64,12 @@ depending on `package` b and `package` d):
 [modular] $ d: built d in /Users/N761472/dev/rig/ghost-building/dist/d
 ```
 
-### Cycle not disappearing when `source` types are removed from the dependency graph (cycle between `package`s)
+### Cycle not disappearing when `source` types are removed from the dependency graph
 
 (assuming that `package` b is depending on `package` c and `package` c is
 depending on `package` b and `package` d):
 
-#### Even with `--dangerouslyIgnoreCircularDependencies` the build fails:
+Even with `--dangerouslyIgnoreCircularDependencies` the build fails:
 
 ```bash
 > modular-dev build b --descendants --dangerouslyIgnoreCircularDependencies

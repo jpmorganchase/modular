@@ -1,7 +1,10 @@
 ---
 title: Supported CRA features
 parent: Concepts
+nav_order: 10
 ---
+
+# Supported CRA Features
 
 Modular [apps](../package-types/app.md) and
 [ESM Views](../package-types/esm-view.md) are compatible with a subset of

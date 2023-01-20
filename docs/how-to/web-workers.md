@@ -4,7 +4,7 @@ nav_order: 4
 title: Adding web workers
 ---
 
-## Web workers
+# Adding web workers
 
 It is possible to add
 [web workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers)
