@@ -5,9 +5,9 @@ name: Windows Test
 
 on:
   push:
-    branches: [main, 'release/**', feature/v4]
+    branches: [main, 'release/**']
   pull_request:
-    branches: [main, 'release/**', feature/v4]
+    branches: [main, 'release/**']
 
 jobs:
   Test:
