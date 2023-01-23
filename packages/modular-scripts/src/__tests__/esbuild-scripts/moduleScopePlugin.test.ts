@@ -62,7 +62,7 @@ describe('WHEN running esbuild with the svgrPlugin', () => {
     });
 
     it('SHOULD produce no warnings', () => {
-      expect(result.warnings).toMatchInlineSnapshot(`Array []`);
+      expect(result.warnings).toMatchInlineSnapshot(`[]`);
     });
 
     it('SHOULD produce an error', async () => {
@@ -70,10 +70,10 @@ describe('WHEN running esbuild with the svgrPlugin', () => {
       const error = result.errors[0];
       const { text, ...err } = error;
       expect(err).toMatchInlineSnapshot(`
-        Object {
+        {
           "detail": undefined,
           "id": "",
-          "location": Object {
+          "location": {
             "column": 20,
             "file": "packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/module-scope/src/index.tsx",
             "length": 8,
@@ -82,7 +82,7 @@ describe('WHEN running esbuild with the svgrPlugin', () => {
             "namespace": "",
             "suggestion": "",
           },
-          "notes": Array [],
+          "notes": [],
           "pluginName": "ModuleScopePlugin",
         }
       `);

@@ -1,32 +1,30 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
 import execa from 'execa';
+import { createModularTestContext, runYarnModular } from '../test/utils';
+import getModularRoot from '../utils/getModularRoot';
 
-const fixturesFolder = path.join(__dirname, '__fixtures__');
+const modularRoot = getModularRoot();
+const fixturesFolder = path.join(__dirname, '__fixtures__', 'typecheck');
+const relativeFixturePath = fixturesFolder.replace(modularRoot, '');
 
 describe('Modular typecheck', () => {
   describe('when there are type errors', () => {
+    let tempModularRepo: string;
+    let tempFixturesFolder: string;
     beforeEach(() => {
+      tempModularRepo = createModularTestContext();
+      tempFixturesFolder = path.join(tempModularRepo, relativeFixturePath);
+      fs.mkdirsSync(tempFixturesFolder);
       fs.writeFileSync(
-        path.join(fixturesFolder, 'typecheck', 'InvalidTyping.ts'),
+        path.join(tempFixturesFolder, 'InvalidTyping.ts'),
         fs
-          .readFileSync(
-            path.join(fixturesFolder, 'typecheck', 'InvalidTyping.ts'),
-            'utf-8',
-          )
+          .readFileSync(path.join(fixturesFolder, 'InvalidTyping.ts'), 'utf-8')
           .replace('//@ts-nocheck', '//'),
       );
-    });
-
-    afterEach(() => {
-      fs.writeFileSync(
-        path.join(fixturesFolder, 'typecheck', 'InvalidTyping.ts'),
-        fs
-          .readFileSync(
-            path.join(fixturesFolder, 'typecheck', 'InvalidTyping.ts'),
-            'utf-8',
-          )
-          .replace('//', '//@ts-nocheck'),
+      fs.copyFileSync(
+        path.join(modularRoot, 'packages', 'modular-scripts', 'tsconfig.json'),
+        path.join(tempModularRepo, 'tsconfig.json'),
       );
     });
 
@@ -43,16 +41,14 @@ describe('Modular typecheck', () => {
           await execa('tsc', ['--noEmit', '--pretty', 'false'], {
             all: true,
             cleanup: true,
+            cwd: tempModularRepo,
           });
         } catch ({ stdout }) {
           tsc = stdout as string;
         }
         let modularStdErr = '';
         try {
-          await execa('yarnpkg', ['modular', 'typecheck'], {
-            all: true,
-            cleanup: true,
-          });
+          await runYarnModular(tempModularRepo, 'typecheck');
         } catch ({ stderr }) {
           modularStdErr = stderr as string;
         }
@@ -70,16 +66,14 @@ describe('Modular typecheck', () => {
           await execa('tsc', ['--noEmit'], {
             all: true,
             cleanup: true,
+            cwd: tempModularRepo,
           });
         } catch ({ stdout }) {
           tsc = stdout as string;
         }
         let modularStdErr = '';
         try {
-          await execa('yarnpkg', ['modular', 'typecheck'], {
-            all: true,
-            cleanup: true,
-          });
+          await runYarnModular(tempModularRepo, 'typecheck');
         } catch ({ stderr }) {
           modularStdErr = stderr as string;
         }
@@ -93,10 +87,7 @@ describe('Modular typecheck', () => {
   });
   describe('when there are no type errors', () => {
     it('should print a one line success message', async () => {
-      const result = await execa('yarnpkg', ['modular', 'typecheck'], {
-        all: true,
-        cleanup: true,
-      });
+      const result = await runYarnModular(modularRoot, 'typecheck');
       expect(result.stdout).toMatch('\u2713 Typecheck passed');
     });
   });

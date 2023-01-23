@@ -11,7 +11,7 @@ import getModularRoot from '../utils/getModularRoot';
 import actionPreflightCheck from '../utils/actionPreflightCheck';
 import { getModularType } from '../utils/packageTypes';
 import execAsync from '../utils/execAsync';
-import getLocation from '../utils/getLocation';
+import getWorkspaceLocation from '../utils/getLocation';
 import { selectBuildableWorkspaces } from '../utils/selectWorkspaces';
 import { setupEnvForDirectory } from '../utils/setupEnv';
 import createPaths from '../utils/createPaths';
@@ -37,32 +37,22 @@ import {
 } from './esbuildFileSizeReporter';
 import { getDependencyInfo } from '../utils/getDependencyInfo';
 import { isReactNewApi } from '../utils/isReactNewApi';
+import { getConfig } from '../utils/config';
+import { getAllWorkspaces } from '../utils/getAllWorkspaces';
 
 async function buildStandalone(
   target: string,
   type: Extract<ModularType, 'app' | 'esm-view'>,
 ) {
-  // True if there's no preference set - or the preference is for webpack.
-  const useWebpack =
-    !process.env.USE_MODULAR_WEBPACK ||
-    process.env.USE_MODULAR_WEBPACK === 'true';
-
-  // True if the preferene IS set and the preference is esbuid.
-  const useEsbuild =
-    process.env.USE_MODULAR_ESBUILD &&
-    process.env.USE_MODULAR_ESBUILD === 'true';
-
-  // If you want to use webpack then we'll always use webpack. But if you've indicated
-  // you want esbuild - then we'll switch you to the new fancy world.
-  const isEsbuild = !useWebpack || useEsbuild;
-
   // Setup Paths
   const modularRoot = getModularRoot();
-  const targetDirectory = await getLocation(target);
+  const targetDirectory = await getWorkspaceLocation(target);
   const targetName = toParamCase(target);
 
   const paths = await createPaths(target);
   const isApp = type === 'app';
+
+  const isEsbuild = getConfig('useModularEsbuild', targetDirectory);
 
   await checkBrowsers(targetDirectory);
 
@@ -132,6 +122,7 @@ async function buildStandalone(
   let cssEntryPoint: string | undefined;
 
   if (isEsbuild) {
+    logger.debug('Building with esbuild');
     const { default: buildEsbuildApp } = await import(
       '../esbuild-scripts/build'
     );
@@ -140,6 +131,7 @@ async function buildStandalone(
     cssEntryPoint = getEntryPoint(paths, result, '.css');
     assets = createEsbuildAssets(paths, result);
   } else {
+    logger.debug('Building with Webpack');
     // create-react-app doesn't support plain module outputs yet,
     // so --preserve-modules has no effect here
 
@@ -160,6 +152,10 @@ async function buildStandalone(
         MODULAR_IS_APP: JSON.stringify(isApp),
         MODULAR_IMPORT_MAP: JSON.stringify(Object.fromEntries(importMap || [])),
         MODULAR_USE_REACT_CREATE_ROOT: JSON.stringify(useReactCreateRoot),
+        INTERNAL_PUBLIC_URL: getConfig('publicUrl', targetDirectory),
+        INTERNAL_GENERATE_SOURCEMAP: String(
+          getConfig('generateSourceMap', targetDirectory),
+        ),
       },
     });
 
@@ -269,7 +265,7 @@ async function buildStandalone(
 }
 
 async function build({
-  packagePaths: targets,
+  packagePaths,
   preserveModules = true,
   private: includePrivate,
   ancestors,
@@ -287,6 +283,14 @@ async function build({
   compareBranch?: string;
   dangerouslyIgnoreCircularDependencies: boolean;
 }): Promise<void> {
+  const isSelective =
+    changed || ancestors || descendants || packagePaths.length;
+
+  // targets are either the set of what's specified in the selective options or all the packages in the monorepo
+  const targets = isSelective
+    ? packagePaths
+    : [...(await getAllWorkspaces())[0].keys()];
+
   const selectedTargets = await selectBuildableWorkspaces({
     targets,
     changed,
@@ -309,7 +313,7 @@ async function build({
 
   for (const target of selectedTargets) {
     try {
-      const targetDirectory = await getLocation(target);
+      const targetDirectory = await getWorkspaceLocation(target);
 
       await setupEnvForDirectory(targetDirectory);
 

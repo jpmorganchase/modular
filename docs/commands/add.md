@@ -3,48 +3,79 @@ parent: Commands
 title: modular add
 ---
 
-# `modular add <packageName>`
+# `modular add [options] [packageName]`
 
-Adds a new package by creating a new workspace at `packages/<packageName>`,
-omitting the scope if the package is
+Adds a new package by creating a new package at the workspace located at
+`packages/<packageName>`, omitting the scope if the package is
 [scoped](https://docs.npmjs.com/cli/v8/using-npm/scope). If `--path <somePath>`
-is specified, create the workspace at `<somePath>/<packageName>`.
+is specified, the command creates the workspace at `<somePath>/<packageName>`.
 
 (i.e. `modular add my-app` would create a package in `packages/my-app`,
 `modular add @scoped/my-scoped-app` would create a package in
 `packages/my-scoped-app` and `modular add lib-a --path libs` would create a
 package in `libs/lib-a`)
 
-Packages can currently be one of the following types:
+The `modular add` command prompts the user to choose the Modular `type` of the
+package it's about to create. The next section briefly describes the various
+types that can be created by the `modular add` command. For an in-depth
+discussion of the available package types and their characteristics, please see
+[this page](../package-types/index.md).
 
-- A standalone `app`. This corresponds to a static Single Page Application (SPA)
-  project in a workspace. Inside this workspace, you can import packages from
-  other workspaces freely, and features like jsx and typechecking work out of
-  the box.
+### Standalone (bundled) package types
 
-- An `esm-view`, which is a package that typically exports a React component by
-  default. ESM Views are built as ES modules that can be `import`ed at runtime
-  by a host to implement a [micro frontend](../concepts/microfrontends.md)
-  architecture or started as a normal standalone application. See also
-  [the view building reference](../esm-views/index.md)
+These package types are built with [Webpack v5](https://webpack.js.org/) or, if
+specified in the [configuration](../configuration.md),
+[esbuild](https://esbuild.github.io/). Modules imported in the source of these
+package types are bundled in the final result (in case of `esm-view`s, only
+local modules get bundled, and external dependencies are rewritten to use an
+external ESM CDN. [This section](../esm-views/index.md) explains the process in
+more depth).
 
-- A `view`, which is a `package` that exports a React component by default. Read
-  more about Views in [this explainer](../concepts/views.md).
+- [`app`](../package-types/app.md). This package type corresponds to a static
+  Single Page Application (SPA) project in a workspace. It's possible to specify
+  a custom `index.html` file and public assets in the `public` directory. See
+  [this page](../package-types/#app) for more information about apps.
 
-- A generic JavaScript `package`. You can use this to create a library with an
-  entry point that gets transpiled to Common JS and ES Module format when built.
-  Packages can be [built](../commands/build.md) but not
-  [start](../commands/start.md)ed by Modular.
+- [`esm-view`](../package-types/esm-view.md). This package type is an app that
+  gets built as an ES module that can be imported at runtime. `esm-view`s are
+  typically used to implement a [micro-frontend](../concepts/microfrontends.md)
+  architecture. `esm-views`, when [built](./build.md) or [started](./start.md)
+  will also generate a `index.html` file that tries to load the ES Module and
+  render its default export as a React component onto the DOM (standalone mode).
+  See also [the esm-view reference](../esm-views/index.md) for an in-depth
+  introduction.
 
-- A `source`, which is a shared package that is imported by other packages from
-  source (i.e. directly importing its source), and it's never built standalone
-  or published. This kind of package is never [built](../commands/build.md) or
-  [start](../commands/start.md)ed by Modular.
+### Library package types
+
+These package types are either built with
+[Rollup.js](https://rollupjs.org/guide/en/) as CommonJS and ES Modules or, in
+case of `source` modules, they are not built at all. Library package types get
+typically published to NPM (`package` and `view` types) or get imported by other
+packages in the monorepo (`source` type). For this reason, files are transpiled
+separately on build and external dependencies are never "pulled in" (i.e. not
+included in a bundle).
+
+- [`package`](../package-types/package.md). This is a generic package with a
+  single entry point. It's normally used to create a publishable library that
+  gets transpiled to CommonJS and ES Module format when built. Packages can be
+  [built](../commands/build.md) but not [start](../commands/start.md)ed by
+  Modular.
+
+- [`view`](../package-types/view.md). This is a `package` that exports a default
+  React component. Views are built exactly like `package`s, but, since Modular
+  knows that the default export can be rendered, `view`s can be
+  [`modular start`](../start.md)ed to preview them locally.
+
+- [`source`](../package-types/source.md). A shared package that is imported by
+  other package types in the monorepo, directly specifying one or more of its
+  source files. This kind of package can be never [built](../commands/build.md)
+  or [start](../commands/start.md)ed by Modular.
 
 ## Options:
 
-`--path`: Optionally set the directory in which the workspace is created. If the
-provided path is outside (i.e., not a descendant) of the paths specified in
+`--path <targetPath>`: Optionally set the directory in which the workspace is
+created. If the provided path is outside (i.e., not a descendant) of the paths
+specified in
 [the `workspaces` field](https://classic.yarnpkg.com/lang/en/docs/workspaces/#toc-how-to-use-it)
 of the root `package.json`, the command will fail
 
@@ -55,4 +86,4 @@ of the root `package.json`, the command will fail
 
 `--template <templateName>`: Use the package `templateName` from the repository
 or the registry as a template for the new package. Find more information about
-Modular templates [in this page](../concepts/templates.md)
+Modular templates [in this page](../package-types/template.md)

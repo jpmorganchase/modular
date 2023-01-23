@@ -7,6 +7,7 @@ import commander, { Option } from 'commander';
 import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import type { TestOptions } from './test';
 import type { LintOptions } from './lint';
+import { testOptions } from './test/jestOptions';
 
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import * as logger from './utils/logger';
@@ -127,11 +128,6 @@ program
         ? logger.log('Building changed packages')
         : logger.log('Building packages at:', packagePaths.join(', '));
 
-      if (!packagePaths.length && !options.changed) {
-        process.stderr.write("error: missing required argument 'packages'");
-        process.exit(1);
-      }
-
       if (options.compareBranch && !options.changed) {
         process.stderr.write(
           "Option --compareBranch doesn't make sense without option --changed\n",
@@ -161,26 +157,20 @@ program
     },
   );
 
-interface JestOption {
-  default?: boolean | string;
-  description: string;
-  type: 'boolean' | 'string';
-}
-type JestOptions = Record<string, JestOption>;
-
-const testOptions =
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  (require('jest-cli/build/cli/args.js') as { options: JestOptions }).options;
-
 interface CLITestOptions extends TestOptions {
   U: boolean;
 }
 
 program
-  .command('test [regexes...]')
+  .command('test [packages...]')
   .option(
     '--ancestors',
     'Additionally run tests for workspaces that depend on workspaces that have changed',
+    false,
+  )
+  .option(
+    '--descendants',
+    'Additionally run tests for workspaces that directly or indirectly depend on the specified packages (can be combined with --changed)',
     false,
   )
   .option(
@@ -196,7 +186,10 @@ program
     '--compareBranch <branch>',
     "Specifies the branch to use with the --changed flag. If not specified, Modular will use the repo's default branch",
   )
-  .option('--package <packages...>', 'Specifies one or more packages to test')
+  .option(
+    '--regex <regexes...>',
+    'Specifies one or more test name regular expression',
+  )
   .option('--coverage', testOptions.coverage.description)
   .option('--forceExit', testOptions.forceExit.description)
   .option('--env <env>', testOptions.env.description, 'jsdom')
@@ -215,41 +208,17 @@ program
   .option('--updateSnapshot, -u', testOptions.updateSnapshot.description)
   .option('--verbose', testOptions.verbose.description)
   .option('--watch', testOptions.watch.description)
-  .option('--watchAll [value]', testOptions.watchAll.description, !isCI)
+  .option('--watchAll [value]', testOptions.watchAll.description, false)
   .option('--bail [value]', testOptions.bail.description, isCI)
   .option('--clearCache', testOptions.clearCache.description)
   .option('--logHeapUsage', testOptions.logHeapUsage.description)
   .option('--no-cache', testOptions.cache.description)
   .allowUnknownOption()
   .description('Run tests over the codebase')
-  .action(async (regexes: string[], options: CLITestOptions) => {
-    if (options.ancestors && !options.changed && !options.package) {
-      process.stderr.write(
-        "Option --ancestors doesn't make sense without option --changed or option --package\n",
-      );
-      process.exit(1);
-    }
-    if (options.package && options.changed) {
-      process.stderr.write(
-        'Option --package conflicts with option --changed\n',
-      );
-      process.exit(1);
-    }
+  .action(async (packages: string[], options: CLITestOptions) => {
     if (options.compareBranch && !options.changed) {
       process.stderr.write(
         "Option --compareBranch doesn't make sense without option --changed\n",
-      );
-      process.exit(1);
-    }
-    if (options.changed && regexes.length) {
-      process.stderr.write(
-        'Option --changed conflicts with supplied test regex\n',
-      );
-      process.exit(1);
-    }
-    if (options.package && regexes.length) {
-      process.stderr.write(
-        'Option --package conflicts with supplied test regex\n',
       );
       process.exit(1);
     }
@@ -260,7 +229,7 @@ program
     const { U, ...testOptions } = options;
     testOptions.updateSnapshot = !!(options.updateSnapshot || U);
 
-    return test(testOptions, regexes);
+    return test(testOptions, packages);
   });
 
 program
@@ -287,27 +256,6 @@ program
     }),
   );
 
-interface InitOptions {
-  y: boolean;
-  preferOffline: string;
-  verbose: boolean;
-}
-
-program
-  .command('init')
-  .description('Initialize a new modular root in the current folder')
-  .option('-y', 'equivalent to the -y flag in NPM')
-  .option('--prefer-offline [value]', 'delegate to offline cache first', true)
-  .option('--verbose', 'Run yarn commands with --verbose set')
-  .action(async (options: InitOptions) => {
-    const { default: initWorkspace } = await import('./init');
-    await initWorkspace(
-      options.y,
-      JSON.parse(options.preferOffline),
-      options.verbose,
-    );
-  });
-
 program
   .command('check')
   .description(
@@ -319,29 +267,6 @@ program
     const { check } = await import('./check');
     await check({ fix });
     logger.log(chalk.green('Success!'));
-  });
-
-program
-  .command('convert')
-  .description('Converts react app in current directory into a modular package')
-  .action(async () => {
-    const { convert } = await import('./convert');
-    await convert();
-    logger.log(
-      chalk.green('Successfully converted your app into a modular app!'),
-    );
-  });
-
-// TODO: enhancement - should take a type option (app, view, package)
-// port are only available for apps right now
-program
-  .command('port <relativePath>')
-  .description(
-    'Ports the react app in specified directory over into the current modular project as a modular app',
-  )
-  .action(async (relativePath) => {
-    const { port } = await import('./port');
-    await port(relativePath);
   });
 
 const lintStagedFlag = '--staged';
@@ -374,15 +299,6 @@ program
   .action(async () => {
     const { default: typecheck } = await import('./typecheck');
     await typecheck();
-  });
-
-program
-  .command('rename <oldPackageName> <newPackageName>')
-  .description(`Rename a package.`)
-  .option('--verbose', 'Enables verbose logging within modular.')
-  .action(async (oldPackageName: string, newPackageName: string) => {
-    const { default: rename } = await import('./rename');
-    await rename(oldPackageName, newPackageName);
   });
 
 interface ServeOptions {

@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import execa from 'execa';
 import { exec } from 'child_process';
 import rimraf from 'rimraf';
@@ -16,6 +19,7 @@ import puppeteer from 'puppeteer';
 
 import { startApp, DevServer } from './start-app';
 import type { CoreProperties } from '@schemastore/package';
+import { runYarnModular, runModularForTests } from '../test/utils';
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
 const { getNodeText } = queries;
@@ -25,14 +29,6 @@ const modularRoot = getModularRoot();
 // These tests must be executed sequentially with `--runInBand`.
 
 const packagesPath = path.join(getModularRoot(), 'packages');
-
-function modular(str: string, opts: Record<string, unknown> = {}) {
-  return execa('yarnpkg', ['modular', ...str.split(' ')], {
-    cwd: modularRoot,
-    cleanup: true,
-    ...opts,
-  });
-}
 
 function cleanup() {
   rimraf.sync(path.join(packagesPath, 'node-env-app'));
@@ -58,7 +54,7 @@ afterAll(cleanup);
 
 describe('when working with a NODE_ENV app', () => {
   beforeAll(async () => {
-    await modular('add node-env-app --unstable-type app', { stdio: 'inherit' });
+    runModularForTests(modularRoot, 'add node-env-app --unstable-type app');
 
     await fs.writeFile(
       path.join(modularRoot, 'packages', 'node-env-app', 'src', 'index.ts'),
@@ -69,9 +65,7 @@ describe('when working with a NODE_ENV app', () => {
     `,
     );
 
-    await modular('build node-env-app', {
-      stdio: 'inherit',
-    });
+    runModularForTests(modularRoot, 'build node-env-app');
   });
 
   afterAll(cleanup);
@@ -91,9 +85,9 @@ describe('when working with a NODE_ENV app', () => {
       └─ static
          └─ js
             ├─ main.a482480b.js #1xwb1v
-            ├─ main.a482480b.js.map #1vulei2
+            ├─ main.a482480b.js.map #wh4kdy
             ├─ runtime-main.97707f9d.js #15lezt9
-            └─ runtime-main.97707f9d.js.map #12i5ddp"
+            └─ runtime-main.97707f9d.js.map #1yg8f1m"
     `);
   });
 
@@ -121,14 +115,12 @@ describe('when working with a NODE_ENV app', () => {
 });
 
 describe('When working with a npm scoped app', () => {
-  beforeAll(async () => {
-    await modular('add @scoped/sample-app --unstable-type app', {
-      stdio: 'inherit',
-    });
-
-    await modular('build @scoped/sample-app', {
-      stdio: 'inherit',
-    });
+  beforeAll(() => {
+    runModularForTests(
+      modularRoot,
+      'add @scoped/sample-app --unstable-type app',
+    );
+    runModularForTests(modularRoot, 'build @scoped/sample-app');
   });
 
   afterAll(cleanup);
@@ -152,11 +144,11 @@ describe('When working with a npm scoped app', () => {
          ├─ js
          │  ├─ 316.74c894ba.js #euj72k
          │  ├─ 316.74c894ba.js.LICENSE.txt #eplx8h
-         │  ├─ 316.74c894ba.js.map #13g05b6
+         │  ├─ 316.74c894ba.js.map #3k9wqz
          │  ├─ main.b44531b6.js #16ahtqz
-         │  ├─ main.b44531b6.js.map #15ijphv
+         │  ├─ main.b44531b6.js.map #n69bgw
          │  ├─ runtime-main.de012fdc.js #1qz643h
-         │  └─ runtime-main.de012fdc.js.map #ntuwq4
+         │  └─ runtime-main.de012fdc.js.map #g5ojr6
          └─ media
             └─ logo.103b5fa18196d5665a7e12318285c916.svg #1okqmlj"
     `);
@@ -312,7 +304,7 @@ describe('When working with a npm scoped app', () => {
 
 describe('when working with a non-scoped app', () => {
   beforeAll(async () => {
-    await modular('add sample-app --unstable-type app', { stdio: 'inherit' });
+    runModularForTests(modularRoot, 'add sample-app --unstable-type app');
 
     // Let's replace the App module with something of our own
     // with a test specific element we can introspect
@@ -321,9 +313,7 @@ describe('when working with a non-scoped app', () => {
       path.join(packagesPath, 'sample-app', 'src', 'App.tsx'),
     );
 
-    await modular('build sample-app', {
-      stdio: 'inherit',
-    });
+    runModularForTests(modularRoot, 'build sample-app');
   });
 
   afterAll(cleanup);
@@ -331,6 +321,7 @@ describe('when working with a non-scoped app', () => {
   it('can add an app', () => {
     expect(tree(path.join(packagesPath, 'sample-app'))).toMatchInlineSnapshot(`
       "sample-app
+      ├─ README.md #1wz039g
       ├─ package.json
       ├─ public
       │  ├─ favicon.ico #6pu3rg
@@ -343,7 +334,7 @@ describe('when working with a non-scoped app', () => {
       │  ├─ App.css #1o0zosm
       │  ├─ App.tsx #igvgtx
       │  ├─ __tests__
-      │  │  └─ App.test.tsx #16urcos
+      │  │  └─ App.test.tsx #1u72nad
       │  ├─ index.css #o7sk21
       │  ├─ index.tsx #zdn6mw
       │  ├─ logo.svg #1okqmlj
@@ -371,11 +362,11 @@ describe('when working with a non-scoped app', () => {
          ├─ js
          │  ├─ 316.394ef80b.js #1mv4xg9
          │  ├─ 316.394ef80b.js.LICENSE.txt #eplx8h
-         │  ├─ 316.394ef80b.js.map #b33pzn
+         │  ├─ 316.394ef80b.js.map #o90ydx
          │  ├─ main.abe6afa1.js #t9np46
-         │  ├─ main.abe6afa1.js.map #nchh6d
+         │  ├─ main.abe6afa1.js.map #15q2td3
          │  ├─ runtime-main.e92969dd.js #1is98ey
-         │  └─ runtime-main.e92969dd.js.map #19haxsp
+         │  └─ runtime-main.e92969dd.js.map #pq512s
          └─ media
             └─ logo.103b5fa18196d5665a7e12318285c916.svg #1okqmlj"
     `);
@@ -499,13 +490,17 @@ describe('when working with a non-scoped app', () => {
   });
 
   it('can execute tests', async () => {
-    const output = await modular('test sample-app --watchAll false', {
-      all: true,
-      reject: false,
-      env: {
-        CI: 'true',
+    const output = await runYarnModular(
+      getModularRoot(),
+      'test sample-app --watchAll false',
+      {
+        all: true,
+        reject: false,
+        env: {
+          CI: 'true',
+        },
       },
-    });
+    );
 
     // TODO: Passing CI=true *should* remove all the coloring stuff,
     // it's weird that it doesn't. To workaround it, I've manually
@@ -558,7 +553,7 @@ describe('when working with a non-scoped app', () => {
       if (devServer) {
         // this is the problematic bit, it leaves hanging node processes
         // despite closing the parent process. Only happens in tests!
-        devServer.kill();
+        void devServer.kill();
       }
     }
 
@@ -578,17 +573,12 @@ describe('when working with a non-scoped app', () => {
 });
 
 describe('When working with an app added in a custom directory', () => {
-  beforeAll(async () => {
-    await modular(
+  beforeAll(() => {
+    runModularForTests(
+      modularRoot,
       'add @scoped/custom-app --unstable-type app --path packages/custom/scoped/',
-      {
-        stdio: 'inherit',
-      },
     );
-
-    await modular('build @scoped/custom-app', {
-      stdio: 'inherit',
-    });
+    runModularForTests(modularRoot, 'build @scoped/custom-app');
   });
 
   afterAll(cleanup);
@@ -612,11 +602,11 @@ describe('When working with an app added in a custom directory', () => {
          ├─ js
          │  ├─ 350.44eb2511.js #4ubhrm
          │  ├─ 350.44eb2511.js.LICENSE.txt #eplx8h
-         │  ├─ 350.44eb2511.js.map #1icgdim
+         │  ├─ 350.44eb2511.js.map #1yro3n5
          │  ├─ main.fba21b67.js #16haxht
-         │  ├─ main.fba21b67.js.map #14bnapx
+         │  ├─ main.fba21b67.js.map #1tgakei
          │  ├─ runtime-main.cef70e6c.js #1f77948
-         │  └─ runtime-main.cef70e6c.js.map #u0erug
+         │  └─ runtime-main.cef70e6c.js.map #13ge77z
          └─ media
             └─ logo.103b5fa18196d5665a7e12318285c916.svg #1okqmlj"
     `);

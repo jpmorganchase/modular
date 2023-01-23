@@ -1,35 +1,35 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`getWorkspaceInfo 1`] = `
-Object {
+{
   "location": "packages/create-modular-react-app",
-  "mismatchedWorkspaceDependencies": Array [],
+  "mismatchedWorkspaceDependencies": [],
   "public": true,
   "type": "package",
   "version": Any<String>,
-  "workspaceDependencies": Array [],
+  "workspaceDependencies": [],
 }
 `;
 
 exports[`getWorkspaceInfo 2`] = `
-Object {
+{
   "location": "packages/eslint-config-modular-app",
-  "mismatchedWorkspaceDependencies": Array [],
+  "mismatchedWorkspaceDependencies": [],
   "public": true,
   "type": "package",
   "version": Any<String>,
-  "workspaceDependencies": Array [],
+  "workspaceDependencies": [],
 }
 `;
 
 exports[`getWorkspaceInfo 3`] = `
-Object {
+{
   "location": "packages/modular-scripts",
-  "mismatchedWorkspaceDependencies": Array [],
+  "mismatchedWorkspaceDependencies": [],
   "public": true,
   "type": "package",
   "version": Any<String>,
-  "workspaceDependencies": Array [
+  "workspaceDependencies": [
     "@modular-scripts/modular-types",
     "@modular-scripts/workspace-resolver",
   ],
@@ -37,123 +37,112 @@ Object {
 `;
 
 exports[`getWorkspaceInfo 4`] = `
-Object {
-  "location": "packages/modular-site",
-  "mismatchedWorkspaceDependencies": Array [],
-  "public": false,
-  "type": "app",
+{
+  "location": "packages/modular-template-app",
+  "mismatchedWorkspaceDependencies": [],
+  "public": true,
+  "type": "template",
   "version": Any<String>,
-  "workspaceDependencies": Array [],
+  "workspaceDependencies": [],
 }
 `;
 
 exports[`getWorkspaceInfo 5`] = `
-Object {
-  "location": "packages/modular-template-app",
-  "mismatchedWorkspaceDependencies": Array [],
+{
+  "location": "packages/modular-template-esm-view",
+  "mismatchedWorkspaceDependencies": [],
   "public": true,
   "type": "template",
   "version": Any<String>,
-  "workspaceDependencies": Array [],
+  "workspaceDependencies": [],
 }
 `;
 
 exports[`getWorkspaceInfo 6`] = `
-Object {
-  "location": "packages/modular-template-esm-view",
-  "mismatchedWorkspaceDependencies": Array [],
-  "public": true,
+{
+  "location": "packages/modular-template-node-env-app",
+  "mismatchedWorkspaceDependencies": [],
+  "public": false,
   "type": "template",
   "version": Any<String>,
-  "workspaceDependencies": Array [],
+  "workspaceDependencies": [],
 }
 `;
 
 exports[`getWorkspaceInfo 7`] = `
-Object {
-  "location": "packages/modular-template-node-env-app",
-  "mismatchedWorkspaceDependencies": Array [],
-  "public": false,
+{
+  "location": "packages/modular-template-package",
+  "mismatchedWorkspaceDependencies": [],
+  "public": true,
   "type": "template",
   "version": Any<String>,
-  "workspaceDependencies": Array [],
+  "workspaceDependencies": [],
 }
 `;
 
 exports[`getWorkspaceInfo 8`] = `
-Object {
-  "location": "packages/modular-template-package",
-  "mismatchedWorkspaceDependencies": Array [],
+{
+  "location": "packages/modular-template-source",
+  "mismatchedWorkspaceDependencies": [],
   "public": true,
   "type": "template",
   "version": Any<String>,
-  "workspaceDependencies": Array [],
+  "workspaceDependencies": [],
 }
 `;
 
 exports[`getWorkspaceInfo 9`] = `
-Object {
-  "location": "packages/modular-template-source",
-  "mismatchedWorkspaceDependencies": Array [],
+{
+  "location": "packages/modular-template-view",
+  "mismatchedWorkspaceDependencies": [],
   "public": true,
   "type": "template",
   "version": Any<String>,
-  "workspaceDependencies": Array [],
+  "workspaceDependencies": [],
 }
 `;
 
 exports[`getWorkspaceInfo 10`] = `
-Object {
-  "location": "packages/modular-template-view",
-  "mismatchedWorkspaceDependencies": Array [],
+{
+  "location": "packages/modular-types",
+  "mismatchedWorkspaceDependencies": [],
   "public": true,
-  "type": "template",
+  "type": "package",
   "version": Any<String>,
-  "workspaceDependencies": Array [],
+  "workspaceDependencies": [],
 }
 `;
 
 exports[`getWorkspaceInfo 11`] = `
-Object {
-  "location": "packages/modular-types",
-  "mismatchedWorkspaceDependencies": Array [],
+{
+  "location": "packages/modular-views.macro",
+  "mismatchedWorkspaceDependencies": [],
   "public": true,
   "type": "package",
   "version": Any<String>,
-  "workspaceDependencies": Array [],
+  "workspaceDependencies": [],
 }
 `;
 
 exports[`getWorkspaceInfo 12`] = `
-Object {
-  "location": "packages/modular-views.macro",
-  "mismatchedWorkspaceDependencies": Array [],
-  "public": true,
+{
+  "location": "packages/tree-view-for-tests",
+  "mismatchedWorkspaceDependencies": [],
+  "public": false,
   "type": "package",
   "version": Any<String>,
-  "workspaceDependencies": Array [],
+  "workspaceDependencies": [],
 }
 `;
 
 exports[`getWorkspaceInfo 13`] = `
-Object {
-  "location": "packages/tree-view-for-tests",
-  "mismatchedWorkspaceDependencies": Array [],
-  "public": false,
-  "type": "package",
-  "version": Any<String>,
-  "workspaceDependencies": Array [],
-}
-`;
-
-exports[`getWorkspaceInfo 14`] = `
-Object {
+{
   "location": "packages/workspace-resolver",
-  "mismatchedWorkspaceDependencies": Array [],
+  "mismatchedWorkspaceDependencies": [],
   "public": true,
   "type": "package",
   "version": Any<String>,
-  "workspaceDependencies": Array [
+  "workspaceDependencies": [
     "@modular-scripts/modular-types",
   ],
 }

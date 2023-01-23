@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import * as React from 'react';
 import { render } from 'react-dom';
 import ComponentName__ from '../index';

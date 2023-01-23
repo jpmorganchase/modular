@@ -6,15 +6,24 @@ title: Modular
 <div align="center">
   <h1><img height="38px" width="44px" style="height: 38px; max-width: 44px" src="https://raw.githubusercontent.com/jpmorganchase/modular/main/docs/img/modular-hero.svg"> &nbsp; Modular</h1>
 
-  <p><strong>Scaled Web Engineering</strong>. Where Libraries, Views & apps coexist together and tooling is a first-class citizen.</p>
+  <p><strong>Scaled Web Engineering</strong>. Where libraries and micro-frontends coexist together and tooling is a first-class citizen.</p>
 </div>
 
-`modular` is a collection of tools and guidance to enable UI development at
-scale. It is derived from work at JP Morgan to enable development in a single
-repository by many teams.
+`modular` is a collection of tools and guidance to enable micro-frontend
+development at scale. It is derived from work at JP Morgan to enable development
+in large monorepositories owned by many teams.
 
-It provides a `modular` CLI to scaffold and develop a new application from
-scratch, as well as commands to add and manage further modules.
+It provides a CLI to:
+
+- Scaffold new micro-frontends and libraries from scratch
+- Provide ready-to-use, opinionated test, lint and build configurations for
+  micro-frontends and libraries
+- Provide tooling to incrementally and selectively run operations on
+  monorepositories at scale
+
+## Pre-requisites
+
+See the [compatibility page](./compatibility.md).
 
 ## Getting Started
 
@@ -25,7 +34,8 @@ scratch, as well as commands to add and manage further modules.
 Bootstraps a new project, configured to use
 [Yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces/).
 
-This also creates a workspace named 'app' which is a new modular app written in
+This also creates a workspace named 'app' which is a new
+[modular app](./package-types) written in
 [TypeScript](https://www.typescriptlang.org/).
 
 It supports three flags:
@@ -38,20 +48,24 @@ It supports three flags:
 
 ## Commands
 
-- [`init`](./commands/init.md)
-- [`workspace`](./commands/workspace.md)
-- [`check`](./commands/check.md)
-- [`add`](./commands/add.md)
-- [`start`](./commands/start.md)
-- [`test`](./commands/test.md)
-- [`build`](./commands/build.md)
-- [`convert`](./commands/convert.md)
-- [`port`](./commands/port.md)
-- [`typecheck`](./commands/typecheck.md)
-- [`lint`](./commands/lint.md)
-- [`rename`](./commands/rename.md)
+- [add](./commands/add.md)
+- [build](./commands/build.md)
+- [start](./commands/start.md)
+- [test](./commands/test.md)
+- [typecheck](./commands/typecheck.md)
+- [lint](./commands/lint.md)
+- [workspace](./commands/workspace.md)
+- [check](./commands/check.md)
 
 ## Concepts
 
-- [Views](./concepts/views.md)
+- [Micro-frontends](./concepts/microfrontends.md)
+- [Configuration](./configuration.md)
+- [Package types](./package-types)
 - [Linting](./concepts/linting.md)
+
+## How to
+
+- [Convert Existing CRA Project](./how-to/convert-react-app.md)
+- [Create a Template](./how-to/create-template.md)
+- [Rename a Modular Package](./how-to/rename-package.md)

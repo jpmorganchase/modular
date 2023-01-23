@@ -1,9 +1,6 @@
 import { parsePackageName } from './parsePackageName';
 import type { Dependency } from '@schemastore/package';
-
-const externalCdnTemplate =
-  process.env.EXTERNAL_CDN_TEMPLATE ??
-  'https://cdn.skypack.dev/[name]@[version]';
+import { getConfig } from './config';
 
 interface BuildImportMapParams {
   externalDependencies: Dependency;
@@ -11,11 +8,16 @@ interface BuildImportMapParams {
   selectiveCDNResolutions: Dependency;
 }
 
-export function buildImportMap({
-  externalDependencies,
-  externalResolutions,
-  selectiveCDNResolutions,
-}: BuildImportMapParams): Map<string, string> {
+export function buildImportMap(
+  workspacePath: string,
+  {
+    externalDependencies,
+    externalResolutions,
+    selectiveCDNResolutions,
+  }: BuildImportMapParams,
+): Map<string, string> {
+  const externalCdnTemplate = getConfig('externalCdnTemplate', workspacePath);
+
   // Add react-dom if only react is specified in the dependencies
   if (!externalDependencies['react-dom']) {
     externalDependencies['react-dom'] = externalDependencies['react'];

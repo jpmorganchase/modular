@@ -16,10 +16,11 @@ import { getPackageEntryPoints } from './getPackageEntryPoints';
 import getPrefixedLogger from '../../utils/getPrefixedLogger';
 import getPackageMetadata from '../../utils/getPackageMetadata';
 import getModularRoot from '../../utils/getModularRoot';
-import getRelativeLocation from '../../utils/getRelativeLocation';
+import getRelativeWorkspaceLocation from '../../utils/getRelativeLocation';
 import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowserslistTarget';
 
 import type { ModularPackageJson } from '@modular-scripts/modular-types';
+import { getConfig } from '../../utils/config';
 
 const outputDirectory = 'dist';
 const extensions = ['.ts', '.tsx', '.js', '.jsx'];
@@ -44,7 +45,7 @@ export async function makeBundle(
   } = metadata;
 
   const paramCaseTarget = toParamCase(packageName);
-  const packagePath = await getRelativeLocation(packageName);
+  const packagePath = await getRelativeWorkspaceLocation(packageName);
   const targetOutputDirectory = path.join(
     modularRoot,
     outputDirectory,
@@ -107,7 +108,7 @@ export async function makeBundle(
 
   const outputOptions: rollup.OutputOptions = {
     freeze: false,
-    sourcemap: true, // TODO: read this off env
+    sourcemap: getConfig('generateSourceMap', absolutePackagePath),
     sourcemapPathTransform(relativeSourcePath: string, sourceMapPath: string) {
       // make source map input files relative to the `${packagePath}/dist-${format}` within
       // the package directory

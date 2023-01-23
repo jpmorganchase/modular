@@ -162,14 +162,11 @@ async function addPackage({
 
   try {
     logger.log(`Looking for template ${templateName} in project...`);
-    console.log(`require.resolve(${installedPackageJsonPath}, {
-      paths: [${modularRoot}],
-    });`);
     templatePackageJsonPath = require.resolve(installedPackageJsonPath, {
       paths: [modularRoot],
     });
   } catch (e) {
-    console.log(e);
+    logger.log(`Couldn't find ${templateName} in project`);
     logger.log(
       `Installing template package ${templateName} from registry, this may take a moment...`,
     );
@@ -214,7 +211,11 @@ async function addPackage({
 
   const modularTemplateType = modularTemplatePackageJson?.modular
     ?.templateType as string;
-  if (!['app', 'esm-view', 'view', 'package'].includes(modularTemplateType)) {
+  if (
+    !['app', 'esm-view', 'view', 'source', 'package'].includes(
+      modularTemplateType,
+    )
+  ) {
     throw new Error(
       `${templateName} has modular type: ${modularTemplateType}, which does not exist, please use update this template`,
     );

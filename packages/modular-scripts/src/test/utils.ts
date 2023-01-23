@@ -1,6 +1,6 @@
 import _rimraf from 'rimraf';
 import execa from 'execa';
-import fs from 'fs-extra';
+import fs, { writeJSONSync } from 'fs-extra';
 import path from 'path';
 import * as tmp from 'tmp';
 import { promisify } from 'util';
@@ -8,21 +8,11 @@ import { promisify } from 'util';
 import getModularRoot from '../utils/getModularRoot';
 import type { ModularPackageJson } from '@modular-scripts/modular-types';
 import { mkdirSync } from 'fs';
+import type { Config } from '@jest/types';
 
 const rimraf = promisify(_rimraf);
 
 const modularRoot = getModularRoot();
-
-export function modular(
-  str: string,
-  opts: Record<string, unknown> = {},
-): execa.ExecaChildProcess<string> {
-  return execa('yarnpkg', ['modular', ...str.split(' ')], {
-    cwd: modularRoot,
-    cleanup: true,
-    ...opts,
-  });
-}
 
 export async function cleanup(packageNames: Array<string>): Promise<void> {
   const packagesPath = path.join(modularRoot, 'packages');
@@ -44,7 +34,7 @@ export async function addFixturePackage(
   options: { copy: boolean } = { copy: true },
 ): Promise<void> {
   const packageSrcDir = path.join(modularRoot, 'packages', name, 'src');
-  await modular(`add ${name} --unstable-type package`, {
+  await runYarnModular(modularRoot, `add ${name} --unstable-type package`, {
     stdio: 'inherit',
   });
   await fs.emptyDir(packageSrcDir);
@@ -67,7 +57,7 @@ export async function addFixturePackage(
  */
 export function createModularTestContext(): string {
   // Modular node_modules are copied in the parent folder
-  const tempDir = tmp.dirSync().name;
+  const tempDir = tmp.dirSync({ unsafeCleanup: true }).name;
   fs.symlinkSync(
     path.join(modularRoot, 'node_modules'),
     path.join(tempDir, 'node_modules'),
@@ -97,12 +87,23 @@ export function createModularTestContext(): string {
         'last 1 safari version',
       ],
     },
+    dependencies: {
+      react: '^18.2.0',
+      'react-dom': '^18.2.0',
+    },
   };
 
   fs.writeJSONSync(path.join(tempModularRepo, 'package.json'), packageJson, {
     spaces: 2,
   });
-
+  fs.writeJSONSync(path.join(tempModularRepo, 'tsconfig.json'), {
+    extends: 'modular-scripts/tsconfig.json',
+    include: ['modular', 'packages/**/src'],
+  });
+  fs.copySync(
+    path.join(modularRoot, 'modular'),
+    path.join(tempModularRepo, 'modular'),
+  );
   return tempModularRepo;
 }
 
@@ -134,32 +135,121 @@ export function mockInstallTemplate(
 }
 
 /**
- * Run the Modular cli present at the root path `modularFolder` with a working directory of `cwd`
- * passing an array of `modularArguments`
+ * Generates the Jest --config flag contents to pass when calling Jest based on config JSON provided
  *
- * Useful to run modular from source in a different directory (usually a temp directory created for tests)
+ * - On Mac, it will provide a stringyfied version of the config JSON provided
  *
- * @param modularToRun The root modular repo folder containing the modular-scripts to run
- * @param cwd The target working directory where we want to run Modular
- * @param modularArguments A list of command-line arguments
+ * - On Windows, it will write the config JSON to a file in a temp directory and provde the path to pass
  */
-export function runLocalModular(
-  modularToRun: string,
+export function generateJestConfig(jestConfig: Config.InitialOptions): string {
+  if (process.platform === 'win32') {
+    const tempConfigPath = path.join(
+      tmp.dirSync().name,
+      'temp-jest-config.json',
+    );
+    writeJSONSync(tempConfigPath, jestConfig);
+    return `${tempConfigPath}`;
+  } else {
+    return `${JSON.stringify(jestConfig)}`;
+  }
+}
+
+/**
+ * Run the main repo's modular cli with the specified arguments, skipping modular checks by default to improve performance
+ * Should be used by most tests - logs from the process are inherited by default
+ *
+ * @param cwd Where to run modular
+ * @param args String of arguments to pass to modular
+ * @param opts Options to pass to execa
+ * @param stdio Override 'inherit' defailt stdio option
+ * @param skipChecks Override 'true' default to skipping startup and preflight checks
+ */
+export function runModularForTests(
   cwd: string,
-  modularArguments: string[],
+  args: string,
+  opts: Record<string, unknown> = {},
+  stdio: 'inherit' | 'pipe' | 'ignore' = 'inherit',
+  skipChecks: 'true' | 'false' = 'true',
 ): execa.ExecaSyncReturnValue<string> {
   return execa.sync(
-    path.join(modularToRun, '/node_modules/.bin/ts-node'),
+    path.join(modularRoot, '/node_modules/.bin/ts-node'),
     [
-      path.join(modularToRun, '/packages/modular-scripts/src/cli.ts'),
-      ...modularArguments,
+      path.join(modularRoot, '/packages/modular-scripts/src/cli.ts'),
+      ...args.split(' '),
     ],
     {
       cwd,
       env: {
         ...process.env,
+        SKIP_MODULAR_STARTUP_CHECK: skipChecks,
+        SKIP_PREFLIGHT_CHECK: skipChecks,
         CI: 'true',
       },
+      stdio,
+      cleanup: true,
+      all: true,
+      ...opts,
     },
   );
+}
+
+/**
+ * Wrapper of runModularForTests that runs checks to make it safe & pipes output
+ * Skip checks is false by default when we pipe output as unsafe output includes warnings that Modular repository might be invalid
+ */
+export function runModularPipeLogs(
+  cwd: string,
+  args: string,
+  skipChecks: 'true' | 'false' = 'false',
+  opts: Record<string, unknown> = {},
+) {
+  return runModularForTests(cwd, args, opts, 'pipe', skipChecks);
+}
+
+/**
+ * Async alternative to runModularForTests
+ */
+export async function runModularForTestsAsync(
+  cwd: string,
+  args: string,
+  opts: Record<string, unknown> = {},
+  stdio: 'inherit' | 'pipe' | 'ignore' = 'inherit',
+  skipChecks: 'true' | 'false' = 'true',
+) {
+  return execa(
+    path.join(modularRoot, '/node_modules/.bin/ts-node'),
+    [
+      path.join(modularRoot, '/packages/modular-scripts/src/cli.ts'),
+      ...args.split(' '),
+    ],
+    {
+      cwd,
+      env: {
+        ...process.env,
+        SKIP_MODULAR_STARTUP_CHECK: skipChecks,
+        SKIP_PREFLIGHT_CHECK: skipChecks,
+        CI: 'true',
+      },
+      stdio,
+      all: true,
+      cleanup: true,
+      ...opts,
+    },
+  );
+}
+
+/**
+ * Runs `yarnpkg modular` in given directory with minimal configuration
+ */
+export async function runYarnModular(
+  cwd: string,
+  args: string,
+  opts: Record<string, unknown> = {},
+) {
+  return execa('yarnpkg', ['modular', ...args.split(' ')], {
+    cwd,
+    all: true,
+    cleanup: true,
+    ...opts,
+  });
 }

@@ -8,7 +8,23 @@ import getModularRoot from '../../utils/getModularRoot';
 import { normalizeToPosix } from '../utils/formatPath';
 
 const svgrOptions: svgr.Config = {
-  template(variables, { tpl }) {
+  template(
+    variables: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      imports: any;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      interfaces: any;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      componentName: any;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      props: any;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      jsx: any;
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    { tpl }: any,
+  ) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
     return tpl`
   ${variables.imports};
   

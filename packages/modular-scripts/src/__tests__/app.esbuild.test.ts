@@ -1,51 +1,30 @@
-import execa from 'execa';
-import rimraf from 'rimraf';
 import tree from 'tree-view-for-tests';
 import path from 'path';
 import fs from 'fs-extra';
 import prettier from 'prettier';
-
-import getModularRoot from '../utils/getModularRoot';
-
-const modularRoot = getModularRoot();
+import { createModularTestContext, runModularForTests } from '../test/utils';
 
 // These tests must be executed sequentially with `--runInBand`.
 
-const packagesPath = path.join(getModularRoot(), 'packages');
-
-function modular(str: string, opts: Record<string, unknown> = {}) {
-  return execa('yarnpkg', ['modular', ...str.split(' ')], {
-    cwd: modularRoot,
-    cleanup: true,
-    // @ts-ignore
-    env: {
-      USE_MODULAR_ESBUILD: 'true',
-    },
-    ...opts,
-  });
-}
-
-function cleanup() {
-  rimraf.sync(path.join(packagesPath, 'sample-esbuild-app'));
-  rimraf.sync(path.join(modularRoot, 'dist/sample-esbuild-app'));
-
-  // run yarn so yarn.lock gets reset
-  return execa.sync('yarnpkg', ['--silent'], {
-    cwd: modularRoot,
-  });
-}
-
-beforeAll(cleanup);
-afterAll(cleanup);
+const tempModularRepo = createModularTestContext();
+const packagesPath = path.join(tempModularRepo, 'packages');
 
 describe('when working with an app', () => {
-  beforeAll(async () => {
-    await modular('add sample-esbuild-app --unstable-type app', {
-      stdio: 'inherit',
-    });
+  beforeAll(() => {
+    runModularForTests(
+      tempModularRepo,
+      'add sample-esbuild-app --unstable-type app',
+      {
+        env: {
+          USE_MODULAR_ESBUILD: 'true',
+        },
+      },
+    );
 
-    await modular('build sample-esbuild-app', {
-      stdio: 'inherit',
+    runModularForTests(tempModularRepo, 'build sample-esbuild-app', {
+      env: {
+        USE_MODULAR_ESBUILD: 'true',
+      },
     });
   });
 
@@ -53,6 +32,7 @@ describe('when working with an app', () => {
     expect(tree(path.join(packagesPath, 'sample-esbuild-app')))
       .toMatchInlineSnapshot(`
       "sample-esbuild-app
+      ├─ README.md #g3sy9z
       ├─ package.json
       ├─ public
       │  ├─ favicon.ico #6pu3rg
@@ -65,7 +45,7 @@ describe('when working with an app', () => {
       │  ├─ App.css #1o0zosm
       │  ├─ App.tsx #c80ven
       │  ├─ __tests__
-      │  │  └─ App.test.tsx #16urcos
+      │  │  └─ App.test.tsx #1u72nad
       │  ├─ index.css #o7sk21
       │  ├─ index.tsx #zdn6mw
       │  ├─ logo.svg #1okqmlj
@@ -75,11 +55,11 @@ describe('when working with an app', () => {
   });
 
   it('can build an app', () => {
-    expect(tree(path.join(modularRoot, 'dist', 'sample-esbuild-app')))
+    expect(tree(path.join(tempModularRepo, 'dist', 'sample-esbuild-app')))
       .toMatchInlineSnapshot(`
       "sample-esbuild-app
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #zk3xji
+      ├─ index.html #1wtu0d9
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -90,8 +70,8 @@ describe('when working with an app', () => {
          │  ├─ index-PE2NG66F.css #1t4q6xl
          │  └─ index-PE2NG66F.css.map #za6yi0
          ├─ js
-         │  ├─ index-TKIUYRMA.js #l9v7el
-         │  └─ index-TKIUYRMA.js.map #51gooi
+         │  ├─ index-QBVJFCSN.js #1xqlxrg
+         │  └─ index-QBVJFCSN.js.map #azbxre
          └─ media
             └─ logo-PGX3QVVN.svg #1okqmlj"
     `);
@@ -102,7 +82,12 @@ describe('when working with an app', () => {
       prettier.format(
         String(
           await fs.readFile(
-            path.join(modularRoot, 'dist', 'sample-esbuild-app', 'index.html'),
+            path.join(
+              tempModularRepo,
+              'dist',
+              'sample-esbuild-app',
+              'index.html',
+            ),
           ),
         ),
         {
@@ -118,12 +103,12 @@ describe('when working with an app', () => {
         String(
           await fs.readFile(
             path.join(
-              modularRoot,
+              tempModularRepo,
               'dist',
               'sample-esbuild-app',
               'static',
               'js',
-              'index-TKIUYRMA.js',
+              'index-QBVJFCSN.js',
             ),
           ),
         ),
@@ -134,22 +119,8 @@ describe('when working with an app', () => {
     ).toMatchSnapshot();
   });
 
-  type SourceMap = Record<string, string | string[]>;
-
-  const readSourceMap = (pathName: string) => {
-    const map = fs.readJsonSync(
-      path.join(modularRoot, 'dist', 'sample-esbuild-app', pathName),
-    ) as SourceMap;
-    return {
-      ...map,
-      // make the source root //modular so that it's the same
-      // across platforms
-      sourceRoot: '//modular',
-    };
-  };
-
   it('can generate a index.js.map', () => {
-    expect(readSourceMap('static/js/index-TKIUYRMA.js.map')).toMatchSnapshot();
+    expect(readSourceMap('static/js/index-QBVJFCSN.js.map')).toMatchSnapshot();
   });
 
   it('can generate a index.css.map', () => {
@@ -158,3 +129,17 @@ describe('when working with an app', () => {
     ).toMatchSnapshot();
   });
 });
+
+type SourceMap = Record<string, string | string[]>;
+
+const readSourceMap = (pathName: string) => {
+  const map = fs.readJsonSync(
+    path.join(tempModularRepo, 'dist', 'sample-esbuild-app', pathName),
+  ) as SourceMap;
+  return {
+    ...map,
+    // make the source root //modular so that it's the same
+    // across platforms
+    sourceRoot: '//modular',
+  };
+};

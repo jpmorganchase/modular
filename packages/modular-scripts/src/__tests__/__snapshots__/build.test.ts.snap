@@ -21,7 +21,7 @@ exports[`WHEN building with preserve modules SHOULD create the correct runAsync.
 "function runAsync() {
   return new Promise((resolve) => {
     setTimeout(() => {
-      console.log(\\"done\\");
+      console.log("done");
       resolve();
     }, 1e3);
   });

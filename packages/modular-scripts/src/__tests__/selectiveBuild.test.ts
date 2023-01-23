@@ -3,12 +3,11 @@ import path from 'path';
 import fs from 'fs-extra';
 
 import getModularRoot from '../utils/getModularRoot';
-import { createModularTestContext, runLocalModular } from '../test/utils';
+import { createModularTestContext, runModularPipeLogs } from '../test/utils';
 
 // Temporary test context paths set by createTempModularRepoWithTemplate()
 let tempModularRepo: string;
 
-const currentModularFolder = getModularRoot();
 const buildRegex = /building (\w)\.\.\./gm;
 
 describe('--changed builds all the changed packages in order', () => {
@@ -55,66 +54,44 @@ describe('--changed builds all the changed packages in order', () => {
   });
 
   it('builds nothing when everything committed', () => {
-    const result = runLocalModular(currentModularFolder, tempModularRepo, [
-      'build',
-      '--changed',
-    ]);
+    const result = runModularPipeLogs(tempModularRepo, 'build --changed');
     expect(result.stderr).toBeFalsy();
     expect(result.stdout).toContain('No workspaces to build');
   });
 
   it('builds multiple packages', () => {
-    const result = runLocalModular(currentModularFolder, tempModularRepo, [
-      'build',
-      'e',
-      'a',
-    ]);
+    const result = runModularPipeLogs(tempModularRepo, 'build e a');
 
     expect(result.stderr).toBeFalsy();
     expect(getBuildOrder(result.stdout)).toEqual(['a', 'e']);
   });
 
   it('builds a single package and its descendants', () => {
-    const result = runLocalModular(currentModularFolder, tempModularRepo, [
-      'build',
-      'b',
-      '--descendants',
-    ]);
+    const result = runModularPipeLogs(tempModularRepo, 'build b --descendants');
 
     expect(result.stderr).toBeFalsy();
     expect(getBuildOrder(result.stdout)).toEqual(['d', 'c', 'b']);
   });
 
   it('builds a single package and its ancestors', () => {
-    const result = runLocalModular(currentModularFolder, tempModularRepo, [
-      'build',
-      'b',
-      '--ancestors',
-    ]);
+    const result = runModularPipeLogs(tempModularRepo, 'build b --ancestors');
 
     expect(result.stderr).toBeFalsy();
     expect(getBuildOrder(result.stdout)).toEqual(['b', 'a', 'e']);
   });
 
   it('builds multiple packages and their descendants', () => {
-    const result = runLocalModular(currentModularFolder, tempModularRepo, [
-      'build',
-      'd',
-      'a',
-      '--descendants',
-    ]);
+    const result = runModularPipeLogs(
+      tempModularRepo,
+      'build d a --descendants',
+    );
 
     expect(result.stderr).toBeFalsy();
     expect(getBuildOrder(result.stdout)).toEqual(['d', 'c', 'b', 'a']);
   });
 
   it('builds multiple packages and their ancestors', () => {
-    const result = runLocalModular(currentModularFolder, tempModularRepo, [
-      'build',
-      'd',
-      'a',
-      '--ancestors',
-    ]);
+    const result = runModularPipeLogs(tempModularRepo, 'build d a --ancestors');
 
     expect(result.stderr).toBeFalsy();
     expect(getBuildOrder(result.stdout)).toEqual(['d', 'c', 'b', 'a', 'e']);
@@ -130,46 +107,44 @@ describe('--changed builds all the changed packages in order', () => {
       "\n// Comment to package c's source",
     );
 
-    const result = runLocalModular(currentModularFolder, tempModularRepo, [
-      'build',
-      '--changed',
-    ]);
+    const result = runModularPipeLogs(tempModularRepo, 'build --changed');
 
     expect(result.stderr).toBeFalsy();
     expect(getBuildOrder(result.stdout)).toEqual(['c', 'b']);
   });
 
   it('builds changed (uncommitted) packages + packages that are explicitly specified', () => {
-    const result = runLocalModular(currentModularFolder, tempModularRepo, [
-      'build',
-      'e',
-      '--changed',
-    ]);
+    const result = runModularPipeLogs(tempModularRepo, 'build e --changed');
 
     expect(result.stderr).toBeFalsy();
     expect(getBuildOrder(result.stdout)).toEqual(['c', 'b', 'e']);
   });
 
   it('builds changed (uncommitted) packages and their descendants', () => {
-    const result = runLocalModular(currentModularFolder, tempModularRepo, [
-      'build',
-      '--changed',
-      '--descendants',
-    ]);
+    const result = runModularPipeLogs(
+      tempModularRepo,
+      'build --changed --descendants',
+    );
 
     expect(result.stderr).toBeFalsy();
     expect(getBuildOrder(result.stdout)).toEqual(['d', 'c', 'b']);
   });
 
   it('builds changed (uncommitted) packages and their ancestors', () => {
-    const result = runLocalModular(currentModularFolder, tempModularRepo, [
-      'build',
-      '--changed',
-      '--ancestors',
-    ]);
+    const result = runModularPipeLogs(
+      tempModularRepo,
+      'build --changed --ancestors',
+    );
 
     expect(result.stderr).toBeFalsy();
     expect(getBuildOrder(result.stdout)).toEqual(['c', 'b', 'a', 'e']);
+  });
+
+  it('builds all packages if invoked without arguments / selective options', () => {
+    const result = runModularPipeLogs(tempModularRepo, 'build');
+
+    expect(result.stderr).toBeFalsy();
+    expect(getBuildOrder(result.stdout)).toEqual(['d', 'c', 'b', 'a', 'e']);
   });
 });
 

@@ -32,13 +32,6 @@ export async function check(target?: string): Promise<boolean> {
       valid = false;
     }
 
-    if (packageInfo.type === 'app' && packageInfo.public) {
-      logger.error(
-        `${packageName} is marked as "public" - Modular apps should be marked as private.`,
-      );
-      valid = false;
-    }
-
     logger.debug(`${packageName} is valid.`);
   }
 

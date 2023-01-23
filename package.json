@@ -5,7 +5,7 @@
     "packages/**"
   ],
   "engines": {
-    "node": "^14.17.0 || >=16.0.0"
+    "node": "^14.18.0 || >=16.10.0 || >=18.0.0"
   },
   "repository": "https://github.com/jpmorganchase/modular.git",
   "scripts": {
@@ -14,9 +14,8 @@
     "lint:fix": "yarn lint --fix",
     "create-modular-react-app": "ts-node packages/create-modular-react-app/src/cli.ts",
     "modular": "ts-node packages/modular-scripts/src/cli.ts",
-    "test": "yarn modular test --watchAll false --runInBand",
+    "test": "yarn modular test --watchAll false --runInBand --env node",
     "build": "yarn workspace @modular-scripts/workspace-resolver build && yarn workspace create-modular-react-app build && yarn workspace modular-scripts build && yarn workspace modular-views.macro build",
-    "start": "yarn modular start modular-site",
     "prepare": "is-ci || husky install",
     "postinstall": "patch-package",
     "typecheck": "yarn modular typecheck",
@@ -59,13 +58,13 @@
     "@types/global-modules": "^2.0.0",
     "@types/html-minifier-terser": "6.1.0",
     "@types/is-ci": "3.0.0",
-    "@types/jest": "26.0.24",
+    "@types/jest": "^29.0.0",
     "@types/mime": "^2.0.3",
     "@types/node": "*",
     "@types/npm-packlist": "3.0.0",
     "@types/parse5": "^6.0.3",
     "@types/prompts": "2.0.14",
-    "@types/puppeteer": "5.4.6",
+    "@types/puppeteer": "^5.4.6",
     "@types/react": "18.0.1",
     "@types/react-dom": "17.0.14",
     "@types/recursive-readdir": "^2.2.1",
@@ -76,7 +75,7 @@
     "@yarnpkg/lockfile": "^1.1.0",
     "commander": "9.4.0",
     "esbuild": "0.14.51",
-    "eslint": "7.32.0",
+    "eslint": "8.28.0",
     "execa": "5.1.1",
     "husky": "8.0.1",
     "is-ci": "2.0.0",
@@ -85,7 +84,7 @@
     "patch-package": "^6.4.7",
     "pptr-testing-library": "0.7.0",
     "prettier": "2.7.1",
-    "puppeteer": "14.2.1",
+    "puppeteer": "^14.2.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "semver": "7.3.7",
@@ -100,7 +99,6 @@
     "coveragePathIgnorePatterns": [
       "/__fixtures__/",
       "/node_modules/",
-      "/modular-site/",
       "/modular-views.macro/"
     ],
     "coverageProvider": "v8"

@@ -9,14 +9,14 @@ import getPrefixedLogger from '../../utils/getPrefixedLogger';
 import getModularRoot from '../../utils/getModularRoot';
 import { reportTSDiagnostics } from '../../utils/reportTSDiagnostics';
 import getPackageMetadata from '../../utils/getPackageMetadata';
-import getRelativeLocation from '../../utils/getRelativeLocation';
+import getRelativeWorkspaceLocation from '../../utils/getRelativeLocation';
 
 const outputDirectory = 'dist';
 const typescriptConfigFilename = 'tsconfig.json';
 
 export async function makeTypings(target: string): Promise<void> {
   const modularRoot = getModularRoot();
-  const packagePath = await getRelativeLocation(target);
+  const packagePath = await getRelativeWorkspaceLocation(target);
   const targetOutputDirectory = path.join(
     modularRoot,
     outputDirectory,

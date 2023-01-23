@@ -1,48 +1,38 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
 
-import getModularRoot from '../utils/getModularRoot';
 import execa from 'execa';
+import { createModularTestContext, runYarnModular } from '../test/utils';
+import getModularRoot from '../utils/getModularRoot';
 
+const modularRoot = getModularRoot();
 const fixturesFolder = path.join(__dirname, '__fixtures__', 'lint');
+const relativeFixturePath = fixturesFolder.replace(modularRoot, '');
 
-let lintedFiles: string[];
+// Temporary text context paths
+let tempModularRepo: string;
 
-function setupLintErrors() {
-  const files = fs.readdirSync(path.join(fixturesFolder));
-  lintedFiles = files.map((file) => {
+function setupLintErrors(): string[] {
+  tempModularRepo = createModularTestContext();
+  const tempFixturesFolder = path.join(tempModularRepo, relativeFixturePath);
+  fs.mkdirsSync(tempFixturesFolder);
+  const files = fs.readdirSync(fixturesFolder);
+  return files.map((file) => {
     fs.writeFileSync(
-      path.join(fixturesFolder, file),
+      path.join(tempFixturesFolder, file),
       fs
         .readFileSync(path.join(fixturesFolder, file), 'utf-8')
         .replace('/* eslint-disable */', '///'),
     );
-    return path.join(fixturesFolder, file);
+    return path.join(tempFixturesFolder, file);
   });
 }
-
-function clearLintErrors() {
-  const files = fs.readdirSync(path.join(fixturesFolder));
-  files.forEach((file) => {
-    fs.writeFileSync(
-      path.join(fixturesFolder, file),
-      fs
-        .readFileSync(path.join(fixturesFolder, file), 'utf-8')
-        .replace('///', '/* eslint-disable */'),
-    );
-  });
-  lintedFiles = [];
-}
-
-const modularRoot = getModularRoot();
 
 describe('Modular lint', () => {
+  let lintedFiles: string[];
   describe('when the codebase has linting errors', () => {
     beforeEach(() => {
-      setupLintErrors();
-    });
-    afterEach(() => {
-      clearLintErrors();
+      lintedFiles = setupLintErrors();
     });
     it('should print the eslint errors', async () => {
       let eslintLogs: string[] = [];
@@ -57,7 +47,7 @@ describe('Modular lint', () => {
             '0',
           ],
           {
-            cwd: modularRoot,
+            cwd: tempModularRepo,
             all: true,
             cleanup: true,
           },
@@ -67,26 +57,18 @@ describe('Modular lint', () => {
       }
       let modularLogs: string[] = [];
       try {
-        await execa('yarnpkg', ['modular', 'lint', '__fixtures__/lint'], {
-          all: true,
-          cleanup: true,
-          cwd: modularRoot,
-        });
+        await runYarnModular(tempModularRepo, 'lint __fixtures__/lint');
       } catch ({ stderr }) {
         modularLogs = (stderr as string).split('\n');
       }
       eslintLogs.forEach((el) => {
-        expect(modularLogs.find((ml) => el.includes(ml))).not.toBeUndefined();
+        expect(modularLogs.find((ml) => el.includes(ml))).toBeDefined();
       });
     });
     it('should not pass lint test', async () => {
       let modularLogs: string[] = [];
       try {
-        await execa('yarnpkg', ['modular', 'lint', '__fixtures__/lint'], {
-          all: true,
-          cleanup: true,
-          cwd: modularRoot,
-        });
+        await runYarnModular(tempModularRepo, 'lint __fixtures__/lint');
       } catch ({ stderr }) {
         modularLogs = (stderr as string).split('\n');
       }
@@ -100,15 +82,10 @@ describe('Modular lint', () => {
   });
   describe('when the codebase does not have lint errors', () => {
     it('should pass the lint tests', async () => {
-      const files = fs.readdirSync(path.join(fixturesFolder));
-      const result = await execa(
-        'yarnpkg',
-        ['modular', 'lint', '__fixtures__/lint'],
-        {
-          all: true,
-          cleanup: true,
-          cwd: modularRoot,
-        },
+      const files = fs.readdirSync(fixturesFolder);
+      const result = await runYarnModular(
+        modularRoot,
+        'lint __fixtures__/lint',
       );
       const modularLogs: string[] = result.stderr.split('\n');
       expect(modularLogs).toContain(

@@ -68,7 +68,7 @@ export function invertDependencyDirection(
       }
     });
     return output;
-  }, Object.create(null));
+  }, Object.create(null) as Record<string, WorkspaceDependencyObject>);
 }
 
 // This function traverses the graph to get an ordered set of dependencies (map reverseOrder => dependencyName)

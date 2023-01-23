@@ -1,19 +1,19 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import getAllFiles from '../../utils/getAllFiles';
-import rimraf from 'rimraf';
+import * as tmp from 'tmp';
 
 describe('getAllFiles', () => {
   const testFiles = ['foo', 'bar', 'nested'];
-  const testDir = path.join(__dirname, 'test-dir');
+  let testDir: string;
   function createTestDir() {
-    fs.mkdirSync(testDir);
+    testDir = tmp.dirSync({ unsafeCleanup: true }).name;
     testFiles.forEach((file) => {
       fs.createFileSync(path.join(testDir, file));
     });
   }
   function createNestedTestDir() {
-    fs.mkdirSync(testDir);
+    testDir = tmp.dirSync({ unsafeCleanup: true }).name;
     testFiles.forEach((file, i) => {
       if (file === 'nested') {
         const nestedFile = 'nested/bazz';
@@ -24,21 +24,12 @@ describe('getAllFiles', () => {
       return fs.createFileSync(path.join(testDir, file));
     });
   }
-  function cleanUpTestDir() {
-    rimraf.sync(testDir);
-  }
-
-  afterAll(() => {
-    cleanUpTestDir();
-  });
 
   describe('when it is a flat directory', () => {
     beforeEach(() => {
       createTestDir();
     });
-    afterEach(() => {
-      cleanUpTestDir();
-    });
+
     it('should return a flat array of file paths', () => {
       const expected = testFiles.map((file) =>
         path.resolve(path.join(testDir, file)),
@@ -52,9 +43,6 @@ describe('getAllFiles', () => {
   describe('when there are nested files', () => {
     beforeEach(() => {
       createNestedTestDir();
-    });
-    afterEach(() => {
-      cleanUpTestDir();
     });
     it('should return a flat array of file paths', () => {
       const expected = testFiles.map((file) =>

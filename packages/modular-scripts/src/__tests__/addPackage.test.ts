@@ -1,12 +1,15 @@
-import execa from 'execa';
 import path from 'path';
 import fs from 'fs-extra';
 import tree from 'tree-view-for-tests';
-
 import getModularRoot from '../utils/getModularRoot';
-
+import {
+  createModularTestContext,
+  mockInstallTemplate,
+  runModularForTests,
+  runModularForTestsAsync,
+  runModularPipeLogs,
+} from '../test/utils';
 import type { CoreProperties } from '@schemastore/package';
-import { createModularTestContext, mockInstallTemplate } from '../test/utils';
 
 const modularRoot = getModularRoot();
 
@@ -35,20 +38,12 @@ function createTempModularRepoWithTemplate(appTemplatePath: string) {
   mockInstallTemplate(appTemplatePath, tempModularRepo);
 }
 
-function modular(str: string, opts: Record<string, unknown> = {}) {
-  return execa('yarnpkg', ['modular', ...str.split(' ')], {
-    cwd: tempModularRepo,
-    cleanup: true,
-    stdio: 'inherit',
-    ...opts,
-  });
-}
-
 describe('When setting a base directory for an app', () => {
   it('fails if trying to add an app outside the "workspaces" directories', async () => {
     createTempModularRepoWithTemplate(appTemplatePath);
     await expect(
-      modular(
+      runModularForTestsAsync(
+        tempModularRepo,
         'add @scoped/will-not-create-app --path some/other/basepath --unstable-type app',
       ),
     ).rejects.toThrow();
@@ -56,27 +51,34 @@ describe('When setting a base directory for an app', () => {
 });
 
 describe('When working with a scoped app', () => {
-  beforeAll(async () => {
+  beforeAll(() => {
     createTempModularRepoWithTemplate(appTemplatePath);
-    await modular('add @scoped/sample-app --unstable-type app');
+    runModularForTests(
+      tempModularRepo,
+      'add @scoped/sample-app --unstable-type app',
+    );
   });
 
   it('creates the app in the expected directory, with the expected name', async () => {
     const manifest = (await fs.readJSON(
       path.join(tempPackagesPath, 'sample-app', 'package.json'),
     )) as CoreProperties;
-    expect(manifest.name).toEqual('@scoped/sample-app');
+    expect(manifest.name).toBe('@scoped/sample-app');
   });
 
   it('fails if trying to add another app with the same name', async () => {
     await expect(
-      modular('add @scoped/sample-app --unstable-type app'),
+      runModularForTestsAsync(
+        tempModularRepo,
+        'add @scoped/sample-app --unstable-type app',
+      ),
     ).rejects.toThrow();
   });
 
   it('fails trying to add another app with the same name in another path', async () => {
     await expect(
-      modular(
+      runModularForTestsAsync(
+        tempModularRepo,
         'add @scoped/sample-app --unstable-type app --path packages/wont/happen',
       ),
     ).rejects.toThrow();
@@ -84,15 +86,19 @@ describe('When working with a scoped app', () => {
 
   it('fails trying to add another app in the same path (as scope is discarded)', async () => {
     await expect(
-      modular('add sample-app --unstable-type app'),
+      runModularForTestsAsync(
+        tempModularRepo,
+        'add sample-app --unstable-type app',
+      ),
     ).rejects.toThrow();
   });
 });
 
 describe('When working with an app installed in a custom directory', () => {
-  beforeAll(async () => {
+  beforeAll(() => {
     createTempModularRepoWithTemplate(appTemplatePath);
-    await modular(
+    runModularForTests(
+      tempModularRepo,
       'add @scoped/sample-app --unstable-type app --path packages/nested/scoped',
     );
   });
@@ -107,18 +113,22 @@ describe('When working with an app installed in a custom directory', () => {
         'package.json',
       ),
     )) as CoreProperties;
-    expect(manifest.name).toEqual('@scoped/sample-app');
+    expect(manifest.name).toBe('@scoped/sample-app');
   });
 
   it('fails if trying to add another app with the same name in the default path', async () => {
     await expect(
-      modular('add @scoped/sample-app --unstable-type app'),
+      runModularForTestsAsync(
+        tempModularRepo,
+        'add @scoped/sample-app --unstable-type app',
+      ),
     ).rejects.toThrow();
   });
 
   it('fails trying to add another app in the same path (as scope is discarded)', async () => {
     await expect(
-      modular(
+      runModularForTestsAsync(
+        tempModularRepo,
         'add sample-app --unstable-type app --path packages/nested/scoped',
       ),
     ).rejects.toThrow();
@@ -127,18 +137,21 @@ describe('When working with an app installed in a custom directory', () => {
 
 describe('When adding a module from a template without a files filter', () => {
   let newModulePath: string;
-  beforeAll(async () => {
+  beforeAll(() => {
     createTempModularRepoWithTemplate(noFilterTemplatePath);
     newModulePath = path.join(tempPackagesPath, 'no-filter-module');
-    await modular('add no-filter-module --template no-filter');
+    runModularForTests(
+      tempModularRepo,
+      'add no-filter-module --template no-filter',
+    );
   });
 
   it('generates the package.json', async () => {
     // Expect name to be as set by command, and type as set by template
     expect(await fs.readJSON(path.join(newModulePath, 'package.json')))
       .toMatchInlineSnapshot(`
-      Object {
-        "modular": Object {
+      {
+        "modular": {
           "type": "app",
         },
         "name": "no-filter-module",
@@ -156,6 +169,7 @@ describe('When adding a module from a template without a files filter', () => {
     ).toMatchInlineSnapshot(`
       "no-filter-module
       ├─ CHANGELOG.md
+      ├─ README.md #13oulez
       ├─ package.json
       ├─ public
       │  └─ robots.txt #1sjb8b3
@@ -170,18 +184,18 @@ describe('When adding a module from a template without a files filter', () => {
 
 describe('When adding a module from a template with a files filter', () => {
   let newModulePath: string;
-  beforeAll(async () => {
+  beforeAll(() => {
     createTempModularRepoWithTemplate(filterTemplatePath);
     newModulePath = path.join(tempPackagesPath, 'filter-module');
-    await modular('add filter-module --template filter');
+    runModularForTests(tempModularRepo, 'add filter-module --template filter');
   });
 
   it('generates the package.json', async () => {
     // Expect name to be as set by command, and type as set by template
     expect(await fs.readJson(path.join(newModulePath, 'package.json')))
       .toMatchInlineSnapshot(`
-      Object {
-        "modular": Object {
+      {
+        "modular": {
           "type": "app",
         },
         "name": "filter-module",
@@ -198,6 +212,7 @@ describe('When adding a module from a template with a files filter', () => {
       }),
     ).toMatchInlineSnapshot(`
       "filter-module
+      ├─ README.md #13oulez
       ├─ package.json
       ├─ src
       │  ├─ __tests__
@@ -205,5 +220,71 @@ describe('When adding a module from a template with a files filter', () => {
       │  └─ index.tsx #1woe74n
       └─ tsconfig.json"
     `);
+  });
+});
+
+describe('When creating a new modular project', () => {
+  beforeAll(() => {
+    tempModularRepo = createModularTestContext();
+  });
+  describe('When adding a new app type workspace from template', () => {
+    beforeAll(() => {
+      runModularForTests(tempModularRepo, 'add my-app --template app');
+    });
+    it('succesfully runs tests', () => {
+      const result = runModularPipeLogs(
+        tempModularRepo,
+        'test --package my-app',
+      );
+      expect(result.exitCode).toBe(0);
+    });
+  });
+  describe('When adding a new package type workspace from template', () => {
+    beforeAll(() => {
+      runModularForTests(tempModularRepo, 'add my-package --template package');
+    });
+    it('succesfully runs tests', () => {
+      const result = runModularPipeLogs(
+        tempModularRepo,
+        'test --package my-package',
+      );
+      expect(result.exitCode).toBe(0);
+    });
+  });
+});
+describe('When adding a new esm-view type workspace from template', () => {
+  beforeAll(() => {
+    runModularForTests(tempModularRepo, 'add my-esm-view --template esm-view');
+  });
+  it('succesfully runs tests', () => {
+    const result = runModularPipeLogs(
+      tempModularRepo,
+      'test --package my-esm-view',
+    );
+    expect(result.exitCode).toBe(0);
+  });
+});
+describe('When adding a new view type workspace from template', () => {
+  beforeAll(() => {
+    runModularForTests(tempModularRepo, 'add my-view --template view');
+  });
+  it('succesfully runs tests', () => {
+    const result = runModularPipeLogs(
+      tempModularRepo,
+      'test --package my-view',
+    );
+    expect(result.exitCode).toBe(0);
+  });
+});
+describe('When adding a new source type workspace from template', () => {
+  beforeAll(() => {
+    runModularForTests(tempModularRepo, 'add my-source --template source');
+  });
+  it('succesfully runs tests', () => {
+    const result = runModularPipeLogs(
+      tempModularRepo,
+      'test --package my-source',
+    );
+    expect(result.exitCode).toBe(0);
   });
 });

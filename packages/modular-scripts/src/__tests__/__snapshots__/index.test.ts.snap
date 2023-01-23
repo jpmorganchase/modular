@@ -1,20 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`modular-scripts WHEN building a view THEN outputs the correct output cjs  index2.js map file 1`] = `
-Object {
+{
   "file": "index2.js",
-  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;AACe,SAAS,UAAU,GAAG;AACrC,EAAE,uBAAuBA,gBAAK,CAAC,aAAa,CAAC,KAAK,EAAE;AACpD,IAAI,aAAa,EAAE,WAAW;AAC9B,GAAG,EAAE,wBAAwB,CAAC,CAAC;AAC/B;;;;",
-  "names": Array [
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;AAEA,SAAwB,UAA0B,GAAA;AAChD,EAAA,uBAAQA,gBAAA,CAAA,aAAA,CAAA,KAAA,EAAA;AAAA,IAAI,aAAY,EAAA,WAAA;AAAA,GAAA,EAAY,wBAAsB,CAAA,CAAA;AAC5D;;;;",
+  "names": [
     "React",
   ],
-  "sources": Array [
+  "sources": [
     "../src/index.tsx",
   ],
-  "sourcesContent": Array [
+  "sourcesContent": [
     "import * as React from 'react';
 
 export default function SampleView(): JSX.Element {
-  return <div data-testid=\\"test-this\\">this is a modular view</div>
+  return <div data-testid="test-this">this is a modular view</div>
 }",
   ],
   "version": 3,
@@ -52,16 +52,16 @@ function _interopNamespace(e) {
       }
     });
   }
-  n[\\"default\\"] = e;
+  n["default"] = e;
   return n;
 }
 
 var React__namespace = /*#__PURE__*/_interopNamespace(React);
 
 function SampleView() {
-  return /* @__PURE__ */ React__namespace.createElement(\\"div\\", {
-    \\"data-testid\\": \\"test-this\\"
-  }, \\"this is a modular view\\");
+  return /* @__PURE__ */ React__namespace.createElement("div", {
+    "data-testid": "test-this"
+  }, "this is a modular view");
 }
 
 module.exports = SampleView;
@@ -70,12 +70,12 @@ module.exports = SampleView;
 `;
 
 exports[`modular-scripts WHEN building a view THEN outputs the correct output cjs map file 1`] = `
-Object {
+{
   "file": "index.js",
   "mappings": ";;;;;;",
-  "names": Array [],
-  "sources": Array [],
-  "sourcesContent": Array [],
+  "names": [],
+  "sources": [],
+  "sourcesContent": [],
   "version": 3,
 }
 `;

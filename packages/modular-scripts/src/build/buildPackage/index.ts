@@ -15,7 +15,7 @@ import getPrefixedLogger from '../../utils/getPrefixedLogger';
 import getModularRoot from '../../utils/getModularRoot';
 import { makeBundle } from './makeBundle';
 import { makeTypings } from './makeTypings';
-import getRelativeLocation from '../../utils/getRelativeLocation';
+import getRelativeWorkspaceLocation from '../../utils/getRelativeLocation';
 import { getRepositoryField } from './getRepositoryField';
 import { maybeCopyRootLicense } from './maybeCopyRootLicense';
 
@@ -35,7 +35,7 @@ export async function buildPackage(
   includePrivate = false,
 ): Promise<void> {
   const modularRoot = getModularRoot();
-  const packagePath = await getRelativeLocation(target);
+  const packagePath = await getRelativeWorkspaceLocation(target);
 
   const logger = getPrefixedLogger(target);
 

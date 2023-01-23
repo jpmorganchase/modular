@@ -3,26 +3,26 @@ import execa from 'execa';
 import getModularRoot from '../utils/getModularRoot';
 import * as logger from '../utils/logger';
 
-function modular(str: string, opts: Record<string, unknown> = {}) {
+function modular(cwd: string, str: string, opts: Record<string, unknown> = {}) {
   return execa('yarnpkg', ['modular', ...str.split(' ')], {
-    cwd: modularRoot,
+    cwd: cwd,
     cleanup: true,
     ...opts,
   });
 }
 
-const modularRoot = getModularRoot();
-
 const START_APP_TIMEOUT = 60 * 1000;
 export interface DevServer {
-  kill: () => void;
+  kill: () => execa.ExecaChildProcess<string>;
 }
 
 export async function startApp(
   appPath: string,
   opts: Record<string, unknown> = {},
+  modularRoot?: string,
 ): Promise<DevServer> {
-  const devServer = modular(`start ${appPath}`, {
+  const cwd = modularRoot ? modularRoot : getModularRoot();
+  const devServer = modular(cwd, `start ${appPath}`, {
     cleanup: true,
     ...opts,
   });

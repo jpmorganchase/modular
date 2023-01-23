@@ -8,7 +8,7 @@ import getModularRoot from './utils/getModularRoot';
 import execAsync from './utils/execAsync';
 import { addFiles, getDiffedFiles, getStagedFiles } from './utils/gitActions';
 import * as logger from './utils/logger';
-
+import { generateJestConfig } from './test/utils';
 export interface LintOptions {
   all: boolean;
   fix: boolean;
@@ -57,7 +57,7 @@ async function lint(
   const testArgs = [
     ...regexes,
     '--config',
-    `"${JSON.stringify(jestEslintConfig)}"`,
+    generateJestConfig(jestEslintConfig),
   ];
 
   const testBin = await resolveAsBin('jest-cli');
