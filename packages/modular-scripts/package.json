@@ -121,7 +121,7 @@
     "source-map-support": "0.5.21",
     "strip-ansi": "6.0.1",
     "style-loader": "3.3.1",
-    "terser-webpack-plugin": "5.3.3",
+    "terser-webpack-plugin": "5.3.6",
     "tmp": "^0.2.1",
     "ts-jest": "^29.0.0",
     "ts-morph": "^14.0.0",
