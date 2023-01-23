@@ -1,5 +1,23 @@
 # eslint-config-modular-app
 
+## 4.0.0
+
+### Major Changes
+
+- [#2264](https://github.com/jpmorganchase/modular/pull/2264)
+  [`75718c4`](https://github.com/jpmorganchase/modular/commit/75718c4feaa19216683523e0ec10165b40b2b059)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Added Node 18
+  engine support Upgraded Jest from 26 to 29 as 26 wasn't compatible with Node
+  18 Upgraded to rollup-plugin-esbuild 5, dropping support for Node 14.17 and
+  below Supported Node versions now: ^14.18.0 || >=16.10.0 || >=18.0.0 Changed
+  Jest flag --watchAll default to false (was previously true if running locally
+  and not in CI)
+
+- [#2264](https://github.com/jpmorganchase/modular/pull/2264)
+  [`75718c4`](https://github.com/jpmorganchase/modular/commit/75718c4feaa19216683523e0ec10165b40b2b059)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Updated eslint to
+  ^8.0.0 and minimum supported TypeScript version to 4.5.3
+
 ## 3.0.2
 
 ### Patch Changes

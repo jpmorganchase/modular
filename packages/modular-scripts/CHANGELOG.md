@@ -1,5 +1,90 @@
 # modular-scripts
 
+## 4.0.0
+
+### Major Changes
+
+- [#2264](https://github.com/jpmorganchase/modular/pull/2264)
+  [`75718c4`](https://github.com/jpmorganchase/modular/commit/75718c4feaa19216683523e0ec10165b40b2b059)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Removed commands:
+  convert, init, port, rename
+
+- [#2264](https://github.com/jpmorganchase/modular/pull/2264)
+  [`75718c4`](https://github.com/jpmorganchase/modular/commit/75718c4feaa19216683523e0ec10165b40b2b059)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Changed default CDN
+  from Skypack to esm.sh as skypack is no longer actively maintained. Add
+  support for configuring modular through a configuration file.
+
+- [#2264](https://github.com/jpmorganchase/modular/pull/2264)
+  [`75718c4`](https://github.com/jpmorganchase/modular/commit/75718c4feaa19216683523e0ec10165b40b2b059)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Added Node 18
+  engine support Upgraded Jest from 26 to 29 as 26 wasn't compatible with Node
+  18 Upgraded to rollup-plugin-esbuild 5, dropping support for Node 14.17 and
+  below Supported Node versions now: ^14.18.0 || >=16.10.0 || >=18.0.0 Changed
+  Jest flag --watchAll default to false (was previously true if running locally
+  and not in CI)
+
+- [#2264](https://github.com/jpmorganchase/modular/pull/2264)
+  [`75718c4`](https://github.com/jpmorganchase/modular/commit/75718c4feaa19216683523e0ec10165b40b2b059)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Fully selective
+  `modular test` command interface, compatible with `modular build`.
+
+- [#2264](https://github.com/jpmorganchase/modular/pull/2264)
+  [`75718c4`](https://github.com/jpmorganchase/modular/commit/75718c4feaa19216683523e0ec10165b40b2b059)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Updated eslint to
+  ^8.0.0 and minimum supported TypeScript version to 4.5.3
+
+- [#2264](https://github.com/jpmorganchase/modular/pull/2264)
+  [`75718c4`](https://github.com/jpmorganchase/modular/commit/75718c4feaa19216683523e0ec10165b40b2b059)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Sunset modular-site
+  package
+
+### Minor Changes
+
+- [#2264](https://github.com/jpmorganchase/modular/pull/2264)
+  [`75718c4`](https://github.com/jpmorganchase/modular/commit/75718c4feaa19216683523e0ec10165b40b2b059)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Generate README
+  inside newly created packages Improve root and default workspaces container
+  README
+
+- [#2264](https://github.com/jpmorganchase/modular/pull/2264)
+  [`75718c4`](https://github.com/jpmorganchase/modular/commit/75718c4feaa19216683523e0ec10165b40b2b059)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - App type modular
+  packages are no longer required to be private
+
+- [#2228](https://github.com/jpmorganchase/modular/pull/2228)
+  [`5322a71`](https://github.com/jpmorganchase/modular/commit/5322a718e8bf6589b9bcb0b33889e0a024e2b04d)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - modular
+  `source` type + `--dangerouslyIgnoreCircularDependencies` build option
+
+- [#2050](https://github.com/jpmorganchase/modular/pull/2050)
+  [`2241c2b`](https://github.com/jpmorganchase/modular/commit/2241c2b2c900e21fd1cc29f1d3e6d75c6f6ec372)
+  Thanks [@joshwooding](https://github.com/joshwooding)! - - Fix prefixed logger
+  debug method logging as info
+  - Copy LICENSE files when building packages
+
+### Patch Changes
+
+- [#2264](https://github.com/jpmorganchase/modular/pull/2264)
+  [`75718c4`](https://github.com/jpmorganchase/modular/commit/75718c4feaa19216683523e0ec10165b40b2b059)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Test pattern now
+  includes jsx
+
+- [#2218](https://github.com/jpmorganchase/modular/pull/2218)
+  [`15a417c`](https://github.com/jpmorganchase/modular/commit/15a417c3c555f5d8712436e585b94334c8b94060)
+  Thanks [@joshwooding](https://github.com/joshwooding)! - Fix repository field
+  generation on Windows
+
+- [#2050](https://github.com/jpmorganchase/modular/pull/2050)
+  [`2241c2b`](https://github.com/jpmorganchase/modular/commit/2241c2b2c900e21fd1cc29f1d3e6d75c6f6ec372)
+  Thanks [@joshwooding](https://github.com/joshwooding)! - Remove explicit
+  package.json and license entry in files array
+
+- [#2219](https://github.com/jpmorganchase/modular/pull/2219)
+  [`4a541a9`](https://github.com/jpmorganchase/modular/commit/4a541a904ebff5d4a56a16a3bbb6c57669c17fac)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Fix
+  `modular build` crashing when the selected workspace(s) are not in `packages`.
+
 ## 3.6.0
 
 ### Minor Changes
