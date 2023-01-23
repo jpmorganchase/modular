@@ -1,5 +1,22 @@
 # modular-template-package
 
+## 1.2.0
+
+### Minor Changes
+
+- [#2264](https://github.com/jpmorganchase/modular/pull/2264)
+  [`75718c4`](https://github.com/jpmorganchase/modular/commit/75718c4feaa19216683523e0ec10165b40b2b059)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Generate README
+  inside newly created packages Improve root and default workspaces container
+  README
+
+### Patch Changes
+
+- [#2050](https://github.com/jpmorganchase/modular/pull/2050)
+  [`2241c2b`](https://github.com/jpmorganchase/modular/commit/2241c2b2c900e21fd1cc29f1d3e6d75c6f6ec372)
+  Thanks [@joshwooding](https://github.com/joshwooding)! - Remove explicit
+  package.json and license entry in files array
+
 ## 1.1.0
 
 ### Minor Changes
