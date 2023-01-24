@@ -144,83 +144,45 @@ exports[`create-modular-react-app WHEN it sets up a project with prefer Offline 
 }
 `;
 
-exports[`create-modular-react-app WHEN it sets up a project with prefer Offline should create a project with prefer offline: 
-        "test-repo
-        ├─ .editorconfig #1p4gvuw
-        ├─ .eslintignore #1ot2bpo
-        ├─ .gitignore #175wbq
-        ├─ .prettierignore #10uqwgj
-        ├─ .vscode
-        │  ├─ extensions.json #1i4584r
-        │  ├─ launch.json #1kk1omt
-        │  └─ settings.json #xes41c
-        ├─ .yarnrc #1orkcoz
-        ├─ README.md #1nksyzj
-        ├─ modular
-        │  ├─ setupEnvironment.ts #m0s4vb
-        │  └─ setupTests.ts #bnjknz
-        ├─ package.json
-        ├─ packages
-        │  ├─ README.md #14bthrh
-        │  └─ app
-        │     ├─ package.json
-        │     ├─ public
-        │     │  ├─ favicon.ico #6pu3rg
-        │     │  ├─ index.html #1m6toxd
-        │     │  ├─ logo192.png #1nez7vk
-        │     │  ├─ logo512.png #1hwqvcc
-        │     │  ├─ manifest.json #19gah8o
-        │     │  └─ robots.txt #1sjb8b3
-        │     ├─ src
-        │     │  ├─ App.css #1o0zosm
-        │     │  ├─ App.tsx #c80ven
-        │     │  ├─ __tests__
-        │     │  │  └─ App.test.tsx #16urcos
-        │     │  ├─ index.css #o7sk21
-        │     │  ├─ index.tsx #zdn6mw
-        │     │  ├─ logo.svg #1okqmlj
-        │     │  └─ react-app-env.d.ts #t4ygcy
-        │     └─ tsconfig.json #6rw46b
-        ├─ tsconfig.json #1h72lkd
-        └─ yarn.lock"
-       1`] = `
+exports[`create-modular-react-app WHEN it sets up a project with prefer Offline should create a project with prefer offline 1`] = `
 "test-repo
-├─ .editorconfig #1p4gvuw
-├─ .eslintignore #1ot2bpo
-├─ .gitignore #175wbq
-├─ .prettierignore #10uqwgj
+├─ .editorconfig
+├─ .eslintignore
+├─ .gitignore
+├─ .prettierignore
 ├─ .vscode
-│  ├─ extensions.json #1i4584r
-│  ├─ launch.json #1kk1omt
-│  └─ settings.json #xes41c
-├─ .yarnrc #1orkcoz
-├─ README.md #5vircs
+│  ├─ extensions.json
+│  ├─ launch.json
+│  └─ settings.json
+├─ .yarnrc
+├─ README.md
 ├─ modular
-│  ├─ setupEnvironment.ts #m0s4vb
-│  └─ setupTests.ts #bnjknz
+│  ├─ setupEnvironment.ts
+│  └─ setupTests.ts
 ├─ package.json
 ├─ packages
-│  ├─ README.md #11apaz5
+│  ├─ README.md
 │  └─ app
+│     ├─ README.md
 │     ├─ package.json
 │     ├─ public
-│     │  ├─ favicon.ico #6pu3rg
-│     │  ├─ index.html #1m6toxd
-│     │  ├─ logo192.png #1nez7vk
-│     │  ├─ logo512.png #1hwqvcc
-│     │  ├─ manifest.json #19gah8o
-│     │  └─ robots.txt #1sjb8b3
+│     │  ├─ favicon.ico
+│     │  ├─ index.html
+│     │  ├─ logo192.png
+│     │  ├─ logo512.png
+│     │  ├─ manifest.json
+│     │  └─ robots.txt
 │     ├─ src
-│     │  ├─ App.css #1o0zosm
-│     │  ├─ App.tsx #c80ven
+│     │  ├─ App.css
+│     │  ├─ App.tsx
 │     │  ├─ __tests__
-│     │  │  └─ App.test.tsx #16urcos
-│     │  ├─ index.css #o7sk21
-│     │  ├─ index.tsx #zdn6mw
-│     │  ├─ logo.svg #1okqmlj
-│     │  └─ react-app-env.d.ts #t4ygcy
-│     └─ tsconfig.json #6rw46b
-├─ tsconfig.json #1h72lkd
+│     │  │  └─ App.test.tsx
+│     │  ├─ index.css
+│     │  ├─ index.tsx
+│     │  ├─ logo.svg
+│     │  └─ react-app-env.d.ts
+│     └─ tsconfig.json
+├─ tsconfig.json
 └─ yarn.lock"
 `;
 
@@ -368,82 +330,44 @@ exports[`create-modular-react-app WHEN setting a project with defaults Sets up t
 }
 `;
 
-exports[`create-modular-react-app WHEN setting a project with defaults should create a project with defaults: 
-          "test-repo
-          ├─ .editorconfig #1p4gvuw
-          ├─ .eslintignore #1ot2bpo
-          ├─ .gitignore #175wbq
-          ├─ .prettierignore #10uqwgj
-          ├─ .vscode
-          │  ├─ extensions.json #1i4584r
-          │  ├─ launch.json #1kk1omt
-          │  └─ settings.json #xes41c
-          ├─ .yarnrc #1orkcoz
-          ├─ README.md #1nksyzj
-          ├─ modular
-          │  ├─ setupEnvironment.ts #m0s4vb
-          │  └─ setupTests.ts #bnjknz
-          ├─ package.json
-          ├─ packages
-          │  ├─ README.md #14bthrh
-          │  └─ app
-          │     ├─ package.json
-          │     ├─ public
-          │     │  ├─ favicon.ico #6pu3rg
-          │     │  ├─ index.html #1m6toxd
-          │     │  ├─ logo192.png #1nez7vk
-          │     │  ├─ logo512.png #1hwqvcc
-          │     │  ├─ manifest.json #19gah8o
-          │     │  └─ robots.txt #1sjb8b3
-          │     ├─ src
-          │     │  ├─ App.css #1o0zosm
-          │     │  ├─ App.tsx #c80ven
-          │     │  ├─ __tests__
-          │     │  │  └─ App.test.tsx #16urcos
-          │     │  ├─ index.css #o7sk21
-          │     │  ├─ index.tsx #zdn6mw
-          │     │  ├─ logo.svg #1okqmlj
-          │     │  └─ react-app-env.d.ts #t4ygcy
-          │     └─ tsconfig.json #6rw46b
-          ├─ tsconfig.json #1h72lkd
-          └─ yarn.lock"
-         1`] = `
+exports[`create-modular-react-app WHEN setting a project with defaults should create a project with defaults 1`] = `
 "test-repo
-├─ .editorconfig #1p4gvuw
-├─ .eslintignore #1ot2bpo
-├─ .gitignore #175wbq
-├─ .prettierignore #10uqwgj
+├─ .editorconfig
+├─ .eslintignore
+├─ .gitignore
+├─ .prettierignore
 ├─ .vscode
-│  ├─ extensions.json #1i4584r
-│  ├─ launch.json #1kk1omt
-│  └─ settings.json #xes41c
-├─ .yarnrc #1orkcoz
-├─ README.md #5vircs
+│  ├─ extensions.json
+│  ├─ launch.json
+│  └─ settings.json
+├─ .yarnrc
+├─ README.md
 ├─ modular
-│  ├─ setupEnvironment.ts #m0s4vb
-│  └─ setupTests.ts #bnjknz
+│  ├─ setupEnvironment.ts
+│  └─ setupTests.ts
 ├─ package.json
 ├─ packages
-│  ├─ README.md #11apaz5
+│  ├─ README.md
 │  └─ app
+│     ├─ README.md
 │     ├─ package.json
 │     ├─ public
-│     │  ├─ favicon.ico #6pu3rg
-│     │  ├─ index.html #1m6toxd
-│     │  ├─ logo192.png #1nez7vk
-│     │  ├─ logo512.png #1hwqvcc
-│     │  ├─ manifest.json #19gah8o
-│     │  └─ robots.txt #1sjb8b3
+│     │  ├─ favicon.ico
+│     │  ├─ index.html
+│     │  ├─ logo192.png
+│     │  ├─ logo512.png
+│     │  ├─ manifest.json
+│     │  └─ robots.txt
 │     ├─ src
-│     │  ├─ App.css #1o0zosm
-│     │  ├─ App.tsx #c80ven
+│     │  ├─ App.css
+│     │  ├─ App.tsx
 │     │  ├─ __tests__
-│     │  │  └─ App.test.tsx #16urcos
-│     │  ├─ index.css #o7sk21
-│     │  ├─ index.tsx #zdn6mw
-│     │  ├─ logo.svg #1okqmlj
-│     │  └─ react-app-env.d.ts #t4ygcy
-│     └─ tsconfig.json #6rw46b
-├─ tsconfig.json #1h72lkd
+│     │  │  └─ App.test.tsx
+│     │  ├─ index.css
+│     │  ├─ index.tsx
+│     │  ├─ logo.svg
+│     │  └─ react-app-env.d.ts
+│     └─ tsconfig.json
+├─ tsconfig.json
 └─ yarn.lock"
 `;

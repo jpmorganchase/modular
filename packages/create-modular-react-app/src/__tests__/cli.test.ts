@@ -2,7 +2,7 @@ import execa from 'execa';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as tmp from 'tmp';
-import tree from 'tree-view-for-tests';
+import { hashlessTree } from 'tree-view-for-tests';
 
 describe('Creating a new modular app via the CLI', () => {
   let cwd: string;
@@ -22,7 +22,7 @@ describe('Creating a new modular app via the CLI', () => {
   });
 
   it('should create the right tree', () => {
-    expect(tree(cwd)).toMatchSnapshot();
+    expect(hashlessTree(cwd)).toMatchSnapshot();
   });
 });
 
@@ -44,6 +44,6 @@ describe('Creating a new modular app via the CLI with --empty', () => {
   });
 
   it('should create the right tree', () => {
-    expect(tree(cwd)).toMatchSnapshot();
+    expect(hashlessTree(cwd)).toMatchSnapshot();
   });
 });
