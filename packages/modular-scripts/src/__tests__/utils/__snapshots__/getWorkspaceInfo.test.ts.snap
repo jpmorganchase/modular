@@ -139,17 +139,6 @@ exports[`getWorkspaceInfo 12`] = `
 
 exports[`getWorkspaceInfo 13`] = `
 {
-  "location": "packages/sample-app",
-  "mismatchedWorkspaceDependencies": [],
-  "public": false,
-  "type": "app",
-  "version": Any<String>,
-  "workspaceDependencies": [],
-}
-`;
-
-exports[`getWorkspaceInfo 14`] = `
-{
   "location": "packages/tree-view-for-tests",
   "mismatchedWorkspaceDependencies": [],
   "public": false,
