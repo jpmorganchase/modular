@@ -317,13 +317,12 @@ async function build({
 
   for (const target of selectedTargets) {
     const packageInfo = allWorkspacePackages.get(target);
-    // If it's modular, build with Modular
-    if (packageInfo?.modular) {
-      try {
-        const targetDirectory = await getWorkspaceLocation(target);
 
-        await setupEnvForDirectory(targetDirectory);
-
+    try {
+      const targetDirectory = await getWorkspaceLocation(target);
+      await setupEnvForDirectory(targetDirectory);
+      if (packageInfo?.modular) {
+        // If it's modular, build with Modular
         const targetType = getModularType(targetDirectory);
         if (targetType === 'app' || targetType === 'esm-view') {
           await buildStandalone(target, targetType);
@@ -334,18 +333,18 @@ async function build({
 
           await buildPackage(target, preserveModules, includePrivate);
         }
-      } catch (err) {
-        logger.error(`building ${target} failed`);
-        throw err;
+      } else {
+        // Otherwise, build by running the workspace's build script. We're sure it's here because selectBuildableWorkspaces returns only buildable workspaces.
+        console.log(
+          'RUNNING',
+          target,
+          'BUILD SCRIPT:',
+          packageInfo?.rawPackageJson?.scripts?.build,
+        );
       }
-    } else {
-      // Otherwise, build by running the workspace's build script. We're sure it's here because selectBuildableWorkspaces returns only buildable workspaces.
-      console.log(
-        'RUNNING',
-        target,
-        'BUILD SCRIPT:',
-        packageInfo?.rawPackageJson?.scripts?.build,
-      );
+    } catch (err) {
+      logger.error(`building ${target} failed`);
+      throw err;
     }
   }
 }
