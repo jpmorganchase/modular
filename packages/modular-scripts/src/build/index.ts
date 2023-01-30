@@ -286,10 +286,12 @@ async function build({
   const isSelective =
     changed || ancestors || descendants || packagePaths.length;
 
+  const [allWorkspacePackages, allWorkspacesMap] = await getAllWorkspaces(
+    getModularRoot(),
+  );
+
   // targets are either the set of what's specified in the selective options or all the packages in the monorepo
-  const targets = isSelective
-    ? packagePaths
-    : [...(await getAllWorkspaces())[0].keys()];
+  const targets = isSelective ? packagePaths : [...allWorkspacePackages.keys()];
 
   const selectedTargets = await selectBuildableWorkspaces({
     targets,
@@ -311,25 +313,39 @@ async function build({
     )}`,
   );
 
+  console.log({ selectedTargets });
+
   for (const target of selectedTargets) {
-    try {
-      const targetDirectory = await getWorkspaceLocation(target);
+    const packageInfo = allWorkspacePackages.get(target);
+    // If it's modular, build with Modular
+    if (packageInfo?.modular) {
+      try {
+        const targetDirectory = await getWorkspaceLocation(target);
 
-      await setupEnvForDirectory(targetDirectory);
+        await setupEnvForDirectory(targetDirectory);
 
-      const targetType = getModularType(targetDirectory);
-      if (targetType === 'app' || targetType === 'esm-view') {
-        await buildStandalone(target, targetType);
-      } else {
-        const { buildPackage } = await import('./buildPackage');
-        // ^ we do a dynamic import here to defer the module's loading
-        // till when it's actually needed
+        const targetType = getModularType(targetDirectory);
+        if (targetType === 'app' || targetType === 'esm-view') {
+          await buildStandalone(target, targetType);
+        } else {
+          const { buildPackage } = await import('./buildPackage');
+          // ^ we do a dynamic import here to defer the module's loading
+          // till when it's actually needed
 
-        await buildPackage(target, preserveModules, includePrivate);
+          await buildPackage(target, preserveModules, includePrivate);
+        }
+      } catch (err) {
+        logger.error(`building ${target} failed`);
+        throw err;
       }
-    } catch (err) {
-      logger.error(`building ${target} failed`);
-      throw err;
+    } else {
+      // Otherwise, build by running the workspace's build script. We're sure it's here because selectBuildableWorkspaces returns only buildable workspaces.
+      console.log(
+        'RUNNING',
+        target,
+        'BUILD SCRIPT:',
+        packageInfo?.rawPackageJson?.scripts?.build,
+      );
     }
   }
 }
