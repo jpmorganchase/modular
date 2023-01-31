@@ -23,6 +23,24 @@ describe('When there is a non-Modular package with a build script', () => {
     });
   });
 
+  it('does not build non-modular packages that are not buildable when selected directly, but does not fail', () => {
+    const result = runModularPipeLogs(
+      tempModularRepo,
+      'build non-modular-non-buildable',
+    );
+    expect(result.stderr).toBeFalsy();
+    expect(result.stdout).toContain('No workspaces to build');
+  });
+
+  it('build non-modular packages that are not buildable when selected directly', () => {
+    const result = runModularPipeLogs(
+      tempModularRepo,
+      'build non-modular-buildable',
+    );
+    expect(result.stderr).toBeFalsy();
+    expect(result.stdout).toContain('\nnon-modular-buildable was built');
+  });
+
   it('builds non-modular packages in dependency order', () => {
     const result = runModularPipeLogs(tempModularRepo, 'build --verbose');
     expect(result.stderr).toBeFalsy();
