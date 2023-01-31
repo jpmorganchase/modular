@@ -312,8 +312,6 @@ async function build({
     )}`,
   );
 
-  console.log({ selectedTargets });
-
   for (const target of selectedTargets) {
     const packageInfo = allWorkspacePackages.get(target);
 
