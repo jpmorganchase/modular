@@ -286,9 +286,8 @@ async function build({
   const isSelective =
     changed || ancestors || descendants || packagePaths.length;
 
-  const [allWorkspacePackages, allWorkspacesMap] = await getAllWorkspaces(
-    getModularRoot(),
-  );
+  const modularRoot = getModularRoot();
+  const [allWorkspacePackages] = await getAllWorkspaces(modularRoot);
 
   // targets are either the set of what's specified in the selective options or all the packages in the monorepo
   const targets = isSelective ? packagePaths : [...allWorkspacePackages.keys()];
@@ -334,13 +333,12 @@ async function build({
           await buildPackage(target, preserveModules, includePrivate);
         }
       } else {
-        // Otherwise, build by running the workspace's build script. We're sure it's here because selectBuildableWorkspaces returns only buildable workspaces.
-        console.log(
-          'RUNNING',
-          target,
-          'BUILD SCRIPT:',
-          packageInfo?.rawPackageJson?.scripts?.build,
-        );
+        // Otherwise, build by running the workspace's build script
+        // We're sure it's here because selectBuildableWorkspaces returns only buildable workspaces.
+        await execAsync(`yarn`, ['workspace', target, 'build'], {
+          cwd: modularRoot,
+          log: false,
+        });
       }
     } catch (err) {
       logger.error(`building ${target} failed`);
