@@ -1,0 +1,14 @@
+{
+  "name": "non-modular-non-buildable",
+  "private": false,
+  "scripts": {
+    "test": "echo 'Test done!'"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "license": "UNLICENSED",
+  "main": "./dist/index.js",
+  "version": "1.0.0"
+}

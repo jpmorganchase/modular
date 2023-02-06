@@ -1,0 +1,14 @@
+{
+  "name": "app",
+  "private": true,
+  "modular": {
+    "type": "app"
+  },
+  "version": "1.0.0",
+  "dependencies": {
+    "non-modular-buildable": "1.0.0"
+  },
+  "scripts": {
+    "build": "echo 'I should never be executed' && exit -1"
+  }
+}
