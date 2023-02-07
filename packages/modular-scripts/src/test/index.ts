@@ -114,8 +114,30 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
   const additionalOptions: string[] = [];
   const cleanRegexes: string[] = [];
 
+  const cleanPackages: string[] = [];
+
+  // Commander seems to read options (--option) passed to the modular test command as
+  // arguments (in this case packages), so we filter them out and pass them to jest
+  if (packages) {
+    packages.forEach((reg) => {
+      if (/^(--)([\w]+)/.exec(reg)) {
+        return additionalOptions.push(reg);
+      }
+      return cleanPackages.push(reg);
+    });
+    if (additionalOptions.length) {
+      additionalOptions.map((reg) => {
+        const [option, value] = reg.split('=');
+        if (value) {
+          return `${option}=${JSON.stringify(value)}`;
+        }
+        return option;
+      });
+    }
+  }
+
   const selectedTargets = await selectWorkspaces({
-    targets: packages ?? [],
+    targets: cleanPackages,
     changed,
     ancestors,
     descendants,
@@ -124,7 +146,7 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
 
   let regexes: string[] = [];
   const isSelective =
-    changed || ancestors || descendants || userRegexes || packages?.length;
+    changed || ancestors || descendants || userRegexes || cleanPackages.length;
 
   if (isSelective) {
     const packageRegexes = await computeRegexesFromPackageNames(
