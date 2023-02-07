@@ -1,5 +1,14 @@
 # modular-scripts
 
+## 4.0.1
+
+### Patch Changes
+
+- [#2276](https://github.com/jpmorganchase/modular/pull/2276)
+  [`95330dd`](https://github.com/jpmorganchase/modular/commit/95330dd6bd297a5543557fdc45ff7d0e06b61ded)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Fixed test command
+  not parsing options correctly
+
 ## 4.0.0
 
 ### Major Changes
