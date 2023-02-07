@@ -236,6 +236,37 @@ describe('Modular test command', () => {
       expect(resultPackagesWithMixedRegex.stderr).toContain('a-nested.test.ts');
       expect(resultPackagesWithMixedRegex.stderr).not.toContain('a.test.ts');
     });
+    it('succesfully parses jest options and passes them to jest', () => {
+      const resultPackages = runModularPipeLogs(
+        randomOutputFolder,
+        'test b c --colors --verbose',
+        'true',
+      );
+
+      expect(resultPackages.stderr).toContain('c-nested.test.ts');
+      expect(resultPackages.stderr).toContain('c.test.ts');
+      expect(resultPackages.stderr).toContain('b-nested.test.ts');
+      expect(resultPackages.stderr).toContain('b.test.ts');
+      expect(resultPackages.stdout).toContain('"--colors"');
+
+      const resultOnlyOptions = runModularPipeLogs(
+        randomOutputFolder,
+        'test --colors --verbose',
+        'true',
+      );
+
+      expect(resultOnlyOptions.stderr).toContain('a-nested.test.ts');
+      expect(resultOnlyOptions.stderr).toContain('a.test.ts');
+      expect(resultOnlyOptions.stderr).toContain('b-nested.test.ts');
+      expect(resultOnlyOptions.stderr).toContain('b.test.ts');
+      expect(resultOnlyOptions.stderr).toContain('c-nested.test.ts');
+      expect(resultOnlyOptions.stderr).toContain('c.test.ts');
+      expect(resultOnlyOptions.stderr).toContain('d-nested.test.ts');
+      expect(resultOnlyOptions.stderr).toContain('d.test.ts');
+      expect(resultOnlyOptions.stderr).toContain('e-nested.test.ts');
+      expect(resultOnlyOptions.stderr).toContain('e.test.ts');
+      expect(resultOnlyOptions.stdout).toContain('"--colors"');
+    });
   });
 
   describe('test command has error states', () => {
