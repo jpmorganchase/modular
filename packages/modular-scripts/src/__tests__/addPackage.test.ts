@@ -232,10 +232,7 @@ describe('When creating a new modular project', () => {
       runModularForTests(tempModularRepo, 'add my-app --template app');
     });
     it('succesfully runs tests', () => {
-      const result = runModularPipeLogs(
-        tempModularRepo,
-        'test --package my-app',
-      );
+      const result = runModularPipeLogs(tempModularRepo, 'test my-app');
       expect(result.exitCode).toBe(0);
     });
   });
@@ -244,10 +241,7 @@ describe('When creating a new modular project', () => {
       runModularForTests(tempModularRepo, 'add my-package --template package');
     });
     it('succesfully runs tests', () => {
-      const result = runModularPipeLogs(
-        tempModularRepo,
-        'test --package my-package',
-      );
+      const result = runModularPipeLogs(tempModularRepo, 'test my-package');
       expect(result.exitCode).toBe(0);
     });
   });
@@ -257,10 +251,7 @@ describe('When adding a new esm-view type workspace from template', () => {
     runModularForTests(tempModularRepo, 'add my-esm-view --template esm-view');
   });
   it('succesfully runs tests', () => {
-    const result = runModularPipeLogs(
-      tempModularRepo,
-      'test --package my-esm-view',
-    );
+    const result = runModularPipeLogs(tempModularRepo, 'test my-esm-view');
     expect(result.exitCode).toBe(0);
   });
 });
@@ -269,10 +260,7 @@ describe('When adding a new view type workspace from template', () => {
     runModularForTests(tempModularRepo, 'add my-view --template view');
   });
   it('succesfully runs tests', () => {
-    const result = runModularPipeLogs(
-      tempModularRepo,
-      'test --package my-view',
-    );
+    const result = runModularPipeLogs(tempModularRepo, 'test my-view');
     expect(result.exitCode).toBe(0);
   });
 });
@@ -281,10 +269,7 @@ describe('When adding a new source type workspace from template', () => {
     runModularForTests(tempModularRepo, 'add my-source --template source');
   });
   it('succesfully runs tests', () => {
-    const result = runModularPipeLogs(
-      tempModularRepo,
-      'test --package my-source',
-    );
+    const result = runModularPipeLogs(tempModularRepo, 'test my-source');
     expect(result.exitCode).toBe(0);
   });
 });
