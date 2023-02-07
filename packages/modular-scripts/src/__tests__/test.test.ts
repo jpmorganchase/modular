@@ -255,10 +255,16 @@ describe('Modular test command', () => {
         'true',
       );
 
-      expect(resultOnlyOptions.stderr).toContain('c-nested.test.ts');
-      expect(resultOnlyOptions.stderr).toContain('c.test.ts');
+      expect(resultOnlyOptions.stderr).toContain('a-nested.test.ts');
+      expect(resultOnlyOptions.stderr).toContain('a.test.ts');
       expect(resultOnlyOptions.stderr).toContain('b-nested.test.ts');
       expect(resultOnlyOptions.stderr).toContain('b.test.ts');
+      expect(resultOnlyOptions.stderr).toContain('c-nested.test.ts');
+      expect(resultOnlyOptions.stderr).toContain('c.test.ts');
+      expect(resultOnlyOptions.stderr).toContain('d-nested.test.ts');
+      expect(resultOnlyOptions.stderr).toContain('d.test.ts');
+      expect(resultOnlyOptions.stderr).toContain('e-nested.test.ts');
+      expect(resultOnlyOptions.stderr).toContain('e.test.ts');
       expect(resultOnlyOptions.stdout).toContain('"--colors"');
     });
   });
