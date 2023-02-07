@@ -119,21 +119,7 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
   // Commander seems to read options (--option) passed to the modular test command as
   // arguments (in this case packages), so we filter them out and pass them to jest
   if (packages) {
-    packages.forEach((reg) => {
-      if (/^(--)([\w]+)/.exec(reg)) {
-        return additionalOptions.push(reg);
-      }
-      return cleanPackages.push(reg);
-    });
-    if (additionalOptions.length) {
-      additionalOptions.map((reg) => {
-        const [option, value] = reg.split('=');
-        if (value) {
-          return `${option}=${JSON.stringify(value)}`;
-        }
-        return option;
-      });
-    }
+    extractOptions(packages, cleanPackages, additionalOptions);
   }
 
   const selectedTargets = await selectWorkspaces({
@@ -172,22 +158,9 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
     }
   }
 
+  // TODO: investigate potentially removing this - regexes might be clean/without args already
   if (regexes?.length) {
-    regexes.forEach((reg) => {
-      if (/^(--)([\w]+)/.exec(reg)) {
-        return additionalOptions.push(reg);
-      }
-      return cleanRegexes.push(reg);
-    });
-    if (additionalOptions.length) {
-      additionalOptions.map((reg) => {
-        const [option, value] = reg.split('=');
-        if (value) {
-          return `${option}=${JSON.stringify(value)}`;
-        }
-        return option;
-      });
-    }
+    extractOptions(regexes, cleanRegexes, additionalOptions);
   }
 
   // push any additional options passed in by debugger or other processes
@@ -243,6 +216,34 @@ async function computeRegexesFromPackageNames(
   return targets
     .map((packageName) => allWorkspaces[0].get(packageName)?.location)
     .filter(Boolean) as string[];
+}
+
+/**
+ * Split out options (--option) that commander incorrectly assumes are arguments
+ * @param args list of arguments provided by commander
+ * @param cleanedArgs list of arguments after removing options
+ * @param additionalOptions list of options extracted from arguments
+ */
+function extractOptions(
+  args: string[],
+  cleanedArgs: string[],
+  additionalOptions: string[],
+) {
+  args.forEach((reg) => {
+    if (/^(--)([\w]+)/.exec(reg)) {
+      return additionalOptions.push(reg);
+    }
+    return cleanedArgs.push(reg);
+  });
+  if (additionalOptions.length) {
+    additionalOptions.map((reg) => {
+      const [option, value] = reg.split('=');
+      if (value) {
+        return `${option}=${JSON.stringify(value)}`;
+      }
+      return option;
+    });
+  }
 }
 
 export default actionPreflightCheck(test);
