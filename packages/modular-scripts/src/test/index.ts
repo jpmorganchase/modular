@@ -122,6 +122,7 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
     extractOptions(packages, cleanPackages, additionalOptions);
   }
 
+  const [workspaceMap] = await getAllWorkspaces(getModularRoot());
   const isSelective =
     changed || ancestors || descendants || userRegexes || cleanPackages.length;
 
@@ -129,8 +130,7 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
 
   if (!isSelective) {
     // If no package and no selector is specified, all packages are specified
-    const [packages] = await getAllWorkspaces(getModularRoot());
-    selectedTargets = [...packages.keys()];
+    selectedTargets = [...workspaceMap.keys()];
   } else {
     // Otherwise, calculate which packages are selected
     selectedTargets = await selectWorkspaces({
@@ -142,17 +142,41 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
     });
   }
 
+  // TODO: split packages into modular and non-modular testable. Make sure that "root" is not there.
+  const [modularTargets, nonModularTargets] = selectedTargets.reduce<
+    [string[], string[]]
+  >(
+    ([testableModularTargetList, testableNonModularTargetList], current) => {
+      const currentPackageInfo = workspaceMap.get(current);
+      if (
+        currentPackageInfo?.modular &&
+        currentPackageInfo.modular.type !== 'root'
+      ) {
+        testableModularTargetList.push(currentPackageInfo.name);
+      }
+      if (
+        !currentPackageInfo?.modular &&
+        currentPackageInfo?.rawPackageJson.scripts?.test
+      ) {
+        testableNonModularTargetList.push(currentPackageInfo.name);
+      }
+
+      return [testableModularTargetList, testableNonModularTargetList];
+    },
+    [[], []],
+  );
+
+  console.log({ modularTargets, nonModularTargets });
+
   let regexes: string[] = [];
 
-  // TODO: split packages into modular and non-modular testable. Make sure that "root" is not there.
-
-  const packageRegexes = await computeRegexesFromPackageNames(selectedTargets);
+  const packageRegexes = await computeRegexesFromPackageNames(modularTargets);
   // Merge and dedupe selective regexes + user-specified regexes
   regexes = [...new Set([...packageRegexes, ...(userRegexes ?? [])])];
 
   logger.debug(
     `Selective testing: targets are ${JSON.stringify(
-      selectedTargets,
+      modularTargets,
     )}, which generates these regexes: ${JSON.stringify(
       packageRegexes,
     )}. User-provided regexes are ${JSON.stringify(
