@@ -124,7 +124,13 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
 
   const [workspaceMap] = await getAllWorkspaces(getModularRoot());
   const isSelective =
-    changed || ancestors || descendants || userRegexes || cleanPackages.length;
+    changed ||
+    ancestors ||
+    descendants ||
+    userRegexes?.length ||
+    cleanPackages.length;
+
+  console.log({ changed, ancestors, descendants, userRegexes, cleanPackages });
 
   let selectedTargets: string[];
 
@@ -171,8 +177,17 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
   let regexes: string[] = [];
 
   const packageRegexes = await computeRegexesFromPackageNames(modularTargets);
+
+  console.log({ packageRegexes });
+
   // Merge and dedupe selective regexes + user-specified regexes
   regexes = [...new Set([...packageRegexes, ...(userRegexes ?? [])])];
+
+  console.log({ regexes });
+
+  if (regexes?.length) {
+    extractOptions(regexes, cleanRegexes, additionalOptions);
+  }
 
   logger.debug(
     `Selective testing: targets are ${JSON.stringify(
