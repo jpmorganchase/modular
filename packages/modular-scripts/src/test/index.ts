@@ -149,23 +149,19 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
     });
   }
 
-  // TODO: split packages into modular and non-modular testable. Make sure that "root" is not there.
+  // Split packages into modular and non-modular testable. Make sure that "root" is not there.
   const [modularTargets, nonModularTargets] = partitionTestablePackages(
     selectedTargets,
     workspaceMap,
   );
-
-  console.log({ modularTargets, nonModularTargets });
-
-  let regexes: string[] = [];
-
+  // Compute patterns to pass Jest for the packages that we want to test
   const packageRegexes = await computeRegexesFromPackageNames(modularTargets);
 
-  console.log({ packageRegexes });
-
   // Merge and dedupe selective regexes + user-specified regexes
-  regexes = [...new Set([...packageRegexes, ...(userRegexes ?? [])])];
+  const regexes = [...new Set([...packageRegexes, ...(userRegexes ?? [])])];
 
+  console.log({ modularTargets, nonModularTargets });
+  console.log({ packageRegexes });
   console.log({ regexes });
 
   if (regexes?.length) {
