@@ -122,45 +122,48 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
     extractOptions(packages, cleanPackages, additionalOptions);
   }
 
-  const selectedTargets = await selectWorkspaces({
-    targets: cleanPackages,
-    changed,
-    ancestors,
-    descendants,
-    compareBranch,
-  });
-
-  let regexes: string[] = [];
   const isSelective =
     changed || ancestors || descendants || userRegexes || cleanPackages.length;
 
-  if (isSelective) {
-    const packageRegexes = await computeRegexesFromPackageNames(
-      selectedTargets,
-    );
-    // Merge and dedupe selective regexes + user-specified regexes
-    regexes = [...new Set([...packageRegexes, ...(userRegexes ?? [])])];
+  let selectedTargets: string[];
 
-    logger.debug(
-      `Selective testing: targets are ${JSON.stringify(
-        selectedTargets,
-      )}, which generates these regexes: ${JSON.stringify(
-        packageRegexes,
-      )}. User-provided regexes are ${JSON.stringify(
-        userRegexes,
-      )} and final regexes are ${JSON.stringify(regexes)}`,
-    );
-
-    // Test is selective but we computed no regexes; bail out
-    if (!regexes?.length) {
-      process.stdout.write('No workspaces found in selection\n');
-      process.exit(0);
-    }
+  if (!isSelective) {
+    // If no package and no selector is specified, all packages are specified
+    const [packages] = await getAllWorkspaces(getModularRoot());
+    selectedTargets = [...packages.keys()];
+  } else {
+    // Otherwise, calculate which packages are selected
+    selectedTargets = await selectWorkspaces({
+      targets: cleanPackages,
+      changed,
+      ancestors,
+      descendants,
+      compareBranch,
+    });
   }
 
-  // TODO: investigate potentially removing this - regexes might be clean/without args already
-  if (regexes?.length) {
-    extractOptions(regexes, cleanRegexes, additionalOptions);
+  let regexes: string[] = [];
+
+  // TODO: split packages into modular and non-modular testable. Make sure that "root" is not there.
+
+  const packageRegexes = await computeRegexesFromPackageNames(selectedTargets);
+  // Merge and dedupe selective regexes + user-specified regexes
+  regexes = [...new Set([...packageRegexes, ...(userRegexes ?? [])])];
+
+  logger.debug(
+    `Selective testing: targets are ${JSON.stringify(
+      selectedTargets,
+    )}, which generates these regexes: ${JSON.stringify(
+      packageRegexes,
+    )}. User-provided regexes are ${JSON.stringify(
+      userRegexes,
+    )} and final regexes are ${JSON.stringify(regexes)}`,
+  );
+
+  // Test is selective but we computed no regexes; bail out
+  if (!regexes?.length) {
+    process.stdout.write('No workspaces found in selection\n');
+    process.exit(0);
   }
 
   // push any additional options passed in by debugger or other processes
@@ -218,6 +221,8 @@ async function computeRegexesFromPackageNames(
     .map((packageName) => allWorkspaces[0].get(packageName)?.location)
     .filter(Boolean) as string[];
 }
+
+// TODO: make this return the new arrays intead of modifying arguments in-place
 
 /**
  * Split out options (--option) that commander incorrectly assumes are arguments
