@@ -9,6 +9,7 @@ import { resolveAsBin } from '../utils/resolveAsBin';
 import * as logger from '../utils/logger';
 import { generateJestConfig } from './utils';
 import { selectWorkspaces } from '../utils/selectWorkspaces';
+import { ModularWorkspacePackage } from '@modular-scripts/modular-types';
 
 export interface TestOptions {
   ancestors: boolean;
@@ -149,27 +150,9 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
   }
 
   // TODO: split packages into modular and non-modular testable. Make sure that "root" is not there.
-  const [modularTargets, nonModularTargets] = selectedTargets.reduce<
-    [string[], string[]]
-  >(
-    ([testableModularTargetList, testableNonModularTargetList], current) => {
-      const currentPackageInfo = workspaceMap.get(current);
-      if (
-        currentPackageInfo?.modular &&
-        currentPackageInfo.modular.type !== 'root'
-      ) {
-        testableModularTargetList.push(currentPackageInfo.name);
-      }
-      if (
-        !currentPackageInfo?.modular &&
-        currentPackageInfo?.rawPackageJson.scripts?.test
-      ) {
-        testableNonModularTargetList.push(currentPackageInfo.name);
-      }
-
-      return [testableModularTargetList, testableNonModularTargetList];
-    },
-    [[], []],
+  const [modularTargets, nonModularTargets] = partitionTestablePackages(
+    selectedTargets,
+    workspaceMap,
   );
 
   console.log({ modularTargets, nonModularTargets });
@@ -289,6 +272,33 @@ function extractOptions(
       return option;
     });
   }
+}
+
+function partitionTestablePackages(
+  targets: string[],
+  workspaceMap: Map<string, ModularWorkspacePackage>,
+) {
+  // Split testable packages into modular and non-modular
+  return targets.reduce<[string[], string[]]>(
+    ([testableModularTargetList, testableNonModularTargetList], current) => {
+      const currentPackageInfo = workspaceMap.get(current);
+      if (
+        currentPackageInfo?.modular &&
+        currentPackageInfo.modular.type !== 'root'
+      ) {
+        testableModularTargetList.push(currentPackageInfo.name);
+      }
+      if (
+        !currentPackageInfo?.modular &&
+        currentPackageInfo?.rawPackageJson.scripts?.test
+      ) {
+        testableNonModularTargetList.push(currentPackageInfo.name);
+      }
+
+      return [testableModularTargetList, testableNonModularTargetList];
+    },
+    [[], []],
+  );
 }
 
 export default actionPreflightCheck(test);
