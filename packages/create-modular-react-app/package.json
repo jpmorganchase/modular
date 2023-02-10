@@ -2,6 +2,9 @@
   "name": "create-modular-react-app",
   "version": "4.0.0",
   "license": "Apache-2.0",
+  "modular": {
+    "type": "source"
+  },
   "bin": {
     "create-modular-react-app": "build/cli.js"
   },
