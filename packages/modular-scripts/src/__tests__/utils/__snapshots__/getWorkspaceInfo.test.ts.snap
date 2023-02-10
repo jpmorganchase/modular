@@ -51,7 +51,7 @@ exports[`getWorkspaceInfo 5`] = `
   "location": "packages/modular-scripts",
   "mismatchedWorkspaceDependencies": [],
   "public": true,
-  "type": "unknown",
+  "type": "source",
   "version": Any<String>,
   "workspaceDependencies": [
     "@modular-scripts/modular-types",
