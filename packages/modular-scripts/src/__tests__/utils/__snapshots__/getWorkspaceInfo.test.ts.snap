@@ -29,7 +29,7 @@ exports[`getWorkspaceInfo 3`] = `
   "location": "packages/create-modular-react-app",
   "mismatchedWorkspaceDependencies": [],
   "public": true,
-  "type": "source",
+  "type": "unknown",
   "version": Any<String>,
   "workspaceDependencies": [],
 }
@@ -51,7 +51,7 @@ exports[`getWorkspaceInfo 5`] = `
   "location": "packages/modular-scripts",
   "mismatchedWorkspaceDependencies": [],
   "public": true,
-  "type": "source",
+  "type": "unknown",
   "version": Any<String>,
   "workspaceDependencies": [
     "@modular-scripts/modular-types",
@@ -138,17 +138,6 @@ exports[`getWorkspaceInfo 12`] = `
 `;
 
 exports[`getWorkspaceInfo 13`] = `
-{
-  "location": "packages/sample-async-package",
-  "mismatchedWorkspaceDependencies": [],
-  "public": true,
-  "type": "package",
-  "version": Any<String>,
-  "workspaceDependencies": [],
-}
-`;
-
-exports[`getWorkspaceInfo 14`] = `
 {
   "location": "packages/tree-view-for-tests",
   "mismatchedWorkspaceDependencies": [],
