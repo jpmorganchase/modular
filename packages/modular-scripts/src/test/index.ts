@@ -211,6 +211,8 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
     )}`,
   );
 
+  // First run Modular tests with Jest
+  console.log('Running Modular tests...');
   try {
     await execAsync(testBin, testArgs, {
       cwd: getModularRoot(),
@@ -225,8 +227,21 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
     });
   } catch (err) {
     logger.debug((err as ExecaError).message);
-    // ✕ Modular test did not pass
     throw new Error('\u2715 Modular test did not pass');
+  }
+
+  // Then run non-Modular tests by running the tests script for each package
+  for (const target of nonModularTargets) {
+    console.log('Running non-Modular tests for', target);
+    try {
+      await execAsync(`yarn`, ['workspace', target, 'test'], {
+        cwd: getModularRoot(),
+        log: false,
+      });
+    } catch (err) {
+      logger.debug((err as ExecaError).message);
+      throw new Error('\u2715 Modular test did not pass');
+    }
   }
 }
 
