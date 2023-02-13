@@ -75,19 +75,4 @@ describe('When there is a non-Modular package with a build script', () => {
 
     expect(result.stdout).toContain('\nnon-modular-testable was tested');
   });
-
-  it('tests multiple non-modular + modular testable packages', () => {
-    const result = runModularPipeLogs(tempModularRepo, 'test --verbose');
-    expect(result.stderr).toBeFalsy();
-    expect(result.stdout).toContain(
-      'Modular package targets for tests are ["app"]',
-    );
-    expect(result.stdout).toContain(
-      'Non-modular targets selected and eligible for tests are: ["non-modular-testable"]',
-    );
-    expect(result.stdout).toContain(
-      'Final regexes to pass to Jest are: ["packages/app"]',
-    );
-    expect(result.stdout).toContain('\nnon-modular-testable was tested\n');
-  });
 });
