@@ -169,25 +169,33 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
   }
 
   logger.debug(
-    `Selective testing: targets are ${JSON.stringify(
-      modularTargets,
-    )}, which generates these regexes: ${JSON.stringify(
+    `Modular package targets for tests are ${JSON.stringify(modularTargets)}.`,
+  );
+  logger.debug(
+    `Non-modular targets selected and eligible for tests are: ${JSON.stringify(
+      nonModularTargets,
+    )}.`,
+  );
+  logger.debug(
+    `Regexes generated from Modular targets are: ${JSON.stringify(
       packageRegexes,
-    )}. User-provided regexes are ${JSON.stringify(
-      userRegexes,
-    )} and final regexes are ${JSON.stringify(regexes)}`,
+    )}.`,
+  );
+  logger.debug(`User-provided regexes are: ${JSON.stringify(userRegexes)}.`);
+  logger.debug(
+    `Final regexes to pass to Jest are: ${JSON.stringify(regexes)}.`,
   );
 
-  // Test is selective but we computed no regexes; bail out
-  if (!regexes?.length) {
+  // If we computed no regexes and there are no non-modular packages to test, bail out
+  if (!regexes?.length && !nonModularTargets.length) {
     process.stdout.write('No workspaces found in selection\n');
     process.exit(0);
   }
 
-  // push any additional options passed in by debugger or other processes
+  // Push any additional options passed in by debugger or other processes
   cleanArgv.push(...additionalOptions);
 
-  // finally add the script regexes to run
+  // Finally add the script regexes to run
   cleanArgv.push(...cleanRegexes);
 
   const jestBin = await resolveAsBin('jest-cli');
@@ -205,32 +213,35 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
     ];
   }
 
-  logger.debug(
-    `Running ${testBin} with cwd: ${getModularRoot()} and args: ${JSON.stringify(
-      testArgs,
-    )}`,
-  );
-
-  // First run Modular tests with Jest
   console.log('Running Modular tests...');
-  try {
-    await execAsync(testBin, testArgs, {
-      cwd: getModularRoot(),
-      log: false,
-      // @ts-ignore
-      env: {
-        BABEL_ENV: 'test',
-        NODE_ENV: 'test',
-        PUBLIC_URL: '',
-        MODULAR_ROOT: getModularRoot(),
-      },
-    });
-  } catch (err) {
-    logger.debug((err as ExecaError).message);
-    throw new Error('\u2715 Modular test did not pass');
+
+  // First run Modular tests with Jest. We're not iterating, but providing arguments to Jest, so we do this only if we have Modular test to run
+  if (regexes.length) {
+    logger.debug(
+      `Running ${testBin} with cwd: ${getModularRoot()} and args: ${JSON.stringify(
+        testArgs,
+      )}`,
+    );
+
+    try {
+      await execAsync(testBin, testArgs, {
+        cwd: getModularRoot(),
+        log: false,
+        // @ts-ignore
+        env: {
+          BABEL_ENV: 'test',
+          NODE_ENV: 'test',
+          PUBLIC_URL: '',
+          MODULAR_ROOT: getModularRoot(),
+        },
+      });
+    } catch (err) {
+      logger.debug((err as ExecaError).message);
+      throw new Error('\u2715 Modular test did not pass');
+    }
   }
 
-  // Then run non-Modular tests by running the tests script for each package
+  // ...Then run non-Modular (if there are any) tests by running the tests script for each package
   for (const target of nonModularTargets) {
     console.log('Running non-Modular tests for', target);
     try {
@@ -254,8 +265,6 @@ async function computeRegexesFromPackageNames(
     .map((packageName) => allWorkspaces[0].get(packageName)?.location)
     .filter(Boolean) as string[];
 }
-
-// TODO: make this return the new arrays intead of modifying arguments in-place
 
 /**
  * Split out options (--option) that commander incorrectly assumes are arguments
