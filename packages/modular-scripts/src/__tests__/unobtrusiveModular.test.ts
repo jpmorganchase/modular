@@ -26,13 +26,13 @@ describe('When there is a non-Modular package with a build script', () => {
   it('does not build non-modular packages that are not buildable when selected directly, but does not fail', () => {
     const result = runModularPipeLogs(
       tempModularRepo,
-      'build non-modular-non-buildable',
+      'build non-modular-non-buildable-non-testable',
     );
     expect(result.stderr).toBeFalsy();
     expect(result.stdout).toContain('No workspaces to build');
   });
 
-  it('build non-modular packages that are not buildable when selected directly', () => {
+  it('builds buildable non-modular packages when selected directly', () => {
     const result = runModularPipeLogs(
       tempModularRepo,
       'build non-modular-buildable',
@@ -49,5 +49,29 @@ describe('When there is a non-Modular package with a build script', () => {
       'Building the following workspaces in order: ["non-modular-buildable","app"]',
     );
     expect(result.stdout).toContain('Compiled successfully.');
+  });
+
+  it('does not test non-modular packages that are not buildable when selected directly, but does not fail', () => {
+    const result = runModularPipeLogs(
+      tempModularRepo,
+      'test non-modular-non-buildable-non-testable',
+    );
+    expect(result.stderr).toBeFalsy();
+    expect(result.stdout).toContain('No workspaces found in selection');
+  });
+
+  it('tests testable non-modular packages when selected directly', () => {
+    const result = runModularPipeLogs(
+      tempModularRepo,
+      'test non-modular-testable --verbose',
+    );
+    expect(result.stderr).toBeFalsy();
+    expect(result.stdout).toContain('Modular package targets for tests are []');
+    expect(result.stdout).toContain(
+      'Non-modular targets selected and eligible for tests are: ["non-modular-testable"]',
+    );
+    expect(result.stdout).toContain('Final regexes to pass to Jest are: []');
+
+    expect(result.stdout).toContain('\nnon-modular-testable was tested');
   });
 });

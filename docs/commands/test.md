@@ -5,9 +5,30 @@ title: modular test
 
 # `modular test [options] [packages...]`
 
-`test` is an opinionated wrapper around [`jest`](https://jestjs.io/) which runs
-tests against the entire `modular` project. It comes with out-of-the-box
-configuration and opinionation.
+Search workspaces based on their `name` field in the `package.json` and test:
+
+- Modular packages, according to their respective `modular.type`. In this case,
+  `modular test` will act as an opinionated wrapper around
+  [`jest`](https://jestjs.io/), which comes with out-of-the-box configuration.
+- Non-Modular packages (i.e. packages without a `modular` configuration), only
+  if they have a `test`
+  [script](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#scripts),
+  by running `yarn test` on the package's
+  [workspace](https://classic.yarnpkg.com/en/docs/cli/workspace).
+
+When the `[packages...]` argument is empty and no selective option has been
+specified (for example when running `yarn modular test`), tests will be run for
+all testable packages in the repo. When the `[packages...]` argument contains
+one or more non-existing package name, the non-existing packages will be ignored
+without an error. If any package or selective option have been defined but
+Modular can't find any package to test, Modular will warn on `stdout` and exit
+with code `0`.
+
+Test order is unspecified by design, so please don't rely on the assumption that
+certain tests will run before others, that Modular tests will run before
+non-Modular tests, or that they will run sequentially. An exception to this,
+valid only for Modular tests (that are run by Jest), is when
+[the `--runinband` option is specified](https://jestjs.io/docs/cli#--runinband).
 
 ## Configuration
 

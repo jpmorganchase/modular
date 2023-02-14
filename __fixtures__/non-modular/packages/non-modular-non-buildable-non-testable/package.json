@@ -1,0 +1,11 @@
+{
+  "name": "non-modular-non-buildable-non-testable",
+  "private": false,
+  "files": [
+    "dist",
+    "src"
+  ],
+  "license": "UNLICENSED",
+  "main": "./dist/index.js",
+  "version": "1.0.0"
+}

@@ -169,14 +169,13 @@ will:
 - Build `e`, because it only depends on `a`, that got built in the previous
   step.
 
-  ## Non-Modular packages
+## Non-Modular packages
 
-  Packages without a `modular` configuration are built only if they have a
-  `build`
-  [script](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#scripts)
-  in their `package.json`. For example, if you have a Modular package named
-  "app" of type `app` that imports a simple non-Modular package called
-  "non-modular-buildable" that is able to build itself using `tsc`:
+Packages without a `modular` configuration are built only if they have a `build`
+[script](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#scripts) in
+their `package.json`. For example, if you have a Modular package named "app" of
+type `app` that imports a simple non-Modular package called
+"non-modular-buildable" that is able to build itself using `tsc`:
 
 ### packages/non-modular-buildable/package.json
 

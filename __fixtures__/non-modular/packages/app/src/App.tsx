@@ -6,7 +6,7 @@ function App(): JSX.Element {
     <div className="App">
       <p>This is the sum:</p>
       <p>
-        <code>7 + 7 = {sum(7, 7)}</code>
+        <code>{`The result is ${sum(7, 7)}`}</code>
       </p>
     </div>
   );
