@@ -131,8 +131,6 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
     userRegexes?.length ||
     cleanPackages.length;
 
-  console.log({ changed, ancestors, descendants, userRegexes, cleanPackages });
-
   let selectedTargets: string[];
 
   if (!isSelective) {
@@ -159,10 +157,6 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
 
   // Merge and dedupe selective regexes + user-specified regexes
   const regexes = [...new Set([...packageRegexes, ...(userRegexes ?? [])])];
-
-  console.log({ modularTargets, nonModularTargets });
-  console.log({ packageRegexes });
-  console.log({ regexes });
 
   if (regexes?.length) {
     extractOptions(regexes, cleanRegexes, additionalOptions);
@@ -243,7 +237,6 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
 
   // ...Then run non-Modular (if there are any) tests by running the tests script for each package
   for (const target of nonModularTargets) {
-    console.log('Running non-Modular tests for', target);
     try {
       await execAsync(`yarn`, ['workspace', target, 'test'], {
         cwd: getModularRoot(),
@@ -294,6 +287,12 @@ function extractOptions(
   }
 }
 
+/**
+ * From a list of package names, discard packages that are not testable
+ * and partition the remaining packages into two lists of, respectively, Modular and non-Modular workspaces.
+ * @param targets list of package names that we want to partition
+ * @param workspaceMap the workspace map as returned from getAllWorkspaces
+ */
 function partitionTestablePackages(
   targets: string[],
   workspaceMap: Map<string, ModularWorkspacePackage>,
