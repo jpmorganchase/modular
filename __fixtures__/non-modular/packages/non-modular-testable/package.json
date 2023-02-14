@@ -1,8 +1,8 @@
 {
-  "name": "non-modular-non-buildable",
+  "name": "non-modular-testable",
   "private": false,
   "scripts": {
-    "test": "echo 'Test done!'"
+    "test": "echo 'non-modular-testable was tested'"
   },
   "files": [
     "dist",
