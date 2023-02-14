@@ -207,8 +207,6 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
     ];
   }
 
-  console.log('Running Modular tests...');
-
   // First run Modular tests with Jest. We're not iterating, but providing arguments to Jest, so we do this only if we have Modular test to run
   if (regexes.length) {
     logger.debug(
