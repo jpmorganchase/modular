@@ -17,7 +17,6 @@ describe('When there is a non-Modular package with a build script', () => {
 
   beforeAll(() => {
     tempModularRepo = createModularTestContext();
-    console.log(tempModularRepo);
     fs.copySync(fixturesFolder, tempModularRepo);
     execa.sync('yarn', {
       cwd: tempModularRepo,
