@@ -196,7 +196,6 @@ async function buildStandalone(
 
   // If view, write the synthetic index.html and create a trampoline file pointing to the main entrypoint
   // This is for both esbuild and webpack so it lives here. If app, instead, the public/index.html file is generated specifical in different ways.
-  // TODO: this becomes always true and we switch to synthetic only if there is no index.html file
   // TODO: this becomes factored out
   if (!isApp) {
     if (!jsEntryPoint) {
@@ -235,7 +234,7 @@ async function buildStandalone(
 
     const trampolinePath = `${paths.appBuild}/static/js/_trampoline.js`;
     await fs.writeFile(trampolinePath, trampolineContent);
-  } else {
+  } else if (isApp && isEsbuild) {
     html = compileIndex({
       indexContent: await fs.readFile(paths.appHtml, { encoding: 'utf-8' }),
       cssEntryPoint,
@@ -245,7 +244,7 @@ async function buildStandalone(
     });
   }
 
-  const minifiedCode = await minimize.minify(html, {
+  const minifiedCode = await minimize.minify(html!, {
     html5: true,
     collapseBooleanAttributes: true,
     collapseWhitespace: true,
