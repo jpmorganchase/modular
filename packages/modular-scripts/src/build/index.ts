@@ -244,20 +244,22 @@ async function buildStandalone(
     });
   }
 
-  const minifiedCode = await minimize.minify(html!, {
-    html5: true,
-    collapseBooleanAttributes: true,
-    collapseWhitespace: true,
-    collapseInlineTagWhitespace: true,
-    decodeEntities: true,
-    minifyCSS: true,
-    minifyJS: true,
-    removeAttributeQuotes: false,
-    removeComments: true,
-    removeTagWhitespace: true,
-  });
+  if (!isApp || isEsbuild) {
+    const minifiedCode = await minimize.minify(html!, {
+      html5: true,
+      collapseBooleanAttributes: true,
+      collapseWhitespace: true,
+      collapseInlineTagWhitespace: true,
+      decodeEntities: true,
+      minifyCSS: true,
+      minifyJS: true,
+      removeAttributeQuotes: false,
+      removeComments: true,
+      removeTagWhitespace: true,
+    });
 
-  await fs.writeFile(path.join(paths.appBuild, 'index.html'), minifiedCode);
+    await fs.writeFile(path.join(paths.appBuild, 'index.html'), minifiedCode);
+  }
   // TODO: /END factor this out
 
   // Add dependencies from source and bundled dependencies to target package.json
