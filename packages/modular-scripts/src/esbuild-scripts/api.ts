@@ -79,6 +79,7 @@ export const indexFile = `
 </html>
 `;
 
+// TODO: this function goes away
 export async function createIndex({
   paths,
   metafile,
@@ -116,6 +117,7 @@ export async function createIndex({
   });
 }
 
+// TODO: this function goes away
 export function createSyntheticIndex({
   cssEntryPoint,
   replacements,
@@ -134,7 +136,7 @@ export function createSyntheticIndex({
   });
 }
 
-function compileIndex({
+export function compileIndex({
   indexContent,
   cssEntryPoint,
   jsEntryPoint,

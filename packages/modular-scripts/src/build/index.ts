@@ -24,6 +24,7 @@ import createEsbuildBrowserslistTarget from '../utils/createEsbuildBrowserslistT
 import getClientEnvironment from '../esbuild-scripts/config/getClientEnvironment';
 import {
   createSyntheticIndex,
+  compileIndex,
   getEntryPoint,
   createViewTrampoline,
 } from '../esbuild-scripts/api';
@@ -190,16 +191,21 @@ async function buildStandalone(
     }
   }
 
+  const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
+  let html: string;
+
   // If view, write the synthetic index.html and create a trampoline file pointing to the main entrypoint
   // This is for both esbuild and webpack so it lives here. If app, instead, the public/index.html file is generated specifical in different ways.
+  // TODO: this becomes always true and we switch to synthetic only if there is no index.html file
+  // TODO: this becomes factored out
   if (!isApp) {
     if (!jsEntryPoint) {
       throw new Error("Can't find main entrypoint after building");
     }
 
     // Create synthetic index
-    const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
-    const html = createSyntheticIndex({
+    // TODO: use compileIndex here and compare with below
+    html = createSyntheticIndex({
       cssEntryPoint,
       replacements: env.raw,
       styleImports,
@@ -229,7 +235,31 @@ async function buildStandalone(
 
     const trampolinePath = `${paths.appBuild}/static/js/_trampoline.js`;
     await fs.writeFile(trampolinePath, trampolineContent);
+  } else {
+    html = compileIndex({
+      indexContent: await fs.readFile(paths.appHtml, { encoding: 'utf-8' }),
+      cssEntryPoint,
+      jsEntryPoint,
+      replacements: env.raw,
+      includeRuntime: false,
+    });
   }
+
+  const minifiedCode = await minimize.minify(html, {
+    html5: true,
+    collapseBooleanAttributes: true,
+    collapseWhitespace: true,
+    collapseInlineTagWhitespace: true,
+    decodeEntities: true,
+    minifyCSS: true,
+    minifyJS: true,
+    removeAttributeQuotes: false,
+    removeComments: true,
+    removeTagWhitespace: true,
+  });
+
+  await fs.writeFile(path.join(paths.appBuild, 'index.html'), minifiedCode);
+  // TODO: /END factor this out
 
   // Add dependencies from source and bundled dependencies to target package.json
   const targetPackageJson = (await fs.readJSON(
