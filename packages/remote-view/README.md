@@ -1,7 +1,7 @@
 # RemoteView
 
 `<RemoteView />` is a Modular React component that enables the micro-frontend
-pattern using Modular ESM views.
+pattern using Modular [ESM views](https://modular.js.org/esm-views/).
 
 ## Features
 
@@ -16,7 +16,7 @@ pattern using Modular ESM views.
 
 Modular `<RemoteView>`s work by
 [dynamically importing](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import)
-your Modular [ESM Views](https://modular.js.org/esm-views/esm-cdn/) and natively
+your Modular [ESM Views](https://modular.js.org/esm-views) and natively
 rendering them into your React tree.
 
 To achieve this, `<RemoteView>` expects to load ESM Views from an ESM CDN, which
@@ -28,7 +28,8 @@ distributed UIs.
 
 ## Example
 
-Load (dynamically import) and render a set of esm-cdn-hosted views:
+Load (dynamically import) and render a set of
+[esm-cdn-hosted](https://modular.js.org/esm-views/esm-cdn/) views:
 
 ```jsx
 import React, { useState } from 'react';
@@ -71,7 +72,7 @@ return (
       <section key={key}>
         <RemoteView
           baseUrl={v}
-          determineFallbackCases={determineFallbackCases}
+          loadWithIframeFallback={determineFallbackCases}
         />
       </section>
     ))}
@@ -98,8 +99,32 @@ You can read more about how CSS is handled on the
 
 ## Build
 
-To [build](https://modular.js.org/commands/build.md) this package, run:
+To [build](https://modular.js.org/commands/build) this package, run:
 
 ```bash
 yarn modular build @modular-scripts/remote-view
 ```
+
+## Compiling ESM view fixtures
+
+To test `<RemoteView />`, at least 2 test ESM views are needed. To this end, we
+use 2 pre-compiled ESM views in the `__fixtures__/remote-view/output` directory.
+This approach is faster and simpler than building them on-the-fly in test.
+
+For both test ESM views (`esm-view-card` and `esm-view-list`), we have set
+`"externalCdnTemplate": "http://localhost:8484/[name]@[version]"` in the Modular
+config so that we do not point to esm.sh in the output (we do not want to rely
+on esm.sh in test).
+
+To re-compile these test ESM views, the source code from
+`__fixtures__/remote-view/packages` must be copied into `packages` (so that
+Modular can see them) and run:
+
+```bash
+yarn modular build esm-view-card
+yarn modular build esm-view-list
+```
+
+Following this, copy the output from `dist` into
+`__fixtures__/remote-view/output` and the new output will be available in test.
+Also, remember to delete the two packages from `packages/`.

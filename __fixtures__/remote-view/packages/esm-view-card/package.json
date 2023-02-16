@@ -1,0 +1,14 @@
+{
+  "name": "esm-view-card",
+  "private": false,
+  "modular": {
+    "type": "template",
+    "templateType": "esm-view"
+  },
+  "dependencies": {},
+  "version": "1.0.0",
+  "devDependencies": {},
+  "files": [
+    "src"
+  ]
+}
