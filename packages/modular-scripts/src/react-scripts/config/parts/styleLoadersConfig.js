@@ -34,7 +34,7 @@ function createConfig({
         ? paths.publicUrlOrPath.startsWith('.')
           ? { publicPath: '../../' }
           : {}
-        : {}, // TODO: Feels like unnecessary addition ?
+        : {},
     },
     {
       loader: require.resolve('css-loader'),

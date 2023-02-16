@@ -28,7 +28,6 @@ export function createAppPluginConfig(
   paths: Paths,
 ): { plugins: webpack.WebpackPluginInstance[] } {
   return {
-    //TODO: This seems insanely dodgy with all those 'as'
     plugins: [
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(

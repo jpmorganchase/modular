@@ -89,7 +89,6 @@ export function createEsmViewPluginConfig(
     importUrlLinks.push(`<link rel="stylesheet" href="${importUrl}"></script>`);
   });
   return {
-    //TODO: more dodgy stuff with 'as' the two types seem to be compatible, how to make this cleaner?
     plugins: [
       // We need to provide a synthetic index.html in case we're starting a ESM view
       !isEnvProduction &&
