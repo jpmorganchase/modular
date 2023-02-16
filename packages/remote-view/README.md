@@ -12,6 +12,20 @@ pattern using Modular ESM views.
 - Declaratively fall back to iframes
 - Compatible with any ESM CDN
 
+## Getting Started
+
+Modular `<RemoteView>`s work by
+[dynamically importing](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import)
+your Modular [ESM Views](https://modular.js.org/esm-views/esm-cdn/) and natively
+rendering them into your React tree.
+
+To achieve this, `<RemoteView>` expects to load ESM Views from an ESM CDN, which
+exposes code as a native ES Module, plus accompanying files such as static CSS
+and the `package.json`.
+
+This approach enables the microfrontend pattern, which can also be thought as
+distributed UIs.
+
 ## Example
 
 Load (dynamically import) and render a set of esm-cdn-hosted views:
@@ -73,6 +87,14 @@ return (
 | ------------------------ | --------------------------------------------------------- | --------- | -------------------------------------------------------------------------------------------------- | ----------- |
 | `baseUrl`                | String (URL)                                              | Yes       | URL to the remote view. Can be either an ESM view URL on your ESM CDN, or an iframe URL            | N/A         |
 | `loadWithIframeFallback` | Function `fn(manifest: MicrofrontendManifest) => boolean` | No        | Optional function to determine if an iframe fallback should be used in place of a React component. | `undefined` |
+
+`MicrofrontManifest` represents the `package.json` of an ESM View served over an
+ESM CDN. This includes fields like the package `name`, `style`, `styleImports`
+and more - see `packages/modular-types/src/types.ts` for the full list of fields
+that are expected.
+
+You can read more about how CSS is handled on the
+[Modular docs](https://modular.js.org/esm-views/external-css-imports/).
 
 ## Build
 
