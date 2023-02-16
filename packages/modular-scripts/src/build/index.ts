@@ -45,8 +45,6 @@ async function buildStandalone(
 ) {
   // Setup Paths
   const targetDirectory = await getWorkspaceLocation(target);
-  const targetName = toParamCase(target);
-
   const paths = await determineTargetPaths(target);
   const isApp = type === 'app';
 

@@ -28,6 +28,11 @@ export interface Paths {
   moduleFileExtensions: string[];
 }
 
+/**
+ * Provided a target package/app/etc, resolve all the relevant paths
+ * @param target
+ * @returns A Paths object containing all relevant paths
+ */
 export default async function determineTargetPaths(
   target: string,
 ): Promise<Paths> {
