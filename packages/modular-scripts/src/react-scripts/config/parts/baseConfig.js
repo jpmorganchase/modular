@@ -33,6 +33,7 @@ function createConfig({
   const isEsmView = !isApp;
 
   return {
+    context: paths.appPath,
     // Workaround for this bug: https://stackoverflow.com/questions/53905253/cant-set-up-the-hmr-stuck-with-waiting-for-update-signal-from-wds-in-cons
     target: 'web',
     // These are the "entry points" to our application.
@@ -243,6 +244,7 @@ function createConfig({
                 dependencyMap,
                 isEnvProduction,
                 shouldUseSourceMap,
+                paths,
               }),
             },
             // Opt-in support for SASS (using .scss or .sass extensions).
@@ -358,12 +360,7 @@ function createConfig({
         new CssMinimizerPlugin(),
       ],
     },
-    // Turn off performance processing because we utilize
-    // our own hints via the FileSizeReporter
-    performance: false,
   };
 }
 
-function createPluginConfig() {}
-
-module.exports = { createConfig, createPluginConfig };
+module.exports = { createConfig };

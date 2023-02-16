@@ -7,10 +7,8 @@ import type { CoreProperties } from '@schemastore/package';
 import type { ModularType } from '@modular-scripts/modular-types';
 
 import * as logger from '../utils/logger';
-import getModularRoot from '../utils/getModularRoot';
 import actionPreflightCheck from '../utils/actionPreflightCheck';
 import { getModularType } from '../utils/packageTypes';
-import execAsync from '../utils/execAsync';
 import getWorkspaceLocation from '../utils/getLocation';
 import { selectBuildableWorkspaces } from '../utils/selectWorkspaces';
 import { setupEnvForDirectory } from '../utils/setupEnv';
@@ -39,13 +37,13 @@ import { getDependencyInfo } from '../utils/getDependencyInfo';
 import { isReactNewApi } from '../utils/isReactNewApi';
 import { getConfig } from '../utils/config';
 import { getAllWorkspaces } from '../utils/getAllWorkspaces';
+import buildWebpack from '../react-scripts/scripts/buildWebpack';
 
 async function buildStandalone(
   target: string,
   type: Extract<ModularType, 'app' | 'esm-view'>,
 ) {
   // Setup Paths
-  const modularRoot = getModularRoot();
   const targetDirectory = await getWorkspaceLocation(target);
   const targetName = toParamCase(target);
 
@@ -135,35 +133,25 @@ async function buildStandalone(
     // create-react-app doesn't support plain module outputs yet,
     // so --preserve-modules has no effect here
 
-    const buildScript = require.resolve(
-      'modular-scripts/react-scripts/scripts/build.js',
-    );
+    // If it's an app, set it at ESBUILD_TARGET_FACTORY or default to es2015
+    // If it's not an app it's an ESM view, then we need es2020
+    const esbuildTargetFactory = isApp ? browserTarget : ['es2020'];
+    let targetPath = await getWorkspaceLocation(target);
 
-    // TODO: this shouldn't be sync
-    await execAsync('node', [buildScript], {
-      cwd: targetDirectory,
-      log: false,
-      // @ts-ignore
-      env: {
-        ESBUILD_TARGET_FACTORY: JSON.stringify(browserTarget),
-        MODULAR_ROOT: modularRoot,
-        MODULAR_PACKAGE: target,
-        MODULAR_PACKAGE_NAME: targetName,
-        MODULAR_IS_APP: JSON.stringify(isApp),
-        MODULAR_IMPORT_MAP: JSON.stringify(Object.fromEntries(importMap || [])),
-        MODULAR_USE_REACT_CREATE_ROOT: JSON.stringify(useReactCreateRoot),
-        INTERNAL_PUBLIC_URL: getConfig('publicUrl', targetDirectory),
-        INTERNAL_GENERATE_SOURCEMAP: String(
-          getConfig('generateSourceMap', targetDirectory),
-        ),
-      },
-    });
+    await buildWebpack(
+      targetPath,
+      esbuildTargetFactory,
+      isApp,
+      importMap,
+      useReactCreateRoot,
+      styleImports,
+      paths,
+    );
 
     const statsFilePath = path.join(paths.appBuild, 'bundle-stats.json');
 
     try {
       const stats: StatsCompilation = await fs.readJson(statsFilePath);
-
       const mainEntrypoint = stats?.assetsByChunkName?.main;
       jsEntryPoint = mainEntrypoint?.find((entryPoint) =>
         entryPoint.endsWith('.js'),

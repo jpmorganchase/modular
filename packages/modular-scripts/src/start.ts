@@ -1,15 +1,11 @@
-import { paramCase as toParamCase } from 'change-case';
-
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import {
   isModularType,
   getModularType,
   isStartableModularType,
 } from './utils/packageTypes';
-import execAsync from './utils/execAsync';
 import getWorkspaceLocation from './utils/getLocation';
 import stageView from './utils/stageView';
-import getModularRoot from './utils/getModularRoot';
 import getWorkspaceInfo from './utils/getWorkspaceInfo';
 import { setupEnvForDirectory } from './utils/setupEnv';
 import { checkBrowsers } from './utils/checkBrowsers';
@@ -22,6 +18,7 @@ import { getDependencyInfo } from './utils/getDependencyInfo';
 import { isReactNewApi } from './utils/isReactNewApi';
 import { getConfig } from './utils/config';
 import type { PackageType } from '@modular-scripts/modular-types';
+import startWebpack from './react-scripts/scripts/startWebpack';
 
 async function start(packageName: string): Promise<void> {
   let target = packageName;
@@ -59,12 +56,12 @@ async function start(packageName: string): Promise<void> {
 
   const isEsmView = isModularType(targetPath, 'esm-view');
   const isView = isModularType(targetPath, 'view');
+  const paths = await createPaths(target);
   if (isView) {
     targetPath = stageView(target);
   } else {
     // in the case we're an app then we need to make sure that users have no incorrectly
     // setup their app folder.
-    const paths = await createPaths(target);
     isEsmView
       ? await checkRequiredFiles([paths.appIndexJs])
       : await checkRequiredFiles([paths.appHtml, paths.appIndexJs]);
@@ -115,35 +112,21 @@ async function start(packageName: string): Promise<void> {
       styleImports,
     });
   } else {
-    const startScript = require.resolve(
-      'modular-scripts/react-scripts/scripts/start.js',
-    );
-    const modularRoot = getModularRoot();
-    const targetName = toParamCase(target);
-
     const browserTarget = createEsbuildBrowserslistTarget(targetPath);
 
-    logger.debug(`Using target: ${browserTarget.join(', ')}`);
+    // If it's an app, set it at ESBUILD_TARGET_FACTORY or default to es2015
+    // If it's not an app it's an ESM view, then we need es2020
+    const esbuildTargetFactory = !isEsmView ? browserTarget : ['es2020'];
 
-    await execAsync('node', [startScript], {
-      cwd: targetPath,
-      log: false,
-      // @ts-ignore
-      env: {
-        ESBUILD_TARGET_FACTORY: JSON.stringify(browserTarget),
-        MODULAR_ROOT: modularRoot,
-        MODULAR_PACKAGE: target,
-        MODULAR_PACKAGE_NAME: targetName,
-        MODULAR_IS_APP: JSON.stringify(!isEsmView),
-        MODULAR_IMPORT_MAP: JSON.stringify(Object.fromEntries(importMap || [])),
-        MODULAR_USE_REACT_CREATE_ROOT: JSON.stringify(useReactCreateRoot),
-        MODULAR_STYLE_IMPORT_MAPS: JSON.stringify([...styleImports]),
-        INTERNAL_PUBLIC_URL: getConfig('publicUrl', targetPath),
-        INTERNAL_GENERATE_SOURCEMAP: String(
-          getConfig('generateSourceMap', targetPath),
-        ),
-      },
-    });
+    logger.debug(`Using target: ${browserTarget.join(', ')}`);
+    startWebpack(
+      esbuildTargetFactory,
+      !isEsmView,
+      importMap,
+      useReactCreateRoot,
+      styleImports,
+      paths,
+    );
   }
 }
 

@@ -18,6 +18,7 @@ export interface Paths {
   appPackageJson: string;
   appSrc: string;
   appTsConfig: string;
+  appJsConfig: string;
   testsSetup: string;
   proxySetup: string;
   appNodeModules: string;
@@ -86,6 +87,7 @@ export default async function createPaths(target: string): Promise<Paths> {
   };
 
   const ownPath = path.dirname(path.join(__dirname, '..', '..'));
+  console.log(`ownPath: ${ownPath}`);
 
   const resolveOwn = (relativePath: string) =>
     path.resolve(ownPath, relativePath);
@@ -98,6 +100,7 @@ export default async function createPaths(target: string): Promise<Paths> {
   const appPackageJson = resolveApp('package.json');
   const appSrc = resolveApp('src');
   const appTsConfig = resolveApp('tsconfig.json');
+  const appJsConfig = resolveApp('jsconfig.json');
   const testsSetup = resolveModule(resolveApp, 'src/setupTests');
   const proxySetup = resolveApp('src/setupProxy.js');
   const appNodeModules = resolveApp('node_modules');
@@ -119,6 +122,7 @@ export default async function createPaths(target: string): Promise<Paths> {
     appPackageJson,
     appSrc,
     appTsConfig,
+    appJsConfig,
     testsSetup,
     proxySetup,
     appNodeModules,
