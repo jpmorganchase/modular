@@ -5,9 +5,17 @@ title: modular build
 
 # `modular build [options] [packages...]`
 
-Search workspaces based on their `name` field in the `package.json` and build
-them according to their respective `modular.type`, in order of dependency (e.g.
-if a package `a` depends on a package `b`, `b` is built first).
+Search workspaces based on their `name` field in the `package.json` and build:
+
+- Modular packages them according to their respective `modular.type`.
+- Non-Modular packages (i.e. packages without a `modular` configuration) only if
+  they have a `build`
+  [script](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#scripts),
+  by running `yarn build` on the package's
+  [workspace](https://classic.yarnpkg.com/en/docs/cli/workspace).
+
+Packages are always built in order of dependency (e.g. if a package `a` depends
+on a package `b`, `b` is built first).
 
 The output directory for built artifacts is `dist/`, which has a flat structure
 of modular package names. Each built app/view/package is added to the `dist/` as
@@ -160,3 +168,98 @@ will:
   steps.
 - Build `e`, because it only depends on `a`, that got built in the previous
   step.
+
+## Non-Modular packages
+
+Packages without a `modular` configuration are built only if they have a `build`
+[script](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#scripts) in
+their `package.json`. For example, if you have a Modular package named "app" of
+type `app` that imports a simple non-Modular package called
+"non-modular-buildable" that is able to build itself using `tsc`:
+
+### packages/non-modular-buildable/package.json
+
+```json
+{
+  "name": "non-modular-buildable",
+  "private": false,
+  "scripts": {
+    "build": "tsc --skipLibCheck"
+  },
+  "files": ["dist", "src"],
+  "main": "./dist/index.js",
+  "version": "1.0.0"
+}
+```
+
+### packages/non-modular-buildable/src/index.ts
+
+```ts
+export default function add(a: number, b: number): number {
+  return a + b;
+}
+```
+
+### packages/non-modular-buildable/tsconfig.json
+
+```json
+{
+  "include": ["src"],
+  "compilerOptions": {
+    "target": "es2018",
+    "outDir": "dist",
+    "lib": ["dom", "esnext"],
+    "declaration": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "strict": true,
+    "esModuleInterop": true
+  }
+}
+```
+
+### packages/app/src/App.tsx
+
+```tsx
+import * as React from 'react';
+import sum from 'non-modular-buildable';
+import logo from './logo.svg';
+import './App.css';
+
+function App(): JSX.Element {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>This is the sum:</p>
+        <p>
+          <code>7 + 7 = {sum(7, 7)}</code>
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
+    </div>
+  );
+}
+
+export default App;
+```
+
+`yarn modular build` will, in this order:
+
+1. Build `non-modular-buildable` by calling
+   `yarn workspace non-modular-buildable build` and waiting for the spawned
+   process to terminate successfully
+2. Build `app` using Modular's build scripts and configuration, bundling the
+   previously built `non-modular-buildable` dependency
+
+Please note that Modular merely works as a task runner when building non-modular
+packages: it's your responsibility to ensure that the `build` script works and
+that your `package.json` is correctly configured to export the right functions
+in the right format.

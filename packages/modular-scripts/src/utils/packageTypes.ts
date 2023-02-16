@@ -26,7 +26,7 @@ const packageTypeDefinitions: PackageTypeDefinitions = {
 
 export const ModularTypes: ModularType[] = (
   Object.keys(packageTypeDefinitions) as ModularType[]
-).concat(['root']);
+).concat(['root', 'unknown']);
 
 export function getModularType(dir: string): ModularType | undefined {
   const packageJsonPath = path.join(dir, 'package.json');

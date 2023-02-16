@@ -58,7 +58,13 @@ export function createJestConfig(
           presets: [require.resolve('babel-preset-react-app')],
         },
       ],
-      '^.+\\.(ts|tsx)$': require.resolve('ts-jest'),
+      // don't typecheck tests in CI
+      '^.+\\.(ts|tsx)$': isCi
+        ? [
+            require.resolve('ts-jest'),
+            { diagnostics: false, isolatedModules: true },
+          ]
+        : require.resolve('ts-jest'),
       '^.+\\.(css|scss)$': require.resolve('jest-transform-stub'),
       '.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
         require.resolve('jest-transform-stub'),
@@ -197,16 +203,6 @@ export function createJestConfig(
       ...packageJsonJest,
       moduleNameMapper: mergedMapper,
     });
-  }
-
-  // don't typecheck tests in CI
-  if (isCi) {
-    jestConfig.globals = {
-      'ts-jest': {
-        diagnostics: false,
-        isolatedModules: true,
-      },
-    };
   }
 
   return jestConfig;

@@ -272,10 +272,11 @@ async function build({
   const isSelective =
     changed || ancestors || descendants || packagePaths.length;
 
+  const modularRoot = getModularRoot();
+  const [allWorkspacePackages] = await getAllWorkspaces(modularRoot);
+
   // targets are either the set of what's specified in the selective options or all the packages in the monorepo
-  const targets = isSelective
-    ? packagePaths
-    : [...(await getAllWorkspaces())[0].keys()];
+  const targets = isSelective ? packagePaths : [...allWorkspacePackages.keys()];
 
   const selectedTargets = await selectBuildableWorkspaces({
     targets,
@@ -298,20 +299,30 @@ async function build({
   );
 
   for (const target of selectedTargets) {
+    const packageInfo = allWorkspacePackages.get(target);
+
     try {
       const targetDirectory = await getWorkspaceLocation(target);
-
       await setupEnvForDirectory(targetDirectory);
+      if (packageInfo?.modular) {
+        // If it's modular, build with Modular
+        const targetType = getModularType(targetDirectory);
+        if (targetType === 'app' || targetType === 'esm-view') {
+          await buildStandalone(target, targetType);
+        } else {
+          const { buildPackage } = await import('./buildPackage');
+          // ^ we do a dynamic import here to defer the module's loading
+          // till when it's actually needed
 
-      const targetType = getModularType(targetDirectory);
-      if (targetType === 'app' || targetType === 'esm-view') {
-        await buildStandalone(target, targetType);
+          await buildPackage(target, preserveModules, includePrivate);
+        }
       } else {
-        const { buildPackage } = await import('./buildPackage');
-        // ^ we do a dynamic import here to defer the module's loading
-        // till when it's actually needed
-
-        await buildPackage(target, preserveModules, includePrivate);
+        // Otherwise, build by running the workspace's build script
+        // We're sure it's here because selectBuildableWorkspaces returns only buildable workspaces.
+        await execAsync(`yarn`, ['workspace', target, 'build'], {
+          cwd: modularRoot,
+          log: false,
+        });
       }
     } catch (err) {
       logger.error(`building ${target} failed`);

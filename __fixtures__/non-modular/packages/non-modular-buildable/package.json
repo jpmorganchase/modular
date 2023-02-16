@@ -1,0 +1,14 @@
+{
+  "name": "non-modular-buildable",
+  "private": false,
+  "scripts": {
+    "build": "tsc --skipLibCheck && echo 'non-modular-buildable was built'"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "license": "UNLICENSED",
+  "main": "./dist/index.js",
+  "version": "1.0.0"
+}

@@ -124,10 +124,6 @@ program
     ) => {
       const { default: build } = await import('./build');
 
-      options.changed
-        ? logger.log('Building changed packages')
-        : logger.log('Building packages at:', packagePaths.join(', '));
-
       if (options.compareBranch && !options.changed) {
         process.stderr.write(
           "Option --compareBranch doesn't make sense without option --changed\n",

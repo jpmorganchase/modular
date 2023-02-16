@@ -2,10 +2,10 @@
 
 exports[`getWorkspaceInfo 1`] = `
 {
-  "location": "packages/create-modular-react-app",
+  "location": "packages/modular-types",
   "mismatchedWorkspaceDependencies": [],
   "public": true,
-  "type": "package",
+  "type": "unknown",
   "version": Any<String>,
   "workspaceDependencies": [],
 }
@@ -13,21 +13,45 @@ exports[`getWorkspaceInfo 1`] = `
 
 exports[`getWorkspaceInfo 2`] = `
 {
-  "location": "packages/eslint-config-modular-app",
+  "location": "packages/workspace-resolver",
   "mismatchedWorkspaceDependencies": [],
   "public": true,
-  "type": "package",
+  "type": "unknown",
   "version": Any<String>,
-  "workspaceDependencies": [],
+  "workspaceDependencies": [
+    "@modular-scripts/modular-types",
+  ],
 }
 `;
 
 exports[`getWorkspaceInfo 3`] = `
 {
+  "location": "packages/create-modular-react-app",
+  "mismatchedWorkspaceDependencies": [],
+  "public": true,
+  "type": "unknown",
+  "version": Any<String>,
+  "workspaceDependencies": [],
+}
+`;
+
+exports[`getWorkspaceInfo 4`] = `
+{
+  "location": "packages/eslint-config-modular-app",
+  "mismatchedWorkspaceDependencies": [],
+  "public": true,
+  "type": "unknown",
+  "version": Any<String>,
+  "workspaceDependencies": [],
+}
+`;
+
+exports[`getWorkspaceInfo 5`] = `
+{
   "location": "packages/modular-scripts",
   "mismatchedWorkspaceDependencies": [],
   "public": true,
-  "type": "package",
+  "type": "unknown",
   "version": Any<String>,
   "workspaceDependencies": [
     "@modular-scripts/modular-types",
@@ -36,7 +60,7 @@ exports[`getWorkspaceInfo 3`] = `
 }
 `;
 
-exports[`getWorkspaceInfo 4`] = `
+exports[`getWorkspaceInfo 6`] = `
 {
   "location": "packages/modular-template-app",
   "mismatchedWorkspaceDependencies": [],
@@ -47,7 +71,7 @@ exports[`getWorkspaceInfo 4`] = `
 }
 `;
 
-exports[`getWorkspaceInfo 5`] = `
+exports[`getWorkspaceInfo 7`] = `
 {
   "location": "packages/modular-template-esm-view",
   "mismatchedWorkspaceDependencies": [],
@@ -58,7 +82,7 @@ exports[`getWorkspaceInfo 5`] = `
 }
 `;
 
-exports[`getWorkspaceInfo 6`] = `
+exports[`getWorkspaceInfo 8`] = `
 {
   "location": "packages/modular-template-node-env-app",
   "mismatchedWorkspaceDependencies": [],
@@ -69,7 +93,7 @@ exports[`getWorkspaceInfo 6`] = `
 }
 `;
 
-exports[`getWorkspaceInfo 7`] = `
+exports[`getWorkspaceInfo 9`] = `
 {
   "location": "packages/modular-template-package",
   "mismatchedWorkspaceDependencies": [],
@@ -80,7 +104,7 @@ exports[`getWorkspaceInfo 7`] = `
 }
 `;
 
-exports[`getWorkspaceInfo 8`] = `
+exports[`getWorkspaceInfo 10`] = `
 {
   "location": "packages/modular-template-source",
   "mismatchedWorkspaceDependencies": [],
@@ -91,7 +115,7 @@ exports[`getWorkspaceInfo 8`] = `
 }
 `;
 
-exports[`getWorkspaceInfo 9`] = `
+exports[`getWorkspaceInfo 11`] = `
 {
   "location": "packages/modular-template-view",
   "mismatchedWorkspaceDependencies": [],
@@ -102,34 +126,12 @@ exports[`getWorkspaceInfo 9`] = `
 }
 `;
 
-exports[`getWorkspaceInfo 10`] = `
-{
-  "location": "packages/modular-types",
-  "mismatchedWorkspaceDependencies": [],
-  "public": true,
-  "type": "package",
-  "version": Any<String>,
-  "workspaceDependencies": [],
-}
-`;
-
-exports[`getWorkspaceInfo 11`] = `
+exports[`getWorkspaceInfo 12`] = `
 {
   "location": "packages/modular-views.macro",
   "mismatchedWorkspaceDependencies": [],
   "public": true,
-  "type": "package",
-  "version": Any<String>,
-  "workspaceDependencies": [],
-}
-`;
-
-exports[`getWorkspaceInfo 12`] = `
-{
-  "location": "packages/tree-view-for-tests",
-  "mismatchedWorkspaceDependencies": [],
-  "public": false,
-  "type": "package",
+  "type": "unknown",
   "version": Any<String>,
   "workspaceDependencies": [],
 }
@@ -137,13 +139,11 @@ exports[`getWorkspaceInfo 12`] = `
 
 exports[`getWorkspaceInfo 13`] = `
 {
-  "location": "packages/workspace-resolver",
+  "location": "packages/tree-view-for-tests",
   "mismatchedWorkspaceDependencies": [],
-  "public": true,
-  "type": "package",
+  "public": false,
+  "type": "unknown",
   "version": Any<String>,
-  "workspaceDependencies": [
-    "@modular-scripts/modular-types",
-  ],
+  "workspaceDependencies": [],
 }
 `;

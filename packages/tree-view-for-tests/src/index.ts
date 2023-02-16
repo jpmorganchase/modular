@@ -30,12 +30,13 @@ interface Options {
   hashIgnores?: string[];
 }
 
-function tree(
+function generateTree(
   _path: string,
   options: Options = {
     ignores: defaultIgnores,
     hashIgnores: defaultHashIgnores,
   },
+  noHash?: boolean,
   level = 1,
 ): string {
   const stat = fs.statSync(_path);
@@ -46,12 +47,14 @@ function tree(
     // todo - handle symlinks, etc
     return `${times('#', level)}${dir}\n${children
       .filter((child: string) => !options.ignores?.includes(child))
-      .map((child: string) => tree(path.join(_path, child), options, level + 1))
+      .map((child: string) =>
+        generateTree(path.join(_path, child), options, noHash, level + 1),
+      )
       .join('\n')}`;
   } else {
     return [
       `${times('#', level)}${path.basename(_path)}`,
-      options.hashIgnores?.includes(path.basename(_path))
+      noHash || options.hashIgnores?.includes(path.basename(_path))
         ? undefined
         : `#${hash(fs.readFileSync(_path, 'utf8').replace(/\r/gm, ''))}`,
     ]
@@ -60,6 +63,11 @@ function tree(
   }
 }
 
-export default function generate(_path: string, options?: Options): string {
-  return asciiTree.generate(tree(_path, options));
+export default function tree(_path: string, options?: Options): string {
+  return asciiTree.generate(generateTree(_path, options));
+}
+
+export function hashlessTree(_path: string): string {
+  console.log('this is being used');
+  return asciiTree.generate(generateTree(_path, undefined, true));
 }
