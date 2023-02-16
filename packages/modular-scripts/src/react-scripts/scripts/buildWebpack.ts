@@ -58,7 +58,6 @@ async function runCompiler(
           warnings: [],
         });
       } else if (stats) {
-        console.log('NO ERRRR');
         statsJson = stats.toJson({
           all: false,
           assets: true,
@@ -93,7 +92,6 @@ async function runCompiler(
 
       try {
         fs.writeJsonSync(`${paths.appBuild}/bundle-stats.json`, statsJson);
-        console.log('WE GOT HEREEE');
         resolve();
       } catch (error) {
         printBuildError(error);
