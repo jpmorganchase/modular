@@ -2,7 +2,7 @@ import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemasto
 import { Plugin } from 'esbuild';
 import chalk from 'chalk';
 import * as fs from 'fs-extra';
-import type { Paths } from '../../../utils/createPaths';
+import type { Paths } from '../../../utils/determineTargetPaths';
 import * as logger from '../../../utils/logger';
 import { InstructionURLS } from '../../config/urls';
 

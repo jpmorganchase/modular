@@ -14,7 +14,7 @@ import isCI from 'is-ci';
 
 import getConfig from '../config/webpack.config';
 import createDevServerConfig from '../config/webpackDevServer.config';
-import { Paths } from '../../utils/createPaths';
+import { Paths } from '../../utils/determineTargetPaths';
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will

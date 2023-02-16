@@ -13,7 +13,7 @@ import { createDevelopmentConfig } from './parts/developmentConfig';
 import { createProductionConfig } from './parts/productionConfig';
 import { createConfig as createBaseConfig } from './parts/baseConfig';
 import { getConfig } from '../../utils/config';
-import { Paths } from '../../utils/createPaths';
+import { Paths } from '../../utils/determineTargetPaths';
 import { Configuration } from 'webpack';
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 

@@ -2,7 +2,7 @@ import { Plugin } from 'esbuild';
 import chalk from 'chalk';
 import * as logger from '../../../utils/logger';
 import { formatError } from '../../utils/formatError';
-import type { Paths } from '../../../utils/createPaths';
+import type { Paths } from '../../../utils/determineTargetPaths';
 
 function createPlugin(paths: Paths): Plugin {
   const plugin: Plugin = {

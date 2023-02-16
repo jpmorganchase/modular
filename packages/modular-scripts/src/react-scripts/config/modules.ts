@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
 import resolve from 'resolve';
-import { Paths } from '../../utils/createPaths';
+import { Paths } from '../../utils/determineTargetPaths';
 
 /**
  * Get additional module paths based on the baseUrl of a compilerOptions object.

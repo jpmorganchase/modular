@@ -10,7 +10,7 @@ import getWorkspaceInfo from './utils/getWorkspaceInfo';
 import { setupEnvForDirectory } from './utils/setupEnv';
 import { checkBrowsers } from './utils/checkBrowsers';
 import checkRequiredFiles from './utils/checkRequiredFiles';
-import createPaths from './utils/createPaths';
+import determineTargetPaths from './utils/determineTargetPaths';
 import * as logger from './utils/logger';
 import createEsbuildBrowserslistTarget from './utils/createEsbuildBrowserslistTarget';
 import prompts from 'prompts';
@@ -56,7 +56,7 @@ async function start(packageName: string): Promise<void> {
 
   const isEsmView = isModularType(targetPath, 'esm-view');
   const isView = isModularType(targetPath, 'view');
-  const paths = await createPaths(target);
+  const paths = await determineTargetPaths(target);
   if (isView) {
     targetPath = stageView(target);
   } else {

@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import * as esbuild from 'esbuild';
 import * as path from 'path';
 import getModularRoot from '../../utils/getModularRoot';
-import type { Paths } from '../../utils/createPaths';
+import type { Paths } from '../../utils/determineTargetPaths';
 
 function createPlugin(paths: Paths): esbuild.Plugin {
   return {

@@ -5,7 +5,7 @@ import * as minimize from 'html-minifier-terser';
 import * as path from 'path';
 import getClientEnvironment from '../config/getClientEnvironment';
 
-import type { Paths } from '../../utils/createPaths';
+import type { Paths } from '../../utils/determineTargetPaths';
 import * as logger from '../../utils/logger';
 import { formatError } from '../utils/formatError';
 

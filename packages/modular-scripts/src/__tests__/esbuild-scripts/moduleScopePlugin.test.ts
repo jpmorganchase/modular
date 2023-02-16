@@ -5,7 +5,7 @@ import stripAnsi from 'strip-ansi';
 import * as tmp from 'tmp';
 
 import plugin from '../../esbuild-scripts/plugins/moduleScopePlugin';
-import type { Paths } from '../../utils/createPaths';
+import type { Paths } from '../../utils/determineTargetPaths';
 import { formatError } from '../../esbuild-scripts/utils/formatError';
 import getModularRoot from '../../utils/getModularRoot';
 

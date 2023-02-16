@@ -3,7 +3,7 @@ import * as fs from 'fs-extra';
 import * as parse5 from 'parse5';
 import dedent from 'dedent';
 import escapeStringRegexp from 'escape-string-regexp';
-import type { Paths } from '../utils/createPaths';
+import type { Paths } from '../utils/determineTargetPaths';
 import getModularRoot from '../utils/getModularRoot';
 import * as path from 'path';
 import { normalizeToPosix } from './utils/formatPath';

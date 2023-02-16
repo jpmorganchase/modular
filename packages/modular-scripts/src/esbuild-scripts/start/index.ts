@@ -11,7 +11,7 @@ import isCi from 'is-ci';
 
 import memoize from '../../utils/memoize';
 
-import createPaths, { Paths } from '../../utils/createPaths';
+import determineTargetPaths, { Paths } from '../../utils/determineTargetPaths';
 import getClientEnvironment, {
   ClientEnvironment,
 } from '../config/getClientEnvironment';
@@ -388,7 +388,7 @@ export default async function start({
   useReactCreateRoot: boolean;
   styleImports: Set<string>;
 }): Promise<void> {
-  const paths = await createPaths(target);
+  const paths = await determineTargetPaths(target);
   const host = getHost();
   const port = await getPort(host);
   const urls = prepareUrls(

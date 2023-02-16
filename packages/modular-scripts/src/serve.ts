@@ -2,7 +2,7 @@ import express from 'express';
 import * as fs from 'fs-extra';
 
 import actionPreflightCheck from './utils/actionPreflightCheck';
-import createPaths from './utils/createPaths';
+import determineTargetPaths from './utils/determineTargetPaths';
 import getWorkspaceLocation from './utils/getLocation';
 import * as logger from './utils/logger';
 import { isModularType } from './utils/packageTypes';
@@ -14,7 +14,7 @@ async function serve(target: string, port = 3000): Promise<void> {
     isModularType(targetLocation, 'app') ||
     isModularType(targetLocation, 'esm-view')
   ) {
-    const paths = await createPaths(target);
+    const paths = await determineTargetPaths(target);
 
     if (fs.existsSync(paths.appBuild)) {
       const app = express();

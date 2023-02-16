@@ -1,6 +1,6 @@
 import path from 'path';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import { Paths } from '../../../utils/createPaths';
+import { Paths } from '../../../utils/determineTargetPaths';
 import { Configuration } from 'webpack';
 
 export function createProductionConfig(

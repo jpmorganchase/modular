@@ -28,7 +28,9 @@ export interface Paths {
   moduleFileExtensions: string[];
 }
 
-export default async function createPaths(target: string): Promise<Paths> {
+export default async function determineTargetPaths(
+  target: string,
+): Promise<Paths> {
   const modularRoot = getModularRoot();
   const targetDirectory = await getWorkspaceLocation(target);
   const targetName = toParamCase(target);

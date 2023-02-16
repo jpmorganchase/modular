@@ -12,7 +12,7 @@ import { getModularType } from '../utils/packageTypes';
 import getWorkspaceLocation from '../utils/getLocation';
 import { selectBuildableWorkspaces } from '../utils/selectWorkspaces';
 import { setupEnvForDirectory } from '../utils/setupEnv';
-import createPaths from '../utils/createPaths';
+import determineTargetPaths from '../utils/determineTargetPaths';
 import printHostingInstructions from './printHostingInstructions';
 import { Asset, printFileSizesAfterBuild } from './fileSizeReporter';
 import type { StatsCompilation } from 'webpack';
@@ -47,7 +47,7 @@ async function buildStandalone(
   const targetDirectory = await getWorkspaceLocation(target);
   const targetName = toParamCase(target);
 
-  const paths = await createPaths(target);
+  const paths = await determineTargetPaths(target);
   const isApp = type === 'app';
 
   const isEsbuild = getConfig('useModularEsbuild', targetDirectory);

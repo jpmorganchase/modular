@@ -2,7 +2,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import InlineChunkHtmlPlugin from '../../../react-dev-utils/InlineChunkHtmlPlugin';
 import InterpolateHtmlPlugin from '../../../react-dev-utils/InterpolateHtmlPlugin';
 import webpack from 'webpack';
-import { Paths } from '../../../utils/createPaths';
+import { Paths } from '../../../utils/determineTargetPaths';
 
 export function createAppConfig(): webpack.Configuration {
   return {

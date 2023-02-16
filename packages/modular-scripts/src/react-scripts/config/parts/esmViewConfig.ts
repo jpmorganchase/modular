@@ -2,7 +2,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import dedent from 'dedent';
 import path from 'path';
 import { Configuration, WebpackPluginInstance } from 'webpack';
-import { Paths } from '../../../utils/createPaths';
+import { Paths } from '../../../utils/determineTargetPaths';
 import { parsePackageName } from '../../../utils/parsePackageName';
 import { rewriteModuleSpecifier } from '../../../utils/buildImportMap';
 

@@ -1,7 +1,7 @@
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
 import WatchMissingNodeModulesPlugin from '../../../react-dev-utils/WatchMissingNodeModulesPlugin';
 import path from 'path';
-import { Paths } from '../../../utils/createPaths';
+import { Paths } from '../../../utils/determineTargetPaths';
 import { Configuration } from 'webpack';
 
 export function createDevelopmentConfig(): Configuration {

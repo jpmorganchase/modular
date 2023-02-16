@@ -2,7 +2,7 @@ import isCi from 'is-ci';
 import * as path from 'path';
 import * as esbuild from 'esbuild';
 import builtinModules from 'builtin-modules';
-import type { Paths } from '../../utils/createPaths';
+import type { Paths } from '../../utils/determineTargetPaths';
 import getClientEnvironment from './getClientEnvironment';
 import * as logger from '../../utils/logger';
 
