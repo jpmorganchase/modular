@@ -4,7 +4,7 @@ import { views } from '../context';
 import type { PropsWithChildren } from 'react';
 import type { MicroFrontendState } from '../types';
 
-export const RemoteViews = ({
+export const RemoteViewProvider = ({
   children,
 }: PropsWithChildren<unknown>): JSX.Element => {
   const value = useState<MicroFrontendState>({});

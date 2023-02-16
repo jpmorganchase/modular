@@ -1,2 +1,2 @@
 export * from './remote-view';
-export * from './remote-views';
+export * from './remote-view-provider';
