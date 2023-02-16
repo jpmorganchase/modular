@@ -27,7 +27,7 @@ import * as logger from '../../utils/logger';
 import prepareUrls, { InstructionURLS } from '../config/urls';
 import { createIndex, indexFile, createViewTrampoline } from '../api';
 import createEsbuildConfig from '../config/createEsbuildConfig';
-import createLaunchEditorMiddleware from '../../../react-dev-utils/errorOverlayMiddleware.js';
+import createLaunchEditorMiddleware from '../../react-dev-utils/errorOverlayMiddleware.js';
 import getHost from './utils/getHost';
 import getPort from './utils/getPort';
 import sanitizeMetafile, { sanitizeFileName } from '../utils/sanitizeMetafile';
