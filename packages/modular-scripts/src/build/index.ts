@@ -38,6 +38,8 @@ import { isReactNewApi } from '../utils/isReactNewApi';
 import { getConfig } from '../utils/config';
 import { getAllWorkspaces } from '../utils/getAllWorkspaces';
 import buildWebpack from '../react-scripts/scripts/buildWebpack';
+import getModularRoot from '../utils/getModularRoot';
+import execAsync from '../utils/execAsync';
 
 async function buildStandalone(
   target: string,
