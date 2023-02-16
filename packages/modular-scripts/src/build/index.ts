@@ -23,10 +23,10 @@ import checkRequiredFiles from '../utils/checkRequiredFiles';
 import createEsbuildBrowserslistTarget from '../utils/createEsbuildBrowserslistTarget';
 import getClientEnvironment from '../esbuild-scripts/config/getClientEnvironment';
 import {
-  createSyntheticIndex,
   compileIndex,
   getEntryPoint,
   createViewTrampoline,
+  indexFile,
 } from '../esbuild-scripts/api';
 import {
   webpackMeasureFileSizesBeforeBuild,
@@ -197,33 +197,23 @@ async function buildStandalone(
   // If view, write the synthetic index.html and create a trampoline file pointing to the main entrypoint
   // This is for both esbuild and webpack so it lives here. If app, instead, the public/index.html file is generated specifical in different ways.
   // TODO: this becomes factored out
+  const hasIndex = fs.existsSync(paths.appHtml);
+
   if (!isApp) {
     if (!jsEntryPoint) {
       throw new Error("Can't find main entrypoint after building");
     }
+    // esm-view with esbuild or webpack
 
     // Create synthetic index
-    // TODO: use compileIndex here and compare with below
-    html = createSyntheticIndex({
+    html = compileIndex({
+      indexContent: hasIndex
+        ? await fs.readFile(paths.appHtml, { encoding: 'utf-8' })
+        : indexFile,
       cssEntryPoint,
       replacements: env.raw,
       styleImports,
     });
-    await fs.writeFile(
-      path.join(paths.appBuild, 'index.html'),
-      await minimize.minify(html, {
-        html5: true,
-        collapseBooleanAttributes: true,
-        collapseWhitespace: true,
-        collapseInlineTagWhitespace: true,
-        decodeEntities: true,
-        minifyCSS: true,
-        minifyJS: true,
-        removeAttributeQuotes: false,
-        removeComments: true,
-        removeTagWhitespace: true,
-      }),
-    );
 
     // Create and write trampoline file
     const trampolineContent = createViewTrampoline({
@@ -234,7 +224,8 @@ async function buildStandalone(
 
     const trampolinePath = `${paths.appBuild}/static/js/_trampoline.js`;
     await fs.writeFile(trampolinePath, trampolineContent);
-  } else if (isApp && isEsbuild) {
+  } else if (isEsbuild) {
+    // app with esbuild
     html = compileIndex({
       indexContent: await fs.readFile(paths.appHtml, { encoding: 'utf-8' }),
       cssEntryPoint,
