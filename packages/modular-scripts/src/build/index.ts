@@ -20,11 +20,7 @@ import type { StatsCompilation } from 'webpack';
 import { checkBrowsers } from '../utils/checkBrowsers';
 import checkRequiredFiles from '../utils/checkRequiredFiles';
 import createEsbuildBrowserslistTarget from '../utils/createEsbuildBrowserslistTarget';
-import {
-  writeOutputIndexFile,
-  getEntryPoint,
-  createViewTrampoline,
-} from '../esbuild-scripts/api';
+import { writeOutputIndexFile, getEntryPoint } from '../esbuild-scripts/api';
 import {
   webpackMeasureFileSizesBeforeBuild,
   createWebpackAssets,
@@ -114,6 +110,7 @@ async function buildStandalone(
     )}`,
   );
 
+  // TODO: this is going away in favour of externalResolutions
   const useReactCreateRoot = isReactNewApi(externalResolutions);
   const browserTarget = createEsbuildBrowserslistTarget(targetDirectory);
 
@@ -200,22 +197,11 @@ async function buildStandalone(
       cssEntryPoint,
       jsEntryPoint,
       styleImports,
+      importMap,
       modularType: type,
       isBuild: true,
+      externalResolutions,
     });
-  }
-
-  // TODO: this conditional + write should be in the "writeESMTrampoline" function
-  if (!isApp) {
-    // Create and write trampoline file
-    const trampolineContent = createViewTrampoline({
-      fileName: path.basename(jsEntryPoint),
-      importMap,
-      useReactCreateRoot,
-    });
-
-    const trampolinePath = `${paths.appBuild}/static/js/_trampoline.js`;
-    await fs.writeFile(trampolinePath, trampolineContent);
   }
 
   // Add dependencies from source and bundled dependencies to target package.json

@@ -1,6 +1,7 @@
 import * as esbuild from 'esbuild';
 import * as fs from 'fs-extra';
 import * as parse5 from 'parse5';
+import semver from 'semver';
 import dedent from 'dedent';
 import escapeStringRegexp from 'escape-string-regexp';
 import minimize from 'html-minifier-terser';
@@ -11,6 +12,7 @@ import * as path from 'path';
 import { normalizeToPosix } from './utils/formatPath';
 import { Element } from 'parse5/dist/tree-adapters/default';
 import getClientEnvironment from '../esbuild-scripts/config/getClientEnvironment';
+import type { Dependency } from '@schemastore/package';
 
 type FileType = '.css' | '.js';
 
@@ -24,11 +26,14 @@ export const indexFile = dedent(`
 </html>
 `);
 
+// TODO: Move this + createViewTrampoline to the build directory, instead of esbuild
 interface CreateIndexArguments {
   paths: Paths;
   cssEntryPoint?: string;
   jsEntryPoint: string;
   styleImports?: Set<string>;
+  importMap: Map<string, string>;
+  externalResolutions: Dependency;
   modularType: Extract<ModularType, 'app' | 'esm-view'>;
   isBuild: boolean;
 }
@@ -37,9 +42,11 @@ export async function writeOutputIndexFile({
   paths,
   cssEntryPoint,
   jsEntryPoint,
-  isBuild,
   styleImports,
+  importMap,
+  externalResolutions,
   modularType,
+  isBuild,
 }: CreateIndexArguments) {
   const indexContent = fs.existsSync(paths.appHtml)
     ? await fs.readFile(paths.appHtml, { encoding: 'utf-8' })
@@ -72,6 +79,22 @@ export async function writeOutputIndexFile({
   });
 
   await fs.writeFile(path.join(paths.appBuild, 'index.html'), minifiedHtml);
+
+  if (modularType === 'esm-view') {
+    const reactVersion = externalResolutions?.['react'];
+    const useReactCreateRoot = Boolean(
+      reactVersion && semver.gte(reactVersion, '18.0.0'),
+    );
+
+    const trampolineContent = createViewTrampoline({
+      fileName: path.basename(jsEntryPoint),
+      importMap,
+      useReactCreateRoot,
+    });
+
+    const trampolinePath = `${paths.appBuild}/static/js/_trampoline.js`;
+    await fs.writeFile(trampolinePath, trampolineContent);
+  }
 }
 
 export function createViewTrampoline({
