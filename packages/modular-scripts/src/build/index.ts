@@ -199,6 +199,7 @@ async function buildStandalone(
   // TODO: this becomes factored out
   const hasIndex = fs.existsSync(paths.appHtml);
 
+  console.log({ isApp, isEsbuild });
   if (!isApp) {
     if (!jsEntryPoint) {
       throw new Error("Can't find main entrypoint after building");
@@ -213,6 +214,7 @@ async function buildStandalone(
       cssEntryPoint,
       replacements: env.raw,
       styleImports,
+      includeTrampoline: true,
     });
 
     // Create and write trampoline file
@@ -249,6 +251,7 @@ async function buildStandalone(
       removeTagWhitespace: true,
     });
 
+    console.log('Writing index.html!!');
     await fs.writeFile(path.join(paths.appBuild, 'index.html'), minifiedCode);
   }
   // TODO: /END factor this out
