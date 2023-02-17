@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { views } from '../context';
 import { loading } from '../symbol';
+import 'isomorphic-fetch';
 
 import type { ManifestCheck, View } from '../types';
 import type { MicrofrontendManifest } from '@modular-scripts/modular-types';
@@ -80,7 +81,7 @@ export const useRemoteView = (
   }, [current, baseUrl, setState, loadWithIframeFallback]);
 
   if (current === undefined) {
-    setState((prev) => ({ ...prev, [baseUrl]: loading }));
+    // setState((prev) => ({ ...prev, [baseUrl]: loading }));
     return null;
   }
 

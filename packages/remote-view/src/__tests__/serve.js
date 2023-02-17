@@ -16,7 +16,6 @@ const outputPath = path.resolve(
   'remote-view',
   'output',
 );
-console.log(outputPath);
 const serve = serveStatic(outputPath);
 
 // Create server
@@ -25,4 +24,6 @@ const server = http.createServer(function onRequest(req, res) {
 });
 
 // Listen
-server.listen(8484);
+const port = 8484;
+console.log(`Static server (remote-view) launched on port ${port}`);
+server.listen(port);

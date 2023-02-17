@@ -12,11 +12,12 @@
   },
   "devDependencies": {
     "finalhandler": "^1.2.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
     "serve-static": "^1.15.0"
   },
   "dependencies": {
+    "isomorphic-fetch": "^3.0.0",
     "@modular-scripts/modular-types": "^1.1.0"
   }
 }
