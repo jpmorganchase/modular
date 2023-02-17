@@ -1,0 +1,13 @@
+{
+  "name": "remote-view-example",
+  "private": false,
+  "modular": {
+    "type": "esm-view",
+    "externalCdnTemplate": "http://localhost:8484/[name]@[version]"
+  },
+  "version": "1.0.0",
+  "dependencies": {
+    "@modular-scripts/remote-view": "*",
+    "react": "17.0.2"
+  }
+}

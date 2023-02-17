@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { RemoteViewProvider, RemoteView } from '../components';
+import { RemoteViewProvider, RemoteView } from '@modular-scripts/remote-view';
 
-export function RemoteViewExample() {
+export default function RemoteViewExample() {
   const [remoteViews] = useState([
     'http://localhost:8484/esm-view-card',
     'http://localhost:8484/esm-view-list',

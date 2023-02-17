@@ -5,19 +5,20 @@ const http = require('http');
 const serveStatic = require('serve-static');
 const finalhandler = require('finalhandler');
 
-// Serve up public/ftp folder
-const outputPath = path.resolve(
+// Serve the 2 ESM views (the build output of both)
+const esmViewsPath = path.resolve(
   __dirname,
   '..',
   '..',
   '..',
   '..',
   '__fixtures__',
-  'remote-view',
-  'output',
+  'remote-view-fake-cdn',
 );
 
-const serve = serveStatic(outputPath);
+const serve = serveStatic(esmViewsPath);
+
+// const serve = serveStatic(outputPath);
 
 // Create server
 const server = http.createServer(function onRequest(req, res) {
