@@ -16,6 +16,7 @@ const outputPath = path.resolve(
   'remote-view',
   'output',
 );
+
 const serve = serveStatic(outputPath);
 
 // Create server

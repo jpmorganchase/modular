@@ -96,35 +96,3 @@ that are expected.
 
 You can read more about how CSS is handled on the
 [Modular docs](https://modular.js.org/esm-views/external-css-imports/).
-
-## Build
-
-To [build](https://modular.js.org/commands/build) this package, run:
-
-```bash
-yarn modular build @modular-scripts/remote-view
-```
-
-## Compiling ESM view fixtures
-
-To test `<RemoteView />`, at least 2 test ESM views are needed. To this end, we
-use 2 pre-compiled ESM views in the `__fixtures__/remote-view/output` directory.
-This approach is faster and simpler than building them on-the-fly in test.
-
-For both test ESM views (`esm-view-card` and `esm-view-list`), we have set
-`"externalCdnTemplate": "http://localhost:8484/[name]@[version]"` in the Modular
-config so that we do not point to esm.sh in the output (we do not want to rely
-on esm.sh in test).
-
-To re-compile these test ESM views, the source code from
-`__fixtures__/remote-view/packages` must be copied into `packages` (so that
-Modular can see them) and run:
-
-```bash
-yarn modular build esm-view-card
-yarn modular build esm-view-list
-```
-
-Following this, copy the output from `dist` into
-`__fixtures__/remote-view/output` and the new output will be available in test.
-Also, remember to delete the two packages from `packages/`.

@@ -1,4 +1,4 @@
-import * as e from 'http://localhost:8484/react@17.0.2';
+import * as e from 'http://localhost:8484/react@17.0.2.js';
 var t = {
     d: (e, a) => {
       for (var n in a)
