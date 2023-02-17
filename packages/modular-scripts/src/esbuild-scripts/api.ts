@@ -3,13 +3,76 @@ import * as fs from 'fs-extra';
 import * as parse5 from 'parse5';
 import dedent from 'dedent';
 import escapeStringRegexp from 'escape-string-regexp';
+import minimize from 'html-minifier-terser';
+import type { ModularType } from '@modular-scripts/modular-types';
 import type { Paths } from '../utils/createPaths';
 import getModularRoot from '../utils/getModularRoot';
 import * as path from 'path';
 import { normalizeToPosix } from './utils/formatPath';
 import { Element } from 'parse5/dist/tree-adapters/default';
+import getClientEnvironment from '../esbuild-scripts/config/getClientEnvironment';
 
 type FileType = '.css' | '.js';
+
+// TODO: Do not export and rename to "indexFileTemplate"
+export const indexFile = dedent(`
+<!DOCTYPE html>
+<html>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+`);
+
+interface CreateIndexArguments {
+  paths: Paths;
+  cssEntryPoint?: string;
+  jsEntryPoint: string;
+  styleImports?: Set<string>;
+  modularType: Extract<ModularType, 'app' | 'esm-view'>;
+  isBuild: boolean;
+}
+
+export async function writeOutputIndexFile({
+  paths,
+  cssEntryPoint,
+  jsEntryPoint,
+  isBuild,
+  styleImports,
+  modularType,
+}: CreateIndexArguments) {
+  const indexContent = fs.existsSync(paths.appHtml)
+    ? await fs.readFile(paths.appHtml, { encoding: 'utf-8' })
+    : indexFile;
+
+  const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
+
+  const indexConfiguration = {
+    indexContent,
+    cssEntryPoint,
+    jsEntryPoint,
+    styleImports,
+    includeTrampoline: modularType === 'esm-view',
+    includeRuntime: !isBuild,
+    replacements: env.raw,
+  };
+
+  const html = compileIndex(indexConfiguration);
+  const minifiedHtml = await minimize.minify(html, {
+    html5: true,
+    collapseBooleanAttributes: true,
+    collapseWhitespace: true,
+    collapseInlineTagWhitespace: true,
+    decodeEntities: true,
+    minifyCSS: true,
+    minifyJS: true,
+    removeAttributeQuotes: false,
+    removeComments: true,
+    removeTagWhitespace: true,
+  });
+
+  await fs.writeFile(path.join(paths.appBuild, 'index.html'), minifiedHtml);
+}
 
 export function createViewTrampoline({
   fileName,
@@ -70,15 +133,6 @@ export function getEntryPoint(
   }
 }
 
-export const indexFile = `
-<!DOCTYPE html>
-<html>
-  <body>
-    <div id="root"></div>
-  </body>
-</html>
-`;
-
 // TODO: this function goes away
 export async function createIndex({
   paths,
@@ -136,6 +190,7 @@ export function createSyntheticIndex({
   });
 }
 
+// TODO: this function should not be exported anymore
 export function compileIndex({
   indexContent,
   cssEntryPoint,

@@ -2,7 +2,6 @@ import { paramCase as toParamCase } from 'change-case';
 import chalk from 'chalk';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import * as minimize from 'html-minifier-terser';
 import type { CoreProperties } from '@schemastore/package';
 import type { ModularType } from '@modular-scripts/modular-types';
 
@@ -21,12 +20,10 @@ import type { StatsCompilation } from 'webpack';
 import { checkBrowsers } from '../utils/checkBrowsers';
 import checkRequiredFiles from '../utils/checkRequiredFiles';
 import createEsbuildBrowserslistTarget from '../utils/createEsbuildBrowserslistTarget';
-import getClientEnvironment from '../esbuild-scripts/config/getClientEnvironment';
 import {
-  compileIndex,
+  writeOutputIndexFile,
   getEntryPoint,
   createViewTrampoline,
-  indexFile,
 } from '../esbuild-scripts/api';
 import {
   webpackMeasureFileSizesBeforeBuild,
@@ -41,6 +38,7 @@ import { isReactNewApi } from '../utils/isReactNewApi';
 import { getConfig } from '../utils/config';
 import { getAllWorkspaces } from '../utils/getAllWorkspaces';
 
+// TODO: This should be in a separate file
 async function buildStandalone(
   target: string,
   type: Extract<ModularType, 'app' | 'esm-view'>,
@@ -191,32 +189,24 @@ async function buildStandalone(
     }
   }
 
-  const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
-  let html: string;
+  if (!jsEntryPoint) {
+    throw new Error("Can't find main entrypoint after building");
+  }
 
-  // If view, write the synthetic index.html and create a trampoline file pointing to the main entrypoint
-  // This is for both esbuild and webpack so it lives here. If app, instead, the public/index.html file is generated specifical in different ways.
-  // TODO: this becomes factored out
-  const hasIndex = fs.existsSync(paths.appHtml);
-
-  console.log({ isApp, isEsbuild });
-  if (!isApp) {
-    if (!jsEntryPoint) {
-      throw new Error("Can't find main entrypoint after building");
-    }
-    // esm-view with esbuild or webpack
-
-    // Create synthetic index
-    html = compileIndex({
-      indexContent: hasIndex
-        ? await fs.readFile(paths.appHtml, { encoding: 'utf-8' })
-        : indexFile,
+  // TODO: this conditional is here to exclude app + Webpack builds until the Webpack conf is in typescript; this needs to go away before the conclusion of this PR
+  if (!isApp || isEsbuild) {
+    await writeOutputIndexFile({
+      paths,
       cssEntryPoint,
-      replacements: env.raw,
+      jsEntryPoint,
       styleImports,
-      includeTrampoline: true,
+      modularType: type,
+      isBuild: true,
     });
+  }
 
+  // TODO: this conditional + write should be in the "writeESMTrampoline" function
+  if (!isApp) {
     // Create and write trampoline file
     const trampolineContent = createViewTrampoline({
       fileName: path.basename(jsEntryPoint),
@@ -226,35 +216,7 @@ async function buildStandalone(
 
     const trampolinePath = `${paths.appBuild}/static/js/_trampoline.js`;
     await fs.writeFile(trampolinePath, trampolineContent);
-  } else if (isEsbuild) {
-    // app with esbuild
-    html = compileIndex({
-      indexContent: await fs.readFile(paths.appHtml, { encoding: 'utf-8' }),
-      cssEntryPoint,
-      jsEntryPoint,
-      replacements: env.raw,
-      includeRuntime: false,
-    });
   }
-
-  if (!isApp || isEsbuild) {
-    const minifiedCode = await minimize.minify(html!, {
-      html5: true,
-      collapseBooleanAttributes: true,
-      collapseWhitespace: true,
-      collapseInlineTagWhitespace: true,
-      decodeEntities: true,
-      minifyCSS: true,
-      minifyJS: true,
-      removeAttributeQuotes: false,
-      removeComments: true,
-      removeTagWhitespace: true,
-    });
-
-    console.log('Writing index.html!!');
-    await fs.writeFile(path.join(paths.appBuild, 'index.html'), minifiedCode);
-  }
-  // TODO: /END factor this out
 
   // Add dependencies from source and bundled dependencies to target package.json
   const targetPackageJson = (await fs.readJSON(
