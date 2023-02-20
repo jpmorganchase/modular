@@ -1,98 +1,96 @@
-/* eslint-disable testing-library/prefer-screen-queries */
+import React, { useState } from 'react';
+import { render, screen, waitFor } from '@testing-library/react';
+import { RemoteViewProvider, RemoteView } from '../components';
 
-import path from 'path';
-import puppeteer from 'puppeteer';
-import { getDocument, queries, waitFor } from 'pptr-testing-library';
-import { spawn } from 'child_process';
+function FakeComponentA() {
+  return <div>Faked dynamically imported module A</div>;
+}
 
-const controller = new AbortController();
+function FakeComponentB() {
+  return <div>Faked dynamically imported module B</div>;
+}
 
-// Launch a tiny fake ESM cdn
-// See serve.js
-function bootFakeEsmCdn() {
-  return new Promise((res) => {
-    const serverPath = path.join(__dirname, 'serve.js');
-    const server = spawn('node', [serverPath], {
-      signal: controller.signal,
-    });
-    // Resolve the promise when the server has finished booting
-    server.stdout.on('data', function (data: Buffer) {
-      if (data.toString().includes('launched on port 8484')) {
-        res(true);
+const mockedManifestA = {
+  name: 'fake-component-a',
+  version: '1.0.0',
+  modular: {
+    type: 'esm-view',
+    externalCdnTemplate: 'http://localhost:8484/[name]@[version]',
+  },
+  dependencies: { react: '17.0.2' },
+  bundledDependencies: [],
+  module: '/static/js/main.abcd1234-a.js',
+};
+const mockedManifestB = {
+  ...mockedManifestA,
+  name: 'fake-component-b',
+  module: '/static/js/main.abcd1234-b.js',
+};
+
+jest.mock('../utils/dynamicallyImport', () => {
+  let n = 0;
+  return {
+    dynamicallyImport: () => {
+      if (n === 0) {
+        n += 1;
+        return FakeComponentA;
       }
-    });
-    server.unref();
-  });
+
+      return FakeComponentB;
+    },
+  };
+});
+
+function getMicrofrontendExample() {
+  return function MicrofrontendExample() {
+    const [remoteViews] = useState([
+      'http://localhost:8484/esm-view-card',
+      'http://localhost:8484/esm-view-list',
+    ]);
+
+    return (
+      <RemoteViewProvider>
+        {remoteViews.map((v, key) => (
+          <section key={key}>
+            <RemoteView baseUrl={v} />
+          </section>
+        ))}
+      </RemoteViewProvider>
+    );
+  };
 }
 
 describe('remote-view', () => {
-  let browser: puppeteer.Browser;
+  beforeEach(() => {
+    let n = 0;
+    global.fetch = jest.fn(() => {
+      const manifest = n === 0 ? mockedManifestA : mockedManifestB;
+      n += 1;
 
-  beforeAll(async () => {
-    await bootFakeEsmCdn();
-
-    const launchArgs: puppeteer.LaunchOptions &
-      puppeteer.BrowserLaunchArgumentOptions = {
-      // always run in headless - if you want to debug this locally use the env var to
-      headless: !Boolean(process.env.NO_HEADLESS_TESTS),
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    };
-
-    browser = await puppeteer.launch(launchArgs);
+      return Promise.resolve({
+        json: () => manifest,
+      });
+    }) as jest.Mock;
+    // fetch.mockImplementationOnce(() => Promise.reject("API is down"));
   });
 
-  afterAll(async () => {
-    // Terminate the fake ESM CDN after tests have run
-    controller.abort();
+  it('should render a microfrontend example', async () => {
+    const Example = getMicrofrontendExample();
 
-    // Terminate the puppeteer browser
-    if (browser) {
-      await browser.close();
-    }
-  });
+    render(<Example />);
 
-  // TODO
-  // This is working, but is an integration test (so 0 coverage)
-  // Next steps:
-  // - Add checks of the list component to this
-  // - Add another test, that mocks out the import bit (move to a fn, probably)
-  // - Update the contributing docs after moving stuff into `remote-view-fake-cdn`
-  // - Address PR TODOs
-  // That will allow high unit test coverage, plus a deep integration test
-
-  it('should render the example remote view and work', async () => {
-    const page = await browser.newPage();
-    await page.goto('http://localhost:8484/index.html', {});
-
-    // 1. The card should render with it's default content
-    const $document = await getDocument(page);
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    await waitFor(() => queries.findByText($document, 'Some card contents'));
-
-    const $button = await queries.findByText($document, 'Change card content');
-    // eslint-disable-next-line jest-dom/prefer-in-document
-    expect($button).toBeTruthy();
-
-    // 2. Clicking the button should work
-    const buttonSelector = 'button';
-    await page.waitForSelector(buttonSelector);
-    await page.click(buttonSelector);
-
-    const $updated = await queries.findByText(
-      $document,
-      'Some mutated card contents',
+    await waitFor(() =>
+      screen.findByText('Faked dynamically imported module A'),
     );
-    // eslint-disable-next-line jest-dom/prefer-in-document
-    expect($updated).toBeTruthy();
-
-    // 3. React & ReactDOM still work, the content of the remote view got updated
-    const contentSelector = 'span';
-    const updatedContentSelector = await page.waitForSelector(contentSelector);
-    const updatedContent = await updatedContentSelector?.evaluate(
-      (el) => el.textContent,
+    await waitFor(() =>
+      screen.findByText('Faked dynamically imported module B'),
     );
-    expect(updatedContent).toBe('Some mutated card contents');
 
-    // TODO other view
+    expect(
+      screen.getByText('Faked dynamically imported module A'),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('Faked dynamically imported module B'),
+    ).toBeInTheDocument();
   });
 });

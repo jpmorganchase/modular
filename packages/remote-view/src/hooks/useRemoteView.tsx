@@ -1,10 +1,11 @@
 import React, { useContext, useEffect } from 'react';
 import { views } from '../context';
-import { loading } from '../symbol';
+import { loading } from '../utils/symbol';
 import 'isomorphic-fetch';
 
-import type { ManifestCheck, View } from '../types';
+import type { ManifestCheck } from '../types';
 import type { MicrofrontendManifest } from '@modular-scripts/modular-types';
+import { dynamicallyImport } from '../utils/dynamicallyImport';
 
 async function loadRemoteView(
   baseUrl: string,
@@ -42,9 +43,7 @@ async function loadRemoteView(
 
   // Dynamically import ESM entrypoint
   if (manifest.module) {
-    const { default: LoadedView } = (await import(
-      /* webpackIgnore: true */ `${baseUrl}${manifest.module}`
-    )) as View;
+    const LoadedView = await dynamicallyImport(baseUrl, manifest.module);
 
     return LoadedView;
   }

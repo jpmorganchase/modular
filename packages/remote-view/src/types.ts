@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { loading } from './symbol';
+import { loading } from './utils/symbol';
 
 import type { MicrofrontendManifest } from '@modular-scripts/modular-types';
 
