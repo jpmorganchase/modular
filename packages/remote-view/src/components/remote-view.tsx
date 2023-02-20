@@ -9,7 +9,7 @@ interface Props {
 }
 
 function DefaultLoading() {
-  return <div data-testid="remote-view-loading">Loading</div>;
+  return <div>Loading</div>;
 }
 
 export function RemoteView({
