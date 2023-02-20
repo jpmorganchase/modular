@@ -2,15 +2,23 @@ import React from 'react';
 import { useRemoteView } from '../hooks/useRemoteView';
 
 import type { ManifestCheck } from '../types';
-
-export const RemoteView = ({
-  baseUrl,
-  loadWithIframeFallback,
-}: {
+interface Props {
   baseUrl: string;
   loadWithIframeFallback?: ManifestCheck;
-}): JSX.Element => {
-  const ViewComponent = useRemoteView(baseUrl, loadWithIframeFallback);
+  loading?: JSX.Element;
+}
 
-  return (ViewComponent && <ViewComponent />) || <div>Loading</div>;
-};
+function DefaultLoading() {
+  return <div data-testid="remote-view-loading">Loading</div>;
+}
+
+export function RemoteView({
+  baseUrl,
+  loadWithIframeFallback,
+  loading,
+}: Props) {
+  const ViewComponent = useRemoteView(baseUrl, loadWithIframeFallback);
+  const loadingOutput = loading ? loading : <DefaultLoading />;
+
+  return (ViewComponent && <ViewComponent />) || loadingOutput;
+}
