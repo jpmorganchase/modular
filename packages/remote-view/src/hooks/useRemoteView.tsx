@@ -59,6 +59,11 @@ function injectRemoteCss(url: string) {
     return;
   }
 
+  /**
+   * Warning!
+   * <RemoteView /> should only be used to render content from a trusted source.
+   * `url` should never be the result of, or exposed to, end user input.
+   */
   node.insertAdjacentHTML(
     'beforeend',
     `<link rel='stylesheet' href='${url}' />`,

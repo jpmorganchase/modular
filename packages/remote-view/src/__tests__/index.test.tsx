@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import {
+  render,
+  screen,
+  waitFor,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import {
   RemoteViewProvider,
   RemoteView,
@@ -24,6 +29,7 @@ const mockedManifestA = {
   dependencies: { react: '17.0.2' },
   bundledDependencies: [],
   module: '/static/js/main.abcd1234-a.js',
+  styleImports: ['http://example.com/fake-path/fake-css.css'],
 };
 const mockedManifestB = {
   ...mockedManifestA,
@@ -155,24 +161,23 @@ describe('remote-view', () => {
       );
     });
 
-    // eslint-disable-next-line jest/no-commented-out-tests
-    // it('should render using a custom loader', async () => {
-    //   const Example = getMicrofrontendExample(
-    //     true,
-    //     <div>Custom loader</div>,
-    //     undefined,
-    //   );
+    it('should render using a custom loader', async () => {
+      const Example = getMicrofrontendExample(
+        false,
+        <div>Custom loader</div>,
+        undefined,
+      );
 
-    //   // eslint-disable-next-line testing-library/no-debugging-utils
-    //   screen.debug();
+      render(<Example />);
 
-    //   render(<Example />);
+      // Custom loaders available right away
+      const customLoaders = screen.getAllByText('Custom loader');
+      expect(customLoaders).toHaveLength(2);
 
-    //   await waitFor(() => screen.findByText('Custom loader'));
-
-    //   const customLoader = screen.getByText('Custom loader');
-    //   expect(customLoader).toBeInTheDocument();
-    // });
+      await waitForElementToBeRemoved(() =>
+        screen.queryAllByText('Custom loader'),
+      );
+    });
   });
 
   describe('for unsupported manifests', () => {

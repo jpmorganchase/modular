@@ -8,7 +8,7 @@ function parsePackageName(name) {
   if (!parsedName) {
     return;
   }
-  const [_, scope, module, submodule] = parsedName;
+  const [, scope, module, submodule] = parsedName;
   const dependencyName = (scope ? `${scope}/` : '') + module;
   return { dependencyName, scope, module, submodule };
 }
