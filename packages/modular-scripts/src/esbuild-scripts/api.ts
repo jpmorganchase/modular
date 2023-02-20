@@ -24,7 +24,7 @@ const indexFileTemplate = dedent(`
   </body>
 </html>
 `);
-interface CreateIndexArguments {
+interface WriteFilesArguments {
   paths: Paths;
   cssEntryPoint?: string;
   jsEntryPoint: string;
@@ -35,7 +35,7 @@ interface CreateIndexArguments {
   isBuild: boolean;
 }
 
-export async function writeOutputIndexFile({
+export async function writeOutputIndexFiles({
   paths,
   cssEntryPoint,
   jsEntryPoint,
@@ -44,7 +44,7 @@ export async function writeOutputIndexFile({
   externalResolutions,
   modularType,
   isBuild,
-}: CreateIndexArguments) {
+}: WriteFilesArguments) {
   const indexContent = fs.existsSync(paths.appHtml)
     ? await fs.readFile(paths.appHtml, { encoding: 'utf-8' })
     : indexFileTemplate;
@@ -92,6 +92,42 @@ export async function writeOutputIndexFile({
     const trampolinePath = `${paths.appBuild}/static/js/_trampoline.js`;
     await fs.writeFile(trampolinePath, trampolineContent);
   }
+}
+
+export async function createStartIndex({
+  paths,
+  metafile,
+  replacements,
+  styleImports,
+  isApp,
+}: {
+  paths: Paths;
+  metafile: esbuild.Metafile | undefined;
+  replacements: Record<string, string>;
+  styleImports?: Set<string>;
+  isApp: boolean;
+}): Promise<string> {
+  const indexContent = (await fs.pathExists(paths.appHtml))
+    ? await fs.readFile(paths.appHtml, { encoding: 'utf-8' })
+    : indexFileTemplate;
+  const cssEntryPoint = metafile
+    ? normalizeToPosix(getEntryPoint(paths, metafile, '.css'))
+    : undefined;
+  const jsEntryPoint = metafile
+    ? normalizeToPosix(getEntryPoint(paths, metafile, '.js'))
+    : undefined;
+
+  const configuration = {
+    indexContent,
+    cssEntryPoint,
+    jsEntryPoint,
+    replacements,
+    includeRuntime: true,
+    includeTrampoline: !isApp,
+    styleImports,
+  };
+
+  return compileIndex(configuration);
 }
 
 export function createViewTrampoline({
@@ -151,42 +187,6 @@ export function getEntryPoint(
   } else {
     return undefined;
   }
-}
-
-export async function createStartIndex({
-  paths,
-  metafile,
-  replacements,
-  styleImports,
-  isApp,
-}: {
-  paths: Paths;
-  metafile: esbuild.Metafile | undefined;
-  replacements: Record<string, string>;
-  styleImports?: Set<string>;
-  isApp: boolean;
-}): Promise<string> {
-  const indexContent = (await fs.pathExists(paths.appHtml))
-    ? await fs.readFile(paths.appHtml, { encoding: 'utf-8' })
-    : indexFileTemplate;
-  const cssEntryPoint = metafile
-    ? normalizeToPosix(getEntryPoint(paths, metafile, '.css'))
-    : undefined;
-  const jsEntryPoint = metafile
-    ? normalizeToPosix(getEntryPoint(paths, metafile, '.js'))
-    : undefined;
-
-  const configuration = {
-    indexContent,
-    cssEntryPoint,
-    jsEntryPoint,
-    replacements,
-    includeRuntime: true,
-    includeTrampoline: !isApp,
-    styleImports,
-  };
-
-  return compileIndex(configuration);
 }
 
 function compileIndex({

@@ -20,7 +20,7 @@ import type { StatsCompilation } from 'webpack';
 import { checkBrowsers } from '../utils/checkBrowsers';
 import checkRequiredFiles from '../utils/checkRequiredFiles';
 import createEsbuildBrowserslistTarget from '../utils/createEsbuildBrowserslistTarget';
-import { writeOutputIndexFile, getEntryPoint } from '../esbuild-scripts/api';
+import { writeOutputIndexFiles, getEntryPoint } from '../esbuild-scripts/api';
 import {
   webpackMeasureFileSizesBeforeBuild,
   createWebpackAssets,
@@ -192,7 +192,7 @@ async function buildStandalone(
 
   // TODO: this conditional is here to exclude app + Webpack builds until the Webpack conf is in typescript; this needs to go away before the conclusion of this PR
   if (!isApp || isEsbuild) {
-    await writeOutputIndexFile({
+    await writeOutputIndexFiles({
       paths,
       cssEntryPoint,
       jsEntryPoint,
