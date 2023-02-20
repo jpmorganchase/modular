@@ -10,7 +10,6 @@ import { Paths } from '../../utils/determineTargetPaths';
 import { WebpackConfiguration } from 'webpack-dev-server';
 
 export default async function buildWebpack(
-  targetPath: string,
   esbuildTargetFactory: string[],
   isApp: boolean,
   dependencyMap: Map<string, string>,

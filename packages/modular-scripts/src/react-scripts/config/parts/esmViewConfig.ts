@@ -28,10 +28,18 @@ export function createEsmViewConfig(
 
 function createExternalRewriter(dependencyMap: Map<string, string>) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return function test(request: any, callback: any) {
+  return function test({ request }: any, callback: any) {
+    console.log(`Request: ${JSON.stringify(request)}`);
+    console.log('I CAN LOG HERE');
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const parsedModule = parsePackageName(request);
+    console.log(parsedModule.dependencyName);
+    console.log(parsedModule.module);
+    console.log(parsedModule.scope);
+    console.log(parsedModule.submodule);
     // If the module is absolute and it is in the import map, we want to externalise it
+
+    console.log(JSON.stringify(parsedModule));
     if (
       parsedModule &&
       parsedModule.dependencyName &&
@@ -40,9 +48,10 @@ function createExternalRewriter(dependencyMap: Map<string, string>) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       !request.endsWith('.css')
     ) {
+      console.log('this logic is happening');
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const toRewrite = rewriteModuleSpecifier(dependencyMap, request);
-
+      console.log(toRewrite);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
       return callback(null, toRewrite);
     }
@@ -95,16 +104,16 @@ export function createEsmViewPluginConfig(
         (new HtmlWebpackPlugin({
           inject: true,
           templateContent: `
-                  <!DOCTYPE html>
-                  <head>
-                  ${importUrlLinks.join()}
-                  </head>
-                  <html>
-                    <body>
-                      <div id="root"></div>
-                    </body>
-                  </html>
-                  `,
+                <!DOCTYPE html>
+                <head>
+                  ${importUrlLinks.join('\n')}
+                </head>
+                <html>
+                  <body>
+                    <div id="root"></div>
+                  </body>
+                </html>
+                `,
           scriptLoading: 'module',
         }) as WebpackPluginInstance),
     ].filter(Boolean) as WebpackPluginInstance[],

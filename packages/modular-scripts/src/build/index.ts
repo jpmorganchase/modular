@@ -136,10 +136,8 @@ async function buildStandalone(
     // If it's an app, set it at ESBUILD_TARGET_FACTORY or default to es2015
     // If it's not an app it's an ESM view, then we need es2020
     const esbuildTargetFactory = isApp ? browserTarget : ['es2020'];
-    let targetPath = await getWorkspaceLocation(target);
 
     await buildWebpack(
-      targetPath,
       esbuildTargetFactory,
       isApp,
       importMap,
