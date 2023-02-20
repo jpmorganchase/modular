@@ -16,8 +16,7 @@ import type { Dependency } from '@schemastore/package';
 
 type FileType = '.css' | '.js';
 
-// TODO: Do not export and rename to "indexFileTemplate"
-export const indexFile = dedent(`
+export const indexFileTemplate = dedent(`
 <!DOCTYPE html>
 <html>
   <body>
@@ -25,8 +24,6 @@ export const indexFile = dedent(`
   </body>
 </html>
 `);
-
-// TODO: Move this + createViewTrampoline to the build directory, instead of esbuild
 interface CreateIndexArguments {
   paths: Paths;
   cssEntryPoint?: string;
@@ -50,7 +47,7 @@ export async function writeOutputIndexFile({
 }: CreateIndexArguments) {
   const indexContent = fs.existsSync(paths.appHtml)
     ? await fs.readFile(paths.appHtml, { encoding: 'utf-8' })
-    : indexFile;
+    : indexFileTemplate;
 
   const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
 
@@ -156,8 +153,7 @@ export function getEntryPoint(
   }
 }
 
-// TODO: this function goes away
-export async function createIndex({
+export async function createStartIndex({
   paths,
   metafile,
   replacements,
@@ -194,27 +190,7 @@ export async function createIndex({
   });
 }
 
-// TODO: this function goes away
-export function createSyntheticIndex({
-  cssEntryPoint,
-  replacements,
-  styleImports,
-}: {
-  cssEntryPoint: string | undefined;
-  replacements: Record<string, string>;
-  styleImports?: Set<string>;
-}): string {
-  return compileIndex({
-    indexContent: indexFile,
-    cssEntryPoint,
-    replacements,
-    includeTrampoline: true,
-    styleImports,
-  });
-}
-
-// TODO: this function should not be exported anymore
-export function compileIndex({
+function compileIndex({
   indexContent,
   cssEntryPoint,
   jsEntryPoint,

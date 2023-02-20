@@ -25,7 +25,11 @@ import firstCompilePlugin from './plugins/firstCompile';
 import openBrowser from '../utils/openBrowser';
 import * as logger from '../../utils/logger';
 import prepareUrls, { InstructionURLS } from '../config/urls';
-import { createIndex, indexFile, createViewTrampoline } from '../api';
+import {
+  createStartIndex,
+  createViewTrampoline,
+  indexFileTemplate,
+} from '../api';
 import createEsbuildConfig from '../config/createEsbuildConfig';
 import createLaunchEditorMiddleware from '../../../react-dev-utils/errorOverlayMiddleware.js';
 import getHost from './utils/getHost';
@@ -279,7 +283,7 @@ class DevServer {
     res.writeHead(200);
     if (this.isApp) {
       res.end(
-        await createIndex({
+        await createStartIndex({
           paths: this.paths,
           metafile: this.metafile,
           replacements: this.env.raw,
@@ -288,12 +292,12 @@ class DevServer {
       );
     } else {
       res.end(
-        await createIndex({
+        await createStartIndex({
           paths: this.paths,
           metafile: this.metafile,
           replacements: this.env.raw,
           includeRuntime: true,
-          indexContent: indexFile,
+          indexContent: indexFileTemplate,
           includeTrampoline: true,
           styleImports: this.styleImports,
         }),
