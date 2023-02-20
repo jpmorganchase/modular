@@ -16,7 +16,7 @@ import type { Dependency } from '@schemastore/package';
 
 type FileType = '.css' | '.js';
 
-export const indexFileTemplate = dedent(`
+const indexFileTemplate = dedent(`
 <!DOCTYPE html>
 <html>
   <body>
@@ -157,21 +157,18 @@ export async function createStartIndex({
   paths,
   metafile,
   replacements,
-  includeRuntime,
-  indexContent,
-  includeTrampoline,
   styleImports,
+  isApp,
 }: {
   paths: Paths;
   metafile: esbuild.Metafile | undefined;
   replacements: Record<string, string>;
-  includeRuntime: boolean;
-  indexContent?: string;
-  includeTrampoline?: boolean;
   styleImports?: Set<string>;
+  isApp: boolean;
 }): Promise<string> {
-  const index =
-    indexContent ?? (await fs.readFile(paths.appHtml, { encoding: 'utf-8' }));
+  const indexContent = (await fs.pathExists(paths.appHtml))
+    ? await fs.readFile(paths.appHtml, { encoding: 'utf-8' })
+    : indexFileTemplate;
   const cssEntryPoint = metafile
     ? normalizeToPosix(getEntryPoint(paths, metafile, '.css'))
     : undefined;
@@ -179,15 +176,17 @@ export async function createStartIndex({
     ? normalizeToPosix(getEntryPoint(paths, metafile, '.js'))
     : undefined;
 
-  return compileIndex({
-    indexContent: index,
+  const configuration = {
+    indexContent,
     cssEntryPoint,
     jsEntryPoint,
     replacements,
-    includeRuntime,
-    includeTrampoline,
+    includeRuntime: true,
+    includeTrampoline: !isApp,
     styleImports,
-  });
+  };
+
+  return compileIndex(configuration);
 }
 
 function compileIndex({
