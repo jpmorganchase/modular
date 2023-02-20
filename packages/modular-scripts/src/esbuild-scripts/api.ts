@@ -27,16 +27,13 @@ export const indexFile = dedent(`
 `);
 
 // TODO: Move this + createViewTrampoline to the build directory, instead of esbuild
-interface WriteOutputArguments extends CreateIndexArguments {
-  importMap: Map<string, string>;
-  externalResolutions: Dependency;
-}
-
 interface CreateIndexArguments {
   paths: Paths;
   cssEntryPoint?: string;
   jsEntryPoint: string;
   styleImports?: Set<string>;
+  importMap: Map<string, string>;
+  externalResolutions: Dependency;
   modularType: Extract<ModularType, 'app' | 'esm-view'>;
   isBuild: boolean;
 }
@@ -48,42 +45,6 @@ export async function writeOutputIndexFile({
   styleImports,
   importMap,
   externalResolutions,
-  modularType,
-  isBuild,
-}: WriteOutputArguments) {
-  const minifiedHtml = createOutputIndexFile({
-    paths,
-    cssEntryPoint,
-    jsEntryPoint,
-    styleImports,
-    modularType,
-    isBuild,
-  });
-
-  await fs.writeFile(path.join(paths.appBuild, 'index.html'), minifiedHtml);
-
-  if (modularType === 'esm-view') {
-    const reactVersion = externalResolutions?.['react'];
-    const useReactCreateRoot = Boolean(
-      reactVersion && semver.gte(reactVersion, '18.0.0'),
-    );
-
-    const trampolineContent = createViewTrampoline({
-      fileName: path.basename(jsEntryPoint),
-      importMap,
-      useReactCreateRoot,
-    });
-
-    const trampolinePath = `${paths.appBuild}/static/js/_trampoline.js`;
-    await fs.writeFile(trampolinePath, trampolineContent);
-  }
-}
-
-export async function createOutputIndexFile({
-  paths,
-  cssEntryPoint,
-  jsEntryPoint,
-  styleImports,
   modularType,
   isBuild,
 }: CreateIndexArguments) {
@@ -117,7 +78,23 @@ export async function createOutputIndexFile({
     removeTagWhitespace: true,
   });
 
-  return minifiedHtml;
+  await fs.writeFile(path.join(paths.appBuild, 'index.html'), minifiedHtml);
+
+  if (modularType === 'esm-view') {
+    const reactVersion = externalResolutions?.['react'];
+    const useReactCreateRoot = Boolean(
+      reactVersion && semver.gte(reactVersion, '18.0.0'),
+    );
+
+    const trampolineContent = createViewTrampoline({
+      fileName: path.basename(jsEntryPoint),
+      importMap,
+      useReactCreateRoot,
+    });
+
+    const trampolinePath = `${paths.appBuild}/static/js/_trampoline.js`;
+    await fs.writeFile(trampolinePath, trampolineContent);
+  }
 }
 
 export function createViewTrampoline({
