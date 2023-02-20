@@ -1,4 +1,5 @@
 import { buildStandalone } from './buildStandalone';
+import { buildPackage } from './buildPackage';
 import * as logger from '../utils/logger';
 import getModularRoot from '../utils/getModularRoot';
 import actionPreflightCheck from '../utils/actionPreflightCheck';
@@ -69,10 +70,6 @@ async function build({
         if (targetType === 'app' || targetType === 'esm-view') {
           await buildStandalone(target, targetType);
         } else {
-          const { buildPackage } = await import('./buildPackage');
-          // ^ we do a dynamic import here to defer the module's loading
-          // till when it's actually needed
-
           await buildPackage(target, preserveModules, includePrivate);
         }
       } else {
