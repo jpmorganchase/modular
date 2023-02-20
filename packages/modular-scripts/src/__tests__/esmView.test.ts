@@ -28,10 +28,8 @@ let buildOutputJsEntrypointPath: string;
 const { getNodeText } = queries;
 
 // These tests must be executed sequentially with `--runInBand`.
-
-const targetedView = 'sample-esm-view';
-
-describe('modular-scripts', () => {
+describe('modular working with an esm-view', () => {
+  const targetedView = 'sample-esm-view';
   beforeAll(async () => {
     tempModularRepo = createModularTestContext();
     tempPackagesPath = path.join(tempModularRepo, 'packages');
@@ -131,14 +129,17 @@ describe('modular-scripts', () => {
     let buildOutputPackageJson: CoreProperties;
 
     beforeAll(async () => {
-      buildSampleEsmView(tempModularRepo, {
+      buildSampleEsmView(targetedView, tempModularRepo, {
         env: {
           USE_MODULAR_ESBUILD: 'true',
         },
       });
       [buildOutputJsEntrypoint, buildOutputJsEntrypointPath] =
-        await getBuildOutputEntrypoint(tempDistPath);
-      buildOutputPackageJson = await getBuildOutputPackageJson(tempDistPath);
+        await getBuildOutputEntrypoint(targetedView, tempDistPath);
+      buildOutputPackageJson = await getBuildOutputPackageJson(
+        targetedView,
+        tempDistPath,
+      );
     });
 
     it('THEN outputs the correct package.json in the dist directory', () => {
@@ -162,7 +163,11 @@ describe('modular-scripts', () => {
     it('THEN outputs a JS entrypoint file', () => {
       expect(
         fs.existsSync(
-          getPackageEntryPointPath(tempDistPath, buildOutputJsEntrypointPath),
+          getPackageEntryPointPath(
+            targetedView,
+            tempDistPath,
+            buildOutputJsEntrypointPath,
+          ),
         ),
       ).toBeTruthy();
     });
@@ -170,7 +175,7 @@ describe('modular-scripts', () => {
 
   describe('WHEN building a esm-view with a custom ESM CDN', () => {
     beforeAll(async () => {
-      buildSampleEsmView(tempModularRepo, {
+      buildSampleEsmView(targetedView, tempModularRepo, {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
@@ -178,27 +183,34 @@ describe('modular-scripts', () => {
       });
 
       [buildOutputJsEntrypoint, buildOutputJsEntrypointPath] =
-        await getBuildOutputEntrypoint(tempDistPath);
+        await getBuildOutputEntrypoint(targetedView, tempDistPath);
     });
 
     it('THEN rewrites the dependencies according to the template string', async () => {
       const trampolineFile = (
         await fs.readFile(
-          path.join(getBuildStaticJsDirPath(tempDistPath), '_trampoline.js'),
+          path.join(
+            getBuildStaticJsDirPath(targetedView, tempDistPath),
+            '_trampoline.js',
+          ),
         )
       ).toString();
 
       expect(trampolineFile).toContain(`https://mycustomcdn.net/react@`);
       expect(trampolineFile).toContain(`https://mycustomcdn.net/react-dom@^`);
       expect(
-        await getIndexFile(tempDistPath, buildOutputJsEntrypoint),
+        await getIndexFile(targetedView, tempDistPath, buildOutputJsEntrypoint),
       ).toContain(`https://mycustomcdn.net/react@`);
     });
 
     it('THEN outputs a JS entrypoint file', () => {
       expect(
         fs.existsSync(
-          getPackageEntryPointPath(tempDistPath, buildOutputJsEntrypointPath),
+          getPackageEntryPointPath(
+            targetedView,
+            tempDistPath,
+            buildOutputJsEntrypointPath,
+          ),
         ),
       ).toBeTruthy();
     });
@@ -211,7 +223,7 @@ describe('modular-scripts', () => {
         path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
       );
 
-      await addToPackageJson(tempPackagesPath, {
+      await addToPackageJson(targetedView, tempPackagesPath, {
         dependencies: {
           lodash: '^4.17.21',
           'lodash.merge': '^4.6.2',
@@ -221,7 +233,7 @@ describe('modular-scripts', () => {
 
       await runYarn();
 
-      buildSampleEsmView(tempModularRepo, {
+      buildSampleEsmView(targetedView, tempModularRepo, {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
@@ -229,11 +241,14 @@ describe('modular-scripts', () => {
       });
 
       [buildOutputJsEntrypoint, buildOutputJsEntrypointPath] =
-        await getBuildOutputEntrypoint(tempDistPath);
+        await getBuildOutputEntrypoint(targetedView, tempDistPath);
     });
 
     it('THEN a manifest is generated with the styleImports field pointing to the external CSS dependency, rewritten to CDN', async () => {
-      const manifestContent = await getBuildOutputPackageJson(tempDistPath);
+      const manifestContent = await getBuildOutputPackageJson(
+        targetedView,
+        tempDistPath,
+      );
       expect(manifestContent['styleImports']).toEqual([
         'https://mycustomcdn.net/regular-table@^0.5.6/dist/css/material.css',
       ]);
@@ -249,6 +264,7 @@ describe('modular-scripts', () => {
 
     it('THEN rewrites the dependencies', async () => {
       const indexFile = await getIndexFile(
+        targetedView,
         tempDistPath,
         buildOutputJsEntrypoint,
       );
@@ -264,7 +280,11 @@ describe('modular-scripts', () => {
     it('THEN outputs a JS entrypoint file', () => {
       expect(
         fs.existsSync(
-          getPackageEntryPointPath(tempDistPath, buildOutputJsEntrypointPath),
+          getPackageEntryPointPath(
+            targetedView,
+            tempDistPath,
+            buildOutputJsEntrypointPath,
+          ),
         ),
       ).toBeTruthy();
     });
@@ -277,7 +297,7 @@ describe('modular-scripts', () => {
         path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
       );
 
-      await addToPackageJson(tempPackagesPath, {
+      await addToPackageJson(targetedView, tempPackagesPath, {
         dependencies: {
           lodash: '^4.17.21',
           'lodash.merge': '^4.6.2',
@@ -287,18 +307,19 @@ describe('modular-scripts', () => {
 
       await runYarn();
 
-      buildSampleEsmView(tempModularRepo, {
+      buildSampleEsmView(targetedView, tempModularRepo, {
         env: {
           EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
         },
       });
 
       [buildOutputJsEntrypoint, buildOutputJsEntrypointPath] =
-        await getBuildOutputEntrypoint(tempDistPath);
+        await getBuildOutputEntrypoint(targetedView, tempDistPath);
     });
 
     it('THEN rewrites the dependencies', async () => {
       const indexFile = await getIndexFile(
+        targetedView,
         tempDistPath,
         buildOutputJsEntrypoint,
       );
@@ -312,7 +333,11 @@ describe('modular-scripts', () => {
     it('THEN outputs a JS entrypoint file', () => {
       expect(
         fs.existsSync(
-          getPackageEntryPointPath(tempDistPath, buildOutputJsEntrypointPath),
+          getPackageEntryPointPath(
+            targetedView,
+            tempDistPath,
+            buildOutputJsEntrypointPath,
+          ),
         ),
       ).toBeTruthy();
     });
@@ -325,7 +350,7 @@ describe('modular-scripts', () => {
         path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
       );
 
-      await addToPackageJson(tempPackagesPath, {
+      await addToPackageJson(targetedView, tempPackagesPath, {
         dependencies: {
           lodash: '^4.17.21',
           'lodash.merge': '^4.6.2',
@@ -339,18 +364,19 @@ describe('modular-scripts', () => {
 
       await runYarn();
 
-      buildSampleEsmView(tempModularRepo, {
+      buildSampleEsmView(targetedView, tempModularRepo, {
         env: {
           EXTERNAL_CDN_TEMPLATE:
             'https://mycustomcdn.net/[name]@[version]?selectiveDeps=[selectiveCDNResolutions]',
         },
       });
       [buildOutputJsEntrypoint, buildOutputJsEntrypointPath] =
-        await getBuildOutputEntrypoint(tempDistPath);
+        await getBuildOutputEntrypoint(targetedView, tempDistPath);
     });
 
     it('THEN rewrites the dependencies', async () => {
       const indexFile = await getIndexFile(
+        targetedView,
         tempDistPath,
         buildOutputJsEntrypoint,
       );
@@ -366,7 +392,11 @@ describe('modular-scripts', () => {
     it('THEN outputs a JS entrypoint file', () => {
       expect(
         fs.existsSync(
-          getPackageEntryPointPath(tempDistPath, buildOutputJsEntrypointPath),
+          getPackageEntryPointPath(
+            targetedView,
+            tempDistPath,
+            buildOutputJsEntrypointPath,
+          ),
         ),
       ).toBeTruthy();
     });
@@ -379,7 +409,7 @@ describe('modular-scripts', () => {
         path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
       );
 
-      await addToPackageJson(tempPackagesPath, {
+      await addToPackageJson(targetedView, tempPackagesPath, {
         dependencies: {
           lodash: '^4.17.21',
           'lodash.merge': '^4.6.2',
@@ -393,7 +423,7 @@ describe('modular-scripts', () => {
 
       await runYarn();
 
-      buildSampleEsmView(tempModularRepo, {
+      buildSampleEsmView(targetedView, tempModularRepo, {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           EXTERNAL_CDN_TEMPLATE:
@@ -402,11 +432,12 @@ describe('modular-scripts', () => {
       });
 
       [buildOutputJsEntrypoint, buildOutputJsEntrypointPath] =
-        await getBuildOutputEntrypoint(tempDistPath);
+        await getBuildOutputEntrypoint(targetedView, tempDistPath);
     });
 
     it('THEN rewrites the dependencies', async () => {
       const indexFile = await getIndexFile(
+        targetedView,
         tempDistPath,
         buildOutputJsEntrypoint,
       );
@@ -422,7 +453,11 @@ describe('modular-scripts', () => {
     it('THEN outputs a JS entrypoint file', () => {
       expect(
         fs.existsSync(
-          getPackageEntryPointPath(tempDistPath, buildOutputJsEntrypointPath),
+          getPackageEntryPointPath(
+            targetedView,
+            tempDistPath,
+            buildOutputJsEntrypointPath,
+          ),
         ),
       ).toBeTruthy();
     });
@@ -435,7 +470,7 @@ describe('modular-scripts', () => {
         path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
       );
 
-      await addToPackageJson(tempPackagesPath, {
+      await addToPackageJson(targetedView, tempPackagesPath, {
         dependencies: {
           lodash: '^4.17.21',
           'lodash.merge': '^4.6.2',
@@ -445,7 +480,7 @@ describe('modular-scripts', () => {
 
       await runYarn();
 
-      buildSampleEsmView(tempModularRepo, {
+      buildSampleEsmView(targetedView, tempModularRepo, {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[resolution]',
@@ -453,11 +488,12 @@ describe('modular-scripts', () => {
       });
 
       [buildOutputJsEntrypoint, buildOutputJsEntrypointPath] =
-        await getBuildOutputEntrypoint(tempDistPath);
+        await getBuildOutputEntrypoint(targetedView, tempDistPath);
     });
 
     it('THEN rewrites the dependencies', async () => {
       const indexFile = await getIndexFile(
+        targetedView,
         tempDistPath,
         buildOutputJsEntrypoint,
       );
@@ -469,7 +505,11 @@ describe('modular-scripts', () => {
     it('THEN outputs a JS entrypoint file', () => {
       expect(
         fs.existsSync(
-          getPackageEntryPointPath(tempDistPath, buildOutputJsEntrypointPath),
+          getPackageEntryPointPath(
+            targetedView,
+            tempDistPath,
+            buildOutputJsEntrypointPath,
+          ),
         ),
       ).toBeTruthy();
     });
@@ -482,7 +522,7 @@ describe('modular-scripts', () => {
         path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
       );
 
-      await addToPackageJson(tempPackagesPath, {
+      await addToPackageJson(targetedView, tempPackagesPath, {
         dependencies: {
           lodash: '^4.17.21',
           'lodash.merge': '^4.6.2',
@@ -492,18 +532,19 @@ describe('modular-scripts', () => {
 
       await runYarn();
 
-      buildSampleEsmView(tempModularRepo, {
+      buildSampleEsmView(targetedView, tempModularRepo, {
         env: {
           EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[resolution]',
         },
       });
 
       [buildOutputJsEntrypoint, buildOutputJsEntrypointPath] =
-        await getBuildOutputEntrypoint(tempDistPath);
+        await getBuildOutputEntrypoint(targetedView, tempDistPath);
     });
 
     it('THEN rewrites the dependencies', async () => {
       const indexFile = await getIndexFile(
+        targetedView,
         tempDistPath,
         buildOutputJsEntrypoint,
       );
@@ -514,7 +555,11 @@ describe('modular-scripts', () => {
     it('THEN outputs a JS entrypoint file', () => {
       expect(
         fs.existsSync(
-          getPackageEntryPointPath(tempDistPath, buildOutputJsEntrypointPath),
+          getPackageEntryPointPath(
+            targetedView,
+            tempDistPath,
+            buildOutputJsEntrypointPath,
+          ),
         ),
       ).toBeTruthy();
     });
@@ -522,7 +567,7 @@ describe('modular-scripts', () => {
 
   describe('WHEN building a esm-view specifying a dependency to not being rewritten', () => {
     beforeAll(async () => {
-      buildSampleEsmView(tempModularRepo, {
+      buildSampleEsmView(targetedView, tempModularRepo, {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
@@ -531,11 +576,12 @@ describe('modular-scripts', () => {
       });
 
       [buildOutputJsEntrypoint, buildOutputJsEntrypointPath] =
-        await getBuildOutputEntrypoint(tempDistPath);
+        await getBuildOutputEntrypoint(targetedView, tempDistPath);
     });
 
     it('THEN rewrites only the dependencies that are not specified in the blocklist', async () => {
       const indexFile = await getIndexFile(
+        targetedView,
         tempDistPath,
         buildOutputJsEntrypoint,
       );
@@ -546,14 +592,19 @@ describe('modular-scripts', () => {
 
     it('THEN expects the correct bundledDependencies in package.json', async () => {
       expect(
-        (await getBuildOutputPackageJson(tempDistPath)).bundledDependencies,
+        (await getBuildOutputPackageJson(targetedView, tempDistPath))
+          .bundledDependencies,
       ).toEqual(['lodash', 'lodash.merge']);
     });
 
     it('THEN outputs a JS entrypoint file', () => {
       expect(
         fs.existsSync(
-          getPackageEntryPointPath(tempDistPath, buildOutputJsEntrypointPath),
+          getPackageEntryPointPath(
+            targetedView,
+            tempDistPath,
+            buildOutputJsEntrypointPath,
+          ),
         ),
       ).toBeTruthy();
     });
@@ -561,7 +612,7 @@ describe('modular-scripts', () => {
 
   describe('WHEN building a esm-view specifying a dependency to not being rewritten using wildcards', () => {
     beforeAll(async () => {
-      buildSampleEsmView(tempModularRepo, {
+      buildSampleEsmView(targetedView, tempModularRepo, {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
@@ -570,11 +621,12 @@ describe('modular-scripts', () => {
       });
 
       [buildOutputJsEntrypoint, buildOutputJsEntrypointPath] =
-        await getBuildOutputEntrypoint(tempDistPath);
+        await getBuildOutputEntrypoint(targetedView, tempDistPath);
     });
 
     it('THEN rewrites only the dependencies that are not specified in the blocklist', async () => {
       const indexFile = await getIndexFile(
+        targetedView,
         tempDistPath,
         buildOutputJsEntrypoint,
       );
@@ -586,14 +638,19 @@ describe('modular-scripts', () => {
 
     it('THEN expects the correct bundledDependencies in package.json', async () => {
       expect(
-        (await getBuildOutputPackageJson(tempDistPath)).bundledDependencies,
+        (await getBuildOutputPackageJson(targetedView, tempDistPath))
+          .bundledDependencies,
       ).toEqual(['lodash', 'lodash.merge']);
     });
 
     it('THEN outputs a JS entrypoint file', () => {
       expect(
         fs.existsSync(
-          getPackageEntryPointPath(tempDistPath, buildOutputJsEntrypointPath),
+          getPackageEntryPointPath(
+            targetedView,
+            tempDistPath,
+            buildOutputJsEntrypointPath,
+          ),
         ),
       ).toBeTruthy();
     });
@@ -601,7 +658,7 @@ describe('modular-scripts', () => {
 
   describe('WHEN building a esm-view specifying a dependency to not being rewritten using allow list and wildcards', () => {
     beforeAll(async () => {
-      buildSampleEsmView(tempModularRepo, {
+      buildSampleEsmView(targetedView, tempModularRepo, {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
@@ -610,11 +667,12 @@ describe('modular-scripts', () => {
       });
 
       [buildOutputJsEntrypoint, buildOutputJsEntrypointPath] =
-        await getBuildOutputEntrypoint(tempDistPath);
+        await getBuildOutputEntrypoint(targetedView, tempDistPath);
     });
 
     it('THEN rewrites only the dependencies that are not specified in the blocklist', async () => {
       const indexFile = await getIndexFile(
+        targetedView,
         tempDistPath,
         buildOutputJsEntrypoint,
       );
@@ -625,14 +683,19 @@ describe('modular-scripts', () => {
 
     it('THEN expects the correct bundledDependencies in package.json', async () => {
       expect(
-        (await getBuildOutputPackageJson(tempDistPath)).bundledDependencies,
+        (await getBuildOutputPackageJson(targetedView, tempDistPath))
+          .bundledDependencies,
       ).toEqual(['lodash', 'lodash.merge', 'regular-table']);
     });
 
     it('THEN outputs a JS entrypoint file', () => {
       expect(
         fs.existsSync(
-          getPackageEntryPointPath(tempDistPath, buildOutputJsEntrypointPath),
+          getPackageEntryPointPath(
+            targetedView,
+            tempDistPath,
+            buildOutputJsEntrypointPath,
+          ),
         ),
       ).toBeTruthy();
     });
@@ -640,7 +703,7 @@ describe('modular-scripts', () => {
 
   describe('WHEN building a esm-view specifying a PUBLIC_URL', () => {
     beforeAll(async () => {
-      buildSampleEsmView(tempModularRepo, {
+      buildSampleEsmView(targetedView, tempModularRepo, {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           PUBLIC_URL: '/public/path/',
@@ -649,7 +712,7 @@ describe('modular-scripts', () => {
       });
 
       [buildOutputJsEntrypoint, buildOutputJsEntrypointPath] =
-        await getBuildOutputEntrypoint(tempDistPath);
+        await getBuildOutputEntrypoint(targetedView, tempDistPath);
     });
 
     it('THEN expects the correct source in package.json', () => {
@@ -662,7 +725,7 @@ describe('modular-scripts', () => {
 
     it('THEN outputs a JS entrypoint file', () => {
       const packageEntryPointPath = path.join(
-        getBuildStaticJsDirPath(tempDistPath),
+        getBuildStaticJsDirPath(targetedView, tempDistPath),
         buildOutputJsEntrypoint,
       );
       expect(fs.existsSync(packageEntryPointPath)).toBeTruthy();
@@ -671,7 +734,7 @@ describe('modular-scripts', () => {
 
   describe('WHEN building a esm-view specifying a PUBLIC_URL and the path is ./', () => {
     beforeAll(async () => {
-      buildSampleEsmView(tempModularRepo, {
+      buildSampleEsmView(targetedView, tempModularRepo, {
         env: {
           USE_MODULAR_ESBUILD: 'true',
           PUBLIC_URL: './',
@@ -680,7 +743,7 @@ describe('modular-scripts', () => {
       });
 
       [buildOutputJsEntrypoint, buildOutputJsEntrypointPath] =
-        await getBuildOutputEntrypoint(tempDistPath);
+        await getBuildOutputEntrypoint(targetedView, tempDistPath);
     });
 
     it('THEN expects the correct source in package.json', () => {
@@ -693,10 +756,138 @@ describe('modular-scripts', () => {
   });
 });
 
+describe('modular working with an esm-view with custom index.html', () => {
+  const targetedView = 'sample-esm-view-with-index';
+  beforeAll(async () => {
+    tempModularRepo = createModularTestContext();
+    tempPackagesPath = path.join(tempModularRepo, 'packages');
+    tempDistPath = path.join(tempModularRepo, 'dist');
+    runModularForTests(
+      tempModularRepo,
+      'add sample-esm-view-with-index --unstable-type esm-view --unstable-name sample-esm-view-with-index',
+    );
+
+    await fs.copyFile(
+      path.join(__dirname, 'TestEsmView.test-tsx'),
+      path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
+    );
+
+    await fs.mkdir(path.join(tempPackagesPath, targetedView, 'public'));
+
+    await fs.copyFile(
+      path.join(__dirname, 'CustomIndex-html'),
+      path.join(tempPackagesPath, targetedView, 'public', 'index.html'),
+    );
+  });
+
+  describe('Adds packages correctly', () => {
+    it('can add a esm-view', () => {
+      expect(tree(path.join(tempPackagesPath, targetedView)))
+        .toMatchInlineSnapshot(`
+        "sample-esm-view-with-index
+        ├─ README.md #dz72za
+        ├─ package.json
+        ├─ public
+        │  └─ index.html #1r28b1o
+        └─ src
+           ├─ EsmView.css #x6onxt
+           ├─ __tests__
+           │  └─ EsmView.test.tsx #p6zl64
+           ├─ index.tsx #plsqyc
+           ├─ logo.svg #1okqmlj
+           └─ react-app-env.d.ts #t4ygcy"
+      `);
+    });
+  });
+
+  describe('WHEN starting a esm-view', () => {
+    let browser: puppeteer.Browser;
+    let devServer: DevServer;
+    let port: string;
+
+    beforeAll(async () => {
+      const launchArgs: puppeteer.LaunchOptions &
+        puppeteer.BrowserLaunchArgumentOptions = {
+        // always run in headless - if you want to debug this locally use the env var to
+        headless: !Boolean(process.env.NO_HEADLESS_TESTS),
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      };
+
+      browser = await puppeteer.launch(launchArgs);
+      port = '4000';
+      devServer = await startApp(
+        targetedView,
+        {
+          env: { PORT: port, USE_MODULAR_ESBUILD: 'true' },
+        },
+        tempModularRepo,
+      );
+    });
+
+    afterAll(async () => {
+      if (browser) {
+        await browser.close();
+      }
+      if (devServer) {
+        // this is the problematic bit, it leaves hanging node processes
+        // despite closing the parent process. Only happens in tests!
+        void devServer.kill();
+      }
+      if (port) {
+        // kill all processes listening to the dev server port
+        exec(`yarnpkg kill-port ${port}`, (err) => {
+          if (err) {
+            console.log('err: ', err);
+          }
+          console.log(`Cleaned up processes on port ${port}`);
+        });
+      }
+    });
+
+    it('THEN can start a esm-view with custom index', async () => {
+      const page = await browser.newPage();
+      await page.goto(`http://localhost:${port}`, {});
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      const { getByTestId, findByTestId } = getQueriesForElement(
+        await getDocument(page),
+      );
+
+      await findByTestId('custom-index');
+
+      // eslint-disable-next-line testing-library/no-await-sync-query
+      expect(await getNodeText(await getByTestId('custom-index'))).toBe(
+        'This will appear before #root',
+      );
+    });
+  });
+
+  describe('WHEN building a esm-view', () => {
+    beforeAll(() => {
+      buildSampleEsmView(targetedView, tempModularRepo, {
+        env: {
+          USE_MODULAR_ESBUILD: 'true',
+        },
+      });
+    });
+
+    it('THEN outputs the custom index.html', async () => {
+      const outputIndex = await fs.readFile(
+        path.join(tempDistPath, targetedView, 'index.html'),
+        'utf8',
+      );
+      expect(outputIndex).toContain(
+        '<div data-testid="custom-index">This will appear before #root</div>',
+      );
+    });
+  });
+});
+
 async function getBuildOutputEntrypoint(
+  targetedView: string,
   tempDistPath: string,
 ): Promise<[string, string]> {
-  const manifest = await getBuildOutputPackageJson(tempDistPath);
+  const manifest = await getBuildOutputPackageJson(targetedView, tempDistPath);
 
   if (!manifest.module) {
     throw new Error('Module has no entrypoint!');
@@ -709,6 +900,7 @@ async function getBuildOutputEntrypoint(
 }
 
 async function getBuildOutputPackageJson(
+  targetedView: string,
   tempDistPath: string,
 ): Promise<CoreProperties> {
   return (await fs.readJson(
@@ -717,6 +909,7 @@ async function getBuildOutputPackageJson(
 }
 
 function buildSampleEsmView(
+  targetedView: string,
   cwd: string,
   opts?: Record<string, unknown>,
 ): execa.ExecaSyncReturnValue<string> {
@@ -724,28 +917,37 @@ function buildSampleEsmView(
 }
 
 function getPackageEntryPointPath(
+  targetedView: string,
   tempDistPath: string,
   buildOutputJsEntrypointPath: string,
 ): string {
   return path.join(tempDistPath, targetedView, buildOutputJsEntrypointPath);
 }
 
-function getBuildStaticJsDirPath(tempDistPath: string): string {
+function getBuildStaticJsDirPath(
+  targetedView: string,
+  tempDistPath: string,
+): string {
   return path.join(tempDistPath, targetedView, 'static', 'js');
 }
 
 async function getIndexFile(
+  targetedView: string,
   tempDistPath: string,
   buildOutputJsEntrypoint: string,
 ): Promise<string> {
   return (
     await fs.readFile(
-      path.join(getBuildStaticJsDirPath(tempDistPath), buildOutputJsEntrypoint),
+      path.join(
+        getBuildStaticJsDirPath(targetedView, tempDistPath),
+        buildOutputJsEntrypoint,
+      ),
     )
   ).toString();
 }
 
 async function addToPackageJson(
+  targetedView: string,
   tempPackagesPath: string,
   content: CoreProperties,
 ) {
