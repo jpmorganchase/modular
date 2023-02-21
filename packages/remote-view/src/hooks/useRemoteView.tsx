@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { views } from '../context';
+import { ErrorContext, ViewsContext } from '../context';
 import { loading } from '../utils/symbol';
 import { dynamicallyImport } from '../utils/dynamicallyImport';
+import { RemoteViewError } from '../utils/remoteViewError';
 import 'isomorphic-fetch';
 
 import type { ManifestCheck } from '../types';
@@ -11,20 +12,27 @@ async function loadRemoteView(
   baseUrl: string,
   loadWithIframeFallback?: ManifestCheck,
 ): Promise<React.ComponentType | void> {
-  const response = await fetch(`${baseUrl}/package.json`);
-  const manifest = (await response.json()) as MicrofrontendManifest;
+  let manifest: MicrofrontendManifest | undefined;
+  try {
+    const response = await fetch(`${baseUrl}/package.json`);
+    manifest = (await response.json()) as MicrofrontendManifest;
+  } catch (e) {
+    throw new RemoteViewError(
+      `Unable to fetch and parse package.json for package at url "${baseUrl}"`,
+      baseUrl,
+    );
+  }
   const type = manifest?.modular?.type;
   const unsupportedType = !type || (type !== 'esm-view' && type !== 'app');
 
-  // In most scenarios, we want to throw, which will trigger the Error Boundary
-  // In some cases (e.g. the jest environment), it's simpler to display the default error fallback
   if (unsupportedType) {
-    throw new TypeError(
-      `Can't load package ${
+    throw new RemoteViewError(
+      `Can't load package "${
         manifest.name
-      } because type is missing or not supported: "${
+      }" at url "${baseUrl}" because type is missing or not supported: "${
         type || JSON.stringify(type)
       }"`,
+      baseUrl,
     );
   }
 
@@ -33,7 +41,8 @@ async function loadRemoteView(
     type === 'app' ||
     (loadWithIframeFallback && loadWithIframeFallback(manifest))
   ) {
-    return () => <iframe title={manifest.name} src={`${baseUrl}/index.html`} />;
+    const iframeTitle = manifest.name;
+    return () => <iframe title={iframeTitle} src={`${baseUrl}/index.html`} />;
   }
 
   // Load global CSS
@@ -74,38 +83,41 @@ export const useRemoteView = (
   baseUrl: string,
   loadWithIframeFallback?: ManifestCheck,
 ): React.ComponentType | null => {
-  const [state, setState] = useContext(views);
+  const [views, setViews] = useContext(ViewsContext);
+  const [, setError] = useContext(ErrorContext);
   const [thrown, setThrown] = useState<string>();
-  const current = state[baseUrl];
+  const currentView = views[baseUrl];
 
   useEffect(() => {
-    if (current !== undefined) {
+    if (currentView !== undefined) {
       return;
     }
 
     void loadRemoteView(baseUrl, loadWithIframeFallback)
       .then((LoadedView) => {
-        LoadedView && setState((old) => ({ ...old, [baseUrl]: LoadedView }));
+        LoadedView && setViews((prev) => ({ ...prev, [baseUrl]: LoadedView }));
       })
-      .catch((err: TypeError) => {
+      .catch((err: Error) => {
         setThrown(err.message);
       });
-  }, [current, baseUrl, setState, loadWithIframeFallback]);
+  }, [currentView, baseUrl, setViews, loadWithIframeFallback]);
 
   // Syncronously throw any errors that happened during `loadRemoteView()`
   // This is required to trigger error boundaries correctly (React cannot catch async throws)
   if (thrown) {
-    throw new Error(thrown);
+    const err = new RemoteViewError(thrown, baseUrl);
+    setError(() => err);
+    throw err;
   }
 
-  if (current === undefined) {
+  if (currentView === undefined) {
     // setState((prev) => ({ ...prev, [baseUrl]: loading }));
     return null;
   }
 
-  if (current === loading) {
+  if (currentView === loading) {
     return null;
   }
 
-  return current;
+  return currentView;
 };

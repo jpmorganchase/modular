@@ -11,6 +11,8 @@ pattern using Modular [ESM views](https://modular.js.org/esm-views/).
 - Supports loading local and global CSS
 - Declaratively fall back to iframes
 - Compatible with any ESM CDN
+- Also supports Modular [apps](https://modular.js.org/package-types/) via
+  iframes
 
 ## Getting Started
 
@@ -38,6 +40,10 @@ and the `package.json`.
 This approach enables the microfrontend pattern, which can also be thought as
 distributed UIs.
 
+`<RemoteView />` also supports rendering non-ESM View modules by falling back to
+iframes. In this case, an iframe is rendered in the React tree, instead of
+another native React tree.
+
 ## Example
 
 Load (dynamically import) and render a set of
@@ -54,8 +60,8 @@ import {
 function MyPortal() {
   // In practice, URLs to your remote ESM views can be fetched from a server
   const [remoteViews, addRemoteView] = useState([
-    'https://cdn.example.com/esm-view-1/index.js',
-    'https://cdn.example.com/esm-view-2/index.js',
+    'https://cdn.example.com/esm-view-1',
+    'https://cdn.example.com/esm-view-2',
   ]);
 
   return (
@@ -72,7 +78,12 @@ function MyPortal() {
 }
 ```
 
-Provide `loadWithIframeFallback` prop to trigger the iframe fallback:
+Modular `esm-view`s will be dynamically loaded, whereas Modular `app`s are
+loaded into an iframe. For more information on Modular types, check out the
+[Package Types on the Modular docs](https://modular.js.org/package-types/).
+
+It is also possible top load specific `esm-view`s into an iframe - provide
+`loadWithIframeFallback` prop to trigger the iframe fallback:
 
 ```tsx
 // Use an iframe fallback for one particular view
@@ -179,10 +190,10 @@ Required provider that must wrap any `<RemoteView />` instances.
 | `loadWithIframeFallback` | Function `fn(manifest: MicrofrontendManifest) => boolean` | No        | Optional function to determine if an iframe fallback should be used in place of a React component. | `undefined`          |
 | `loading`                | JSX.Element                                               | No        | Display a custom loading component whilst the remote view is being fetched and rendered            | `<div>Loading</div>` |
 
-`MicrofrontManifest` represents the `package.json` of an ESM View served over an
-ESM CDN. This includes fields like the package `name`, `style`, `styleImports`
-and more - see `packages/modular-types/src/types.ts` for the full list of fields
-that are expected.
+`MicrofrontendManifest` represents the `package.json` of an ESM View served over
+an ESM CDN. This includes fields like the package `name`, `style`,
+`styleImports` and more - see `packages/modular-types/src/types.ts` for the full
+list of fields that are expected.
 
 `<RemoteViewErrorBoundary />`
 

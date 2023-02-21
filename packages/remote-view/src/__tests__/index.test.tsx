@@ -10,6 +10,7 @@ import {
   RemoteView,
   RemoteViewErrorBoundary,
 } from '../components';
+import { useRemoteViewError } from '../hooks/useRemoteViewError';
 
 function FakeComponentA() {
   return <div>Faked dynamically imported module A</div>;
@@ -74,9 +75,7 @@ jest.mock('../utils/dynamicallyImport', () => {
 function getMicrofrontendExample(
   useIframe = false,
   customLoader: JSX.Element | undefined,
-  customFallback:
-    | React.ComponentType<{ message: string | undefined }>
-    | undefined,
+  customFallback: React.ComponentType | undefined,
 ) {
   return function MicrofrontendExample() {
     const [remoteViews] = useState([
@@ -88,7 +87,7 @@ function getMicrofrontendExample(
       <RemoteViewProvider>
         {remoteViews.map((v, key) => (
           <section key={key}>
-            <RemoteViewErrorBoundary errorFallback={customFallback}>
+            <RemoteViewErrorBoundary content={customFallback}>
               <RemoteView
                 loading={customLoader}
                 baseUrl={v}
@@ -220,8 +219,9 @@ describe('remote-view', () => {
     });
 
     it('should throw and display a custom error fallback', async () => {
-      function CustomFallback({ message }: { message: string | undefined }) {
-        const filteredMsgMatches = message?.match(/bad-component-(a|b)/);
+      function CustomFallback() {
+        const error = useRemoteViewError();
+        const filteredMsgMatches = error?.message?.match(/bad-component-(a|b)/);
         const filteredMsg = filteredMsgMatches?.length
           ? filteredMsgMatches[0]
           : '';

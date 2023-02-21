@@ -1,12 +1,13 @@
 import React from 'react';
+import { RemoteViewError } from '../utils/remoteViewError';
 import { DefaultErrorFallback } from './default-error-fallback';
 
 interface BoundaryState {
-  error: string | undefined;
+  error: RemoteViewError | undefined;
 }
 
 interface BoundaryProps {
-  errorFallback?: React.ComponentType<{ message: string | undefined }>;
+  content?: React.ComponentType;
   children?: React.ReactNode;
 }
 
@@ -19,19 +20,22 @@ export class RemoteViewErrorBoundary extends React.Component<
     this.state = { error: undefined };
   }
 
-  componentDidCatch(error: TypeError): void {
-    this.setState({ error: error.message });
+  componentDidCatch(error: RemoteViewError, errorInfo: React.ErrorInfo): void {
+    const { message } = error;
+    console.error(message);
+    console.error(errorInfo.componentStack);
+    this.setState({ error });
   }
 
   render() {
-    const ProvidedFallback = this.props.errorFallback;
-    const errorFallbackOutput = ProvidedFallback ? (
-      <ProvidedFallback message={this.state.error} />
-    ) : (
-      <DefaultErrorFallback message={this.state.error} />
-    );
-
     if (this.state.error) {
+      const ProvidedFallback = this.props.content;
+      const errorFallbackOutput = ProvidedFallback ? (
+        <ProvidedFallback />
+      ) : (
+        <DefaultErrorFallback />
+      );
+
       return errorFallbackOutput;
     }
 

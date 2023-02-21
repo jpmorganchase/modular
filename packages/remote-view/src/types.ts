@@ -18,3 +18,7 @@ export type MicroFrontendState = Record<
   React.ComponentType | typeof loading
 >;
 export type ManifestCheck = (manifest: MicrofrontendManifest) => boolean;
+
+export interface RemoteViewErrorInterface extends Error {
+  remoteViewUrl: string;
+}

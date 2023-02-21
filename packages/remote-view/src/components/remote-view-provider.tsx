@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { views } from '../context';
+import { ErrorContext, ViewsContext } from '../context';
+import { RemoteViewError } from '../utils/remoteViewError';
 
 import type { PropsWithChildren } from 'react';
 import type { MicroFrontendState } from '../types';
@@ -7,7 +8,14 @@ import type { MicroFrontendState } from '../types';
 export const RemoteViewProvider = ({
   children,
 }: PropsWithChildren<unknown>): JSX.Element => {
-  const value = useState<MicroFrontendState>({});
+  const currentViews = useState<MicroFrontendState>({});
+  const currentError = useState<RemoteViewError>();
 
-  return <views.Provider value={value}>{children}</views.Provider>;
+  return (
+    <ViewsContext.Provider value={currentViews}>
+      <ErrorContext.Provider value={currentError}>
+        {children}
+      </ErrorContext.Provider>
+    </ViewsContext.Provider>
+  );
 };

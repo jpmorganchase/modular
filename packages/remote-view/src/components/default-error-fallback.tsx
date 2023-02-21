@@ -1,14 +1,20 @@
 import React from 'react';
+import { useRemoteViewError } from '../hooks/useRemoteViewError';
 
-interface Props {
-  message: string | undefined;
-}
+export function DefaultErrorFallback() {
+  const error = useRemoteViewError();
+  if (!error) {
+    throw new TypeError(
+      `<RemoteView />'s default error fallback attempted to render without an error existing in ErrorContext. ` +
+        `Ensure that you have wrapped any usage of <RemoteView /> with <RemoteViewProvider />.`,
+    );
+  }
+  const { message, remoteViewUrl } = error;
 
-export function DefaultErrorFallback({ message }: Props) {
-  const suffix = message ? `: ${message}` : '';
   return (
-    <div data-testid="remote-view-default-error-fallback">
-      Something went wrong{suffix}
+    <div>
+      <span>Something went wrong for module at URL "{remoteViewUrl}".</span>
+      {message && <pre>{message}</pre>}
     </div>
   );
 }

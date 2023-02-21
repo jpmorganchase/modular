@@ -51,15 +51,6 @@ describe('remote-view (integration)', () => {
     }
   });
 
-  // TODO
-  // This is working, but is an integration test (so 0 coverage)
-  // Next steps:
-  // - Add checks of the list component to this
-  // - Add another test, that mocks out the import bit (move to a fn, probably)
-  // - Update the contributing docs after moving stuff into `remote-view-fake-cdn`
-  // - Address PR TODOs
-  // That will allow high unit test coverage, plus a deep integration test
-
   it('should render the example remote view and work', async () => {
     const page = await browser.newPage();
     await page.goto('http://localhost:8484/index.html', {});
