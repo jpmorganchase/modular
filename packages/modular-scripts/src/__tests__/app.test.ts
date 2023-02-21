@@ -87,7 +87,7 @@ describe('when working with a NODE_ENV app', () => {
             ├─ main.a482480b.js #1xwb1v
             ├─ main.a482480b.js.map #wh4kdy
             ├─ runtime-main.97707f9d.js #15lezt9
-            └─ runtime-main.97707f9d.js.map #1yg8f1m"
+            └─ runtime-main.97707f9d.js.map #1qz5n9i"
     `);
   });
 
@@ -129,9 +129,9 @@ describe('When working with a npm scoped app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'scoped-sample-app')))
       .toMatchInlineSnapshot(`
       "scoped-sample-app
-      ├─ asset-manifest.json #1uspk39
+      ├─ asset-manifest.json #sfq5q
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #ysfmfn
+      ├─ index.html #5mlazw
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -142,13 +142,13 @@ describe('When working with a npm scoped app', () => {
          │  ├─ main.1a7488ce.css #x701i6
          │  └─ main.1a7488ce.css.map #z36y5v
          ├─ js
-         │  ├─ 316.74c894ba.js #euj72k
-         │  ├─ 316.74c894ba.js.LICENSE.txt #eplx8h
-         │  ├─ 316.74c894ba.js.map #3k9wqz
-         │  ├─ main.b44531b6.js #16ahtqz
-         │  ├─ main.b44531b6.js.map #n69bgw
+         │  ├─ 691.024b78a1.js #3p6i9s
+         │  ├─ 691.024b78a1.js.LICENSE.txt #eplx8h
+         │  ├─ 691.024b78a1.js.map #1k1dfv5
+         │  ├─ main.59a925f1.js #lnwzbz
+         │  ├─ main.59a925f1.js.map #ue8mz1
          │  ├─ runtime-main.de012fdc.js #1qz643h
-         │  └─ runtime-main.de012fdc.js.map #g5ojr6
+         │  └─ runtime-main.de012fdc.js.map #v3az36
          └─ media
             └─ logo.103b5fa18196d5665a7e12318285c916.svg #1okqmlj"
     `);
@@ -246,12 +246,12 @@ describe('When working with a npm scoped app', () => {
               'scoped-sample-app',
               'static',
               'js',
-              'main.b44531b6.js',
+              'main.59a925f1.js',
             ),
           ),
         ),
         {
-          filepath: 'main.b44531b6.js',
+          filepath: 'main.59a925f1.js',
         },
       ),
     ).toMatchSnapshot();
@@ -290,12 +290,12 @@ describe('When working with a npm scoped app', () => {
               'scoped-sample-app',
               'static',
               'js',
-              '316.74c894ba.js',
+              '691.024b78a1.js',
             ),
           ),
         ),
         {
-          filepath: '316.74c894ba.js',
+          filepath: '691.024b78a1.js',
         },
       ),
     ).toMatchSnapshot();
@@ -347,9 +347,9 @@ describe('when working with a non-scoped app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'sample-app')))
       .toMatchInlineSnapshot(`
       "sample-app
-      ├─ asset-manifest.json #620pei
+      ├─ asset-manifest.json #m15pac
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #1vp7lky
+      ├─ index.html #1v77ixd
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -360,13 +360,13 @@ describe('when working with a non-scoped app', () => {
          │  ├─ main.1a7488ce.css #x701i6
          │  └─ main.1a7488ce.css.map #z36y5v
          ├─ js
-         │  ├─ 316.394ef80b.js #1mv4xg9
-         │  ├─ 316.394ef80b.js.LICENSE.txt #eplx8h
-         │  ├─ 316.394ef80b.js.map #o90ydx
-         │  ├─ main.abe6afa1.js #t9np46
-         │  ├─ main.abe6afa1.js.map #15q2td3
+         │  ├─ 691.27c15ff7.js #z635hj
+         │  ├─ 691.27c15ff7.js.LICENSE.txt #eplx8h
+         │  ├─ 691.27c15ff7.js.map #r5j0b0
+         │  ├─ main.46370e66.js #1vnj4tr
+         │  ├─ main.46370e66.js.map #193ww1g
          │  ├─ runtime-main.e92969dd.js #1is98ey
-         │  └─ runtime-main.e92969dd.js.map #pq512s
+         │  └─ runtime-main.e92969dd.js.map #xx7n2r
          └─ media
             └─ logo.103b5fa18196d5665a7e12318285c916.svg #1okqmlj"
     `);
@@ -434,12 +434,12 @@ describe('when working with a non-scoped app', () => {
               'sample-app',
               'static',
               'js',
-              'main.abe6afa1.js',
+              'main.46370e66.js',
             ),
           ),
         ),
         {
-          filepath: 'main.abe6afa1.js',
+          filepath: 'main.46370e66.js',
         },
       ),
     ).toMatchSnapshot();
@@ -478,12 +478,12 @@ describe('when working with a non-scoped app', () => {
               'sample-app',
               'static',
               'js',
-              '316.394ef80b.js',
+              '691.27c15ff7.js',
             ),
           ),
         ),
         {
-          filepath: '316.394ef80b.js',
+          filepath: '691.27c15ff7.js',
         },
       ),
     ).toMatchSnapshot();
@@ -587,9 +587,9 @@ describe('When working with an app added in a custom directory', () => {
     expect(tree(path.join(modularRoot, 'dist', 'scoped-custom-app')))
       .toMatchInlineSnapshot(`
       "scoped-custom-app
-      ├─ asset-manifest.json #dvvkwh
+      ├─ asset-manifest.json #w24273
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #6iz8a6
+      ├─ index.html #rv8ndx
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -600,13 +600,13 @@ describe('When working with an app added in a custom directory', () => {
          │  ├─ main.1a7488ce.css #x701i6
          │  └─ main.1a7488ce.css.map #z36y5v
          ├─ js
-         │  ├─ 350.44eb2511.js #4ubhrm
-         │  ├─ 350.44eb2511.js.LICENSE.txt #eplx8h
-         │  ├─ 350.44eb2511.js.map #1yro3n5
-         │  ├─ main.fba21b67.js #16haxht
-         │  ├─ main.fba21b67.js.map #1tgakei
+         │  ├─ 747.4db12b23.js #1rzkpt3
+         │  ├─ 747.4db12b23.js.LICENSE.txt #eplx8h
+         │  ├─ 747.4db12b23.js.map #1mu4m1j
+         │  ├─ main.1d49254f.js #sfgkyb
+         │  ├─ main.1d49254f.js.map #1okwr8l
          │  ├─ runtime-main.cef70e6c.js #1f77948
-         │  └─ runtime-main.cef70e6c.js.map #13ge77z
+         │  └─ runtime-main.cef70e6c.js.map #6vl4pa
          └─ media
             └─ logo.103b5fa18196d5665a7e12318285c916.svg #1okqmlj"
     `);
@@ -704,12 +704,12 @@ describe('When working with an app added in a custom directory', () => {
               'scoped-custom-app',
               'static',
               'js',
-              'main.fba21b67.js',
+              'main.1d49254f.js',
             ),
           ),
         ),
         {
-          filepath: 'main.fba21b67.js',
+          filepath: 'main.1d49254f.js',
         },
       ),
     ).toMatchSnapshot();
@@ -748,12 +748,12 @@ describe('When working with an app added in a custom directory', () => {
               'scoped-custom-app',
               'static',
               'js',
-              '350.44eb2511.js',
+              '747.4db12b23.js',
             ),
           ),
         ),
         {
-          filepath: '350.44eb2511.js',
+          filepath: '747.4db12b23.js',
         },
       ),
     ).toMatchSnapshot();
