@@ -32,8 +32,28 @@ interface WriteFilesArguments {
   importMap: Map<string, string>;
   externalResolutions: Dependency;
   modularType: Extract<ModularType, 'app' | 'esm-view'>;
-  isBuild: boolean;
 }
+
+/**
+ * @typedef {Object} WriteFilesArguments
+ * @property {Paths} paths - list of paths relative to your application or esm-view
+ * @property {string} cssEntryPoint - the name of your css entrypoint file
+ * @property {string} jsEntryPoint - the name of your js entrypoint file
+ * @property {Set<string>} styleImports - a set containing global style import URLs
+ * @property {Map<string, string>} importMap - a map from package name to CDN URL
+ * @property {Dependency} externalResolutions - a record of external resolutions and their versions
+ * @property {Extract<ModularType, 'app' | 'esm-view'>;} modularType - Modular type, can be "app" or "esm-view"
+ */
+
+/**
+ * Write `index.html` in the `appBuild` directory specified in `paths`,
+ * linking the provided entrypoints (`jsEntryPoint` and `cssEntryPoint`) into it;
+ * optionally write a `/static/js/_trampoline.js` trampoline file if `modularType` is "esm-view"
+ * and link it in the `index.html`, along with the global `styleImports`.
+ * The trampoline file is compatible with the version of React specified in `externalResolutions`.
+ * @param  {WriteFilesArguments} arguments - a {@link WriteFilesArguments} object
+ * @return {Promise<void>}
+ */
 
 export async function writeOutputIndexFiles({
   paths,
@@ -43,8 +63,7 @@ export async function writeOutputIndexFiles({
   importMap,
   externalResolutions,
   modularType,
-  isBuild,
-}: WriteFilesArguments) {
+}: WriteFilesArguments): Promise<void> {
   const indexContent = fs.existsSync(paths.appHtml)
     ? await fs.readFile(paths.appHtml, { encoding: 'utf-8' })
     : indexFileTemplate;
@@ -57,7 +76,7 @@ export async function writeOutputIndexFiles({
     jsEntryPoint,
     styleImports,
     includeTrampoline: modularType === 'esm-view',
-    includeRuntime: !isBuild,
+    includeRuntime: false,
     replacements: env.raw,
   };
 

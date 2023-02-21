@@ -193,7 +193,6 @@ export async function buildStandalone(
       styleImports,
       importMap,
       modularType: type,
-      isBuild: true,
       externalResolutions,
     });
   }
