@@ -1,1 +1,5 @@
-export { RemoteViewProvider, RemoteView } from './components';
+export {
+  RemoteViewProvider,
+  RemoteView,
+  RemoteViewErrorBoundary,
+} from './components';

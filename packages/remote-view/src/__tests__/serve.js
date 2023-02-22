@@ -22,6 +22,7 @@ const serve = serveStatic(esmViewsPath);
 
 // Create server
 const server = http.createServer(function onRequest(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
   serve(req, res, finalhandler(req, res));
 });
 

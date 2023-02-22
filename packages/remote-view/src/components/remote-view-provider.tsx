@@ -8,12 +8,12 @@ import type { MicroFrontendState } from '../types';
 export const RemoteViewProvider = ({
   children,
 }: PropsWithChildren<unknown>): JSX.Element => {
-  const currentViews = useState<MicroFrontendState>({});
-  const currentError = useState<RemoteViewError>();
+  const viewState = useState<MicroFrontendState>({});
+  const errorState = useState<RemoteViewError>();
 
   return (
-    <ViewsContext.Provider value={currentViews}>
-      <ErrorContext.Provider value={currentError}>
+    <ViewsContext.Provider value={viewState}>
+      <ErrorContext.Provider value={errorState}>
         {children}
       </ErrorContext.Provider>
     </ViewsContext.Provider>

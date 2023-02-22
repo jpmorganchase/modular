@@ -11,6 +11,7 @@ import {
   RemoteViewErrorBoundary,
 } from '../components';
 import { useRemoteViewError } from '../hooks/useRemoteViewError';
+import { RemoteViewError } from '../utils/remoteViewError';
 
 function FakeComponentA() {
   return <div>Faked dynamically imported module A</div>;
@@ -85,17 +86,17 @@ function getMicrofrontendExample(
 
     return (
       <RemoteViewProvider>
-        {remoteViews.map((v, key) => (
-          <section key={key}>
-            <RemoteViewErrorBoundary content={customFallback}>
+        <RemoteViewErrorBoundary content={customFallback}>
+          {remoteViews.map((v, key) => (
+            <section key={key}>
               <RemoteView
                 loading={customLoader}
                 baseUrl={v}
                 loadWithIframeFallback={() => useIframe}
               />
-            </RemoteViewErrorBoundary>
-          </section>
-        ))}
+            </section>
+          ))}
+        </RemoteViewErrorBoundary>
       </RemoteViewProvider>
     );
   };
@@ -204,18 +205,13 @@ describe('remote-view', () => {
       const Example = getMicrofrontendExample(false, undefined, undefined);
       render(<Example />);
 
-      const failTextA =
-        'Something went wrong: Can\'t load package bad-component-a because type is missing or not supported: "undefined"';
-      const failTextB =
-        'Something went wrong: Can\'t load package bad-component-b because type is missing or not supported: "view"';
+      const failText =
+        'Something went wrong for module at URL "http://localhost:8484/esm-view-card".';
 
-      await waitFor(() => screen.findByText(failTextA));
-      expect(screen.getByText(failTextA)).toBeInTheDocument();
+      await waitFor(() => screen.findByText(failText));
+      expect(screen.getByText(failText)).toBeInTheDocument();
 
-      await waitFor(() => screen.findByText(failTextB));
-      expect(screen.getByText(failTextB)).toBeInTheDocument();
-
-      expect.any(TypeError);
+      expect.any(RemoteViewError);
     });
 
     it('should throw and display a custom error fallback', async () => {
@@ -231,16 +227,12 @@ describe('remote-view', () => {
       const Example = getMicrofrontendExample(false, undefined, CustomFallback);
       render(<Example />);
 
-      const failTextA = 'Custom fallback component: bad-component-a';
-      const failTextB = 'Custom fallback component: bad-component-b';
+      const failText = 'Custom fallback component: bad-component-a';
 
-      await waitFor(() => screen.findByText(failTextA));
-      expect(screen.getByText(failTextA)).toBeInTheDocument();
+      await waitFor(() => screen.findByText(failText));
+      expect(screen.getByText(failText)).toBeInTheDocument();
 
-      await waitFor(() => screen.findByText(failTextB));
-      expect(screen.getByText(failTextB)).toBeInTheDocument();
-
-      expect.any(TypeError);
+      expect.any(RemoteViewError);
     });
   });
 });

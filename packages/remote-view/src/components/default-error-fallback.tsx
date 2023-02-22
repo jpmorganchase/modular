@@ -10,10 +10,11 @@ export function DefaultErrorFallback() {
     );
   }
   const { message, remoteViewUrl } = error;
+  const formattedMsg = `Something went wrong for module at URL "${remoteViewUrl}".`;
 
   return (
     <div>
-      <span>Something went wrong for module at URL "{remoteViewUrl}".</span>
+      <span>{formattedMsg}</span>
       {message && <pre>{message}</pre>}
     </div>
   );
