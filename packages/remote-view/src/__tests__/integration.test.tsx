@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 /* eslint-disable testing-library/prefer-screen-queries */
 
 import path from 'path';

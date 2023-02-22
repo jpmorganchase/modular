@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import React, { useState } from 'react';
 import {
   render,
