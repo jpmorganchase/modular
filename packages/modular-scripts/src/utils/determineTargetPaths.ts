@@ -4,7 +4,6 @@ import * as path from 'path';
 
 import getPublicUrlOrPath from './getPublicUrlOrPath';
 import getModularRoot from './getModularRoot';
-import getWorkspaceLocation from './getLocation';
 import { getConfig } from './config';
 export interface Paths {
   modularRoot: string;
@@ -33,11 +32,11 @@ export interface Paths {
  * @param target
  * @returns A Paths object containing all relevant paths
  */
-export default async function determineTargetPaths(
+export default function determineTargetPaths(
   target: string,
-): Promise<Paths> {
+  targetDirectory: string,
+): Paths {
   const modularRoot = getModularRoot();
-  const targetDirectory = await getWorkspaceLocation(target);
   const targetName = toParamCase(target);
 
   // Make sure any symlinks in the project folder are resolved:

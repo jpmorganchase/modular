@@ -35,6 +35,7 @@ import getModularRoot from '../../utils/getModularRoot';
 import { createRewriteDependenciesPlugin } from '../plugins/rewriteDependenciesPlugin';
 import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowserslistTarget';
 import { normalizeToPosix } from '../utils/formatPath';
+import getWorkspaceLocation from '../../utils/getLocation';
 
 const RUNTIME_DIR = path.join(__dirname, 'runtime');
 class DevServer {
@@ -388,7 +389,8 @@ export default async function start({
   useReactCreateRoot: boolean;
   styleImports: Set<string>;
 }): Promise<void> {
-  const paths = await determineTargetPaths(target);
+  const targetPath = await getWorkspaceLocation(target);
+  const paths = determineTargetPaths(target, targetPath);
   const host = getHost();
   const port = await getPort(host);
   const urls = prepareUrls(

@@ -54,12 +54,14 @@ async function start(packageName: string): Promise<void> {
     );
   }
 
+  let paths;
   const isEsmView = isModularType(targetPath, 'esm-view');
   const isView = isModularType(targetPath, 'view');
-  const paths = await determineTargetPaths(target);
   if (isView) {
     targetPath = stageView(target);
+    paths = determineTargetPaths(target, targetPath);
   } else {
+    paths = determineTargetPaths(target, targetPath);
     // in the case we're an app then we need to make sure that users have no incorrectly
     // setup their app folder.
     isEsmView

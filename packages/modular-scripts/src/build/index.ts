@@ -47,7 +47,7 @@ async function buildStandalone(
 ) {
   // Setup Paths
   const targetDirectory = await getWorkspaceLocation(target);
-  const paths = await determineTargetPaths(target);
+  const paths = determineTargetPaths(target, targetDirectory);
   const isApp = type === 'app';
 
   const isEsbuild = getConfig('useModularEsbuild', targetDirectory);

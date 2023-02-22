@@ -8,13 +8,13 @@ import * as logger from './utils/logger';
 import { isModularType } from './utils/packageTypes';
 
 async function serve(target: string, port = 3000): Promise<void> {
-  const targetLocation = await getWorkspaceLocation(target);
+  const targetPath = await getWorkspaceLocation(target);
 
   if (
-    isModularType(targetLocation, 'app') ||
-    isModularType(targetLocation, 'esm-view')
+    isModularType(targetPath, 'app') ||
+    isModularType(targetPath, 'esm-view')
   ) {
-    const paths = await determineTargetPaths(target);
+    const paths = determineTargetPaths(target, targetPath);
 
     if (fs.existsSync(paths.appBuild)) {
       const app = express();
