@@ -102,7 +102,7 @@ function getMicrofrontendExample(
   };
 }
 
-describe('remote-view', () => {
+describe('RemoteView', () => {
   describe('for supported manifests', () => {
     beforeEach(() => {
       let n = 0;
@@ -181,8 +181,6 @@ describe('remote-view', () => {
   });
 
   describe('for unsupported manifests', () => {
-    const consoleErrorFn = jest.spyOn(console, 'error');
-
     beforeEach(() => {
       let n = 0;
       global.fetch = jest.fn(() => {
@@ -194,11 +192,7 @@ describe('remote-view', () => {
         });
       }) as jest.Mock;
 
-      consoleErrorFn.mockImplementation(() => jest.fn());
-    });
-
-    afterAll(() => {
-      consoleErrorFn.mockRestore();
+      jest.spyOn(console, 'error').mockImplementation(() => undefined);
     });
 
     it('should throw and display the default error fallback', async () => {
@@ -228,6 +222,29 @@ describe('remote-view', () => {
       render(<Example />);
 
       const failText = 'Custom fallback component: bad-component-a';
+
+      await waitFor(() => screen.findByText(failText));
+      expect(screen.getByText(failText)).toBeInTheDocument();
+
+      expect.any(RemoteViewError);
+    });
+  });
+
+  describe('when a manifest cannot be retrieved', () => {
+    beforeEach(() => {
+      global.fetch = jest.fn(() => {
+        return Promise.reject('Unspecified fetch rejection');
+      }) as jest.Mock;
+
+      jest.spyOn(console, 'error').mockImplementation(() => undefined);
+    });
+
+    it('gets caught by the default error boundary', async () => {
+      const Example = getMicrofrontendExample(false, undefined, undefined);
+      render(<Example />);
+
+      const failText =
+        'Something went wrong for module at URL "http://localhost:8484/esm-view-card".';
 
       await waitFor(() => screen.findByText(failText));
       expect(screen.getByText(failText)).toBeInTheDocument();

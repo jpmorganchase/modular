@@ -3,6 +3,7 @@ import { useRemoteViewError } from '../hooks/useRemoteViewError';
 
 export function DefaultErrorFallback() {
   const error = useRemoteViewError();
+
   if (!error) {
     throw new TypeError(
       `<RemoteView />'s default error fallback attempted to render without an error existing in ErrorContext. ` +

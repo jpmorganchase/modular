@@ -22,7 +22,7 @@ async function loadRemoteView(
       baseUrl,
     );
   }
-  const type = manifest?.modular?.type;
+  const type = manifest.modular?.type;
   const unsupportedType = !type || (type !== 'esm-view' && type !== 'app');
 
   if (unsupportedType) {
@@ -69,7 +69,6 @@ function injectRemoteCss(url: string) {
   }
 
   /**
-   * Warning!
    * <RemoteView /> should only be used to render content from a trusted source.
    * `url` should never be the result of, or exposed to, end user input.
    */
