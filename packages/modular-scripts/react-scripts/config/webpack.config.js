@@ -56,6 +56,9 @@ module.exports = function (webpackEnv) {
   const isEnvProductionProfile =
     isEnvProduction && process.argv.includes('--profile');
 
+  // If an index is provided, this is its path. Otherwise false.
+  const indexPath = fs.existsSync(paths.appHtml) && paths.appHtml;
+
   // Create configurations
 
   // base, common configuration
@@ -97,6 +100,7 @@ module.exports = function (webpackEnv) {
     shouldUseSourceMap,
     useTypeScript,
     styleImports,
+    indexPath,
   });
 
   // Merge all configurations into the final one

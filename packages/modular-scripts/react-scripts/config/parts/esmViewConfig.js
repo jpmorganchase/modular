@@ -1,5 +1,8 @@
 'use strict';
+const fs = require('fs-extra');
+const parse5 = require('parse5');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const InterpolateHtmlPlugin = require('../../../react-dev-utils/InterpolateHtmlPlugin');
 const { parsePackageName } = require('../utils/esmUtils');
 const dedent = require('dedent');
 const path = require('path');
@@ -24,34 +27,59 @@ function createConfig({
   };
 }
 
-function createPluginConfig({ isEnvProduction, styleImports }) {
+function createPluginConfig({ isEnvProduction, styleImports, indexPath, env }) {
+  console.log(styleImports);
+  let templateContent;
+
+  // If we have an index template in the project, let's use it
+  if (indexPath) {
+    templateContent = fs.readFileSync(indexPath, 'utf8');
+
+    // Style (global) imports are excluded from the build, so they don't get injected. We have to manually inject them in the index template.
+    if (styleImports.length) {
+      const page = parse5.parse(templateContent);
+      const html = page.childNodes.find((node) => node.nodeName === 'html');
+      const head = html.childNodes.find((node) => node.nodeName === 'head');
+
+      styleImports.forEach((importUrl) =>
+        head.childNodes.push(
+          ...parse5.parseFragment(
+            `<link rel="stylesheet" href="${importUrl}" />`,
+          ).childNodes,
+        ),
+      );
+      templateContent = parse5.serialize(page);
+    }
+  } else {
+    // Standard minimal template to start an esm-view
+    templateContent = dedent(`
+      <!DOCTYPE html>
+        <head>
+          ${styleImports?.map(
+            (importUrl) =>
+              `<link rel="stylesheet" href="${importUrl}"></script>`,
+          )}
+        </head>
+        <html>
+          <body>
+            <div id="root"></div>
+          </body>
+        </html>`);
+  }
   return {
     plugins: [
-      // We need to provide a synthetic index.html in case we're starting a ESM view
       !isEnvProduction &&
         new HtmlWebpackPlugin(
           Object.assign(
             {},
             {
               inject: true,
-              templateContent: `
-                <!DOCTYPE html>
-                <head>
-                  ${styleImports?.map(
-                    (importUrl) =>
-                      `<link rel="stylesheet" href="${importUrl}"></script>`,
-                  )}
-                </head>
-                <html>
-                  <body>
-                    <div id="root"></div>
-                  </body>
-                </html>
-                `,
+              templateContent,
               scriptLoading: 'module',
             },
           ),
         ),
+      new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
     ].filter(Boolean),
   };
 }

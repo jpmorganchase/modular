@@ -104,7 +104,6 @@ export async function buildStandalone(
     )}`,
   );
 
-  // TODO: this is going away in favour of externalResolutions
   const useReactCreateRoot = isReactNewApi(externalResolutions);
   const browserTarget = createEsbuildBrowserslistTarget(targetDirectory);
 
@@ -184,7 +183,7 @@ export async function buildStandalone(
     throw new Error("Can't find main entrypoint after building");
   }
 
-  // TODO: this conditional is here to exclude app + Webpack builds until the Webpack conf is in typescript; this needs to go away before the conclusion of this PR
+  // Only Webpack apps create their index files separately with a plugin - exclude them
   if (!isApp || isEsbuild) {
     await writeOutputIndexFiles({
       paths,
