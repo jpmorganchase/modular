@@ -54,13 +54,13 @@ function createPluginConfig({ isEnvProduction, styleImports, indexPath, env }) {
     // Standard minimal template to start an esm-view
     templateContent = dedent(`
       <!DOCTYPE html>
-        <head>
-          ${styleImports?.map(
-            (importUrl) =>
-              `<link rel="stylesheet" href="${importUrl}"></script>`,
-          )}
-        </head>
         <html>
+          <head>
+            ${styleImports?.map(
+              (importUrl) =>
+                `<link rel="stylesheet" href="${importUrl}"></script>`,
+            )}
+          </head>
           <body>
             <div id="root"></div>
           </body>
