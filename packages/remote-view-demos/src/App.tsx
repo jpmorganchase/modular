@@ -56,7 +56,13 @@ export default function RemoteViewDemos(): JSX.Element {
                 <RemoteViewErrorBoundary>
                   <RemoteView
                     baseUrl={url}
-                    loading={<Spinner aria-label="loading" role="status" />}
+                    loading={
+                      <Spinner
+                        aria-label="loading"
+                        role="status"
+                        className="RemoteViewContainer__spinner"
+                      />
+                    }
                   />
                 </RemoteViewErrorBoundary>
               </div>
@@ -72,7 +78,13 @@ export default function RemoteViewDemos(): JSX.Element {
               <RemoteViewErrorBoundary>
                 <RemoteView
                   baseUrl={badView}
-                  loading={<Spinner aria-label="loading" role="status" />}
+                  loading={
+                    <Spinner
+                      aria-label="loading"
+                      role="status"
+                      className="RemoteViewContainer__spinner"
+                    />
+                  }
                 />
               </RemoteViewErrorBoundary>
             </div>
@@ -88,7 +100,13 @@ export default function RemoteViewDemos(): JSX.Element {
               <RemoteViewErrorBoundary content={MyErrorContent}>
                 <RemoteView
                   baseUrl={badView}
-                  loading={<Spinner aria-label="loading" role="status" />}
+                  loading={
+                    <Spinner
+                      aria-label="loading"
+                      role="status"
+                      className="RemoteViewContainer__spinner"
+                    />
+                  }
                 />
               </RemoteViewErrorBoundary>
             </div>
@@ -109,7 +127,13 @@ export default function RemoteViewDemos(): JSX.Element {
               <MyErrorBoundary>
                 <RemoteView
                   baseUrl={badView}
-                  loading={<Spinner aria-label="loading" role="status" />}
+                  loading={
+                    <Spinner
+                      aria-label="loading"
+                      role="status"
+                      className="RemoteViewContainer__spinner"
+                    />
+                  }
                 />
               </MyErrorBoundary>
             </div>
