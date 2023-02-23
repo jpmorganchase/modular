@@ -28,7 +28,6 @@ function createConfig({
 }
 
 function createPluginConfig({ isEnvProduction, styleImports, indexPath, env }) {
-  console.log(styleImports);
   let templateContent;
 
   // If we have an index template in the project, let's use it
