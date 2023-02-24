@@ -14,7 +14,7 @@ const sockPath = process.env.WDS_SOCKET_PATH; // default: '/ws'
 const sockPort = process.env.WDS_SOCKET_PORT;
 
 export default function createDevServerConfig(
-  port: string,
+  port: number,
   proxy: ProxyConfigArray | undefined,
   allowedHost: string | undefined,
   paths: Paths,

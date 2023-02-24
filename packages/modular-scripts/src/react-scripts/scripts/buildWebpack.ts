@@ -5,7 +5,7 @@ import webpack from 'webpack';
 import getConfig from '../config/webpack.config';
 import formatWebpackMessages from '../../react-dev-utils/formatWebpackMessages';
 import printBuildError from '../../react-dev-utils/printBuildError';
-import { log } from '../../react-dev-utils/logger';
+import { log } from '../../utils/logger';
 import { Paths } from '../../utils/determineTargetPaths';
 import { WebpackConfiguration } from 'webpack-dev-server';
 

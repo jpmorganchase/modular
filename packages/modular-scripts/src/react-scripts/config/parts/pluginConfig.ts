@@ -6,12 +6,12 @@ import { merge } from 'webpack-merge';
 import { WebpackManifestPlugin } from 'webpack-manifest-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import ModuleNotFoundPlugin from '../../../react-dev-utils/ModuleNotFoundPlugin';
-import getClientEnvironment from '../env';
 import { createEsmViewPluginConfig } from './esmViewConfig';
 import { createAppPluginConfig } from './appConfig';
 import { createDevelopmentPluginConfig } from './developmentConfig';
 import { createProductionPluginConfig } from './productionConfig';
 import { Paths } from '../../../utils/determineTargetPaths';
+import getClientEnvironment from '../../../esbuild-scripts/config/getClientEnvironment';
 
 // Some apps do not need the benefits of saving a web request, so not inlining the chunk
 // makes for a smoother build process.

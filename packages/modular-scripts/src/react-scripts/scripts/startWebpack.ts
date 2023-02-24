@@ -1,12 +1,8 @@
 import fs from 'fs';
 import chalk from 'chalk';
-import webpack from 'webpack';
 import WebpackDevServer from 'webpack-dev-server';
 import { log } from '../../utils/logger';
-import {
-  choosePort,
-  createCompiler,
-} from '../../react-dev-utils/WebpackDevServerUtils';
+import { createCompiler } from '../../react-dev-utils/WebpackDevServerUtils';
 import openBrowser from '../../react-dev-utils/openBrowser';
 import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import isCI from 'is-ci';
@@ -15,7 +11,10 @@ import getConfig from '../config/webpack.config';
 import createDevServerConfig from '../config/webpackDevServer.config';
 import { Paths } from '../../utils/determineTargetPaths';
 import { readJSONSync } from 'fs-extra';
-import { prepareProxy, prepareUrls } from '../../utils/webpackDevServerUtils';
+import { prepareProxy } from '../../utils/webpackDevServerUtils';
+import { choosePort } from '../../esbuild-scripts/start/utils/getPort';
+import prepareUrls from '../../esbuild-scripts/config/urls';
+import { webpack } from 'webpack';
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
@@ -53,8 +52,8 @@ export default function startWebpack(
   }
 
   choosePort(HOST, DEFAULT_PORT)
-    .then(async (port: string | null) => {
-      if (port == null) {
+    .then(async (port: number | undefined) => {
+      if (!port) {
         // We have not found a port.
         return;
       }
