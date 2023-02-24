@@ -24,7 +24,7 @@ export default async function buildWebpack(
     throw err;
   });
 
-  const webpackConfig: WebpackConfiguration = getConfig(
+  const webpackConfig: WebpackConfiguration = await getConfig(
     true,
     esbuildTargetFactory,
     isApp,

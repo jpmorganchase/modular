@@ -60,7 +60,7 @@ export default function startWebpack(
         return;
       }
 
-      const config = getConfig(
+      const config = await getConfig(
         false,
         esbuildTargetFactory,
         isApp,

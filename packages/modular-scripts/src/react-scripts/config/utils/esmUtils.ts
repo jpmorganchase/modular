@@ -6,8 +6,7 @@ export function parsePackageName(name: string) {
   if (!parsedName) {
     return;
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, scope, module, submodule] = parsedName;
+  const [, scope, module, submodule] = parsedName;
   const dependencyName = (scope ? `${scope}/` : '') + module;
   return { dependencyName, scope, module, submodule };
 }

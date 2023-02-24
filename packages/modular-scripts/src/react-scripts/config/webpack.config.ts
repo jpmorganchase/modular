@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import chalk from 'chalk';
 import fs from 'fs';
 
@@ -23,7 +22,7 @@ const imageInlineSizeLimit = parseInt(
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
-export default function getWebpackConfig(
+export default async function getWebpackConfig(
   isEnvProduction: boolean,
   esbuildTargetFactory: string[],
   isApp: boolean,
@@ -31,7 +30,7 @@ export default function getWebpackConfig(
   useReactCreateRoot: boolean,
   styleImports: Set<string>,
   paths: Paths,
-): Configuration {
+): Promise<Configuration> {
   // Check if TypeScript is setup
   const useTypeScript = fs.existsSync(paths.appTsConfig);
   const shouldUseSourceMap = getConfig('generateSourceMap', paths.appPath);
@@ -113,9 +112,7 @@ export default function getWebpackConfig(
     },
   };
 
-  Object.keys(dependencyPlugins).forEach((dependency) => {
-    const plugin =
-      dependencyPlugins[dependency as keyof typeof dependencyPlugins];
+  for (const [dependency, plugin] of Object.entries(dependencyPlugins)) {
     try {
       // test whether the dependency has been installed.
       // if not don't install the corresponding plugin
@@ -134,8 +131,8 @@ export default function getWebpackConfig(
       }
       // both dependency and its webpack plugin are available, let's
       // add it to our webpack pipeline.
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const WebpackPlugin = require(plugin.package);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const WebpackPlugin = await import(plugin.package);
 
       if (webpackConfig.plugins) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
@@ -147,7 +144,7 @@ export default function getWebpackConfig(
     } catch (err) {
       /* silently fail */
     }
-  });
+  }
 
   return webpackConfig;
 }
