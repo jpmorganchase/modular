@@ -88,10 +88,10 @@ function AppInner(): JSX.Element {
   );
 }
 
-export default function App() {
+export default React.memo(function App() {
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
       <AppInner />
     </MantineProvider>
   );
-}
+});

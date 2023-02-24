@@ -49,13 +49,16 @@ var c = {};
   });
   o.default.addLocale('en', a.default);
   const l = { green: '#e4ebe4', red: '#f1dbdb' };
-  function d() {
+  function d(e) {
+    return e[0].toUpperCase() + e.slice(1);
+  }
+  const u = t.default.memo(function () {
     const e = (0, t.useRef)(null),
       r = (0, t.useRef)(null),
       n = (function (e) {
         const t = [
             () =>
-              `${u((0, o.word)({ type: 'adjective' }))} ${u(
+              `${d((0, o.word)({ type: 'adjective' }))} ${d(
                 (0, o.word)({ type: 'noun' }),
               )}`,
             () => String(Math.ceil(100 * Math.random())),
@@ -122,14 +125,11 @@ var c = {};
       }),
       t.default.createElement('div', { ref: e })
     );
-  }
-  function u(e) {
-    return e[0].toUpperCase() + e.slice(1);
-  }
+  });
   function i() {
-    return t.createElement(d, null);
+    return t.createElement(u, null);
   }
 })();
 var l = c.Z;
 export { l as default };
-//# sourceMappingURL=main.2290a075.js.map
+//# sourceMappingURL=main.f5af2115.js.map

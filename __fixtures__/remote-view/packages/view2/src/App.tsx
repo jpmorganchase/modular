@@ -45,7 +45,7 @@ function createPeople(n: number) {
   return columns;
 }
 
-export default function App(): JSX.Element {
+function App(): JSX.Element {
   const view = useRef<HTMLDivElement>(null);
   const regTableInstance = useRef<unknown>(null);
 
@@ -120,3 +120,5 @@ export default function App(): JSX.Element {
 function capitalize(s: string) {
   return s[0].toUpperCase() + s.slice(1);
 }
+
+export default React.memo(App);

@@ -88,17 +88,22 @@ export const useRemoteView = (
   const currentView = views[baseUrl];
 
   useEffect(() => {
-    if (currentView !== undefined) {
+    if (currentView === loading) {
       return;
     }
 
-    void loadRemoteView(baseUrl, loadWithIframeFallback)
-      .then((LoadedView) => {
-        LoadedView && setViews((prev) => ({ ...prev, [baseUrl]: LoadedView }));
-      })
-      .catch((err: Error) => {
-        setThrown(err.message);
-      });
+    if (currentView === undefined) {
+      setViews((prev) => ({ ...prev, [baseUrl]: loading }));
+
+      void loadRemoteView(baseUrl, loadWithIframeFallback)
+        .then((LoadedView) => {
+          LoadedView &&
+            setViews((prev) => ({ ...prev, [baseUrl]: LoadedView }));
+        })
+        .catch((err: Error) => {
+          setThrown(err.message);
+        });
+    }
   }, [currentView, baseUrl, setViews, loadWithIframeFallback]);
 
   // Syncronously throw any errors that happened during `loadRemoteView()`
@@ -109,11 +114,13 @@ export const useRemoteView = (
     throw err;
   }
 
+  // Initial render (loading has not yet started)
   if (currentView === undefined) {
-    // setState((prev) => ({ ...prev, [baseUrl]: loading }));
+    // setViews((prev) => ({ ...prev, [baseUrl]: loading }));
     return null;
   }
 
+  // Loading render
   if (currentView === loading) {
     return null;
   }

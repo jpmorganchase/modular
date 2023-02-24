@@ -129,17 +129,17 @@ function i() {
     ),
   );
 }
-function c() {
+s.default.addLocale('en', d.default);
+const c = o.default.memo(function () {
   return o.default.createElement(
     l.MantineProvider,
     { withGlobalStyles: !0, withNormalizeCSS: !0 },
     o.default.createElement(i, null),
   );
-}
+});
 function u() {
   return o.createElement(c, null);
 }
-s.default.addLocale('en', d.default);
 var p = m.Z;
 export { p as default };
-//# sourceMappingURL=main.c5589a4f.js.map
+//# sourceMappingURL=main.76563358.js.map

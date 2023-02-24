@@ -5,7 +5,7 @@ import {
   RemoteViewErrorBoundary,
   RemoteViewProvider,
 } from '@modular-scripts/remote-view';
-import { H1, H2, Text } from '@salt-ds/core';
+import { H1, H2, Text, Button } from '@salt-ds/core';
 import { Spinner } from '@salt-ds/lab';
 
 import './index.css';
@@ -21,17 +21,21 @@ function MyErrorContent() {
   );
 }
 
-export default function RemoteViewDemos({
+function RemoteViewDemos({
   toggleThemeButton,
 }: {
   toggleThemeButton: JSX.Element;
 }): JSX.Element {
-  const [remoteViews] = useState([
+  const [remoteViews, setRemoteViews] = useState([
     'http://localhost:8484/view1',
     'http://localhost:8484/view2',
   ]);
 
   const [badView] = useState('http://localhost:8484/this-view-will-404');
+
+  function addDuplicateRemoteView() {
+    setRemoteViews(['http://localhost:8484/view1', ...remoteViews]);
+  }
 
   return (
     <RemoteViewProvider>
@@ -50,10 +54,13 @@ export default function RemoteViewDemos({
         </Text>
         <br />
         {toggleThemeButton}
-        <H2>remoteViews</H2>
-        <pre>{`[\n  ${remoteViews.join(',\n  ')}\n]`}</pre>
 
         <H2>Happy path example</H2>
+        <Button onClick={addDuplicateRemoteView}>Add Duplicate View</Button>
+        <Text>
+          Adding a duplicate view demonstrates that remote modules are only
+          loaded once
+        </Text>
         <div className="ExampleContainer ExampleContainer--happy-path">
           {remoteViews.map((url, key) => (
             <div className="RemoteViewContainer" key={key}>
@@ -149,3 +156,5 @@ export default function RemoteViewDemos({
     </RemoteViewProvider>
   );
 }
+
+export default React.memo(RemoteViewDemos);

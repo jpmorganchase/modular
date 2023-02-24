@@ -3,10 +3,17 @@ import { Button, SaltProvider, Panel } from '@salt-ds/core';
 import App from './App';
 import '@salt-ds/theme/index.css';
 
+const MemoPanel = React.memo(Panel);
+
+// When Modular 4.2 is available, instead of this, we could use a templateable index.html
 function injectFonts() {
+  if (document.querySelectorAll('[data-injected-fonts]').length) {
+    return;
+  }
+
   document.body.insertAdjacentHTML(
     'beforeend',
-    '<link rel="preconnect" href="https://fonts.googleapis.com" />',
+    '<link rel="preconnect" href="https://fonts.googleapis.com" data-injected-fonts="foo" />',
   );
   document.body.insertAdjacentHTML(
     'beforeend',
@@ -34,13 +41,13 @@ export default function RemoteViewDemos(): JSX.Element {
 
   return (
     <SaltProvider mode={theme}>
-      <Panel>
+      <MemoPanel>
         <App
           toggleThemeButton={
             <Button onClick={toggleTheme}>Toggle Theme</Button>
           }
         />
-      </Panel>
+      </MemoPanel>
     </SaltProvider>
   );
 }
