@@ -13,15 +13,26 @@ import { createProductionConfig } from './parts/productionConfig';
 import { createConfig as createBaseConfig } from './parts/baseConfig';
 import { getConfig } from '../../utils/config';
 import { Paths } from '../../utils/determineTargetPaths';
-import { Configuration } from 'webpack';
+import { Configuration, WebpackPluginInstance } from 'webpack';
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 
 const imageInlineSizeLimit = parseInt(
   process.env.IMAGE_INLINE_SIZE_LIMIT || '10000',
 );
 
-// This is the production and development configuration.
-// It is focused on developer experience, fast rebuilds, and a minimal bundle.
+/**
+ * Generate Webpack Configuration
+ * This is the production and development configuration.
+ * It is focused on developer experience, fast rebuilds, and a minimal bundle.
+ * @param isEnvProduction True when building, false when just starting
+ * @param esbuildTargetFactory
+ * @param isApp
+ * @param dependencyMap
+ * @param useReactCreateRoot
+ * @param styleImports
+ * @param targetPaths
+ * @returns Promise containing webpack configuration
+ */
 export default async function getWebpackConfig(
   isEnvProduction: boolean,
   esbuildTargetFactory: string[],
@@ -29,11 +40,14 @@ export default async function getWebpackConfig(
   dependencyMap: Map<string, string>,
   useReactCreateRoot: boolean,
   styleImports: Set<string>,
-  paths: Paths,
+  targetPaths: Paths,
 ): Promise<Configuration> {
   // Check if TypeScript is setup
-  const useTypeScript = fs.existsSync(paths.appTsConfig);
-  const shouldUseSourceMap = getConfig('generateSourceMap', paths.appPath);
+  const useTypeScript = fs.existsSync(targetPaths.appTsConfig);
+  const shouldUseSourceMap = getConfig(
+    'generateSourceMap',
+    targetPaths.appPath,
+  );
 
   // Variable used for enabling profiling in Production
   // passed into alias object. Uses a flag if passed into the build command
@@ -41,12 +55,12 @@ export default async function getWebpackConfig(
     isEnvProduction && process.argv.includes('--profile');
 
   // Create configurations
-  const modules = getModules(paths);
+  const modules = getModules(targetPaths);
   // base, common configuration
   const baseConfig: Configuration = createBaseConfig({
     isEnvProduction,
     isApp,
-    paths,
+    paths: targetPaths,
     useTypeScript,
     isEnvProductionProfile,
     imageInlineSizeLimit,
@@ -67,14 +81,14 @@ export default async function getWebpackConfig(
     ? createAppConfig()
     : createEsmViewConfig(
         dependencyMap,
-        paths,
+        targetPaths,
         isEnvProduction,
         useReactCreateRoot,
       );
 
   // Specific configuration based on build type (production, development)
   const buildTypeConfiguration: Configuration = isEnvProduction
-    ? createProductionConfig(shouldUseSourceMap, paths)
+    ? createProductionConfig(shouldUseSourceMap, targetPaths)
     : createDevelopmentConfig();
 
   // Plugin configuration
@@ -84,7 +98,7 @@ export default async function getWebpackConfig(
     shouldUseSourceMap,
     useTypeScript,
     styleImports,
-    paths,
+    targetPaths,
   );
 
   // Merge all configurations into the final one
@@ -131,14 +145,13 @@ export default async function getWebpackConfig(
       }
       // both dependency and its webpack plugin are available, let's
       // add it to our webpack pipeline.
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const WebpackPlugin = await import(plugin.package);
+      const WebpackPlugin = (await import(
+        plugin.package
+      )) as WebpackPluginInstanceConstructor;
 
       if (webpackConfig.plugins) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
         webpackConfig.plugins.push(new WebpackPlugin(plugin.options));
       } else {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         webpackConfig.plugins = [new WebpackPlugin(plugin.options)];
       }
     } catch (err) {
@@ -147,4 +160,11 @@ export default async function getWebpackConfig(
   }
 
   return webpackConfig;
+}
+
+/**
+ * Interface to satisfy TS linting for Webpack Plugin stuff
+ */
+interface WebpackPluginInstanceConstructor {
+  new (options: unknown): WebpackPluginInstance;
 }

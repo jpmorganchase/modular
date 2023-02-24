@@ -1,19 +1,24 @@
-'use strict';
-
-const fs = require('fs');
-const errorOverlayMiddleware = require('../../react-dev-utils/errorOverlayMiddleware');
-const evalSourceMapMiddleware = require('../../react-dev-utils/evalSourceMapMiddleware');
-const noopServiceWorkerMiddleware = require('../../react-dev-utils/noopServiceWorkerMiddleware');
-const ignoredFiles = require('../../react-dev-utils/ignoredFiles');
-const redirectServedPath = require('../../react-dev-utils/redirectServedPathMiddleware');
-const getHttpsConfig = require('./getHttpsConfig');
+import fs from 'fs';
+import errorOverlayMiddleware from '../../react-dev-utils/errorOverlayMiddleware';
+import evalSourceMapMiddleware from '../../react-dev-utils/evalSourceMapMiddleware';
+import noopServiceWorkerMiddleware from '../../react-dev-utils/noopServiceWorkerMiddleware';
+import ignoredFiles from '../../react-dev-utils/ignoredFiles';
+import redirectServedPath from '../../react-dev-utils/redirectServedPathMiddleware';
+import getHttpsConfig from './getHttpsConfig';
+import { Configuration, ProxyConfigArray } from 'webpack-dev-server';
+import { Paths } from '../../utils/determineTargetPaths';
 
 const host = process.env.HOST || '0.0.0.0';
 const sockHost = process.env.WDS_SOCKET_HOST;
 const sockPath = process.env.WDS_SOCKET_PATH; // default: '/ws'
 const sockPort = process.env.WDS_SOCKET_PORT;
 
-module.exports = function (port, proxy, allowedHost, paths) {
+export default function createDevServerConfig(
+  port: string,
+  proxy: ProxyConfigArray | undefined,
+  allowedHost: string | undefined,
+  paths: Paths,
+): Configuration {
   const disableFirewall =
     !proxy || process.env.DANGEROUSLY_DISABLE_HOST_CHECK === 'true';
 
@@ -36,7 +41,11 @@ module.exports = function (port, proxy, allowedHost, paths) {
     // really know what you're doing with a special environment variable.
     // Note: ["localhost", ".localhost"] will support subdomains - but we might
     // want to allow setting the allowedHosts manually for more complex setups
-    allowedHosts: disableFirewall ? 'all' : [allowedHost],
+    allowedHosts: disableFirewall
+      ? 'all'
+      : allowedHost
+      ? [allowedHost]
+      : undefined,
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': '*',
@@ -100,30 +109,32 @@ module.exports = function (port, proxy, allowedHost, paths) {
     proxy,
     setupMiddlewares(middlewares, server) {
       const app = server.app;
+      if (app) {
+        // Keep `evalSourceMapMiddleware` and `errorOverlayMiddleware`
+        // middlewares before `redirectServedPath` otherwise will not have any effect
+        // This lets us fetch source contents from webpack for the error overlay
+        app.use(evalSourceMapMiddleware(server));
+        // This lets us open files from the runtime error overlay.
+        app.use(errorOverlayMiddleware());
 
-      // Keep `evalSourceMapMiddleware` and `errorOverlayMiddleware`
-      // middlewares before `redirectServedPath` otherwise will not have any effect
-      // This lets us fetch source contents from webpack for the error overlay
-      app.use(evalSourceMapMiddleware(server));
-      // This lets us open files from the runtime error overlay.
-      app.use(errorOverlayMiddleware());
+        // Redirect to `PUBLIC_URL` or `homepage` from `package.json` if url not match
+        app.use(redirectServedPath(paths.publicUrlOrPath));
 
-      // Redirect to `PUBLIC_URL` or `homepage` from `package.json` if url not match
-      app.use(redirectServedPath(paths.publicUrlOrPath));
+        // This service worker file is effectively a 'no-op' that will reset any
+        // previous service worker registered for the same host:port combination.
+        // We do this in development to avoid hitting the production cache if
+        // it used the same host and port.
+        // https://github.com/facebook/create-react-app/issues/2272#issuecomment-302832432
+        app.use(noopServiceWorkerMiddleware(paths.publicUrlOrPath));
 
-      // This service worker file is effectively a 'no-op' that will reset any
-      // previous service worker registered for the same host:port combination.
-      // We do this in development to avoid hitting the production cache if
-      // it used the same host and port.
-      // https://github.com/facebook/create-react-app/issues/2272#issuecomment-302832432
-      app.use(noopServiceWorkerMiddleware(paths.publicUrlOrPath));
-
-      if (fs.existsSync(paths.proxySetup)) {
-        // This registers user provided middleware for proxy reasons
-        require(paths.proxySetup)(app);
+        if (fs.existsSync(paths.proxySetup)) {
+          // This registers user provided middleware for proxy reasons
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-var-requires
+          require(paths.proxySetup)(app);
+        }
       }
 
       return middlewares;
     },
   };
-};
+}
