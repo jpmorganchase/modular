@@ -64,11 +64,13 @@ export async function buildStandalone(
   logger.log('Creating an optimized production build...');
 
   await fs.emptyDir(paths.appBuild);
-  await fs.copy(paths.appPublic, paths.appBuild, {
-    dereference: true,
-    filter: (file) => file !== paths.appHtml,
-    overwrite: true,
-  });
+  if (await fs.pathExists(paths.appPublic)) {
+    await fs.copy(paths.appPublic, paths.appBuild, {
+      dereference: true,
+      filter: (file) => file !== paths.appHtml,
+      overwrite: true,
+    });
+  }
 
   let assets: Asset[];
   logger.debug('Extracting dependency info from source code...');
