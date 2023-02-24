@@ -63,6 +63,7 @@ export async function buildStandalone(
 
   logger.log('Creating an optimized production build...');
 
+  // Build assets from public/ to the dist/, execept for the index
   await fs.emptyDir(paths.appBuild);
   if (await fs.pathExists(paths.appPublic)) {
     await fs.copy(paths.appPublic, paths.appBuild, {
