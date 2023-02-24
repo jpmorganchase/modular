@@ -1,15 +1,12 @@
 import * as esbuild from 'esbuild';
 import chalk from 'chalk';
 import fs from 'fs-extra';
-import * as minimize from 'html-minifier-terser';
 import * as path from 'path';
-import getClientEnvironment from '../config/getClientEnvironment';
 
 import type { Paths } from '../../utils/createPaths';
 import * as logger from '../../utils/logger';
 import { formatError } from '../utils/formatError';
 
-import { createIndex } from '../api';
 import createEsbuildConfig from '../config/createEsbuildConfig';
 import getModularRoot from '../../utils/getModularRoot';
 import sanitizeMetafile from '../utils/sanitizeMetafile';
@@ -24,8 +21,6 @@ export default async function build(
 ) {
   const modularRoot = getModularRoot();
   const isApp = type === 'app';
-
-  const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
 
   let result: esbuild.Metafile;
 
@@ -70,30 +65,6 @@ export default async function build(
         path.join(modularRoot, outputFileName),
       );
     }
-  }
-
-  if (isApp) {
-    const html = await createIndex({
-      paths,
-      metafile: result,
-      replacements: env.raw,
-      includeRuntime: false,
-    });
-
-    const minifiedCode = await minimize.minify(html, {
-      html5: true,
-      collapseBooleanAttributes: true,
-      collapseWhitespace: true,
-      collapseInlineTagWhitespace: true,
-      decodeEntities: true,
-      minifyCSS: true,
-      minifyJS: true,
-      removeAttributeQuotes: false,
-      removeComments: true,
-      removeTagWhitespace: true,
-    });
-
-    await fs.writeFile(path.join(paths.appBuild, 'index.html'), minifiedCode);
   }
 
   return result;
