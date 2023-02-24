@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { SaltProvider } from '@salt-ds/core';
+import React, { useEffect, useState } from 'react';
+import { Button, SaltProvider, Panel } from '@salt-ds/core';
 import App from './App';
 import '@salt-ds/theme/index.css';
 
@@ -18,14 +18,29 @@ function injectFonts() {
   );
 }
 
+type SaltTheme = 'light' | 'dark';
+
 export default function RemoteViewDemos(): JSX.Element {
+  const [theme, setTheme] = useState<SaltTheme>('light');
+
+  function toggleTheme() {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+  }
+
   useEffect(() => {
     injectFonts();
-  }, []);
+  });
 
   return (
-    <SaltProvider>
-      <App />
+    <SaltProvider mode={theme}>
+      <Panel>
+        <App
+          toggleThemeButton={
+            <Button onClick={toggleTheme}>Toggle Theme</Button>
+          }
+        />
+      </Panel>
     </SaltProvider>
   );
 }

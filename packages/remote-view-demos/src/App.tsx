@@ -21,7 +21,11 @@ function MyErrorContent() {
   );
 }
 
-export default function RemoteViewDemos(): JSX.Element {
+export default function RemoteViewDemos({
+  toggleThemeButton,
+}: {
+  toggleThemeButton: JSX.Element;
+}): JSX.Element {
   const [remoteViews] = useState([
     'http://localhost:8484/view1',
     'http://localhost:8484/view2',
@@ -44,6 +48,8 @@ export default function RemoteViewDemos(): JSX.Element {
           <a href="https://modular.js.org/esm-views/esm-cdn/">ESM CDN</a>, which
           happens at run-time.
         </Text>
+        <br />
+        {toggleThemeButton}
         <H2>remoteViews</H2>
         <pre>{`[\n  ${remoteViews.join(',\n  ')}\n]`}</pre>
 
