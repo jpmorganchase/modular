@@ -5,7 +5,7 @@
     "type": "esm-view",
     "externalCdnTemplate": "https://esm.sh/[name]@[version]&deps=react@17.0.2,react-dom@17.0.2&pin=v106"
   },
-  "version": "1.0.0",
+  "version": "0.0.0",
   "dependencies": {
     "@modular-scripts/remote-view": "1.0.0",
     "@salt-ds/core": "1.1.0",
