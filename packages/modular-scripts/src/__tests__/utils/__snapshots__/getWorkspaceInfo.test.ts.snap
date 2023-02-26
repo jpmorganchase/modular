@@ -126,17 +126,6 @@ exports[`getWorkspaceInfo 11`] = `
 
 exports[`getWorkspaceInfo 12`] = `
 {
-  "location": "packages/node-env-app",
-  "mismatchedWorkspaceDependencies": [],
-  "public": false,
-  "type": "app",
-  "version": Any<String>,
-  "workspaceDependencies": [],
-}
-`;
-
-exports[`getWorkspaceInfo 13`] = `
-{
   "location": "packages/remote-view",
   "mismatchedWorkspaceDependencies": [],
   "public": true,
@@ -148,7 +137,7 @@ exports[`getWorkspaceInfo 13`] = `
 }
 `;
 
-exports[`getWorkspaceInfo 14`] = `
+exports[`getWorkspaceInfo 13`] = `
 {
   "location": "packages/remote-view-demos",
   "mismatchedWorkspaceDependencies": [],
@@ -161,7 +150,7 @@ exports[`getWorkspaceInfo 14`] = `
 }
 `;
 
-exports[`getWorkspaceInfo 15`] = `
+exports[`getWorkspaceInfo 14`] = `
 {
   "location": "packages/tree-view-for-tests",
   "mismatchedWorkspaceDependencies": [],
@@ -172,7 +161,7 @@ exports[`getWorkspaceInfo 15`] = `
 }
 `;
 
-exports[`getWorkspaceInfo 16`] = `
+exports[`getWorkspaceInfo 15`] = `
 {
   "location": "packages/workspace-resolver",
   "mismatchedWorkspaceDependencies": [],

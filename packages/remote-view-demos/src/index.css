@@ -53,6 +53,14 @@
   height: 100%;
 }
 
+.RemoteViewContainer__content iframe {
+  width: 100%;
+  height: 100%;
+  outline: none;
+  margin: 0;
+  border: 2px dashed #ccc;
+}
+
 #view2-table {
   width: 100%;
   height: 450px;
