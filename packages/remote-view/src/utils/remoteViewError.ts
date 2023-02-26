@@ -7,6 +7,7 @@ export class RemoteViewError extends Error implements RemoteViewErrorInterface {
     super(message);
     Object.setPrototypeOf(this, RemoteViewError.prototype);
 
+    this.name = 'RemoteViewError';
     this.remoteViewUrl = remoteViewUrl;
   }
 }

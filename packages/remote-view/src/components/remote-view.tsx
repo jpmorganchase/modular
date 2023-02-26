@@ -2,6 +2,7 @@ import React from 'react';
 import { useRemoteView } from '../hooks/useRemoteView';
 
 import type { ManifestCheck } from '../types';
+
 interface Props {
   baseUrl: string;
   loadWithIframeFallback?: ManifestCheck;

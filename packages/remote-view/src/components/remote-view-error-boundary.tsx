@@ -1,13 +1,15 @@
 import React from 'react';
 import { RemoteViewError } from '../utils/remoteViewError';
-import { DefaultErrorFallback } from './default-error-fallback';
+import { DefaultRemoteViewErrorFallback } from './default-remote-view-error-fallback';
+import { DefaultUnknownErrorFallback } from './default-unknown-error-fallback';
 
 interface BoundaryState {
-  error: RemoteViewError | undefined;
+  error: RemoteViewError | Error | undefined;
+  isRemoteViewError: boolean | undefined;
 }
 
 interface BoundaryProps {
-  content?: React.ComponentType;
+  content?: React.ComponentType<{ error: RemoteViewError | Error }>;
   children?: React.ReactNode;
 }
 
@@ -17,26 +19,39 @@ export class RemoteViewErrorBoundary extends React.Component<
 > {
   constructor(props: BoundaryProps) {
     super(props);
-    this.state = { error: undefined };
+    this.state = { error: undefined, isRemoteViewError: undefined };
   }
 
-  componentDidCatch(error: RemoteViewError, errorInfo: React.ErrorInfo): void {
+  componentDidCatch(
+    error: Error | RemoteViewError,
+    errorInfo: React.ErrorInfo,
+  ): void {
     const { message } = error;
     console.error(message);
     console.error(errorInfo.componentStack);
-    this.setState({ error });
+
+    this.setState({
+      error,
+      isRemoteViewError: error instanceof RemoteViewError,
+    });
   }
 
   render() {
     if (this.state.error) {
       const ProvidedFallback = this.props.content;
-      const errorFallbackOutput = ProvidedFallback ? (
-        <ProvidedFallback />
-      ) : (
-        <DefaultErrorFallback />
-      );
 
-      return errorFallbackOutput;
+      // User-provided error boundary content
+      if (ProvidedFallback) {
+        return <ProvidedFallback error={this.state.error} />;
+      }
+
+      // RemoteViewError specific error fallback
+      if (this.state.isRemoteViewError) {
+        return <DefaultRemoteViewErrorFallback />;
+      }
+
+      // Error fallback for all other cases
+      return <DefaultUnknownErrorFallback error={this.state.error} />;
     }
 
     return this.props.children;

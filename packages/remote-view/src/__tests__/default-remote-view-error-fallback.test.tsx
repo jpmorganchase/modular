@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
-import { DefaultErrorFallback } from '../components/default-error-fallback';
+import { DefaultRemoteViewErrorFallback } from '../components/default-remote-view-error-fallback';
 import { RemoteViewError } from '../utils/remoteViewError';
 
 function mockedUseRemoteViewError(n: number): RemoteViewError | undefined {
@@ -57,7 +57,7 @@ describe('RemoteView DefaultErrorFallback', () => {
   });
 
   it('should render an error as expected', async () => {
-    render(<DefaultErrorFallback />);
+    render(<DefaultRemoteViewErrorFallback />);
     const failText =
       'Something went wrong for module at URL "http://cdn.example.com/fake-module-url".';
 
@@ -68,7 +68,7 @@ describe('RemoteView DefaultErrorFallback', () => {
   it('should throw a new error if a RemoteViewError doesnt exist in the context', async () => {
     render(
       <MiniErrorBoundary>
-        <DefaultErrorFallback />
+        <DefaultRemoteViewErrorFallback />
       </MiniErrorBoundary>,
     );
 

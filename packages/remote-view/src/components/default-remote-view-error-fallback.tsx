@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRemoteViewError } from '../hooks/useRemoteViewError';
 
-export function DefaultErrorFallback() {
+export function DefaultRemoteViewErrorFallback() {
   const error = useRemoteViewError();
 
   if (!error) {

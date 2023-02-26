@@ -80,7 +80,9 @@ jest.mock('../utils/dynamicallyImport', () => {
 function getMicrofrontendExample(
   useIframe = false,
   customLoader: JSX.Element | undefined,
-  customFallback: React.ComponentType | undefined,
+  customFallback:
+    | React.ComponentType<{ error: Error | RemoteViewError }>
+    | undefined,
 ) {
   return function MicrofrontendExample() {
     const [remoteViews] = useState([
