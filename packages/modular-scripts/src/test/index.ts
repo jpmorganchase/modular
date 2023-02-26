@@ -214,6 +214,7 @@ async function computeRegexesFromPackageNames(
 ): Promise<string[]> {
   const allWorkspaces = await getAllWorkspaces(getModularRoot());
   return targets
+    .filter((packageName) => allWorkspaces[0].get(packageName)?.type)
     .map((packageName) => allWorkspaces[0].get(packageName)?.location)
     .filter(Boolean) as string[];
 }

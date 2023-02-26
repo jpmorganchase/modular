@@ -155,10 +155,18 @@ async function computeWorkspaceSelection({
 
   const targetsToBuild = [...new Set(targets.concat(changedTargets))];
 
-  // We want to remove all the non-buildable packages from the package scope. Create a filter predicate that looks up to the package map
+  // We want to remove all the non-buildable packages from the package scope.
+  // Let's create a filter predicate that looks up to the package map in the closure on the fly.
   const isBuildable = (name: string) => {
-    const type = allWorkspacePackages.get(name)?.modular?.type;
-    return type && isBuildableModularType(type as PackageType);
+    const packageInfo = allWorkspacePackages.get(name);
+    const type = packageInfo?.modular?.type;
+    const buildScript = packageInfo?.rawPackageJson?.scripts?.build;
+    // If the package has a modular type and the type is buildable, the package is buildable
+    if (type && isBuildableModularType(type as PackageType)) return true;
+    // If the package has no modular configuration but has a build script, then it's a non-Modular buildable package
+    if (!packageInfo?.modular && buildScript) return true;
+    // In all other occasions, the package is not buildable
+    return false;
   };
 
   let ancestorsSet: Set<string> = new Set();
