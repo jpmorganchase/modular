@@ -77,13 +77,31 @@ jest.mock('../utils/dynamicallyImport', () => {
   };
 });
 
-function getMicrofrontendExample(
-  useIframe = false,
-  customLoader: JSX.Element | undefined,
-  customFallback:
-    | React.ComponentType<{ error: Error | RemoteViewError }>
-    | undefined,
-) {
+function MaybeSimulateCrash({
+  children,
+  shouldCrash,
+}: {
+  children: React.ReactNode;
+  shouldCrash: boolean;
+}) {
+  if (shouldCrash) {
+    throw new TypeError('Crashing on purpose');
+  }
+
+  return <div>{children}</div>;
+}
+
+function getMicrofrontendExample({
+  useIframe,
+  customLoader,
+  customFallback,
+  crashWithUnknownError,
+}: {
+  useIframe?: boolean;
+  customLoader?: JSX.Element;
+  customFallback?: React.ComponentType<{ error: Error | RemoteViewError }>;
+  crashWithUnknownError?: boolean;
+}) {
   return function MicrofrontendExample() {
     const [remoteViews] = useState([
       'http://localhost:8484/esm-view-card',
@@ -95,11 +113,13 @@ function getMicrofrontendExample(
         <RemoteViewErrorBoundary content={customFallback}>
           {remoteViews.map((v, key) => (
             <section key={key}>
-              <RemoteView
-                loading={customLoader}
-                baseUrl={v}
-                loadWithIframeFallback={() => useIframe}
-              />
+              <MaybeSimulateCrash shouldCrash={crashWithUnknownError || false}>
+                <RemoteView
+                  loading={customLoader}
+                  baseUrl={v}
+                  loadWithIframeFallback={() => useIframe || false}
+                />
+              </MaybeSimulateCrash>
             </section>
           ))}
         </RemoteViewErrorBoundary>
@@ -120,10 +140,12 @@ describe('RemoteView', () => {
           json: () => manifest,
         });
       }) as jest.Mock;
+
+      jest.spyOn(console, 'error').mockImplementation(() => undefined);
     });
 
     it('should render a microfrontend example', async () => {
-      const Example = getMicrofrontendExample(false, undefined, undefined);
+      const Example = getMicrofrontendExample({ useIframe: false });
 
       render(<Example />);
 
@@ -143,7 +165,7 @@ describe('RemoteView', () => {
     });
 
     it('should render using iframe fallbacks', async () => {
-      const Example = getMicrofrontendExample(true, undefined, undefined);
+      const Example = getMicrofrontendExample({ useIframe: true });
 
       render(<Example />);
 
@@ -168,11 +190,9 @@ describe('RemoteView', () => {
     });
 
     it('should render using a custom loader', async () => {
-      const Example = getMicrofrontendExample(
-        false,
-        <div>Custom loader</div>,
-        undefined,
-      );
+      const Example = getMicrofrontendExample({
+        customLoader: <div>Custom loader</div>,
+      });
 
       render(<Example />);
 
@@ -183,6 +203,18 @@ describe('RemoteView', () => {
       await waitForElementToBeRemoved(() =>
         screen.queryAllByText('Custom loader'),
       );
+    });
+
+    it('should capture an error within a RemoteView', async () => {
+      const Example = getMicrofrontendExample({
+        crashWithUnknownError: true,
+      });
+
+      render(<Example />);
+
+      await waitFor(() => screen.findByText('Crashing on purpose'));
+      const errorText = screen.getByText('Crashing on purpose');
+      expect(errorText).toBeInTheDocument();
     });
   });
 
@@ -202,7 +234,7 @@ describe('RemoteView', () => {
     });
 
     it('should throw and display the default error fallback', async () => {
-      const Example = getMicrofrontendExample(false, undefined, undefined);
+      const Example = getMicrofrontendExample({});
       render(<Example />);
 
       const failText =
@@ -224,7 +256,9 @@ describe('RemoteView', () => {
         return <div>Custom fallback component: {filteredMsg}</div>;
       }
 
-      const Example = getMicrofrontendExample(false, undefined, CustomFallback);
+      const Example = getMicrofrontendExample({
+        customFallback: CustomFallback,
+      });
       render(<Example />);
 
       const failText = 'Custom fallback component: bad-component-a';
@@ -246,7 +280,7 @@ describe('RemoteView', () => {
     });
 
     it('gets caught by the default error boundary', async () => {
-      const Example = getMicrofrontendExample(false, undefined, undefined);
+      const Example = getMicrofrontendExample({});
       render(<Example />);
 
       const failText =

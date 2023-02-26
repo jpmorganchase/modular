@@ -51,7 +51,7 @@ class MiniErrorBoundary extends React.Component<
   }
 }
 
-describe('RemoteView DefaultErrorFallback', () => {
+describe('RemoteView DefaultRemoteViewErrorFallback', () => {
   beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => undefined);
   });
