@@ -7,7 +7,7 @@
   },
   "version": "0.0.0",
   "dependencies": {
-    "@modular-scripts/remote-view": "1.0.0",
+    "@modular-scripts/remote-view": "*",
     "@salt-ds/core": "1.1.0",
     "@salt-ds/lab": "1.0.0-alpha.1",
     "@salt-ds/theme": "1.0.0",
