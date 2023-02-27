@@ -1,3 +1,8 @@
+---
+parent: Components
+title: <RemoteView />
+---
+
 # `<RemoteView />`
 
 `<RemoteView />` is a Modular React component that enables the micro-frontend
