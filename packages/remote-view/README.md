@@ -192,8 +192,10 @@ return (
 Supply the `content` prop. If the `error` prop is an instance of
 `RemoteViewError`, will contain RemoteView-specific error details.
 
-```tsx
+```jsx
 function MyErrorContent({ error }: { error: Error | RemoteViewError }) {
+  const isRemoteViewError = error instanceof RemoteViewError;
+
   return (
     <div>
       <H1>A custom error fallback component</H1>
@@ -208,6 +210,9 @@ function MyErrorContent({ error }: { error: Error | RemoteViewError }) {
       <Text>
         Message: <code>{error.message}</code>
       </Text>
+      {isRemoteViewError && (
+        <Text>RemoteView could not load "{error.remoteViewUrl}"</Text>
+      )}
     </div>
   );
 }
@@ -286,6 +291,6 @@ crashes. `<RemoteView />`s can throw during attempts to load ESM views
 (unsupported manifests, unreachable manifests), but also inside the subtree that
 is ultimately rendered, which is outside the control of `<RemoteView />`.
 
-| Prop      | Type                | Required? | Description                                                                                                        | Default |
-| --------- | ------------------- | --------- | ------------------------------------------------------------------------------------------------------------------ | ------- | ------------------------------------------------------------------------------------ |
-| `content` | React.ComponentType | No        | Optional component to customize the error boundary. If provided, receives an `error` prop of type `RemoteViewError | Error`. | A simple div that outputs "Something went wrong" with an accompanying error message. |
+| Prop      | Type                | Required? | Description                                                                                                                     | Default                                                                              |
+| --------- | ------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `content` | React.ComponentType | No        | Optional component to customize the error boundary. If provided, receives an `error` prop of type `RemoteViewError` or `Error`. | A simple div that outputs "Something went wrong" with an accompanying error message. |
