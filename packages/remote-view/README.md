@@ -9,6 +9,7 @@ pattern using Modular [ESM views](https://modular.js.org/esm-views/).
   [ESM Views](https://modular.js.org/esm-views/) and an
   [ESM CDN](https://modular.js.org/esm-views/esm-cdn/)
 - Supports loading local and global CSS
+- Flexible error handling
 - Declaratively fall back to iframes
 - Compatible with any ESM CDN
 - Also supports Modular [apps](https://modular.js.org/package-types/) via
@@ -41,15 +42,15 @@ This approach enables the microfrontend pattern, which can also be thought as
 distributed UIs.
 
 `<RemoteView />` also supports rendering non-ESM View modules by falling back to
-iframes. In this case, an iframe is rendered in the React tree, instead of
-another native React tree.
+iframes. In this case, an iframe is rendered in the React tree, instead of a
+native React subtree.
 
 ## Example
 
 Load (dynamically import) and render a set of
 [esm-cdn-hosted](https://modular.js.org/esm-views/esm-cdn/) views:
 
-```tsx
+```jsx
 import React, { useState } from 'react';
 import {
   RemoteViewProvider,
@@ -66,10 +67,10 @@ function MyPortal() {
 
   return (
     <RemoteViewProvider>
-      {remoteViews.map((v, key) => (
+      {remoteViews.map((url, key) => (
         <section key={key}>
           <RemoteViewErrorBoundary>
-            <RemoteView baseUrl={v} />
+            <RemoteView baseUrl={url} />
           </RemoteViewErrorBoundary>
         </section>
       ))}
@@ -78,14 +79,18 @@ function MyPortal() {
 }
 ```
 
-Modular `esm-view`s will be dynamically loaded, whereas Modular `app`s are
+Modular [ESM Views](https://modular.js.org/esm-views) will be dynamically
+loaded, whereas Modular [Apps](https://modular.js.org/package-types/app/) are
 loaded into an iframe. For more information on Modular types, check out the
-[Package Types on the Modular docs](https://modular.js.org/package-types/).
+[Package Types breakdown on the Modular docs](https://modular.js.org/package-types/).
 
-It is also possible top load specific `esm-view`s into an iframe - provide
-`loadWithIframeFallback` prop to trigger the iframe fallback:
+## Fall back to iframes
 
-```tsx
+It is also possible to load [ESM Views](https://modular.js.org/esm-views) (in
+addition to [Apps](https://modular.js.org/package-types/app/)) into an iframe if
+desired - provide `loadWithIframeFallback` prop to trigger the iframe fallback:
+
+```jsx
 // Use an iframe fallback for one particular view
 function determineFallbackCases(manifest: MicrofrontendManifest) {
   if (manifest.name === '@myscope/example-module') {
@@ -116,49 +121,24 @@ return (
 You can customize the loading state of each `<RemoteView />` by providing a
 `loading` prop:
 
-```tsx
+```jsx
 return (
-  <RemoteViewErrorBoundary>
-    <RemoteView
-      baseUrl={myUrl}
-      loadWithIframeFallback={determineFallbackCases}
-      loading={<div>My custom loading component</div>}
-    />
-  </RemoteViewErrorBoundary>
+  <RemoteViewProvider>
+    <RemoteViewErrorBoundary>
+      <RemoteView
+        baseUrl={myUrl}
+        loadWithIframeFallback={determineFallbackCases}
+        loading={<div>My custom loading component</div>}
+      />
+    </RemoteViewErrorBoundary>
+  </RemoteViewProvider>
 );
 ```
 
 By default, `<RemoteView />` will output a very simple loading message:
 `<div>Loading</div>`.
 
-## Custom error boundary
-
-It's recommended to use `<RemoteViewErrorBoundary />` around `<RemoteView />`
-because the runtime dynamic imports that happen mean that safety can never be
-guaranteed.
-
-`<RemoteViewErrorBoundary />` exposes an `errorFallback` prop which can be used
-to customize the error boundary, which will receive a relevant error `message`,
-if available:
-
-```tsx
-function CustomFallback({ message }: { message: string | undefined }) {
-  return (
-    <div>Custom error boundary component contained message: {message}</div>
-  );
-}
-
-<RemoteViewErrorBoundary errorFallback={CustomFallback}>
-  <RemoteView baseUrl={myUrl} loadWithIframeFallback={determineFallbackCases} />
-</RemoteViewErrorBoundary>;
-```
-
 Alternatively, you bring your own error boundary.
-
-## CSS
-
-You can read more about how CSS is handled on the
-[Modular docs](https://modular.js.org/esm-views/external-css-imports/).
 
 ## Security
 
@@ -176,11 +156,111 @@ recommended to use error boundaries. `<RemoteView />` attempts to render
 whatever module it finds into your React tree, and this depends on runtime
 imports actually returning valid React modules.
 
+## CSS
+
+`<RemoteView />` automatically imports local and global CSS from ESM Views that
+have been specified according to the
+[Modular docs](https://modular.js.org/esm-views/external-css-imports/).
+
+When an iframe fallback is used, this does not apply.
+
+## Error handling
+
+It is strongly recommended to wrap any usage of `<RemoteView />` with error
+boundaries. There are two approaches you can take:
+
+- Use the provided `<RemoteViewErrorBoundary />`, optionally customizing the
+  content that is displayed
+- Use your own error boundary
+
+### Using the default error boundary
+
+Outputs a default, simple error component displaying the error details
+
+```jsx
+return (
+  <RemoteViewProvider>
+    <RemoteViewErrorBoundary>
+      <RemoteView baseUrl={url} />
+    </RemoteViewErrorBoundary>
+  </RemoteViewProvider>
+);
+```
+
+### Customizing the content of `<RemoteViewErrorBoundary />`
+
+Supply the `content` prop. If the `error` prop is an instance of
+`RemoteViewError`, will contain RemoteView-specific error details.
+
+```tsx
+function MyErrorContent({ error }: { error: Error | RemoteViewError }) {
+  return (
+    <div>
+      <H1>A custom error fallback component</H1>
+      <Text>
+        You can render and do anything you want, it's just a React component.
+      </Text>
+      <br />
+      <Text>This error:</Text>
+      <Text>
+        Name: <code>{error.name}</code>
+      </Text>
+      <Text>
+        Message: <code>{error.message}</code>
+      </Text>
+    </div>
+  );
+}
+
+return (
+  <RemoteViewProvider>
+    <RemoteViewErrorBoundary content={MyErrorContent}>
+      <RemoteView baseUrl={url} />
+    </RemoteViewErrorBoundary>
+  </RemoteViewProvider>
+);
+```
+
+### Using a fully custom error boundary
+
+The RemoteView subtree can throw a `RemoteViewError` or other `Error` subclass.
+
+If the error relates to the loading of the ESM View, a `RemoteViewError` should
+be thrown. In all other cases (e.g. any crash in the React subtree after
+rendering), an `Error` (of any subclass) will throw.
+
+Use the standard class component `componentDidCatch` API to handle errors as you
+choose.
+
+```jsx
+return (
+  <RemoteViewProvider>
+    <MyErrorBoundary>
+      <RemoteView baseUrl={url} />
+    </MyErrorBoundary>
+  </RemoteViewProvider>
+);
+```
+
+Examples of how errors can be handled, including recovery, can be seen in
+`packages/remote-view-demos`.
+
+## Examples
+
+There are a range of examples implemented in `packages/remote-view-demos`:
+
+- 2 ESM Views loaded and rendering (aka "happy path")
+- Iframe fallback
+- All types of error handling
+- How to recover a crashed view
+
 ## API
 
 `<RemoteViewProvider />`
 
-Required provider that must wrap any `<RemoteView />` instances.
+Required provider that must wrap any `<RemoteView />` instances. Contains a
+context that holds any ESM Views that may have been loaded by child
+`<RemoteView />` components.
 
 `<RemoteView />`
 
@@ -193,15 +273,13 @@ Required provider that must wrap any `<RemoteView />` instances.
 `MicrofrontendManifest` represents the `package.json` of an ESM View served over
 an ESM CDN. This includes fields like the package `name`, `style`,
 `styleImports` and more - see `packages/modular-types/src/types.ts` for the full
-list of fields that are expected.
+list of fields that are expected. You can also refer to the
+[Modular docs on CSS imports](https://modular.js.org/esm-views/external-css-imports/).
 
 `<RemoteViewErrorBoundary />`
 
 Recommended error boundary component to protect against runtime crashes
 
-| Prop            | Type                | Required? | Description                                                                                                                                   | Default                                                                                      |
-| --------------- | ------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| `errorFallback` | React.ComponentType | No        | Optional component to customize the error boundary. Accepts an optional `message` string prop which contains the error message, if available. | A simple div that outputs "Something went wrong" with an accompanying error message if found |
-
-A custom [Error Boundary](https://reactjs.org/docs/error-boundaries.html) can
-also be used in place of `<RemoteViewErrorBoundary />`.
+| Prop      | Type                | Required? | Description                                                                                                                     | Default                                                                              |
+| --------- | ------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `content` | React.ComponentType | No        | Optional component to customize the error boundary. If provided, receives an `error` prop of type `RemoteViewError` or `Error`. | A simple div that outputs "Something went wrong" with an accompanying error message. |
