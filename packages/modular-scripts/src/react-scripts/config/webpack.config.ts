@@ -91,6 +91,8 @@ export default async function getWebpackConfig(
     ? createProductionConfig(shouldUseSourceMap, targetPaths)
     : createDevelopmentConfig();
 
+  // If an index is provided, this is its path. Otherwise false.
+  const indexPath = fs.existsSync(targetPaths.appHtml) && targetPaths.appHtml;
   // Plugin configuration
   const pluginConfig: Configuration = createPluginConfig(
     isApp,
@@ -99,6 +101,7 @@ export default async function getWebpackConfig(
     useTypeScript,
     styleImports,
     targetPaths,
+    indexPath,
   );
 
   // Merge all configurations into the final one

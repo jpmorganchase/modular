@@ -2,9 +2,6 @@
 // could be happening simultaneously across packages, so
 // try be 'thread-safe'. No state outside of functions
 
-// shorthand for building every workspace, if you're ever debugging this flow
-// rm -rf dist && yarn modular build `ls -m1 packages | sed -e 'H;${x;s/\n/,/g;s/^,//;p;};d'`
-
 import * as path from 'path';
 import { paramCase as toParamCase } from 'change-case';
 import fs from 'fs-extra';

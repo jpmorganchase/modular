@@ -29,6 +29,7 @@ export default function createPluginConfig(
   useTypeScript: boolean,
   styleImports: Set<string>,
   paths: Paths,
+  indexPath: string | false,
 ): { plugins: any[] } {
   const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
   const isEnvDevelopment = !isEnvProduction;
@@ -133,7 +134,12 @@ export default function createPluginConfig(
           env,
           paths,
         )
-      : createEsmViewPluginConfig(isEnvProduction, styleImports),
+      : createEsmViewPluginConfig(
+          isEnvProduction,
+          styleImports,
+          indexPath,
+          env,
+        ),
     isEnvProduction
       ? createProductionPluginConfig()
       : createDevelopmentPluginConfig(paths),

@@ -5,6 +5,10 @@ import { Configuration, WebpackPluginInstance } from 'webpack';
 import { Paths } from '../../../utils/determineTargetPaths';
 import { parsePackageName } from '../../../utils/parsePackageName';
 import { rewriteModuleSpecifier } from '../../../utils/buildImportMap';
+import { ClientEnvironment } from '../../../esbuild-scripts/config/getClientEnvironment';
+import fs from 'fs-extra';
+import parse5 from 'parse5';
+import { Element } from 'parse5/dist/tree-adapters/default';
 
 export function createEsmViewConfig(
   dependencyMap: Map<string, string>,
@@ -82,28 +86,60 @@ function getVirtualTrampoline(paths: Paths, useReactCreateRoot: boolean) {
 export function createEsmViewPluginConfig(
   isEnvProduction: boolean,
   styleImports: Set<string>,
+  indexPath: string | false,
+  env: ClientEnvironment,
 ): { plugins: WebpackPluginInstance[] } {
   const importUrlLinks: string[] = [];
   styleImports.forEach((importUrl) => {
     importUrlLinks.push(`<link rel="stylesheet" href="${importUrl}"></script>`);
   });
+  let templateContent;
+
+  // If we have an index template in the project, let's use it
+  if (indexPath) {
+    templateContent = fs.readFileSync(indexPath, 'utf8');
+
+    // Style (global) imports are excluded from the build, so they don't get injected. We have to manually inject them in the index template.
+    if (styleImports.size) {
+      //TODO: this is probably duplicated from api.ts
+      const page = parse5.parse(templateContent);
+      const html = page.childNodes.find(
+        (node) => node.nodeName === 'html',
+      ) as Element;
+      const head = html.childNodes.find(
+        (node) => node.nodeName === 'head',
+      ) as Element;
+
+      styleImports.forEach((importUrl) =>
+        head.childNodes.push(
+          ...parse5.parseFragment(
+            `<link rel="stylesheet" href="${importUrl}" />`,
+          ).childNodes,
+        ),
+      );
+      templateContent = parse5.serialize(page);
+    }
+  } else {
+    // Standard minimal template to start an esm-view
+    templateContent = dedent(`
+      <!DOCTYPE html>
+        <html>
+          <head>
+          ${importUrlLinks.join('\n')}
+          </head>
+          <body>
+            <div id="root"></div>
+          </body>
+        </html>`);
+  }
+
   return {
     plugins: [
       // We need to provide a synthetic index.html in case we're starting a ESM view
       !isEnvProduction &&
         (new HtmlWebpackPlugin({
           inject: true,
-          templateContent: `
-                <!DOCTYPE html>
-                <head>
-                  ${importUrlLinks.join('\n')}
-                </head>
-                <html>
-                  <body>
-                    <div id="root"></div>
-                  </body>
-                </html>
-                `,
+          templateContent,
           scriptLoading: 'module',
         }) as WebpackPluginInstance),
     ].filter(Boolean) as WebpackPluginInstance[],
