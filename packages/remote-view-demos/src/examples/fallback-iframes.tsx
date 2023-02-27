@@ -7,11 +7,17 @@ import {
 import { H2, Text } from '@salt-ds/core';
 import { Spinner } from '@salt-ds/lab';
 
+import type { MicrofrontendManifest } from '@modular-scripts/modular-types';
+
 export function FallbackIframesExample() {
   const remoteViews = [
     'http://localhost:8484/view1',
     'http://localhost:8484/view2',
   ];
+
+  function shouldUseIframe(manifest: MicrofrontendManifest) {
+    return ['view1', 'view2'].includes(manifest.name);
+  }
 
   return (
     <section>
@@ -20,7 +26,10 @@ export function FallbackIframesExample() {
         Implement <code>loadWithIframeFallback</code> to control any views that
         should render in an iframe instead.
       </Text>
-      <RemoteViewProvider>
+      <RemoteViewProvider
+        urls={remoteViews}
+        loadWithIframeFallback={shouldUseIframe}
+      >
         <div className="ExampleContainer ExampleContainer--happy-path">
           {remoteViews.map((url, key) => (
             <div className="RemoteViewContainer" key={key}>
@@ -28,7 +37,7 @@ export function FallbackIframesExample() {
               <div className="RemoteViewContainer__content">
                 <RemoteViewErrorBoundary>
                   <RemoteView
-                    baseUrl={url}
+                    url={url}
                     loading={
                       <Spinner
                         aria-label="loading"
@@ -36,7 +45,6 @@ export function FallbackIframesExample() {
                         className="RemoteViewContainer__spinner"
                       />
                     }
-                    loadWithIframeFallback={() => true}
                   />
                 </RemoteViewErrorBoundary>
               </div>

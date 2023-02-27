@@ -42,14 +42,14 @@ export function CustomErrorContentExample() {
         content on the provided <code>RemoteViewErrorBoundary</code>:{' '}
         <pre>{'<RemoteViewErrorBoundary content={MyErrorContent}>'}</pre>
       </Text>
-      <RemoteViewProvider>
+      <RemoteViewProvider urls={[badView]}>
         <div className="ExampleContainer">
           <div className="RemoteViewContainer">
             <div className="RemoteViewContainer__label">{badView}</div>
             <div className="RemoteViewContainer__content">
               <RemoteViewErrorBoundary content={MyErrorContent}>
                 <RemoteView
-                  baseUrl={badView}
+                  url={badView}
                   loading={
                     <Spinner
                       aria-label="loading"

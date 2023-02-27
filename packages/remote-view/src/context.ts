@@ -1,20 +1,7 @@
 import { createContext } from 'react';
-import { RemoteViewError } from './utils/remoteViewError';
 
-import type { MicroFrontendState } from './types';
+import type { RemoteViewsContext, RemoteViewErrorsContext } from './types';
 
-export const ViewsContext = createContext<
-  [
-    MicroFrontendState,
-    (value: (prevState: MicroFrontendState) => MicroFrontendState) => void,
-  ]
->([{}, () => null]);
+export const ViewsContext = createContext<RemoteViewsContext>({});
 
-export const ErrorContext = createContext<
-  [
-    RemoteViewError | undefined,
-    (
-      value: (prevState: RemoteViewError | undefined) => RemoteViewError,
-    ) => void,
-  ]
->([undefined, () => null]);
+export const ErrorContext = createContext<RemoteViewErrorsContext>({});

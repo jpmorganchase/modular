@@ -17,14 +17,14 @@ export function DefaultErrorBoundaryExample() {
         Simply wrap <code>RemoteView</code>s with the provided{' '}
         <code>RemoteViewErrorBoundary</code>.
       </Text>
-      <RemoteViewProvider>
+      <RemoteViewProvider urls={[badView]}>
         <div className="ExampleContainer">
           <div className="RemoteViewContainer">
             <div className="RemoteViewContainer__label">{badView}</div>
             <div className="RemoteViewContainer__content">
               <RemoteViewErrorBoundary>
                 <RemoteView
-                  baseUrl={badView}
+                  url={badView}
                   loading={
                     <Spinner
                       aria-label="loading"

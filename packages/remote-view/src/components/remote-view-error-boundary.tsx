@@ -46,8 +46,11 @@ export class RemoteViewErrorBoundary extends React.Component<
       }
 
       // RemoteViewError specific error fallback
-      if (this.state.isRemoteViewError) {
-        return <DefaultRemoteViewErrorFallback />;
+      if (
+        this.state.isRemoteViewError &&
+        this.state.error instanceof RemoteViewError
+      ) {
+        return <DefaultRemoteViewErrorFallback error={this.state.error} />;
       }
 
       // Error fallback for all other cases

@@ -15,7 +15,7 @@ export function CustomErrorBoundaryExample() {
         error. This allows implementing retry, reporting and other custom error
         handling features.
       </Text>
-      <RemoteViewProvider>
+      <RemoteViewProvider urls={[badView]}>
         <pre>{'<MyErrorBoundary><RemoteView></MyErrorBoundary>'}</pre>
         <div className="ExampleContainer">
           <div className="RemoteViewContainer">
@@ -23,7 +23,7 @@ export function CustomErrorBoundaryExample() {
             <div className="RemoteViewContainer__content">
               <MyErrorBoundary>
                 <RemoteView
-                  baseUrl={badView}
+                  url={badView}
                   loading={
                     <Spinner
                       aria-label="loading"

@@ -56,10 +56,10 @@ export function ErrorRecoveryExample() {
           <div className="RemoteViewContainer__label">{remoteViews[0]}</div>
           <div className="RemoteViewContainer__content">
             {showRecoveryView && (
-              <RemoteViewProvider>
+              <RemoteViewProvider urls={remoteViews}>
                 <RemoteViewErrorBoundary>
                   <SimulateCrash shouldCrash={shouldCrash}>
-                    <RemoteView baseUrl={remoteViews[0]} />
+                    <RemoteView url={remoteViews[0]} />
                   </SimulateCrash>
                 </RemoteViewErrorBoundary>
               </RemoteViewProvider>

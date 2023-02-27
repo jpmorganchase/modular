@@ -28,7 +28,7 @@ export function HappyPathExample() {
         Adding a duplicate view demonstrates that remote modules are only loaded
         once.
       </Text>
-      <RemoteViewProvider>
+      <RemoteViewProvider urls={remoteViews}>
         <div className="ExampleContainer ExampleContainer--happy-path">
           {remoteViews.map((url, key) => (
             <div className="RemoteViewContainer" key={key}>
@@ -36,7 +36,7 @@ export function HappyPathExample() {
               <div className="RemoteViewContainer__content">
                 <RemoteViewErrorBoundary>
                   <RemoteView
-                    baseUrl={url}
+                    url={url}
                     loading={
                       <Spinner
                         aria-label="loading"

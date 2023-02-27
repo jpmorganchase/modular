@@ -70,7 +70,7 @@ function MyPortal() {
       {remoteViews.map((url, key) => (
         <section key={key}>
           <RemoteViewErrorBoundary>
-            <RemoteView baseUrl={url} />
+            <RemoteView url={url} />
           </RemoteViewErrorBoundary>
         </section>
       ))}
@@ -102,11 +102,11 @@ function determineFallbackCases(manifest: MicrofrontendManifest) {
 
 return (
   <RemoteViewProvider>
-    {remoteViews.map((v, key) => (
+    {remoteViews.map((url, key) => (
       <section key={key}>
         <RemoteViewErrorBoundary>
           <RemoteView
-            baseUrl={v}
+            url={url}
             loadWithIframeFallback={determineFallbackCases}
           />
         </RemoteViewErrorBoundary>
@@ -126,7 +126,7 @@ return (
   <RemoteViewProvider>
     <RemoteViewErrorBoundary>
       <RemoteView
-        baseUrl={myUrl}
+        url={myUrl}
         loadWithIframeFallback={determineFallbackCases}
         loading={<div>My custom loading component</div>}
       />
@@ -181,7 +181,7 @@ Outputs a default, simple error component displaying the error details
 return (
   <RemoteViewProvider>
     <RemoteViewErrorBoundary>
-      <RemoteView baseUrl={url} />
+      <RemoteView url={url} />
     </RemoteViewErrorBoundary>
   </RemoteViewProvider>
 );
@@ -215,7 +215,7 @@ function MyErrorContent({ error }: { error: Error | RemoteViewError }) {
 return (
   <RemoteViewProvider>
     <RemoteViewErrorBoundary content={MyErrorContent}>
-      <RemoteView baseUrl={url} />
+      <RemoteView url={url} />
     </RemoteViewErrorBoundary>
   </RemoteViewProvider>
 );
@@ -236,7 +236,7 @@ choose.
 return (
   <RemoteViewProvider>
     <MyErrorBoundary>
-      <RemoteView baseUrl={url} />
+      <RemoteView url={url} />
     </MyErrorBoundary>
   </RemoteViewProvider>
 );
@@ -256,19 +256,22 @@ There are a range of examples implemented in `packages/remote-view-demos`:
 
 ## API
 
-`<RemoteViewProvider />`
+### `<RemoteViewProvider />`
 
-Required provider that must wrap any `<RemoteView />` instances. Contains a
-context that holds any ESM Views that may have been loaded by child
-`<RemoteView />` components.
+Required provider that must wrap any `<RemoteView />` instances. Is responsible
+for fetching ESM views.
 
-`<RemoteView />`
+| Prop                     | Type                                                      | Required? | Description                                                                                        | Default     |
+| ------------------------ | --------------------------------------------------------- | --------- | -------------------------------------------------------------------------------------------------- | ----------- |
+| `urls`                   | String[] (URLs)                                           | Yes       | URLs of the ESM Views you want to load                                                             | N/A         |
+| `loadWithIframeFallback` | Function `fn(manifest: MicrofrontendManifest) => boolean` | No        | Optional function to determine if an iframe fallback should be used in place of a React component. | `undefined` |
 
-| Prop                     | Type                                                      | Required? | Description                                                                                        | Default              |
-| ------------------------ | --------------------------------------------------------- | --------- | -------------------------------------------------------------------------------------------------- | -------------------- |
-| `baseUrl`                | String (URL)                                              | Yes       | URL to the remote view. Can be either an ESM view URL on your ESM CDN, or an iframe URL            | N/A                  |
-| `loadWithIframeFallback` | Function `fn(manifest: MicrofrontendManifest) => boolean` | No        | Optional function to determine if an iframe fallback should be used in place of a React component. | `undefined`          |
-| `loading`                | JSX.Element                                               | No        | Display a custom loading component whilst the remote view is being fetched and rendered            | `<div>Loading</div>` |
+### `<RemoteView />`
+
+| Prop      | Type         | Required? | Description                                                                             | Default              |
+| --------- | ------------ | --------- | --------------------------------------------------------------------------------------- | -------------------- |
+| `url`     | String (URL) | Yes       | URL to the remote view. Can be either an ESM view URL on your ESM CDN, or an iframe URL | N/A                  |
+| `loading` | JSX.Element  | No        | Display a custom loading component whilst the remote view is being fetched and rendered | `<div>Loading</div>` |
 
 `MicrofrontendManifest` represents the `package.json` of an ESM View served over
 an ESM CDN. This includes fields like the package `name`, `style`,
@@ -276,10 +279,13 @@ an ESM CDN. This includes fields like the package `name`, `style`,
 list of fields that are expected. You can also refer to the
 [Modular docs on CSS imports](https://modular.js.org/esm-views/external-css-imports/).
 
-`<RemoteViewErrorBoundary />`
+### `<RemoteViewErrorBoundary />`
 
-Recommended error boundary component to protect against runtime crashes
+Recommended (but optional) error boundary component to protect against runtime
+crashes. `<RemoteView />`s can throw during attempts to load ESM views
+(unsupported manifests, unreachable manifests), but also inside the subtree that
+is ultimately rendered, which is outside the control of `<RemoteView />`.
 
-| Prop      | Type                | Required? | Description                                                                                                                     | Default                                                                              |
-| --------- | ------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| `content` | React.ComponentType | No        | Optional component to customize the error boundary. If provided, receives an `error` prop of type `RemoteViewError` or `Error`. | A simple div that outputs "Something went wrong" with an accompanying error message. |
+| Prop      | Type                | Required? | Description                                                                                                        | Default |
+| --------- | ------------------- | --------- | ------------------------------------------------------------------------------------------------------------------ | ------- | ------------------------------------------------------------------------------------ |
+| `content` | React.ComponentType | No        | Optional component to customize the error boundary. If provided, receives an `error` prop of type `RemoteViewError | Error`. | A simple div that outputs "Something went wrong" with an accompanying error message. |

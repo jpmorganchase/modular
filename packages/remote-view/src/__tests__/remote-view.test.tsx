@@ -14,7 +14,6 @@ import {
   RemoteView,
   RemoteViewErrorBoundary,
 } from '../components';
-import { useRemoteViewError } from '../hooks/useRemoteViewError';
 import { RemoteViewError } from '../utils/remoteViewError';
 
 function FakeComponentA() {
@@ -109,16 +108,15 @@ function getMicrofrontendExample({
     ]);
 
     return (
-      <RemoteViewProvider>
+      <RemoteViewProvider
+        loadWithIframeFallback={() => useIframe || false}
+        urls={remoteViews}
+      >
         <RemoteViewErrorBoundary content={customFallback}>
           {remoteViews.map((v, key) => (
             <section key={key}>
               <MaybeSimulateCrash shouldCrash={crashWithUnknownError || false}>
-                <RemoteView
-                  loading={customLoader}
-                  baseUrl={v}
-                  loadWithIframeFallback={() => useIframe || false}
-                />
+                <RemoteView loading={customLoader} url={v} />
               </MaybeSimulateCrash>
             </section>
           ))}
@@ -247,8 +245,7 @@ describe('RemoteView', () => {
     });
 
     it('should throw and display a custom error fallback', async () => {
-      function CustomFallback() {
-        const error = useRemoteViewError();
+      function CustomFallback({ error }: { error: Error | RemoteViewError }) {
         const filteredMsgMatches = error?.message?.match(/bad-component-(a|b)/);
         const filteredMsg = filteredMsgMatches?.length
           ? filteredMsgMatches[0]
