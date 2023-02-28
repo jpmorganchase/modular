@@ -39,9 +39,11 @@ Modular `<RemoteView>`s work by
 your Modular [ESM Views](https://modular.js.org/esm-views) and natively
 rendering them into your React tree.
 
-To achieve this, `<RemoteView>` expects to load ESM Views from an ESM CDN, which
-exposes code as a native ES Module, plus accompanying files such as static CSS
-and the `package.json`.
+To achieve this, `<RemoteView />` loads
+[ESM View manifests](https://modular.js.org/esm-views/output-package-manifest/)
+that are statically served from a CDN. Once a manifest is fetched,
+`<RemoteView />` dynamically imports the ESM View's JS and CSS entrypoints and
+renders them as part of the caller's React tree.
 
 This approach enables the microfrontend pattern, which can also be thought as
 distributed UIs.
@@ -140,7 +142,7 @@ return (
 );
 ```
 
-By default, `<RemoteView />` will output a very simple loading message:
+By default, `<RemoteView />` outputs a very simple loading message:
 `<div>Loading</div>`.
 
 Alternatively, you bring your own error boundary.
@@ -192,6 +194,20 @@ return (
 );
 ```
 
+The error fallback contains a simple output:
+
+```jsx
+return (
+  <div>
+    <span>
+      Something went wrong for module at URL
+      "https://cdn.example.com/views/foo".
+    </span>
+    <pre>{error.message}</pre>
+  </div>
+);
+```
+
 ### Customizing the content of `<RemoteViewErrorBoundary />`
 
 Supply the `content` prop. If the `error` prop is an instance of
@@ -199,6 +215,8 @@ Supply the `content` prop. If the `error` prop is an instance of
 
 ```tsx
 function MyErrorContent({ error }: { error: Error | RemoteViewError }) {
+  const isRemoteViewError = error instanceof RemoteViewError;
+
   return (
     <div>
       <H1>A custom error fallback component</H1>
@@ -213,6 +231,9 @@ function MyErrorContent({ error }: { error: Error | RemoteViewError }) {
       <Text>
         Message: <code>{error.message}</code>
       </Text>
+      {isRemoteViewError && (
+        <Text>RemoteView could not load "{error.remoteViewUrl}"</Text>
+      )}
     </div>
   );
 }
@@ -248,11 +269,12 @@ return (
 ```
 
 Examples of how errors can be handled, including recovery, can be seen in
-`packages/remote-view-demos`.
+[`packages/remote-view-demos`](https://github.com/jpmorganchase/modular/tree/main/packages/remote-view-demos).
 
 ## Examples
 
-There are a range of examples implemented in `packages/remote-view-demos`:
+There are a range of examples implemented in
+[`packages/remote-view-demos`](https://github.com/jpmorganchase/modular/tree/main/packages/remote-view-demos):
 
 - 2 ESM Views loaded and rendering (aka "happy path")
 - Iframe fallback
@@ -291,6 +313,6 @@ crashes. `<RemoteView />`s can throw during attempts to load ESM views
 (unsupported manifests, unreachable manifests), but also inside the subtree that
 is ultimately rendered, which is outside the control of `<RemoteView />`.
 
-| Prop      | Type                | Required? | Description                                                                                                        | Default |
-| --------- | ------------------- | --------- | ------------------------------------------------------------------------------------------------------------------ | ------- | ------------------------------------------------------------------------------------ |
-| `content` | React.ComponentType | No        | Optional component to customize the error boundary. If provided, receives an `error` prop of type `RemoteViewError | Error`. | A simple div that outputs "Something went wrong" with an accompanying error message. |
+| Prop      | Type                | Required? | Description                                                                                                                     | Default                                                                              |
+| --------- | ------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `content` | React.ComponentType | No        | Optional component to customize the error boundary. If provided, receives an `error` prop of type `RemoteViewError` or `Error`. | A simple div that outputs "Something went wrong" with an accompanying error message. |
