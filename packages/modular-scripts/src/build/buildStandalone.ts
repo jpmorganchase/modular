@@ -7,16 +7,15 @@ import type { ModularType } from '@modular-scripts/modular-types';
 
 import * as logger from '../utils/logger';
 import getModularRoot from '../utils/getModularRoot';
-import execAsync from '../utils/execAsync';
 import getWorkspaceLocation from '../utils/getLocation';
-import createPaths from '../utils/determineTargetPaths';
+import determineTargetPaths from './common-scripts/determineTargetPaths';
 import printHostingInstructions from './printHostingInstructions';
 import { Asset, printFileSizesAfterBuild } from './fileSizeReporter';
 import type { StatsCompilation } from 'webpack';
 import { checkBrowsers } from '../utils/checkBrowsers';
 import checkRequiredFiles from '../utils/checkRequiredFiles';
-import createEsbuildBrowserslistTarget from '../utils/createEsbuildBrowserslistTarget';
-import { writeOutputIndexFiles, getEntryPoint } from '../esbuild-scripts/api';
+import createEsbuildBrowserslistTarget from './common-scripts/createEsbuildBrowserslistTarget';
+import { writeOutputIndexFiles, getEntryPoint } from './esbuild-scripts/api';
 import {
   webpackMeasureFileSizesBeforeBuild,
   createWebpackAssets,
@@ -28,17 +27,14 @@ import {
 import { getDependencyInfo } from '../utils/getDependencyInfo';
 import { isReactNewApi } from '../utils/isReactNewApi';
 import { getConfig } from '../utils/config';
-import determineTargetPaths from '../utils/determineTargetPaths';
-import buildWebpack from '../react-scripts/scripts/buildWebpack';
+import buildWebpack from './webpack-scripts/buildWebpack';
 
 export async function buildStandalone(
   target: string,
   type: Extract<ModularType, 'app' | 'esm-view'>,
 ) {
   // Setup Paths
-  const modularRoot = getModularRoot();
   const targetDirectory = await getWorkspaceLocation(target);
-  const targetName = toParamCase(target);
 
   const paths = await determineTargetPaths(target, targetDirectory);
   const isApp = type === 'app';
@@ -115,7 +111,7 @@ export async function buildStandalone(
   if (isEsbuild) {
     logger.debug('Building with esbuild');
     const { default: buildEsbuildApp } = await import(
-      '../esbuild-scripts/build'
+      './esbuild-scripts/build'
     );
     const result = await buildEsbuildApp(target, paths, importMap, type);
     jsEntryPoint = getEntryPoint(paths, result, '.js');

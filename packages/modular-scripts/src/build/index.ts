@@ -1,5 +1,5 @@
 import { buildStandalone } from './buildStandalone';
-import { buildPackage } from './buildPackage';
+import { buildPackage } from './build-package';
 import * as logger from '../utils/logger';
 import actionPreflightCheck from '../utils/actionPreflightCheck';
 import { getModularType } from '../utils/packageTypes';

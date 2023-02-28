@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs-extra';
 import * as tmp from 'tmp';
 import tree from 'tree-view-for-tests';
-import webworkerPlugin from '../../esbuild-scripts/plugins/workerFactoryPlugin';
+import webworkerPlugin from '../../build/esbuild-scripts/plugins/workerFactoryPlugin';
 import getModularRoot from '../../utils/getModularRoot';
 
 describe('WHEN running esbuild with the workerFactoryPlugin', () => {

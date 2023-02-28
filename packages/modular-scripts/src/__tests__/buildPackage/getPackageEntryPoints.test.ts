@@ -1,4 +1,4 @@
-import { getMain } from '../../build/buildPackage/getPackageEntryPoints';
+import { getMain } from '../../build/build-package/getPackageEntryPoints';
 
 jest.mock('../../utils/getModularRoot', () => {
   return {

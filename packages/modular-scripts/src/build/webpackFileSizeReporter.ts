@@ -3,8 +3,8 @@ import { sync as gzipSize } from 'gzip-size';
 import * as path from 'path';
 import recursive from 'recursive-readdir';
 import type webpack from 'webpack';
+import { Paths } from './common-scripts/determineTargetPaths';
 
-import type { Paths } from '../utils/determineTargetPaths';
 import { Asset, canReadAsset } from './fileSizeReporter';
 
 function removeFileNameHash(fileName: string): string {

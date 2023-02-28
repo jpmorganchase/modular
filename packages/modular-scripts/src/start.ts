@@ -10,15 +10,15 @@ import getWorkspaceInfo from './utils/getWorkspaceInfo';
 import { setupEnvForDirectory } from './utils/setupEnv';
 import { checkBrowsers } from './utils/checkBrowsers';
 import checkRequiredFiles from './utils/checkRequiredFiles';
-import determineTargetPaths from './utils/determineTargetPaths';
 import * as logger from './utils/logger';
-import createEsbuildBrowserslistTarget from './utils/createEsbuildBrowserslistTarget';
+import createEsbuildBrowserslistTarget from './build/common-scripts/createEsbuildBrowserslistTarget';
 import prompts from 'prompts';
 import { getDependencyInfo } from './utils/getDependencyInfo';
 import { isReactNewApi } from './utils/isReactNewApi';
 import { getConfig } from './utils/config';
 import type { PackageType } from '@modular-scripts/modular-types';
-import startWebpack from './react-scripts/scripts/startWebpack';
+import determineTargetPaths from './build/common-scripts/determineTargetPaths';
+import startWebpack from './build/webpack-scripts/startWebpack';
 
 async function start(packageName: string): Promise<void> {
   let target = packageName;
@@ -104,7 +104,7 @@ async function start(packageName: string): Promise<void> {
   // you want esbuild - then we'll switch you to the new fancy world.
   if (getConfig('useModularEsbuild', targetPath)) {
     const { default: startEsbuildApp } = await import(
-      './esbuild-scripts/start'
+      './build/esbuild-scripts/start'
     );
     await startEsbuildApp({
       target,
