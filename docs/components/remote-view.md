@@ -86,9 +86,9 @@ function MyPortal() {
 }
 ```
 
-Modular [ESM Views](https://modular.js.org/esm-views) will be dynamically
-loaded, whereas Modular [Apps](https://modular.js.org/package-types/app/) are
-loaded into an iframe. For more information on Modular types, check out the
+Modular [ESM Views](https://modular.js.org/esm-views) are dynamically loaded,
+whereas Modular [Apps](https://modular.js.org/package-types/app/) are loaded
+into an iframe. For more information on Modular types, check out the
 [Package Types breakdown on the Modular docs](https://modular.js.org/package-types/).
 
 ## Fall back to iframes
