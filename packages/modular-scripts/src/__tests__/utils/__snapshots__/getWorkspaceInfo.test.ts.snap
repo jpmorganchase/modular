@@ -152,9 +152,20 @@ exports[`getWorkspaceInfo 13`] = `
 
 exports[`getWorkspaceInfo 14`] = `
 {
+  "location": "packages/node-env-app",
+  "mismatchedWorkspaceDependencies": [],
+  "public": false,
+  "type": "app",
+  "version": Any<String>,
+  "workspaceDependencies": [],
+}
+`;
+
+exports[`getWorkspaceInfo 15`] = `
+{
   "location": "packages/remote-view-demos",
   "mismatchedWorkspaceDependencies": [],
-  "public": true,
+  "public": false,
   "type": "esm-view",
   "version": Any<String>,
   "workspaceDependencies": [
@@ -163,7 +174,7 @@ exports[`getWorkspaceInfo 14`] = `
 }
 `;
 
-exports[`getWorkspaceInfo 15`] = `
+exports[`getWorkspaceInfo 16`] = `
 {
   "location": "packages/tree-view-for-tests",
   "mismatchedWorkspaceDependencies": [],
