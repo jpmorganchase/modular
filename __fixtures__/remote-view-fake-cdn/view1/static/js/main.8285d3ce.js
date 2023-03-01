@@ -1,7 +1,7 @@
-import * as e from 'https://esm.sh/react@17.0.2&deps=react@17.0.2,react-dom@17.0.2&pin=v106';
-import * as t from 'https://esm.sh/@mantine/core@5.10.4&deps=react@17.0.2,react-dom@17.0.2&pin=v106';
-import * as a from 'https://esm.sh/minifaker@1.34.1&deps=react@17.0.2,react-dom@17.0.2&pin=v106';
-import * as r from 'https://esm.sh/minifaker@1.34.1&deps=react@17.0.2,react-dom@17.0.2&pin=v106/locales/en';
+import * as e from 'https://esm.sh/react@18.2.0';
+import * as t from 'https://esm.sh/@mantine/core@5.10.4';
+import * as a from 'https://esm.sh/minifaker@1.34.1';
+import * as r from 'https://esm.sh/minifaker@1.34.1/locales/en';
 var n = {
     d: (e, t) => {
       for (var a in t)
@@ -12,7 +12,7 @@ var n = {
     o: (e, t) => Object.prototype.hasOwnProperty.call(e, t),
   },
   m = {};
-n.d(m, { Z: () => u });
+n.d(m, { Z: () => c });
 const o = ((e) => {
   var t = {};
   return n.d(t, e), t;
@@ -130,16 +130,16 @@ function i() {
   );
 }
 s.default.addLocale('en', d.default);
-const c = o.default.memo(function () {
+const u = o.default.memo(function () {
   return o.default.createElement(
     l.MantineProvider,
     { withGlobalStyles: !0, withNormalizeCSS: !0 },
     o.default.createElement(i, null),
   );
 });
-function u() {
-  return o.createElement(c, null);
+function c() {
+  return o.createElement(u, null);
 }
-var p = m.Z;
-export { p as default };
-//# sourceMappingURL=main.76563358.js.map
+var f = m.Z;
+export { f as default };
+//# sourceMappingURL=main.8285d3ce.js.map

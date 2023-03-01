@@ -1,14 +1,14 @@
-import * as e from 'https://esm.sh/react@17.0.2&deps=react@17.0.2,react-dom@17.0.2&pin=v106';
-import * as t from 'https://esm.sh/regular-table@0.5.6&deps=react@17.0.2,react-dom@17.0.2&pin=v106';
-import * as r from 'https://esm.sh/minifaker@1.34.1&deps=react@17.0.2,react-dom@17.0.2&pin=v106/locales/en';
-import * as n from 'https://esm.sh/minifaker@1.34.1&deps=react@17.0.2,react-dom@17.0.2&pin=v106';
-var a = { 545: () => {} },
-  o = {};
+import * as e from 'https://esm.sh/react@18.2.0';
+import * as t from 'https://esm.sh/regular-table@0.5.6';
+import * as r from 'https://esm.sh/minifaker@1.34.1/locales/en';
+import * as n from 'https://esm.sh/minifaker@1.34.1';
+var o = { 545: () => {} },
+  a = {};
 function s(e) {
-  var t = o[e];
+  var t = a[e];
   if (void 0 !== t) return t.exports;
-  var r = (o[e] = { exports: {} });
-  return a[e](r, r.exports, s), r.exports;
+  var r = (a[e] = { exports: {} });
+  return o[e](r, r.exports, s), r.exports;
 }
 (s.d = (e, t) => {
   for (var r in t)
@@ -17,9 +17,9 @@ function s(e) {
       Object.defineProperty(e, r, { enumerable: !0, get: t[r] });
 }),
   (s.o = (e, t) => Object.prototype.hasOwnProperty.call(e, t));
-var c = {};
+var l = {};
 (() => {
-  s.d(c, { Z: () => i });
+  s.d(l, { Z: () => f });
   const t = ((e) => {
     var t = {};
     return s.d(t, e), t;
@@ -34,11 +34,11 @@ var c = {};
     var t = {};
     s.d(t, e);
   })({});
-  const a = ((e) => {
+  const o = ((e) => {
     var t = {};
     return s.d(t, e), t;
   })({ default: () => r.default });
-  const o = ((e) => {
+  const a = ((e) => {
     var t = {};
     return s.d(t, e), t;
   })({
@@ -47,30 +47,30 @@ var c = {};
     domainName: () => n.domainName,
     word: () => n.word,
   });
-  o.default.addLocale('en', a.default);
-  const l = { green: '#e4ebe4', red: '#f1dbdb' };
-  function d(e) {
+  a.default.addLocale('en', o.default);
+  const u = { green: '#e4ebe4', red: '#f1dbdb' };
+  function c(e) {
     return e[0].toUpperCase() + e.slice(1);
   }
-  const u = t.default.memo(function () {
+  const d = t.default.memo(function () {
     const e = (0, t.useRef)(null),
       r = (0, t.useRef)(null),
       n = (function (e) {
         const t = [
             () =>
-              `${d((0, o.word)({ type: 'adjective' }))} ${d(
-                (0, o.word)({ type: 'noun' }),
+              `${c((0, a.word)({ type: 'adjective' }))} ${c(
+                (0, a.word)({ type: 'noun' }),
               )}`,
             () => String(Math.ceil(100 * Math.random())),
-            () => (0, o.country)({ useCode: 'alpha3' }),
-            o.domainName,
+            () => (0, a.country)({ useCode: 'alpha3' }),
+            a.domainName,
             () => String((1e3 * Math.random()).toFixed(2)),
           ],
           r = [];
         for (let n = 0; n < t.length; n += 1) {
-          const a = [];
-          for (let r = 0; r < e; r += 1) a.push(t[n]());
-          r.push(a);
+          const o = [];
+          for (let r = 0; r < e; r += 1) o.push(t[n]());
+          r.push(o);
         }
         return r;
       })(5e3);
@@ -84,18 +84,18 @@ var c = {};
         t.setAttribute('id', 'view2-table'),
           (r.current = t),
           e.current?.appendChild(t);
-        const a = r.current;
-        a.setDataListener(function (e, t, r, a) {
-          const o = [];
-          for (let c = 0; c < n[4].length; c += 1) {
+        const o = r.current;
+        o.setDataListener(function (e, t, r, o) {
+          const a = [];
+          for (let l = 0; l < n[4].length; l += 1) {
             const e = 100 * Math.random() - 50;
-            (n[4][c] = String((parseFloat(n[4][c]) + e).toFixed(2))),
-              (o[c] = e < 0 ? 'red' : 'green');
+            (n[4][l] = String((parseFloat(n[4][l]) + e).toFixed(2))),
+              (a[l] = e < 0 ? 'red' : 'green');
           }
           const s = {
             num_rows: n[0].length,
             num_columns: n.length,
-            data: n.slice(e, r).map((e) => e.slice(t, a)),
+            data: n.slice(e, r).map((e) => e.slice(t, o)),
             column_headers: [
               ['Company Name'],
               ['Employees'],
@@ -103,20 +103,20 @@ var c = {};
               ['Domain'],
               ['Price'],
             ],
-            metadata: [[], [], [], [], o],
+            metadata: [[], [], [], [], a],
           };
           return Promise.resolve(s);
         }),
-          a.addStyleListener(() => {
-            const e = a.querySelectorAll('thead th');
+          o.addStyleListener(() => {
+            const e = o.querySelectorAll('thead th');
             for (const r of e)
               (r.style.textAlign = 'left'),
                 (r.style.fontWeight = '900'),
                 (r.style.padding = '0 0 12px 0');
-            const t = a.querySelectorAll('body td');
+            const t = o.querySelectorAll('body td');
             for (const r of t) {
-              const e = a.getMeta(r);
-              e.user && (r.style.backgroundColor = l[e.user]);
+              const e = o.getMeta(r);
+              e.user && (r.style.backgroundColor = u[e.user]);
             }
           });
       }),
@@ -126,10 +126,10 @@ var c = {};
       t.default.createElement('div', { ref: e })
     );
   });
-  function i() {
-    return t.createElement(u, null);
+  function f() {
+    return t.createElement(d, null);
   }
 })();
-var l = c.Z;
-export { l as default };
-//# sourceMappingURL=main.f5af2115.js.map
+var u = l.Z;
+export { u as default };
+//# sourceMappingURL=main.95dbf0ef.js.map

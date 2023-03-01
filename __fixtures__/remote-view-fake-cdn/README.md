@@ -17,6 +17,9 @@ hence we have a small set of views/dependencies pre-built and exposed.
 - React and ReactDOM at 17.0.2, exposed in the same way it would be by esm.sh
   (v106). This results in various dirs and files.
 
+`view1` and `view2` are built against `esm.sh`, whereas the others are built
+against `localhost:8484`.
+
 ## Rebuilding the contents
 
 For any ESM view, you need to `yarn modular build` it, which usually requires
