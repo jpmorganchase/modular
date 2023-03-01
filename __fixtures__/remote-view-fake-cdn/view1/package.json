@@ -4,7 +4,7 @@
   "license": "UNLICENSED",
   "modular": {
     "type": "esm-view",
-    "externalCdnTemplate": "https://esm.sh/[name]@[version]&deps=react@17.0.2,react-dom@17.0.2&pin=v106"
+    "externalCdnTemplate": "https://esm.sh/[name]@[version]"
   },
   "dependencies": {
     "react": "17.0.2",

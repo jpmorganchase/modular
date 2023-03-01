@@ -57,6 +57,6 @@ export class RemoteViewErrorBoundary extends React.Component<
       return <DefaultUnknownErrorFallback error={this.state.error} />;
     }
 
-    return this.props.children;
+    return <>{this.props.children}</>;
   }
 }
