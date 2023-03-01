@@ -113,14 +113,6 @@ exports[`getWorkspaceInfo 1`] = `
     "version": "3.1.1",
     "workspaceDependencies": [],
   },
-  "node-env-app": {
-    "location": "packages/node-env-app",
-    "mismatchedWorkspaceDependencies": [],
-    "public": false,
-    "type": "app",
-    "version": "1.0.0",
-    "workspaceDependencies": [],
-  },
   "remote-view-demos": {
     "location": "packages/remote-view-demos",
     "mismatchedWorkspaceDependencies": [],
