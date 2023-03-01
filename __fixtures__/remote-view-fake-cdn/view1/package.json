@@ -1,0 +1,17 @@
+{
+  "name": "view1",
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "modular": {
+    "type": "esm-view",
+    "externalCdnTemplate": "https://esm.sh/[name]@[version]"
+  },
+  "dependencies": {
+    "react": "18.2.0",
+    "@mantine/core": "5.10.4",
+    "minifaker": "1.34.1"
+  },
+  "bundledDependencies": [],
+  "module": "/static/js/main.8285d3ce.js",
+  "style": "/static/css/main.1115b39e.css"
+}

@@ -2,148 +2,134 @@
 
 exports[`getWorkspaceInfo 1`] = `
 {
-  "location": "packages/modular-types",
-  "mismatchedWorkspaceDependencies": [],
-  "public": true,
-  "type": "unknown",
-  "version": Any<String>,
-  "workspaceDependencies": [],
-}
-`;
-
-exports[`getWorkspaceInfo 2`] = `
-{
-  "location": "packages/workspace-resolver",
-  "mismatchedWorkspaceDependencies": [],
-  "public": true,
-  "type": "unknown",
-  "version": Any<String>,
-  "workspaceDependencies": [
-    "@modular-scripts/modular-types",
-  ],
-}
-`;
-
-exports[`getWorkspaceInfo 3`] = `
-{
-  "location": "packages/create-modular-react-app",
-  "mismatchedWorkspaceDependencies": [],
-  "public": true,
-  "type": "unknown",
-  "version": Any<String>,
-  "workspaceDependencies": [],
-}
-`;
-
-exports[`getWorkspaceInfo 4`] = `
-{
-  "location": "packages/eslint-config-modular-app",
-  "mismatchedWorkspaceDependencies": [],
-  "public": true,
-  "type": "unknown",
-  "version": Any<String>,
-  "workspaceDependencies": [],
-}
-`;
-
-exports[`getWorkspaceInfo 5`] = `
-{
-  "location": "packages/modular-scripts",
-  "mismatchedWorkspaceDependencies": [],
-  "public": true,
-  "type": "unknown",
-  "version": Any<String>,
-  "workspaceDependencies": [
-    "@modular-scripts/modular-types",
-    "@modular-scripts/workspace-resolver",
-  ],
-}
-`;
-
-exports[`getWorkspaceInfo 6`] = `
-{
-  "location": "packages/modular-template-app",
-  "mismatchedWorkspaceDependencies": [],
-  "public": true,
-  "type": "template",
-  "version": Any<String>,
-  "workspaceDependencies": [],
-}
-`;
-
-exports[`getWorkspaceInfo 7`] = `
-{
-  "location": "packages/modular-template-esm-view",
-  "mismatchedWorkspaceDependencies": [],
-  "public": true,
-  "type": "template",
-  "version": Any<String>,
-  "workspaceDependencies": [],
-}
-`;
-
-exports[`getWorkspaceInfo 8`] = `
-{
-  "location": "packages/modular-template-node-env-app",
-  "mismatchedWorkspaceDependencies": [],
-  "public": false,
-  "type": "template",
-  "version": Any<String>,
-  "workspaceDependencies": [],
-}
-`;
-
-exports[`getWorkspaceInfo 9`] = `
-{
-  "location": "packages/modular-template-package",
-  "mismatchedWorkspaceDependencies": [],
-  "public": true,
-  "type": "template",
-  "version": Any<String>,
-  "workspaceDependencies": [],
-}
-`;
-
-exports[`getWorkspaceInfo 10`] = `
-{
-  "location": "packages/modular-template-source",
-  "mismatchedWorkspaceDependencies": [],
-  "public": true,
-  "type": "template",
-  "version": Any<String>,
-  "workspaceDependencies": [],
-}
-`;
-
-exports[`getWorkspaceInfo 11`] = `
-{
-  "location": "packages/modular-template-view",
-  "mismatchedWorkspaceDependencies": [],
-  "public": true,
-  "type": "template",
-  "version": Any<String>,
-  "workspaceDependencies": [],
-}
-`;
-
-exports[`getWorkspaceInfo 12`] = `
-{
-  "location": "packages/modular-views.macro",
-  "mismatchedWorkspaceDependencies": [],
-  "public": true,
-  "type": "unknown",
-  "version": Any<String>,
-  "workspaceDependencies": [],
-}
-`;
-
-exports[`getWorkspaceInfo 13`] = `
-{
-  "location": "packages/tree-view-for-tests",
-  "mismatchedWorkspaceDependencies": [],
-  "public": false,
-  "type": "unknown",
-  "version": Any<String>,
-  "workspaceDependencies": [],
+  "@modular-scripts/modular-types": {
+    "location": "packages/modular-types",
+    "mismatchedWorkspaceDependencies": [],
+    "public": true,
+    "type": "unknown",
+    "version": "1.1.0",
+    "workspaceDependencies": [],
+  },
+  "@modular-scripts/remote-view": {
+    "location": "packages/remote-view",
+    "mismatchedWorkspaceDependencies": [],
+    "public": true,
+    "type": "package",
+    "version": "0.0.0",
+    "workspaceDependencies": [
+      "@modular-scripts/modular-types",
+    ],
+  },
+  "@modular-scripts/workspace-resolver": {
+    "location": "packages/workspace-resolver",
+    "mismatchedWorkspaceDependencies": [],
+    "public": true,
+    "type": "unknown",
+    "version": "1.2.0",
+    "workspaceDependencies": [
+      "@modular-scripts/modular-types",
+    ],
+  },
+  "create-modular-react-app": {
+    "location": "packages/create-modular-react-app",
+    "mismatchedWorkspaceDependencies": [],
+    "public": true,
+    "type": "unknown",
+    "version": "4.0.0",
+    "workspaceDependencies": [],
+  },
+  "eslint-config-modular-app": {
+    "location": "packages/eslint-config-modular-app",
+    "mismatchedWorkspaceDependencies": [],
+    "public": true,
+    "type": "unknown",
+    "version": "4.0.0",
+    "workspaceDependencies": [],
+  },
+  "modular-scripts": {
+    "location": "packages/modular-scripts",
+    "mismatchedWorkspaceDependencies": [],
+    "public": true,
+    "type": "unknown",
+    "version": "4.0.1",
+    "workspaceDependencies": [
+      "@modular-scripts/modular-types",
+      "@modular-scripts/workspace-resolver",
+    ],
+  },
+  "modular-template-app": {
+    "location": "packages/modular-template-app",
+    "mismatchedWorkspaceDependencies": [],
+    "public": true,
+    "type": "template",
+    "version": "1.2.0",
+    "workspaceDependencies": [],
+  },
+  "modular-template-esm-view": {
+    "location": "packages/modular-template-esm-view",
+    "mismatchedWorkspaceDependencies": [],
+    "public": true,
+    "type": "template",
+    "version": "1.1.0",
+    "workspaceDependencies": [],
+  },
+  "modular-template-node-env-app": {
+    "location": "packages/modular-template-node-env-app",
+    "mismatchedWorkspaceDependencies": [],
+    "public": false,
+    "type": "template",
+    "version": "0.2.1",
+    "workspaceDependencies": [],
+  },
+  "modular-template-package": {
+    "location": "packages/modular-template-package",
+    "mismatchedWorkspaceDependencies": [],
+    "public": true,
+    "type": "template",
+    "version": "1.2.0",
+    "workspaceDependencies": [],
+  },
+  "modular-template-source": {
+    "location": "packages/modular-template-source",
+    "mismatchedWorkspaceDependencies": [],
+    "public": true,
+    "type": "template",
+    "version": "1.1.0",
+    "workspaceDependencies": [],
+  },
+  "modular-template-view": {
+    "location": "packages/modular-template-view",
+    "mismatchedWorkspaceDependencies": [],
+    "public": true,
+    "type": "template",
+    "version": "1.2.0",
+    "workspaceDependencies": [],
+  },
+  "modular-views.macro": {
+    "location": "packages/modular-views.macro",
+    "mismatchedWorkspaceDependencies": [],
+    "public": true,
+    "type": "unknown",
+    "version": "3.1.1",
+    "workspaceDependencies": [],
+  },
+  "remote-view-demos": {
+    "location": "packages/remote-view-demos",
+    "mismatchedWorkspaceDependencies": [],
+    "public": false,
+    "type": "esm-view",
+    "version": "0.0.0",
+    "workspaceDependencies": [
+      "@modular-scripts/remote-view",
+    ],
+  },
+  "tree-view-for-tests": {
+    "location": "packages/tree-view-for-tests",
+    "mismatchedWorkspaceDependencies": [],
+    "public": false,
+    "type": "unknown",
+    "version": "2.0.1",
+    "workspaceDependencies": [],
+  },
 }
 `;

@@ -1,0 +1,17 @@
+{
+  "name": "remote-view-demos",
+  "private": true,
+  "modular": {
+    "type": "esm-view",
+    "externalCdnTemplate": "https://esm.sh/[name]@[version]"
+  },
+  "version": "0.0.0",
+  "dependencies": {
+    "@modular-scripts/remote-view": "*",
+    "@salt-ds/core": "1.1.0",
+    "@salt-ds/lab": "1.0.0-alpha.1",
+    "@salt-ds/theme": "1.0.0",
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
+  }
+}
