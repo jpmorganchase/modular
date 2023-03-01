@@ -20,6 +20,20 @@ pattern using Modular [ESM views](https://modular.js.org/esm-views/).
 - Also supports Modular [apps](https://modular.js.org/package-types/) via
   iframes
 
+## Prerequisites
+
+To natively load ESM Views via `<RemoteView />`, it is required that:
+
+1. The host (or "portal") application is a Modular
+   [ESM View](https://modular.js.org/esm-views/) itself
+2. The version of React matches between the host and each ESM View being loaded
+
+This is due to the fact that React is a stateful dependency and loading
+[more than 1 copy is unsupported](https://reactjs.org/warnings/invalid-hook-call-warning.html#duplicate-react).
+
+Using an iframe fallback avoids this limitation and may be suitable depending on
+your use-case.
+
 ## Getting Started
 
 Install the RemoteView package:
