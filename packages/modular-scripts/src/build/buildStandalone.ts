@@ -5,7 +5,6 @@ import type { CoreProperties } from '@schemastore/package';
 import type { ModularType } from '@modular-scripts/modular-types';
 
 import * as logger from '../utils/logger';
-import getModularRoot from '../utils/getModularRoot';
 import getWorkspaceLocation from '../utils/getLocation';
 import determineTargetPaths from './common-scripts/determineTargetPaths';
 import printHostingInstructions from './printHostingInstructions';
