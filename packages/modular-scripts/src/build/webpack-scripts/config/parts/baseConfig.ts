@@ -1,4 +1,3 @@
-// This fila hasn't been changed to typescript due to the dependency pnp-webpack-plugin not being typed
 import builtinModules from 'builtin-modules';
 import PnpWebpackPlugin from 'pnp-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
