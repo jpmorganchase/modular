@@ -1,6 +1,6 @@
 ---
 parent: Components
-title: <RemoteView />
+title: RemoteView
 ---
 
 # `<RemoteView />`
@@ -87,7 +87,7 @@ function MyPortal() {
   ]);
 
   return (
-    <RemoteViewProvider>
+    <RemoteViewProvider urls={remoteViews}>
       {remoteViews.map((url, key) => (
         <section key={key}>
           <RemoteViewErrorBoundary>
@@ -103,13 +103,14 @@ function MyPortal() {
 Modular [ESM Views](https://modular.js.org/esm-views) are dynamically loaded,
 whereas Modular [Apps](https://modular.js.org/package-types/app/) are loaded
 into an iframe. For more information on Modular types, check out the
-[Package Types breakdown on the Modular docs](https://modular.js.org/package-types/).
+[Package Types breakdown](https://modular.js.org/package-types/).
 
 ## Fall back to iframes
 
 It is also possible to load [ESM Views](https://modular.js.org/esm-views) (in
 addition to [Apps](https://modular.js.org/package-types/app/)) into an iframe if
-desired - provide `loadWithIframeFallback` prop to trigger the iframe fallback:
+desired - provide the `loadWithIframeFallback` prop to trigger the iframe
+fallback:
 
 ```jsx
 // Use an iframe fallback for one particular view
@@ -122,7 +123,7 @@ function determineFallbackCases(manifest: MicrofrontendManifest) {
 }
 
 return (
-  <RemoteViewProvider>
+  <RemoteViewProvider urls={remoteViews}>
     {remoteViews.map((url, key) => (
       <section key={key}>
         <RemoteViewErrorBoundary>
@@ -144,7 +145,7 @@ You can customize the loading state of each `<RemoteView />` by providing a
 
 ```jsx
 return (
-  <RemoteViewProvider>
+  <RemoteViewProvider urls={[myUrl]}>
     <RemoteViewErrorBoundary>
       <RemoteView
         url={myUrl}
@@ -179,9 +180,8 @@ imports actually returning valid React modules.
 
 ## CSS
 
-`<RemoteView />` automatically imports local and global CSS from ESM Views that
-have been specified according to the
-[Modular docs](https://modular.js.org/esm-views/external-css-imports/).
+`<RemoteView />` automatically imports local and global CSS from ESM Views - see
+[External CSS Imports](https://modular.js.org/esm-views/external-css-imports/).
 
 When an iframe fallback is used, this does not apply.
 
@@ -200,7 +200,7 @@ Outputs a default, simple error component displaying the error details
 
 ```jsx
 return (
-  <RemoteViewProvider>
+  <RemoteViewProvider urls={[url]}>
     <RemoteViewErrorBoundary>
       <RemoteView url={url} />
     </RemoteViewErrorBoundary>
@@ -253,7 +253,7 @@ function MyErrorContent({ error }: { error: Error | RemoteViewError }) {
 }
 
 return (
-  <RemoteViewProvider>
+  <RemoteViewProvide urls={[url]}>
     <RemoteViewErrorBoundary content={MyErrorContent}>
       <RemoteView url={url} />
     </RemoteViewErrorBoundary>
@@ -274,7 +274,7 @@ choose.
 
 ```jsx
 return (
-  <RemoteViewProvider>
+  <RemoteViewProvider urls={[url]}>
     <MyErrorBoundary>
       <RemoteView url={url} />
     </MyErrorBoundary>
@@ -317,8 +317,8 @@ for fetching ESM views.
 `MicrofrontendManifest` represents the `package.json` of an ESM View served over
 an ESM CDN. This includes fields like the package `name`, `style`,
 `styleImports` and more - see `packages/modular-types/src/types.ts` for the full
-list of fields that are expected. You can also refer to the
-[Modular docs on CSS imports](https://modular.js.org/esm-views/external-css-imports/).
+list of fields that are expected. Also see
+[External CSS Imports](https://modular.js.org/esm-views/external-css-imports/).
 
 ### `<RemoteViewErrorBoundary />`
 
