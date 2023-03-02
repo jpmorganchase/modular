@@ -6,6 +6,8 @@ const { resolve } = require('path');
 /**
  * Removes the `publishConfig` block from a built Modular package.
  * This expects the build output to have been copied to `packages/<dir>/dist`.
+ *
+ * Mainly used by RemoteView.
  */
 
 const DIRS_TO_PREPARE = ['remote-view'];
