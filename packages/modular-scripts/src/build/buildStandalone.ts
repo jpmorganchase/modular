@@ -3,7 +3,6 @@ import fs from 'fs-extra';
 import path from 'path';
 import type { CoreProperties } from '@schemastore/package';
 import type { ModularType } from '@modular-scripts/modular-types';
-
 import * as logger from '../utils/logger';
 import getWorkspaceLocation from '../utils/getLocation';
 import determineTargetPaths from './common-scripts/determineTargetPaths';
