@@ -5,7 +5,7 @@
     "type": "package"
   },
   "main": "./src/index.ts",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "peerDependencies": {
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
