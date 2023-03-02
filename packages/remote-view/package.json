@@ -17,5 +17,8 @@
   "dependencies": {
     "isomorphic-fetch": "^3.0.0",
     "@modular-scripts/modular-types": "^1.2.0"
+  },
+  "publishConfig": {
+    "directory": "dist"
   }
 }
