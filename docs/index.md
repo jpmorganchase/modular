@@ -57,6 +57,10 @@ It supports three flags:
 - [workspace](./commands/workspace.md)
 - [check](./commands/check.md)
 
+## Components
+
+- [`<RemoteView />`](./components/remote-view.md)
+
 ## Concepts
 
 - [Micro-frontends](./concepts/microfrontends.md)

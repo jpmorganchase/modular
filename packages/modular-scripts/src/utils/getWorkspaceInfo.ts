@@ -31,7 +31,7 @@ export async function getWorkspaceInfo(
       }
       const { rawPackageJson } = workspace;
 
-      const type = rawPackageJson.modular?.type || ('package' as ModularType);
+      const type = rawPackageJson.modular?.type || 'unknown';
       workspaceInfo[packageName] = {
         ...packageInfo,
         type,

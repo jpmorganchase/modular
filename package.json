@@ -15,7 +15,7 @@
     "create-modular-react-app": "ts-node packages/create-modular-react-app/src/cli.ts",
     "modular": "ts-node packages/modular-scripts/src/cli.ts",
     "test": "yarn modular test --watchAll false --runInBand --env node",
-    "build": "yarn workspace @modular-scripts/workspace-resolver build && yarn workspace create-modular-react-app build && yarn workspace modular-scripts build && yarn workspace modular-views.macro build",
+    "build": "yarn workspace @modular-scripts/workspace-resolver build && yarn workspace create-modular-react-app build && yarn workspace modular-scripts build && yarn workspace modular-views.macro build && yarn modular build @modular-scripts/remote-view",
     "prepare": "is-ci || husky install",
     "postinstall": "patch-package",
     "typecheck": "yarn modular typecheck",
