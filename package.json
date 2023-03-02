@@ -17,7 +17,9 @@
     "test": "yarn modular test --watchAll false --runInBand --env node",
     "build": "yarn workspace @modular-scripts/workspace-resolver build && yarn workspace create-modular-react-app build && yarn workspace modular-scripts build && yarn workspace modular-views.macro build && yarn modular build @modular-scripts/remote-view && yarn prepare:remote-view",
     "prepare": "is-ci || husky install",
-    "prepare:remote-view": "cp -R dist/modular-scripts-remote-view packages/remote-view/dist",
+    "prepare:remote-view:copy": "cp -R dist/modular-scripts-remote-view packages/remote-view/dist",
+    "prepare:remote-view:prepublish": "node scripts/remote-view-prepublish.js",
+    "prepare:remote-view": "yarn prepare:remote-view:copy && yarn prepare:remote-view:prepublish",
     "postinstall": "patch-package",
     "typecheck": "yarn modular typecheck",
     "validate-lockfile": "node scripts/validate-lockfile.js"
