@@ -1,5 +1,4 @@
 import builtinModules from 'builtin-modules';
-import PnpWebpackPlugin from 'pnp-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import ModuleScopePlugin from '../../js-utils/ModuleScopePlugin';
@@ -11,6 +10,7 @@ import webpack from 'webpack';
 const reactRefreshOverlayEntry = require.resolve(
   '../../js-utils/refreshOverlayInterop',
 );
+const PnpWebpackPlugin = require('pnp-webpack-plugin');
 
 // style files regexes
 const cssRegex = /\.css$/;
