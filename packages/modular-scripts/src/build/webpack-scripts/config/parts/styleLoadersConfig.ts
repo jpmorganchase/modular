@@ -1,7 +1,7 @@
 import postcssNormalize from 'postcss-normalize';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { Paths } from '../../../common-scripts/determineTargetPaths';
-import { RuleSetUseItem } from 'webpack';
+import webpack from 'webpack';
 
 // common function to get style loaders
 export default function createConfig({
@@ -20,7 +20,7 @@ export default function createConfig({
   isEnvProduction: boolean;
   shouldUseSourceMap: boolean;
   paths: Paths;
-}): RuleSetUseItem[] {
+}): webpack.RuleSetUseItem[] {
   const isEnvDevelopment = !isEnvProduction;
   const loaders = [
     // This loader translates external css dependencies if we're using a CDN
@@ -73,7 +73,7 @@ export default function createConfig({
         implementation: require('postcss'),
       },
     },
-  ].filter(Boolean) as RuleSetUseItem[];
+  ].filter(Boolean) as webpack.RuleSetUseItem[];
   if (preProcessor) {
     loaders.push(
       {

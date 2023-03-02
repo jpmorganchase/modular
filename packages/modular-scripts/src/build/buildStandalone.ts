@@ -1,4 +1,3 @@
-import { paramCase as toParamCase } from 'change-case';
 import chalk from 'chalk';
 import fs from 'fs-extra';
 import path from 'path';
@@ -11,7 +10,7 @@ import getWorkspaceLocation from '../utils/getLocation';
 import determineTargetPaths from './common-scripts/determineTargetPaths';
 import printHostingInstructions from './printHostingInstructions';
 import { Asset, printFileSizesAfterBuild } from './fileSizeReporter';
-import type { StatsCompilation } from 'webpack';
+import type webpack from 'webpack';
 import { checkBrowsers } from '../utils/checkBrowsers';
 import checkRequiredFiles from '../utils/checkRequiredFiles';
 import createEsbuildBrowserslistTarget from './common-scripts/createEsbuildBrowserslistTarget';
@@ -138,13 +137,13 @@ export async function buildStandalone(
     const statsFilePath = path.join(paths.appBuild, 'bundle-stats.json');
 
     try {
-      const stats: StatsCompilation = await fs.readJson(statsFilePath);
+      const stats: webpack.StatsCompilation = await fs.readJson(statsFilePath);
 
       const mainEntrypoint = stats?.assetsByChunkName?.main;
-      jsEntryPoint = mainEntrypoint?.find((entryPoint) =>
+      jsEntryPoint = mainEntrypoint?.find((entryPoint: string) =>
         entryPoint.endsWith('.js'),
       );
-      cssEntryPoint = mainEntrypoint?.find((entryPoint) =>
+      cssEntryPoint = mainEntrypoint?.find((entryPoint: string) =>
         entryPoint.endsWith('.css'),
       );
 

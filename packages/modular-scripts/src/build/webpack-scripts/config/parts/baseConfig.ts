@@ -8,7 +8,7 @@ import getCSSModuleLocalIdent from '../../ts-utils/getCSSModuleLocalIdent';
 import createStyleLoadersConfig from './styleLoadersConfig';
 import { Paths } from '../../../common-scripts/determineTargetPaths';
 import { Modules } from '../modules';
-import { Configuration, webpack } from 'webpack';
+import webpack from 'webpack';
 const reactRefreshOverlayEntry = require.resolve(
   '../../js-utils/refreshOverlayInterop',
 );
@@ -30,7 +30,7 @@ export default function createBaseConfig(
   shouldUseSourceMap: boolean,
   esbuildTargetFactory: string[],
   dependencyMap: Map<string, string>,
-): Configuration {
+): webpack.Configuration {
   const isEnvDevelopment = !isEnvProduction;
   const isEsmView = !isApp;
   return {

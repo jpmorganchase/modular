@@ -12,7 +12,7 @@ import { createDevelopmentConfig } from './parts/developmentConfig';
 import { createProductionConfig } from './parts/productionConfig';
 import createBaseConfig from './parts/baseConfig';
 import { getConfig } from '../../../utils/config';
-import { Configuration, WebpackPluginInstance } from 'webpack';
+import webpack from 'webpack';
 import { Paths } from '../../common-scripts/determineTargetPaths';
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 
@@ -41,7 +41,7 @@ export default async function getWebpackConfig(
   useReactCreateRoot: boolean,
   styleImports: Set<string>,
   targetPaths: Paths,
-): Promise<Configuration> {
+): Promise<webpack.Configuration> {
   // Check if TypeScript is setup
   const useTypeScript = fs.existsSync(targetPaths.appTsConfig);
   const shouldUseSourceMap = getConfig(
@@ -57,7 +57,7 @@ export default async function getWebpackConfig(
   // Create configurations
   const modules = getModules(targetPaths);
   // base, common configuration
-  const baseConfig: Configuration = createBaseConfig(
+  const baseConfig: webpack.Configuration = createBaseConfig(
     isEnvProduction,
     isApp,
     targetPaths,
@@ -70,14 +70,14 @@ export default async function getWebpackConfig(
     dependencyMap,
   );
 
-  const performanceConfiguration: Configuration = {
+  const performanceConfiguration: webpack.Configuration = {
     // Turn off performance processing because we utilize
     // our own hints via the FileSizeReporter
     performance: false,
   };
 
   // Specific configuration based on modular type (app, esm-view)
-  const modularTypeConfiguration: Configuration = isApp
+  const modularTypeConfiguration: webpack.Configuration = isApp
     ? createAppConfig()
     : createEsmViewConfig(
         dependencyMap,
@@ -87,14 +87,14 @@ export default async function getWebpackConfig(
       );
 
   // Specific configuration based on build type (production, development)
-  const buildTypeConfiguration: Configuration = isEnvProduction
+  const buildTypeConfiguration: webpack.Configuration = isEnvProduction
     ? createProductionConfig(shouldUseSourceMap, targetPaths)
     : createDevelopmentConfig();
 
   // If an index is provided, this is its path. Otherwise false.
   const indexPath = fs.existsSync(targetPaths.appHtml) && targetPaths.appHtml;
   // Plugin configuration
-  const pluginConfig: Configuration = createPluginConfig(
+  const pluginConfig: webpack.Configuration = createPluginConfig(
     isApp,
     isEnvProduction,
     shouldUseSourceMap,
@@ -105,7 +105,7 @@ export default async function getWebpackConfig(
   );
 
   // Merge all configurations into the final one
-  const webpackConfig: Configuration = merge([
+  const webpackConfig: webpack.Configuration = merge([
     baseConfig,
     performanceConfiguration,
     modularTypeConfiguration,
@@ -169,5 +169,5 @@ export default async function getWebpackConfig(
  * Interface to satisfy TS linting for Webpack Plugin stuff
  */
 interface WebpackPluginInstanceConstructor {
-  new (options: unknown): WebpackPluginInstance;
+  new (options: unknown): webpack.WebpackPluginInstance;
 }

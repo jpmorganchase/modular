@@ -1,7 +1,7 @@
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import dedent from 'dedent';
 import path from 'path';
-import { Configuration, WebpackPluginInstance } from 'webpack';
+import webpack from 'webpack';
 import { parsePackageName } from '../../../../utils/parsePackageName';
 import { rewriteModuleSpecifier } from '../../../../utils/buildImportMap';
 import { ClientEnvironment } from '../../../esbuild-scripts/config/getClientEnvironment';
@@ -15,7 +15,7 @@ export function createEsmViewConfig(
   paths: Paths,
   isEnvProduction: boolean,
   useReactCreateRoot: boolean,
-): Configuration {
+): webpack.Configuration {
   return {
     entry: !isEnvProduction
       ? getVirtualTrampoline(paths, useReactCreateRoot)
@@ -88,7 +88,7 @@ export function createEsmViewPluginConfig(
   styleImports: Set<string>,
   indexPath: string | false,
   env: ClientEnvironment,
-): { plugins: WebpackPluginInstance[] } {
+): { plugins: webpack.WebpackPluginInstance[] } {
   const importUrlLinks: string[] = [];
   styleImports.forEach((importUrl) => {
     importUrlLinks.push(`<link rel="stylesheet" href="${importUrl}"></script>`);
@@ -141,7 +141,7 @@ export function createEsmViewPluginConfig(
           inject: true,
           templateContent,
           scriptLoading: 'module',
-        }) as WebpackPluginInstance),
-    ].filter(Boolean) as WebpackPluginInstance[],
+        }) as webpack.WebpackPluginInstance),
+    ].filter(Boolean) as webpack.WebpackPluginInstance[],
   };
 }

@@ -9,7 +9,7 @@ import { ProxyConfigArray, Request, Response } from 'webpack-dev-server';
 import type * as http from 'http';
 import type * as httpProxy from 'http-proxy';
 import formatWebpackMessages from '../js-utils/formatWebpackMessages';
-import { Configuration, webpack } from 'webpack';
+import webpack from 'webpack';
 import { InstructionURLS } from '../../common-scripts/urls';
 import forkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 
@@ -204,13 +204,13 @@ function printInstructions(appName: string | undefined, urls: InstructionURLS) {
 
 export function createCompiler(
   appName: string | undefined,
-  config: Configuration,
+  config: webpack.Configuration,
   urls: InstructionURLS,
   useTypeScript: boolean,
 ) {
   // "Compiler" is a low-level interface to webpack.
   // It lets us listen to some events and provide our own custom messages.
-  const compiler = webpack(config);
+  const compiler = webpack.webpack(config);
 
   // "invalid" event fires when you have changed a file, and webpack is
   // recompiling a bundle. WebpackDevServer takes care to pause serving the
@@ -236,7 +236,7 @@ export function createCompiler(
 
   // "done" event fires when webpack has finished recompiling the bundle.
   // Whether or not you have warnings or errors, you will get this event.
-  compiler.hooks.done.tap('done', async (stats) => {
+  compiler.hooks.done.tap('done', async (stats: any) => {
     // We have switched off the default webpack output in WebpackDevServer
     // options so we are going to "massage" the warnings and errors and present
     // them in a readable focused way.
@@ -298,7 +298,7 @@ export function createCompiler(
     compiler.hooks.failed.tap('smokeTest', async () => {
       process.exit(1);
     });
-    compiler.hooks.done.tap('smokeTest', async (stats) => {
+    compiler.hooks.done.tap('smokeTest', async (stats: any) => {
       if (stats.hasErrors() || stats.hasWarnings()) {
         process.exit(1);
       } else {

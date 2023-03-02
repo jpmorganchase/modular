@@ -42,7 +42,7 @@ async function runCompiler(
   paths: Paths,
 ): Promise<void> {
   return new Promise((resolve, reject) => {
-    compiler.run((err, stats) => {
+    compiler.run((err: any, stats: any) => {
       log('Webpack Compiled.');
       let messages;
       let statsJson;
