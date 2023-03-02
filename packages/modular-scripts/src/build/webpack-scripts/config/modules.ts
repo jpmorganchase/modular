@@ -55,16 +55,16 @@ function getAdditionalModulePaths(options: any = {}, paths: Paths) {
  *
  * @param {*} options
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function getWebpackAliases(options: any = {}, paths: Paths) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+function getWebpackAliases(
+  options: any = {},
+  paths: Paths,
+): { src: string } | undefined {
   const baseUrl = options.baseUrl;
 
   if (!baseUrl) {
-    return {};
+    return undefined;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const baseUrlResolved = path.resolve(paths.appPath, baseUrl);
 
   if (path.relative(paths.appPath, baseUrlResolved) === '') {
@@ -74,7 +74,7 @@ function getWebpackAliases(options: any = {}, paths: Paths) {
   }
 }
 
-export default function getModules(paths: Paths) {
+export default function getModules(paths: Paths): Modules {
   // Check if TypeScript is setup
   const hasTsConfig = fs.existsSync(paths.appTsConfig);
   const hasJsConfig = fs.existsSync(paths.appJsConfig);
@@ -116,4 +116,15 @@ export default function getModules(paths: Paths) {
     webpackAliases: getWebpackAliases(options, paths),
     hasTsConfig,
   };
+}
+
+export interface Modules {
+  additionalModulePaths: string | string[] | null;
+  webpackAliases:
+    | {}
+    | {
+        src: string;
+      }
+    | undefined;
+  hasTsConfig: boolean;
 }

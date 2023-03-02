@@ -1,10 +1,10 @@
-'use strict';
-
-const postcssNormalize = require('postcss-normalize');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+import postcssNormalize from 'postcss-normalize';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import { Paths } from '../../../common-scripts/determineTargetPaths';
+import { RuleSetUseItem } from 'webpack';
 
 // common function to get style loaders
-function createConfig({
+export default function createConfig({
   cssOptions,
   preProcessor,
   includeEsmLoader,
@@ -12,14 +12,22 @@ function createConfig({
   isEnvProduction,
   shouldUseSourceMap,
   paths,
-}) {
+}: {
+  cssOptions: { importLoaders: number; sourceMap: boolean; modules?: any };
+  preProcessor?: any;
+  includeEsmLoader?: boolean;
+  dependencyMap: Map<string, string>;
+  isEnvProduction: boolean;
+  shouldUseSourceMap: boolean;
+  paths: Paths;
+}): RuleSetUseItem[] {
   const isEnvDevelopment = !isEnvProduction;
   const loaders = [
     // This loader translates external css dependencies if we're using a CDN
     // Since it's a pitching loader, it's important that it stays at the top
     // excluding all the others in the chain if it's triggered
     includeEsmLoader &&
-      function externalStyleLoader(info) {
+      function externalStyleLoader(info: any) {
         return {
           loader: require.resolve('../cdnStyleLoader'),
           options: { info, dependencyMap },
@@ -65,7 +73,7 @@ function createConfig({
         implementation: require('postcss'),
       },
     },
-  ].filter(Boolean);
+  ].filter(Boolean) as RuleSetUseItem[];
   if (preProcessor) {
     loaders.push(
       {
@@ -73,18 +81,16 @@ function createConfig({
         options: {
           sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
           root: paths.appSrc,
-        },
+        } as any,
       },
       {
         loader: preProcessor,
         options: {
           sourceMap: true,
-        },
+        } as any,
       },
     );
   }
 
   return loaders;
 }
-
-module.exports = createConfig;

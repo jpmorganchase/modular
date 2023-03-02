@@ -10,7 +10,7 @@ import { createEsmViewConfig } from './parts/esmViewConfig';
 import { createAppConfig } from './parts/appConfig';
 import { createDevelopmentConfig } from './parts/developmentConfig';
 import { createProductionConfig } from './parts/productionConfig';
-import { createConfig as createBaseConfig } from './parts/baseConfig';
+import createBaseConfig from './parts/baseConfig';
 import { getConfig } from '../../../utils/config';
 import { Configuration, WebpackPluginInstance } from 'webpack';
 import { Paths } from '../../common-scripts/determineTargetPaths';
@@ -57,10 +57,10 @@ export default async function getWebpackConfig(
   // Create configurations
   const modules = getModules(targetPaths);
   // base, common configuration
-  const baseConfig: Configuration = createBaseConfig({
+  const baseConfig: Configuration = createBaseConfig(
     isEnvProduction,
     isApp,
-    paths: targetPaths,
+    targetPaths,
     useTypeScript,
     isEnvProductionProfile,
     imageInlineSizeLimit,
@@ -68,7 +68,7 @@ export default async function getWebpackConfig(
     shouldUseSourceMap,
     esbuildTargetFactory,
     dependencyMap,
-  });
+  );
 
   const performanceConfiguration: Configuration = {
     // Turn off performance processing because we utilize

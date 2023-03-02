@@ -5,6 +5,7 @@ import * as path from 'path';
 import getPublicUrlOrPath from './getPublicUrlOrPath';
 import getModularRoot from '../../utils/getModularRoot';
 import { getConfig } from '../../utils/config';
+import globby from 'globby';
 export interface Paths {
   modularRoot: string;
   publicUrlOrPath: string;
@@ -25,6 +26,7 @@ export interface Paths {
   appTypeDeclarations: string;
   ownTypeDeclarations: string;
   moduleFileExtensions: string[];
+  includeDirectories: string[];
 }
 
 /**
@@ -98,6 +100,24 @@ export default function determineTargetPaths(
   const resolveOwn = (relativePath: string) =>
     path.resolve(ownPath, relativePath);
 
+  const resolveModular = (relativePath: string) =>
+    path.resolve(modularRoot, relativePath);
+
+  // Get the workspaces field from the manifest to calculate the possible workspace directories
+  const rootManifest = require(resolveModular('package.json'));
+  const workspaceDefinitions =
+    (Array.isArray(rootManifest?.workspaces)
+      ? rootManifest?.workspaces
+      : rootManifest?.workspaces?.packages) || [];
+
+  // Calculate all the possible workspace directories. We need to convert paths to posix separator to feed it into globby
+  // and convert back to native separator after
+  const workspaceDirectories = globby
+    .sync(workspaceDefinitions.map(resolveModular).map(toPosix), {
+      onlyDirectories: true,
+    })
+    .map(fromPosix);
+
   const dotenv = resolveApp('.env');
   const appPath = resolveApp('.');
   const appPublic = resolveApp('public');
@@ -113,6 +133,10 @@ export default function determineTargetPaths(
   const ownNodeModules = resolveOwn('node_modules');
   const appTypeDeclarations = resolveApp('src/react-app-env.d.ts');
   const ownTypeDeclarations = resolveOwn('react-app.d.ts');
+  const includeDirectories = [
+    ...workspaceDirectories,
+    resolveModular('node_modules/.modular'),
+  ];
 
   const appBuild = path.join(modularRoot, 'dist', targetName);
 
@@ -136,7 +160,16 @@ export default function determineTargetPaths(
     appTypeDeclarations,
     ownTypeDeclarations,
     moduleFileExtensions,
+    includeDirectories,
   };
 
   return paths;
+}
+
+function toPosix(pathString: string) {
+  return pathString.split(path.sep).join(path.posix.sep);
+}
+
+function fromPosix(pathString: string) {
+  return pathString.split(path.posix.sep).join(path.sep);
 }

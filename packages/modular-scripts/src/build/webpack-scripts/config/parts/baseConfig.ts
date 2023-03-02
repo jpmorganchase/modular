@@ -1,14 +1,16 @@
-'use strict';
-
-const builtinModules = require('builtin-modules');
-const PnpWebpackPlugin = require('pnp-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const ModuleScopePlugin = require('../../js-utils/ModuleScopePlugin');
-const getCSSModuleLocalIdent = require('../../js-utils/getCSSModuleLocalIdent');
-const createStyleLoadersConfig = require('./styleLoadersConfig');
+// This fila hasn't been changed to typescript due to the dependency pnp-webpack-plugin not being typed
+import builtinModules from 'builtin-modules';
+import PnpWebpackPlugin from 'pnp-webpack-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
+import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+import ModuleScopePlugin from '../../js-utils/ModuleScopePlugin';
+import getCSSModuleLocalIdent from '../../ts-utils/getCSSModuleLocalIdent';
+import createStyleLoadersConfig from './styleLoadersConfig';
+import { Paths } from '../../../common-scripts/determineTargetPaths';
+import { Modules } from '../modules';
+import { Configuration, webpack } from 'webpack';
 const reactRefreshOverlayEntry = require.resolve(
-  '../../../react-dev-utils/refreshOverlayInterop',
+  '../../js-utils/refreshOverlayInterop',
 );
 
 // style files regexes
@@ -17,21 +19,20 @@ const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
 
-function createConfig({
-  isEnvProduction,
-  isApp,
-  paths,
-  useTypeScript,
-  isEnvProductionProfile,
-  imageInlineSizeLimit,
-  modules,
-  shouldUseSourceMap,
-  esbuildTargetFactory,
-  dependencyMap,
-}) {
+export default function createBaseConfig(
+  isEnvProduction: boolean,
+  isApp: boolean,
+  paths: Paths,
+  useTypeScript: boolean,
+  isEnvProductionProfile: boolean,
+  imageInlineSizeLimit: number,
+  modules: Modules,
+  shouldUseSourceMap: boolean,
+  esbuildTargetFactory: string[],
+  dependencyMap: Map<string, string>,
+): Configuration {
   const isEnvDevelopment = !isEnvProduction;
   const isEsmView = !isApp;
-
   return {
     context: paths.appPath,
     // Workaround for this bug: https://stackoverflow.com/questions/53905253/cant-set-up-the-hmr-stuck-with-waiting-for-update-signal-from-wds-in-cons
@@ -76,7 +77,7 @@ function createConfig({
       // Some libraries import Node modules but don't use them in the browser.
       // Tell webpack to provide empty mocks for them so importing them works.
       // See https://github.com/webpack/webpack/issues/11649
-      fallback: builtinModules.reduce((acc, next) => {
+      fallback: builtinModules.reduce((acc: any, next) => {
         acc[next] = false;
         return acc;
       }, {}),
@@ -326,11 +327,10 @@ function createConfig({
               // into invalid ecma 5 code. This is why the 'compress' and 'output'
               // sections only apply transformations that are ecma 5 safe
               // https://github.com/facebook/create-react-app/pull/4234
-              ecma: 8,
+              ecma: 2017,
             },
             compress: {
               ecma: 5,
-              warnings: false,
               // Disabled because of an issue with Uglify breaking seemingly valid code:
               // https://github.com/facebook/create-react-app/issues/2376
               // Pending further investigation:
@@ -362,5 +362,3 @@ function createConfig({
     },
   };
 }
-
-module.exports = { createConfig };
