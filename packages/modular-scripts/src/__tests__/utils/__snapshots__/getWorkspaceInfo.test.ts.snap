@@ -7,7 +7,7 @@ exports[`getWorkspaceInfo 1`] = `
     "mismatchedWorkspaceDependencies": [],
     "public": true,
     "type": "unknown",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "workspaceDependencies": [],
   },
   "@modular-scripts/remote-view": {
@@ -15,7 +15,7 @@ exports[`getWorkspaceInfo 1`] = `
     "mismatchedWorkspaceDependencies": [],
     "public": true,
     "type": "package",
-    "version": "0.0.0",
+    "version": "0.1.0",
     "workspaceDependencies": [
       "@modular-scripts/modular-types",
     ],
@@ -51,7 +51,7 @@ exports[`getWorkspaceInfo 1`] = `
     "mismatchedWorkspaceDependencies": [],
     "public": true,
     "type": "unknown",
-    "version": "4.0.1",
+    "version": "4.1.0",
     "workspaceDependencies": [
       "@modular-scripts/modular-types",
       "@modular-scripts/workspace-resolver",
