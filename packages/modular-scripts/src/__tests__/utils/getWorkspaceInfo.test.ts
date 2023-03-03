@@ -1,9 +1,18 @@
 import { getWorkspaceInfo } from '../../utils/getWorkspaceInfo';
 
+import type { WorkspaceInfo } from '../../utils/getWorkspaceInfo';
+
 test('getWorkspaceInfo', async () => {
+  const collected: WorkspaceInfo = {};
   const workspace = await getWorkspaceInfo();
-  Object.entries(workspace).forEach(([_, workspaceRecord]) => {
-    expect(typeof workspaceRecord.version).toBe('string');
+
+  // Check that a version string exists but, exclude the version
+  // from the snapshot comparison, to avoid intefering when version bumping happens
+  Object.entries(workspace).forEach(([key, workspaceRecord]) => {
+    const { version, ...record } = workspaceRecord;
+    expect(typeof version).toBe('string');
+    collected[key] = { ...record };
   });
-  expect(workspace).toMatchSnapshot();
+
+  expect(collected).toMatchSnapshot();
 });
