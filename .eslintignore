@@ -43,3 +43,6 @@ yarn-error.log*
 
 # Top level test fixtures
 /__fixtures__
+
+# Only used in RemoteView tests
+__fixtures__/remote-view-fake-cdn

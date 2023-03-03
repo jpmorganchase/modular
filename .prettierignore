@@ -5,3 +5,4 @@ packages/*/build
 packages/*/public
 packages/*/dist-cjs
 packages/*/dist-types
+__fixtures__/remote-view-fake-cdn

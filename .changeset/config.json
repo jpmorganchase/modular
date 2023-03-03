@@ -6,6 +6,6 @@
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": [],
+  "ignore": ["remote-view-demos"],
   "updateInternalDependents": "always"
 }

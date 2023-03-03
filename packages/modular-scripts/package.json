@@ -1,6 +1,6 @@
 {
   "name": "modular-scripts",
-  "version": "4.0.1",
+  "version": "4.1.0",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
@@ -150,7 +150,7 @@
     "*.js"
   ],
   "devDependencies": {
-    "@modular-scripts/modular-types": "1.1.0",
+    "@modular-scripts/modular-types": "1.2.0",
     "@schemastore/package": "0.0.6",
     "@schemastore/tsconfig": "0.0.9",
     "@types/js-yaml": "^4.0.5",

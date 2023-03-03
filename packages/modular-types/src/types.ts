@@ -11,20 +11,31 @@ export type UnknownType = 'unknown';
 
 export type ModularType = PackageType | UnknownType | 'root';
 
+export type ModularConfiguration = {
+  type: ModularType | undefined;
+};
+
 export type ModularWorkspacePackage = {
   path: string;
   location: string;
   name: string;
   version: string;
   workspace: boolean;
-  modular?: {
-    type: ModularType | undefined;
-  };
+  modular?: ModularConfiguration;
   type: ModularType | undefined;
   children: ModularWorkspacePackage[];
   parent: ModularWorkspacePackage | null;
   dependencies: Record<string, string> | undefined;
   rawPackageJson: ModularPackageJson;
+};
+
+// Represents an exposed package.json that can be consumed via a RemoteView
+export type MicrofrontendManifest = {
+  name: string;
+  module: string;
+  style?: string;
+  styleImports?: string[];
+  modular?: ModularConfiguration;
 };
 
 export interface WorkspaceDependencyObject {

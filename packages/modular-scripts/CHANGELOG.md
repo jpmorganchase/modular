@@ -1,5 +1,26 @@
 # modular-scripts
 
+## 4.1.0
+
+### Minor Changes
+
+- [#2268](https://github.com/jpmorganchase/modular/pull/2268)
+  [`b45979e`](https://github.com/jpmorganchase/modular/commit/b45979ec6a0a22980adf2bcb4b7d8568b3587bc6)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Allow
+  non-modular packages without errors
+
+- [#2272](https://github.com/jpmorganchase/modular/pull/2272)
+  [`e2fa8f4`](https://github.com/jpmorganchase/modular/commit/e2fa8f4be180addb655152237e859c67245116dc)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Build
+  non-modular workspaces with `modular build`
+
+### Patch Changes
+
+- [#2281](https://github.com/jpmorganchase/modular/pull/2281)
+  [`4361e9a`](https://github.com/jpmorganchase/modular/commit/4361e9ae2bd918d5053502c7b03a8a471f1189f7)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Fixed configuration
+  of ts-jest under `globals` deprecated warning
+
 ## 4.0.1
 
 ### Patch Changes

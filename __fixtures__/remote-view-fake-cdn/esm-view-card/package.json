@@ -1,0 +1,13 @@
+{
+  "name": "esm-view-card",
+  "version": "1.0.0",
+  "modular": {
+    "type": "esm-view",
+    "externalCdnTemplate": "http://localhost:8484/[name]@[version]"
+  },
+  "dependencies": {
+    "react": "17.0.2"
+  },
+  "bundledDependencies": [],
+  "module": "/static/js/main.5a34a408.js"
+}

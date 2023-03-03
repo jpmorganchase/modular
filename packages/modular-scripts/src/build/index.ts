@@ -67,6 +67,8 @@ async function build({
       if (packageInfo?.modular) {
         // If it's modular, build with Modular
         const targetType = getModularType(targetDirectory);
+        logger.log('\nBuilding', targetType!, target);
+
         if (targetType === 'app' || targetType === 'esm-view') {
           await buildStandalone(target, targetType);
         } else {
@@ -75,6 +77,7 @@ async function build({
       } else {
         // Otherwise, build by running the workspace's build script
         // We're sure it's here because selectBuildableWorkspaces returns only buildable workspaces.
+        logger.log('\nBuilding non-modular package', target);
         await execAsync(`yarn`, ['workspace', target, 'build'], {
           cwd: modularRoot,
           log: false,

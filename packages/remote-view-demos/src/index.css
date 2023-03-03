@@ -1,0 +1,67 @@
+.ExamplesApp {
+  padding: 20px;
+}
+
+.ExampleContainer {
+  display: flex;
+}
+
+.ExampleContainer--happy-path .RemoteViewContainer {
+  width: 50%;
+}
+
+.RemoteViewContainer {
+  padding: 15px;
+  overflow: hidden;
+  display: block;
+  width: 100%;
+  height: 450px;
+  position: relative;
+  border: 1px dotted #333;
+  margin: 10px;
+}
+
+.RemoteViewContainer__label {
+  position: absolute;
+  z-index: 1;
+  font-size: 12px;
+  margin-top: -15px;
+  margin-left: -15px;
+  background: #eee;
+  padding: 2px 10px;
+}
+
+.RemoteViewContainer__content {
+  margin: 20px 10px;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+}
+
+.RemoteViewContainer__content .RemoteViewContainer__spinner.saltSvgSpinner {
+  width: 50px;
+  height: 50px;
+  align-self: center;
+}
+
+.ExampleContainer--happy-path .RemoteViewContainer__content > div {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.RemoteViewContainer__content iframe {
+  width: 100%;
+  height: 100%;
+  outline: none;
+  margin: 0;
+  border: 2px dashed #ccc;
+}
+
+#view2-table {
+  width: 100%;
+  height: 450px;
+}
