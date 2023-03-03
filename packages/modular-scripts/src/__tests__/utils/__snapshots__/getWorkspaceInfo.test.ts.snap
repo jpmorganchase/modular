@@ -7,7 +7,6 @@ exports[`getWorkspaceInfo 1`] = `
     "mismatchedWorkspaceDependencies": [],
     "public": true,
     "type": "unknown",
-    "version": "1.2.0",
     "workspaceDependencies": [],
   },
   "@modular-scripts/remote-view": {
@@ -15,7 +14,6 @@ exports[`getWorkspaceInfo 1`] = `
     "mismatchedWorkspaceDependencies": [],
     "public": true,
     "type": "package",
-    "version": "0.1.2",
     "workspaceDependencies": [
       "@modular-scripts/modular-types",
     ],
@@ -25,7 +23,6 @@ exports[`getWorkspaceInfo 1`] = `
     "mismatchedWorkspaceDependencies": [],
     "public": true,
     "type": "unknown",
-    "version": "1.2.0",
     "workspaceDependencies": [
       "@modular-scripts/modular-types",
     ],
@@ -35,7 +32,6 @@ exports[`getWorkspaceInfo 1`] = `
     "mismatchedWorkspaceDependencies": [],
     "public": true,
     "type": "unknown",
-    "version": "4.0.0",
     "workspaceDependencies": [],
   },
   "eslint-config-modular-app": {
@@ -43,7 +39,6 @@ exports[`getWorkspaceInfo 1`] = `
     "mismatchedWorkspaceDependencies": [],
     "public": true,
     "type": "unknown",
-    "version": "4.0.0",
     "workspaceDependencies": [],
   },
   "modular-scripts": {
@@ -51,7 +46,6 @@ exports[`getWorkspaceInfo 1`] = `
     "mismatchedWorkspaceDependencies": [],
     "public": true,
     "type": "unknown",
-    "version": "4.1.0",
     "workspaceDependencies": [
       "@modular-scripts/modular-types",
       "@modular-scripts/workspace-resolver",
@@ -62,7 +56,6 @@ exports[`getWorkspaceInfo 1`] = `
     "mismatchedWorkspaceDependencies": [],
     "public": true,
     "type": "template",
-    "version": "1.2.0",
     "workspaceDependencies": [],
   },
   "modular-template-esm-view": {
@@ -70,7 +63,6 @@ exports[`getWorkspaceInfo 1`] = `
     "mismatchedWorkspaceDependencies": [],
     "public": true,
     "type": "template",
-    "version": "1.1.0",
     "workspaceDependencies": [],
   },
   "modular-template-node-env-app": {
@@ -78,7 +70,6 @@ exports[`getWorkspaceInfo 1`] = `
     "mismatchedWorkspaceDependencies": [],
     "public": false,
     "type": "template",
-    "version": "0.2.1",
     "workspaceDependencies": [],
   },
   "modular-template-package": {
@@ -86,7 +77,6 @@ exports[`getWorkspaceInfo 1`] = `
     "mismatchedWorkspaceDependencies": [],
     "public": true,
     "type": "template",
-    "version": "1.2.0",
     "workspaceDependencies": [],
   },
   "modular-template-source": {
@@ -94,7 +84,6 @@ exports[`getWorkspaceInfo 1`] = `
     "mismatchedWorkspaceDependencies": [],
     "public": true,
     "type": "template",
-    "version": "1.1.0",
     "workspaceDependencies": [],
   },
   "modular-template-view": {
@@ -102,7 +91,6 @@ exports[`getWorkspaceInfo 1`] = `
     "mismatchedWorkspaceDependencies": [],
     "public": true,
     "type": "template",
-    "version": "1.2.0",
     "workspaceDependencies": [],
   },
   "modular-views.macro": {
@@ -110,7 +98,6 @@ exports[`getWorkspaceInfo 1`] = `
     "mismatchedWorkspaceDependencies": [],
     "public": true,
     "type": "unknown",
-    "version": "3.1.1",
     "workspaceDependencies": [],
   },
   "remote-view-demos": {
@@ -118,7 +105,6 @@ exports[`getWorkspaceInfo 1`] = `
     "mismatchedWorkspaceDependencies": [],
     "public": false,
     "type": "esm-view",
-    "version": "0.0.0",
     "workspaceDependencies": [
       "@modular-scripts/remote-view",
     ],
@@ -128,7 +114,6 @@ exports[`getWorkspaceInfo 1`] = `
     "mismatchedWorkspaceDependencies": [],
     "public": false,
     "type": "unknown",
-    "version": "2.0.1",
     "workspaceDependencies": [],
   },
 }
