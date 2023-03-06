@@ -1,9 +1,9 @@
 import fs from 'fs';
-import errorOverlayMiddleware from '../ts-utils/errorOverlayMiddleware';
-import evalSourceMapMiddleware from '../js-utils/evalSourceMapMiddleware';
-import noopServiceWorkerMiddleware from '../js-utils/noopServiceWorkerMiddleware';
-import ignoredFiles from '../js-utils/ignoredFiles';
-import redirectServedPath from '../js-utils/redirectServedPathMiddleware';
+import errorOverlayMiddleware from '../utils/errorOverlayMiddleware';
+import evalSourceMapMiddleware from '../utils/evalSourceMapMiddleware';
+import noopServiceWorkerMiddleware from '../utils/noopServiceWorkerMiddleware';
+import ignoredFiles from '../utils/ignoredFiles';
+import redirectServedPath from '../utils/redirectServedPathMiddleware';
 import getHttpsConfig from './getHttpsConfig';
 import { Configuration, ProxyConfigArray } from 'webpack-dev-server';
 import { Paths } from '../../common-scripts/determineTargetPaths';

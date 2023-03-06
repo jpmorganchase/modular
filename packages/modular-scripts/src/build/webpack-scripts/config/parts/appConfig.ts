@@ -1,6 +1,6 @@
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import InlineChunkHtmlPlugin from '../../js-utils/InlineChunkHtmlPlugin';
-import InterpolateHtmlPlugin from '../../js-utils/InterpolateHtmlPlugin';
+import InlineChunkHtmlPlugin from '../../utils/InlineChunkHtmlPlugin';
+import InterpolateHtmlPlugin from '../../utils/InterpolateHtmlPlugin';
 import webpack from 'webpack';
 import { Paths } from '../../../common-scripts/determineTargetPaths';
 

@@ -5,7 +5,7 @@ import isCI from 'is-ci';
 import { merge } from 'webpack-merge';
 import { WebpackManifestPlugin } from 'webpack-manifest-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
-import ModuleNotFoundPlugin from '../../js-utils/ModuleNotFoundPlugin';
+import ModuleNotFoundPlugin from '../../utils/ModuleNotFoundPlugin';
 import { createEsmViewPluginConfig } from './esmViewConfig';
 import { createAppPluginConfig } from './appConfig';
 import { createDevelopmentPluginConfig } from './developmentConfig';

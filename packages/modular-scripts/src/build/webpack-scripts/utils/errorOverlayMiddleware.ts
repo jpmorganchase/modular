@@ -1,5 +1,5 @@
-import launchEditor from '../js-utils/launchEditor';
-import launchEditorEndpoint from '../js-utils/launchEditorEndpoint';
+import launchEditor from './launchEditor';
+import launchEditorEndpoint from './launchEditorEndpoint';
 
 export default function createLaunchEditorMiddleware() {
   return function launchEditorMiddleware(req: any, res: any, next: any) {

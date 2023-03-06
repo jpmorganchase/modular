@@ -8,7 +8,7 @@ import { log } from '../../../utils/logger';
 import { ProxyConfigArray, Request, Response } from 'webpack-dev-server';
 import type * as http from 'http';
 import type * as httpProxy from 'http-proxy';
-import formatWebpackMessages from '../js-utils/formatWebpackMessages';
+import formatWebpackMessages from '../utils/formatWebpackMessages';
 import webpack from 'webpack';
 import { InstructionURLS } from '../../common-scripts/urls';
 import forkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';

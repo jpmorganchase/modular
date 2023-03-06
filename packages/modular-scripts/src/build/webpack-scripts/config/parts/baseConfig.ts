@@ -1,8 +1,8 @@
 import builtinModules from 'builtin-modules';
 import TerserPlugin from 'terser-webpack-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
-import ModuleScopePlugin from '../../js-utils/ModuleScopePlugin';
-import getCSSModuleLocalIdent from '../../ts-utils/getCSSModuleLocalIdent';
+import ModuleScopePlugin from '../../utils/ModuleScopePlugin';
+import getCSSModuleLocalIdent from '../../utils/getCSSModuleLocalIdent';
 import createStyleLoadersConfig from './styleLoadersConfig';
 import { Paths } from '../../../common-scripts/determineTargetPaths';
 import { Modules } from '../modules';

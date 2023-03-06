@@ -26,7 +26,7 @@ import * as logger from '../../../utils/logger';
 import prepareUrls, { InstructionURLS } from '../../common-scripts/urls';
 import { createStartIndex, createViewTrampoline } from '../api';
 import createEsbuildConfig from '../config/createEsbuildConfig';
-import createLaunchEditorMiddleware from '../../webpack-scripts/ts-utils/errorOverlayMiddleware';
+import createLaunchEditorMiddleware from '../../webpack-scripts/utils/errorOverlayMiddleware';
 import getHost from './utils/getHost';
 import getPort from '../../common-scripts/getPort';
 import sanitizeMetafile, { sanitizeFileName } from '../utils/sanitizeMetafile';
@@ -365,7 +365,7 @@ class DevServer {
   };
 }
 
-export default async function start({
+export default async function startEsbuild({
   target,
   isApp,
   importMap,

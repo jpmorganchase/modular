@@ -19,6 +19,7 @@ import { getConfig } from './utils/config';
 import type { PackageType } from '@modular-scripts/modular-types';
 import determineTargetPaths from './build/common-scripts/determineTargetPaths';
 import startWebpack from './build/webpack-scripts/startWebpack';
+import startEsbuild from './build/esbuild-scripts/start';
 
 async function start(packageName: string): Promise<void> {
   let target = packageName;
@@ -103,10 +104,7 @@ async function start(packageName: string): Promise<void> {
   // If you want to use webpack then we'll always use webpack. But if you've indicated
   // you want esbuild - then we'll switch you to the new fancy world.
   if (getConfig('useModularEsbuild', targetPath)) {
-    const { default: startEsbuildApp } = await import(
-      './build/esbuild-scripts/start'
-    );
-    await startEsbuildApp({
+    await startEsbuild({
       target,
       isApp: !isEsmView,
       importMap,

@@ -2,14 +2,14 @@ import fs from 'fs';
 import chalk from 'chalk';
 import WebpackDevServer from 'webpack-dev-server';
 import { log } from '../../utils/logger';
-import openBrowser from './js-utils/openBrowser';
+import openBrowser from './utils/openBrowser';
 import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import isCI from 'is-ci';
 
 import getConfig from './config/webpack.config';
 import createDevServerConfig from './config/webpackDevServer.config';
 import { readJSONSync } from 'fs-extra';
-import { prepareProxy, createCompiler } from './ts-utils/webpackDevServerUtils';
+import { prepareProxy, createCompiler } from './utils/webpackDevServerUtils';
 import { choosePort } from '../common-scripts/getPort';
 import prepareUrls from '../common-scripts/urls';
 import { Paths } from '../common-scripts/determineTargetPaths';
