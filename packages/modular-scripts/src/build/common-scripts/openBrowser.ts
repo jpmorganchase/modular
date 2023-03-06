@@ -1,28 +1,40 @@
-'use strict';
+import chalk from 'chalk';
+import { execSync } from 'child_process';
+import spawn from 'cross-spawn';
+import open from 'open';
 
-var chalk = require('chalk');
-var execSync = require('child_process').execSync;
-var spawn = require('cross-spawn');
-var open = require('open');
-const console = require('./logger');
+import * as logger from '../../utils/logger';
 
 // https://github.com/sindresorhus/open#app
-var OSX_CHROME = 'google chrome';
+const OSX_CHROME = 'google chrome';
 
-const Actions = Object.freeze({
-  NONE: 0,
-  BROWSER: 1,
-  SCRIPT: 2,
-});
+enum Actions {
+  NONE = 'None',
+  BROWSER = 'Browser',
+  SCRIPT = 'Script',
+}
+
+const DEFAULT_BROWSER = process.env.BROWSER;
+const DEFAULT_BROWSER_ARGS = process.env.BROWSER_ARGS
+  ? process.env.BROWSER_ARGS.split(' ')
+  : [];
+
+// Will use the first open browser found from list
+const SUPPORTED_CHROMIUM_BROWSERS = [
+  'Google Chrome Canary',
+  'Google Chrome',
+  'Microsoft Edge',
+  'Brave Browser',
+  'Vivaldi',
+  'Chromium',
+];
 
 function getBrowserEnv() {
   // Attempt to honor this environment variable.
   // It is specific to the operating system.
   // See https://github.com/sindresorhus/open#app for documentation.
-  const value = process.env.BROWSER;
-  const args = process.env.BROWSER_ARGS
-    ? process.env.BROWSER_ARGS.split(' ')
-    : [];
+  const value = DEFAULT_BROWSER;
+  const args = DEFAULT_BROWSER_ARGS;
   let action;
   if (!value) {
     // Default.
@@ -37,48 +49,41 @@ function getBrowserEnv() {
   return { action, value, args };
 }
 
-function executeNodeScript(scriptPath, url) {
+function executeNodeScript(scriptPath: string, url: string) {
   const extraArgs = process.argv.slice(2);
   const child = spawn(process.execPath, [scriptPath, ...extraArgs, url], {
     stdio: 'inherit',
   });
-  child.on('close', (code) => {
+  child.on('close', (code: number) => {
     if (code !== 0) {
-      console.log();
-      console.log(
+      logger.log();
+      logger.log(
         chalk.red(
           'The script specified as BROWSER environment variable failed.',
         ),
       );
-      console.log(chalk.cyan(scriptPath) + ' exited with code ' + code + '.');
-      console.log();
+      logger.log(`${chalk.cyan(scriptPath)} exited with code ${code}.`);
+      logger.log();
       return;
     }
   });
   return true;
 }
 
-function startBrowserProcess(browser, url, args) {
+async function startBrowserProcess(
+  targetBrowser: string | undefined,
+  url: string,
+  args: string[],
+) {
   // If we're on OS X, the user hasn't specifically
   // requested a different browser, we can try opening
   // Chrome with AppleScript. This lets us reuse an
   // existing tab when possible instead of creating a new one.
   const shouldTryOpenChromiumWithAppleScript =
-    process.platform === 'darwin' &&
-    (typeof browser !== 'string' || browser === OSX_CHROME);
+    process.platform === 'darwin' && targetBrowser === OSX_CHROME;
 
   if (shouldTryOpenChromiumWithAppleScript) {
-    // Will use the first open browser found from list
-    const supportedChromiumBrowsers = [
-      'Google Chrome Canary',
-      'Google Chrome',
-      'Microsoft Edge',
-      'Brave Browser',
-      'Vivaldi',
-      'Chromium',
-    ];
-
-    for (let chromiumBrowser of supportedChromiumBrowsers) {
+    for (const chromiumBrowser of SUPPORTED_CHROMIUM_BROWSERS) {
       try {
         // Try our best to reuse existing tab
         // on OSX Chromium-based browser with AppleScript
@@ -105,20 +110,22 @@ function startBrowserProcess(browser, url, args) {
   // In this case, instead of passing `open` to `opn` (which won't work),
   // just ignore it (thus ensuring the intended behavior, i.e. opening the system browser):
   // https://github.com/facebook/create-react-app/pull/1690#issuecomment-283518768
-  if (process.platform === 'darwin' && browser === 'open') {
-    browser = undefined;
-  }
-
-  // If there are arguments, they must be passed as array with the browser
-  if (typeof browser === 'string' && args.length > 0) {
-    browser = [browser].concat(args);
+  if (process.platform === 'darwin' && targetBrowser === 'open') {
+    targetBrowser = undefined;
   }
 
   // Fallback to open
   // (It will always open new tab)
   try {
-    var options = { app: browser, wait: false, url: true };
-    open(url, options).catch(() => {}); // Prevent `unhandledRejection` error.
+    await open(url, {
+      app: targetBrowser
+        ? {
+            name: targetBrowser,
+            arguments: args,
+          }
+        : undefined,
+      wait: false,
+    });
     return true;
   } catch (err) {
     return false;
@@ -129,19 +136,18 @@ function startBrowserProcess(browser, url, args) {
  * Reads the BROWSER environment variable and decides what to do with it. Returns
  * true if it opened a browser or ran a node.js script, otherwise false.
  */
-function openBrowser(url) {
+export default async function openBrowser(url: string): Promise<boolean> {
   const { action, value, args } = getBrowserEnv();
   switch (action) {
     case Actions.NONE:
       // Special case: BROWSER="none" will prevent opening completely.
       return false;
     case Actions.SCRIPT:
-      return executeNodeScript(value, url);
+      // Value will always be string if action is SCRIPT.
+      return executeNodeScript(value as string, url);
     case Actions.BROWSER:
       return startBrowserProcess(value, url, args);
     default:
       throw new Error('Not implemented.');
   }
 }
-
-module.exports = openBrowser;

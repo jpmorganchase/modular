@@ -21,7 +21,7 @@ import websocketReloadPlugin from './plugins/wsReload';
 import metafileReporterPlugin from './plugins/metafileReporter';
 import firstCompilePlugin from './plugins/firstCompile';
 
-import openBrowser from '../utils/openBrowser';
+import openBrowser from '../../common-scripts/openBrowser';
 import * as logger from '../../../utils/logger';
 import prepareUrls, { InstructionURLS } from '../../common-scripts/urls';
 import { createStartIndex, createViewTrampoline } from '../api';

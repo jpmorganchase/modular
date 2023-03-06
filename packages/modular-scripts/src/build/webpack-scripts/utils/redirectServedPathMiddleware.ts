@@ -1,11 +1,9 @@
-'use strict';
+import path from 'path';
 
-const path = require('path');
-
-module.exports = function createRedirectServedPathMiddleware(servedPath) {
+export default function createRedirectServedPathMiddleware(servedPath: string) {
   // remove end slash so user can land on `/test` instead of `/test/`
   servedPath = servedPath.slice(0, -1);
-  return function redirectServedPathMiddleware(req, res, next) {
+  return function redirectServedPathMiddleware(req: any, res: any, next: any) {
     if (
       servedPath === '' ||
       req.url === servedPath ||
@@ -17,4 +15,4 @@ module.exports = function createRedirectServedPathMiddleware(servedPath) {
       res.redirect(newPath);
     }
   };
-};
+}

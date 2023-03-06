@@ -1,5 +1,5 @@
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
-import WatchMissingNodeModulesPlugin from '../../utils/WatchMissingNodeModulesPlugin';
+import WatchMissingNodeModulesPlugin from '../../plugins/WatchMissingNodeModulesPlugin';
 import path from 'path';
 import webpack from 'webpack';
 import { Paths } from '../../../common-scripts/determineTargetPaths';

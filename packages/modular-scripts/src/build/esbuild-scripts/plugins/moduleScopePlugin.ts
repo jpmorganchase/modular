@@ -4,7 +4,7 @@ import * as path from 'path';
 import getModularRoot from '../../../utils/getModularRoot';
 import { Paths } from '../../common-scripts/determineTargetPaths';
 
-function createPlugin(paths: Paths): esbuild.Plugin {
+function createPlugin(paths: Paths, allowedFiles?: string[]): esbuild.Plugin {
   return {
     name: 'ModuleScopePlugin',
     setup(build) {
@@ -36,6 +36,9 @@ function createPlugin(paths: Paths): esbuild.Plugin {
           path.dirname(args.importer),
           args.path,
         );
+        if (allowedFiles?.includes(requestFullPath)) {
+          return;
+        }
         // Find path from src to the requested file
         // Error if in a parent directory of all given appSrcs
         const requestRelative = path.relative(appSrc, requestFullPath);

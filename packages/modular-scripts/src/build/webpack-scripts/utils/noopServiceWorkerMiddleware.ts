@@ -1,9 +1,7 @@
-'use strict';
+import path from 'path';
 
-const path = require('path');
-
-module.exports = function createNoopServiceWorkerMiddleware(servedPath) {
-  return function noopServiceWorkerMiddleware(req, res, next) {
+export default function createNoopServiceWorkerMiddleware(servedPath: string) {
+  return function noopServiceWorkerMiddleware(req: any, res: any, next: any) {
     if (req.url === path.join(servedPath, 'service-worker.js')) {
       res.setHeader('Content-Type', 'text/javascript');
       res.send(
@@ -30,4 +28,4 @@ self.addEventListener('activate', () => {
       next();
     }
   };
-};
+}

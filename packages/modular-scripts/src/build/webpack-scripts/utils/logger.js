@@ -1,5 +1,6 @@
 'use strict';
 
+// TODO: Duplicate of logger.ts in utils, remove once all JS scripts that use this file have been typed
 const isCI = require('is-ci');
 const chalk = require('chalk');
 

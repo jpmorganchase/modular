@@ -1,9 +1,7 @@
-'use strict';
+import chalk from 'chalk';
+import console from './logger';
 
-const chalk = require('chalk');
-const console = require('./logger');
-
-module.exports = function printBuildError(err) {
+export default function printBuildError(err: any) {
   const message = err != null && err.message;
   const stack = err != null && err.stack;
 
@@ -36,4 +34,4 @@ module.exports = function printBuildError(err) {
     console.log((message || err) + '\n');
   }
   console.log();
-};
+}
