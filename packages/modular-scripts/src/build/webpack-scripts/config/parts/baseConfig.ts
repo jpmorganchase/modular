@@ -8,7 +8,7 @@ import { Paths } from '../../../common-scripts/determineTargetPaths';
 import { Modules } from '../modules';
 import webpack from 'webpack';
 const reactRefreshOverlayEntry = require.resolve(
-  '../../js-utils/refreshOverlayInterop',
+  '../../utils/refreshOverlayInterop',
 );
 const PnpWebpackPlugin = require('pnp-webpack-plugin');
 
