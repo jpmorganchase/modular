@@ -1,0 +1,13 @@
+{
+  "name": "remote-view",
+  "version": "1.0.0",
+  "author": "App Frameworks team",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/**"
+  ],
+  "modular": {
+    "type": "root"
+  }
+}

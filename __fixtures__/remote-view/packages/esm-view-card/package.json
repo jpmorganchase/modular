@@ -1,0 +1,14 @@
+{
+  "name": "esm-view-card",
+  "private": false,
+  "modular": {
+    "type": "esm-view",
+    "externalCdnTemplate": "http://localhost:8484/[name]@[version]"
+  },
+  "dependencies": {},
+  "version": "1.0.0",
+  "devDependencies": {},
+  "files": [
+    "src"
+  ]
+}
