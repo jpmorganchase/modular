@@ -42,10 +42,10 @@ export function webpackMeasureFileSizesBeforeBuild(
 
 export function createWebpackAssets(
   paths: Paths,
-  stats: StatsCompilation | undefined,
+  stats: StatsCompilation,
 ): Asset[] {
   const readableAssets: string[] = (
-    stats?.assets?.filter((asset: { name: string }) =>
+    stats.assets?.filter((asset: { name: string }) =>
       canReadAsset(asset.name),
     ) || []
   ).map((asset: { name: string }) => asset.name);

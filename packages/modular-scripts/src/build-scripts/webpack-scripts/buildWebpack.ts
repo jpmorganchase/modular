@@ -1,11 +1,15 @@
 import isCi from 'is-ci';
 import chalk from 'chalk';
-import fs from 'fs-extra';
 import webpack from 'webpack';
 import formatWebpackMessages from './utils/formatWebpackMessages';
 import printBuildError from './utils/printBuildError';
 import { log } from '../../utils/logger';
-import { Compiler, Stats, WebpackConfiguration } from 'webpack-dev-server';
+import {
+  Compiler,
+  Stats,
+  StatsCompilation,
+  WebpackConfiguration,
+} from 'webpack-dev-server';
 import { Paths } from '../common-scripts/determineTargetPaths';
 import getConfig from './config/webpack.config';
 
@@ -16,7 +20,7 @@ export default async function buildWebpack(
   useReactCreateRoot: boolean,
   styleImports: Set<string>,
   paths: Paths,
-) {
+): Promise<StatsCompilation> {
   // Makes the script crash on unhandled rejections instead of silently
   // ignoring them. In the future, promise rejections that are not handled will
   // terminate the Node.js process with a non-zero exit code.
@@ -35,10 +39,10 @@ export default async function buildWebpack(
   );
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   const compiler: Compiler = webpack(webpackConfig) as Compiler;
-  await runCompiler(compiler, paths);
+  return await runCompiler(compiler);
 }
 
-async function runCompiler(compiler: Compiler, paths: Paths): Promise<void> {
+async function runCompiler(compiler: Compiler): Promise<StatsCompilation> {
   return new Promise((resolve, reject) => {
     compiler.run((err: Error | null | undefined, stats: Stats | undefined) => {
       log('Webpack Compiled.');
@@ -81,9 +85,7 @@ async function runCompiler(compiler: Compiler, paths: Paths): Promise<void> {
         printBuildError(new Error(messages.warnings.join('\n\n')));
         reject();
       }
-
-      fs.writeJsonSync(`${paths.appBuild}/bundle-stats.json`, statsJson);
-      resolve();
+      statsJson ? resolve(statsJson) : reject();
     });
   });
 }

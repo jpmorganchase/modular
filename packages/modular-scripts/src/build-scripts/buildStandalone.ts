@@ -26,7 +26,6 @@ import { getDependencyInfo } from '../utils/getDependencyInfo';
 import { isReactNewApi } from '../utils/isReactNewApi';
 import { getConfig } from '../utils/config';
 import buildWebpack from './webpack-scripts/buildWebpack';
-import { Stats } from 'webpack-dev-server';
 
 export async function buildStandalone(
   target: string,
@@ -125,7 +124,7 @@ export async function buildStandalone(
     // If it's not an app it's an ESM view, then we need es2020
     const esbuildTargetFactory = isApp ? browserTarget : ['es2020'];
 
-    await buildWebpack(
+    const stats = await buildWebpack(
       esbuildTargetFactory,
       isApp,
       importMap,
@@ -134,35 +133,27 @@ export async function buildStandalone(
       paths,
     );
 
-    const statsFilePath = path.join(paths.appBuild, 'bundle-stats.json');
+    const mainEntrypoint = stats.assetsByChunkName?.main;
+    jsEntryPoint = mainEntrypoint?.find((entryPoint: string) =>
+      entryPoint.endsWith('.js'),
+    );
+    cssEntryPoint = mainEntrypoint?.find((entryPoint: string) =>
+      entryPoint.endsWith('.css'),
+    );
 
-    try {
-      const stats = (await fs.readJson(statsFilePath)) as Stats | undefined;
-      const statsJson = stats?.toJson();
-      const mainEntrypoint = statsJson?.assetsByChunkName?.main;
-      jsEntryPoint = mainEntrypoint?.find((entryPoint: string) =>
-        entryPoint.endsWith('.js'),
+    if (stats.warnings?.length) {
+      logger.log(chalk.yellow('Compiled with warnings.\n'));
+      logger.log(stats.warnings.join('\n\n'));
+      logger.log(
+        '\nSearch for the ' +
+          chalk.underline(chalk.yellow('keywords')) +
+          ' to learn more about each warning.',
       );
-      cssEntryPoint = mainEntrypoint?.find((entryPoint: string) =>
-        entryPoint.endsWith('.css'),
-      );
-
-      if (statsJson?.warnings?.length) {
-        logger.log(chalk.yellow('Compiled with warnings.\n'));
-        logger.log(statsJson.warnings.join('\n\n'));
-        logger.log(
-          '\nSearch for the ' +
-            chalk.underline(chalk.yellow('keywords')) +
-            ' to learn more about each warning.',
-        );
-      } else {
-        logger.log(chalk.green('Compiled successfully.\n'));
-      }
-
-      assets = createWebpackAssets(paths, statsJson);
-    } finally {
-      await fs.remove(statsFilePath);
+    } else {
+      logger.log(chalk.green('Compiled successfully.\n'));
     }
+
+    assets = createWebpackAssets(paths, stats);
   }
 
   if (!jsEntryPoint) {
@@ -187,7 +178,7 @@ export async function buildStandalone(
     path.join(targetDirectory, 'package.json'),
   )) as ModularPackageJson;
   // Copy selected fields of package.json over
-  void (await fs.writeJSON(
+  fs.writeJsonSync(
     path.join(paths.appBuild, 'package.json'),
     {
       name: targetPackageJson.name,
@@ -203,7 +194,7 @@ export async function buildStandalone(
       styleImports: styleImports?.size ? [...styleImports] : undefined,
     },
     { spaces: 2 },
-  ));
+  );
 
   printFileSizesAfterBuild(assets, previousFileSizes);
 

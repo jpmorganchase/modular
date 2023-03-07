@@ -246,14 +246,12 @@ export function createCompiler(
 
   // "done" event fires when webpack has finished recompiling the bundle.
   // Whether or not you have warnings or errors, you will get this event.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  compiler.hooks.done.tap('done', (stats: any) => {
+  compiler.hooks.done.tap('done', (stats: Stats) => {
     // We have switched off the default webpack output in WebpackDevServer
     // options so we are going to "massage" the warnings and errors and present
     // them in a readable focused way.
     // We only construct the warnings and errors for speed:
     // https://github.com/facebook/create-react-app/issues/4492#issuecomment-421959548
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     const statsData = stats.toJson({
       all: false,
       warnings: true,
