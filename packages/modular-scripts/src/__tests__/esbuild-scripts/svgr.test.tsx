@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs-extra';
 import * as tmp from 'tmp';
 import tree from 'tree-view-for-tests';
-import svgrPlugin from '../../build/esbuild-scripts/plugins/svgr';
+import svgrPlugin from '../../build-scripts/esbuild-scripts/plugins/svgr';
 import getModularRoot from '../../utils/getModularRoot';
 
 const emptyDir = async (dirName: string) => {

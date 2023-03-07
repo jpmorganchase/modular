@@ -1,6 +1,6 @@
 import express from 'express';
 import * as fs from 'fs-extra';
-import determineTargetPaths from './build/common-scripts/determineTargetPaths';
+import determineTargetPaths from './build-scripts/common-scripts/determineTargetPaths';
 
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import getWorkspaceLocation from './utils/getLocation';

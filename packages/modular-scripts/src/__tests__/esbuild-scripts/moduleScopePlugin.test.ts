@@ -4,10 +4,10 @@ import * as fs from 'fs-extra';
 import stripAnsi from 'strip-ansi';
 import * as tmp from 'tmp';
 
-import plugin from '../../build/esbuild-scripts/plugins/moduleScopePlugin';
-import { formatError } from '../../build/esbuild-scripts/utils/formatError';
+import plugin from '../../build-scripts/esbuild-scripts/plugins/moduleScopePlugin';
+import { formatError } from '../../build-scripts/esbuild-scripts/utils/formatError';
 import getModularRoot from '../../utils/getModularRoot';
-import { Paths } from '../../build/common-scripts/determineTargetPaths';
+import { Paths } from '../../build-scripts/common-scripts/determineTargetPaths';
 
 const emptyDir = async (dirName: string) => {
   await fs.emptyDir(dirName);

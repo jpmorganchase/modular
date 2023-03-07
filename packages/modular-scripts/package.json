@@ -34,6 +34,7 @@
     "@rollup/plugin-commonjs": "22.0.0",
     "@rollup/plugin-json": "4.1.0",
     "@rollup/plugin-node-resolve": "13.3.0",
+    "@schemastore/tsconfig": "0.0.9",
     "@svgr/core": "6.2.1",
     "@svgr/webpack": "6.2.1",
     "@types/case-sensitive-paths-webpack-plugin": "^2.1.6",
@@ -157,7 +158,6 @@
   "devDependencies": {
     "@modular-scripts/modular-types": "1.2.0",
     "@schemastore/package": "0.0.6",
-    "@schemastore/tsconfig": "0.0.9",
     "@types/js-yaml": "^4.0.5",
     "@types/loader-utils": "^2.0.3",
     "@types/validate-npm-package-name": "^4.0.0",
