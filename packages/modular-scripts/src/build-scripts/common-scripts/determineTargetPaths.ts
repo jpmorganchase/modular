@@ -95,7 +95,6 @@ export default function determineTargetPaths(
   };
 
   const ownPath = path.dirname(path.join(__dirname, '..', '..'));
-  console.log(`ownPath: ${ownPath}`);
 
   const resolveOwn = (relativePath: string) =>
     path.resolve(ownPath, relativePath);
