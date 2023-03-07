@@ -368,5 +368,8 @@ export default function createBaseConfig(
         new CssMinimizerPlugin(),
       ],
     },
+    // Turn off performance processing because we utilize
+    // our own hints via the FileSizeReporter
+    performance: false,
   };
 }

@@ -71,12 +71,6 @@ export default async function getWebpackConfig(
     dependencyMap,
   );
 
-  const performanceConfiguration: WebpackConfiguration = {
-    // Turn off performance processing because we utilize
-    // our own hints via the FileSizeReporter
-    performance: false,
-  };
-
   // Specific configuration based on modular type (app, esm-view)
   const modularTypeConfiguration: WebpackConfiguration = isApp
     ? createAppConfig()
@@ -108,7 +102,6 @@ export default async function getWebpackConfig(
   // Merge all configurations into the final one
   const webpackConfig: WebpackConfiguration = merge([
     baseConfig,
-    performanceConfiguration,
     modularTypeConfiguration,
     buildTypeConfiguration,
     pluginConfig,
