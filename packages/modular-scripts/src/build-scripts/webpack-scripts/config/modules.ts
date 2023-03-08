@@ -3,22 +3,23 @@ import path from 'path';
 import chalk from 'chalk';
 import resolve from 'resolve';
 import { Paths } from '../../common-scripts/determineTargetPaths';
+import { readJsonSync } from 'fs-extra';
 
 /**
  * Get additional module paths based on the baseUrl of a compilerOptions object.
  *
  * @param {Object} options
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function getAdditionalModulePaths(options: any = {}, paths: Paths) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+function getAdditionalModulePaths(
+  options: { baseUrl?: string } = {},
+  paths: Paths,
+) {
   const baseUrl = options.baseUrl;
 
   if (!baseUrl) {
     return '';
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const baseUrlResolved = path.resolve(paths.appPath, baseUrl);
 
   // We don't need to do anything if `baseUrl` is set to `node_modules`. This is
@@ -71,7 +72,7 @@ function getWebpackAliases(
     };
 }
 
-export default function getModules(paths: Paths): Modules {
+export default async function getModules(paths: Paths): Promise<Modules> {
   // Check if TypeScript is setup
   const hasTsConfig = fs.existsSync(paths.appTsConfig);
   const hasJsConfig = fs.existsSync(paths.appJsConfig);
@@ -82,28 +83,27 @@ export default function getModules(paths: Paths): Modules {
     );
   }
 
-  let config;
+  let config: Config = {};
 
   // If there's a tsconfig.json we assume it's a
   // TypeScript project and set up the config
   // based on tsconfig.json
   if (hasTsConfig) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
-    const ts = require(resolve.sync('typescript', {
-      basedir: paths.appNodeModules,
-    }));
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    const ts = (await import(
+      resolve.sync('typescript', {
+        basedir: paths.appNodeModules,
+      })
+    )) as {
+      readConfigFile: (path: string, readFile: unknown) => { config: Config };
+      sys: { readFile: unknown };
+    };
     config = ts.readConfigFile(paths.appTsConfig, ts.sys.readFile).config;
     // Otherwise we'll check if there is jsconfig.json
     // for non TS projects.
   } else if (hasJsConfig) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    config = require(paths.appJsConfig);
+    config = readJsonSync(require.resolve(paths.appJsConfig)) as Config;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  config = config || {};
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   const options: { baseUrl?: string } = config.compilerOptions || {};
 
   const additionalModulePaths = getAdditionalModulePaths(options, paths);
@@ -117,11 +117,15 @@ export default function getModules(paths: Paths): Modules {
 
 export interface Modules {
   additionalModulePaths: string | string[] | null;
-  webpackAliases: // eslint-disable-next-line @typescript-eslint/ban-types
-  | {}
+  webpackAliases:
+    | Record<string, never>
     | {
         src: string;
       }
     | undefined;
   hasTsConfig: boolean;
+}
+
+interface Config {
+  compilerOptions?: { baseUrl?: string };
 }

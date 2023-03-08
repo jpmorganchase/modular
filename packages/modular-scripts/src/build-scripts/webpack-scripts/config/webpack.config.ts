@@ -56,7 +56,7 @@ export default async function getWebpackConfig(
     isEnvProduction && process.argv.includes('--profile');
 
   // Create configurations
-  const modules = getModules(targetPaths);
+  const modules = await getModules(targetPaths);
   // base, common configuration
   const baseConfig: WebpackConfiguration = createBaseConfig(
     isEnvProduction,
