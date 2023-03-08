@@ -32,26 +32,28 @@ export function createEsmViewConfig(
 }
 
 function createExternalRewriter(dependencyMap: Map<string, string>) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return function test({ request }: any, callback: any) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const parsedModule = parsePackageName(request);
-    // If the module is absolute and it is in the import map, we want to externalise it
-    if (
-      parsedModule &&
-      parsedModule.dependencyName &&
-      dependencyMap.get(parsedModule.dependencyName) &&
-      // If this is an absolute export of css we need to deal with it in the loader
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      !request.endsWith('.css')
-    ) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      const toRewrite = rewriteModuleSpecifier(dependencyMap, request);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
-      return callback(null, toRewrite);
+  return function test(
+    { request }: { request?: string },
+    callback: (
+      err?: Error,
+      result?: string | boolean | string[] | { [index: string]: unknown },
+    ) => void,
+  ) {
+    if (request) {
+      const parsedModule = parsePackageName(request);
+      // If the module is absolute and it is in the import map, we want to externalise it
+      if (
+        parsedModule &&
+        parsedModule.dependencyName &&
+        dependencyMap.get(parsedModule.dependencyName) &&
+        // If this is an absolute export of css we need to deal with it in the loader
+        !request.endsWith('.css')
+      ) {
+        const toRewrite = rewriteModuleSpecifier(dependencyMap, request);
+        return callback(undefined, toRewrite);
+      }
     }
     // Otherwise we just want to bundle it
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
     return callback();
   };
 }
