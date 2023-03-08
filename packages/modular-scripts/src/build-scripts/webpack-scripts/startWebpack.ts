@@ -14,13 +14,6 @@ import prepareUrls from '../common-scripts/urls';
 import { Paths } from '../common-scripts/determineTargetPaths';
 import openBrowser from '../common-scripts/openBrowser';
 
-// Makes the script crash on unhandled rejections instead of silently
-// ignoring them. In the future, promise rejections that are not handled will
-// terminate the Node.js process with a non-zero exit code.
-process.on('unhandledRejection', (err) => {
-  throw err;
-});
-
 // Tools like Cloud9 rely on this.
 const portEnv = process.env.PORT;
 const DEFAULT_PORT = portEnv ? parseInt(portEnv, 10) : 3000;
