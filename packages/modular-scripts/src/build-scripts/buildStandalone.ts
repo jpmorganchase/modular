@@ -114,7 +114,7 @@ export async function buildStandalone(
     const result = await buildEsbuildApp(target, paths, importMap, type);
     jsEntryPoint = getEntryPoint(paths, result, '.js');
     cssEntryPoint = getEntryPoint(paths, result, '.css');
-    assets = createEsbuildAssets(paths, result);
+    assets = createEsbuildAssets(result);
   } else {
     logger.debug('Building with Webpack');
     // create-react-app doesn't support plain module outputs yet,

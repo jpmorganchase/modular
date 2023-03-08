@@ -5,7 +5,6 @@ import * as path from 'path';
 import recursive from 'recursive-readdir';
 
 import getModularRoot from '../utils/getModularRoot';
-import { Paths } from './common-scripts/determineTargetPaths';
 import { Asset, canReadAsset } from './fileSizeReporter';
 
 function removeFileNameHash(fileName: string): string {
@@ -50,10 +49,7 @@ export function esbuildMeasureFileSizesBeforeBuild(
   });
 }
 
-export function createEsbuildAssets(
-  _paths: Paths,
-  stats: esbuild.Metafile,
-): Asset[] {
+export function createEsbuildAssets(stats: esbuild.Metafile): Asset[] {
   const modularRoot = getModularRoot();
 
   const readableAssets = Object.keys(stats.outputs).filter(canReadAsset);
