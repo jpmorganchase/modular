@@ -59,17 +59,18 @@ function getAdditionalModulePaths(
 function getWebpackAliases(
   options: { baseUrl?: string },
   paths: Paths,
-): { src: string } | undefined {
+): Record<string, never> | { src: string } | undefined {
   const baseUrl = options.baseUrl;
 
-  if (!baseUrl) return undefined;
+  if (!baseUrl) return {};
 
   const baseUrlResolved = path.resolve(paths.appPath, baseUrl);
 
-  if (path.relative(paths.appPath, baseUrlResolved) === '')
+  if (path.relative(paths.appPath, baseUrlResolved) === '') {
     return {
       src: paths.appSrc,
     };
+  }
 }
 
 export default async function getModules(paths: Paths): Promise<Modules> {
