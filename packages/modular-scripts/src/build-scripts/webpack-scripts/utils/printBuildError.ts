@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import console from './logger';
+import * as console from '../../../utils/logger';
 
 export default function printBuildError(err: Error) {
   const message = err != null && err.message;
@@ -27,7 +27,7 @@ export default function printBuildError(err: Error) {
         '\n',
       );
     } catch (ignored) {
-      console.log('Failed to minify the bundle.', err);
+      console.log('Failed to minify the bundle.', err.message);
     }
     console.log('Read more here: https://cra.link/failed-to-minify');
   } else {
