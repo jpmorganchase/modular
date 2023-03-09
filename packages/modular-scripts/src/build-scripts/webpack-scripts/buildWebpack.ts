@@ -58,15 +58,12 @@ async function runCompiler(compiler: Compiler): Promise<StatsCompilation> {
           warnings: statsJson.warnings,
         });
       }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       if (messages && messages.errors.length) {
         // Only keep the first error. Others are often indicative
         // of the same problem, but confuse the reader with noise.
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
         printBuildError(new Error(messages.errors[0]));
         reject();
       }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       if (isCi && messages && messages.warnings.length) {
         log(
           chalk.yellow(
@@ -74,7 +71,6 @@ async function runCompiler(compiler: Compiler): Promise<StatsCompilation> {
               'Most CI servers set it automatically.\n',
           ),
         );
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         printBuildError(new Error(messages.warnings.join('\n\n')));
         reject();
       }

@@ -91,8 +91,10 @@ export function createCompiler(
       errors: true,
     });
 
-    const messages = formatWebpackMessages(statsData);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    const messages = formatWebpackMessages({
+      warnings: statsData.warnings,
+      errors: statsData.errors,
+    });
     const isSuccessful = !messages.errors.length && !messages.warnings.length;
     if (isSuccessful) {
       console.log(chalk.green('Compiled successfully!'));
@@ -103,26 +105,20 @@ export function createCompiler(
     isFirstCompile = false;
 
     // If errors exist, only show errors.
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (messages.errors.length) {
       // Only keep the first error. Others are often indicative
       // of the same problem, but confuse the reader with noise.
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       if (messages.errors.length > 1) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         messages.errors.length = 1;
       }
       console.log(chalk.red('Failed to compile.\n'));
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       console.log(messages.errors.join('\n\n'));
       return;
     }
 
     // Show warnings if no errors were found.
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (messages.warnings.length) {
       console.log(chalk.yellow('Compiled with warnings.\n'));
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       console.log(messages.warnings.join('\n\n'));
 
       // Teach some ESLint tricks.
