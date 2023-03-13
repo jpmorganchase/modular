@@ -2,6 +2,7 @@ import path from 'path';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { Paths } from '../../../common-scripts/determineTargetPaths';
 import { WebpackConfiguration } from 'webpack-dev-server';
+import { Configuration, WebpackPluginInstance } from 'webpack';
 
 export function createProductionConfig(
   shouldUseSourceMap: boolean,
@@ -33,7 +34,7 @@ export function createProductionConfig(
   };
 }
 
-export function createProductionPluginConfig() {
+export function createProductionPluginConfig(): Configuration {
   return {
     plugins: [
       new MiniCssExtractPlugin({
@@ -41,7 +42,7 @@ export function createProductionPluginConfig() {
         // both options are optional
         filename: 'static/css/[name].[contenthash:8].css',
         chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
-      }),
+      }) as unknown as WebpackPluginInstance,
     ].filter(Boolean),
   };
 }

@@ -1,4 +1,4 @@
-import webpack from 'webpack';
+import webpack, { Configuration, WebpackPluginInstance } from 'webpack';
 import resolve from 'resolve';
 import isCI from 'is-ci';
 import { merge } from 'webpack-merge';
@@ -29,22 +29,21 @@ export default function createPluginConfig(
   styleImports: Set<string>,
   paths: Paths,
   indexPath: string | false,
-): { plugins: webpack.WebpackPluginInstance[] } {
+): Configuration {
   const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
   const isEnvDevelopment = !isEnvProduction;
 
-  const basePlugins = {
+  const basePlugins: Configuration = {
     plugins: [
       // This gives some necessary context to module not found errors, such as
       // the requesting resource.
-      new ModuleNotFoundPlugin(paths.appPath),
+      new ModuleNotFoundPlugin(paths.appPath) as WebpackPluginInstance,
       // Makes some environment variables available to the JS code, for example:
       // if (process.env.NODE_ENV === 'production') { ... }. See `./env.js`.
       // It is absolutely essential that NODE_ENV is set to production
       // during a production build.
       // Otherwise React will be compiled in the very slow development mode.
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-      new webpack.DefinePlugin(env.stringified),
+      new webpack.DefinePlugin(env.stringified) as WebpackPluginInstance,
       // Generate an asset manifest file with the following content:
       // - "files" key: Mapping of all asset filenames to their corresponding
       //   output file so that tools can pick it up without having to parse
@@ -68,22 +67,21 @@ export default function createPluginConfig(
             entrypoints: entrypointFiles,
           };
         },
-      }),
+      }) as unknown as WebpackPluginInstance,
       // Moment.js is an extremely popular library that bundles large locale files
       // by default due to how webpack interprets its code. This is a practical
       // solution that requires the user to opt into importing specific locales.
       // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
       // You can remove this if you don't use Moment.js:
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       new webpack.IgnorePlugin({
         resourceRegExp: /^\.\/locale$/,
         contextRegExp: /moment$/,
-      }),
+      }) as WebpackPluginInstance,
       // TypeScript type checking turned off for CI envs
       // https://github.com/jpmorganchase/modular/issues/605
       useTypeScript &&
         !isCI &&
-        new ForkTsCheckerWebpackPlugin({
+        (new ForkTsCheckerWebpackPlugin({
           async: isEnvDevelopment,
           typescript: {
             typescriptPath: resolve.sync('typescript', {
@@ -123,8 +121,8 @@ export default function createPluginConfig(
               { file: '**/src/setupTests.*' },
             ],
           },
-        }),
-    ].filter(Boolean),
+        }) as WebpackPluginInstance),
+    ].filter(Boolean) as WebpackPluginInstance[],
   };
 
   return merge([
@@ -135,12 +133,7 @@ export default function createPluginConfig(
           env,
           paths,
         )
-      : createEsmViewPluginConfig(
-          isEnvProduction,
-          styleImports,
-          indexPath,
-          env,
-        ),
+      : createEsmViewPluginConfig(isEnvProduction, styleImports, indexPath),
     isEnvProduction
       ? createProductionPluginConfig()
       : createDevelopmentPluginConfig(paths),

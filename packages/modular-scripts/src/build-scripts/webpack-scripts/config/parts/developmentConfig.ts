@@ -3,6 +3,11 @@ import WatchMissingNodeModulesPlugin from '../../plugins/WatchMissingNodeModules
 import path from 'path';
 import { Paths } from '../../../common-scripts/determineTargetPaths';
 import { WebpackConfiguration } from 'webpack-dev-server';
+import {
+  Configuration,
+  WebpackPluginFunction,
+  WebpackPluginInstance,
+} from 'webpack';
 
 export function createDevelopmentConfig(): WebpackConfiguration {
   return {
@@ -26,18 +31,20 @@ export function createDevelopmentConfig(): WebpackConfiguration {
   };
 }
 
-export function createDevelopmentPluginConfig(paths: Paths) {
+export function createDevelopmentPluginConfig(paths: Paths): Configuration {
   return {
     plugins: [
       // Watcher doesn't work well if you mistype casing in a path so we use
       // a plugin that prints an error when you attempt to do this.
       // See https://github.com/facebook/create-react-app/issues/240
-      new CaseSensitivePathsPlugin(),
+      new CaseSensitivePathsPlugin() as WebpackPluginFunction,
       // If you require a missing module and then `npm install` it, you still have
       // to restart the development server for webpack to discover it. This plugin
       // makes the discovery automatic so you don't have to restart.
       // See https://github.com/facebook/create-react-app/issues/186
-      new WatchMissingNodeModulesPlugin(paths.appNodeModules),
+      new WatchMissingNodeModulesPlugin(
+        paths.appNodeModules,
+      ) as WebpackPluginInstance,
     ].filter(Boolean),
   };
 }

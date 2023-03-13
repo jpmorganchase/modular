@@ -12,9 +12,8 @@ import { createDevelopmentConfig } from './parts/developmentConfig';
 import { createProductionConfig } from './parts/productionConfig';
 import createBaseConfig from './parts/baseConfig';
 import { getConfig } from '../../../utils/config';
-import webpack from 'webpack';
+import webpack, { Configuration } from 'webpack';
 import { Paths } from '../../common-scripts/determineTargetPaths';
-import { WebpackConfiguration } from 'webpack-dev-server';
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 
 const imageInlineSizeLimit = parseInt(
@@ -42,7 +41,7 @@ export default async function getWebpackConfig(
   useReactCreateRoot: boolean,
   styleImports: Set<string>,
   targetPaths: Paths,
-): Promise<WebpackConfiguration> {
+): Promise<Configuration> {
   // Check if TypeScript is setup
   const useTypeScript = fs.existsSync(targetPaths.appTsConfig);
   const shouldUseSourceMap = getConfig(
@@ -58,7 +57,7 @@ export default async function getWebpackConfig(
   // Create configurations
   const modules = await getModules(targetPaths);
   // base, common configuration
-  const baseConfig: WebpackConfiguration = createBaseConfig(
+  const baseConfig = createBaseConfig(
     isEnvProduction,
     isApp,
     targetPaths,
@@ -72,7 +71,7 @@ export default async function getWebpackConfig(
   );
 
   // Specific configuration based on modular type (app, esm-view)
-  const modularTypeConfiguration: WebpackConfiguration = isApp
+  const modularTypeConfiguration = isApp
     ? createAppConfig()
     : createEsmViewConfig(
         dependencyMap,
@@ -82,14 +81,14 @@ export default async function getWebpackConfig(
       );
 
   // Specific configuration based on build type (production, development)
-  const buildTypeConfiguration: WebpackConfiguration = isEnvProduction
+  const buildTypeConfiguration = isEnvProduction
     ? createProductionConfig(shouldUseSourceMap, targetPaths)
     : createDevelopmentConfig();
 
   // If an index is provided, this is its path. Otherwise false.
   const indexPath = fs.existsSync(targetPaths.appHtml) && targetPaths.appHtml;
   // Plugin configuration
-  const pluginConfig: WebpackConfiguration = createPluginConfig(
+  const pluginConfig = createPluginConfig(
     isApp,
     isEnvProduction,
     shouldUseSourceMap,
@@ -100,12 +99,12 @@ export default async function getWebpackConfig(
   );
 
   // Merge all configurations into the final one
-  const webpackConfig: WebpackConfiguration = merge([
+  const webpackConfig = merge([
     baseConfig,
     modularTypeConfiguration,
     buildTypeConfiguration,
     pluginConfig,
-  ]);
+  ]) as Configuration;
 
   // These dependencies are so widely used for us (JPM) that it makes sense to install
   // their webpack plugin when used.
@@ -147,7 +146,6 @@ export default async function getWebpackConfig(
       )) as WebpackPluginInstanceConstructor;
 
       if (webpackConfig.plugins) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         webpackConfig.plugins.push(new WebpackPlugin(plugin.options));
       } else {
         webpackConfig.plugins = [new WebpackPlugin(plugin.options)];
@@ -164,5 +162,7 @@ export default async function getWebpackConfig(
  * Interface to satisfy TS linting for Webpack Plugin stuff
  */
 interface WebpackPluginInstanceConstructor {
-  new (options: unknown): webpack.WebpackPluginInstance;
+  new (options: unknown):
+    | webpack.WebpackPluginInstance
+    | webpack.WebpackPluginFunction;
 }

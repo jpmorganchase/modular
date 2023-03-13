@@ -1,6 +1,6 @@
 import fs from 'fs';
 import chalk from 'chalk';
-import WebpackDevServer from 'webpack-dev-server';
+import WebpackDevServer, { Compiler } from 'webpack-dev-server';
 import { log } from '../../utils/logger';
 import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import isCI from 'is-ci';
@@ -94,7 +94,10 @@ export default function startWebpack(
         urls.lanUrlForConfig,
         paths,
       );
-      const devServer = new WebpackDevServer(serverConfig, compiler);
+      const devServer = new WebpackDevServer(
+        serverConfig,
+        compiler as unknown as Compiler,
+      );
 
       // Launch WebpackDevServer.
       log(chalk.cyan('Starting the development server...'));

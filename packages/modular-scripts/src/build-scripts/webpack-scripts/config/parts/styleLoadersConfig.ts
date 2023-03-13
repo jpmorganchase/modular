@@ -14,7 +14,7 @@ export default function createStyleLoadersConfig({
   paths,
 }: {
   cssOptions: { importLoaders: number; sourceMap: boolean; modules?: unknown };
-  preProcessor?: unknown;
+  preProcessor?: string;
   includeEsmLoader?: boolean;
   dependencyMap: Map<string, string>;
   isEnvProduction: boolean;

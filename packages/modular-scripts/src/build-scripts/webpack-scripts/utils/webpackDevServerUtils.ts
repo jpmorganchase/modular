@@ -5,20 +5,14 @@ import url from 'url';
 import path from 'path';
 import { existsSync } from 'fs';
 import { log } from '../../../utils/logger';
-import {
-  Compiler,
-  ProxyConfigArray,
-  Request,
-  Response,
-  Stats,
-  WebpackConfiguration,
-} from 'webpack-dev-server';
+import { ProxyConfigArray, Request, Response } from 'webpack-dev-server';
 import type * as http from 'http';
 import type * as httpProxy from 'http-proxy';
 import formatWebpackMessages from './formatWebpackMessages';
-import webpack from 'webpack';
+import webpack, { Configuration } from 'webpack';
 import { InstructionURLS } from '../../common-scripts/urls';
 import forkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+import { Compiler } from 'webpack';
 
 function printInstructions(appName: string | undefined, urls: InstructionURLS) {
   console.log();
@@ -46,14 +40,13 @@ function printInstructions(appName: string | undefined, urls: InstructionURLS) {
 
 export function createCompiler(
   appName: string | undefined,
-  webpackConfig: WebpackConfiguration,
+  webpackConfig: Configuration,
   urls: InstructionURLS,
   useTypeScript: boolean,
 ): Compiler {
   // "Compiler" is a low-level interface to webpack.
   // It lets us listen to some events and provide our own custom messages.
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  const compiler: Compiler = webpack(webpackConfig) as Compiler;
+  const compiler = webpack(webpackConfig);
 
   // "invalid" event fires when you have changed a file, and webpack is
   // recompiling a bundle. WebpackDevServer takes care to pause serving the
@@ -79,7 +72,7 @@ export function createCompiler(
 
   // "done" event fires when webpack has finished recompiling the bundle.
   // Whether or not you have warnings or errors, you will get this event.
-  compiler.hooks.done.tap('done', (stats: Stats) => {
+  compiler.hooks.done.tap('done', (stats) => {
     // We have switched off the default webpack output in WebpackDevServer
     // options so we are going to "massage" the warnings and errors and present
     // them in a readable focused way.
@@ -144,7 +137,7 @@ export function createCompiler(
     compiler.hooks.failed.tap('smokeTest', () => {
       process.exit(1);
     });
-    compiler.hooks.done.tap('smokeTest', (stats: Stats) => {
+    compiler.hooks.done.tap('smokeTest', (stats) => {
       if (stats.hasErrors() || stats.hasWarnings()) {
         process.exit(1);
       } else {

@@ -1,7 +1,7 @@
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import InlineChunkHtmlPlugin from '../../plugins/InlineChunkHtmlPlugin';
 import InterpolateHtmlPlugin from '../../plugins/InterpolateHtmlPlugin';
-import webpack from 'webpack';
+import webpack, { Configuration, WebpackPluginInstance } from 'webpack';
 import { Paths } from '../../../common-scripts/determineTargetPaths';
 import { WebpackConfiguration } from 'webpack-dev-server';
 import { ClientEnvironment } from '../../../common-scripts/getClientEnvironment';
@@ -26,7 +26,7 @@ export function createAppPluginConfig(
   shouldInlineRuntimeChunk: boolean,
   env: ClientEnvironment,
   paths: Paths,
-): { plugins: webpack.WebpackPluginInstance[] } {
+): Configuration {
   return {
     plugins: [
       // Generates an `index.html` file with the <script> injected.
@@ -54,7 +54,7 @@ export function createAppPluginConfig(
               }
             : undefined,
         ),
-      ) as webpack.WebpackPluginInstance,
+      ) as unknown as WebpackPluginInstance,
       // Inlines the webpack runtime script. This script is too small to warrant
       // a network request.
       // https://github.com/facebook/create-react-app/issues/5358

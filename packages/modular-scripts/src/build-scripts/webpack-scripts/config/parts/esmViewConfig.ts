@@ -1,10 +1,9 @@
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import dedent from 'dedent';
 import path from 'path';
-import webpack from 'webpack';
+import webpack, { Configuration } from 'webpack';
 import { parsePackageName } from '../../../../utils/parsePackageName';
 import { rewriteModuleSpecifier } from '../../../../utils/buildImportMap';
-import { ClientEnvironment } from '../../../common-scripts/getClientEnvironment';
 import fs from 'fs-extra';
 import parse5 from 'parse5';
 import { Element } from 'parse5/dist/tree-adapters/default';
@@ -90,8 +89,7 @@ export function createEsmViewPluginConfig(
   isEnvProduction: boolean,
   styleImports: Set<string>,
   indexPath: string | false,
-  env: ClientEnvironment,
-): { plugins: webpack.WebpackPluginInstance[] } {
+): Configuration {
   const importUrlLinks: string[] = [];
   styleImports.forEach((importUrl) => {
     importUrlLinks.push(`<link rel="stylesheet" href="${importUrl}"></script>`);
@@ -143,7 +141,7 @@ export function createEsmViewPluginConfig(
           inject: true,
           templateContent,
           scriptLoading: 'module',
-        }) as webpack.WebpackPluginInstance),
+        }) as unknown as webpack.WebpackPluginInstance),
     ].filter(Boolean) as webpack.WebpackPluginInstance[],
   };
 }
