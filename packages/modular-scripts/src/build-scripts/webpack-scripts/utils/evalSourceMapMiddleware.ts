@@ -40,6 +40,7 @@ export default function createEvalSourceMapMiddleware(server: Server) {
       const fileName = req.query.fileName as string;
       const match = fileName.match(/webpack-internal:\/\/\/(.+)/);
       const id = match ? match[1] : undefined;
+      // Server.stats is private so we get around it this way
       const stats = server['stats'] as Stats | undefined;
       if (!id || !stats) {
         next();

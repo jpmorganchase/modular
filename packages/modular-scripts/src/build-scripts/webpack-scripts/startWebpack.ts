@@ -94,6 +94,9 @@ export default function startWebpack(
         urls.lanUrlForConfig,
         paths,
       );
+
+      // Types from WebpackDevServer and Webpack overlap but unfortunately aren't compatible
+      // even though when you look into it Webpack-Dev-Server simply imports the Webpack types
       const devServer = new WebpackDevServer(
         serverConfig,
         compiler as unknown as Compiler,
