@@ -1,9 +1,12 @@
 import fs from 'fs';
 import path from 'path';
 import selfsigned from 'selfsigned';
-import { deleteSync } from 'del';
+import { promisify } from 'util';
+import rimraf from 'rimraf';
 
 import * as logger from '../../../utils/logger';
+
+const del = promisify(rimraf);
 
 // This code is mostly duplicated from webpack-dev-server, with some typings added.
 // To provide consistent https behaviour in esbuild mode, we use the same directories to store the generated cert.
@@ -40,7 +43,7 @@ function findCacheDir() {
   return path.resolve(dir, 'node_modules/.cache/webpack-dev-server');
 }
 
-export function generateSelfSignedCert() {
+export async function generateSelfSignedCert() {
   const certificateDir = findCacheDir();
   const certificatePath = path.join(certificateDir, 'server.pem');
   let certificateExists = fs.existsSync(certificatePath);
@@ -55,7 +58,7 @@ export function generateSelfSignedCert() {
     if ((Number(now) - Number(certificateStat.ctime)) / certificateTtl > 30) {
       logger.log('SSL Certificate is more than 30 days old. Removing...');
 
-      deleteSync([certificatePath], { force: true });
+      await del(certificatePath);
 
       certificateExists = false;
     }

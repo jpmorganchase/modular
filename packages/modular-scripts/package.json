@@ -55,7 +55,6 @@
     "css-loader": "6.7.1",
     "css-minimizer-webpack-plugin": "3.4.1",
     "dedent": "0.7.0",
-    "del": "^7.0.0",
     "detect-port-alt": "1.1.6",
     "dotenv": "16.0.2",
     "dotenv-expand": "8.0.3",

@@ -149,11 +149,15 @@ class DevServer {
     const { SSL_CRT_FILE, SSL_KEY_FILE, HTTPS } = process.env;
     const isHttps = HTTPS === 'true';
 
+    let selfSignedCert: Buffer | undefined;
+    if (isHttps) {
+      selfSignedCert = await generateSelfSignedCert();
+    }
+
     return new Promise<DevServer>((resolve, reject) => {
       try {
-        if (isHttps) {
+        if (isHttps && selfSignedCert) {
           // By default, use a self-signed, generated cert
-          const selfSignedCert = generateSelfSignedCert();
           let key = selfSignedCert;
           let cert = selfSignedCert;
 
@@ -177,9 +181,11 @@ class DevServer {
               },
               this.express,
             )
-            .listen(443);
+            .listen(this.port, this.host);
         } else {
-          this.server = http.createServer(this.express).listen(80);
+          this.server = http
+            .createServer(this.express)
+            .listen(this.port, this.host);
         }
 
         openBrowser(this.urls.localUrlForBrowser)
@@ -187,7 +193,7 @@ class DevServer {
             resolve(this);
           })
           .catch(() => {
-            reject(this);
+            /* Silently fail */
           });
       } catch (err) {
         logger.error(err as string);
