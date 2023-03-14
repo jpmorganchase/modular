@@ -7,7 +7,7 @@ import type {
 } from 'webpack-dev-server';
 import webpack from 'webpack';
 
-function base64SourceMap(source: webpack.sources.Source) {
+function getBase64SourceMap(source: webpack.sources.Source) {
   const base64 = Buffer.from(JSON.stringify(source.map()), 'utf8').toString(
     'base64',
   );
@@ -45,9 +45,9 @@ export default function createEvalSourceMapMiddleware(server: Server) {
       } else {
         const source = getSourceById(stats, id);
         if (source) {
-          const sourceMapURL = `//# sourceMappingURL=${base64SourceMap(
-            source,
-          )}`;
+          const base64SourceMap = getBase64SourceMap(source);
+          const sourceMapURL = `//# sourceMappingURL=${base64SourceMap}`;
+
           const sourceURL = `//# sourceURL=webpack-internal:///${module.id}`;
           res.end(
             `${source.source() as string}\n${sourceMapURL}\n${sourceURL}`,
