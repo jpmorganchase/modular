@@ -1,6 +1,6 @@
 {
   "name": "modular-scripts",
-  "version": "4.1.0",
+  "version": "4.4.0",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
@@ -24,7 +24,7 @@
     "modular": "ts-node src/cli.ts",
     "clean": "rimraf build dist-cjs",
     "prebuild": "yarn clean",
-    "build": "babel --source-maps --root-mode upward src --out-dir dist-cjs --extensions [.ts,.js] --ignore 'src/**/*.test.ts'"
+    "build": "babel --source-maps --root-mode upward src --out-dir dist-cjs --extensions .ts,.js --ignore 'src/**/*.test.ts'"
   },
   "dependencies": {
     "@babel/code-frame": "7.18.6",
