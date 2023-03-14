@@ -5,6 +5,7 @@ import type { RequestHandler } from 'express';
 import ws from 'express-ws';
 import * as fs from 'fs-extra';
 import * as http from 'http';
+import * as https from 'https';
 import * as path from 'path';
 import { getType } from 'mime';
 import isCi from 'is-ci';
@@ -35,6 +36,8 @@ import getModularRoot from '../../utils/getModularRoot';
 import { createRewriteDependenciesPlugin } from '../plugins/rewriteDependenciesPlugin';
 import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowserslistTarget';
 import { normalizeToPosix } from '../utils/formatPath';
+import { generateSelfSignedCert } from './utils/generateSelfSignedCert';
+import { validateKeyAndCerts } from './utils/validateCert';
 
 const RUNTIME_DIR = path.join(__dirname, 'runtime');
 class DevServer {
@@ -143,13 +146,49 @@ class DevServer {
     await this.startEsbuildServer();
     await this.hostRuntime();
 
+    const { SSL_CRT_FILE, SSL_KEY_FILE, HTTPS } = process.env;
+    const isHttps = HTTPS === 'true';
+
     return new Promise<DevServer>((resolve, reject) => {
       try {
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        this.server = this.express.listen(this.port, this.host, async () => {
-          await openBrowser(this.urls.localUrlForBrowser);
-          resolve(this);
-        });
+        if (isHttps) {
+          // By default, use a self-signed, generated cert
+          const selfSignedCert = generateSelfSignedCert();
+          let key = selfSignedCert;
+          let cert = selfSignedCert;
+
+          // If the user has supplied the key and cert files, use those instead
+          if (SSL_KEY_FILE && SSL_CRT_FILE) {
+            key = fs.readFileSync(SSL_KEY_FILE);
+            cert = fs.readFileSync(SSL_CRT_FILE);
+            validateKeyAndCerts({
+              key,
+              cert,
+              keyFile: SSL_KEY_FILE,
+              crtFile: SSL_CRT_FILE,
+            });
+          }
+
+          this.server = https
+            .createServer(
+              {
+                key,
+                cert,
+              },
+              this.express,
+            )
+            .listen(443);
+        } else {
+          this.server = http.createServer(this.express).listen(80);
+        }
+
+        openBrowser(this.urls.localUrlForBrowser)
+          .then(() => {
+            resolve(this);
+          })
+          .catch(() => {
+            reject(this);
+          });
       } catch (err) {
         logger.error(err as string);
         reject(err);
