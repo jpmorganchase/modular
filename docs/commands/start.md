@@ -16,6 +16,27 @@ module within a template app, which we stage in a `node_modules/.modular`
 folder. You can develop your view as you normally would an app and it will
 automatically re-compile as you make changes in the view package.
 
+## HTTPS
+
+That are several options for enabling HTTPS in local development.
+
+Modular follows the
+[CRA implementation to enable HTTPS](https://create-react-app.dev/docs/using-https-in-development/#custom-ssl-certificate).
+
+There are two SSL certificate options available:
+
+1. Plain, self-signed (default): use the default self-signed certificate that
+   gets generated automatically (requires user to accept an invalid cert)
+2. A custom, signed certificate: you want to use a custom certificate (e.g. to
+   get a valid certificate chain that will enable authentication flows)
+
+To use custom certificates, provide the `SSL_CRT_FILE` and `SSL_KEY_FILE`
+environment variables:
+
+```bash
+HTTPS=true SSL_CRT_FILE=cert.crt SSL_KEY_FILE=cert.key yarn modular start
+```
+
 ## Options:
 
 `--verbose`: Run yarn commands with the --verbose flag set

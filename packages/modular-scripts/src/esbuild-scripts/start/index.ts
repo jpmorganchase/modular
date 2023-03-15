@@ -48,7 +48,7 @@ class DevServer {
 
   private env: ClientEnvironment;
 
-  private ws: ws.Instance;
+  private ws?: ws.Instance;
 
   private watching = false;
   private firstCompilePromise: Promise<void>;
@@ -105,7 +105,6 @@ class DevServer {
     this.env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
 
     this.express = express.default();
-    this.ws = ws(this.express);
 
     this.express.use(this.handleStaticAsset);
     this.isApp ||
@@ -125,10 +124,6 @@ class DevServer {
 
     this.express.use(createLaunchEditorMiddleware());
 
-    this.ws.app.ws('/_ws', (ws, req) => {
-      logger.debug('Connected');
-    });
-
     // This registers user provided middleware for proxy reasons
     if (fs.existsSync(paths.proxySetup)) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-var-requires
@@ -142,72 +137,64 @@ class DevServer {
     logger.clear();
     logger.log(chalk.cyan('Starting the development server...\n'));
 
-    // Start the esbuild before we startup the server
-    await this.startEsbuildServer();
-    await this.hostRuntime();
-
     const { SSL_CRT_FILE, SSL_KEY_FILE, HTTPS } = process.env;
     const isHttps = HTTPS === 'true';
 
-    let selfSignedCert: Buffer | undefined;
     if (isHttps) {
-      selfSignedCert = await generateSelfSignedCert();
+      // By default, use a self-signed, generated cert
+      const selfSignedCert = await generateSelfSignedCert();
+      let key = selfSignedCert;
+      let cert = selfSignedCert;
+
+      // If the user has supplied the key and cert files, use those instead
+      if (SSL_KEY_FILE && SSL_CRT_FILE) {
+        key = fs.readFileSync(SSL_KEY_FILE);
+        cert = fs.readFileSync(SSL_CRT_FILE);
+        validateKeyAndCerts({
+          key,
+          cert,
+          keyFile: SSL_KEY_FILE,
+          crtFile: SSL_CRT_FILE,
+        });
+      }
+
+      this.server = https
+        .createServer(
+          {
+            key,
+            cert,
+          },
+          this.express,
+        )
+        .listen(this.port, this.host);
+    } else {
+      this.server = http
+        .createServer(this.express)
+        .listen(this.port, this.host);
     }
 
-    return new Promise<DevServer>((resolve, reject) => {
-      try {
-        if (isHttps && selfSignedCert) {
-          // By default, use a self-signed, generated cert
-          let key = selfSignedCert;
-          let cert = selfSignedCert;
-
-          // If the user has supplied the key and cert files, use those instead
-          if (SSL_KEY_FILE && SSL_CRT_FILE) {
-            key = fs.readFileSync(SSL_KEY_FILE);
-            cert = fs.readFileSync(SSL_CRT_FILE);
-            validateKeyAndCerts({
-              key,
-              cert,
-              keyFile: SSL_KEY_FILE,
-              crtFile: SSL_CRT_FILE,
-            });
-          }
-
-          this.server = https
-            .createServer(
-              {
-                key,
-                cert,
-              },
-              this.express,
-            )
-            .listen(this.port, this.host);
-        } else {
-          this.server = http
-            .createServer(this.express)
-            .listen(this.port, this.host);
-        }
-
-        openBrowser(this.urls.localUrlForBrowser)
-          .then(() => {
-            resolve(this);
-          })
-          .catch(() => {
-            /* Silently fail */
-          });
-      } catch (err) {
-        logger.error(err as string);
-        reject(err);
-      }
+    this.ws = ws(this.express, this.server);
+    this.ws.app.ws('/_ws', (ws, req) => {
+      logger.debug('Connected');
     });
+
+    // Start esbuild after starting the server.
+    // This order is important, since `this.ws` is only set
+    // after https has been determined and the server has been booted.
+    await this.startEsbuildServer();
+    await this.hostRuntime();
+
+    await openBrowser(this.urls.localUrlForBrowser);
+
+    return new Promise<DevServer>((resolve) => resolve(this));
   }
 
   shutdown = () => {
     this.esbuild?.stop?.();
-    this.ws.getWss().close();
+    this.ws?.getWss().close();
     this.server?.close();
     process.nextTick(() => {
-      this.ws.getWss().clients.forEach((socket) => {
+      this.ws?.getWss().clients.forEach((socket) => {
         socket.terminate();
       });
     });
@@ -285,9 +272,11 @@ class DevServer {
 
     config.plugins?.push(incrementalReporterPlugin(this.paths));
     config.plugins?.push(incrementalCompilePlugin(this.paths, this.urls));
-    config.plugins?.push(
-      websocketReloadPlugin('app', this.ws.getWss(), this.paths),
-    );
+    if (this.ws) {
+      config.plugins?.push(
+        websocketReloadPlugin('app', this.ws.getWss(), this.paths),
+      );
+    }
     config.plugins?.push(metafileReporterPlugin(this.metafileCallback));
     config.plugins?.push(firstCompilePlugin(this.firstCompilePluginCallback));
 
