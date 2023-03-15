@@ -458,6 +458,7 @@ export default async function start({
   ['SIGINT', 'SIGTERM'].forEach((sig) => {
     process.on(sig, () => {
       void server.shutdown();
+      process.exit();
     });
   });
 
@@ -465,6 +466,7 @@ export default async function start({
     // Gracefully exit when stdin ends
     process.stdin.on('end', () => {
       void server.shutdown();
+      process.exit();
     });
   }
 }
