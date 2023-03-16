@@ -8,14 +8,13 @@ import fs from 'fs-extra';
 import parse5 from 'parse5';
 import type { Element } from 'parse5/dist/tree-adapters/default';
 import type { Paths } from '../../../common-scripts/determineTargetPaths';
-import { WebpackConfiguration } from 'webpack-dev-server';
 
 export function createEsmViewConfig(
   dependencyMap: Map<string, string>,
   paths: Paths,
   isEnvProduction: boolean,
   useReactCreateRoot: boolean,
-): WebpackConfiguration {
+): Configuration {
   return {
     entry: !isEnvProduction
       ? getVirtualTrampoline(paths, useReactCreateRoot)
