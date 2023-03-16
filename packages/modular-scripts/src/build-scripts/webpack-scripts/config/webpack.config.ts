@@ -24,13 +24,13 @@ const imageInlineSizeLimit = parseInt(
  * Generate Webpack Configuration
  * This is the production and development configuration.
  * It is focused on developer experience, fast rebuilds, and a minimal bundle.
- * @param isEnvProduction True when building, false when just starting
- * @param esbuildTargetFactory
- * @param isApp
- * @param dependencyMap
- * @param useReactCreateRoot
- * @param styleImports
- * @param targetPaths
+ * @param isEnvProduction True when building, false starting
+ * @param esbuildTargetFactory ES Target version
+ * @param isApp True if target is an app, false if it's an ESM View
+ * @param dependencyMap Map of target's dependency
+ * @param useReactCreateRoot True for React >= 18 as it needs a different way of instantiating rendering.
+ * @param styleImports Set of Style Imports
+ * @param targetPaths Relevant file paths for output
  * @returns Promise containing webpack configuration
  */
 export default async function getWebpackConfig(

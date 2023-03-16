@@ -42,8 +42,8 @@ export function createProductionPluginConfig(): Configuration {
         // both options are optional
         filename: 'static/css/[name].[contenthash:8].css',
         chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
-        // 'as unknown' used as Workaround for Typescript unable to compare the types
-        // 'due to excessive stack depth' in current Typescript version 4.8.3
+        // 'as unknown' used as Workaround for Typescript error:
+        // 'Excessive stack depth comparing types' in current Typescript version 4.8.3
       }) as unknown as WebpackPluginInstance,
     ].filter(Boolean),
   };
