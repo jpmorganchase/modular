@@ -7,7 +7,7 @@ import { rewriteModuleSpecifier } from '../../../../utils/buildImportMap';
 import fs from 'fs-extra';
 import parse5 from 'parse5';
 import { Element } from 'parse5/dist/tree-adapters/default';
-import { Paths } from '../../../common-scripts/determineTargetPaths';
+import type { Paths } from '../../../common-scripts/determineTargetPaths';
 import { WebpackConfiguration } from 'webpack-dev-server';
 
 export function createEsmViewConfig(

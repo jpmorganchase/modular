@@ -4,7 +4,7 @@ import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 import ModuleScopePlugin from '../../plugins/ModuleScopePlugin';
 import getCSSModuleLocalIdent from '../../utils/getCSSModuleLocalIdent';
 import createStyleLoadersConfig from './styleLoadersConfig';
-import { Paths } from '../../../common-scripts/determineTargetPaths';
+import type { Paths } from '../../../common-scripts/determineTargetPaths';
 import { Modules } from '../modules';
 import { WebpackConfiguration } from 'webpack-dev-server';
 

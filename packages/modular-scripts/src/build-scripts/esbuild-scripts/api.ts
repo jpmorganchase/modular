@@ -12,7 +12,7 @@ import { normalizeToPosix } from './utils/formatPath';
 import { Element } from 'parse5/dist/tree-adapters/default';
 import getClientEnvironment from '../common-scripts/getClientEnvironment';
 import type { Dependency } from '@schemastore/package';
-import { Paths } from '../common-scripts/determineTargetPaths';
+import type { Paths } from '../common-scripts/determineTargetPaths';
 
 type FileType = '.css' | '.js';
 

@@ -10,7 +10,7 @@ import webpack, {
 import formatWebpackMessages from './utils/formatWebpackMessages';
 import printBuildError from './utils/printBuildError';
 import { log } from '../../utils/logger';
-import { Paths } from '../common-scripts/determineTargetPaths';
+import type { Paths } from '../common-scripts/determineTargetPaths';
 import getConfig from './config/webpack.config';
 
 export default async function buildWebpack(

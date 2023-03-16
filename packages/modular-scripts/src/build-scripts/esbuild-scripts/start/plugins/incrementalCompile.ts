@@ -4,7 +4,7 @@ import chalk from 'chalk';
 import * as fs from 'fs-extra';
 import * as logger from '../../../../utils/logger';
 import { InstructionURLS } from '../../../common-scripts/urls';
-import { Paths } from '../../../common-scripts/determineTargetPaths';
+import type { Paths } from '../../../common-scripts/determineTargetPaths';
 
 function createPlugin(paths: Paths, urls: InstructionURLS): Plugin {
   const plugin: Plugin = {

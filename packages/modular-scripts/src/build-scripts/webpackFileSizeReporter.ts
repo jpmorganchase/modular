@@ -3,7 +3,7 @@ import { sync as gzipSize } from 'gzip-size';
 import * as path from 'path';
 import recursive from 'recursive-readdir';
 import { StatsCompilation } from 'webpack-dev-server';
-import { Paths } from './common-scripts/determineTargetPaths';
+import type { Paths } from './common-scripts/determineTargetPaths';
 
 import { Asset, canReadAsset } from './fileSizeReporter';
 

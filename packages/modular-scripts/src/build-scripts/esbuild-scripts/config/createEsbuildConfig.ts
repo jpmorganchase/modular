@@ -9,7 +9,7 @@ import moduleScopePlugin from '../plugins/moduleScopePlugin';
 import svgrPlugin from '../plugins/svgr';
 import workerFactoryPlugin from '../plugins/workerFactoryPlugin';
 import { getConfig } from '../../../utils/config';
-import { Paths } from '../../common-scripts/determineTargetPaths';
+import type { Paths } from '../../common-scripts/determineTargetPaths';
 
 export default function createEsbuildConfig(
   paths: Paths,

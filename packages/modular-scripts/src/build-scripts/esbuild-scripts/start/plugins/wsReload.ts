@@ -2,7 +2,7 @@ import esbuild from 'esbuild';
 import * as ws from 'ws';
 import type Websocket from 'ws';
 import { formatError } from '../../utils/formatError';
-import { Paths } from '../../../common-scripts/determineTargetPaths';
+import type { Paths } from '../../../common-scripts/determineTargetPaths';
 
 export default function createPlugin(
   name: string,

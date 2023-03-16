@@ -13,7 +13,7 @@ import { createProductionConfig } from './parts/productionConfig';
 import createBaseConfig from './parts/baseConfig';
 import { getConfig } from '../../../utils/config';
 import webpack, { Configuration } from 'webpack';
-import { Paths } from '../../common-scripts/determineTargetPaths';
+import type { Paths } from '../../common-scripts/determineTargetPaths';
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 
 const imageInlineSizeLimit = parseInt(

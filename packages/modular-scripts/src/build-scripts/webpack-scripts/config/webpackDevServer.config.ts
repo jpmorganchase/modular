@@ -6,7 +6,7 @@ import ignoredFiles from '../utils/ignoredFiles';
 import redirectServedPath from '../utils/redirectServedPathMiddleware';
 import getHttpsConfig from './getHttpsConfig';
 import { Configuration, ProxyConfigArray } from 'webpack-dev-server';
-import { Paths } from '../../common-scripts/determineTargetPaths';
+import type { Paths } from '../../common-scripts/determineTargetPaths';
 
 const host = process.env.HOST || '0.0.0.0';
 const sockHost = process.env.WDS_SOCKET_HOST;

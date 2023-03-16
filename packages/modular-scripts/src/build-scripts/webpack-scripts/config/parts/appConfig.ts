@@ -2,7 +2,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import InlineChunkHtmlPlugin from '../../plugins/InlineChunkHtmlPlugin';
 import InterpolateHtmlPlugin from '../../plugins/InterpolateHtmlPlugin';
 import webpack, { Configuration, WebpackPluginInstance } from 'webpack';
-import { Paths } from '../../../common-scripts/determineTargetPaths';
+import type { Paths } from '../../../common-scripts/determineTargetPaths';
 import { WebpackConfiguration } from 'webpack-dev-server';
 import { ClientEnvironment } from '../../../common-scripts/getClientEnvironment';
 

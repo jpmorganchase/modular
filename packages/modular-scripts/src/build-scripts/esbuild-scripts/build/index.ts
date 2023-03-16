@@ -11,7 +11,7 @@ import getModularRoot from '../../../utils/getModularRoot';
 import sanitizeMetafile from '../utils/sanitizeMetafile';
 import { createRewriteDependenciesPlugin } from '../plugins/rewriteDependenciesPlugin';
 import createEsbuildBrowserslistTarget from '../../common-scripts/createEsbuildBrowserslistTarget';
-import { Paths } from '../../common-scripts/determineTargetPaths';
+import type { Paths } from '../../common-scripts/determineTargetPaths';
 
 export default async function build(
   target: string,

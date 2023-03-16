@@ -7,7 +7,7 @@ import * as tmp from 'tmp';
 import plugin from '../../build-scripts/esbuild-scripts/plugins/moduleScopePlugin';
 import { formatError } from '../../build-scripts/esbuild-scripts/utils/formatError';
 import getModularRoot from '../../utils/getModularRoot';
-import { Paths } from '../../build-scripts/common-scripts/determineTargetPaths';
+import type { Paths } from '../../build-scripts/common-scripts/determineTargetPaths';
 
 const emptyDir = async (dirName: string) => {
   await fs.emptyDir(dirName);

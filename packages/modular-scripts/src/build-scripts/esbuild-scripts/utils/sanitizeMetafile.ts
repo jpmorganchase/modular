@@ -3,7 +3,7 @@ import type * as esbuild from 'esbuild';
 
 import getModularRoot from '../../../utils/getModularRoot';
 import { normalizeToPosix } from './formatPath';
-import { Paths } from '../../common-scripts/determineTargetPaths';
+import type { Paths } from '../../common-scripts/determineTargetPaths';
 
 export const sanitizeFileName = (pathName: string): string => {
   const normalizedPathName = normalizeToPosix(pathName);

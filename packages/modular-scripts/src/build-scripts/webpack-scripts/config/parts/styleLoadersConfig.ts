@@ -1,6 +1,6 @@
 import postcssNormalize from 'postcss-normalize';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import { Paths } from '../../../common-scripts/determineTargetPaths';
+import type { Paths } from '../../../common-scripts/determineTargetPaths';
 import webpack from 'webpack';
 
 // common function to get style loaders

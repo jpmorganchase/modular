@@ -2,8 +2,23 @@ import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
 import resolve from 'resolve';
-import { Paths } from '../../common-scripts/determineTargetPaths';
+import type { Paths } from '../../common-scripts/determineTargetPaths';
 import { readJsonSync } from 'fs-extra';
+
+export interface Modules {
+  additionalModulePaths: string | string[] | null;
+  webpackAliases:
+    | Record<string, never>
+    | {
+        src: string;
+      }
+    | undefined;
+  hasTsConfig: boolean;
+}
+
+interface Config {
+  compilerOptions?: { baseUrl?: string };
+}
 
 /**
  * Get additional module paths based on the baseUrl of a compilerOptions object.

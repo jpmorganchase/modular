@@ -11,7 +11,7 @@ import { readJSONSync } from 'fs-extra';
 import { prepareProxy, createCompiler } from './utils/webpackDevServerUtils';
 import { choosePort } from '../common-scripts/getPort';
 import prepareUrls from '../common-scripts/urls';
-import { Paths } from '../common-scripts/determineTargetPaths';
+import type { Paths } from '../common-scripts/determineTargetPaths';
 import openBrowser from '../common-scripts/openBrowser';
 
 // Tools like Cloud9 rely on this.

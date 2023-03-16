@@ -10,7 +10,7 @@ import { createAppPluginConfig } from './appConfig';
 import { createDevelopmentPluginConfig } from './developmentConfig';
 import { createProductionPluginConfig } from './productionConfig';
 import getClientEnvironment from '../../../common-scripts/getClientEnvironment';
-import { Paths } from '../../../common-scripts/determineTargetPaths';
+import type { Paths } from '../../../common-scripts/determineTargetPaths';
 
 // Some apps do not need the benefits of saving a web request, so not inlining the chunk
 // makes for a smoother build process.
