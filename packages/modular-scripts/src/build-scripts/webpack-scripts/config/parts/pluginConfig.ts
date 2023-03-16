@@ -67,6 +67,8 @@ export default function createPluginConfig(
             entrypoints: entrypointFiles,
           };
         },
+        // 'as unknown' used as Workaround for Typescript error:
+        // 'Excessive stack depth comparing types' in current Typescript version 4.8.3
       }) as unknown as WebpackPluginInstance,
       // Moment.js is an extremely popular library that bundles large locale files
       // by default due to how webpack interprets its code. This is a practical

@@ -41,7 +41,7 @@ describe('WHEN running esbuild with the svgrPlugin', () => {
                 'module-scope',
                 'src',
               ),
-            } as unknown as Paths),
+            } as Paths),
           ],
           logLevel: 'silent',
           outdir,

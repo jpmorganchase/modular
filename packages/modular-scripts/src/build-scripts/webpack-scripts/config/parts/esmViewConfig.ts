@@ -140,6 +140,8 @@ export function createEsmViewPluginConfig(
           inject: true,
           templateContent,
           scriptLoading: 'module',
+          // 'as unknown' used as Workaround for Typescript error:
+          // 'Excessive stack depth comparing types' in current Typescript version 4.8.3
         }) as unknown as webpack.WebpackPluginInstance),
     ].filter(Boolean) as webpack.WebpackPluginInstance[],
   };
