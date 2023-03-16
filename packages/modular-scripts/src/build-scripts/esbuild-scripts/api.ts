@@ -9,7 +9,7 @@ import type { ModularType } from '@modular-scripts/modular-types';
 import getModularRoot from '../../utils/getModularRoot';
 import * as path from 'path';
 import { normalizeToPosix } from './utils/formatPath';
-import { Element } from 'parse5/dist/tree-adapters/default';
+import type { Element } from 'parse5/dist/tree-adapters/default';
 import getClientEnvironment from '../common-scripts/getClientEnvironment';
 import type { Dependency } from '@schemastore/package';
 import type { Paths } from '../common-scripts/determineTargetPaths';
