@@ -101,7 +101,11 @@ export async function buildStandalone(
   );
 
   const useReactCreateRoot = isReactNewApi(externalResolutions);
+
+  // If it's an app, set it at ESBUILD_TARGET_FACTORY or default to es2015
+  // If it's not an app it's an ESM view, then we need es2020
   const browserTarget = createEsbuildBrowserslistTarget(targetDirectory);
+  const esbuildTargetFactory = isApp ? browserTarget : ['es2020'];
 
   let jsEntryPoint: string | undefined;
   let cssEntryPoint: string | undefined;
@@ -119,10 +123,6 @@ export async function buildStandalone(
     logger.debug('Building with Webpack');
     // create-react-app doesn't support plain module outputs yet,
     // so --preserve-modules has no effect here
-
-    // If it's an app, set it at ESBUILD_TARGET_FACTORY or default to es2015
-    // If it's not an app it's an ESM view, then we need es2020
-    const esbuildTargetFactory = isApp ? browserTarget : ['es2020'];
 
     const stats = await buildWebpack(
       esbuildTargetFactory,
@@ -152,7 +152,6 @@ export async function buildStandalone(
     } else {
       logger.log(chalk.green('Compiled successfully.\n'));
     }
-
     assets = createWebpackAssets(paths, stats);
   }
 
