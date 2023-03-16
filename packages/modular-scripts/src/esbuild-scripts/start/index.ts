@@ -141,10 +141,8 @@ class DevServer {
     const isHttps = HTTPS === 'true';
 
     if (isHttps) {
-      // By default, use a self-signed, generated cert
-      const selfSignedCert = await generateSelfSignedCert();
-      let key = selfSignedCert;
-      let cert = selfSignedCert;
+      let key: Buffer | undefined;
+      let cert: Buffer | undefined;
 
       // If the user has supplied the key and cert files, use those instead
       if (SSL_KEY_FILE && SSL_CRT_FILE) {
@@ -156,6 +154,11 @@ class DevServer {
           keyFile: SSL_KEY_FILE,
           crtFile: SSL_CRT_FILE,
         });
+      } else {
+        // By default, use a self-signed, generated cert
+        const selfSignedCert = await generateSelfSignedCert();
+        key = selfSignedCert;
+        cert = selfSignedCert;
       }
 
       this.server = https
