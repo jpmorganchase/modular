@@ -12097,7 +12097,7 @@ ts-morph@^14.0.0:
     "@ts-morph/common" "~0.13.0"
     code-block-writer "^11.0.0"
 
-ts-node@10.9.1, ts-node@^10.9.1:
+ts-node@10.9.1:
   version "10.9.1"
   resolved "https://registry.npmjs.org/ts-node/-/ts-node-10.9.1.tgz"
   integrity sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==

@@ -131,7 +131,6 @@
     "tmp": "^0.2.1",
     "ts-jest": "^29.0.0",
     "ts-morph": "^14.0.0",
-    "ts-node": "^10.9.1",
     "update-notifier": "5.1.0",
     "url-loader": "4.1.1",
     "validate-npm-package-name": "^4.0.0",
