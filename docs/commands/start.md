@@ -37,6 +37,12 @@ environment variables:
 HTTPS=true SSL_CRT_FILE=cert.crt SSL_KEY_FILE=cert.key yarn modular start
 ```
 
+Both values can be filenames or paths to files within the project. Modular will
+look for your files:
+
+1. In the individual package directory
+2. In the monorepo root
+
 ## Options:
 
 `--verbose`: Run yarn commands with the --verbose flag set

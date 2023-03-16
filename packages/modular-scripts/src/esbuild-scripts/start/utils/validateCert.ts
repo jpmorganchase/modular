@@ -7,13 +7,13 @@ import crypto from 'crypto';
 export function validateKeyAndCerts({
   cert,
   key,
-  keyFile,
-  crtFile,
+  keyPath,
+  certPath,
 }: {
   cert: unknown;
   key: unknown;
-  keyFile: string;
-  crtFile: string;
+  keyPath: string;
+  certPath: string;
 }) {
   let encrypted;
   try {
@@ -24,7 +24,7 @@ export function validateKeyAndCerts({
     );
   } catch (err) {
     throw new Error(
-      `The certificate "${chalk.yellow(crtFile)}" is invalid.\n${
+      `The certificate "${chalk.yellow(certPath)}" is invalid.\n${
         (err as Error).message
       }`,
     );
@@ -35,7 +35,7 @@ export function validateKeyAndCerts({
     crypto.privateDecrypt(key as crypto.RsaPrivateKey, encrypted);
   } catch (err) {
     throw new Error(
-      `The certificate key "${chalk.yellow(keyFile)}" is invalid.\n${
+      `The certificate key "${chalk.yellow(keyPath)}" is invalid.\n${
         (err as Error).message
       }`,
     );

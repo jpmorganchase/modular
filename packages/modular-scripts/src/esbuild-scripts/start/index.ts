@@ -38,6 +38,8 @@ import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowsersli
 import { normalizeToPosix } from '../utils/formatPath';
 import { generateSelfSignedCert } from './utils/generateSelfSignedCert';
 import { validateKeyAndCerts } from './utils/validateCert';
+import getWorkspaceLocation from '../../utils/getLocation';
+import { readCertFile } from './utils/readCertFile';
 
 const RUNTIME_DIR = path.join(__dirname, 'runtime');
 class DevServer {
@@ -131,28 +133,45 @@ class DevServer {
     }
   }
 
-  async start(): Promise<DevServer> {
+  async start(targetDir: string): Promise<DevServer> {
     // force clearing the terminal when we start a dev server process
     // unless we're in CI because we'll want to keep all logs
     logger.clear();
     logger.log(chalk.cyan('Starting the development server...\n'));
 
+    const modularRoot = getModularRoot();
     const { SSL_CRT_FILE, SSL_KEY_FILE, HTTPS } = process.env;
     const isHttps = HTTPS === 'true';
 
     if (isHttps) {
       let key: Buffer | undefined;
       let cert: Buffer | undefined;
+      let keyPath: string | undefined;
+      let certPath: string | undefined;
 
       // If the user has supplied the key and cert files, use those instead
       if (SSL_KEY_FILE && SSL_CRT_FILE) {
-        key = fs.readFileSync(SSL_KEY_FILE);
-        cert = fs.readFileSync(SSL_CRT_FILE);
+        keyPath = path.resolve(targetDir, SSL_KEY_FILE);
+        certPath = path.resolve(targetDir, SSL_CRT_FILE);
+
+        try {
+          // 1. Package path (for webpack compatibility)
+          key = readCertFile(keyPath, SSL_KEY_FILE);
+          cert = readCertFile(certPath, SSL_CRT_FILE);
+        } catch (e) {
+          // 2. Modular root
+          keyPath = path.resolve(modularRoot, SSL_KEY_FILE);
+          certPath = path.resolve(modularRoot, SSL_CRT_FILE);
+
+          key = readCertFile(keyPath, SSL_KEY_FILE);
+          cert = readCertFile(certPath, SSL_CRT_FILE);
+        }
+
         validateKeyAndCerts({
           key,
           cert,
-          keyFile: SSL_KEY_FILE,
-          crtFile: SSL_CRT_FILE,
+          keyPath,
+          certPath,
         });
       } else {
         // By default, use a self-signed, generated cert
@@ -434,6 +453,7 @@ export default async function start({
     port,
     paths.publicUrlOrPath.slice(0, -1),
   );
+  const targetDir = await getWorkspaceLocation(target);
   const devServer = new DevServer({
     paths,
     urls,
@@ -445,7 +465,7 @@ export default async function start({
     styleImports,
   });
 
-  const server = await devServer.start();
+  const server = await devServer.start(targetDir);
 
   ['SIGINT', 'SIGTERM'].forEach((sig) => {
     process.on(sig, () => {
