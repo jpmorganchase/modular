@@ -4,9 +4,10 @@ import evalSourceMapMiddleware from '../utils/evalSourceMapMiddleware';
 import noopServiceWorkerMiddleware from '../utils/noopServiceWorkerMiddleware';
 import ignoredFiles from '../utils/ignoredFiles';
 import redirectServedPath from '../utils/redirectServedPathMiddleware';
-import getHttpsConfig from './getHttpsConfig';
+import getHttpsConfig from '../../common-scripts/getHttpsConfig';
 import type { Configuration, ProxyConfigArray } from 'webpack-dev-server';
 import type { Paths } from '../../common-scripts/determineTargetPaths';
+import getModularRoot from '../../../utils/getModularRoot';
 
 const host = process.env.HOST || '0.0.0.0';
 const sockHost = process.env.WDS_SOCKET_HOST;
@@ -21,6 +22,7 @@ export default function createDevServerConfig(
 ): Configuration {
   const disableFirewall =
     !proxy || process.env.DANGEROUSLY_DISABLE_HOST_CHECK === 'true';
+  const modularRoot = getModularRoot();
 
   return {
     // WebpackDevServer 2.4.3 introduced a security fix that prevents remote
@@ -96,7 +98,7 @@ export default function createDevServerConfig(
       // remove last slash so user can land on `/test` instead of `/test/`
       publicPath: paths.publicUrlOrPath.slice(0, -1),
     },
-    https: getHttpsConfig(paths),
+    https: getHttpsConfig(paths, modularRoot),
     host,
     port,
     historyApiFallback: {
