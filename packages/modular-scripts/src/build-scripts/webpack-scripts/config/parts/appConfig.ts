@@ -54,6 +54,8 @@ export function createAppPluginConfig(
               }
             : undefined,
         ),
+        // 'as unknown' used as Workaround for Typescript unable to compare the types
+        // 'due to excessive stack depth' in current Typescript version 4.8.3
       ) as unknown as WebpackPluginInstance,
       // Inlines the webpack runtime script. This script is too small to warrant
       // a network request.

@@ -5,7 +5,7 @@ import * as path from 'path';
 import getPublicUrlOrPath from './getPublicUrlOrPath';
 import getModularRoot from '../../utils/getModularRoot';
 import { getConfig } from '../../utils/config';
-import globby from 'globby';
+import { getWorkspaceInfo } from '../../utils/getWorkspaceInfo';
 export interface Paths {
   modularRoot: string;
   publicUrlOrPath: string;
@@ -34,10 +34,10 @@ export interface Paths {
  * @param target
  * @returns A Paths object containing all relevant paths
  */
-export default function determineTargetPaths(
+export default async function determineTargetPaths(
   target: string,
   targetDirectory: string,
-): Paths {
+): Promise<Paths> {
   const modularRoot = getModularRoot();
   const targetName = toParamCase(target);
 
@@ -102,22 +102,11 @@ export default function determineTargetPaths(
   const resolveModular = (relativePath: string) =>
     path.resolve(modularRoot, relativePath);
 
-  // Get the workspaces field from the manifest to calculate the possible workspace directories
-  const rootManifest = fs.readJsonSync(
-    require.resolve(resolveModular('package.json')),
-  ) as { workspaces: string[] | { packages: string[] } };
-  const workspaceDefinitions =
-    (Array.isArray(rootManifest?.workspaces)
-      ? rootManifest?.workspaces
-      : rootManifest?.workspaces?.packages) || [];
-
-  // Calculate all the possible workspace directories. We need to convert paths to posix separator to feed it into globby
-  // and convert back to native separator after
-  const workspaceDirectories = globby
-    .sync(workspaceDefinitions.map(resolveModular).map(toPosix), {
-      onlyDirectories: true,
-    })
-    .map(fromPosix);
+  const workspaceDirectories = Object.values(
+    await getWorkspaceInfo(target),
+  ).map((record) => {
+    return record.location;
+  });
 
   const dotenv = resolveApp('.env');
   const appPath = resolveApp('.');
@@ -165,12 +154,4 @@ export default function determineTargetPaths(
   };
 
   return paths;
-}
-
-function toPosix(pathString: string) {
-  return pathString.split(path.sep).join(path.posix.sep);
-}
-
-function fromPosix(pathString: string) {
-  return pathString.split(path.posix.sep).join(path.sep);
 }

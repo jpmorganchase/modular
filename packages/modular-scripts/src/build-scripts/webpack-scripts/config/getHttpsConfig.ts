@@ -21,7 +21,16 @@ function validateKeyAndCerts({
   try {
     // publicEncrypt will throw an error with an invalid cert
     encrypted = crypto.publicEncrypt(cert, Buffer.from('test'));
-
+  } catch (err) {
+    if (err instanceof Error) {
+      throw new Error(
+        `The certificate "${chalk.yellow(crtFile)}" is invalid.\n${
+          err.message
+        }`,
+      );
+    }
+  }
+  if (encrypted) {
     try {
       // privateDecrypt will throw an error with an invalid key
       crypto.privateDecrypt(key, encrypted);
@@ -33,14 +42,6 @@ function validateKeyAndCerts({
           }`,
         );
       }
-    }
-  } catch (err) {
-    if (err instanceof Error) {
-      throw new Error(
-        `The certificate "${chalk.yellow(crtFile)}" is invalid.\n${
-          err.message
-        }`,
-      );
     }
   }
 }

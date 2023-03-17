@@ -1,13 +1,12 @@
 import path from 'path';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import type { Paths } from '../../../common-scripts/determineTargetPaths';
-import { WebpackConfiguration } from 'webpack-dev-server';
-import { Configuration, WebpackPluginInstance } from 'webpack';
+import type { Configuration, WebpackPluginInstance } from 'webpack';
 
 export function createProductionConfig(
   shouldUseSourceMap: boolean,
   paths: Paths,
-): WebpackConfiguration {
+): Configuration {
   return {
     mode: 'production',
     // Stop compilation early in production

@@ -12,7 +12,11 @@ import { createDevelopmentConfig } from './parts/developmentConfig';
 import { createProductionConfig } from './parts/productionConfig';
 import createBaseConfig from './parts/baseConfig';
 import { getConfig } from '../../../utils/config';
-import webpack, { Configuration } from 'webpack';
+import type {
+  Configuration,
+  WebpackPluginFunction,
+  WebpackPluginInstance,
+} from 'webpack';
 import type { Paths } from '../../common-scripts/determineTargetPaths';
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 
@@ -159,10 +163,8 @@ export default async function getWebpackConfig(
 }
 
 /**
- * Interface to satisfy TS linting for Webpack Plugin stuff
+ * Interface to satisfy TS linting for Webpack Plugins
  */
 interface WebpackPluginInstanceConstructor {
-  new (options: unknown):
-    | webpack.WebpackPluginInstance
-    | webpack.WebpackPluginFunction;
+  new (options: unknown): WebpackPluginInstance | WebpackPluginFunction;
 }
