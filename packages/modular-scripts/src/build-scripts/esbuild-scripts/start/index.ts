@@ -436,7 +436,7 @@ export default async function startEsbuild({
   styleImports: Set<string>;
 }): Promise<void> {
   const targetPath = await getWorkspaceLocation(target);
-  const paths = await determineTargetPaths(target, targetPath);
+  const paths = determineTargetPaths(target, targetPath);
   const host = getHost();
   const port = await getPort(host);
   const urls = prepareUrls(

@@ -60,9 +60,9 @@ async function start(packageName: string): Promise<void> {
   const isView = isModularType(targetPath, 'view');
   if (isView) {
     targetPath = stageView(target);
-    paths = await determineTargetPaths(target, targetPath);
+    paths = determineTargetPaths(target, targetPath);
   } else {
-    paths = await determineTargetPaths(target, targetPath);
+    paths = determineTargetPaths(target, targetPath);
     // in the case we're an app then we need to make sure that users have no incorrectly
     // setup their app folder.
     isEsmView

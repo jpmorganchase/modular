@@ -14,7 +14,7 @@ async function serve(target: string, port = 3000): Promise<void> {
     isModularType(targetPath, 'app') ||
     isModularType(targetPath, 'esm-view')
   ) {
-    const paths = await determineTargetPaths(target, targetPath);
+    const paths = determineTargetPaths(target, targetPath);
 
     if (fs.existsSync(paths.appBuild)) {
       const app = express();
