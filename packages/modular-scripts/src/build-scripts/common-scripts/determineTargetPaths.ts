@@ -102,6 +102,7 @@ export default function determineTargetPaths(
   const resolveModular = (relativePath: string) =>
     path.resolve(modularRoot, relativePath);
 
+  // TODO: This could be deduplciated by using getWorkspaceInfo locations
   // Get the workspaces field from the manifest to calculate the possible workspace directories
   const rootManifest = fs.readJsonSync(
     require.resolve(resolveModular('package.json')),
