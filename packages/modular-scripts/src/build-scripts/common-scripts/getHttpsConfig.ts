@@ -2,20 +2,20 @@ import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
 import chalk from 'chalk';
-import type { Paths } from '../../common-scripts/determineTargetPaths';
+import type { Paths } from './determineTargetPaths';
 
 // Ensure the certificate and key provided are valid and if not
 // throw an easy to debug error
 function validateKeyAndCerts({
   cert,
   key,
-  keyFile,
-  crtFile,
+  keyPath,
+  certPath,
 }: {
   cert: Buffer;
   key: Buffer;
-  keyFile: string;
-  crtFile: string;
+  keyPath: string;
+  certPath: string;
 }) {
   let encrypted;
   try {
@@ -24,7 +24,7 @@ function validateKeyAndCerts({
   } catch (err) {
     if (err instanceof Error) {
       throw new Error(
-        `The certificate "${chalk.yellow(crtFile)}" is invalid.\n${
+        `The certificate "${chalk.yellow(certPath)}" is invalid.\n${
           err.message
         }`,
       );
@@ -37,7 +37,7 @@ function validateKeyAndCerts({
     } catch (err) {
       if (err instanceof Error) {
         throw new Error(
-          `The certificate key "${chalk.yellow(keyFile)}" is invalid.\n${
+          `The certificate key "${chalk.yellow(keyPath)}" is invalid.\n${
             err.message
           }`,
         );
@@ -60,19 +60,38 @@ function readEnvFile(file: string, type: string) {
 
 // Get the https config
 // Return cert files if provided in env, otherwise just true or false
-export default function getHttpsConfig(paths: Paths) {
+export default function getHttpsConfig(paths: Paths, modularRoot: string) {
   const { SSL_CRT_FILE, SSL_KEY_FILE, HTTPS } = process.env;
   const isHttps = HTTPS === 'true';
 
+  let cert: Buffer | undefined;
+  let key: Buffer | undefined;
+  let keyPath: string | undefined;
+  let certPath: string | undefined;
+
   if (isHttps && SSL_CRT_FILE && SSL_KEY_FILE) {
-    const crtFile = path.resolve(paths.appPath, SSL_CRT_FILE);
-    const keyFile = path.resolve(paths.appPath, SSL_KEY_FILE);
+    // 1. Look in the app directory (non-root) - legacy behaviour
+    certPath = path.resolve(paths.appPath, SSL_CRT_FILE);
+    keyPath = path.resolve(paths.appPath, SSL_KEY_FILE);
+
+    try {
+      cert = readEnvFile(certPath, 'SSL_CRT_FILE');
+      key = readEnvFile(keyPath, 'SSL_KEY_FILE');
+    } catch (e) {
+      // 2. Fall back to the modular root
+      certPath = path.resolve(modularRoot, SSL_CRT_FILE);
+      keyPath = path.resolve(modularRoot, SSL_KEY_FILE);
+
+      cert = readEnvFile(certPath, 'SSL_CRT_FILE');
+      key = readEnvFile(keyPath, 'SSL_KEY_FILE');
+    }
+
     const config = {
-      cert: readEnvFile(crtFile, 'SSL_CRT_FILE'),
-      key: readEnvFile(keyFile, 'SSL_KEY_FILE'),
+      cert,
+      key,
     };
 
-    validateKeyAndCerts({ ...config, keyFile, crtFile });
+    validateKeyAndCerts({ ...config, keyPath, certPath });
     return config;
   }
   return isHttps;
