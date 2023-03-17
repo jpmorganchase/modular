@@ -5,6 +5,7 @@
 /* eslint-disable testing-library/prefer-screen-queries */
 
 import path from 'path';
+import { exec } from 'child_process';
 import fs from 'fs-extra';
 import { getDocument, queries, waitFor } from 'pptr-testing-library';
 import puppeteer from 'puppeteer';
@@ -69,6 +70,12 @@ describe('modular start', () => {
         // this is the problematic bit, it leaves hanging node processes
         // despite closing the parent process. Only happens in tests!
         void devServer.kill();
+      }
+      if (port) {
+        // kill all processes listening to the dev server port
+        exec(
+          `lsof -n -i4TCP:${port} | grep LISTEN | awk '{ print $2 }' | xargs kill -9`,
+        );
       }
     });
 
