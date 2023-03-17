@@ -5,6 +5,7 @@ import type { RequestHandler } from 'express';
 import ws from 'express-ws';
 import * as fs from 'fs-extra';
 import * as http from 'http';
+import * as https from 'https';
 import * as path from 'path';
 import { getType } from 'mime';
 import isCi from 'is-ci';
@@ -38,6 +39,11 @@ import getWorkspaceLocation from '../../../utils/getLocation';
 import determineTargetPaths, {
   Paths,
 } from '../../common-scripts/determineTargetPaths';
+import {
+  readEnvFile,
+  validateKeyAndCerts,
+} from '../../common-scripts/getHttpsConfig';
+import { generateSelfSignedCert } from '../utils/generateSelfSignedCert';
 
 const RUNTIME_DIR = path.join(__dirname, 'runtime');
 class DevServer {
@@ -48,7 +54,7 @@ class DevServer {
 
   private env: ClientEnvironment;
 
-  private ws: ws.Instance;
+  private ws?: ws.Instance;
 
   private watching = false;
   private firstCompilePromise: Promise<void>;
@@ -105,7 +111,6 @@ class DevServer {
     this.env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
 
     this.express = express.default();
-    this.ws = ws(this.express);
 
     this.express.use(this.handleStaticAsset);
     this.isApp ||
@@ -125,10 +130,6 @@ class DevServer {
 
     this.express.use(createLaunchEditorMiddleware());
 
-    this.ws.app.ws('/_ws', (ws, req) => {
-      logger.debug('Connected');
-    });
-
     // This registers user provided middleware for proxy reasons
     if (fs.existsSync(paths.proxySetup)) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-var-requires
@@ -136,36 +137,90 @@ class DevServer {
     }
   }
 
-  async start(): Promise<DevServer> {
+  async start(targetDir: string): Promise<DevServer> {
     // force clearing the terminal when we start a dev server process
     // unless we're in CI because we'll want to keep all logs
     logger.clear();
     logger.log(chalk.cyan('Starting the development server...\n'));
 
-    // Start the esbuild before we startup the server
+    const modularRoot = getModularRoot();
+    const { SSL_CRT_FILE, SSL_KEY_FILE, HTTPS } = process.env;
+    const isHttps = HTTPS === 'true';
+
+    if (isHttps) {
+      let key: Buffer | undefined;
+      let cert: Buffer | undefined;
+      let keyPath: string | undefined;
+      let certPath: string | undefined;
+
+      // If the user has supplied the key and cert files, use those instead
+      if (SSL_KEY_FILE && SSL_CRT_FILE) {
+        keyPath = path.resolve(targetDir, SSL_KEY_FILE);
+        certPath = path.resolve(targetDir, SSL_CRT_FILE);
+
+        try {
+          // 1. Package path (for webpack compatibility)
+          key = readEnvFile(keyPath, SSL_KEY_FILE);
+          cert = readEnvFile(certPath, SSL_CRT_FILE);
+        } catch (e) {
+          // 2. Modular root
+          keyPath = path.resolve(modularRoot, SSL_KEY_FILE);
+          certPath = path.resolve(modularRoot, SSL_CRT_FILE);
+
+          key = readEnvFile(keyPath, SSL_KEY_FILE);
+          cert = readEnvFile(certPath, SSL_CRT_FILE);
+        }
+
+        validateKeyAndCerts({
+          key,
+          cert,
+          keyPath,
+          certPath,
+        });
+      } else {
+        // By default, use a self-signed, generated cert
+        const selfSignedCert = await generateSelfSignedCert();
+        key = selfSignedCert;
+        cert = selfSignedCert;
+      }
+
+      this.server = https
+        .createServer(
+          {
+            key,
+            cert,
+          },
+          this.express,
+        )
+        .listen(this.port, this.host);
+    } else {
+      this.server = http
+        .createServer(this.express)
+        .listen(this.port, this.host);
+    }
+
+    this.ws = ws(this.express, this.server);
+    this.ws.app.ws('/_ws', (ws, req) => {
+      logger.debug('Connected');
+    });
+
+    // Start esbuild after starting the server.
+    // This order is important, since `this.ws` is only set
+    // after https has been determined and the server has been booted.
     await this.startEsbuildServer();
     await this.hostRuntime();
 
-    return new Promise<DevServer>((resolve, reject) => {
-      try {
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        this.server = this.express.listen(this.port, this.host, async () => {
-          await openBrowser(this.urls.localUrlForBrowser);
-          resolve(this);
-        });
-      } catch (err) {
-        logger.error(err as string);
-        reject(err);
-      }
-    });
+    await openBrowser(this.urls.localUrlForBrowser);
+
+    return new Promise<DevServer>((resolve) => resolve(this));
   }
 
   shutdown = () => {
     this.esbuild?.stop?.();
-    this.ws.getWss().close();
+    this.ws?.getWss().close();
     this.server?.close();
     process.nextTick(() => {
-      this.ws.getWss().clients.forEach((socket) => {
+      this.ws?.getWss().clients.forEach((socket) => {
         socket.terminate();
       });
     });
@@ -243,9 +298,11 @@ class DevServer {
 
     config.plugins?.push(incrementalReporterPlugin(this.paths));
     config.plugins?.push(incrementalCompilePlugin(this.paths, this.urls));
-    config.plugins?.push(
-      websocketReloadPlugin('app', this.ws.getWss(), this.paths),
-    );
+    if (this.ws) {
+      config.plugins?.push(
+        websocketReloadPlugin('app', this.ws.getWss(), this.paths),
+      );
+    }
     config.plugins?.push(metafileReporterPlugin(this.metafileCallback));
     config.plugins?.push(firstCompilePlugin(this.firstCompilePluginCallback));
 
@@ -388,6 +445,7 @@ export default async function startEsbuild({
     port,
     paths.publicUrlOrPath.slice(0, -1),
   );
+  const targetDir = await getWorkspaceLocation(target);
   const devServer = new DevServer({
     paths,
     urls,
@@ -399,11 +457,12 @@ export default async function startEsbuild({
     styleImports,
   });
 
-  const server = await devServer.start();
+  const server = await devServer.start(targetDir);
 
   ['SIGINT', 'SIGTERM'].forEach((sig) => {
     process.on(sig, () => {
       void server.shutdown();
+      process.exit();
     });
   });
 
@@ -411,6 +470,7 @@ export default async function startEsbuild({
     // Gracefully exit when stdin ends
     process.stdin.on('end', () => {
       void server.shutdown();
+      process.exit();
     });
   }
 }

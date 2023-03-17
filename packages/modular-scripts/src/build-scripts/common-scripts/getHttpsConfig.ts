@@ -6,7 +6,7 @@ import type { Paths } from './determineTargetPaths';
 
 // Ensure the certificate and key provided are valid and if not
 // throw an easy to debug error
-function validateKeyAndCerts({
+export function validateKeyAndCerts({
   cert,
   key,
   keyPath,
@@ -47,7 +47,7 @@ function validateKeyAndCerts({
 }
 
 // Read file and throw an error if it doesn't exist
-function readEnvFile(file: string, type: string) {
+export function readEnvFile(file: string, type: string) {
   if (!fs.existsSync(file)) {
     throw new Error(
       `You specified ${chalk.cyan(
