@@ -177,7 +177,7 @@ export async function buildStandalone(
     path.join(targetDirectory, 'package.json'),
   )) as ModularPackageJson;
   // Copy selected fields of package.json over
-  fs.writeJsonSync(
+  await fs.writeJson(
     path.join(paths.appBuild, 'package.json'),
     {
       name: targetPackageJson.name,
