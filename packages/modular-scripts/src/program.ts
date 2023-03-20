@@ -272,6 +272,7 @@ program
     '--all',
     'Only lint diffed files from your remote origin default branch (e.g. main or master)',
   )
+  .option('--packages [packages...]', 'Only lint selected packages')
   .option(
     '--fix',
     `Fix the lint errors wherever possible, restages changes if run with ${lintStagedFlag}`,
