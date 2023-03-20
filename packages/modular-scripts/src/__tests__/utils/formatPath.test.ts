@@ -1,4 +1,4 @@
-import { normalizeToPosix } from '../../esbuild-scripts/utils/formatPath';
+import { normalizeToPosix } from '../../build-scripts/esbuild-scripts/utils/formatPath';
 
 describe('Normalize path to Posix', () => {
   it('should convert a Win32 path into a Posix path', () => {

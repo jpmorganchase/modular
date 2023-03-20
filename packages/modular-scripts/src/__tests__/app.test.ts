@@ -87,7 +87,7 @@ describe('when working with a NODE_ENV app', () => {
             ├─ main.a482480b.js #1xwb1v
             ├─ main.a482480b.js.map #wh4kdy
             ├─ runtime-main.97707f9d.js #15lezt9
-            └─ runtime-main.97707f9d.js.map #1yg8f1m"
+            └─ runtime-main.97707f9d.js.map #1qz5n9i"
     `);
   });
 
@@ -148,7 +148,7 @@ describe('When working with a npm scoped app', () => {
          │  ├─ main.b44531b6.js #16ahtqz
          │  ├─ main.b44531b6.js.map #n69bgw
          │  ├─ runtime-main.de012fdc.js #1qz643h
-         │  └─ runtime-main.de012fdc.js.map #g5ojr6
+         │  └─ runtime-main.de012fdc.js.map #v3az36
          └─ media
             └─ logo.103b5fa18196d5665a7e12318285c916.svg #1okqmlj"
     `);
@@ -366,7 +366,7 @@ describe('when working with a non-scoped app', () => {
          │  ├─ main.abe6afa1.js #t9np46
          │  ├─ main.abe6afa1.js.map #15q2td3
          │  ├─ runtime-main.e92969dd.js #1is98ey
-         │  └─ runtime-main.e92969dd.js.map #pq512s
+         │  └─ runtime-main.e92969dd.js.map #xx7n2r
          └─ media
             └─ logo.103b5fa18196d5665a7e12318285c916.svg #1okqmlj"
     `);
@@ -606,7 +606,7 @@ describe('When working with an app added in a custom directory', () => {
          │  ├─ main.fba21b67.js #16haxht
          │  ├─ main.fba21b67.js.map #1tgakei
          │  ├─ runtime-main.cef70e6c.js #1f77948
-         │  └─ runtime-main.cef70e6c.js.map #13ge77z
+         │  └─ runtime-main.cef70e6c.js.map #6vl4pa
          └─ media
             └─ logo.103b5fa18196d5665a7e12318285c916.svg #1okqmlj"
     `);

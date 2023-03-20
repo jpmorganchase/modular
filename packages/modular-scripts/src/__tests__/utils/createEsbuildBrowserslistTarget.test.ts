@@ -1,4 +1,4 @@
-import createEsbuildBrowserslistTarget from '../../utils/createEsbuildBrowserslistTarget';
+import createEsbuildBrowserslistTarget from '../../build-scripts/common-scripts/createEsbuildBrowserslistTarget';
 import * as fs from 'fs-extra';
 import * as tmp from 'tmp';
 import { promisify } from 'util';
