@@ -26,7 +26,7 @@ jobs:
         os: [ubuntu-latest]
         node-version: ['14.18.0', '16.x', '18.x']
         yarn-version: ['1.22.19', '3.5.0']
-        excludes:
+        exclude:
           - node-version: '14.18.0'
             yarn-version: '3.5.0'
           - node-version: '18.x'
