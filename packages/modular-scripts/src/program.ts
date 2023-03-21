@@ -274,6 +274,24 @@ program
   )
   .option('--packages [packages...]', 'Only lint selected packages')
   .option(
+    '--ancestors',
+    'Lint workspaces that depend on workspaces that have changed',
+    false,
+  )
+  .option(
+    '--descendants',
+    'Lint workspaces that directly or indirectly depend on the specified packages',
+    false,
+  )
+  .option(
+    '--changed',
+    'Lint workspaces that have changed compared to the branch specified in --compareBranch',
+  )
+  .option(
+    '--compareBranch <branch>',
+    "Specifies the branch to use with the --changed flag. If not specified, Modular will use the repo's default branch",
+  )
+  .option(
     '--fix',
     `Fix the lint errors wherever possible, restages changes if run with ${lintStagedFlag}`,
   )

@@ -10,18 +10,32 @@ import { addFiles, getDiffedFiles, getStagedFiles } from './utils/gitActions';
 import * as logger from './utils/logger';
 import { generateJestConfig } from './test/utils';
 import { getAllWorkspaces } from './utils/getAllWorkspaces';
+import { selectWorkspaces } from './utils/selectWorkspaces';
 export interface LintOptions {
   all: boolean;
   fix: boolean;
   staged: boolean;
   packages?: string[];
+  ancestors?: boolean;
+  descendants?: boolean;
+  changed?: boolean;
+  compareBranch?: string;
 }
 
 async function lint(
   options: LintOptions,
   regexes: string[] = [],
 ): Promise<void> {
-  const { all = false, fix = false, staged = false, packages } = options;
+  const {
+    all = false,
+    fix = false,
+    staged = false,
+    packages = [],
+    ancestors = false,
+    descendants = false,
+    changed = false,
+    compareBranch,
+  } = options;
   const modularRoot = getModularRoot();
   const lintExtensions = ['.ts', '.tsx', '.js', '.jsx'];
   let runnerMatch = ['<rootDir>/**/src/**/*.{js,jsx,ts,tsx}'];
@@ -29,7 +43,8 @@ async function lint(
   console.log({ all, fix, staged, packages, regexes });
   const [packageMap] = await getAllWorkspaces();
 
-  const selectiveOptionSpecified = packages?.length; // || ancestors etc.
+  const selectiveOptionSpecified =
+    packages?.length || ancestors || descendants || changed || compareBranch;
 
   if (all && selectiveOptionSpecified) {
     logger.warn(
@@ -43,10 +58,17 @@ async function lint(
 
   if (!all && !isCI) {
     if (selectiveOptionSpecified) {
-      // TODO: Calculate packages from selective options
+      // If at least one of the selective options is specified, calculate target packages from selective options
+      const targetPackages = await selectWorkspaces({
+        targets: packages,
+        changed,
+        ancestors,
+        descendants,
+        compareBranch,
+      });
 
       // Calculate the match regexes for the selective options
-      const selectiveMatch = packages
+      const selectiveMatch = targetPackages
         .map((packageName) => {
           const packageLocation = packageMap.get(packageName)?.location;
           return packageLocation
