@@ -40,7 +40,7 @@ async function lint(
   const lintExtensions = ['.ts', '.tsx', '.js', '.jsx'];
   let runnerMatch = ['<rootDir>/**/src/**/*.{js,jsx,ts,tsx}'];
 
-  console.log({ all, fix, staged, packages, regexes });
+  // console.log({ all, fix, staged, packages, regexes, isCI });
   const [packageMap] = await getAllWorkspaces();
 
   const selectiveOptionSpecified =
@@ -56,7 +56,7 @@ async function lint(
     process.exit(-1);
   }
 
-  if (!all && !isCI) {
+  if (!all) {
     if (selectiveOptionSpecified) {
       // If at least one of the selective options is specified, calculate target packages from selective options
       const targetPackages = await selectWorkspaces({
@@ -84,12 +84,12 @@ async function lint(
       }
       // Narrow the matches to the selection matches
       runnerMatch = selectiveMatch;
-    } else {
-      // Not selective and not --all; calculate the file regexes of --diff or --staged
+    } else if ((!isCI || staged) && regexes.length === 0) {
+      // Not selective, not --all and no regexes; calculate the file regexes of --diff or --staged
       if (staged && regexes.length === 0) {
         const diffedFiles = staged ? getStagedFiles() : getDiffedFiles();
 
-        console.log({ diffedFiles });
+        // console.log({ diffedFiles });
 
         if (diffedFiles.length === 0) {
           logger.log(
@@ -126,7 +126,7 @@ async function lint(
     generateJestConfig(jestEslintConfig),
   ];
 
-  console.log({ testArgs });
+  // console.log({ testArgs });
 
   const testBin = await resolveAsBin('jest-cli');
 

@@ -1,0 +1,12 @@
+{
+  "name": "beta-lint",
+  "private": false,
+  "modular": {
+    "type": "package"
+  },
+  "main": "./src/index.ts",
+  "version": "1.0.0",
+  "dependencies": {
+    "gamma-lint": "1.0.0"
+  }
+}
