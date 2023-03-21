@@ -1,7 +1,7 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Windows Test
+name: Test Yarn 3
 
 on:
   push:
@@ -15,14 +15,14 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       MODULAR_LOGGER_DEBUG: true
+      GIT_AUTHOR_NAME: 'Modular Tests'
+      GIT_AUTHOR_EMAIL: 'tests@modular.js.org'
 
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest]
-        node-version: ['14.18.0', '16.x', '18.x']
-        yarn-version: ['1.22.19', '3.5.0']
-
+        os: [ubuntu-latest]
+        node-version: ['16.x']
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
@@ -30,13 +30,28 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
-      - name: Switch to ${{ matrix.yarn-version }} Yarn
-        run: corepack prepare --activate yarn@${{ matrix.yarn-version }}
+      - name: Switch to stable Yarn
+        run: corepack prepare --activate yarn@3.5.0
       - name: Install Dependencies
         run: yarn --frozen-lockfile
       - name: 'Build internal prerequisites'
         run: yarn workspace @modular-scripts/workspace-resolver build
-      - name: Run Windows tests
-        run:
-          yarn test --regex esmView.test.ts workspace-resolver
-          addPackage.test.ts
+      - name: Run Tests
+        run: yarn test --coverage
+      - name: Coveralls Parallel
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          flag-name: run-${{ matrix.node-version }}
+          parallel: true
+  finish:
+    name: Upload Coverage
+    if: ${{ always() }}
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Coveralls Finished
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel-finished: true
