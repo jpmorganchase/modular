@@ -91,7 +91,7 @@ export default async function createModularApp(argv: {
       ? ['--prefer-offline']
       : ['--cached']
     : [];
-  const verboseArgs = argv.verbose ? ['--verbose'] : [];
+  const verboseArgs = argv.verbose ? (isYarnV1 ? ['--verbose'] : []) : [];
   const yarn1SpecifcArgs = isYarnV1 ? ['-W'] : [];
 
   const newModularRoot = path.isAbsolute(argv.name)
