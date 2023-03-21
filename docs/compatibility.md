@@ -23,7 +23,7 @@ Yarn v3 is partially supported; we are actively trying to support more features.
 
 All Modular commands and functionality should work as expected.
 
-The project's `.yarnrc.yml` must include the `nodeLinkler` property set to
+The project's `.yarnrc.yml` must include the `nodeLinker` property set to
 `node-modules` as we do not support Plug'n'Play.
 
 #### Unsupported Features:
