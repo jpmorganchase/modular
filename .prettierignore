@@ -1,5 +1,4 @@
 .changeset
-.github*
 /dist
 packages/*/dist
 packages/*/build
