@@ -43,6 +43,13 @@ function isYarnInstalled(): boolean {
   }
 }
 
+async function getYarnVersion() {
+  const { stdout: version } = await execa('yarnpkg', ['--version'], {
+    stdout: 'pipe',
+  });
+  return version;
+}
+
 export default async function createModularApp(argv: {
   name: string;
   repo?: boolean;
@@ -61,15 +68,31 @@ export default async function createModularApp(argv: {
     );
   }
 
-  const preferOfflineArg = argv.preferOffline ? ['--prefer-offline'] : [];
-  const verboseArgs = argv.verbose ? ['--verbose'] : [];
-
-  if (isYarnInstalled() === false) {
+  if (!isYarnInstalled()) {
     console.error(
       'Please install `yarn` before attempting to run `create-modular-react-app`.',
     );
     throw new Error(`Yarn was not installed`);
   }
+
+  const yarnVersion = await getYarnVersion();
+  const isYarnV1 = yarnVersion.startsWith('1.');
+  const isYarnV2 = yarnVersion.startsWith('2.');
+
+  if (isYarnV2) {
+    console.error(
+      'Yarn v2 is not supported by Modular. Please upgrade to Yarn v3+ or Classic Yarn to use Modular.',
+    );
+    throw new Error(`Yarn v2 used`);
+  }
+
+  const preferOfflineArg = argv.preferOffline
+    ? isYarnV1
+      ? ['--prefer-offline']
+      : ['--cached']
+    : [];
+  const verboseArgs = argv.verbose ? ['--verbose'] : [];
+  const yarn1SpecifcArgs = isYarnV1 ? ['-W'] : [];
 
   const newModularRoot = path.isAbsolute(argv.name)
     ? argv.name
@@ -86,6 +109,12 @@ export default async function createModularApp(argv: {
   if (argv.repo) {
     await exec('git', ['init'], newModularRoot);
   }
+
+  if (!isYarnV1)
+    await fs.writeFile(
+      path.join(newModularRoot, '.yarnrc.yml'),
+      'nodeLinker: node-modules',
+    );
 
   await exec('yarnpkg', ['init', '-y'], newModularRoot);
 
@@ -126,7 +155,7 @@ export default async function createModularApp(argv: {
     'yarnpkg',
     [
       'add',
-      '-W',
+      ...yarn1SpecifcArgs,
       ...verboseArgs,
       ...preferOfflineArg,
       '@testing-library/dom',
