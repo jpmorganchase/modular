@@ -112,16 +112,11 @@ describe('modular working with an esm-view', () => {
       await page.goto(`http://localhost:${port}`, {});
 
       // eslint-disable-next-line @typescript-eslint/unbound-method
-      const { getByTestId, findByTestId } = getQueriesForElement(
-        await getDocument(page),
-      );
+      const { findByTestId } = getQueriesForElement(await getDocument(page));
 
-      await findByTestId('test-this');
-
-      // eslint-disable-next-line testing-library/no-await-sync-query
-      expect(await getNodeText(await getByTestId('test-this'))).toBe(
-        'this is a modular esm-view',
-      );
+      const form = await findByTestId('test-this');
+      const text = await getNodeText(form);
+      expect(text).toBe('this is a modular esm-view');
     });
   });
 
@@ -849,16 +844,11 @@ describe('modular working with an esm-view with custom index.html', () => {
       await page.goto(`http://localhost:${port}`, {});
 
       // eslint-disable-next-line @typescript-eslint/unbound-method
-      const { getByTestId, findByTestId } = getQueriesForElement(
-        await getDocument(page),
-      );
+      const { findByTestId } = getQueriesForElement(await getDocument(page));
 
-      await findByTestId('custom-index');
-
-      // eslint-disable-next-line testing-library/no-await-sync-query
-      expect(await getNodeText(await getByTestId('custom-index'))).toBe(
-        'This will appear before #root',
-      );
+      const form = await findByTestId('custom-index');
+      const text = await getNodeText(form);
+      expect(text).toBe('This will appear before #root');
     });
   });
 
