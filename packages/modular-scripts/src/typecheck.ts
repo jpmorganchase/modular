@@ -5,34 +5,106 @@ import getPackageMetadata from './utils/getPackageMetadata';
 import * as logger from './utils/logger';
 import getModularRoot from './utils/getModularRoot';
 import actionPreflightCheck from './utils/actionPreflightCheck';
+import { getAllWorkspaces } from './utils/getAllWorkspaces';
+import { selectWorkspaces } from './utils/selectWorkspaces';
 
-async function typecheck(): Promise<void> {
-  const { typescriptConfig } = await getPackageMetadata();
+import type { JSONSchemaForTheTypeScriptCompilerSConfigurationFile as TSConfig } from '@schemastore/tsconfig';
 
-  const { _compilerOptions, ...rest } = typescriptConfig;
+type CompilerOptions = TSConfig['compilerOptions'];
 
-  const tsConfig: typeof typescriptConfig = {
+export interface TypecheckOptions {
+  ancestors: boolean;
+  descendants: boolean;
+  changed: boolean;
+  compareBranch: string;
+}
+
+const COMPILER_OPTIONS_ALLOW_LIST: string[] = ['jsx'];
+const DEFAULT_COMPILER_OPTIONS: CompilerOptions = {
+  noEmit: true,
+};
+const DEFAULT_EXCLUDES: string[] = [
+  'node_modules',
+  'bower_components',
+  'jspm_packages',
+  'tmp',
+  '**/dist-types',
+  '**/dist-cjs',
+  '**/dist-es',
+  'dist',
+  '**/__fixtures__',
+];
+
+function restrictUserTsconfig(
+  userTsConfig: TSConfig,
+  replaceInclude: string[] | undefined,
+): TSConfig {
+  const { compilerOptions, ...rest } = userTsConfig;
+
+  // The exclude list here is different to that in getPackageInfo() because we want
+  // to test more files during a typecheck compared to a build (test/spec files). During a build,
+  // there might be various files that we don't want to end up in the output.
+  const tsConfig: TSConfig = {
     ...rest,
-    exclude: [
-      'node_modules',
-      'bower_components',
-      'jspm_packages',
-      'tmp',
-      '**/dist-types',
-      '**/dist-cjs',
-      '**/dist-es',
-      'dist',
-      '**/__fixtures__',
-    ],
-    compilerOptions: {
-      noEmit: true,
-    },
+    exclude: [...DEFAULT_EXCLUDES],
   };
 
-  // If compilerOptions.jsx is defined use it otherwise, depend on the extended config by not setting it to undefined.
-  if (tsConfig.compilerOptions && rest.compilerOptions?.jsx) {
-    tsConfig.compilerOptions.jsx = rest.compilerOptions.jsx;
+  const combinedCompilerOptions: CompilerOptions = {
+    ...DEFAULT_COMPILER_OPTIONS,
+  };
+
+  // Where the user has defined allowlist-supported compiler options, apply them
+  for (const item of COMPILER_OPTIONS_ALLOW_LIST) {
+    if (compilerOptions && compilerOptions[item]) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      combinedCompilerOptions[item] = compilerOptions[item];
+    }
   }
+
+  tsConfig.compilerOptions = combinedCompilerOptions;
+
+  // If the user provided selective options, use a computed `include` config instead of what is derived from tsconfig.json
+  if (replaceInclude) {
+    tsConfig.include = replaceInclude;
+  }
+
+  return tsConfig;
+}
+
+async function typecheck(
+  options: TypecheckOptions,
+  packages: string[],
+): Promise<void> {
+  const { ancestors, descendants, changed, compareBranch } = options;
+  const isSelective = changed || ancestors || descendants || packages.length;
+  const modularRoot = getModularRoot();
+  const [allWorkspacePackages] = await getAllWorkspaces(modularRoot);
+  const targets = isSelective ? packages : [...allWorkspacePackages.keys()];
+  let replaceInclude: undefined | string[];
+
+  if (isSelective) {
+    const selectedTargets = await selectWorkspaces({
+      targets,
+      changed,
+      compareBranch,
+      descendants,
+      ancestors,
+    });
+
+    const targetLocations: string[] = [];
+    for (const [pkgName, pkg] of allWorkspacePackages) {
+      if (selectedTargets.includes(pkgName)) {
+        targetLocations.push(pkg.location);
+      }
+    }
+
+    if (targetLocations.length) {
+      replaceInclude = targetLocations;
+    }
+  }
+
+  const { typescriptConfig } = await getPackageMetadata();
+  const tsConfig = restrictUserTsconfig(typescriptConfig, replaceInclude);
 
   const diagnosticHost = {
     getCurrentDirectory: (): string => getModularRoot(),
