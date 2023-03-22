@@ -34,7 +34,6 @@ describe('A modular repo with a root .modular.js config file', () => {
     );
     expect(result.stdout).toContain('Building with esbuild');
     expect(result.exitCode).toBe(0);
-    console.log(result.stdout);
   });
   it('builds using webpack if a package specific config gile overrides the root config', () => {
     copyFileSync(
@@ -48,7 +47,6 @@ describe('A modular repo with a root .modular.js config file', () => {
     );
     expect(result.stdout).toContain('Building with Webpack');
     expect(result.exitCode).toBe(0);
-    console.log(result.stdout);
   });
   it('builds using webpack if the environment variable is provided as it overrides the config', () => {
     const result = runModularPipeLogs(
@@ -63,6 +61,5 @@ describe('A modular repo with a root .modular.js config file', () => {
     );
     expect(result.stdout).toContain('Building with Webpack');
     expect(result.exitCode).toBe(0);
-    console.log(result.stdout);
   });
 });
