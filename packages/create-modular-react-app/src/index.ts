@@ -81,7 +81,7 @@ export default async function createModularApp(argv: {
 
   if (isYarnV2) {
     console.error(
-      'Yarn v2 is not supported by Modular. Please upgrade to Yarn v3+ or Classic Yarn to use Modular.',
+      'Yarn v2 is not supported by Modular (See https://modular.js.org/compatibility/). Please upgrade to Yarn v3+ or Classic Yarn to use Modular.',
     );
     throw new Error(`Yarn v2 used`);
   }

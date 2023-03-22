@@ -15,7 +15,9 @@ Yarn have different levels of support.
 ### Yarn v2
 
 Yarn v2 is not supported by Modular, due to
-[PnP](https://yarnpkg.com/features/pnp) and other issues.
+[PnP](https://yarnpkg.com/features/pnp) and Yarn's choice to not backport the
+fix to
+[this issue](https://github.com/yarnpkg/berry/issues/2232#issuecomment-818514929).
 
 ### Yarn v3
 
