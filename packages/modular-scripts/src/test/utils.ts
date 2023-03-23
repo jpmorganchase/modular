@@ -301,3 +301,10 @@ export async function runYarnModular(
     ...opts,
   });
 }
+
+export const mockPreflightImplementation = {
+  __esModule: true,
+  default: (fn: (...args: unknown[]) => Promise<void>) => {
+    return fn;
+  },
+};
