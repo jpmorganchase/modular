@@ -12,7 +12,9 @@ behaviours. Additionally it requires some minimal configuration within the
 
 We allow a number of Modular behaviours to be configured via a dedicated Modular
 config file, `.modular.js`, that can be placed at the root of a
-workspace/package you wish to configure.
+workspace/package you wish to configure, or at the root of your project for a
+'global' configuration file that affects all packages. Root configurations will
+be overridden by local package configurations if both are provided.
 
 We support the following file names/formats:
 
