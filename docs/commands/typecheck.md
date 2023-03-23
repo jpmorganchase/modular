@@ -3,7 +3,7 @@ parent: Commands
 title: modular typecheck
 ---
 
-# `modular typecheck [options]`
+# `modular typecheck [options] [packages...]`
 
 `modular typecheck` will programmatically report the semantic, syntactic, and
 declaration type errors found in your code, based on your `tsconfig.json`.
@@ -16,8 +16,7 @@ small snapshot of the offending line in question.
 ## Configuration
 
 `modular typecheck` will respect the root `tsconfig.json`, but most
-`compilerOptions` are ignored. Individual `tsconfig.json` files within packages
-are ignored.
+`compilerOptions` are ignored.
 
 It should be noted that `modular typecheck` does not support package-level
 `tsconfig.json` files, for backwards compatibility. Your IDE may still consume
