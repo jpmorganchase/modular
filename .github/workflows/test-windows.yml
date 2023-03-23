@@ -41,6 +41,10 @@ jobs:
         run: yarn set version ${{ matrix.yarn-version }}
       - name: Install Dependencies
         run: yarn --frozen-lockfile
+        if: ${{ matrix.yarn-version }} == '1.22.19'
+      - name: Install Dependencies
+        run: yarn --no-immutable
+        if: ${{ matrix.yarn-version }} == '3.5.0'
       - name: 'Build internal prerequisites'
         run: yarn workspace @modular-scripts/workspace-resolver build
       - name: Run Windows tests
