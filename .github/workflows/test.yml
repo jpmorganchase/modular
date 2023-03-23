@@ -11,9 +11,7 @@ on:
 
 jobs:
   Test:
-    name:
-      ${{ matrix.os }} (${{ matrix.node-version }} | Yarn ${{
-      matrix.yarn-version }})
+    name: ${{ matrix.os }} (${{ matrix.node-version }})
     runs-on: ${{ matrix.os }}
     env:
       MODULAR_LOGGER_DEBUG: true
