@@ -117,7 +117,7 @@ async function typecheck(
   const configParseResult = ts.parseJsonConfigFileContent(
     tsConfig,
     ts.sys,
-    getModularRoot(),
+    modularRoot,
   );
 
   if (configParseResult.errors.length > 0) {

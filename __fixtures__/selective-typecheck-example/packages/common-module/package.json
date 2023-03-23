@@ -1,0 +1,10 @@
+{
+  "name": "selective-typecheck-common-module",
+  "private": false,
+  "modular": {
+    "type": "source"
+  },
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "version": "1.0.0"
+}
