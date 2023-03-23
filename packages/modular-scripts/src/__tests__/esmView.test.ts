@@ -842,6 +842,7 @@ describe('modular working with an esm-view with custom index.html', () => {
     it('THEN can start a esm-view with custom index', async () => {
       const page = await browser.newPage();
       await page.goto(`http://localhost:${port}`, {});
+      await page.waitForNetworkIdle();
 
       // eslint-disable-next-line @typescript-eslint/unbound-method
       const { findByTestId } = getQueriesForElement(await getDocument(page));
