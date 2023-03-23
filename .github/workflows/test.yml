@@ -25,12 +25,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         node-version: ['14.18.0', '16.x', '18.x']
-        yarn-version: ['1.22.19', '3.5.0']
-        exclude:
-          - node-version: '14.18.0'
-            yarn-version: '3.5.0'
-          - node-version: '18.x'
-            yarn-version: '3.5.0'
+
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
@@ -38,14 +33,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
-      - name: Use Yarn version ${{ matrix.yarn-version }}
-        run: yarn set version ${{ matrix.yarn-version }}
       - name: Install Dependencies
         run: yarn --frozen-lockfile
-        if: matrix.yarn-version == '1.22.19'
-      - name: Install Dependencies
-        run: yarn --no-immutable
-        if: matrix.yarn-version == '3.5.0'
       - name: 'Build internal prerequisites'
         run: yarn workspace @modular-scripts/workspace-resolver build
       - name: Run Tests
