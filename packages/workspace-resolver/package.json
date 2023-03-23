@@ -13,7 +13,7 @@
     "@types/fs-extra": "^9.0.13"
   },
   "scripts": {
-    "build": "tsc && babel --source-maps --root-mode upward src --out-dir dist-cjs --extensions .ts --ignore **/__tests__",
+    "build": "yarn run --top-level tsc && yarn run --top-level babel --source-maps --root-mode upward src --out-dir dist-cjs --extensions .ts --ignore **/__tests__",
     "clean": "rimraf dist-cjs",
     "prepublishOnly": "node ../../scripts/extend-publish-config.js"
   },
