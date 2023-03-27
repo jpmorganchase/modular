@@ -9,7 +9,7 @@ title: modular lint
 current branch and your remote origin default branch (i.e. `master` or `main`)
 and only lint the `.ts`, `.tsx`, `.js`, `.jsx` files that have changes. When in
 CI or when `--all` is provided, it will default to lint the entire codebase.
-Wneh `--staged` is provided, it will only lint the files staged on git.
+When `--staged` is provided, it will only lint the files staged on git.
 
 Alternatively, when it is invoked with one or more selective options
 (`--packages`, `--ancestors`, `--descendants` or `--changed`), it will lint all
