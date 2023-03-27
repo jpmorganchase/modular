@@ -9,7 +9,7 @@ title: modular lint
 current branch and your remote origin default branch (i.e. `master` or `main`)
 and only lint the `.ts`, `.tsx`, `.js`, `.jsx` files that have changes. When in
 CI without arguments or options or when the `--all` option is provided, it will
-lint the entire codebase. Wneh `--staged` is provided, it will only lint the
+lint the entire codebase. When `--staged` is provided, it will only lint the
 files staged on git.
 
 Alternatively, when it is invoked with one or more selective options
@@ -18,7 +18,7 @@ the source code files in the provided `--packages`, optionally agumenting the
 set of packages by adding their ancestors (`--ancestors`), their descendants
 (`--descendants`) or the files that have changed (`--changed`), calculated
 comparing the current state of the git repository with the branch specified by
-`compareBranch` or, if `compareBranch` is not set, with the default branch.
+`--compareBranch` or, if `--compareBranch` is not set, with the default branch.
 
 It uses your project eslint config to lint and jest runner to report on the lint
 status of each file (`PASS` or `FAIL`). If a file has a lint warning, the
