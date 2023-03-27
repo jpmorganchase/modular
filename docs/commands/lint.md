@@ -8,8 +8,9 @@ title: modular lint
 `modular lint` without arguments or options will check the diff between the
 current branch and your remote origin default branch (i.e. `master` or `main`)
 and only lint the `.ts`, `.tsx`, `.js`, `.jsx` files that have changes. When in
-CI or when `--all` is provided, it will default to lint the entire codebase.
-Wneh `--staged` is provided, it will only lint the files staged on git.
+CI without arguments or options or when the `--all` option is provided, it will
+lint the entire codebase. Wneh `--staged` is provided, it will only lint the
+files staged on git.
 
 Alternatively, when it is invoked with one or more selective options
 (`--packages`, `--ancestors`, `--descendants` or `--changed`), it will lint all
@@ -23,6 +24,16 @@ It uses your project eslint config to lint and jest runner to report on the lint
 status of each file (`PASS` or `FAIL`). If a file has a lint warning, the
 command will be marked as failed, with printed eslint errors for each
 warning/error.
+
+## Default behaviour
+
+`modular lint` without arguments or options will:
+
+- default to lint the `git diff` between the current branch and the remote
+  origin's default branch when not in CI
+- default to lint everything (essentially like `--all`) when in CI
+
+codebase (like `--all`)
 
 ## Options:
 
