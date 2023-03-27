@@ -40,7 +40,6 @@ async function lint(
   const lintExtensions = ['.ts', '.tsx', '.js', '.jsx'];
   let runnerMatch = ['<rootDir>/**/src/**/*.{js,jsx,ts,tsx}'];
 
-  // console.log({ all, fix, staged, packages, regexes, isCI });
   const [packageMap] = await getAllWorkspaces();
 
   const selectiveOptionSpecified =
@@ -86,11 +85,19 @@ async function lint(
       runnerMatch = selectiveMatch;
     } else if ((!isCI || staged) && regexes.length === 0) {
       // Not selective, not --all and no regexes; calculate the file regexes of --diff or --staged
-      if (staged && regexes.length === 0) {
-        const diffedFiles = staged ? getStagedFiles() : getDiffedFiles();
+      let diffedFiles: null | string[];
 
-        // console.log({ diffedFiles });
+      try {
+        // This can throw in case there is no git directory; in this case, we need to continue like nothing happened
+        diffedFiles = staged ? getStagedFiles() : getDiffedFiles();
+      } catch {
+        diffedFiles = null;
+        logger.log(
+          'Getting staged or diffed files failed - are you sure this is a git repo? Falling back to `--all`.',
+        );
+      }
 
+      if (diffedFiles !== null) {
         if (diffedFiles.length === 0) {
           logger.log(
             'No diffed files detected. Use the `--all` option to lint the entire codebase',
@@ -125,8 +132,6 @@ async function lint(
     '--config',
     generateJestConfig(jestEslintConfig),
   ];
-
-  // console.log({ testArgs });
 
   const testBin = await resolveAsBin('jest-cli');
 
