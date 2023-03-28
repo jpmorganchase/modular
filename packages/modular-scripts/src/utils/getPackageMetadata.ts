@@ -56,9 +56,10 @@ async function getPackageMetadata() {
   // validate tsconfig
   // Extract configuration from config file and parse JSON,
   // after removing comments. Just a fancier JSON.parse
+  const userTsConfigPath = path.join(modularRoot, typescriptConfigFilename);
   const result = ts.parseConfigFileTextToJson(
-    path.join(modularRoot, typescriptConfigFilename),
-    fse.readFileSync(typescriptConfigFilename, 'utf8').toString(),
+    userTsConfigPath,
+    fse.readFileSync(userTsConfigPath, 'utf8').toString(),
   );
 
   const configObject = result.config as TSConfig;
