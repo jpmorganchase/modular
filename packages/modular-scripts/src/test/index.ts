@@ -223,7 +223,8 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
         env: {
           BABEL_ENV: 'test',
           NODE_ENV: 'test',
-          PUBLIC_URL: '',
+          // TODO: Check why this was set - conflicts with tests that set publicUrl
+          // PUBLIC_URL: '',
           MODULAR_ROOT: getModularRoot(),
         },
       });
