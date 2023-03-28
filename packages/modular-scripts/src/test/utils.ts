@@ -4,9 +4,10 @@ import fs, { writeJSONSync } from 'fs-extra';
 import path from 'path';
 import * as tmp from 'tmp';
 import { promisify } from 'util';
+import findUp from 'find-up';
+import { mkdirSync } from 'fs';
 
 import type { ModularPackageJson } from '@modular-scripts/modular-types';
-import { mkdirSync } from 'fs';
 import type { Config } from '@jest/types';
 import findUp from 'find-up';
 
