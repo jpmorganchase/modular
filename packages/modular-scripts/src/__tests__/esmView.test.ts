@@ -15,8 +15,9 @@ import { startApp, DevServer } from './start-app';
 import type { CoreProperties } from '@schemastore/package';
 import {
   createModularTestContext,
-  mockPreflightImplementation,
   runModularForTests,
+  setupMocks,
+  buildPackageForTests,
 } from '../test/utils';
 import { setTimeout } from 'timers';
 
@@ -1021,71 +1022,4 @@ async function addPackageForTests(name: string, type: string): Promise<void> {
     type: type,
     unstableName: name,
   });
-}
-
-/**
- * Build packages
- * @param targetPackage Target package to build
- * @param config Optional array of configuration options and their values to affect build
- */
-async function buildPackageForTests(targetPackage: string, config?: string[]) {
-  if (config) await writeConfig(targetPackage, config);
-  const { default: build } = await import('../build-scripts/index');
-  await build({
-    packagePaths: [targetPackage],
-    preserveModules: false,
-    private: false,
-    ancestors: false,
-    descendants: false,
-    changed: false,
-    dangerouslyIgnoreCircularDependencies: false,
-  });
-  if (config) await deleteConfig(targetPackage);
-}
-
-/**
- * Write a modular configuration file in the temporary
- * modular repo to configure modular command behaviour
- * @param targetPackage name of package being configured
- * @param config Array of configuration options and their value
- */
-async function writeConfig(targetPackage: string, config: string[]) {
-  const { default: getWorkspaceLocation } = await import(
-    '../utils/getLocation'
-  );
-  const targetPath = await getWorkspaceLocation(targetPackage);
-  await fs.writeFile(
-    path.join(targetPath, '.modular.js'),
-    `module.exports = {\n
-      ${config.join(',\n')},\n};`,
-  );
-}
-
-async function deleteConfig(targetPackage: string) {
-  const { default: getWorkspaceLocation } = await import(
-    '../utils/getLocation'
-  );
-  const targetPath = await getWorkspaceLocation(targetPackage);
-  // Can't actually delete due to permission issues so just overwrite with empty
-  await fs.writeFile(
-    path.join(targetPath, '.modular.js'),
-    `module.exports = {};`,
-  );
-}
-
-function setupMocks(modularRoot: string) {
-  jest.resetAllMocks();
-  jest.resetModules();
-  // Mock the modular root per temporary modular repo
-  jest.doMock('../utils/getModularRoot', () => {
-    return {
-      __esModule: true,
-      default: () => tempModularRepo,
-    };
-  });
-  // Skip preflight in tests (faster, avoids the need to mock getModularRoot statically)
-  jest.doMock(
-    '../utils/actionPreflightCheck',
-    () => mockPreflightImplementation,
-  );
 }
