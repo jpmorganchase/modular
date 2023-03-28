@@ -9,7 +9,6 @@ import { mkdirSync } from 'fs';
 
 import type { ModularPackageJson } from '@modular-scripts/modular-types';
 import type { Config } from '@jest/types';
-import findUp from 'find-up';
 
 const rimraf = promisify(_rimraf);
 
