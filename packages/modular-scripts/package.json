@@ -35,7 +35,7 @@
     "@rollup/plugin-json": "4.1.0",
     "@rollup/plugin-node-resolve": "13.3.0",
     "@schemastore/tsconfig": "0.0.9",
-    "@svgr/core": "6.2.1",
+    "@svgr/core": "6.5.1",
     "@svgr/webpack": "6.2.1",
     "@types/case-sensitive-paths-webpack-plugin": "^2.1.6",
     "@types/lodash": "^4.14.191",
