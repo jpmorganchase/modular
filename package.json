@@ -54,7 +54,7 @@
     "@types/babel__code-frame": "^7.0.3",
     "@types/cross-spawn": "^6.0.2",
     "@types/dedent": "0.7.0",
-    "@types/express": "^4.17.13",
+    "@types/express": "^4.17.17",
     "@types/express-ws": "^3.0.1",
     "@types/find-up": "4.0.0",
     "@types/fs-extra": "9.0.13",

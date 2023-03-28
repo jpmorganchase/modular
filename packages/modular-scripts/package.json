@@ -69,7 +69,7 @@
     "escape-string-regexp": "2.0.0",
     "eslint": "8.28.0",
     "execa": "5.1.1",
-    "express": "4.18.1",
+    "express": "4.18.2",
     "express-ws": "5.0.2",
     "file-loader": "6.2.0",
     "filesize": "9.0.11",
