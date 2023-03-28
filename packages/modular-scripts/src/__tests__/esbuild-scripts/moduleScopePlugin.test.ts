@@ -4,10 +4,10 @@ import * as fs from 'fs-extra';
 import stripAnsi from 'strip-ansi';
 import * as tmp from 'tmp';
 
-import plugin from '../../esbuild-scripts/plugins/moduleScopePlugin';
-import type { Paths } from '../../utils/createPaths';
-import { formatError } from '../../esbuild-scripts/utils/formatError';
+import plugin from '../../build-scripts/esbuild-scripts/plugins/moduleScopePlugin';
+import { formatError } from '../../build-scripts/esbuild-scripts/utils/formatError';
 import getModularRoot from '../../utils/getModularRoot';
+import type { Paths } from '../../build-scripts/common-scripts/determineTargetPaths';
 
 const emptyDir = async (dirName: string) => {
   await fs.emptyDir(dirName);
@@ -41,7 +41,7 @@ describe('WHEN running esbuild with the svgrPlugin', () => {
                 'module-scope',
                 'src',
               ),
-            } as unknown as Paths),
+            } as Paths),
           ],
           logLevel: 'silent',
           outdir,

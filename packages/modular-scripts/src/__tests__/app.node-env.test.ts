@@ -65,7 +65,7 @@ describe('when working with a NODE_ENV app', () => {
               ├─ main.a482480b.js #1xwb1v
               ├─ main.a482480b.js.map #4bcy8y
               ├─ runtime-main.97707f9d.js #15lezt9
-              └─ runtime-main.97707f9d.js.map #1yg8f1m"
+              └─ runtime-main.97707f9d.js.map #1qz5n9i"
       `);
     });
     it('can generate a js/main.5d879077.js', async () => {

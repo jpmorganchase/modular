@@ -16,8 +16,6 @@ following essential differences:
 1. All their external `import`s are rewritten to point to an
    [ESM CDN](../esm-views/esm-cdn.md).
 
-1. They don't allow the user to specify a custom `index.html`
-
 1. They don't include a `public` folder in the build
 
 1. They expect their entry-point (`src/index.tsx`) to not render to the DOM, but
@@ -63,9 +61,12 @@ for external dependencies that are re-written to an ESM CDN (this behaviour is
 
 ### Dynamically loading vs statically serving ESM Views
 
-The resulting output of an ESM View contains a synthetically-generated
-`index.html` file and a `_trampoline.js` loader, which allows an ESM View to be
-served like a static website. The JS and CSS bundle are hashed and linked in the
+The resulting output of an ESM View contains an `index.html` file, which is
+generated from the user-specified `public/index.html` or is synthetically
+generated from a simple internal template if that file is missing. Either way,
+the resulting `index.html` links to a synthetically-generated `_trampoline.js`
+module, which allows an ESM View to be served like a static website. The JS and
+CSS bundles are hashed and linked in the
 [generated package.json](../esm-views/output-package-manifest.md), that the
 loading code can fetch and examine before importing the `esm-view` at runtime.
 For example, this is the stucture of a built ESM View on the filesystem:
@@ -85,10 +86,10 @@ For example, this is the stucture of a built ESM View on the filesystem:
       └── main.bf0399f0.js.map
 ```
 
-where `/index.html` and `/static/js/_trampoline` are generated to statically
-serve the ESM View. It is also possible to load the ESM view dynamically, by
-discovering the hashed JS (`/static/js/main.bf0399f0.js`) and CSS
-(`/static/css/main.1915b736.css`) entrypoints from the generated
+where `/static/js/_trampoline` (and, possibly, `index.html`) is generated to
+statically serve the ESM View. It is also possible to load the ESM view
+dynamically, by discovering the hashed JS (`/static/js/main.bf0399f0.js`) and
+CSS (`/static/css/main.1915b736.css`) entrypoints from the generated
 `/package.json`:
 
 ```
@@ -145,9 +146,9 @@ a React component as default for this to work.
 
 ## Entry-point
 
-ESM-Views need an entry-point file located at `src/index.tsx`, which typically
-exports a React component as default for the synthetically generated
-`index.html` and the `start` command to work.
+ESM-Views need an entry-point file located at `src/index.tsx`, which by
+convention exports a React component as default for the `modular start` command
+to work.
 
 ## Template
 

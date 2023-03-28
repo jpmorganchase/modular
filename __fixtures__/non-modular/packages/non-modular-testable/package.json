@@ -1,0 +1,14 @@
+{
+  "name": "non-modular-testable",
+  "private": false,
+  "scripts": {
+    "test": "echo 'non-modular-testable was tested'"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "license": "UNLICENSED",
+  "main": "./dist/index.js",
+  "version": "1.0.0"
+}

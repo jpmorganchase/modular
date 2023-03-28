@@ -62,7 +62,7 @@ export function rewriteModuleSpecifier(
   const { dependencyName, submodule } = parsePackageName(moduleSpecifier);
   // Find dependency name (no submodule) in the pre-built import map
   const dependencyUrl = dependencyName
-    ? (importMap.get(dependencyName) as string)
+    ? importMap.get(dependencyName)
     : undefined;
   if (dependencyUrl) {
     // Rewrite the path taking the submodule into account

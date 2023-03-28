@@ -122,7 +122,7 @@ program
         dangerouslyIgnoreCircularDependencies: boolean;
       },
     ) => {
-      const { default: build } = await import('./build');
+      const { default: build } = await import('./build-scripts');
 
       if (options.compareBranch && !options.changed) {
         process.stderr.write(
