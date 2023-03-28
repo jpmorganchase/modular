@@ -12,7 +12,7 @@ const modularRoot = getRealModularRootInTest();
 jest.mock('../utils/actionPreflightCheck', () => mockPreflightImplementation);
 
 describe('Modular typecheck', () => {
-  describe('when there are type errors (non-selective)', () => {
+  describe('not using selective options', () => {
     let tempModularRepo: string;
     let tempFixturesFolder: string;
 
@@ -99,7 +99,7 @@ describe('Modular typecheck', () => {
     });
   });
 
-  describe('when there are type errors (selective)', () => {
+  describe('using selective options', () => {
     let tempModularRepo: string;
 
     beforeEach(() => {
@@ -184,6 +184,61 @@ describe('Modular typecheck', () => {
       } finally {
         expect(caughtError).toBeUndefined();
       }
+    });
+  });
+
+  describe('using allowlisted compiler options', () => {
+    let tempModularRepo: string;
+
+    beforeEach(() => {
+      // Required to achieve consistency when using `jest.doMock` in tests
+      jest.resetModules();
+
+      /**
+       * - Set up a temp modular repo
+       * - Copy the `selective-typecheck-example` fixture into it (3 packages within)
+       * - Create a custom `tsconfig.json` that uses allowlisted compiler options
+       */
+      tempModularRepo = createModularTestContext();
+      fs.copySync(
+        path.join(
+          modularRoot,
+          '__fixtures__',
+          'selective-typecheck-example',
+          'packages',
+        ),
+        path.join(tempModularRepo, 'packages'),
+      );
+      // eslint-disable-next-line
+      const tsconfigContent: Record<string, any> = JSON.parse(
+        fs.readFileSync(path.join(modularRoot, 'tsconfig.json')).toString(),
+      );
+      const updatedTsConfig = {
+        ...tsconfigContent,
+        include: ['packages/**/src'],
+        compilerOptions: {
+          jsx: 'preserve',
+        },
+      };
+      fs.writeFileSync(
+        path.join(tempModularRepo, 'tsconfig.json'),
+        JSON.stringify(updatedTsConfig),
+      );
+
+      // Mock the modular root per temporary modular repo
+      jest.doMock('../utils/getModularRoot', () => {
+        return {
+          __esModule: true,
+          default: () => tempModularRepo,
+        };
+      });
+    });
+
+    it('accepts a non-default ("preserve") value for `jsx`', async () => {
+      // This option has no effect on typecheck, since typecheck doesn't emit.
+      // So, we just check that typecheck doesn't throw.
+      const { default: typecheck } = await import('../typecheck');
+      await expect(typecheck({}, [])).resolves.not.toThrow();
     });
   });
 });
