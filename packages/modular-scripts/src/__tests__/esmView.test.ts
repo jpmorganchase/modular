@@ -14,7 +14,7 @@ import { normalizeToPosix } from '../build-scripts/esbuild-scripts/utils/formatP
 import { startApp, DevServer } from './start-app';
 import type { CoreProperties } from '@schemastore/package';
 import { createModularTestContext, runModularForTests } from '../test/utils';
-import { setTimeout } from 'timers/promises';
+import { setTimeout } from 'timers';
 
 // Temporary text context paths
 let tempModularRepo: string;
@@ -87,7 +87,7 @@ describe('modular working with an esm-view', () => {
         tempModularRepo,
       );
       // Wait two seconds to ensure app started fully
-      await setTimeout(2000);
+      await new Promise((f) => setTimeout(f, 2000));
     });
 
     afterAll(async () => {
@@ -821,7 +821,7 @@ describe('modular working with an esm-view with custom index.html', () => {
         tempModularRepo,
       );
       // Wait two seconds to ensure app started fully
-      await setTimeout(2000);
+      await new Promise((f) => setTimeout(f, 2000));
     });
 
     afterAll(async () => {
