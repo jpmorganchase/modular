@@ -1,5 +1,34 @@
 # modular-scripts
 
+## 4.2.0
+
+### Minor Changes
+
+- [#2324](https://github.com/jpmorganchase/modular/pull/2324)
+  [`d6ca9af`](https://github.com/jpmorganchase/modular/commit/d6ca9af0146951da42652d59b762e248b9a2bd58)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Modular test works
+  on non-modular packages with test script
+
+- [#2288](https://github.com/jpmorganchase/modular/pull/2288)
+  [`e76c272`](https://github.com/jpmorganchase/modular/commit/e76c272c4d5d03fb62453c74f8cba778a6419cf3)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Support
+  public assets for esm-views
+
+- [#2282](https://github.com/jpmorganchase/modular/pull/2282)
+  [`0d66f68`](https://github.com/jpmorganchase/modular/commit/0d66f68e87c3ec4a4b2b6e4e59fdcdae192b4c48)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Support
+  custom `public/index.html` for esm-views
+
+- [#2283](https://github.com/jpmorganchase/modular/pull/2283)
+  [`2c25504`](https://github.com/jpmorganchase/modular/commit/2c25504b4921f8afa8a00f74d39f8fb0f9a315aa)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Fix support for SSL
+  certificates in esbuild mode
+
+- [#2283](https://github.com/jpmorganchase/modular/pull/2283)
+  [`2c25504`](https://github.com/jpmorganchase/modular/commit/2c25504b4921f8afa8a00f74d39f8fb0f9a315aa)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Rewrote Webpack
+  Configuration in TypeScript
+
 ## 4.1.0
 
 ### Minor Changes
