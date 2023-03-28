@@ -33,8 +33,6 @@ warning/error.
   origin's default branch when not in CI
 - default to lint everything (essentially like `--all`) when in CI
 
-codebase (like `--all`)
-
 ## Options:
 
 `--all`: Lints the entire codebase (not compatible with `--staged` and with the
