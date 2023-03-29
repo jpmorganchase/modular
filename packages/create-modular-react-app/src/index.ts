@@ -129,7 +129,7 @@ export default async function createModularApp(argv: {
       start: 'modular start',
       build: 'modular build',
       test: 'modular test',
-      lint: 'eslint . --ext .js,.ts,.tsx',
+      lint: 'modular lint',
       prettier: 'prettier --write .',
     },
     eslintConfig: {
