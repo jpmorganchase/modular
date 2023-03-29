@@ -195,7 +195,7 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
   cleanArgv.push(...cleanRegexes);
 
   // If custom memory limit allocated
-  if (maxMemory) cleanArgv.push(`--max-old-space-size=${maxMemory}`);
+  if (maxMemory) cleanArgv.push(`--workerIdleMemoryLimit=${maxMemory}`);
 
   const jestBin = await resolveAsBin('jest-cli');
   let testBin = jestBin,
