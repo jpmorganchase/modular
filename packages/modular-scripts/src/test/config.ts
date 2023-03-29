@@ -21,6 +21,7 @@ const supportedOverrides = [
   'testRunner',
   'transformIgnorePatterns',
   'coverageProvider',
+  'workerIdleMemoryLimit',
 ];
 
 type SetUpFilesMap = {
