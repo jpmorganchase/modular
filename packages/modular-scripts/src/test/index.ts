@@ -37,7 +37,6 @@ export interface TestOptions {
   verbose: boolean;
   watch: boolean;
   watchAll: boolean;
-  maxMemory: number | undefined;
 }
 
 // via https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/scripts/test.js
@@ -76,7 +75,6 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
     env,
     reporters,
     testResultsProcessor,
-    maxMemory,
     ...jestOptions
   } = options;
 
@@ -193,9 +191,6 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
 
   // Finally add the script regexes to run
   cleanArgv.push(...cleanRegexes);
-
-  // If custom memory limit allocated
-  if (maxMemory) cleanArgv.push(`--workerIdleMemoryLimit=${maxMemory}`);
 
   const jestBin = await resolveAsBin('jest-cli');
   let testBin = jestBin,
