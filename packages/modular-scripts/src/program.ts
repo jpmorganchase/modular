@@ -183,6 +183,10 @@ program
     '--regex <regexes...>',
     'Specifies one or more test name regular expression',
   )
+  .option(
+    '--maxMemory',
+    'Specifies the max memory allocation for the test process',
+  )
   .option('--coverage', testOptions.coverage.description)
   .option('--forceExit', testOptions.forceExit.description)
   .option('--env <env>', testOptions.env.description, 'jsdom')
