@@ -127,6 +127,7 @@ async function getYarnVersion() {
     cwd: getModularRoot(),
     stdout: 'pipe',
   });
+  console.log(`Yarn version: ${version}`);
   return version;
 }
 
