@@ -14,9 +14,11 @@ if [ $YARN_VERSION == 1.22.19 ]
 then
     # Not sure why we have to set it both ways but Yarn works in mysterious unpredictable ways 
     corepack prepare yarn@1.22.19 --activate
+    yarn set version 1.22.19
     yarn config set registry http://localhost:4873/
 else
     corepack prepare yarn@3.5.0 --activate
+    yarn set version 3.5.0
     yarn config set unsafeHttpWhitelist localhost
     yarn config set npmRegistryServer http://localhost:4873/
 fi
@@ -26,6 +28,7 @@ echo $(yarn -v)
 yarn create modular-react-app test-repo --empty
 
 cd /tmp/integration-tests/test-repo/
+echo $(yarn -v)
 
 for template in "${TEMPLATES[@]}"; 
 do 
