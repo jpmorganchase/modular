@@ -749,14 +749,6 @@ describe('modular working with an esm-view', () => {
         'publicUrl: "/public/path/"',
         'externalCdnTemplate: "https://mycustomcdn.net/[name]@[version]"',
       ]);
-      // TODO: Re-add if we can't remove the public URL set in index.ts
-      // buildSampleEsmView(targetedView, tempModularRepo, {
-      //   env: {
-      //     USE_MODULAR_ESBUILD: 'true',
-      //     PUBLIC_URL: '/public/path/',
-      //     EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
-      //   },
-      // });
 
       [buildOutputJsEntrypoint, buildOutputJsEntrypointPath] =
         await getBuildOutputEntrypoint(targetedView, tempDistPath);
@@ -787,14 +779,6 @@ describe('modular working with an esm-view', () => {
         'publicUrl: "./"',
         'externalCdnTemplate: "https://mycustomcdn.net/[name]@[version]"',
       ]);
-      // TODO: Re-add if we can't remove the public URL set in index.ts
-      // buildSampleEsmView(targetedView, tempModularRepo, {
-      //   env: {
-      //     USE_MODULAR_ESBUILD: 'true',
-      //     PUBLIC_URL: './',
-      //     EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
-      //   },
-      // });
 
       [buildOutputJsEntrypoint, buildOutputJsEntrypointPath] =
         await getBuildOutputEntrypoint(targetedView, tempDistPath);
