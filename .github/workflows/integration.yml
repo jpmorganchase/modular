@@ -32,7 +32,6 @@ jobs:
         uses: actions/setup-node@v3.3.0
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'yarn'
       - name: Install Dependencies with Yarn 1
         run: yarn --frozen-lockfile
       - name: Build internal prerequisites
