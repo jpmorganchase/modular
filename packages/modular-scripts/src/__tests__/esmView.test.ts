@@ -820,13 +820,13 @@ describe('modular working with an esm-view with custom index.html', () => {
 
     await addPackageForTests(targetedView, 'esm-view');
 
-    await fs.copyFile(
-      path.join(__dirname, 'TestEsmView.test-tsx'),
-      path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
-    );
-
-    await fs.mkdir(path.join(tempPackagesPath, targetedView, 'public'));
-
+    await Promise.all([
+      fs.copyFile(
+        path.join(__dirname, 'TestEsmView.test-tsx'),
+        path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
+      ),
+      fs.mkdir(path.join(tempPackagesPath, targetedView, 'public')),
+    ]);
     await fs.copyFile(
       path.join(__dirname, 'CustomIndex-html'),
       path.join(tempPackagesPath, targetedView, 'public', 'index.html'),
