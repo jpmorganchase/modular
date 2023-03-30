@@ -38,14 +38,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
-      - name: Use Yarn version ${{ matrix.yarn-version }}
-        run: yarn set version ${{ matrix.yarn-version }}
       - name: Install Dependencies with Yarn 1
         run: yarn --frozen-lockfile
-        if: matrix.yarn-version == '1.22.19'
-      - name: Install Dependencies with Yarn 3
-        run: yarn
-        if: matrix.yarn-version == '3.5.0'
       - name: Build internal prerequisites
         run: yarn workspace @modular-scripts/workspace-resolver build
       - name: Build packages to test
@@ -58,5 +52,7 @@ jobs:
             cd ./packages/$package
             yarn publish --no-git-tag-version --no-commit-hooks --registry http://localhost:4873/ --new-version 99999.0.0
           done
+      - name: Use Yarn version ${{ matrix.yarn-version }}
+        run: yarn set version ${{ matrix.yarn-version }}
       - name: Run verdaccio integration tests
         run: ./integration-test-scripts/verdaccioTest.sh
