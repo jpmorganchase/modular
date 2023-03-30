@@ -102,12 +102,12 @@ describe('when working with a NODE_ENV app', () => {
               'node-env-app',
               'static',
               'js',
-              'main.a482480b.js',
+              'main.6f2657b7.js',
             ),
           ),
         ),
         {
-          filepath: 'main.a482480b.js',
+          filepath: 'main.6f2657b7.js',
         },
       ),
     ).toMatchSnapshot();
@@ -246,12 +246,12 @@ describe('When working with a npm scoped app', () => {
               'scoped-sample-app',
               'static',
               'js',
-              'main.b44531b6.js',
+              'main.3eba3908.js',
             ),
           ),
         ),
         {
-          filepath: 'main.b44531b6.js',
+          filepath: 'main.3eba3908.js',
         },
       ),
     ).toMatchSnapshot();
@@ -434,12 +434,12 @@ describe('when working with a non-scoped app', () => {
               'sample-app',
               'static',
               'js',
-              'main.abe6afa1.js',
+              'main.b81fd1ea.js',
             ),
           ),
         ),
         {
-          filepath: 'main.abe6afa1.js',
+          filepath: 'main.b81fd1ea.js',
         },
       ),
     ).toMatchSnapshot();
@@ -704,12 +704,12 @@ describe('When working with an app added in a custom directory', () => {
               'scoped-custom-app',
               'static',
               'js',
-              'main.fba21b67.js',
+              'main.a1b87a25.js',
             ),
           ),
         ),
         {
-          filepath: 'main.fba21b67.js',
+          filepath: 'main.a1b87a25.js',
         },
       ),
     ).toMatchSnapshot();

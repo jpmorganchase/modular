@@ -11,15 +11,15 @@ exports[`when working with a NODE_ENV app WHEN building with webpack can generat
 (self.webpackChunknode_env_app = self.webpackChunknode_env_app || []).push([
   [179],
   {
-    908: () => {
+    560: () => {
       console.log("production");
     },
   },
   (e) => {
     var n;
-    (n = 908), e((e.s = n));
+    (n = 560), e((e.s = n));
   },
 ]);
-//# sourceMappingURL=main.a482480b.js.map
+//# sourceMappingURL=main.6f2657b7.js.map
 "
 `;
