@@ -1,6 +1,5 @@
 # Modular Verdaccio Config for CI
 
-
 storage: ./storage
 plugins: ./plugins
 
@@ -14,7 +13,7 @@ auth:
 # Back Verdaccio onto Artifactory instead of NPM
 uplinks:
   npmjs:
-    url: https://artifacts.jpmchase.net/artifactory/api/npm/npm
+    url: https://registry.yarnpkg.com
 
 packages:
   '**':
@@ -30,8 +29,7 @@ middlewares:
   audit:
     enabled: false
 
-logs:
-  { type: stdout, format: pretty, level: http }
+logs: { type: stdout, format: pretty, level: http }
 
 i18n:
   web: en-US

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+yarn config set //localhost:4873/:_authToken faketoken
+
 PACKAGES=("modular-scripts" "create-modular-react-app" "eslint-config-modular-app" "modular-template-app" "modular-template-esm-view" "modular-template-package" "modular-template-source" "modular-template-view")
 for package in "${PACKAGES[@]}";
 do 
