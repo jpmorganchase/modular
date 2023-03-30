@@ -4,7 +4,9 @@
 # All templates to test except app which is already installed
 TEMPLATES=("app" "esm-view" "package" "view" "source")
 
-cd /tmp
+rm -r /tmp/integration-tests/
+mkdir /tmp/integration-tests/
+cd /tmp/integration-tests/
 
 YARN_VERSION=$(yarn -v)
 
@@ -12,7 +14,7 @@ YARN_VERSION=$(yarn -v)
 echo yarn version $YARN_VERSION
 
 # Set registry with yarn version specific command
-if [ $YARN_VERSION -eq 1.22.19 ]
+if [ $YARN_VERSION == 1.22.19 ]
 then
     yarn config set registry http://localhost:4873/
 else
@@ -24,7 +26,7 @@ fi
 
 yarn create modular-react-app test-repo --empty
 
-cd /tmp/test-repo
+cd /tmp/integration-tests/test-repo/
 
 for template in "${TEMPLATES[@]}"; 
 do 
