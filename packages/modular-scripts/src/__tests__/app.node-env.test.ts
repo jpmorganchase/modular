@@ -52,9 +52,9 @@ describe('when working with a NODE_ENV app', () => {
       expect(tree(path.join(modularRoot, 'dist', 'node-env-app')))
         .toMatchInlineSnapshot(`
         "node-env-app
-        ├─ asset-manifest.json #5npfrr
+        ├─ asset-manifest.json #v9meuo
         ├─ favicon.ico #6pu3rg
-        ├─ index.html #9j6678
+        ├─ index.html #1d9ei2j
         ├─ logo192.png #1nez7vk
         ├─ logo512.png #1hwqvcc
         ├─ manifest.json #19gah8o
@@ -62,8 +62,8 @@ describe('when working with a NODE_ENV app', () => {
         ├─ robots.txt #1sjb8b3
         └─ static
            └─ js
-              ├─ main.a482480b.js #1xwb1v
-              ├─ main.a482480b.js.map #4bcy8y
+              ├─ main.6f2657b7.js #14cwcdk
+              ├─ main.6f2657b7.js.map #1snt4em
               ├─ runtime-main.97707f9d.js #15lezt9
               └─ runtime-main.97707f9d.js.map #1qz5n9i"
       `);
