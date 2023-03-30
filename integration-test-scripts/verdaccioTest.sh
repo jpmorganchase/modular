@@ -8,17 +8,18 @@ rm -r /tmp/integration-tests/
 mkdir /tmp/integration-tests/
 cd /tmp/integration-tests/
 
-YARN_VERSION=$(yarn -v)
-
 #Remove - just debug
 echo yarn version $YARN_VERSION
 
 # Set registry with yarn version specific command
 if [ $YARN_VERSION == 1.22.19 ]
 then
+    # Not sure why we have to set it both ways but Yarn works in mysterious unpredictable ways 
+    corepack prepare yarn@1.22.19 --activate
+    yarn set version 1.22.19
     yarn config set registry http://localhost:4873/
 else
-    # Not sure why we have to set it again but it won't use it otherwise 
+    corepack prepare yarn@3.5.0 --activate
     yarn set version 3.5.0
     yarn config set unsafeHttpWhitelist localhost
     yarn config set npmRegistryServer http://localhost:4873/
