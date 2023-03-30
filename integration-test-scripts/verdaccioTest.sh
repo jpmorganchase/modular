@@ -3,7 +3,7 @@
 
 YARN_VERSION=$(yarn -v | cut -d "." -f1)
 # All templates to test except app which is already installed
-TEMPLATES=[app, esm-view, package, view, source]
+TEMPLATES=("app" "esm-view" "package" "view" "source")
 
 cd /tmp
 
@@ -17,9 +17,10 @@ fi
 
 yarn create modular-react-app test-repo --empty
 
-cd ./test-repo
+cd /tmp/test-repo
 
 for template in $TEMPLATES; do 
+    echo templates
     yarn modular add $template --template $template
     yarn modular test $template
     yarn modular build $template
