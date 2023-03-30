@@ -19,11 +19,6 @@ jobs:
       MODULAR_LOGGER_DEBUG: true
       GIT_AUTHOR_NAME: 'Modular Tests'
       GIT_AUTHOR_EMAIL: 'tests@modular.js.org'
-      PACKAGES:
-        ("modular-scripts" "create-modular-react-app"
-        "eslint-config-modular-app" "modular-template-app"
-        "modular-template-esm-view" "modular-template-package"
-        "modular-template-source" "modular-template-view")
 
     strategy:
       fail-fast: false
@@ -47,11 +42,7 @@ jobs:
       - name: Setup Verdaccio
         run: bash ./integration-test-scripts/setupVerdaccio.sh
       - name: Publish packages to verdaccio
-        run: |
-          for package in $PACKAGES; do 
-            cd ./packages/$package
-            yarn publish --no-git-tag-version --no-commit-hooks --registry http://localhost:4873/ --new-version 99999.0.0
-          done
+        run: bash ./integration-test-scripts/publishVerdaccio.sh
       - name: Use Yarn version ${{ matrix.yarn-version }}
         run: yarn set version ${{ matrix.yarn-version }}
       - name: Run verdaccio integration tests
