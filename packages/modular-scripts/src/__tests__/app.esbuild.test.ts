@@ -108,7 +108,7 @@ describe('when working with an app', () => {
               'sample-esbuild-app',
               'static',
               'js',
-              'index-QBVJFCSN.js',
+              'index-TF6XLTWF.js',
             ),
           ),
         ),
@@ -120,7 +120,7 @@ describe('when working with an app', () => {
   });
 
   it('can generate a index.js.map', () => {
-    expect(readSourceMap('static/js/index-QBVJFCSN.js.map')).toMatchSnapshot();
+    expect(readSourceMap('static/js/index-TF6XLTWF.js.map')).toMatchSnapshot();
   });
 
   it('can generate a index.css.map', () => {
