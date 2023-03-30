@@ -7,11 +7,15 @@ TEMPLATES=("app" "esm-view" "package" "view" "source")
 
 cd /tmp
 
+#Remove - just debug
+echo $YARN_VERSION
+
 # Set registry with yarn version specific command
 if [ $YARN_VERSION -eq '1' ]
 then
     yarn config set registry http://localhost:4873/
 else
+    corepack prepare --activate yarn@3.5.0
     yarn config set npmRegistryServer http://localhost:4873/
 fi
 
