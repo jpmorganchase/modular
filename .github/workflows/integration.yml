@@ -1,0 +1,68 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Integration
+
+on:
+  push:
+    branches: [main, 'release/**', 'feature/**']
+  pull_request:
+    branches: [main, 'release/**', 'feature/**']
+
+jobs:
+  Test:
+    name:
+      ${{ matrix.os }} (${{ matrix.node-version }} | Yarn ${{
+      matrix.yarn-version }})
+    runs-on: ${{ matrix.os }}
+    env:
+      MODULAR_LOGGER_DEBUG: true
+      GIT_AUTHOR_NAME: 'Modular Tests'
+      GIT_AUTHOR_EMAIL: 'tests@modular.js.org'
+      PACKAGES:
+        [
+          modular-scripts,
+          create-modular-react-app,
+          eslint-config-modular-app,
+          modular-template-app,
+          modular-template-esm-view,
+          modular-template-package,
+          modular-template-source,
+          modular-template-view,
+        ]
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        node-version: ['14.18.0', '16.x', '18.x']
+        yarn-version: ['1.22.19', '3.5.0']
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3.3.0
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+      - name: Use Yarn version ${{ matrix.yarn-version }}
+        run: yarn set version ${{ matrix.yarn-version }}
+      - name: Install Dependencies with Yarn 1
+        run: yarn --frozen-lockfile
+        if: matrix.yarn-version == '1.22.19'
+      - name: Install Dependencies with Yarn 3
+        run: yarn
+        if: matrix.yarn-version == '3.5.0'
+      - name: Build internal prerequisites
+        run: yarn workspace @modular-scripts/workspace-resolver build
+      - name: Build packages to test
+        run: yarn modular build $PACKAGES
+      - name: Setup Verdaccio
+        run: ./integration-test-scripts/setupVerdaccio.sh
+      - name: Publish packages to verdaccio
+        run: |
+          for package in $PACKAGES; do 
+            cd ./packages/$package
+            yarn publish --no-git-tag-version --no-commit-hooks --registry http://localhost:4873/ --new-version 99999.0.0
+          done
+      - name: Run verdaccio integration tests
+        run: ./integration-test-scripts/verdaccioTest.sh
