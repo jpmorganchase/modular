@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-verdaccio
+verdaccio --config ./integration-test-scripts/verdaccio-config.yaml

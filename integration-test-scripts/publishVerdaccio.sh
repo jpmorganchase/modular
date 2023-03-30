@@ -5,6 +5,6 @@ for package in "${PACKAGES[@]}";
 do 
     echo $package
     cd ./packages/$package
-    yarn publish --no-git-tag-version --no-commit-hooks --registry http://localhost:4873/ --new-version 999.0.0
+    yarn publish --no-git-tag-version --no-commit-hooks --non-interactive --registry http://localhost:4873/ --new-version 999.0.0
     cd ../../
 done

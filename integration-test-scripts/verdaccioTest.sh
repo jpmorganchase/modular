@@ -26,16 +26,15 @@ fi
 # Clean mess created by yarn set version
 rm -r ./*
 
-echo $(yarn -v)
+echo Testing with Yarn $(yarn -v)
 
 yarn create modular-react-app test-repo --empty
 
 cd /tmp/integration-tests/test-repo/
-echo $(yarn -v)
 
 for template in "${TEMPLATES[@]}"; 
 do 
-    echo template
+    echo testing $template
     yarn modular add $template --template $template
     yarn modular test $template
     yarn modular build $template

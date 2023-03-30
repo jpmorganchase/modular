@@ -1,0 +1,37 @@
+# Modular Verdaccio Config for CI
+
+
+storage: ./storage
+plugins: ./plugins
+
+web:
+  title: Verdaccio
+
+auth:
+  htpasswd:
+    file: ./htpasswd
+
+# Back Verdaccio onto Artifactory instead of NPM
+uplinks:
+  npmjs:
+    url: https://artifacts.jpmchase.net/artifactory/api/npm/npm
+
+packages:
+  '**':
+    access: $all
+    publish: $all
+    unpublish: $all
+    proxy: npmjs
+
+server:
+  keepAliveTimeout: 60
+
+middlewares:
+  audit:
+    enabled: false
+
+logs:
+  { type: stdout, format: pretty, level: http }
+
+i18n:
+  web: en-US
