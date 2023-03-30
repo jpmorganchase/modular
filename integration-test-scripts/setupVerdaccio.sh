@@ -6,7 +6,7 @@ yarn global add forever
 
 # Start Verdaccio, via `forever`
 # This effectively daemonizes the running of verdaccio (i.e. makes it run in the background)
-forever start -c "sh" verdaccio
+forever start -c "sh" ./integration-test-scripts/startVerdaccio.sh
 
 # Add a new user to the Verdaccio registry.
 # This is required to perform `npm publish`.
