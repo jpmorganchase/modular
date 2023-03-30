@@ -8,7 +8,7 @@ TEMPLATES=("app" "esm-view" "package" "view" "source")
 cd /tmp
 
 # Set registry with yarn version specific command
-if [ $YARN_VERSION -eq '1']
+if [ $YARN_VERSION -eq '1' ]
 then
     yarn config set registry http://localhost:4873/
 else
