@@ -47,6 +47,7 @@ async function getYarnVersion() {
   const { stdout: version } = await execa('yarnpkg', ['--version'], {
     stdout: 'pipe',
   });
+  console.log(`Yarn version: ${version}`);
   return version;
 }
 

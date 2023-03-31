@@ -127,7 +127,6 @@ async function getYarnVersion() {
     cwd: getModularRoot(),
     stdout: 'pipe',
   });
-  logger.log(`Yarn version: ${version}`);
   return version;
 }
 
@@ -172,8 +171,6 @@ async function addPackage({
       `Installing template package ${templateName} from registry, this may take a moment...`,
     );
     const yarnAddArgs = ['add', templateName];
-
-    logger.log('Yarn version: ', await getYarnVersion());
 
     if (isYarnV1) {
       yarnAddArgs.push('--prefer-offline', '-W');

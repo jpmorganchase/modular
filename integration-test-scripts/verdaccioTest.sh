@@ -10,7 +10,7 @@ cd /tmp/integration-tests/
 #Remove - just debug
 
 # Set registry with yarn version specific command
-if [ $YARN_VERSION == 1.22.19 ]
+if [[ $YARN_VERSION == 1.22.19 ]]
 then
     # Not sure why we have to set it both ways but Yarn works in mysterious unpredictable ways 
     corepack prepare yarn@1.22.19 --activate
@@ -23,11 +23,11 @@ else
     yarn config set npmRegistryServer http://localhost:4873/
 fi
 
+
 # Clean mess created by yarn set version
 rm -r ./*
 
 echo Testing with Yarn $(yarn -v)
-
 yarn create modular-react-app test-repo --empty
 
 cd /tmp/integration-tests/test-repo/
