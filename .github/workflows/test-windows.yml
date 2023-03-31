@@ -11,9 +11,7 @@ on:
 
 jobs:
   Test:
-    name:
-      ${{ matrix.os }} (${{ matrix.node-version }} | Yarn ${{
-      matrix.yarn-version }})
+    name: ${{ matrix.os }} (${{ matrix.node-version }})
     runs-on: ${{ matrix.os }}
     env:
       MODULAR_LOGGER_DEBUG: true
@@ -23,7 +21,6 @@ jobs:
       matrix:
         os: [windows-latest]
         node-version: ['14.18.0', '16.x', '18.x']
-        yarn-version: ['1.22.19', '3.5.0']
 
     steps:
       - uses: actions/checkout@v3
@@ -32,8 +29,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
-      - name: Use Yarn version ${{ matrix.yarn-version }}
-        run: corepack prepare --activate yarn@${{ matrix.yarn-version }}
       - name: Install Dependencies
         run: yarn --frozen-lockfile
       - name: 'Build internal prerequisites'
