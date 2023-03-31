@@ -7,8 +7,6 @@ TEMPLATES=("app" "esm-view" "package" "view" "source")
 mkdir /tmp/integration-tests/
 cd /tmp/integration-tests/
 
-#Remove - just debug
-
 # Set registry with yarn version specific command
 if [[ $YARN_VERSION == 1.22.19 ]]
 then
@@ -22,7 +20,6 @@ else
     yarn config set unsafeHttpWhitelist localhost
     yarn config set npmRegistryServer http://localhost:4873/
 fi
-
 
 # Clean mess created by yarn set version
 rm -r ./*

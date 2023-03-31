@@ -7,3 +7,5 @@ yarn global add forever
 # Start Verdaccio, via `forever`
 # This effectively daemonizes the running of verdaccio (i.e. makes it run in the background)
 forever start -c "sh" ./integration-test-scripts/startVerdaccio.sh
+
+npm ping --registry http://localhost:4873/
