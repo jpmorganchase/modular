@@ -299,13 +299,13 @@ describe('modular-scripts', () => {
         ├─ dist-cjs
         │  ├─ index.js #p1m6x9
         │  ├─ index.js.map #16jes1h
-        │  ├─ index2.js #dbk75e
-        │  └─ index2.js.map #1mldv0
+        │  ├─ index2.js #ut2sl0
+        │  └─ index2.js.map #odecj1
         ├─ dist-es
         │  ├─ index.js #tcl83f
         │  ├─ index.js.map #yz1h1d
-        │  ├─ index2.js #urz4k4
-        │  └─ index2.js.map #1p2gdzx
+        │  ├─ index2.js #1yfevcg
+        │  └─ index2.js.map #1nllcqu
         ├─ dist-types
         │  └─ index.d.ts #obuyms
         └─ package.json"
