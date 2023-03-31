@@ -77,8 +77,14 @@ export default async function createModularApp(argv: {
   }
 
   const yarnVersion = await getYarnVersion();
+  console.log(`Yarn version as identified by modular: ${yarnVersion}`);
   const isYarnV1 = yarnVersion.startsWith('1.');
   const isYarnV2 = yarnVersion.startsWith('2.');
+  console.log(`is v1: `, isYarnV1);
+
+  if (!isYarnV1) {
+    console.error('TEST');
+  }
 
   if (isYarnV2) {
     console.error(
