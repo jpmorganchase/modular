@@ -47,7 +47,6 @@ async function getYarnVersion() {
   const { stdout: version } = await execa('yarnpkg', ['--version'], {
     stdout: 'pipe',
   });
-  console.log(`Yarn version: ${version}`);
   return version;
 }
 
@@ -77,10 +76,8 @@ export default async function createModularApp(argv: {
   }
 
   const yarnVersion = await getYarnVersion();
-  console.log(`Yarn version as identified by modular: ${yarnVersion}`);
-  const isYarnV1 = yarnVersion.startsWith('1.');
+  let isYarnV1 = yarnVersion.startsWith('1.');
   const isYarnV2 = yarnVersion.startsWith('2.');
-  console.log(`is v1: `, isYarnV1);
 
   if (!isYarnV1) {
     console.error('TEST');
@@ -92,14 +89,6 @@ export default async function createModularApp(argv: {
     );
     throw new Error(`Yarn v2 used`);
   }
-
-  const preferOfflineArg = argv.preferOffline
-    ? isYarnV1
-      ? ['--prefer-offline']
-      : ['--cached']
-    : [];
-  const verboseArgs = argv.verbose ? (isYarnV1 ? ['--verbose'] : []) : [];
-  const yarn1SpecifcArgs = isYarnV1 ? ['-W'] : [];
 
   const newModularRoot = path.isAbsolute(argv.name)
     ? argv.name
@@ -123,8 +112,31 @@ export default async function createModularApp(argv: {
       'nodeLinker: node-modules',
     );
 
-  await exec('yarnpkg', ['init', '-y'], newModularRoot);
+  const initResult = await exec('yarnpkg', ['init', '-y'], newModularRoot);
 
+  // Sometimes getYarnVersion fails to correctly identify yarn version. this is an attempt to catch that and course correct
+  if (
+    initResult.stdout.includes('yarn@3') ||
+    initResult.stdout.includes('yarn@4')
+  ) {
+    isYarnV1 = false;
+    await fs.writeFile(
+      path.join(newModularRoot, '.yarnrc.yml'),
+      'nodeLinker: node-modules',
+    );
+  } else if (initResult.stdout.includes('yarn@2')) {
+    console.error(
+      'Yarn v2 is not supported by Modular (See https://modular.js.org/compatibility/). Please upgrade to Yarn v3+ or Classic Yarn to use Modular.',
+    );
+    throw new Error(`Yarn v2 used`);
+  }
+  const preferOfflineArg = argv.preferOffline
+    ? isYarnV1
+      ? ['--prefer-offline']
+      : ['--cached']
+    : [];
+  const verboseArgs = argv.verbose ? (isYarnV1 ? ['--verbose'] : []) : [];
+  const yarn1SpecifcArgs = isYarnV1 ? ['-W'] : [];
   fs.writeJsonSync(projectPackageJsonPath, {
     ...fs.readJsonSync(projectPackageJsonPath),
     private: true,
