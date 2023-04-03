@@ -110,9 +110,7 @@ export default async function createModularApp(argv: {
 
   await exec('yarnpkg', ['init', '-y'], newModularRoot);
 
-  const packageJson = (
-    await fs.readFile(path.join(newModularRoot, 'package.json'))
-  ).toString();
+  const packageJson = (await fs.readFile(projectPackageJsonPath)).toString();
 
   // Sometimes getYarnVersion fails to correctly identify yarn version. this is an attempt to catch that and course correct
   if (packageJson.includes('yarn@3') || packageJson.includes('yarn@4')) {
