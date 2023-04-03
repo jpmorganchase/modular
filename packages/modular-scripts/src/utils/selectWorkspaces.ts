@@ -61,6 +61,14 @@ export async function selectWorkspaces(
 export async function selectBuildableWorkspaces(
   options: SelectBuildableOptions,
 ): Promise<string[]> {
+  return (await selectBuildableSubsets(options))
+    .sort((a, b) => b[1] - a[1])
+    .map(([packageName]) => packageName);
+}
+
+export async function selectBuildableSubsets(
+  options: SelectBuildableOptions,
+): Promise<[string, number][]> {
   const { ancestors, descendants, dangerouslyIgnoreCircularDependencies } =
     options;
   const {
@@ -113,12 +121,10 @@ export async function selectBuildableWorkspaces(
 
   return (
     targetEntriesWithOrder
-      .sort((a, b) => b[1] - a[1])
-      .map(([packageName]) => packageName)
       // Filter out descendants and ancestors if we don't explicitly need them.
       // This allows us to get the correct dependency order even if we restrict the scope (for example, by explicit user input).
       .filter(
-        (packageName) =>
+        ([packageName]) =>
           (descendants && descendantsSet.has(packageName)) ||
           (ancestors && ancestorsSet.has(packageName)) ||
           targetsToBuild.includes(packageName),

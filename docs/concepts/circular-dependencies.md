@@ -58,10 +58,10 @@ With `--dangerouslyIgnoreCircularDependencies` the build warns but succeeds:
 [modular] You chose to dangerously ignore cycles in the dependency graph. Builds will still fail if a cycle is found involving two or more buildable packages. Please note that the use of this flag is not recommended. It's always possible to break a cyclic dependency by creating an additional dependency that contains the common code.
 [modular] $ b: generating .d.ts files
 [modular] $ b: building b...
-[modular] $ b: built b in /Users/N761472/dev/rig/ghost-building/dist/b
+[modular] $ b: built b in /Users/modular/dev/rig/ghost-building/dist/b
 [modular] $ d: generating .d.ts files
 [modular] $ d: building d...
-[modular] $ d: built d in /Users/N761472/dev/rig/ghost-building/dist/d
+[modular] $ d: built d in /Users/modular/dev/rig/ghost-building/dist/d
 ```
 
 ### Cycle not disappearing when `source` types are removed from the dependency graph

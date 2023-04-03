@@ -310,4 +310,48 @@ program
     await serve(packageName, parseInt(options.port, 10));
   });
 
+program
+  .command('select [packages...]')
+  .description('TODO')
+  .option('--verbose', 'Run commands with --verbose set') // TODO: is this possible?
+  .option(
+    '--buildable',
+    'Select packages and output them in build order. Default is false',
+    false,
+  )
+  .option(
+    '--changed',
+    'Select only packages that contains files that have changed compared to the branch specified in --compareBranch. Default is false.',
+    false,
+  )
+  .option(
+    '--descendants',
+    'Additionally select packages that the specified packages directly or indirectly depend on. Default is false.',
+    false,
+  )
+  .option(
+    '--ancestors',
+    'Additionally select packages that directly or indirectly depend on the specified packages. Default is false.',
+    false,
+  )
+  .option(
+    '--compareBranch <branch>',
+    "Specifies the branch to use with the --changed flag. If not specified, Modular will use the repo's default branch",
+  )
+  .action(
+    async (
+      selectedPackages: string[],
+      options: {
+        changed: boolean;
+        compareBranch?: string;
+        ancestors: boolean;
+        descendants: boolean;
+        buildable: boolean;
+      },
+    ) => {
+      const { default: select } = await import('./select');
+      await select({ ...options, selectedPackages });
+    },
+  );
+
 export { program };
