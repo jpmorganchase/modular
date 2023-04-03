@@ -5,7 +5,9 @@
 TEMPLATES=("app" "esm-view" "package" "view" "source")
 
 mkdir /tmp/integration-tests/
-cd /tmp/integration-tests/
+mkdir /tmp/integration-tests/test-repo
+cd /tmp/integration-tests/test-repo
+
 
 # Set registry with yarn version specific command
 if [[ $YARN_VERSION == 1.22.19 ]]
@@ -21,10 +23,10 @@ else
     yarn config set npmRegistryServer http://localhost:4873/
 fi
 
-# Clean mess created by yarn set version
-rm -r ./*
+cd ../
 
 echo Testing with Yarn $(yarn -v)
+
 yarn create modular-react-app test-repo --empty
 
 cd /tmp/integration-tests/test-repo/
