@@ -79,10 +79,6 @@ export default async function createModularApp(argv: {
   let isYarnV1 = yarnVersion.startsWith('1.');
   const isYarnV2 = yarnVersion.startsWith('2.');
 
-  if (!isYarnV1) {
-    console.error('TEST');
-  }
-
   if (isYarnV2) {
     console.error(
       'Yarn v2 is not supported by Modular (See https://modular.js.org/compatibility/). Please upgrade to Yarn v3+ or Classic Yarn to use Modular.',
@@ -112,19 +108,20 @@ export default async function createModularApp(argv: {
       'nodeLinker: node-modules',
     );
 
-  const initResult = await exec('yarnpkg', ['init', '-y'], newModularRoot);
+  await exec('yarnpkg', ['init', '-y'], newModularRoot);
+
+  const packageJson = (
+    await fs.readFile(path.join(newModularRoot, 'package.json'))
+  ).toString();
 
   // Sometimes getYarnVersion fails to correctly identify yarn version. this is an attempt to catch that and course correct
-  if (
-    initResult.stdout.includes('yarn@3') ||
-    initResult.stdout.includes('yarn@4')
-  ) {
+  if (packageJson.includes('yarn@3') || packageJson.includes('yarn@4')) {
     isYarnV1 = false;
     await fs.writeFile(
       path.join(newModularRoot, '.yarnrc.yml'),
       'nodeLinker: node-modules',
     );
-  } else if (initResult.stdout.includes('yarn@2')) {
+  } else if (packageJson.includes('yarn@2')) {
     console.error(
       'Yarn v2 is not supported by Modular (See https://modular.js.org/compatibility/). Please upgrade to Yarn v3+ or Classic Yarn to use Modular.',
     );
