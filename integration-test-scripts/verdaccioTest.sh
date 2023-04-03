@@ -21,7 +21,15 @@ else
     yarn set version 3.5.0
     yarn config set unsafeHttpWhitelist localhost
     yarn config set npmRegistryServer http://localhost:4873/
+    cd ../
+    corepack prepare yarn@3.5.0 --activate
+    yarn set version 3.5.0
+    yarn config set unsafeHttpWhitelist localhost
+    yarn config set npmRegistryServer http://localhost:4873/
+    rm ./package.json
+    cd /tmp/integration-tests/test-repo
 fi
+
 
 cd ../
 

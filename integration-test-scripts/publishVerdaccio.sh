@@ -16,8 +16,6 @@ TOKEN=$(node -pe 'JSON.parse(process.argv[1]).token' "$USER_RESP")
 # Install the token for the Verdaccio registry only
 npm set //localhost:4873/:_authToken $TOKEN
 
-yarn config list
-
 PACKAGES=("modular-scripts" "create-modular-react-app" "eslint-config-modular-app" "modular-template-app" "modular-template-esm-view" "modular-template-package" "modular-template-source" "modular-template-view")
 for package in "${PACKAGES[@]}";
 do 
