@@ -46,7 +46,7 @@ export async function selectWorkspaces(
 }
 
 /**
- * Select buildable target packages in workspaces in build order, optionally including changed, ancestors and descendant packages
+ * Select buildable target packages in build order, optionally including changed, ancestors and descendant packages. The result is returned as an array of package names.
  *
  * Please note that the build order algorithm can't calculate build order if there's a cycle in the dependency graph,
  * so circular dependencies will throw unless they only involve packages that don't get built (i.e. "source" `modular.type`s).
@@ -61,14 +61,26 @@ export async function selectWorkspaces(
 export async function selectBuildableWorkspaces(
   options: SelectBuildableOptions,
 ): Promise<string[]> {
-  return (await selectBuildableSubsets(options))
-    .sort((a, b) => b[1] - a[1])
-    .map(([packageName]) => packageName);
+  // Flatten the subarrays (that signal parallelism) to make an ordered serial sequence
+  return (await selectParallellyBuildableWorkspaces(options)).flat();
 }
 
-export async function selectBuildableSubsets(
+/**
+ * Select buildable target packages in build order, optionally including changed, ancestors and descendant packages. The result is returned as a 1-level nested array of package names, where sub-arrays can be built parallely
+ *
+ * Please note that the build order algorithm can't calculate build order if there's a cycle in the dependency graph,
+ * so circular dependencies will throw unless they only involve packages that don't get built (i.e. "source" `modular.type`s).
+ * Please also note that circular dependencies can always be fixed by creating an additional package that contains the common parts,
+ * and that they are considered a code smell + a source of many issues (e.g. https://nodejs.org/api/modules.html#modules_cycles)
+ * and they make your code fragile towards refactoring, so please don't introduce them in your monorepository.
+ *
+ * @param  {SelectBuildableOptions} options The target options to configure selection
+ * @return {Promise<string[][]>} A nested (1 level depth) list of selected buildable package names, in build order. Nested subarrays can be built parallely.
+ */
+
+export async function selectParallellyBuildableWorkspaces(
   options: SelectBuildableOptions,
-): Promise<[string, number][]> {
+): Promise<string[][]> {
   const { ancestors, descendants, dangerouslyIgnoreCircularDependencies } =
     options;
   const {
@@ -129,12 +141,20 @@ export async function selectBuildableSubsets(
           (ancestors && ancestorsSet.has(packageName)) ||
           targetsToBuild.includes(packageName),
       )
+      // The output is a sequence of [packageName, level] - transform it into a sequence of [[level_0_pkg, ...], [level_1_pkg, ...], ...]
+      .reduce<string[][]>((acc, [pkg, level]) => {
+        acc[level] ? acc[level].push(pkg) : (acc[level] = [pkg]);
+        return acc;
+      }, [])
+      // Reverse in actual build order
+      .reverse()
   );
 }
 
 /**
- * Common data structures to calculate package selection
+ * Common data structures / functions to calculate package selection
  */
+
 async function computeWorkspaceSelection({
   targets,
   changed,

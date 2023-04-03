@@ -1,5 +1,5 @@
 import {
-  selectBuildableSubsets,
+  selectParallellyBuildableWorkspaces,
   selectWorkspaces,
 } from './utils/selectWorkspaces';
 import actionPreflightCheck from './utils/actionPreflightCheck';
@@ -30,7 +30,7 @@ async function select({
       : selectedPackages;
 
   const selected = buildable
-    ? await selectBuildableSubsets({
+    ? await selectParallellyBuildableWorkspaces({
         targets,
         changed,
         compareBranch,
