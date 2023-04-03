@@ -21,6 +21,9 @@ else
     yarn config set npmRegistryServer http://localhost:4873/
 fi
 
+# Clean mess created by yarn set version
+rm -r ./*
+
 echo Testing with Yarn $(yarn -v)
 yarn create modular-react-app test-repo --empty
 
