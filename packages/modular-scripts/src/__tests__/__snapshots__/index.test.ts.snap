@@ -3,7 +3,7 @@
 exports[`modular-scripts WHEN building a view THEN outputs the correct output cjs  index2.js map file 1`] = `
 {
   "file": "index2.js",
-  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;AAEA,SAAwB,UAA0B,GAAA;AAChD,EAAA,uBAAQA,gBAAA,CAAA,aAAA,CAAA,KAAA,EAAA;AAAA,IAAI,aAAY,EAAA,WAAA;AAAA,GAAA,EAAY,wBAAsB,CAAA,CAAA;AAC5D;;;;",
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;AAEA,SAAwB,UAA0B,GAAA;AAChD,EAAA,uBAAQA,gBAAA,CAAA,aAAA,CAAA,KAAA,EAAA,EAAI,aAAY,EAAA,WAAA,EAAA,EAAY,wBAAsB,CAAA,CAAA;AAC5D;;;;",
   "names": [
     "React",
   ],
@@ -59,9 +59,7 @@ function _interopNamespace(e) {
 var React__namespace = /*#__PURE__*/_interopNamespace(React);
 
 function SampleView() {
-  return /* @__PURE__ */ React__namespace.createElement("div", {
-    "data-testid": "test-this"
-  }, "this is a modular view");
+  return /* @__PURE__ */ React__namespace.createElement("div", { "data-testid": "test-this" }, "this is a modular view");
 }
 
 module.exports = SampleView;

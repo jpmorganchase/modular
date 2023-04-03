@@ -64,7 +64,8 @@ class DevServer {
 
   private metafile!: esbuild.Metafile;
 
-  private esbuild!: esbuild.BuildResult;
+  private esbuildContext?: esbuild.BuildContext;
+  private esbuildResult?: esbuild.BuildResult;
   private runtimeEsbuild!: esbuild.BuildResult;
 
   private host: string;
@@ -216,7 +217,6 @@ class DevServer {
   }
 
   shutdown = () => {
-    this.esbuild?.stop?.();
     this.ws?.getWss().close();
     this.server?.close();
     process.nextTick(() => {
@@ -224,6 +224,7 @@ class DevServer {
         socket.terminate();
       });
     });
+    void this.esbuildContext?.dispose();
   };
 
   private hostRuntime = memoize(async () => {
@@ -293,6 +294,12 @@ class DevServer {
     this.firstCompilePromiseResolve?.();
   };
 
+  private onRebuildCallback = (result: esbuild.BuildResult) => {
+    if (result) {
+      this.esbuildResult = result;
+    }
+  };
+
   private watchEsbuild = async () => {
     const config = this.baseEsbuildConfig();
 
@@ -304,19 +311,15 @@ class DevServer {
       );
     }
     config.plugins?.push(metafileReporterPlugin(this.metafileCallback));
-    config.plugins?.push(firstCompilePlugin(this.firstCompilePluginCallback));
+    config.plugins?.push(
+      firstCompilePlugin(
+        this.firstCompilePluginCallback,
+        this.onRebuildCallback,
+      ),
+    );
 
-    this.esbuild = await esbuild.build({
-      ...config,
-      incremental: true,
-      watch: {
-        onRebuild: (_, result) => {
-          if (result) {
-            this.esbuild = result;
-          }
-        },
-      },
-    });
+    this.esbuildContext = await esbuild.context(config);
+    void this.esbuildContext.watch();
   };
 
   private startEsbuildServer: () => Promise<void> = async () => {
@@ -398,13 +401,15 @@ class DevServer {
     // wait until the first watch compile is complete
     await this.firstCompilePromise;
 
-    this.serveEsbuild(
-      this.baseEsbuildConfig().outdir as string,
-      req.url as string,
-      this.esbuild,
-      res,
-      next,
-    );
+    if (this.esbuildResult) {
+      this.serveEsbuild(
+        this.baseEsbuildConfig().outdir as string,
+        req.url as string,
+        this.esbuildResult,
+        res,
+        next,
+      );
+    }
   };
 
   handleRuntimeAsset: express.RequestHandler = (
