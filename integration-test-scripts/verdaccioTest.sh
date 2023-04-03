@@ -27,7 +27,7 @@ cd ../
 
 echo Testing with Yarn $(yarn -v)
 
-yarn create modular-react-app test-repo --empty
+yarn create modular-react-app@99.0.0 test-repo --registry http://localhost:4873/  --empty
 
 cd /tmp/integration-tests/test-repo/
 
