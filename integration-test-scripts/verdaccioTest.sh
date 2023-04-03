@@ -27,6 +27,8 @@ cd ../
 
 echo Testing with Yarn $(yarn -v)
 
+# Check verdaccio is still reachable
+npm ping --registry http://localhost:4873/
 yarn create modular-react-app@99.0.0 test-repo --registry http://localhost:4873/  --empty
 
 cd /tmp/integration-tests/test-repo/
