@@ -47,6 +47,8 @@ else
 fi
 cd /tmp/integration-tests/test-repo/
 
+# Just for debug
+yarn add create-modular-react-app
 echo CMRA Version used: $(yarn info create-modular-react-app version)
 
 for template in "${TEMPLATES[@]}"; 
