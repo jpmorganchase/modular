@@ -31,7 +31,16 @@ else
 fi
 
 
+cd /tmp/integration-tests/
+mkdir random
+cd ./random
+
+# Ensures yarn caches the latest 
+yarn add create-modular-react-app
+echo CMRA Version used: $(yarn info create-modular-react-app version)
+
 cd ../
+
 
 echo Testing with Yarn $(yarn -v)
 
@@ -46,16 +55,6 @@ else
     REGISTRY='http://localhost:4873/' yarn create modular-react-app test-repo  --empty
 fi
 cd /tmp/integration-tests/test-repo/
-
-# Just for debug
-yarn add create-modular-react-app
-echo CMRA Version used: $(yarn info create-modular-react-app version)
-if [[ $YARN_VERSION == 1.22.19 ]]
-then
-    NPM_REGISTRY_SERVER='http://localhost:4873/' yarn create modular-react-app test-repo  --empty
-else
-    REGISTRY='http://localhost:4873/' yarn create modular-react-app test-repo  --empty
-fi
 
 for template in "${TEMPLATES[@]}"; 
 do 
