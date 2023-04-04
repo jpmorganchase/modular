@@ -33,10 +33,17 @@ else
     mkdir utility
     cd ./utility 
     yarn init -y
+    echo 'nodeLinker: node-modules' > .yarnrc.yml
     yarn add create-modular-react-app
+    yarn
 fi
 
 cd /tmp/integration-tests/
+
+echo $(ls)
+echo $(ls ./utility)
+echo $(ls ./utility/node_modules/)
+echo $(ls ./utility/node_modules/.bin/)
 
 echo Testing with Yarn $(yarn -v)
 
