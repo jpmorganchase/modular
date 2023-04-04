@@ -43,9 +43,9 @@ npm ping --registry http://localhost:4873/
 
 if [[ $YARN_VERSION == 1.22.19 ]]
 then
-    NPM_REGISTRY_SERVER='http://localhost:4873/' yarn create modular-react-app test-repo  --empty
+    NPM_REGISTRY_SERVER='http://localhost:4873/' yarn create modular-react-app test-repo  --empty --version
 else
-    REGISTRY='http://localhost:4873/' yarn create modular-react-app test-repo  --empty
+    REGISTRY='http://localhost:4873/' yarn create modular-react-app test-repo  --empty --version
 fi
 cd /tmp/integration-tests/test-repo/
 
