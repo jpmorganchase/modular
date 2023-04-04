@@ -62,6 +62,7 @@ for template in "${TEMPLATES[@]}";
 do 
     echo testing $template
     yarn modular add $template --template $template
+    yarn
     yarn modular test $template
     yarn modular build $template
     USE_MODULAR_ESBUILD=true yarn modular build $template
