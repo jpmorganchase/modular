@@ -60,6 +60,8 @@ fi
 
 cd /tmp/integration-tests/test-repo/
 
+yarn
+
 for template in "${TEMPLATES[@]}"; 
 do 
     echo testing $template
