@@ -22,16 +22,20 @@ else
     yarn config set unsafeHttpWhitelist localhost
     yarn config set npmRegistryServer http://localhost:4873/
     rm ./package.json
-    echo Testing with Yarn $(yarn -v)
     cd ../
     corepack prepare yarn@3.5.0 --activate
     yarn set version 3.5.0
     yarn config set unsafeHttpWhitelist localhost
     yarn config set npmRegistryServer http://localhost:4873/
     rm ./package.json
-    echo Testing with Yarn $(yarn -v)
+    
+    # Create command not officially supported by Yarn 3, so we get the actual package and run the script manually 
+    mkdir utility
+    cd ./utility 
+    yarn init -y
+    yarn add create-modular-react-app
+    cd ../
 fi
-
 
 cd /tmp/integration-tests/
 
@@ -43,10 +47,11 @@ npm ping --registry http://localhost:4873/
 
 if [[ $YARN_VERSION == 1.22.19 ]]
 then
-    NPM_REGISTRY_SERVER='http://localhost:4873/' yarn create modular-react-app test-repo  --empty --version
+    yarn create modular-react-app test-repo  --empty --version
 else
-    REGISTRY='http://localhost:4873/' yarn create modular-react-app test-repo  --empty --version
+    ./utility/node_modules/.bin/create-modular-react-app test-repo  --empty --version
 fi
+
 cd /tmp/integration-tests/test-repo/
 
 for template in "${TEMPLATES[@]}"; 

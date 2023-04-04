@@ -76,7 +76,7 @@ export default async function createModularApp(argv: {
   }
 
   const yarnVersion = await getYarnVersion();
-  let isYarnV1 = yarnVersion.startsWith('1.');
+  const isYarnV1 = yarnVersion.startsWith('1.');
   const isYarnV2 = yarnVersion.startsWith('2.');
 
   if (isYarnV2) {
@@ -110,21 +110,6 @@ export default async function createModularApp(argv: {
 
   await exec('yarnpkg', ['init', '-y'], newModularRoot);
 
-  const packageJson = (await fs.readFile(projectPackageJsonPath)).toString();
-
-  // Sometimes getYarnVersion fails to correctly identify yarn version. this is an attempt to catch that and course correct
-  if (packageJson.includes('yarn@3') || packageJson.includes('yarn@4')) {
-    isYarnV1 = false;
-    await fs.writeFile(
-      path.join(newModularRoot, '.yarnrc.yml'),
-      'nodeLinker: node-modules',
-    );
-  } else if (packageJson.includes('yarn@2')) {
-    console.error(
-      'Yarn v2 is not supported by Modular (See https://modular.js.org/compatibility/). Please upgrade to Yarn v3+ or Classic Yarn to use Modular.',
-    );
-    throw new Error(`Yarn v2 used`);
-  }
   const preferOfflineArg = argv.preferOffline
     ? isYarnV1
       ? ['--prefer-offline']
