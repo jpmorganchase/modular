@@ -21,27 +21,19 @@ else
     yarn set version 3.5.0
     yarn config set unsafeHttpWhitelist localhost
     yarn config set npmRegistryServer http://localhost:4873/
+    rm ./package.json
+    echo Testing with Yarn $(yarn -v)
     cd ../
     corepack prepare yarn@3.5.0 --activate
     yarn set version 3.5.0
     yarn config set unsafeHttpWhitelist localhost
     yarn config set npmRegistryServer http://localhost:4873/
     rm ./package.json
-    cd /tmp/integration-tests/test-repo
+    echo Testing with Yarn $(yarn -v)
 fi
 
 
 cd /tmp/integration-tests/
-mkdir random
-cd ./random
-
-# Ensures yarn caches the latest 
-yarn init -y
-yarn add create-modular-react-app
-echo CMRA Version used: $(yarn info create-modular-react-app version)
-
-cd ../
-
 
 echo Testing with Yarn $(yarn -v)
 
@@ -51,9 +43,9 @@ npm ping --registry http://localhost:4873/
 
 if [[ $YARN_VERSION == 1.22.19 ]]
 then
-    NPM_REGISTRY_SERVER='http://localhost:4873/' yarn create modular-react-app test-repo  --empty --version --verbose
+    NPM_REGISTRY_SERVER='http://localhost:4873/' yarn create modular-react-app test-repo  --empty
 else
-    REGISTRY='http://localhost:4873/' yarn create modular-react-app test-repo  --empty --version --verbose
+    REGISTRY='http://localhost:4873/' yarn create modular-react-app test-repo  --empty
 fi
 cd /tmp/integration-tests/test-repo/
 
