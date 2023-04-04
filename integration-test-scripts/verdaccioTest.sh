@@ -36,7 +36,7 @@ mkdir random
 cd ./random
 
 # Ensures yarn caches the latest 
-yarn init -y test
+yarn init -y
 yarn add create-modular-react-app
 echo CMRA Version used: $(yarn info create-modular-react-app version)
 
