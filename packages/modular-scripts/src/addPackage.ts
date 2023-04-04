@@ -180,8 +180,8 @@ async function addPackage({
 
     const templateInstallSubprocess = execAsync('yarnpkg', yarnAddArgs, {
       cwd: modularRoot,
-      stderr: 'inherit',
-      stdout: 'inherit',
+      stderr: process.stderr,
+      stdout: process.stdout,
     });
 
     // Remove warnings

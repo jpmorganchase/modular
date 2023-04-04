@@ -40,16 +40,10 @@ fi
 
 cd /tmp/integration-tests/
 
-echo $(ls)
-echo $(ls ./utility)
-echo $(ls ./utility/node_modules/)
-echo $(ls ./utility/node_modules/.bin/)
-
 echo Testing with Yarn $(yarn -v)
 
 # Check verdaccio is still reachable
 npm ping --registry http://localhost:4873/
-
 
 if [[ $YARN_VERSION == 1.22.19 ]]
 then
@@ -59,6 +53,8 @@ else
 fi
 
 cd /tmp/integration-tests/test-repo/
+
+yarn config set  preferAggregateCacheInfo false
 
 yarn
 
