@@ -38,6 +38,8 @@ echo Testing with Yarn $(yarn -v)
 # Check verdaccio is still reachable
 npm ping --registry http://localhost:4873/
 
+echo CMRA Version used: $(yarn info create-modular-react-app version)
+
 if [[ $YARN_VERSION == 1.22.19 ]]
 then
     NPM_REGISTRY_SERVER='http://localhost:4873/' yarn create modular-react-app test-repo  --empty
