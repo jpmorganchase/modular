@@ -4,15 +4,63 @@ import fs, { writeJSONSync } from 'fs-extra';
 import path from 'path';
 import * as tmp from 'tmp';
 import { promisify } from 'util';
-
-import getModularRoot from '../utils/getModularRoot';
-import type { ModularPackageJson } from '@modular-scripts/modular-types';
+import findUp from 'find-up';
 import { mkdirSync } from 'fs';
+
+import type { ModularPackageJson } from '@modular-scripts/modular-types';
 import type { Config } from '@jest/types';
 
 const rimraf = promisify(_rimraf);
 
-const modularRoot = getModularRoot();
+/**
+ * This is a duplicate copy of `getModularRoot`.
+ * It exists as a standalone test util so that we can mock the real `getMockRoot` in tests.
+ *
+ * A copy of the real implementation (i.e. one that returns the modular root of modular itself) is
+ * still needed in test code for things like test setup (and the other utilities in here).
+ */
+export function getRealModularRootInTest(): string {
+  function isModularRoot(packageJsonPath: string) {
+    const packageJson = fs.readJSONSync(packageJsonPath, {
+      encoding: 'utf8',
+    }) as { modular?: Record<string, unknown> };
+    return packageJson?.modular?.type === 'root';
+  }
+
+  function findModularRoot(): string | undefined {
+    try {
+      const modularRoot = findUp.sync(
+        (directory: string) => {
+          const packageJsonPath = path.join(directory, 'package.json');
+          if (
+            findUp.sync.exists(packageJsonPath) &&
+            isModularRoot(packageJsonPath)
+          ) {
+            return packageJsonPath;
+          }
+          return;
+        },
+        { type: 'file', allowSymlinks: false },
+      );
+
+      return modularRoot
+        ? path.normalize(path.dirname(modularRoot))
+        : undefined;
+    } catch (err) {
+      throw new Error(err as string);
+    }
+  }
+
+  const modularRoot = findModularRoot();
+
+  if (modularRoot === undefined) {
+    throw new Error('Could not find modular root.');
+  }
+
+  return modularRoot;
+}
+
+const modularRoot = getRealModularRootInTest();
 
 export async function cleanup(packageNames: Array<string>): Promise<void> {
   const packagesPath = path.join(modularRoot, 'packages');
@@ -252,4 +300,94 @@ export async function runYarnModular(
     cleanup: true,
     ...opts,
   });
+}
+
+export const mockPreflightImplementation = {
+  __esModule: true,
+  default: (fn: (...args: unknown[]) => Promise<void>) => {
+    return fn;
+  },
+};
+
+/**
+ * Build a specified package
+ * Use with setupMocks/Mocked getModularRoot to ensure that it looks for the package in the correct test context
+ * @param targetPackage Target package to build
+ * @param config Optional array of configuration options and their values to affect build
+ */
+export async function buildPackageForTests(
+  targetPackage: string,
+  config?: string[],
+) {
+  if (config) await writeConfig(targetPackage, config);
+  const { default: build } = await import('../build-scripts/index');
+  await build({
+    packagePaths: [targetPackage],
+    preserveModules: false,
+    private: false,
+    ancestors: false,
+    descendants: false,
+    changed: false,
+    dangerouslyIgnoreCircularDependencies: false,
+  });
+  if (config) await deleteConfig(targetPackage);
+}
+
+/**
+ * Write a modular configuration file in the temporary
+ * modular repo to configure modular command behaviour
+ * Use with setupMocks/Mocked getModularRoot to ensure that it looks for the package in the correct test context
+ * @param targetPackage name of package being configured
+ * @param config Array of configuration options and their value
+ */
+async function writeConfig(targetPackage: string, config: string[]) {
+  const { default: getWorkspaceLocation } = await import(
+    '../utils/getLocation'
+  );
+  const targetPath = await getWorkspaceLocation(targetPackage);
+  await fs.writeFile(
+    path.join(targetPath, '.modular.js'),
+    `module.exports = {\n
+      ${config.join(',\n')},\n};`,
+  );
+}
+
+/**
+ * Opposite of write config - doesn't actually delete, just overwrites with an empty config
+ * Use with setupMocks/Mocked getModularRoot to ensure that it looks for the package in the correct test context
+ * @param targetPackage name of package being configured
+ */
+async function deleteConfig(targetPackage: string) {
+  const { default: getWorkspaceLocation } = await import(
+    '../utils/getLocation'
+  );
+  const targetPath = await getWorkspaceLocation(targetPackage);
+  // Can't actually delete due to permission issues so just overwrite with empty
+  await fs.writeFile(
+    path.join(targetPath, '.modular.js'),
+    `module.exports = {};`,
+  );
+}
+
+/**
+ * Set up mocked ModularRoot and skip preflight checks so that dynamically imported code can run
+ * on the temporary modular repo provided, rather than on the current modular root
+ * @param modularRoot Path to temporary modular repo to mock getModularRoot to
+ */
+export function setupMocks(modularRoot: string) {
+  // Resets mocks and modules so that modules use updated mocked modularRoot
+  jest.resetAllMocks();
+  jest.resetModules();
+  // Mock the modular root per temporary modular repo
+  jest.doMock('../utils/getModularRoot', () => {
+    return {
+      __esModule: true,
+      default: () => modularRoot,
+    };
+  });
+  // Skip preflight in tests (faster, avoids the need to mock getModularRoot statically)
+  jest.doMock(
+    '../utils/actionPreflightCheck',
+    () => mockPreflightImplementation,
+  );
 }

@@ -13,28 +13,45 @@ const configFixtures = path.join(modularRoot, '__fixtures__', 'test-config');
 // Temporary test context paths set by createTempModularRepoWithTemplate()
 let tempModularRepo: string;
 
-describe('A simple modular repo with a .modular.js config file', () => {
+const app = 'test-app';
+const esbuildConfigFile = 'esbuild-config.js';
+const webpackConfigFile = 'webpack-config.js';
+
+describe('A modular repo with a root .modular.js config file', () => {
   beforeEach(() => {
     tempModularRepo = createModularTestContext();
-    runModularForTests(tempModularRepo, 'add test-app --unstable-type app');
+    runModularForTests(tempModularRepo, `add ${app} --unstable-type app`);
     copyFileSync(
-      path.join(configFixtures, '.modular.js'),
-      path.join(tempModularRepo, 'packages', 'test-app', '.modular.js'),
+      path.join(configFixtures, esbuildConfigFile),
+      path.join(tempModularRepo, '.modular.js'),
     );
   });
-  it('builds using esbuild as specified in config file', () => {
+  it('builds using esbuild as specified in the root config file', () => {
     const result = runModularPipeLogs(
       tempModularRepo,
-      `build test-app --verbose`,
+      `build ${app} --verbose`,
       'true',
     );
     expect(result.stdout).toContain('Building with esbuild');
     expect(result.exitCode).toBe(0);
   });
-  it('builds using webpack if the environment variable is provided as it overrides the config', () => {
+  it('builds using webpack if a package specific config file overrides the root config', () => {
+    copyFileSync(
+      path.join(configFixtures, webpackConfigFile),
+      path.join(tempModularRepo, 'packages', app, '.modular.js'),
+    );
     const result = runModularPipeLogs(
       tempModularRepo,
-      `build test-app --verbose`,
+      `build ${app} --verbose`,
+      'true',
+    );
+    expect(result.stdout).toContain('Building with Webpack');
+    expect(result.exitCode).toBe(0);
+  });
+  it('builds using webpack if an environment variable is provided as it overrides the config', () => {
+    const result = runModularPipeLogs(
+      tempModularRepo,
+      `build ${app} --verbose`,
       'true',
       {
         env: {

@@ -1,5 +1,8 @@
 import { cosmiconfigSync } from 'cosmiconfig';
 import path from 'path';
+import getModularRoot from './getModularRoot';
+import * as logger from './logger';
+const modularRoot = getModularRoot();
 
 // Where cosmiconfig can look for the configuration
 const searchPlaces = [
@@ -106,7 +109,8 @@ function searchConfig(
  * @param workspacePath Path of workspace to which configuration applies
  * @returns configured value:
  * - the override environment variable if configured
- * - the value stated in the config file if provided
+ * - the value stated in the package's config file if provided
+ * - the value stated in the root config file if provided
  * - the default value if neither environment variable nor the config file are provided
  */
 export function getConfig<T extends keyof Config>(
@@ -115,5 +119,39 @@ export function getConfig<T extends keyof Config>(
 ): Config[T] {
   const configResult = searchConfig(workspacePath);
   const configValue = configResult ? configResult.config[field] : undefined;
-  return defs[field].override ?? configValue ?? defs[field].default;
+  const rootConfigResult = searchConfig(modularRoot);
+  const rootConfigValue = rootConfigResult
+    ? rootConfigResult.config[field]
+    : undefined;
+  const returnConfigValue =
+    defs[field].override ??
+    configValue ??
+    rootConfigValue ??
+    defs[field].default;
+  if (defs[field].override !== undefined) {
+    logger.debug(
+      `${field} configured to ${JSON.stringify(
+        returnConfigValue,
+      )} by the environment variable provided`,
+    );
+  } else if (configValue !== undefined) {
+    logger.debug(
+      `${field} configured to ${JSON.stringify(
+        returnConfigValue,
+      )} through package's modular configuration at ${workspacePath}`,
+    );
+  } else if (rootConfigValue !== undefined) {
+    logger.debug(
+      `${field} configured to ${JSON.stringify(
+        returnConfigValue,
+      )} through the project's root modular configuration`,
+    );
+  } else {
+    logger.debug(
+      `Using default configuration for ${field}: ${JSON.stringify(
+        returnConfigValue,
+      )}`,
+    );
+  }
+  return returnConfigValue;
 }

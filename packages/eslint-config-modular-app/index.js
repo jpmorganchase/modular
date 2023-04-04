@@ -11,7 +11,7 @@ const WARN = 'warn';
 const OFF = 'off';
 
 module.exports = {
-  extends: ['react-app'],
+  extends: [require.resolve('./react-app')],
   parser: '@babel/eslint-parser',
   reportUnusedDisableDirectives: true,
   overrides: [

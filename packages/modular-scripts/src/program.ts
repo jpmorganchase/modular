@@ -4,13 +4,15 @@ import * as fs from 'fs-extra';
 import isCI from 'is-ci';
 import chalk from 'chalk';
 import commander, { Option } from 'commander';
+import { testOptions } from './test/jestOptions';
+import actionPreflightCheck from './utils/actionPreflightCheck';
+import * as logger from './utils/logger';
+import { validateCompareOptions } from './utils/validateOptions';
+
 import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import type { TestOptions } from './test';
 import type { LintOptions } from './lint';
-import { testOptions } from './test/jestOptions';
-
-import actionPreflightCheck from './utils/actionPreflightCheck';
-import * as logger from './utils/logger';
+import type { TypecheckOptions } from './typecheck';
 
 const program = new commander.Command('modular');
 program.version(
@@ -124,12 +126,7 @@ program
     ) => {
       const { default: build } = await import('./build-scripts');
 
-      if (options.compareBranch && !options.changed) {
-        process.stderr.write(
-          "Option --compareBranch doesn't make sense without option --changed\n",
-        );
-        process.exit(1);
-      }
+      validateCompareOptions(options.compareBranch, options.changed);
 
       if (options.dangerouslyIgnoreCircularDependencies) {
         // Warn. Users should never use this, but if they use it, they should have cycles limited to "source" packages
@@ -212,12 +209,7 @@ program
   .allowUnknownOption()
   .description('Run tests over the codebase')
   .action(async (packages: string[], options: CLITestOptions) => {
-    if (options.compareBranch && !options.changed) {
-      process.stderr.write(
-        "Option --compareBranch doesn't make sense without option --changed\n",
-      );
-      process.exit(1);
-    }
+    validateCompareOptions(options.compareBranch, options.changed);
 
     const { default: test } = await import('./test');
 
@@ -272,6 +264,25 @@ program
     '--all',
     'Only lint diffed files from your remote origin default branch (e.g. main or master)',
   )
+  .option('--packages [packages...]', 'Only lint selected packages')
+  .option(
+    '--ancestors',
+    'Lint workspaces that depend on workspaces that have changed',
+    false,
+  )
+  .option(
+    '--descendants',
+    'Lint workspaces that directly or indirectly depend on the specified packages',
+    false,
+  )
+  .option(
+    '--changed',
+    'Lint workspaces that have changed compared to the branch specified in --compareBranch',
+  )
+  .option(
+    '--compareBranch <branch>',
+    "Specifies the branch to use with the --changed flag. If not specified, Modular will use the repo's default branch",
+  )
   .option(
     '--fix',
     `Fix the lint errors wherever possible, restages changes if run with ${lintStagedFlag}`,
@@ -289,12 +300,32 @@ program
   });
 
 program
-  .command('typecheck')
+  .command('typecheck [packages...]')
   .description('Typechecks the entire project')
   .option('--verbose', 'Enables verbose logging within modular.')
-  .action(async () => {
+  .option(
+    '--ancestors',
+    'Additionally run typecheck for workspaces that depend on workspaces that have changed',
+    false,
+  )
+  .option(
+    '--descendants',
+    'Additionally run typecheck for workspaces that directly or indirectly depend on the specified packages (can be combined with --changed)',
+    false,
+  )
+  .option(
+    '--changed',
+    'Run typecheck only for workspaces that have changed compared to the branch specified in --compareBranch',
+  )
+  .option(
+    '--compareBranch <branch>',
+    "Specifies the branch to use with the --changed flag. If not specified, Modular will use the repo's default branch",
+  )
+  .action(async (packages: string[], options: TypecheckOptions) => {
+    validateCompareOptions(options.compareBranch, options.changed);
+
     const { default: typecheck } = await import('./typecheck');
-    await typecheck();
+    await typecheck(options, packages);
   });
 
 interface ServeOptions {

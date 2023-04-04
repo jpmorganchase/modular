@@ -72,7 +72,7 @@ exports[`create-modular-react-app WHEN it sets up a project with prefer Offline 
           "private": true,
           "scripts": Object {
             "build": "modular build",
-            "lint": "eslint . --ext .js,.ts,.tsx",
+            "lint": "modular lint",
             "prettier": "prettier --write .",
             "start": "modular start",
             "test": "modular test",
@@ -132,7 +132,7 @@ exports[`create-modular-react-app WHEN it sets up a project with prefer Offline 
   "private": true,
   "scripts": {
     "build": "modular build",
-    "lint": "eslint . --ext .js,.ts,.tsx",
+    "lint": "modular lint",
     "prettier": "prettier --write .",
     "start": "modular start",
     "test": "modular test",
@@ -258,7 +258,7 @@ exports[`create-modular-react-app WHEN setting a project with defaults Sets up t
             "private": true,
             "scripts": Object {
               "build": "modular build",
-              "lint": "eslint . --ext .js,.ts,.tsx",
+              "lint": "modular lint",
               "prettier": "prettier --write .",
               "start": "modular start",
               "test": "modular test",
@@ -318,7 +318,7 @@ exports[`create-modular-react-app WHEN setting a project with defaults Sets up t
   "private": true,
   "scripts": {
     "build": "modular build",
-    "lint": "eslint . --ext .js,.ts,.tsx",
+    "lint": "modular lint",
     "prettier": "prettier --write .",
     "start": "modular start",
     "test": "modular test",

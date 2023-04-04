@@ -156,7 +156,7 @@ describe('WHEN running esbuild with the svgrPlugin', () => {
       expect(tree(outdir, { hashIgnores: ['index.js'] }))
         .toMatchInlineSnapshot(`
         "output
-        ├─ index.css #5f8lem
+        ├─ index.css #1nwpxut
         └─ index.js"
       `);
     });

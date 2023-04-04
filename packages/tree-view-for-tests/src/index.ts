@@ -68,6 +68,5 @@ export default function tree(_path: string, options?: Options): string {
 }
 
 export function hashlessTree(_path: string): string {
-  console.log('this is being used');
   return asciiTree.generate(generateTree(_path, undefined, true));
 }
