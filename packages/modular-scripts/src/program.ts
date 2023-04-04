@@ -344,7 +344,7 @@ program
 program
   .command('select [packages...]')
   .description('TODO')
-  .option('--verbose', 'Run commands with --verbose set') // TODO: is this possible?
+  .option('--verbose', 'Show verbose information')
   .option(
     '--buildable',
     'Select packages and output them in build order. Default is false',
@@ -352,17 +352,17 @@ program
   )
   .option(
     '--changed',
-    'Select only packages that contains files that have changed compared to the branch specified in --compareBranch. Default is false.',
+    'Select only packages that contains files that have changed compared to the branch specified in --compareBranch. Default is false',
     false,
   )
   .option(
     '--descendants',
-    'Additionally select packages that the specified packages directly or indirectly depend on. Default is false.',
+    'Additionally select packages that the specified packages directly or indirectly depend on. Default is false',
     false,
   )
   .option(
     '--ancestors',
-    'Additionally select packages that directly or indirectly depend on the specified packages. Default is false.',
+    'Additionally select packages that directly or indirectly depend on the specified packages. Default is false',
     false,
   )
   .option(
@@ -381,6 +381,7 @@ program
       },
     ) => {
       const { default: select } = await import('./select');
+      validateCompareOptions(options.compareBranch, options.changed);
       await select({ ...options, selectedPackages });
     },
   );

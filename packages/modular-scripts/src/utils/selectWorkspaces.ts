@@ -61,7 +61,7 @@ export async function selectWorkspaces(
 export async function selectBuildableWorkspaces(
   options: SelectBuildableOptions,
 ): Promise<string[]> {
-  // Flatten the subarrays (that signal parallelism) to make an ordered serial sequence
+  // Flatten the subarrays to make an ordered serial sequence. This loses parallelism.
   return (await selectParallellyBuildableWorkspaces(options)).flat();
 }
 

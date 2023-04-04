@@ -38,13 +38,15 @@ async function select({
         ancestors,
         dangerouslyIgnoreCircularDependencies: false,
       })
-    : await selectWorkspaces({
-        targets,
-        changed,
-        compareBranch,
-        descendants,
-        ancestors,
-      });
+    : (
+        await selectWorkspaces({
+          targets,
+          changed,
+          compareBranch,
+          descendants,
+          ancestors,
+        })
+      ).filter((target) => allWorkspacePackages.get(target)?.type !== 'root');
 
   console.log(JSON.stringify(selected, null, 2));
 }
