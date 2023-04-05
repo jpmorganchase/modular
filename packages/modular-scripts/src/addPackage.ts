@@ -180,8 +180,8 @@ async function addPackage({
 
     const templateInstallSubprocess = execAsync('yarnpkg', yarnAddArgs, {
       cwd: modularRoot,
-      stderr: process.stderr,
-      stdout: process.stdout,
+      stderr: 'pipe',
+      stdout: 'ignore',
     });
 
     // Remove warnings
@@ -293,15 +293,15 @@ async function addPackage({
 
   const subprocess = execAsync('yarnpkg', yarnArgs, {
     cwd: modularRoot,
-    stderr: process.stderr,
-    stdout: process.stdout,
+    stderr: 'pipe',
+    stdout: verbose ? process.stdout : 'ignore',
   });
 
-  // // Remove warnings
-  // subprocess.stderr?.pipe(new LineFilterOutStream(/.*warning.*/));
-  // if (verbose) {
-  //   subprocess.stderr?.pipe(process.stderr);
-  // }
+  // Remove warnings
+  subprocess.stderr?.pipe(new LineFilterOutStream(/.*warning.*/));
+  if (verbose) {
+    subprocess.stderr?.pipe(process.stderr);
+  }
 
   await subprocess;
 }

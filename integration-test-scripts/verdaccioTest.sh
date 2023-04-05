@@ -12,11 +12,12 @@ cd /tmp/integration-tests/test-repo
 # Set registry with yarn version specific command
 if [[ $YARN_VERSION == 1.22.19 ]]
 then
-    # Not sure why we have to set it both ways but Yarn works in mysterious unpredictable ways 
+    # Not sure why we have to set it both with corepack and yarn set, but Yarn works in mysterious unpredictable ways 
     corepack prepare yarn@1.22.19 --activate
     yarn set version 1.22.19
     yarn config set registry http://localhost:4873/
 else
+    # Setting it in both the parent directory, and the repo directory that will be used by CMRA
     corepack prepare yarn@3.5.0 --activate
     yarn set version 3.5.0
     yarn config set unsafeHttpWhitelist localhost
@@ -35,25 +36,23 @@ else
     yarn init -y
     echo 'nodeLinker: node-modules' > .yarnrc.yml
     yarn add create-modular-react-app
-    yarn
 fi
 
 cd /tmp/integration-tests/
 
 echo Testing with Yarn $(yarn -v)
 
-# Check verdaccio is still reachable
-npm ping --registry http://localhost:4873/
-
 if [[ $YARN_VERSION == 1.22.19 ]]
 then
     yarn create modular-react-app test-repo  --empty
 else
+    # With Yarn > 1 we don't use the yarn create command, instead we run CMRA from .bin
     ./utility/node_modules/.bin/create-modular-react-app test-repo  --empty
 fi
 
 cd /tmp/integration-tests/test-repo/
 
+# Ensure full logs with Yarn 3 & that it won't error fail when the test repo's lockfile is changed
 yarn config set  preferAggregateCacheInfo false
 yarn config set enableImmutableInstalls false
 
@@ -63,7 +62,6 @@ for template in "${TEMPLATES[@]}";
 do 
     echo testing $template
     yarn modular add $template --template $template
-    yarn
     yarn modular test $template
     yarn modular build $template
     USE_MODULAR_ESBUILD=true yarn modular build $template
