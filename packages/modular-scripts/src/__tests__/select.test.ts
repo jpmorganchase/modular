@@ -54,6 +54,7 @@ describe('select', () => {
   it('selects nothing when everything committed', () => {
     const result = runModularPipeLogs(tempModularRepo, 'select --changed');
     expect(result.stderr).toBeFalsy();
+    console.log('STDOUT IS: ', result.stdout);
     expect(
       arrayHasSameElements(JSON.parse(result.stdout) as string[], []),
     ).toBeTruthy();
