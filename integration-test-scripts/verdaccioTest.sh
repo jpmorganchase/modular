@@ -56,8 +56,6 @@ cd /tmp/integration-tests/test-repo/
 yarn config set  preferAggregateCacheInfo false
 yarn config set enableImmutableInstalls false
 
-yarn
-
 for template in "${TEMPLATES[@]}"; 
 do 
     echo testing $template

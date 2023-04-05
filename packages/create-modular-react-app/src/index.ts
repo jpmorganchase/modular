@@ -86,6 +86,14 @@ export default async function createModularApp(argv: {
     throw new Error(`Yarn v2 used`);
   }
 
+  const preferOfflineArg = argv.preferOffline
+    ? isYarnV1
+      ? ['--prefer-offline']
+      : ['--cached']
+    : [];
+  const verboseArgs = argv.verbose ? (isYarnV1 ? ['--verbose'] : []) : [];
+  const yarn1SpecifcArgs = isYarnV1 ? ['-W'] : [];
+
   const newModularRoot = path.isAbsolute(argv.name)
     ? argv.name
     : path.join(process.cwd(), argv.name);
@@ -110,13 +118,6 @@ export default async function createModularApp(argv: {
 
   await exec('yarnpkg', ['init', '-y'], newModularRoot);
 
-  const preferOfflineArg = argv.preferOffline
-    ? isYarnV1
-      ? ['--prefer-offline']
-      : ['--cached']
-    : [];
-  const verboseArgs = argv.verbose ? (isYarnV1 ? ['--verbose'] : []) : [];
-  const yarn1SpecifcArgs = isYarnV1 ? ['-W'] : [];
   fs.writeJsonSync(projectPackageJsonPath, {
     ...fs.readJsonSync(projectPackageJsonPath),
     private: true,
