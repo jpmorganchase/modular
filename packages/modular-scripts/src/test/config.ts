@@ -51,7 +51,14 @@ export function createJestConfig(
     displayName: 'test',
     resetMocks: false,
     transform: {
-      '^.+\\.(t|j)sx?$': [
+      '^.+\\.(js|jsx|mjs|cjs)$': [
+        require.resolve('babel-jest'),
+        {
+          presets: [require.resolve('babel-preset-react-app')],
+        },
+      ],
+      // don't typecheck tests in CI
+      '^.+\\.(ts|tsx)$': [
         require.resolve('@swc/jest'),
         {
           $schema: 'https://json.schemastore.org/swcrc',
