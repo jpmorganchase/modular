@@ -10,7 +10,6 @@ auth:
   htpasswd:
     file: ./htpasswd
 
-# Back Verdaccio onto Artifactory instead of NPM
 uplinks:
   npmjs:
     url: https://registry.yarnpkg.com
