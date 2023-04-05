@@ -1,0 +1,48 @@
+# This workflow will do a clean install of node dependencies, build all the packages we develop, publish them to a temporary local registry and do a full runthrough of CMRA and Modular commands
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Integration
+
+on:
+  push:
+    branches: [main, 'release/**', 'feature/**']
+  pull_request:
+    branches: [main, 'release/**', 'feature/**']
+
+jobs:
+  Test:
+    name:
+      ${{ matrix.os }} (${{ matrix.node-version }} | Yarn ${{
+      matrix.yarn-version }})
+    runs-on: ${{ matrix.os }}
+    env:
+      MODULAR_LOGGER_DEBUG: true
+      GIT_AUTHOR_NAME: 'Modular Tests'
+      GIT_AUTHOR_EMAIL: 'tests@modular.js.org'
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        node-version: ['14.18.0', '16.x', '18.x']
+        yarn-version: ['1.22.19', '3.5.0']
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3.3.0
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install Dependencies with Yarn 1
+        run: yarn --frozen-lockfile
+      - name: Build internal prerequisites
+        run: yarn workspace @modular-scripts/workspace-resolver build
+      - name: Build packages to test
+        run: yarn modular build $PACKAGES
+      - name: Setup Verdaccio
+        run: bash ./integration-test-scripts/setupVerdaccio.sh
+      - name: Publish packages to verdaccio
+        run: bash ./integration-test-scripts/publishVerdaccio.sh
+      - name: Run verdaccio integration tests
+        run:
+          YARN_VERSION=${{ matrix.yarn-version }} bash
+          ./integration-test-scripts/verdaccioTest.sh
