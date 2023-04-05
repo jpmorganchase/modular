@@ -21,7 +21,7 @@
     "node": "^14.18.0 || >=16.10.0 || >=18.0.0"
   },
   "scripts": {
-    "modular": "ts-node src/cli.ts",
+    "modular": "tsx src/cli.ts",
     "clean": "rimraf build dist-cjs",
     "prebuild": "yarn clean",
     "build": "babel --source-maps --root-mode upward src --out-dir dist-cjs --extensions .ts,.js --ignore 'src/**/*.test.ts'"
