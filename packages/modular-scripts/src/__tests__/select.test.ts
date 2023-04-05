@@ -54,28 +54,21 @@ describe('select', () => {
   it('selects nothing when everything committed', () => {
     const result = runModularPipeLogs(tempModularRepo, 'select --changed');
     expect(result.stderr).toBeFalsy();
-    console.log('STDOUT IS: ', result.stdout);
-    expect(
-      arrayHasSameElements(JSON.parse(result.stdout) as string[], []),
-    ).toBeTruthy();
+    expect(result.stdout).toContain(format([]));
   });
 
   it('selects multiple packages', () => {
     const result = runModularPipeLogs(tempModularRepo, 'select e a');
 
     expect(result.stderr).toBeFalsy();
-    expect(
-      arrayHasSameElements(JSON.parse(result.stdout) as string[], ['e', 'a']),
-    ).toBeTruthy();
+    expect(result.stdout).toContain(format(['e', 'a']));
   });
 
   it('selects multiple packages in select order', () => {
     const result = runModularPipeLogs(tempModularRepo, 'select e a');
 
     expect(result.stderr).toBeFalsy();
-    expect(
-      arrayHasSameElements(JSON.parse(result.stdout) as string[], ['a', 'e']),
-    ).toBeTruthy();
+    expect(result.stdout).toContain(format(['e', 'a']));
   });
 
   it('selects a single package and its descendants', () => {
@@ -85,26 +78,14 @@ describe('select', () => {
     );
 
     expect(result.stderr).toBeFalsy();
-    expect(
-      arrayHasSameElements(JSON.parse(result.stdout) as string[], [
-        'd',
-        'c',
-        'b',
-      ]),
-    ).toBeTruthy();
+    expect(result.stdout).toContain(format(['b', 'c', 'd']));
   });
 
   it('selects a single package and its ancestors', () => {
     const result = runModularPipeLogs(tempModularRepo, 'select b --ancestors');
 
     expect(result.stderr).toBeFalsy();
-    expect(
-      arrayHasSameElements(JSON.parse(result.stdout) as string[], [
-        'b',
-        'a',
-        'e',
-      ]),
-    ).toBeTruthy();
+    expect(result.stdout).toContain(format(['b', 'a', 'e']));
   });
 
   it('selects multiple packages and their descendants', () => {
@@ -114,14 +95,7 @@ describe('select', () => {
     );
 
     expect(result.stderr).toBeFalsy();
-    expect(
-      arrayHasSameElements(JSON.parse(result.stdout) as string[], [
-        'd',
-        'c',
-        'b',
-        'a',
-      ]),
-    ).toBeTruthy();
+    expect(result.stdout).toContain(format(['d', 'a', 'b', 'c']));
   });
 
   it('selects multiple packages and their ancestors', () => {
@@ -131,15 +105,7 @@ describe('select', () => {
     );
 
     expect(result.stderr).toBeFalsy();
-    expect(
-      arrayHasSameElements(JSON.parse(result.stdout) as string[], [
-        'd',
-        'c',
-        'b',
-        'a',
-        'e',
-      ]),
-    ).toBeTruthy();
+    expect(result.stdout).toContain(format(['d', 'a', 'c', 'e', 'b']));
   });
 
   it('selects changed (uncommitted) packages', () => {
@@ -155,22 +121,14 @@ describe('select', () => {
     const result = runModularPipeLogs(tempModularRepo, 'select --changed');
 
     expect(result.stderr).toBeFalsy();
-    expect(
-      arrayHasSameElements(JSON.parse(result.stdout) as string[], ['c', 'b']),
-    ).toBeTruthy();
+    expect(result.stdout).toContain(format(['b', 'c']));
   });
 
   it('selects changed (uncommitted) packages + packages that are explicitly specified', () => {
     const result = runModularPipeLogs(tempModularRepo, 'select e --changed');
 
     expect(result.stderr).toBeFalsy();
-    expect(
-      arrayHasSameElements(JSON.parse(result.stdout) as string[], [
-        'c',
-        'b',
-        'e',
-      ]),
-    ).toBeTruthy();
+    expect(result.stdout).toContain(format(['e', 'b', 'c']));
   });
 
   it('selects changed (uncommitted) packages and their descendants', () => {
@@ -180,13 +138,7 @@ describe('select', () => {
     );
 
     expect(result.stderr).toBeFalsy();
-    expect(
-      arrayHasSameElements(JSON.parse(result.stdout) as string[], [
-        'd',
-        'c',
-        'b',
-      ]),
-    ).toBeTruthy();
+    expect(result.stdout).toContain(format(['b', 'c', 'd']));
   });
 
   it('selects changed (uncommitted) packages and their ancestors', () => {
@@ -196,29 +148,14 @@ describe('select', () => {
     );
 
     expect(result.stderr).toBeFalsy();
-    expect(
-      arrayHasSameElements(JSON.parse(result.stdout) as string[], [
-        'c',
-        'b',
-        'a',
-        'e',
-      ]),
-    ).toBeTruthy();
+    expect(result.stdout).toContain(format(['b', 'c', 'a', 'e']));
   });
 
   it('selects all packages if invoked without arguments / selective options', () => {
     const result = runModularPipeLogs(tempModularRepo, 'select');
 
     expect(result.stderr).toBeFalsy();
-    expect(
-      arrayHasSameElements(JSON.parse(result.stdout) as string[], [
-        'd',
-        'c',
-        'b',
-        'a',
-        'e',
-      ]),
-    ).toBeTruthy();
+    expect(result.stdout).toContain(format(['a', 'b', 'c', 'd', 'e']));
   });
 });
 
@@ -271,7 +208,7 @@ describe('select in buildable order', () => {
       'select --changed --buildable',
     );
     expect(result.stderr).toBeFalsy();
-    expect(JSON.parse(result.stdout)).toStrictEqual([]);
+    expect(result.stdout).toContain(format([]));
   });
 
   it('selects multiple packages in select order', () => {
@@ -281,7 +218,7 @@ describe('select in buildable order', () => {
     );
 
     expect(result.stderr).toBeFalsy();
-    expect(JSON.parse(result.stdout)).toStrictEqual([['a'], ['e']]);
+    expect(result.stdout).toContain(format([['a'], ['e']]));
   });
 
   it('selects a single package and its descendants', () => {
@@ -291,7 +228,7 @@ describe('select in buildable order', () => {
     );
 
     expect(result.stderr).toBeFalsy();
-    expect(JSON.parse(result.stdout)).toStrictEqual([['d'], ['c'], ['b']]);
+    expect(result.stdout).toContain(format([['d'], ['c'], ['b']]));
   });
 
   it('selects a single package and its ancestors', () => {
@@ -301,7 +238,7 @@ describe('select in buildable order', () => {
     );
 
     expect(result.stderr).toBeFalsy();
-    expect(JSON.parse(result.stdout)).toStrictEqual([['b'], ['a'], ['e']]);
+    expect(result.stdout).toContain(format([['b'], ['a'], ['e']]));
   });
 
   it('selects multiple packages and their descendants', () => {
@@ -311,12 +248,7 @@ describe('select in buildable order', () => {
     );
 
     expect(result.stderr).toBeFalsy();
-    expect(JSON.parse(result.stdout)).toStrictEqual([
-      ['d'],
-      ['c'],
-      ['b'],
-      ['a'],
-    ]);
+    expect(result.stdout).toContain(format([['d'], ['c'], ['b'], ['a']]));
   });
 
   it('selects multiple packages and their ancestors', () => {
@@ -326,13 +258,9 @@ describe('select in buildable order', () => {
     );
 
     expect(result.stderr).toBeFalsy();
-    expect(JSON.parse(result.stdout)).toStrictEqual([
-      ['d'],
-      ['c'],
-      ['b'],
-      ['a'],
-      ['e'],
-    ]);
+    expect(result.stdout).toContain(
+      format([['d'], ['c'], ['b'], ['a'], ['e']]),
+    );
   });
 
   it('selects changed (uncommitted) packages', () => {
@@ -351,7 +279,7 @@ describe('select in buildable order', () => {
     );
 
     expect(result.stderr).toBeFalsy();
-    expect(JSON.parse(result.stdout)).toStrictEqual([['c'], ['b']]);
+    expect(result.stdout).toContain(format([['c'], ['b']]));
   });
 
   it('selects changed (uncommitted) packages and their descendants', () => {
@@ -361,7 +289,7 @@ describe('select in buildable order', () => {
     );
 
     expect(result.stderr).toBeFalsy();
-    expect(JSON.parse(result.stdout)).toStrictEqual([['d'], ['c'], ['b']]);
+    expect(result.stdout).toContain(format([['d'], ['c'], ['b']]));
   });
 
   it('selects changed (uncommitted) packages and their ancestors', () => {
@@ -371,28 +299,19 @@ describe('select in buildable order', () => {
     );
 
     expect(result.stderr).toBeFalsy();
-    expect(JSON.parse(result.stdout)).toStrictEqual([
-      ['c'],
-      ['b'],
-      ['a'],
-      ['e'],
-    ]);
+    expect(result.stdout).toContain(format([['c'], ['b'], ['a'], ['e']]));
   });
 
   it('selects all packages if invoked without arguments / selective options', () => {
     const result = runModularPipeLogs(tempModularRepo, 'select --buildable');
 
     expect(result.stderr).toBeFalsy();
-    expect(JSON.parse(result.stdout)).toStrictEqual([
-      ['d'],
-      ['c'],
-      ['b'],
-      ['a'],
-      ['e'],
-    ]);
+    expect(result.stdout).toContain(
+      format([['d'], ['c'], ['b'], ['a'], ['e']]),
+    );
   });
 });
 
-function arrayHasSameElements<T>(a: T[], b: T[]) {
-  return a.length === b.length && a.every((val) => b.includes(val));
+function format(u: unknown) {
+  return JSON.stringify(u, null, 2);
 }
