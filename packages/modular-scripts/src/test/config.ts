@@ -1,7 +1,6 @@
 import * as fs from 'fs-extra';
 import path from 'path';
 import chalk from 'chalk';
-import isCi from 'is-ci';
 import globby from 'globby';
 import type { Config } from '@jest/types';
 import { defaults } from 'jest-config';
@@ -59,12 +58,35 @@ export function createJestConfig(
         },
       ],
       // don't typecheck tests in CI
-      '^.+\\.(ts|tsx)$': isCi
-        ? [
-            require.resolve('ts-jest'),
-            { diagnostics: false, isolatedModules: true },
-          ]
-        : require.resolve('ts-jest'),
+      '^.+\\.(ts|tsx)$': [
+        require.resolve('@swc/jest'),
+        {
+          $schema: 'https://json.schemastore.org/swcrc',
+          sourceMaps: true,
+          module: { type: 'commonjs', strictMode: true, noInterop: false },
+          jsc: {
+            externalHelpers: false,
+            target: 'es2016',
+            parser: {
+              syntax: 'typescript',
+              tsx: true,
+              decorators: false,
+              dynamicImport: true,
+            },
+            transform: {
+              legacyDecorator: true,
+              decoratorMetadata: false,
+              react: {
+                throwIfNamespace: false,
+                useBuiltins: false,
+                pragma: 'React.createElement',
+                pragmaFrag: 'React.Fragment',
+              },
+            },
+            keepClassNames: true,
+          },
+        },
+      ],
       '^.+\\.(css|scss)$': require.resolve('jest-transform-stub'),
       '.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
         require.resolve('jest-transform-stub'),

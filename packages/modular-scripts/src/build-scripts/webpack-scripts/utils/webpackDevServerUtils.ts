@@ -9,10 +9,10 @@ import { ProxyConfigArray, Request, Response } from 'webpack-dev-server';
 import type * as http from 'http';
 import type * as httpProxy from 'http-proxy';
 import formatWebpackMessages from './formatWebpackMessages';
-import webpack, { Configuration } from 'webpack';
+import webpack from 'webpack';
 import { InstructionURLS } from '../../common-scripts/urls';
 import forkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
-import { Compiler } from 'webpack';
+import type { Compiler, Configuration } from 'webpack';
 
 function printInstructions(appName: string | undefined, urls: InstructionURLS) {
   console.log();

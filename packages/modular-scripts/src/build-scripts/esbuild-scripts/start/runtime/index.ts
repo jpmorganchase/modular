@@ -1,14 +1,22 @@
-import {
+import stripAnsi from 'strip-ansi';
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+const {
   setEditorHandler,
   startReportingRuntimeErrors,
   reportBuildError,
-} from 'react-error-overlay';
-import stripAnsi from 'strip-ansi';
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+} = require('react-error-overlay');
 
 let isFirstCompilation = true;
 let hasCompileErrors = false;
 
-setEditorHandler(function editorHandler(errorLocation) {
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+setEditorHandler(function editorHandler(errorLocation: {
+  fileName: string;
+  lineNumber: string | number;
+  colNumber: string | number;
+}) {
   // Keep this sync with errorOverlayMiddleware.js
   void fetch(
     '/__open-stack-frame-in-editor' +
@@ -30,6 +38,7 @@ function clearOutdatedErrors() {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 startReportingRuntimeErrors({
   filename: '/index.js',
 });
@@ -105,6 +114,7 @@ connection.onmessage = (m: MessageEvent) => {
         }
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       reportBuildError(formatted.errors[0]);
     }
   }

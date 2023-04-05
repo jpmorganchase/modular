@@ -1,4 +1,8 @@
-import { dismissRuntimeErrors, reportRuntimeError } from 'react-error-overlay';
+'use strict';
+const {
+  dismissRuntimeErrors,
+  reportRuntimeError,
+} = require('react-error-overlay');
 
 module.exports = {
   clearRuntimeErrors: dismissRuntimeErrors,
