@@ -125,7 +125,7 @@ export function createModularTestContext(): string {
     },
     workspaces: ['packages/**', 'templates/**'],
     scripts: {
-      modular: `tsx ${modularRoot}/packages/modular-scripts/src/cli.ts`,
+      modular: `ts-node ${modularRoot}/packages/modular-scripts/src/cli.ts`,
     },
     browserslist: {
       production: ['>0.2%', 'not dead', 'not op_mini all'],
@@ -220,7 +220,7 @@ export function runModularForTests(
   skipChecks: 'true' | 'false' = 'true',
 ): execa.ExecaSyncReturnValue<string> {
   return execa.sync(
-    path.join(modularRoot, '/node_modules/.bin/tsx'),
+    path.join(modularRoot, '/node_modules/.bin/ts-node'),
     [
       path.join(modularRoot, '/packages/modular-scripts/src/cli.ts'),
       ...args.split(' '),
@@ -265,7 +265,7 @@ export async function runModularForTestsAsync(
   skipChecks: 'true' | 'false' = 'true',
 ) {
   return execa(
-    path.join(modularRoot, '/node_modules/.bin/tsx'),
+    path.join(modularRoot, '/node_modules/.bin/ts-node'),
     [
       path.join(modularRoot, '/packages/modular-scripts/src/cli.ts'),
       ...args.split(' '),
