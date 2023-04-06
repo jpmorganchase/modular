@@ -5,23 +5,57 @@ title: modular select
 
 # `modular select [options] [packages...]`
 
-Select workspaces based on the name of the `packages` or the `options` provided
+Filter workspaces based on the name of the `packages` or the `options` provided
 and output an array of package names. This is the same algorithm that powers
 package selection in all other commands.
-
-Packages are selected in no particular order by default, but when the `--build`
-option is provided, only buildable packages are selected in build order and
-presented as an array of subarrays, where each subarray can be built in
-parallel.
 
 When `packages` is empty and no selective options have been specified (for
 example when running `yarn modular select`), all packages in the monorepo will
 be selected.
 
-Please note that the logic implemented in the `select` command is included all
-the other Modular commands; it's not necessary to use `select` to determine
-which packages need to be built or tested. The command is useful in cases where
-the user wants to use the selective algorithms of Modular to implement a custom
+For example, if you have three packages:
+
+```
+my-repo/
+├─ packages/
+│  ├─ pkg-a
+│  ├─ pkg-b
+│  ├─ pkg-c
+```
+
+Then executing `yarn modular select` would return:
+
+```json
+["pkg-a", "pkg-b", "pkg-c"]
+```
+
+The `options` allow you to filter packages selectively. For example, if `pkg-a`
+depends on `pkg-b` and you exectue:
+
+```
+yarn modular select pkg-a --descendants
+```
+
+The result will be:
+
+```json
+["pkg-a", "pkg-b"]
+```
+
+Packages are selected in no particular order by default, but when the
+ `--buildable` option is provided, only buildable packages are selected in
+build order and presented as an array of subarrays, where each subarray can be
+built in parallel.
+
+For more information on which packages are buildable or non-buildable and how
+selection works, please see the [`modular build`](./build.md) documentation.
+
+It is not necessary to use `select` to determine which packages need to be
+built or tested when executing the other Modular commands such as
+[`modular build`](./build.md) or [`modular test`](./test.md). The logic
+implemented in the `select` command is executed by all the other Modular
+commands automatically. The `select` command is useful in cases where the user
+wants to use the selective algorithms of Modular to implement a custom
 strategy to build Modular workspaces, for example in multi-node CI pipelines
 where each task could be run on a different machine.
 
@@ -47,10 +81,11 @@ order.
 
 `--verbose`: Show verbose information
 
-`--buildable`: Select only buildable packages and output an array of subarrays
-in build order, where packages inside subarrays can be built in any order and
-subarrays must be built in series, according to their order in the array. For
-example, suppose that `modular select` outputs this sequence of packages:
+`--buildable`: Select only buildable packages and output a 1-level nested array
+of subarrays in build order, where packages inside subarrays can be built in
+any order and subarrays must be built in series, according to their order in
+the array. For example, suppose that `modular select` outputs this sequence of
+packages:
 
 ```js
 ['a', 'b', 'c', 'd-not-buildable', 'e'];
@@ -69,10 +104,9 @@ and the subarrays signal that the contained packages can be built in any order
 (or even in parallel). In particular, the last example determines the following
 steps to build the listed packages:
 
-- Start with building package `a` and package `b`, no matter which order
-  (possibly in parallel)
-- After the previous step is completed, build package `c`
-- Finally, after the previous step is completed, build package `e`
+- Start by building packages `a` and `b` either sequentially or in parallel.
+- Next, build package `c` once both `a` and `b` have been built.
+- Finally, build package `e` once `c` has been built.
 
 Modular's build order is explained and exemplified in
 [the build command page](../commands/).
