@@ -17,5 +17,8 @@
     "noEmit": true,
     "jsx": "react",
     "sourceMap": true
+  },
+  "ts-node": {
+    "swc": true
   }
 }
