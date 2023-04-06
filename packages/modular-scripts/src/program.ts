@@ -343,16 +343,18 @@ program
 
 program
   .command('select [packages...]')
-  .description('TODO')
+  .description(
+    'Returns an array of selected package names by filtering all workspaces by the packages and options provided',
+  )
   .option('--verbose', 'Show verbose information')
   .option(
     '--buildable',
-    'Select packages and output them in build order. Default is false',
+    'Select packages and output them in build order as 1-level nested arrays. Default is false',
     false,
   )
   .option(
     '--changed',
-    'Select only packages that contains files that have changed compared to the branch specified in --compareBranch. Default is false',
+    'Select only packages that contain files that have changed compared to the branch specified in --compareBranch. Default is false',
     false,
   )
   .option(
