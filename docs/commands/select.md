@@ -43,21 +43,21 @@ The result will be:
 ```
 
 Packages are selected in no particular order by default, but when the
- `--buildable` option is provided, only buildable packages are selected in
-build order and presented as an array of subarrays, where each subarray can be
-built in parallel.
+`--buildable` option is provided, only buildable packages are selected in build
+order and presented as an array of subarrays, where each subarray can be built
+in parallel.
 
 For more information on which packages are buildable or non-buildable and how
 selection works, please see the [`modular build`](./build.md) documentation.
 
-It is not necessary to use `select` to determine which packages need to be
-built or tested when executing the other Modular commands such as
+It is not necessary to use `select` to determine which packages need to be built
+or tested when executing the other Modular commands such as
 [`modular build`](./build.md) or [`modular test`](./test.md). The logic
 implemented in the `select` command is executed by all the other Modular
 commands automatically. The `select` command is useful in cases where the user
-wants to use the selective algorithms of Modular to implement a custom
-strategy to build Modular workspaces, for example in multi-node CI pipelines
-where each task could be run on a different machine.
+wants to use the selective algorithms of Modular to implement a custom strategy
+to build Modular workspaces, for example in multi-node CI pipelines where each
+task could be run on a different machine.
 
 ## Options:
 
@@ -82,9 +82,9 @@ order.
 `--verbose`: Show verbose information
 
 `--buildable`: Select only buildable packages and output a 1-level nested array
-of subarrays in build order, where packages inside subarrays can be built in
-any order and subarrays must be built in series, according to their order in
-the array. For example, suppose that `modular select` outputs this sequence of
+of subarrays in build order, where packages inside subarrays can be built in any
+order and subarrays must be built in series, according to their order in the
+array. For example, suppose that `modular select` outputs this sequence of
 packages:
 
 ```js
