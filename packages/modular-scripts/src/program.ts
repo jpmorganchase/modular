@@ -287,6 +287,12 @@ program
     '--fix',
     `Fix the lint errors wherever possible, restages changes if run with ${lintStagedFlag}`,
   )
+  .option('--verbose', 'Enables verbose logging within modular.')
+  .option(
+    '--includeNonModular',
+    "Runs 'lint' script if specified in the package.json of any non-modular package included - Will be removed and true as default in Modular 5.0.0",
+    false,
+  )
   .addOption(
     new Option(
       lintStagedFlag,
