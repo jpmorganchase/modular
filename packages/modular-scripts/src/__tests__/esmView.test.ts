@@ -944,7 +944,7 @@ function buildSampleEsmView(
   cwd: string,
   opts?: Record<string, unknown>,
 ): execa.ExecaSyncReturnValue<string> {
-  return runModularForTests(cwd, `build ${targetedView} --verbose`, opts);
+  return runModularForTests(cwd, `build ${targetedView}`, opts);
 }
 
 function getPackageEntryPointPath(

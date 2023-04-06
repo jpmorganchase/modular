@@ -51,13 +51,7 @@ export function createJestConfig(
     displayName: 'test',
     resetMocks: false,
     transform: {
-      '^.+\\.(js|jsx|mjs|cjs)$': [
-        require.resolve('babel-jest'),
-        {
-          presets: [require.resolve('babel-preset-react-app')],
-        },
-      ],
-      // don't typecheck tests in CI
+      '^.+\\.(js|jsx|mjs|cjs)$': require.resolve('@swc/jest'),
       '^.+\\.(ts|tsx)$': [
         require.resolve('@swc/jest'),
         {
