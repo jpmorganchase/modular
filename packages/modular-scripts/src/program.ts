@@ -347,4 +347,51 @@ program
     await serve(packageName, parseInt(options.port, 10));
   });
 
+program
+  .command('select [packages...]')
+  .description(
+    'Returns an array of selected package names by filtering all workspaces by the packages and options provided',
+  )
+  .option('--verbose', 'Show verbose information')
+  .option(
+    '--buildable',
+    'Select packages and output them in build order as 1-level nested arrays. Default is false',
+    false,
+  )
+  .option(
+    '--changed',
+    'Select only packages that contain files that have changed compared to the branch specified in --compareBranch. Default is false',
+    false,
+  )
+  .option(
+    '--descendants',
+    'Additionally select packages that the specified packages directly or indirectly depend on. Default is false',
+    false,
+  )
+  .option(
+    '--ancestors',
+    'Additionally select packages that directly or indirectly depend on the specified packages. Default is false',
+    false,
+  )
+  .option(
+    '--compareBranch <branch>',
+    "Specifies the branch to use with the --changed flag. If not specified, Modular will use the repo's default branch",
+  )
+  .action(
+    async (
+      selectedPackages: string[],
+      options: {
+        changed: boolean;
+        compareBranch?: string;
+        ancestors: boolean;
+        descendants: boolean;
+        buildable: boolean;
+      },
+    ) => {
+      const { default: select } = await import('./select');
+      validateCompareOptions(options.compareBranch, options.changed);
+      await select({ ...options, selectedPackages });
+    },
+  );
+
 export { program };
