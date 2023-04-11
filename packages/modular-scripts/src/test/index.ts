@@ -9,7 +9,10 @@ import { resolveAsBin } from '../utils/resolveAsBin';
 import * as logger from '../utils/logger';
 import { generateJestConfig } from './utils';
 import { selectWorkspaces } from '../utils/selectWorkspaces';
-import { ModularWorkspacePackage } from '@modular-scripts/modular-types';
+import {
+  computeRegexesFromPackageNames,
+  partitionPackages,
+} from '../utils/unobtrusiveModular';
 
 export interface TestOptions {
   ancestors: boolean;
@@ -148,9 +151,10 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
   }
 
   // Split packages into modular and non-modular testable. Make sure that "root" is not there.
-  const [modularTargets, nonModularTargets] = partitionTestablePackages(
+  const [modularTargets, nonModularTargets] = partitionPackages(
     selectedTargets,
     workspaceMap,
+    'test',
   );
   // Compute patterns to pass Jest for the packages that we want to test
   const packageRegexes = await computeRegexesFromPackageNames(modularTargets);
@@ -246,16 +250,6 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
   }
 }
 
-async function computeRegexesFromPackageNames(
-  targets: string[],
-): Promise<string[]> {
-  const allWorkspaces = await getAllWorkspaces(getModularRoot());
-  return targets
-    .filter((packageName) => allWorkspaces[0].get(packageName)?.type)
-    .map((packageName) => allWorkspaces[0].get(packageName)?.location)
-    .filter(Boolean) as string[];
-}
-
 /**
  * Split out options (--option) that commander incorrectly assumes are arguments
  * @param args list of arguments provided by commander
@@ -282,39 +276,6 @@ function extractOptions(
       return option;
     });
   }
-}
-
-/**
- * From a list of package names, discard packages that are not testable
- * and partition the remaining packages into two lists of, respectively, Modular and non-Modular workspaces.
- * @param targets list of package names that we want to partition
- * @param workspaceMap the workspace map as returned from getAllWorkspaces
- */
-function partitionTestablePackages(
-  targets: string[],
-  workspaceMap: Map<string, ModularWorkspacePackage>,
-) {
-  // Split testable packages into modular and non-modular
-  return targets.reduce<[string[], string[]]>(
-    ([testableModularTargetList, testableNonModularTargetList], current) => {
-      const currentPackageInfo = workspaceMap.get(current);
-      if (
-        currentPackageInfo?.modular &&
-        currentPackageInfo.modular.type !== 'root'
-      ) {
-        testableModularTargetList.push(currentPackageInfo.name);
-      }
-      if (
-        !currentPackageInfo?.modular &&
-        currentPackageInfo?.rawPackageJson.scripts?.test
-      ) {
-        testableNonModularTargetList.push(currentPackageInfo.name);
-      }
-
-      return [testableModularTargetList, testableNonModularTargetList];
-    },
-    [[], []],
-  );
 }
 
 export default actionPreflightCheck(test);
