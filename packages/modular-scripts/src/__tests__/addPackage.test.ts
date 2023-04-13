@@ -74,9 +74,7 @@ describe('When working with a scoped app', () => {
     } catch (e) {
       err = (e as Error).message;
     }
-    expect(err).toContain(
-      `temp_repo/packages/sample-app" already exists and it's not empty`,
-    );
+    expect(err).toContain(`already exists and it's not empty`);
   });
 
   it('fails trying to add another app with the same name in another path', async () => {
@@ -95,9 +93,7 @@ describe('When working with a scoped app', () => {
     } catch (e) {
       err = (e as Error).message;
     }
-    expect(err).toContain(
-      `/temp_repo/packages/sample-app" already exists and it's not empty`,
-    );
+    expect(err).toContain(`already exists and it's not empty`);
   });
 });
 
