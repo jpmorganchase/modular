@@ -126,6 +126,8 @@ export async function selectParallellyBuildableWorkspaces(
         acc[level] ? acc[level].push(pkg) : (acc[level] = [pkg]);
         return acc;
       }, [])
+      // The previous reduction can leave holes in the array, let's remove them.
+      .filter(Boolean)
       // Reverse in actual build order
       .reverse()
   );

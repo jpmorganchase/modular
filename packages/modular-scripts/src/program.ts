@@ -141,7 +141,7 @@ program
       );
 
       logger.debug(
-        `Running buil with a concurrency level of ${concurrencyLevel}`,
+        `Running build with a concurrency level of ${concurrencyLevel}`,
       );
 
       if (options.dangerouslyIgnoreCircularDependencies) {

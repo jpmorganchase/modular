@@ -60,9 +60,12 @@ async function build({
     )}`,
   );
 
-  console.log(selectedTargets);
-
   for (const batch of selectedTargets) {
+    logger.log(
+      `Building batch: ${JSON.stringify(
+        batch,
+      )} with concurrency ${concurrencyLevel}`,
+    );
     const jobBatch = batch.map((target) => {
       const packageInfo = allWorkspacePackages.get(target);
       if (!packageInfo) {
@@ -71,7 +74,6 @@ async function build({
         );
       }
       return () => {
-        console.log(`*** RUNNING job for ${packageInfo.name}`);
         return runBuildJob({
           packageInfo,
           preserveModules,
@@ -131,9 +133,6 @@ async function runBuildJob({
 }
 
 async function runBatch<T extends Job>(functions: T[], concurrency: number) {
-  console.log(
-    `*** running batch of ${functions.length} with concurrency ${concurrency}`,
-  );
   while (functions.length) {
     await Promise.all(functions.splice(0, concurrency || 1).map((f) => f()));
   }
