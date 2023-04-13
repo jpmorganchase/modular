@@ -46,7 +46,7 @@ describe('When there is a non-Modular package with a build script', () => {
     expect(result.stderr).toBeFalsy();
     expect(result.stdout).toContain('\nnon-modular-buildable was built\n');
     expect(result.stdout).toContain(
-      'Building the following workspaces in order: ["non-modular-buildable","app"]',
+      'Building the following workspaces in order: [["non-modular-buildable"],["app"]]',
     );
     expect(result.stdout).toContain('Compiled successfully.');
   });
