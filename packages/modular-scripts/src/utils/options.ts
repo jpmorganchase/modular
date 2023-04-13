@@ -18,7 +18,7 @@ export function validateCompareOptions(
 }
 
 /**
- * Validates and conver concurrency option to number.
+ * Validates and converts concurrency option to number.
  *
  * Throws and exits when invalid value is detected.
  */

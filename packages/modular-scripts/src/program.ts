@@ -10,7 +10,7 @@ import * as logger from './utils/logger';
 import {
   validateCompareOptions,
   computeConcurrencyOption,
-} from './utils/validateOptions';
+} from './utils/options';
 
 import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import type { TestOptions } from './test';
