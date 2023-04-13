@@ -25,15 +25,15 @@ export function validateCompareOptions(
 export function computeConcurrencyOption(
   concurrencyLevel: string | undefined,
 ): number {
-  // If not supplied, default to the number of CPUs. If the number of CPUs is 0 (/proc or equivalent is unavailable), default to no concurrency.
   if (!concurrencyLevel) {
+    // If concurrencyLevel is not supplied, default to the number of CPUs. If the number of CPUs is 0 (/proc or equivalent is unavailable), default to no concurrency.
     return os.cpus().length || 1;
   }
 
   // Otherwise, try to parse it
   const concurrency = parseInt(concurrencyLevel, 10);
 
-  // If it's invalid, bail out.
+  // If not a number or a negative number, bail out with an error.
   if (isNaN(concurrency) || concurrency < 0) {
     process.stderr.write(
       `--currencyLevel must be a number greater or equal than 0. You specified "${concurrencyLevel}" instead.`,

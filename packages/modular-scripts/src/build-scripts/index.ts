@@ -61,7 +61,7 @@ async function build({
   );
 
   for (const batch of selectedTargets) {
-    logger.log(
+    logger.debug(
       `Building batch: ${JSON.stringify(
         batch,
       )} with concurrency ${concurrencyLevel}`,
@@ -134,6 +134,8 @@ async function runBuildJob({
 
 async function runBatch<T extends Job>(functions: T[], concurrency: number) {
   while (functions.length) {
+    // It's not Promise.all that starts the functions, but the act of invoking them, so we need to defer invocation until it's needed.
+    // Councurrency = [0|1] means no concurrency in a user-friendly way. Since 0 would spin forever, it's defaulted to 1.
     await Promise.all(functions.splice(0, concurrency || 1).map((f) => f()));
   }
 }
