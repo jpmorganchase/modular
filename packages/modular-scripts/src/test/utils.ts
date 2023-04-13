@@ -328,11 +328,22 @@ export async function addPackageForTests(
   });
 }
 
-export async function runTestForTests(packages?: string[]): Promise<void> {
+/**
+ * Runs tests based on the provided parameters
+ * Use with setupMocks/Mocked getModularRoot to ensure that it adds the package in the correct test context
+ */
+export async function runTestForTests({
+  packages,
+  regex,
+}: {
+  packages?: string[];
+  regex?: string[];
+}): Promise<void> {
   const { default: test } = await import('../test/index');
   await test(
     {
       env: 'jsdom',
+      regex,
     },
     packages,
   );
@@ -419,4 +430,14 @@ export function setupMocks(modularRoot: string) {
     '../utils/actionPreflightCheck',
     () => mockPreflightImplementation,
   );
+}
+
+/**
+ * Mocks process.exit so that it doesn't happen during tests
+ * @returns jest.SpyInstance which you can use to test with expect(mockExit).toHaveBeenCalled()
+ */
+export function mockProcessExit() {
+  return jest.spyOn(process, 'exit').mockImplementation(() => {
+    return undefined as never;
+  });
 }

@@ -6,6 +6,8 @@ import {
   createModularTestContext,
   runYarnModular,
   runModularPipeLogs,
+  setupMocks,
+  runTestForTests,
 } from '../test/utils';
 import getModularRoot from '../utils/getModularRoot';
 
@@ -17,6 +19,7 @@ describe('Modular test command', () => {
 
     beforeEach(() => {
       tempModularRepo = createModularTestContext();
+      setupMocks(tempModularRepo);
       const fixturesFolder = path.join(__dirname, '__fixtures__', 'test');
       const relativeFixturePath = fixturesFolder.replace(modularRoot, '');
       const tempFixturesFolder = path.join(
@@ -36,32 +39,26 @@ describe('Modular test command', () => {
     });
 
     describe('when the tests fail', () => {
-      it('should exit with an error', async () => {
-        let errorNumber = 0;
+      it('should error', async () => {
+        let err;
         try {
-          await runYarnModular(
-            tempModularRepo,
-            'test --regex test/InvalidTest.test.ts --watchAll=false',
-          );
-        } catch (error) {
-          errorNumber = (error as ExecaError).exitCode;
+          await runTestForTests({ regex: ['test/InvalidTest.test.ts'] });
+        } catch (e) {
+          err = (e as Error).message;
         }
-        expect(errorNumber).toBe(1);
+        expect(err).toContain('Modular test did not pass');
       });
     });
 
     describe('when the tests pass', () => {
-      it('should exit with no error', async () => {
-        let errorNumber = 0;
+      it('should not error', async () => {
+        let err;
         try {
-          await runYarnModular(
-            tempModularRepo,
-            'test --regex test/ValidTest.test.ts --watchAll=false',
-          );
-        } catch (error) {
-          errorNumber = (error as ExecaError).exitCode;
+          await runTestForTests({ regex: ['test/ValidTest.test.ts'] });
+        } catch (e) {
+          err = (e as Error).message;
         }
-        expect(errorNumber).toBe(0);
+        expect(err).toBeUndefined();
       });
     });
   });
