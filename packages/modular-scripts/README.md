@@ -38,7 +38,8 @@ Bootstraps a new project, configured to use
 [Yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces/).
 
 This also creates a workspace named 'app' which is a new
-[modular app](./package-types) written in [TypeScript](https://www.typescriptlang.org/).
+[modular app](./package-types) written in
+[TypeScript](https://www.typescriptlang.org/).
 
 It supports three flags:
 
