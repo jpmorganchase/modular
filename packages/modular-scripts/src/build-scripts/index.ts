@@ -73,20 +73,26 @@ async function build({
           `building ${target} failed - pacakge ${target} has no package info.`,
         );
       }
-      return () => {
-        return runBuildJob({
-          packageInfo,
-          preserveModules,
-          includePrivate,
-          cwd: modularRoot,
-        });
+      return {
+        id: packageInfo.name,
+        promise: () => {
+          return runBuildJob({
+            packageInfo,
+            preserveModules,
+            includePrivate,
+            cwd: modularRoot,
+          });
+        },
       };
     });
     await runBatch(jobBatch, concurrencyLevel);
   }
 }
 
-type Job = (...args: unknown[]) => Promise<void>;
+interface Job {
+  id: string;
+  promise: (...args: unknown[]) => Promise<void>;
+}
 interface BuildParameters {
   packageInfo: ModularWorkspacePackage;
   preserveModules: boolean;
@@ -132,11 +138,19 @@ async function runBuildJob({
   }
 }
 
-async function runBatch<T extends Job>(functions: T[], concurrency: number) {
-  while (functions.length) {
-    // It's not Promise.all that starts the functions, but the act of invoking them, so we need to defer invocation until it's needed.
+async function runBatch<T extends Job>(jobs: T[], concurrency: number) {
+  while (jobs.length) {
     // Councurrency = [0|1] means no concurrency in a user-friendly way. Since 0 would spin forever, it's defaulted to 1.
-    await Promise.all(functions.splice(0, concurrency || 1).map((f) => f()));
+    const nextConcurrentBatch = jobs.splice(0, concurrency || 1);
+    const ids = nextConcurrentBatch.map((j) => j.id);
+    const promises = nextConcurrentBatch.map((j) => j.promise);
+    logger.debug(
+      `runBatch is running a batch of length ${JSON.stringify(
+        ids.length,
+      )}: ${JSON.stringify(ids)}`,
+    );
+    // It's not Promise.all that starts the functions, but the act of invoking them, so we need to defer invocation until it's needed.
+    await Promise.all(promises.map((f) => f()));
   }
 }
 
