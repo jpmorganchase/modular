@@ -155,7 +155,7 @@ describe('select', () => {
     const result = runModularPipeLogs(tempModularRepo, 'select');
 
     expect(result.stderr).toBeFalsy();
-    expect(result.stdout).toContain(format(['a', 'b', 'c', 'd', 'e']));
+    expect(result.stdout).toContain(format(['a', 'b', 'c', 'd', 'e', 'f']));
   });
 });
 
@@ -307,7 +307,7 @@ describe('select in buildable order', () => {
 
     expect(result.stderr).toBeFalsy();
     expect(result.stdout).toContain(
-      format([['d'], ['c'], ['b'], ['a'], ['e']]),
+      format([['d'], ['c'], ['b'], ['a'], ['e', 'f']]),
     );
   });
 });

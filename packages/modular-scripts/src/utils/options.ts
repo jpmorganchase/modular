@@ -27,6 +27,7 @@ export function computeConcurrencyOption(
 ): number {
   if (!concurrencyLevel) {
     // If concurrencyLevel is not supplied, default to the number of CPUs. If the number of CPUs is 0 (/proc or equivalent is unavailable), default to no concurrency.
+    // TODO: Conditionally use os.availableParallelism() when it lands in a supported LTS that we can update types to: https://nodejs.org/api/os.html#osavailableparallelism
     return os.cpus().length || 1;
   }
 
