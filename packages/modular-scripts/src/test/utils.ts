@@ -310,6 +310,46 @@ export const mockPreflightImplementation = {
 };
 
 /**
+ * Adds a package to the current modular repo
+ * Can't be made compatible with path parameter as addPackage has a check that uses path.relative()
+ * that will fail as it uses the CWD
+ * Use with setupMocks/Mocked getModularRoot to ensure that it adds the package in the correct test context
+ * @param name Name of package to add
+ * @param type Modular Type of package being added (template)
+ */
+export async function addPackageForTests(
+  name: string,
+  type: string,
+): Promise<void> {
+  const { default: addPackage } = await import('../addPackage');
+  await addPackage({
+    name,
+    type,
+  });
+}
+
+/**
+ * Runs tests based on the provided parameters
+ * Use with setupMocks/Mocked getModularRoot to ensure that it adds the package in the correct test context
+ */
+export async function runTestForTests({
+  packages,
+  regex,
+}: {
+  packages?: string[];
+  regex?: string[];
+}): Promise<void> {
+  const { default: test } = await import('../test/index');
+  await test(
+    {
+      env: 'jsdom',
+      regex,
+    },
+    packages,
+  );
+}
+
+/**
  * Build a specified package
  * Use with setupMocks/Mocked getModularRoot to ensure that it looks for the package in the correct test context
  * @param targetPackage Target package to build
@@ -390,4 +430,14 @@ export function setupMocks(modularRoot: string) {
     '../utils/actionPreflightCheck',
     () => mockPreflightImplementation,
   );
+}
+
+/**
+ * Mocks process.exit so that it doesn't happen during tests
+ * @returns jest.SpyInstance which you can use to test with expect(mockExit).toHaveBeenCalled()
+ */
+export function mockProcessExit() {
+  return jest.spyOn(process, 'exit').mockImplementation(() => {
+    return undefined as never;
+  });
 }

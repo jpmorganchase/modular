@@ -11,7 +11,11 @@ import { getDocument, queries, waitFor } from 'pptr-testing-library';
 import puppeteer from 'puppeteer';
 
 import { startApp, DevServer } from './start-app';
-import { createModularTestContext, runModularForTests } from '../test/utils';
+import {
+  addPackageForTests,
+  createModularTestContext,
+  setupMocks,
+} from '../test/utils';
 
 // Temporary text context paths
 let tempModularRepo: string;
@@ -22,11 +26,10 @@ const targetedView = 'sample-app';
 describe('modular start', () => {
   beforeAll(async () => {
     tempModularRepo = createModularTestContext();
+    setupMocks(tempModularRepo);
     const tempPackagesPath = path.join(tempModularRepo, 'packages');
-    runModularForTests(
-      tempModularRepo,
-      'add sample-app --unstable-type app --unstable-name sample-app',
-    );
+
+    await addPackageForTests('sample-app', 'app');
 
     await fs.copyFile(
       path.join(__dirname, 'TestApp.test-tsx'),

@@ -18,6 +18,7 @@ import {
   runModularForTests,
   setupMocks,
   buildPackageForTests,
+  addPackageForTests,
 } from '../test/utils';
 import { setTimeout } from 'timers';
 
@@ -996,14 +997,5 @@ async function runYarn() {
   await execa('yarnpkg', [], {
     cwd: tempModularRepo,
     cleanup: true,
-  });
-}
-
-async function addPackageForTests(name: string, type: string): Promise<void> {
-  const { default: addPackage } = await import('../addPackage');
-  await addPackage({
-    name: name,
-    type: type,
-    unstableName: name,
   });
 }
