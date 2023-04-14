@@ -7,7 +7,10 @@ import commander, { Option } from 'commander';
 import { testOptions } from './test/jestOptions';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import * as logger from './utils/logger';
-import { validateCompareOptions } from './utils/validateOptions';
+import {
+  validateCompareOptions,
+  computeConcurrencyOption,
+} from './utils/options';
 
 import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import type { TestOptions } from './test';
@@ -111,6 +114,10 @@ program
     "Ignore circular dependency checks if your graph has one or more circular dependencies involving 'source' types, then warn. The build will still fail if circular dependencies involve more than one buildable package. Circular dependencies can be always refactored to remove cycles. This switch is dangerous and should be used sparingly and only temporarily.",
     false,
   )
+  .option(
+    '--concurrencyLevel <level>',
+    'Limit the concurrency of build processes that are executed in parallel within batches. 0 or 1 means no concurrency. Default is the number of logical CPUs.',
+  )
   .action(
     async (
       packagePaths: string[],
@@ -122,11 +129,20 @@ program
         ancestors: boolean;
         descendants: boolean;
         dangerouslyIgnoreCircularDependencies: boolean;
+        concurrencyLevel?: string;
       },
     ) => {
       const { default: build } = await import('./build-scripts');
 
       validateCompareOptions(options.compareBranch, options.changed);
+
+      const concurrencyLevel = computeConcurrencyOption(
+        options.concurrencyLevel,
+      );
+
+      logger.debug(
+        `Running build with a concurrency level of ${concurrencyLevel}`,
+      );
 
       if (options.dangerouslyIgnoreCircularDependencies) {
         // Warn. Users should never use this, but if they use it, they should have cycles limited to "source" packages
@@ -146,6 +162,7 @@ program
         descendants: options.descendants,
         dangerouslyIgnoreCircularDependencies:
           options.dangerouslyIgnoreCircularDependencies,
+        concurrencyLevel,
       });
     },
   );

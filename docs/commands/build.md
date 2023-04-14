@@ -15,7 +15,10 @@ Search workspaces based on their `name` field in the `package.json` and build:
   [workspace](https://classic.yarnpkg.com/en/docs/cli/workspace).
 
 Packages are always built in order of dependency (e.g. if a package `a` depends
-on a package `b`, `b` is built first).
+on a package `b`, `b` is built first). Packages may be built concurrently when
+possible. The maximum concurrency level defaults to the number of CPUs available
+on the machine, but can be set by the user (see the `--concurrencyLevel`
+option).
 
 The output directory for built artifacts is `dist/`, which has a flat structure
 of modular package names. Each built app/view/package is added to the `dist/` as
@@ -45,9 +48,9 @@ changed. Files that have changed are calculated comparing the current state of
 the repository with the branch specified by `compareBranch` or, if
 `compareBranch` is not set, with the default git branch.
 
-`--compareBranch`: Specify the comparison branch used to determine which files
-have changed when using the `changed` option. If this option is used without
-`changed`, the command will fail.
+`--compareBranch <branchName>`: Specify the comparison branch used to determine
+which files have changed when using the `changed` option. If this option is used
+without `changed`, the command will fail.
 
 `--descendants`: Build the packages specified by the `[packages...]` argument
 and/or the `--changed` option and additionally build all their descendants (i.e.
@@ -57,6 +60,12 @@ the packages they directly or indirectly depend on) in dependency order.
 and/or the `--changed` option and additionally build all their ancestors (i.e.
 the packages that have a direct or indirect dependency on them) in dependency
 order.
+
+`--concurrencyLevel <level>`: Limit the concurrency of build processes that are
+executed in different processes within build batches. 0 or 1 means no
+concurrency. If not specified, this option defaults to
+[the number of logical CPUs](https://nodejs.org/api/os.html#oscpus) available on
+the machine, or 1 if that information is not available.
 
 ## Dependency selection and build order examples
 
