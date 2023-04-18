@@ -72,15 +72,16 @@ async function lint(
   );
 
   // Compute patterns to pass Jest for the packages that we want to test
-  const packageRegexes = await computeRegexesFromPackageNames(modularTargets);
+  const selectedPackageRegexes = await computeRegexesFromPackageNames(
+    modularTargets,
+  );
 
   // Only set regexes if all or selective options have been specified
-  let lintPackageRegexes =
-    isSelective || all
-      ? packageRegexes.map(
-          (regex) => `<rootDir>/${regex}/src/**/*.{js,jsx,ts,tsx}`,
-        )
-      : [];
+  let processedPackageRegexes = selectedPackageRegexes.map(
+    (regex) => `<rootDir>/${regex}/src/**/*.{js,jsx,ts,tsx}`,
+  );
+
+  let lintRegexes = isSelective || all ? processedPackageRegexes : [];
 
   if (all && isSelective) {
     logger.warn(
@@ -93,46 +94,51 @@ async function lint(
   }
 
   // Not selective, not --all and no regexes; calculate the file regexes of --diff or --staged
-  if (!all && !isSelective && (!isCI || staged) && userRegexes.length === 0) {
-    let diffedFiles: null | string[];
+  if (!all && !isSelective && userRegexes.length === 0) {
+    if (!isCI || staged) {
+      let diffedFiles: null | string[];
 
-    try {
-      // This can throw in case there is no git directory; in this case, we need to continue like nothing happened
-      diffedFiles = staged ? getStagedFiles() : getDiffedFiles();
-    } catch {
-      diffedFiles = null;
-      logger.log(
-        'Getting staged or diffed files failed - are you sure this is a git repo? Falling back to `--all`.',
-      );
-      lintPackageRegexes = packageRegexes.map(
-        (regex) => `<rootDir>/${regex}/src/**/*.{js,jsx,ts,tsx}`,
-      );
-    }
-    if (diffedFiles !== null) {
-      if (diffedFiles.length === 0) {
+      try {
+        // This can throw in case there is no git directory; in this case, we need to continue like nothing happened
+        diffedFiles = staged ? getStagedFiles() : getDiffedFiles();
+      } catch {
+        diffedFiles = null;
         logger.log(
-          'No diffed files detected. Use the `--all` option to lint the entire codebase',
+          'Getting staged or diffed files failed - are you sure this is a git repo? Falling back to `--all`.',
         );
-      } else {
-        lintPackageRegexes = diffedFiles
-          .filter((p: string) => lintExtensions.includes(path.extname(p)))
-          .map((p: string) => `<rootDir>/${p}`);
+        lintRegexes = processedPackageRegexes;
+      }
+      if (diffedFiles !== null) {
+        if (diffedFiles.length === 0) {
+          logger.log(
+            'No diffed files detected. Use the `--all` option to lint the entire codebase',
+          );
+        } else {
+          processedPackageRegexes = diffedFiles
+            .filter((p: string) => lintExtensions.includes(path.extname(p)))
+            .map((p: string) => `<rootDir>/${p}`);
 
-        // if none of the diffed files meet the extension criteria, do not lint
-        // end the process early with a success
-        if (!lintPackageRegexes.length) {
-          logger.warn('No diffed target files to lint found');
+          // if none of the diffed files meet the extension criteria, do not lint
+          // end the process early with a success
+          if (!processedPackageRegexes.length) {
+            logger.warn('No diffed target files to lint found');
+          }
         }
+      } else {
+        // If not CI, then lint all
+        lintRegexes = processedPackageRegexes;
       }
     }
+  } else if (
+    !all &&
+    !isSelective &&
+    (isCI || !staged) &&
+    userRegexes.length === 0
+  ) {
   }
 
   // If we computed no regexes and there are no non-modular packages to lint, bail out
-  if (
-    !lintPackageRegexes?.length &&
-    !userRegexes &&
-    !nonModularTargets.length
-  ) {
+  if (!lintRegexes?.length && !userRegexes && !nonModularTargets.length) {
     process.stdout.write('No workspaces found in selection\n');
     process.exit(0);
   }
@@ -141,7 +147,7 @@ async function lint(
     runner: require.resolve('modular-scripts/jest-runner-eslint'),
     displayName: 'lint',
     rootDir: modularRoot,
-    testMatch: lintPackageRegexes,
+    testMatch: lintRegexes,
     testPathIgnorePatterns: ['/node_modules/', '/dist/'],
   };
 
@@ -154,14 +160,12 @@ async function lint(
   const lintBin = await resolveAsBin('jest-cli');
 
   logger.debug(
-    `Regexes for Modular packages being linted: ${JSON.stringify(
-      lintPackageRegexes,
-    )}`,
+    `Regexes for Modular packages being linted: ${JSON.stringify(lintRegexes)}`,
   );
   logger.debug(`User provided regexes: ${JSON.stringify(userRegexes)}`);
 
   // Lint modular packages
-  if (lintPackageRegexes.length || userRegexes.length) {
+  if (lintRegexes.length || userRegexes.length) {
     try {
       logger.debug(
         `Running ${lintBin} with cwd: ${getModularRoot()} and args: ${JSON.stringify(
@@ -179,10 +183,8 @@ async function lint(
       });
 
       if (staged && fix) {
-        lintPackageRegexes = lintPackageRegexes.map((p) =>
-          p.replace('<rootDir>/', ''),
-        );
-        addFiles(lintPackageRegexes);
+        lintRegexes = lintRegexes.map((p) => p.replace('<rootDir>/', ''));
+        addFiles(lintRegexes);
       }
     } catch (err) {
       logger.debug((err as ExecaError).message);
