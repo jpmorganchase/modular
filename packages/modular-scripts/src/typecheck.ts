@@ -19,7 +19,7 @@ export interface TypecheckOptions {
   compareBranch: string;
 }
 
-const COMPILER_OPTIONS_ALLOW_LIST: string[] = ['jsx'];
+const COMPILER_OPTIONS_ALLOW_LIST: string[] = ['jsx', 'strict'];
 const DEFAULT_COMPILER_OPTIONS: CompilerOptions = {
   noEmit: true,
 };
