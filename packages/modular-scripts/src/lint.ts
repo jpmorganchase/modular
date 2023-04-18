@@ -104,6 +104,9 @@ async function lint(
       logger.log(
         'Getting staged or diffed files failed - are you sure this is a git repo? Falling back to `--all`.',
       );
+      lintPackageRegexes = packageRegexes.map(
+        (regex) => `<rootDir>/${regex}/src/**/*.{js,jsx,ts,tsx}`,
+      );
     }
     if (diffedFiles !== null) {
       if (diffedFiles.length === 0) {
