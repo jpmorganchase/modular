@@ -67,6 +67,6 @@ do
 done
 
 yarn modular workspace
-yarn modular lint -all
+yarn modular lint
 yarn modular typecheck
 
