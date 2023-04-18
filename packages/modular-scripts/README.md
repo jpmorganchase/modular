@@ -1,7 +1,7 @@
 <div align="center">
   <h1><img height="38px" width="44px" style="height: 38px; max-width: 44px" src="https://raw.githubusercontent.com/jpmorganchase/modular/main/docs/img/modular-hero.svg"> &nbsp; Modular</h1>
 
-  <p><strong>Scaled Web Engineering</strong>. Where Libraries, Views & apps coexist together and tooling is a first-class citizen.</p>
+  <p><strong>Scaled Web Engineering</strong>. Where libraries and micro-frontends coexist together and tooling is a first-class citizen.</p>
 </div>
 
 ---
@@ -12,31 +12,21 @@
 ![Tests](https://github.com/jpmorganchase/modular/actions/workflows/test.yml/badge.svg)
 [![Coverage](https://coveralls.io/repos/github/jpmorganchase/modular/badge.svg?branch=main)](https://coveralls.io/github/jpmorganchase/modular?branch=main)
 
-`modular` is a collection of tools and guidance to enable UI development at
-scale. It is derived from work at JP Morgan to enable development in a single
-repository by many teams.
+`modular` is a collection of tools and guidance to enable micro-frontend
+development at scale. It is derived from work at JP Morgan to enable development
+in large monorepositories owned by many teams.
 
-It provides a `modular` CLI to scaffold and develop a new application from
-scratch, as well as commands to add and manage further modules.
+It provides a CLI to:
 
-## Philosophy
+- Scaffold new micro-frontends and libraries from scratch
+- Provide ready-to-use, opinionated test, lint and build configurations for
+  micro-frontends and libraries
+- Provide tooling to incrementally and selectively run operations on
+  monorepositories at scale
 
-`modular` believes the burden to learn a "Framework" with proprietary APIs in a
-rapidly evolving landscape is an inhibitor to **scaled web engineering**.
+## Pre-requisites
 
-There is already a very strong set of **Language Constructs, Frameworks and
-Tooling** that the front end community is rallying around like `TypeScript`,
-`ES6 Modules`, `React`, `Parcel`, `Webpack`, `GitHub Actions`, `Jest`,
-`Workspaces` etc.
-
-Scaled Engineering requires a few more Frameworks, Libraries and Tools that are
-not yet first class citizens in the world of Front End Engineering like
-**Universal Data Fetching**, **Feature Flags**, **Analytics Capture**,
-**Security**, **Deployment** etc.
-
-`modular` attempts to bring the best Language Constructs, Libraries, Frameworks
-and Tooling together to establish a set of patterns and definitions to enable
-**Monorepo** based engineering.
+See the [compatibility page](https://modular.js.org/compatibility/).
 
 ## Getting Started
 
@@ -47,7 +37,8 @@ and Tooling together to establish a set of patterns and definitions to enable
 Bootstraps a new project, configured to use
 [Yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces/).
 
-This also creates a workspace named 'app' which is a new modular app written in
+This also creates a workspace named 'app' which is a new
+[modular app](./package-types) written in
 [TypeScript](https://www.typescriptlang.org/).
 
 It supports three flags:
@@ -61,10 +52,10 @@ It supports three flags:
 ## Commands
 
 More documentation about modular commands is
-[here](https://github.com/jpmorganchase/modular/tree/main/docs/).
+[here](https://modular.js.org/commands/).
 
 ## Configuration
 
 Modular is based around the idea of minimal configuration - however
 documentation for the options available is
-[here](https://github.com/jpmorganchase/modular/tree/main/docs/configuration.md).
+[here](https://modular.js.org/configuration/).
