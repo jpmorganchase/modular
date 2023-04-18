@@ -4,15 +4,63 @@ import fs, { writeJSONSync } from 'fs-extra';
 import path from 'path';
 import * as tmp from 'tmp';
 import { promisify } from 'util';
-
-import getModularRoot from '../utils/getModularRoot';
-import type { ModularPackageJson } from '@modular-scripts/modular-types';
+import findUp from 'find-up';
 import { mkdirSync } from 'fs';
+
+import type { ModularPackageJson } from '@modular-scripts/modular-types';
 import type { Config } from '@jest/types';
 
 const rimraf = promisify(_rimraf);
 
-const modularRoot = getModularRoot();
+/**
+ * This is a duplicate copy of `getModularRoot`.
+ * It exists as a standalone test util so that we can mock the real `getMockRoot` in tests.
+ *
+ * A copy of the real implementation (i.e. one that returns the modular root of modular itself) is
+ * still needed in test code for things like test setup (and the other utilities in here).
+ */
+export function getRealModularRootInTest(): string {
+  function isModularRoot(packageJsonPath: string) {
+    const packageJson = fs.readJSONSync(packageJsonPath, {
+      encoding: 'utf8',
+    }) as { modular?: Record<string, unknown> };
+    return packageJson?.modular?.type === 'root';
+  }
+
+  function findModularRoot(): string | undefined {
+    try {
+      const modularRoot = findUp.sync(
+        (directory: string) => {
+          const packageJsonPath = path.join(directory, 'package.json');
+          if (
+            findUp.sync.exists(packageJsonPath) &&
+            isModularRoot(packageJsonPath)
+          ) {
+            return packageJsonPath;
+          }
+          return;
+        },
+        { type: 'file', allowSymlinks: false },
+      );
+
+      return modularRoot
+        ? path.normalize(path.dirname(modularRoot))
+        : undefined;
+    } catch (err) {
+      throw new Error(err as string);
+    }
+  }
+
+  const modularRoot = findModularRoot();
+
+  if (modularRoot === undefined) {
+    throw new Error('Could not find modular root.');
+  }
+
+  return modularRoot;
+}
+
+const modularRoot = getRealModularRootInTest();
 
 export async function cleanup(packageNames: Array<string>): Promise<void> {
   const packagesPath = path.join(modularRoot, 'packages');

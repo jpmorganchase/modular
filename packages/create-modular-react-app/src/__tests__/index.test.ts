@@ -119,7 +119,7 @@ describe('create-modular-react-app', () => {
             "private": true,
             "scripts": Object {
               "build": "modular build",
-              "lint": "eslint . --ext .js,.ts,.tsx",
+              "lint": "modular lint",
               "prettier": "prettier --write .",
               "start": "modular start",
               "test": "modular test",
@@ -217,7 +217,7 @@ describe('create-modular-react-app', () => {
           "private": true,
           "scripts": Object {
             "build": "modular build",
-            "lint": "eslint . --ext .js,.ts,.tsx",
+            "lint": "modular lint",
             "prettier": "prettier --write .",
             "start": "modular start",
             "test": "modular test",

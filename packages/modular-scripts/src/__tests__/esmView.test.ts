@@ -14,6 +14,12 @@ import { normalizeToPosix } from '../build-scripts/esbuild-scripts/utils/formatP
 import { startApp, DevServer } from './start-app';
 import type { CoreProperties } from '@schemastore/package';
 import { createModularTestContext, runModularForTests } from '../test/utils';
+import {
+  addPackageForTests,
+  buildPackageForTests,
+  setupMocks,
+} from '../test/mockFunctions';
+import { setTimeout } from 'timers';
 
 // Temporary text context paths
 let tempModularRepo: string;
@@ -34,10 +40,9 @@ describe('modular working with an esm-view', () => {
     tempModularRepo = createModularTestContext();
     tempPackagesPath = path.join(tempModularRepo, 'packages');
     tempDistPath = path.join(tempModularRepo, 'dist');
-    runModularForTests(
-      tempModularRepo,
-      'add sample-esm-view --unstable-type esm-view --unstable-name sample-esm-view',
-    );
+    setupMocks(tempModularRepo);
+
+    await addPackageForTests(targetedView, 'esm-view');
 
     await fs.copyFile(
       path.join(__dirname, 'TestEsmView.test-tsx'),
@@ -85,6 +90,8 @@ describe('modular working with an esm-view', () => {
         },
         tempModularRepo,
       );
+      // Wait two seconds to ensure app started fully
+      await new Promise((f) => setTimeout(f, 2000));
     });
 
     afterAll(async () => {
@@ -112,16 +119,11 @@ describe('modular working with an esm-view', () => {
       await page.goto(`http://localhost:${port}`, {});
 
       // eslint-disable-next-line @typescript-eslint/unbound-method
-      const { getByTestId, findByTestId } = getQueriesForElement(
-        await getDocument(page),
-      );
+      const { findByTestId } = getQueriesForElement(await getDocument(page));
 
-      await findByTestId('test-this');
-
-      // eslint-disable-next-line testing-library/no-await-sync-query
-      expect(await getNodeText(await getByTestId('test-this'))).toBe(
-        'this is a modular esm-view',
-      );
+      const form = await findByTestId('test-this');
+      const text = await getNodeText(form);
+      expect(text).toBe('this is a modular esm-view');
     });
   });
 
@@ -129,11 +131,9 @@ describe('modular working with an esm-view', () => {
     let buildOutputPackageJson: CoreProperties;
 
     beforeAll(async () => {
-      buildSampleEsmView(targetedView, tempModularRepo, {
-        env: {
-          USE_MODULAR_ESBUILD: 'true',
-        },
-      });
+      setupMocks(tempModularRepo);
+      await buildPackageForTests(targetedView, ['useModularEsbuild: true']);
+
       [buildOutputJsEntrypoint, buildOutputJsEntrypointPath] =
         await getBuildOutputEntrypoint(targetedView, tempDistPath);
       buildOutputPackageJson = await getBuildOutputPackageJson(
@@ -146,18 +146,18 @@ describe('modular working with an esm-view', () => {
       const { module: _, ...manifest } = buildOutputPackageJson;
       // Omit module from manifest as we test it separately, in a more informative way
       expect(manifest).toMatchInlineSnapshot(`
-        {
-          "bundledDependencies": [],
-          "dependencies": {
-            "react": "^18.2.0",
-          },
-          "modular": {
-            "type": "esm-view",
-          },
-          "name": "sample-esm-view",
-          "version": "1.0.0",
-        }
-      `);
+          {
+            "bundledDependencies": [],
+            "dependencies": {
+              "react": "^18.2.0",
+            },
+            "modular": {
+              "type": "esm-view",
+            },
+            "name": "sample-esm-view",
+            "version": "1.0.0",
+          }
+        `);
     });
 
     it('THEN outputs a JS entrypoint file', () => {
@@ -175,12 +175,11 @@ describe('modular working with an esm-view', () => {
 
   describe('WHEN building a esm-view with a custom ESM CDN', () => {
     beforeAll(async () => {
-      buildSampleEsmView(targetedView, tempModularRepo, {
-        env: {
-          USE_MODULAR_ESBUILD: 'true',
-          EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
-        },
-      });
+      setupMocks(tempModularRepo);
+      await buildPackageForTests(targetedView, [
+        'useModularEsbuild: true',
+        'externalCdnTemplate: "https://mycustomcdn.net/[name]@[version]"',
+      ]);
 
       [buildOutputJsEntrypoint, buildOutputJsEntrypointPath] =
         await getBuildOutputEntrypoint(targetedView, tempDistPath);
@@ -218,6 +217,7 @@ describe('modular working with an esm-view', () => {
 
   describe('WHEN building a esm-view with various kinds of package dependencies with esbuild', () => {
     beforeAll(async () => {
+      setupMocks(tempModularRepo);
       await fs.copyFile(
         path.join(__dirname, 'TestViewPackages.test-tsx'),
         path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
@@ -233,12 +233,10 @@ describe('modular working with an esm-view', () => {
 
       await runYarn();
 
-      buildSampleEsmView(targetedView, tempModularRepo, {
-        env: {
-          USE_MODULAR_ESBUILD: 'true',
-          EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
-        },
-      });
+      await buildPackageForTests(targetedView, [
+        'useModularEsbuild: true',
+        'externalCdnTemplate: "https://mycustomcdn.net/[name]@[version]"',
+      ]);
 
       [buildOutputJsEntrypoint, buildOutputJsEntrypointPath] =
         await getBuildOutputEntrypoint(targetedView, tempDistPath);
@@ -292,6 +290,8 @@ describe('modular working with an esm-view', () => {
 
   describe('WHEN building a esm-view with various kinds of package dependencies with webpack', () => {
     beforeAll(async () => {
+      setupMocks(tempModularRepo);
+
       await fs.copyFile(
         path.join(__dirname, 'TestViewPackages.test-tsx'),
         path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
@@ -307,6 +307,10 @@ describe('modular working with an esm-view', () => {
 
       await runYarn();
 
+      // TODO: Switch to the below line once we get Webpack working in tests without execa
+      // await buildPackageForTests(targetedView, [
+      //   'externalCdnTemplate: "https://mycustomcdn.net/[name]@[version]"',
+      // ]);
       buildSampleEsmView(targetedView, tempModularRepo, {
         env: {
           EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
@@ -345,6 +349,8 @@ describe('modular working with an esm-view', () => {
 
   describe('WHEN building a esm-view with a series of CDN selective dependency resolutions with the resolution field with webpack', () => {
     beforeAll(async () => {
+      setupMocks(tempModularRepo);
+
       await fs.copyFile(
         path.join(__dirname, 'TestViewPackages.test-tsx'),
         path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
@@ -364,12 +370,17 @@ describe('modular working with an esm-view', () => {
 
       await runYarn();
 
+      // TODO: Switch to the below line once we get Webpack working in tests without execa
+      // await buildPackageForTests(targetedView, [
+      //   'externalCdnTemplate: "https://mycustomcdn.net/[name]@[version]?selectiveDeps=[selectiveCDNResolutions]"',
+      // ]);
       buildSampleEsmView(targetedView, tempModularRepo, {
         env: {
           EXTERNAL_CDN_TEMPLATE:
             'https://mycustomcdn.net/[name]@[version]?selectiveDeps=[selectiveCDNResolutions]',
         },
       });
+
       [buildOutputJsEntrypoint, buildOutputJsEntrypointPath] =
         await getBuildOutputEntrypoint(targetedView, tempDistPath);
     });
@@ -404,6 +415,8 @@ describe('modular working with an esm-view', () => {
 
   describe('WHEN building a esm-view with a series of CDN selective dependency resolutions with the resolution field with esbuild', () => {
     beforeAll(async () => {
+      setupMocks(tempModularRepo);
+
       await fs.copyFile(
         path.join(__dirname, 'TestViewPackages.test-tsx'),
         path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
@@ -423,13 +436,10 @@ describe('modular working with an esm-view', () => {
 
       await runYarn();
 
-      buildSampleEsmView(targetedView, tempModularRepo, {
-        env: {
-          USE_MODULAR_ESBUILD: 'true',
-          EXTERNAL_CDN_TEMPLATE:
-            'https://mycustomcdn.net/[name]@[version]?selectiveDeps=[selectiveCDNResolutions]',
-        },
-      });
+      await buildPackageForTests(targetedView, [
+        'useModularEsbuild: true',
+        'externalCdnTemplate: "https://mycustomcdn.net/[name]@[version]?selectiveDeps=[selectiveCDNResolutions]"',
+      ]);
 
       [buildOutputJsEntrypoint, buildOutputJsEntrypointPath] =
         await getBuildOutputEntrypoint(targetedView, tempDistPath);
@@ -465,6 +475,8 @@ describe('modular working with an esm-view', () => {
 
   describe('WHEN building a esm-view with resolutions', () => {
     beforeAll(async () => {
+      setupMocks(tempModularRepo);
+
       await fs.copyFile(
         path.join(__dirname, 'TestViewPackages.test-tsx'),
         path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
@@ -480,12 +492,10 @@ describe('modular working with an esm-view', () => {
 
       await runYarn();
 
-      buildSampleEsmView(targetedView, tempModularRepo, {
-        env: {
-          USE_MODULAR_ESBUILD: 'true',
-          EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[resolution]',
-        },
-      });
+      await buildPackageForTests(targetedView, [
+        'useModularEsbuild: true',
+        'externalCdnTemplate: "https://mycustomcdn.net/[name]@[resolution]"',
+      ]);
 
       [buildOutputJsEntrypoint, buildOutputJsEntrypointPath] =
         await getBuildOutputEntrypoint(targetedView, tempDistPath);
@@ -517,6 +527,8 @@ describe('modular working with an esm-view', () => {
 
   describe('WHEN building a esm-view with resolutions and webpack', () => {
     beforeAll(async () => {
+      setupMocks(tempModularRepo);
+
       await fs.copyFile(
         path.join(__dirname, 'TestViewPackages.test-tsx'),
         path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
@@ -532,6 +544,10 @@ describe('modular working with an esm-view', () => {
 
       await runYarn();
 
+      // TODO: Switch to the below line once we get Webpack working in tests without execa
+      // await buildPackageForTests(targetedView, [
+      //   'externalCdnTemplate: "https://mycustomcdn.net/[name]@[resolution]"',
+      // ]);
       buildSampleEsmView(targetedView, tempModularRepo, {
         env: {
           EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[resolution]',
@@ -567,6 +583,14 @@ describe('modular working with an esm-view', () => {
 
   describe('WHEN building a esm-view specifying a dependency to not being rewritten', () => {
     beforeAll(async () => {
+      setupMocks(tempModularRepo);
+      // TODO: Use buildPackageForTests once this error is fixed:
+      // "Dependency react-dom found in package.json but not in lockfile. Have you installed your dependencies?""
+      // await buildPackageForTests(targetedView, [
+      //   'useModularEsbuild: true',
+      //   'externalCdnTemplate: "https://mycustomcdn.net/[name]@[version]"',
+      //   'externalBlockList: ["lodash", "lodash.merge"]',
+      // ]);
       buildSampleEsmView(targetedView, tempModularRepo, {
         env: {
           USE_MODULAR_ESBUILD: 'true',
@@ -612,6 +636,14 @@ describe('modular working with an esm-view', () => {
 
   describe('WHEN building a esm-view specifying a dependency to not being rewritten using wildcards', () => {
     beforeAll(async () => {
+      setupMocks(tempModularRepo);
+      // TODO: Use buildPackageForTests once this error is fixed:
+      // "Dependency react-dom found in package.json but not in lockfile. Have you installed your dependencies?""
+      // await buildPackageForTests(targetedView, [
+      //   'useModularEsbuild: true',
+      //   'externalCdnTemplate: "https://mycustomcdn.net/[name]@[version]"',
+      //   'externalBlockList: ["lodash*"]',
+      // ]);
       buildSampleEsmView(targetedView, tempModularRepo, {
         env: {
           USE_MODULAR_ESBUILD: 'true',
@@ -658,6 +690,14 @@ describe('modular working with an esm-view', () => {
 
   describe('WHEN building a esm-view specifying a dependency to not being rewritten using allow list and wildcards', () => {
     beforeAll(async () => {
+      setupMocks(tempModularRepo);
+      // TODO: Use buildPackageForTests once this error is fixed:
+      // "Dependency react-dom found in package.json but not in lockfile. Have you installed your dependencies?""
+      // await buildPackageForTests(targetedView, [
+      //   'useModularEsbuild: true',
+      //   'externalCdnTemplate: "https://mycustomcdn.net/[name]@[version]"',
+      //   'externalBlockList: ["react*"]',
+      // ]);
       buildSampleEsmView(targetedView, tempModularRepo, {
         env: {
           USE_MODULAR_ESBUILD: 'true',
@@ -703,13 +743,12 @@ describe('modular working with an esm-view', () => {
 
   describe('WHEN building a esm-view specifying a PUBLIC_URL', () => {
     beforeAll(async () => {
-      buildSampleEsmView(targetedView, tempModularRepo, {
-        env: {
-          USE_MODULAR_ESBUILD: 'true',
-          PUBLIC_URL: '/public/path/',
-          EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
-        },
-      });
+      setupMocks(tempModularRepo);
+      await buildPackageForTests(targetedView, [
+        'useModularEsbuild: true',
+        'publicUrl: "/public/path/"',
+        'externalCdnTemplate: "https://mycustomcdn.net/[name]@[version]"',
+      ]);
 
       [buildOutputJsEntrypoint, buildOutputJsEntrypointPath] =
         await getBuildOutputEntrypoint(targetedView, tempDistPath);
@@ -734,13 +773,12 @@ describe('modular working with an esm-view', () => {
 
   describe('WHEN building a esm-view specifying a PUBLIC_URL and the path is ./', () => {
     beforeAll(async () => {
-      buildSampleEsmView(targetedView, tempModularRepo, {
-        env: {
-          USE_MODULAR_ESBUILD: 'true',
-          PUBLIC_URL: './',
-          EXTERNAL_CDN_TEMPLATE: 'https://mycustomcdn.net/[name]@[version]',
-        },
-      });
+      setupMocks(tempModularRepo);
+      await buildPackageForTests(targetedView, [
+        'useModularEsbuild: true',
+        'publicUrl: "./"',
+        'externalCdnTemplate: "https://mycustomcdn.net/[name]@[version]"',
+      ]);
 
       [buildOutputJsEntrypoint, buildOutputJsEntrypointPath] =
         await getBuildOutputEntrypoint(targetedView, tempDistPath);
@@ -762,18 +800,17 @@ describe('modular working with an esm-view with custom index.html', () => {
     tempModularRepo = createModularTestContext();
     tempPackagesPath = path.join(tempModularRepo, 'packages');
     tempDistPath = path.join(tempModularRepo, 'dist');
-    runModularForTests(
-      tempModularRepo,
-      'add sample-esm-view-with-index --unstable-type esm-view --unstable-name sample-esm-view-with-index',
-    );
+    setupMocks(tempModularRepo);
 
-    await fs.copyFile(
-      path.join(__dirname, 'TestEsmView.test-tsx'),
-      path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
-    );
+    await addPackageForTests(targetedView, 'esm-view');
 
-    await fs.mkdir(path.join(tempPackagesPath, targetedView, 'public'));
-
+    await Promise.all([
+      fs.copyFile(
+        path.join(__dirname, 'TestEsmView.test-tsx'),
+        path.join(tempPackagesPath, targetedView, 'src', 'index.tsx'),
+      ),
+      fs.mkdir(path.join(tempPackagesPath, targetedView, 'public')),
+    ]);
     await fs.copyFile(
       path.join(__dirname, 'CustomIndex-html'),
       path.join(tempPackagesPath, targetedView, 'public', 'index.html'),
@@ -822,6 +859,8 @@ describe('modular working with an esm-view with custom index.html', () => {
         },
         tempModularRepo,
       );
+      // Wait two seconds to ensure app started fully
+      await new Promise((f) => setTimeout(f, 2000));
     });
 
     afterAll(async () => {
@@ -849,26 +888,18 @@ describe('modular working with an esm-view with custom index.html', () => {
       await page.goto(`http://localhost:${port}`, {});
 
       // eslint-disable-next-line @typescript-eslint/unbound-method
-      const { getByTestId, findByTestId } = getQueriesForElement(
-        await getDocument(page),
-      );
+      const { findByTestId } = getQueriesForElement(await getDocument(page));
 
-      await findByTestId('custom-index');
-
-      // eslint-disable-next-line testing-library/no-await-sync-query
-      expect(await getNodeText(await getByTestId('custom-index'))).toBe(
-        'This will appear before #root',
-      );
+      const form = await findByTestId('custom-index');
+      const text = await getNodeText(form);
+      expect(text).toBe('This will appear before #root');
     });
   });
 
   describe('WHEN building a esm-view', () => {
-    beforeAll(() => {
-      buildSampleEsmView(targetedView, tempModularRepo, {
-        env: {
-          USE_MODULAR_ESBUILD: 'true',
-        },
-      });
+    beforeAll(async () => {
+      setupMocks(tempModularRepo);
+      await buildPackageForTests(targetedView, ['useModularEsbuild: true']);
     });
 
     it('THEN outputs the custom index.html', async () => {

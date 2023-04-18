@@ -2,7 +2,11 @@ import * as path from 'path';
 import * as fs from 'fs-extra';
 
 import execa from 'execa';
-import { createModularTestContext, runYarnModular } from '../test/utils';
+import {
+  createModularTestContext,
+  runYarnModular,
+  runModularPipeLogs,
+} from '../test/utils';
 import getModularRoot from '../utils/getModularRoot';
 
 const modularRoot = getModularRoot();
@@ -95,5 +99,83 @@ describe('Modular lint', () => {
         files.length,
       );
     });
+  });
+});
+
+describe('lint command can successfully do selective tests based on selected packages', () => {
+  const fixturesFolder = path.join(
+    __dirname,
+    Array.from({ length: 4 }).reduce<string>(
+      (acc) => `${acc}..${path.sep}`,
+      '',
+    ),
+    '__fixtures__',
+    'selective-lint',
+  );
+
+  let randomOutputFolder: string;
+
+  beforeEach(() => {
+    // Create random dir
+    randomOutputFolder = createModularTestContext();
+
+    fs.copySync(fixturesFolder, randomOutputFolder);
+    execa.sync('yarn', {
+      cwd: randomOutputFolder,
+    });
+  });
+
+  // Run in a single test, serially for performance reasons (the setup time is quite long)
+  it('finds test after specifying a valid package / finds ancestors using --ancestors', () => {
+    const resultPackages = runModularPipeLogs(
+      randomOutputFolder,
+      'lint --packages beta-lint gamma-lint',
+      'true',
+    );
+    expect(resultPackages.stderr).toContain('packages/beta-lint/src/');
+    expect(resultPackages.stderr).toContain('packages/gamma-lint/src/');
+    expect(resultPackages.stderr).not.toContain('packages/alpha-lint/src/');
+    expect(resultPackages.stderr).not.toContain('packages/delta-lint/src/');
+    expect(resultPackages.stderr).not.toContain('packages/epsilon-lint/src/');
+
+    const resultPackagesWithAncestors = runModularPipeLogs(
+      randomOutputFolder,
+      'lint --packages beta-lint gamma-lint --ancestors',
+      'true',
+    );
+    expect(resultPackagesWithAncestors.stderr).toContain(
+      'packages/gamma-lint/src/',
+    );
+    expect(resultPackagesWithAncestors.stderr).toContain(
+      'packages/beta-lint/src/',
+    );
+    expect(resultPackagesWithAncestors.stderr).toContain(
+      'packages/alpha-lint/src/',
+    );
+    expect(resultPackagesWithAncestors.stderr).toContain(
+      'packages/epsilon-lint/src/',
+    );
+    expect(resultPackages.stderr).not.toContain('packages/alpha-lint/src/');
+
+    const resultPackagesWithDescendants = runModularPipeLogs(
+      randomOutputFolder,
+      'lint --packages beta-lint gamma-lint --descendants',
+      'true',
+    );
+    expect(resultPackagesWithDescendants.stderr).toContain(
+      'packages/beta-lint/src/',
+    );
+    expect(resultPackagesWithDescendants.stderr).toContain(
+      'packages/gamma-lint/src/',
+    );
+    expect(resultPackagesWithDescendants.stderr).toContain(
+      'packages/delta-lint/src/',
+    );
+    expect(resultPackagesWithDescendants.stderr).not.toContain(
+      'packages/alpha-lint/src/',
+    );
+    expect(resultPackagesWithDescendants.stderr).not.toContain(
+      'packages/epsilon-lint/src/',
+    );
   });
 });

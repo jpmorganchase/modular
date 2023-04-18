@@ -46,7 +46,7 @@ describe('When there is a non-Modular package with a build script', () => {
     expect(result.stderr).toBeFalsy();
     expect(result.stdout).toContain('\nnon-modular-buildable was built\n');
     expect(result.stdout).toContain(
-      'Building the following workspaces in order: ["non-modular-buildable","app"]',
+      'Building the following workspaces in order: [["non-modular-buildable"],["app"]]',
     );
     expect(result.stdout).toContain('Compiled successfully.');
   });
@@ -73,5 +73,17 @@ describe('When there is a non-Modular package with a build script', () => {
     expect(result.stdout).toContain('Final regexes to pass to Jest are: []');
 
     expect(result.stdout).toContain('\nnon-modular-testable was tested');
+  });
+
+  it('lints non-modular packages when the --includeNonModular flag is provided', () => {
+    const result = runModularPipeLogs(
+      tempModularRepo,
+      'lint --packages non-modular-lintable --includeNonModular --verbose',
+    );
+    expect(result.stderr).toBeFalsy();
+    expect(result.stdout).toContain(
+      'Running lint command in the following non-modular packages: ["non-modular-lintable"]',
+    );
+    expect(result.stdout).toContain('non-modular-lintable was linted');
   });
 });

@@ -67,14 +67,14 @@ describe('WHEN building with preserve modules', () => {
       │  ├─ index.js #p1m6x9
       │  ├─ index.js.map #16jes1h
       │  ├─ index2.js #1gdggtn
-      │  ├─ index2.js.map #4wjwha
+      │  ├─ index2.js.map #1pr8j30
       │  ├─ runAsync.js #kr3qrh
       │  └─ runAsync.js.map #1552hj
       ├─ dist-es
       │  ├─ index.js #tcl83f
       │  ├─ index.js.map #yz1h1d
       │  ├─ index2.js #67jtpf
-      │  ├─ index2.js.map #1l63dzb
+      │  ├─ index2.js.map #1kusida
       │  ├─ runAsync.js #1tt0e7o
       │  └─ runAsync.js.map #4pcbd
       ├─ dist-types
