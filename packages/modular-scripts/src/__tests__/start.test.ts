@@ -11,11 +11,8 @@ import { getDocument, queries, waitFor } from 'pptr-testing-library';
 import puppeteer from 'puppeteer';
 
 import { startApp, DevServer } from './start-app';
-import {
-  addPackageForTests,
-  createModularTestContext,
-  setupMocks,
-} from '../test/utils';
+import { createModularTestContext } from '../test/utils';
+import { addPackageForTests, setupMocks } from '../test/mockFunctions';
 
 // Temporary text context paths
 let tempModularRepo: string;

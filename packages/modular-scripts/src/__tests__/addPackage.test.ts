@@ -3,16 +3,17 @@ import fs from 'fs-extra';
 import tree from 'tree-view-for-tests';
 import getModularRoot from '../utils/getModularRoot';
 import {
-  addPackageForTests,
   createModularTestContext,
   mockInstallTemplate,
   runModularForTests,
   runModularForTestsAsync,
-  runTestForTests,
-  mockProcessExit,
-  setupMocks,
 } from '../test/utils';
 import type { CoreProperties } from '@schemastore/package';
+import {
+  runTestForTests,
+  setupMocks,
+  addPackageForTests,
+} from '../test/mockFunctions';
 
 const modularRoot = getModularRoot();
 
@@ -233,18 +234,11 @@ describe('When creating a new modular project', () => {
       await addPackageForTests('my-app', 'app');
     });
     it('succesfully runs tests', async () => {
-      // Mock process.exit so that it doesn't do anything during these tests
-      const mockExit = mockProcessExit();
-      let err;
-      try {
-        await runTestForTests({ packages: ['my-app'] });
-      } catch (e) {
-        err = e;
-      }
-      // Tests can fail in two ways: error, and process.exit - we have to cover both
+      const { mockExit, err } = await runTestForTests({
+        packages: ['my-app'],
+      });
       expect(err).toBeUndefined();
       expect(mockExit).not.toHaveBeenCalled();
-      mockExit.mockRestore();
     });
   });
   describe('When adding a new package type workspace from template', () => {
@@ -253,18 +247,11 @@ describe('When creating a new modular project', () => {
       await addPackageForTests('my-package', 'package');
     });
     it('succesfully runs tests', async () => {
-      // Mock process.exit so that it doesn't do anything during these tests
-      const mockExit = mockProcessExit();
-      let err;
-      try {
-        await runTestForTests({ packages: ['my-package'] });
-      } catch (e) {
-        err = e;
-      }
-      // Tests can fail in two ways: error, and process.exit - we have to cover both
+      const { mockExit, err } = await runTestForTests({
+        packages: ['my-package'],
+      });
       expect(err).toBeUndefined();
       expect(mockExit).not.toHaveBeenCalled();
-      mockExit.mockRestore();
     });
   });
   describe('When adding a new esm-view type workspace from template', () => {
@@ -273,18 +260,11 @@ describe('When creating a new modular project', () => {
       await addPackageForTests('my-esm-view', 'esm-view');
     });
     it('succesfully runs tests', async () => {
-      // Mock process.exit so that it doesn't do anything during these tests
-      const mockExit = mockProcessExit();
-      let err;
-      try {
-        await runTestForTests({ packages: ['my-esm-view'] });
-      } catch (e) {
-        err = e;
-      }
-      // Tests can fail in two ways: error, and process.exit - we have to cover both
+      const { mockExit, err } = await runTestForTests({
+        packages: ['my-esm-view'],
+      });
       expect(err).toBeUndefined();
       expect(mockExit).not.toHaveBeenCalled();
-      mockExit.mockRestore();
     });
   });
   describe('When adding a new view type workspace from template', () => {
@@ -293,18 +273,11 @@ describe('When creating a new modular project', () => {
       await addPackageForTests('my-view', 'view');
     });
     it('succesfully runs tests', async () => {
-      // Mock process.exit so that it doesn't do anything during these tests
-      const mockExit = mockProcessExit();
-      let err;
-      try {
-        await runTestForTests({ packages: ['my-view'] });
-      } catch (e) {
-        err = e;
-      }
-      // Tests can fail in two ways: error, and process.exit - we have to cover both
+      const { mockExit, err } = await runTestForTests({
+        packages: ['my-view'],
+      });
       expect(err).toBeUndefined();
       expect(mockExit).not.toHaveBeenCalled();
-      mockExit.mockRestore();
     });
   });
   describe('When adding a new source type workspace from template', () => {
@@ -313,18 +286,11 @@ describe('When creating a new modular project', () => {
       await addPackageForTests('my-source', 'source');
     });
     it('succesfully runs tests', async () => {
-      // Mock process.exit so that it doesn't do anything during these tests
-      const mockExit = mockProcessExit();
-      let err;
-      try {
-        await runTestForTests({ packages: ['my-source'] });
-      } catch (e) {
-        err = e;
-      }
-      // Tests can fail in two ways: error, and process.exit - we have to cover both
+      const { mockExit, err } = await runTestForTests({
+        packages: ['my-source'],
+      });
       expect(err).toBeUndefined();
       expect(mockExit).not.toHaveBeenCalled();
-      mockExit.mockRestore();
     });
   });
 });
