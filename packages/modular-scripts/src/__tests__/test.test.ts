@@ -6,10 +6,9 @@ import {
   createModularTestContext,
   runYarnModular,
   runModularPipeLogs,
-  setupMocks,
-  runTestForTests,
 } from '../test/utils';
 import getModularRoot from '../utils/getModularRoot';
+import { runTestForTests, setupMocks } from '../test/mockFunctions';
 
 const modularRoot = getModularRoot();
 
@@ -40,25 +39,20 @@ describe('Modular test command', () => {
 
     describe('when the tests fail', () => {
       it('should error', async () => {
-        let err;
-        try {
-          await runTestForTests({ regex: ['test/InvalidTest.test.ts'] });
-        } catch (e) {
-          err = (e as Error).message;
-        }
+        const { err } = await runTestForTests({
+          regex: ['test/InvalidTest.test.ts'],
+        });
         expect(err).toContain('Modular test did not pass');
       });
     });
 
     describe('when the tests pass', () => {
       it('should not error', async () => {
-        let err;
-        try {
-          await runTestForTests({ regex: ['test/ValidTest.test.ts'] });
-        } catch (e) {
-          err = (e as Error).message;
-        }
+        const { mockExit, err } = await runTestForTests({
+          regex: ['test/ValidTest.test.ts'],
+        });
         expect(err).toBeUndefined();
+        expect(mockExit).not.toHaveBeenCalled();
       });
     });
   });

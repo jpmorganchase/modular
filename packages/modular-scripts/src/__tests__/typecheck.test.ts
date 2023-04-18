@@ -3,8 +3,8 @@ import * as fs from 'fs-extra';
 import {
   createModularTestContext,
   getRealModularRootInTest,
-  mockPreflightImplementation,
 } from '../test/utils';
+import { mockPreflightImplementation } from '../test/mockFunctions';
 
 const modularRoot = getRealModularRootInTest();
 

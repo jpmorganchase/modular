@@ -4,6 +4,7 @@ import fs from 'fs-extra';
 
 import getModularRoot from '../utils/getModularRoot';
 import { createModularTestContext, runModularPipeLogs } from '../test/utils';
+import { runSelectForTests, setupMocks } from '../test/mockFunctions';
 
 // Temporary test context paths set by createTempModularRepoWithTemplate()
 let tempModularRepo: string;
@@ -17,6 +18,7 @@ describe('select', () => {
 
   beforeAll(() => {
     tempModularRepo = createModularTestContext();
+    setupMocks(tempModularRepo);
     fs.copySync(fixturesFolder, tempModularRepo);
 
     // Create git repo & commit
@@ -52,60 +54,59 @@ describe('select', () => {
   });
 
   it('selects nothing when everything committed', () => {
+    // RunSelectForTests doesn't work with git related things when using --changed
     const result = runModularPipeLogs(tempModularRepo, 'select --changed');
     expect(result.stderr).toBeFalsy();
     expect(result.stdout).toContain(format([]));
   });
 
-  it('selects multiple packages', () => {
-    const result = runModularPipeLogs(tempModularRepo, 'select e a');
+  it('selects multiple packages in select order', async () => {
+    const { stdout, stderr } = await runSelectForTests({
+      selectedPackages: ['e', 'a'],
+    });
 
-    expect(result.stderr).toBeFalsy();
-    expect(result.stdout).toContain(format(['e', 'a']));
+    expect(stderr).toBe('');
+    expect(stdout).toContain(format(['e', 'a']));
   });
 
-  it('selects multiple packages in select order', () => {
-    const result = runModularPipeLogs(tempModularRepo, 'select e a');
+  it('selects a single package and its descendants', async () => {
+    const { stdout, stderr } = await runSelectForTests({
+      selectedPackages: ['b'],
+      descendants: true,
+    });
 
-    expect(result.stderr).toBeFalsy();
-    expect(result.stdout).toContain(format(['e', 'a']));
+    expect(stderr).toBe('');
+    expect(stdout).toContain(format(['b', 'c', 'd']));
   });
 
-  it('selects a single package and its descendants', () => {
-    const result = runModularPipeLogs(
-      tempModularRepo,
-      'select b --descendants',
-    );
+  it('selects a single package and its ancestors', async () => {
+    const { stdout, stderr } = await runSelectForTests({
+      selectedPackages: ['b'],
+      ancestors: true,
+    });
 
-    expect(result.stderr).toBeFalsy();
-    expect(result.stdout).toContain(format(['b', 'c', 'd']));
+    expect(stderr).toBe('');
+    expect(stdout).toContain(format(['b', 'a', 'e']));
   });
 
-  it('selects a single package and its ancestors', () => {
-    const result = runModularPipeLogs(tempModularRepo, 'select b --ancestors');
+  it('selects multiple packages and their descendants', async () => {
+    const { stdout, stderr } = await runSelectForTests({
+      selectedPackages: ['d', 'a'],
+      descendants: true,
+    });
 
-    expect(result.stderr).toBeFalsy();
-    expect(result.stdout).toContain(format(['b', 'a', 'e']));
+    expect(stderr).toBe('');
+    expect(stdout).toContain(format(['d', 'a', 'b', 'c']));
   });
 
-  it('selects multiple packages and their descendants', () => {
-    const result = runModularPipeLogs(
-      tempModularRepo,
-      'select d a --descendants',
-    );
+  it('selects multiple packages and their ancestors', async () => {
+    const { stdout, stderr } = await runSelectForTests({
+      selectedPackages: ['d', 'a'],
+      ancestors: true,
+    });
 
-    expect(result.stderr).toBeFalsy();
-    expect(result.stdout).toContain(format(['d', 'a', 'b', 'c']));
-  });
-
-  it('selects multiple packages and their ancestors', () => {
-    const result = runModularPipeLogs(
-      tempModularRepo,
-      'select d a --ancestors',
-    );
-
-    expect(result.stderr).toBeFalsy();
-    expect(result.stdout).toContain(format(['d', 'a', 'c', 'e', 'b']));
+    expect(stderr).toBe('');
+    expect(stdout).toContain(format(['d', 'a', 'c', 'e', 'b']));
   });
 
   it('selects changed (uncommitted) packages', () => {
@@ -118,6 +119,7 @@ describe('select', () => {
       "\n// Comment to package c's source",
     );
 
+    // RunSelectForTests doesn't work with git related things when using --changed
     const result = runModularPipeLogs(tempModularRepo, 'select --changed');
 
     expect(result.stderr).toBeFalsy();
@@ -125,6 +127,7 @@ describe('select', () => {
   });
 
   it('selects changed (uncommitted) packages + packages that are explicitly specified', () => {
+    // RunSelectForTests doesn't work with git related things when using --changed
     const result = runModularPipeLogs(tempModularRepo, 'select e --changed');
 
     expect(result.stderr).toBeFalsy();
@@ -132,6 +135,7 @@ describe('select', () => {
   });
 
   it('selects changed (uncommitted) packages and their descendants', () => {
+    // RunSelectForTests doesn't work with git related things when using --changed
     const result = runModularPipeLogs(
       tempModularRepo,
       'select --changed --descendants',
@@ -142,6 +146,7 @@ describe('select', () => {
   });
 
   it('selects changed (uncommitted) packages and their ancestors', () => {
+    // RunSelectForTests doesn't work with git related things when using --changed
     const result = runModularPipeLogs(
       tempModularRepo,
       'select --changed --ancestors',
@@ -151,11 +156,11 @@ describe('select', () => {
     expect(result.stdout).toContain(format(['b', 'c', 'a', 'e']));
   });
 
-  it('selects all packages if invoked without arguments / selective options', () => {
-    const result = runModularPipeLogs(tempModularRepo, 'select');
+  it('selects all packages if invoked without arguments / selective options', async () => {
+    const { stdout, stderr } = await runSelectForTests({});
 
-    expect(result.stderr).toBeFalsy();
-    expect(result.stdout).toContain(format(['a', 'b', 'c', 'd', 'e', 'f']));
+    expect(stderr).toBe('');
+    expect(stdout).toContain(format(['a', 'b', 'c', 'd', 'e', 'f']));
   });
 });
 
@@ -168,6 +173,7 @@ describe('select in buildable order', () => {
 
   beforeAll(() => {
     tempModularRepo = createModularTestContext();
+    setupMocks(tempModularRepo);
     fs.copySync(fixturesFolder, tempModularRepo);
 
     // Create git repo & commit
@@ -202,6 +208,7 @@ describe('select in buildable order', () => {
     });
   });
 
+  // RunSelectForTests doesn't work with git related things when using --changed
   it('selects nothing when everything committed', () => {
     const result = runModularPipeLogs(
       tempModularRepo,
@@ -211,56 +218,58 @@ describe('select in buildable order', () => {
     expect(result.stdout).toContain(format([]));
   });
 
-  it('selects multiple packages in select order', () => {
-    const result = runModularPipeLogs(
-      tempModularRepo,
-      'select e a --buildable',
-    );
+  it('selects multiple packages in select order', async () => {
+    const { stdout, stderr } = await runSelectForTests({
+      selectedPackages: ['e', 'a'],
+      buildable: true,
+    });
 
-    expect(result.stderr).toBeFalsy();
-    expect(result.stdout).toContain(format([['a'], ['e']]));
+    expect(stderr).toBe('');
+    expect(stdout).toContain(format([['a'], ['e']]));
   });
 
-  it('selects a single package and its descendants', () => {
-    const result = runModularPipeLogs(
-      tempModularRepo,
-      'select b --descendants --buildable',
-    );
+  it('selects a single package and its descendants', async () => {
+    const { stdout, stderr } = await runSelectForTests({
+      selectedPackages: ['b'],
+      descendants: true,
+      buildable: true,
+    });
 
-    expect(result.stderr).toBeFalsy();
-    expect(result.stdout).toContain(format([['d'], ['c'], ['b']]));
+    expect(stderr).toBe('');
+    expect(stdout).toContain(format([['d'], ['c'], ['b']]));
   });
 
-  it('selects a single package and its ancestors', () => {
-    const result = runModularPipeLogs(
-      tempModularRepo,
-      'select b --ancestors --buildable',
-    );
+  it('selects a single package and its ancestors', async () => {
+    const { stdout, stderr } = await runSelectForTests({
+      selectedPackages: ['b'],
+      ancestors: true,
+      buildable: true,
+    });
 
-    expect(result.stderr).toBeFalsy();
-    expect(result.stdout).toContain(format([['b'], ['a'], ['e']]));
+    expect(stderr).toBe('');
+    expect(stdout).toContain(format([['b'], ['a'], ['e']]));
   });
 
-  it('selects multiple packages and their descendants', () => {
-    const result = runModularPipeLogs(
-      tempModularRepo,
-      'select d a --descendants --buildable',
-    );
+  it('selects multiple packages and their descendants', async () => {
+    const { stdout, stderr } = await runSelectForTests({
+      selectedPackages: ['d', 'a'],
+      descendants: true,
+      buildable: true,
+    });
 
-    expect(result.stderr).toBeFalsy();
-    expect(result.stdout).toContain(format([['d'], ['c'], ['b'], ['a']]));
+    expect(stderr).toBe('');
+    expect(stdout).toContain(format([['d'], ['c'], ['b'], ['a']]));
   });
 
-  it('selects multiple packages and their ancestors', () => {
-    const result = runModularPipeLogs(
-      tempModularRepo,
-      'select d a --ancestors --buildable',
-    );
+  it('selects multiple packages and their ancestors', async () => {
+    const { stdout, stderr } = await runSelectForTests({
+      selectedPackages: ['d', 'a'],
+      ancestors: true,
+      buildable: true,
+    });
 
-    expect(result.stderr).toBeFalsy();
-    expect(result.stdout).toContain(
-      format([['d'], ['c'], ['b'], ['a'], ['e']]),
-    );
+    expect(stderr).toBe('');
+    expect(stdout).toContain(format([['d'], ['c'], ['b'], ['a'], ['e']]));
   });
 
   it('selects changed (uncommitted) packages', () => {
@@ -273,6 +282,7 @@ describe('select in buildable order', () => {
       "\n// Comment to package c's source",
     );
 
+    // RunSelectForTests doesn't work with git related things when using --changed
     const result = runModularPipeLogs(
       tempModularRepo,
       'select --changed --buildable',
@@ -282,6 +292,7 @@ describe('select in buildable order', () => {
     expect(result.stdout).toContain(format([['c'], ['b']]));
   });
 
+  // RunSelectForTests doesn't work with git related things when using --changed\
   it('selects changed (uncommitted) packages and their descendants', () => {
     const result = runModularPipeLogs(
       tempModularRepo,
@@ -292,6 +303,7 @@ describe('select in buildable order', () => {
     expect(result.stdout).toContain(format([['d'], ['c'], ['b']]));
   });
 
+  // RunSelectForTests doesn't work with git related things when using --changed
   it('selects changed (uncommitted) packages and their ancestors', () => {
     const result = runModularPipeLogs(
       tempModularRepo,
@@ -302,13 +314,13 @@ describe('select in buildable order', () => {
     expect(result.stdout).toContain(format([['c'], ['b'], ['a'], ['e']]));
   });
 
-  it('selects all packages if invoked without arguments / selective options', () => {
-    const result = runModularPipeLogs(tempModularRepo, 'select --buildable');
+  it('selects all packages if invoked without arguments / selective options', async () => {
+    const { stdout, stderr } = await runSelectForTests({
+      buildable: true,
+    });
 
-    expect(result.stderr).toBeFalsy();
-    expect(result.stdout).toContain(
-      format([['d'], ['c'], ['b'], ['a'], ['e', 'f']]),
-    );
+    expect(stderr).toBe('');
+    expect(stdout).toContain(format([['d'], ['c'], ['b'], ['a'], ['e', 'f']]));
   });
 });
 

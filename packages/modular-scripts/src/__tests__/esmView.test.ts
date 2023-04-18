@@ -13,13 +13,12 @@ import puppeteer from 'puppeteer';
 import { normalizeToPosix } from '../build-scripts/esbuild-scripts/utils/formatPath';
 import { startApp, DevServer } from './start-app';
 import type { CoreProperties } from '@schemastore/package';
+import { createModularTestContext, runModularForTests } from '../test/utils';
 import {
-  createModularTestContext,
-  runModularForTests,
-  setupMocks,
-  buildPackageForTests,
   addPackageForTests,
-} from '../test/utils';
+  buildPackageForTests,
+  setupMocks,
+} from '../test/mockFunctions';
 import { setTimeout } from 'timers';
 
 // Temporary text context paths
