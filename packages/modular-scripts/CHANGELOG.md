@@ -1,5 +1,14 @@
 # modular-scripts
 
+## 4.3.1
+
+### Patch Changes
+
+- [#2353](https://github.com/jpmorganchase/modular/pull/2353)
+  [`390243d`](https://github.com/jpmorganchase/modular/commit/390243d95253dedff45096d01341b57eae7bbf1b)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Fix modular lint
+  not linting all when no arguments are provided and not a git repository
+
 ## 4.3.0
 
 ### Minor Changes
