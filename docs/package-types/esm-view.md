@@ -16,8 +16,6 @@ following essential differences:
 1. All their external `import`s are rewritten to point to an
    [ESM CDN](../esm-views/esm-cdn.md).
 
-1. They don't include a `public` folder in the build
-
 1. They expect their entry-point (`src/index.tsx`) to not render to the DOM, but
    to export something, typically a React Component.
 
