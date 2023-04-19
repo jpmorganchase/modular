@@ -115,7 +115,7 @@ describe('lint command can successfully do selective tests based on selected pac
 
   let randomOutputFolder: string;
 
-  beforeEach(() => {
+  beforeAll(() => {
     // Create random dir
     randomOutputFolder = createModularTestContext();
 
@@ -126,7 +126,7 @@ describe('lint command can successfully do selective tests based on selected pac
   });
 
   // Run in a single test, serially for performance reasons (the setup time is quite long)
-  it('finds test after specifying a valid package / finds ancestors using --ancestors', () => {
+  it('finds test after specifying a valid package', () => {
     const resultPackages = runModularPipeLogs(
       randomOutputFolder,
       'lint --packages beta-lint gamma-lint',
@@ -137,7 +137,9 @@ describe('lint command can successfully do selective tests based on selected pac
     expect(resultPackages.stderr).not.toContain('packages/alpha-lint/src/');
     expect(resultPackages.stderr).not.toContain('packages/delta-lint/src/');
     expect(resultPackages.stderr).not.toContain('packages/epsilon-lint/src/');
+  });
 
+  it('finds ancestors using --ancestors', () => {
     const resultPackagesWithAncestors = runModularPipeLogs(
       randomOutputFolder,
       'lint --packages beta-lint gamma-lint --ancestors',
@@ -155,8 +157,12 @@ describe('lint command can successfully do selective tests based on selected pac
     expect(resultPackagesWithAncestors.stderr).toContain(
       'packages/epsilon-lint/src/',
     );
-    expect(resultPackages.stderr).not.toContain('packages/alpha-lint/src/');
+    expect(resultPackagesWithAncestors.stderr).not.toContain(
+      'packages/delta-lint/src/',
+    );
+  });
 
+  it('finds descendants using --descendants', () => {
     const resultPackagesWithDescendants = runModularPipeLogs(
       randomOutputFolder,
       'lint --packages beta-lint gamma-lint --descendants',
@@ -177,5 +183,15 @@ describe('lint command can successfully do selective tests based on selected pac
     expect(resultPackagesWithDescendants.stderr).not.toContain(
       'packages/epsilon-lint/src/',
     );
+  });
+
+  it('finds all using no options', () => {
+    const result = runModularPipeLogs(randomOutputFolder, 'lint', 'true');
+    console.log('stdout: ', result.stdout);
+    expect(result.stderr).toContain('packages/gamma-lint/src/');
+    expect(result.stderr).toContain('packages/beta-lint/src/');
+    expect(result.stderr).toContain('packages/alpha-lint/src/');
+    expect(result.stderr).toContain('packages/epsilon-lint/src/');
+    expect(result.stderr).toContain('packages/delta-lint/src/');
   });
 });

@@ -1,5 +1,62 @@
 # modular-scripts
 
+## 4.3.1
+
+### Patch Changes
+
+- [#2353](https://github.com/jpmorganchase/modular/pull/2353)
+  [`390243d`](https://github.com/jpmorganchase/modular/commit/390243d95253dedff45096d01341b57eae7bbf1b)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Fix modular lint
+  not linting all when no arguments are provided and not a git repository
+
+## 4.3.0
+
+### Minor Changes
+
+- [#2320](https://github.com/jpmorganchase/modular/pull/2320)
+  [`561d780`](https://github.com/jpmorganchase/modular/commit/561d780cc6e86cd96723dae94ee98043f98dba52)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Allow root level
+  configuration that's overrideable by package-specific configuration
+
+- [#2315](https://github.com/jpmorganchase/modular/pull/2315)
+  [`9753190`](https://github.com/jpmorganchase/modular/commit/9753190b429523606a98566dd9eba1c3a5236737)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Selective
+  `modular lint`
+
+- [#2315](https://github.com/jpmorganchase/modular/pull/2315)
+  [`9753190`](https://github.com/jpmorganchase/modular/commit/9753190b429523606a98566dd9eba1c3a5236737)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! -
+  `modular lint` supports selective options `eslint-config-modular-app` doesn't
+  depend on eslint-config-react-app anymore
+
+- [#2332](https://github.com/jpmorganchase/modular/pull/2332)
+  [`49c0260`](https://github.com/jpmorganchase/modular/commit/49c0260124f59d87b268c25d83f978fb0498e80f)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Upgrade
+  to esbuild 0.17.14 to fix `baseUrl` bug:
+  https://github.com/evanw/esbuild/issues/2119
+
+- [#2341](https://github.com/jpmorganchase/modular/pull/2341)
+  [`4d07c4b`](https://github.com/jpmorganchase/modular/commit/4d07c4bbfe60d28305b8b0bd170cda1c6fab7d86)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! -
+  `modular build` can build concurrently; `--concurrencyLevel` command added
+
+- [#2337](https://github.com/jpmorganchase/modular/pull/2337)
+  [`3781ab9`](https://github.com/jpmorganchase/modular/commit/3781ab9cf19516169a830c7f72b1f241cc7c9576)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - `select`
+  command - compute selective options for the user and print a JSON output on
+  the screen
+
+- [#2340](https://github.com/jpmorganchase/modular/pull/2340)
+  [`7d49224`](https://github.com/jpmorganchase/modular/commit/7d4922474554223fdc5b50d3753b4fa1b71e981d)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Added
+  --includeNonModular flag to lint command to lint non Modular packages when a
+  lint script is provided in the package.json
+
+- [#2321](https://github.com/jpmorganchase/modular/pull/2321)
+  [`962b5e5`](https://github.com/jpmorganchase/modular/commit/962b5e5c70578ed7efe9fa6b2d0d267e08b047e9)
+  Thanks [@sgb-io](https://github.com/sgb-io)! - Add selective options to
+  typecheck
+
 ## 4.2.0
 
 ### Minor Changes
