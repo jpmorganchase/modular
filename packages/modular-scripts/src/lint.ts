@@ -93,9 +93,11 @@ async function lint(
     process.exit(-1);
   }
 
-  // Not selective, not --all and no regexes; calculate the file regexes of --diff or --staged
+  // Not selective, not --all and no regexes;
+  // TODO: Bring this in line with behaviour of other commands, too 'unpredictable' from a user point of view
   if (!all && !isSelective && userRegexes.length === 0) {
-    if (!isCI || staged) {
+    if (staged || !isCI) {
+      // If --staged or not in CI, calculate the file regexes of --diff or --staged
       let diffedFiles: null | string[];
 
       try {
@@ -124,17 +126,11 @@ async function lint(
             logger.warn('No diffed target files to lint found');
           }
         }
-      } else {
-        // If not CI, then lint all
-        lintRegexes = processedPackageRegexes;
       }
+    } else {
+      // If in CI, then lint all
+      lintRegexes = processedPackageRegexes;
     }
-  } else if (
-    !all &&
-    !isSelective &&
-    (isCI || !staged) &&
-    userRegexes.length === 0
-  ) {
   }
 
   // If we computed no regexes and there are no non-modular packages to lint, bail out
