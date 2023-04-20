@@ -16,8 +16,6 @@ following essential differences:
 1. All their external `import`s are rewritten to point to an
    [ESM CDN](../esm-views/esm-cdn.md).
 
-1. They don't include a `public` folder in the build
-
 1. They expect their entry-point (`src/index.tsx`) to not render to the DOM, but
    to export something, typically a React Component.
 
@@ -42,6 +40,14 @@ ESM views support a subset of [Create React App](https://create-react-app.dev/)
 features that make sense in a monorepo context for a type of application that
 can be loaded at runtime. See [this page](../concepts/supported-cra.md) for a
 detailed list of supported features.
+
+## Custom index.html
+
+By deafult, the `index.html` that loads the ESM view in standalone mode is
+created automatically by Modular. If you want to specify your own index file,
+just create your `public/index.html` file in your ESM view workspace directory.
+The custom index (and the public folder) works in the same way as
+[Create React App does](https://create-react-app.dev/docs/using-the-public-folder/#adding-assets-outside-of-the-module-system).
 
 ## Build
 
