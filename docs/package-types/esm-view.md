@@ -41,6 +41,12 @@ features that make sense in a monorepo context for a type of application that
 can be loaded at runtime. See [this page](../concepts/supported-cra.md) for a
 detailed list of supported features.
 
+## Custom index.html
+
+By deafult, the `index.html` that loads the ESM view in standalone mode is
+created automatically by Modular. If you want to specify your own index file,
+just create your `public/index.html` file in your ESM view workspace directory.
+
 ## Build
 
 To [build](../commands/build.md) your ESM View for deployment, run:
