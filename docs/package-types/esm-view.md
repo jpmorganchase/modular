@@ -46,6 +46,8 @@ detailed list of supported features.
 By deafult, the `index.html` that loads the ESM view in standalone mode is
 created automatically by Modular. If you want to specify your own index file,
 just create your `public/index.html` file in your ESM view workspace directory.
+The custom index (and the public folder) works in the same way as
+[Create React App does](https://create-react-app.dev/docs/using-the-public-folder/#adding-assets-outside-of-the-module-system).
 
 ## Build
 
