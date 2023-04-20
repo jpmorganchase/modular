@@ -10,6 +10,7 @@ import {
 import getModularRoot from '../utils/getModularRoot';
 import rimraf from 'rimraf';
 import execa from 'execa';
+import { addPackageForTests, setupMocks } from '../test/mockFunctions';
 
 // These tests must be executed sequentially with `--runInBand`.
 
@@ -33,28 +34,17 @@ function cleanup() {
 describe('when working with a NODE_ENV app', () => {
   describe('WHEN building with webpack', () => {
     beforeAll(async () => {
-      cleanup();
-      runModularForTests(modularRoot, 'add node-env-app --unstable-type app');
-
-      await fs.writeFile(
-        path.join(modularRoot, 'packages', 'node-env-app', 'src', 'index.ts'),
-        `
-      console.log(process.env.NODE_ENV);
-      export {};
-    `,
-      );
-      rimraf.sync(path.join(modularRoot, 'dist/node-env-app'));
-
-      runModularForTests(modularRoot, 'build node-env-app');
+      await setupNodeEnvApp();
+      runModularForTests(tempModularRepo, 'build node-env-app');
     });
     afterAll(cleanup);
     it('can build a app', () => {
-      expect(tree(path.join(modularRoot, 'dist', 'node-env-app')))
+      expect(tree(path.join(tempModularRepo, 'dist', 'node-env-app')))
         .toMatchInlineSnapshot(`
         "node-env-app
-        ├─ asset-manifest.json #v9meuo
+        ├─ asset-manifest.json #1tib982
         ├─ favicon.ico #6pu3rg
-        ├─ index.html #1d9ei2j
+        ├─ index.html #18ay0vb
         ├─ logo192.png #1nez7vk
         ├─ logo512.png #1hwqvcc
         ├─ manifest.json #19gah8o
@@ -62,29 +52,29 @@ describe('when working with a NODE_ENV app', () => {
         ├─ robots.txt #1sjb8b3
         └─ static
            └─ js
-              ├─ main.6f2657b7.js #14cwcdk
-              ├─ main.6f2657b7.js.map #1snt4em
+              ├─ main.63c69032.js #yz811i
+              ├─ main.63c69032.js.map #mbzgea
               ├─ runtime-main.97707f9d.js #15lezt9
               └─ runtime-main.97707f9d.js.map #1qz5n9i"
       `);
     });
-    it('can generate a js/main.5d879077.js', async () => {
+    it('can generate a js/main.63c69032.js', async () => {
       expect(
         prettier.format(
           String(
             await fs.readFile(
               path.join(
-                modularRoot,
+                tempModularRepo,
                 'dist',
                 'node-env-app',
                 'static',
                 'js',
-                'main.6f2657b7.js',
+                'main.63c69032.js',
               ),
             ),
           ),
           {
-            filepath: 'main.6f2657b7.js',
+            filepath: 'main.63c69032.js',
           },
         ),
       ).toMatchSnapshot();
@@ -147,14 +137,13 @@ describe('when working with a NODE_ENV app', () => {
  */
 async function setupNodeEnvApp(): Promise<void> {
   tempModularRepo = createModularTestContext();
+  setupMocks(tempModularRepo);
   mockInstallTemplate(
     path.join(getModularRoot(), '__fixtures__/templates'),
     tempModularRepo,
   );
-  runModularForTests(
-    tempModularRepo,
-    'add node-env-app --unstable-type modular-template-app',
-  );
+
+  await addPackageForTests('node-env-app', 'app');
 
   await fs.writeFile(
     path.join(tempModularRepo, 'packages', 'node-env-app', 'src', 'index.ts'),

@@ -3,6 +3,7 @@ import path from 'path';
 import fs from 'fs-extra';
 import prettier from 'prettier';
 import { createModularTestContext, runModularForTests } from '../test/utils';
+import { addPackageForTests, setupMocks } from '../test/mockFunctions';
 
 // These tests must be executed sequentially with `--runInBand`.
 
@@ -10,16 +11,9 @@ const tempModularRepo = createModularTestContext();
 const packagesPath = path.join(tempModularRepo, 'packages');
 
 describe('when working with an app', () => {
-  beforeAll(() => {
-    runModularForTests(
-      tempModularRepo,
-      'add sample-esbuild-app --unstable-type app',
-      {
-        env: {
-          USE_MODULAR_ESBUILD: 'true',
-        },
-      },
-    );
+  beforeAll(async () => {
+    setupMocks(tempModularRepo);
+    await addPackageForTests('sample-esbuild-app', 'app');
 
     runModularForTests(tempModularRepo, 'build sample-esbuild-app', {
       env: {
