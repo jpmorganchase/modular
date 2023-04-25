@@ -3,14 +3,17 @@ import dedent from 'dedent';
 import path from 'path';
 import webpack, { Configuration } from 'webpack';
 import { parsePackageName } from '../../../../utils/parsePackageName';
-import { rewriteModuleSpecifier } from '../../../../utils/buildImportMap';
+import {
+  rewriteModuleSpecifier,
+  ImportInfo,
+} from '../../../../utils/buildImportMap';
 import fs from 'fs-extra';
 import parse5 from 'parse5';
 import type { Element } from 'parse5/dist/tree-adapters/default';
 import type { Paths } from '../../../common-scripts/determineTargetPaths';
 
 export function createEsmViewConfig(
-  dependencyMap: Map<string, string>,
+  importInfo: ImportInfo,
   paths: Paths,
   isEnvProduction: boolean,
   useReactCreateRoot: boolean,
@@ -19,7 +22,7 @@ export function createEsmViewConfig(
     entry: !isEnvProduction
       ? getVirtualTrampoline(paths, useReactCreateRoot)
       : paths.appIndexJs,
-    externals: createExternalRewriter(dependencyMap),
+    externals: createExternalRewriter(importInfo),
     externalsType: 'module',
     experiments: { outputModule: true },
     output: {
@@ -29,7 +32,8 @@ export function createEsmViewConfig(
   };
 }
 
-function createExternalRewriter(dependencyMap: Map<string, string>) {
+function createExternalRewriter(importInfo: ImportInfo) {
+  const dependencyMap = importInfo.importMap;
   return function test(
     { request }: { request?: string },
     callback: (
@@ -47,7 +51,7 @@ function createExternalRewriter(dependencyMap: Map<string, string>) {
         // If this is an absolute export of css we need to deal with it in the loader
         !request.endsWith('.css')
       ) {
-        const toRewrite = rewriteModuleSpecifier(dependencyMap, request);
+        const toRewrite = rewriteModuleSpecifier(importInfo, request);
         return callback(undefined, toRewrite);
       }
     }

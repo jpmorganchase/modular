@@ -13,6 +13,7 @@ import { choosePort } from '../common-scripts/getPort';
 import prepareUrls from '../common-scripts/urls';
 import type { Paths } from '../common-scripts/determineTargetPaths';
 import openBrowser from '../common-scripts/openBrowser';
+import type { ImportInfo } from '../../utils/buildImportMap';
 
 // Tools like Cloud9 rely on this.
 const portEnv = process.env.PORT;
@@ -22,7 +23,7 @@ const HOST = process.env.HOST || '0.0.0.0';
 export default function startWebpack(
   esbuildTargetFactory: string[],
   isApp: boolean,
-  dependencyMap: Map<string, string>,
+  importInfo: ImportInfo,
   useReactCreateRoot: boolean,
   styleImports: Set<string>,
   paths: Paths,
@@ -53,7 +54,7 @@ export default function startWebpack(
         false,
         esbuildTargetFactory,
         isApp,
-        dependencyMap,
+        importInfo,
         useReactCreateRoot,
         styleImports,
         paths,

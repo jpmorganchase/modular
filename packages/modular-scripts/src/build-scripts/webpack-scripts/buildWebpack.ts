@@ -12,11 +12,12 @@ import printBuildError from './utils/printBuildError';
 import { log } from '../../utils/logger';
 import type { Paths } from '../common-scripts/determineTargetPaths';
 import getConfig from './config/webpack.config';
+import type { ImportInfo } from '../../utils/buildImportMap';
 
 export default async function buildWebpack(
   esbuildTargetFactory: string[],
   isApp: boolean,
-  dependencyMap: Map<string, string>,
+  importInfo: ImportInfo,
   useReactCreateRoot: boolean,
   styleImports: Set<string>,
   paths: Paths,
@@ -25,7 +26,7 @@ export default async function buildWebpack(
     true,
     esbuildTargetFactory,
     isApp,
-    dependencyMap,
+    importInfo,
     useReactCreateRoot,
     styleImports,
     paths,

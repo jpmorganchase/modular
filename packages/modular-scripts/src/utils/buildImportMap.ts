@@ -8,6 +8,12 @@ interface BuildImportMapParams {
   selectiveCDNResolutions: Dependency;
 }
 
+export interface ImportInfo {
+  importMap: Map<string, string>;
+  externalResolutions: Dependency;
+  selectiveCDNResolutions: Dependency;
+}
+
 export function buildImportMap(
   workspacePath: string,
   {
@@ -15,7 +21,7 @@ export function buildImportMap(
     externalResolutions,
     selectiveCDNResolutions,
   }: BuildImportMapParams,
-): Map<string, string> {
+): ImportInfo {
   const externalCdnTemplate = getConfig('externalCdnTemplate', workspacePath);
 
   // Add react-dom if only react is specified in the dependencies
@@ -52,13 +58,14 @@ export function buildImportMap(
     }),
   );
 
-  return importMap;
+  return { importMap, externalResolutions, selectiveCDNResolutions };
 }
 
 export function rewriteModuleSpecifier(
-  importMap: Map<string, string>,
+  importInfo: ImportInfo,
   moduleSpecifier: string,
 ): string | undefined {
+  const { importMap } = importInfo;
   const { dependencyName, submodule } = parsePackageName(moduleSpecifier);
   // Find dependency name (no submodule) in the pre-built import map
   const dependencyUrl = dependencyName

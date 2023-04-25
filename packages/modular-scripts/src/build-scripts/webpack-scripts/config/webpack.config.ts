@@ -12,6 +12,7 @@ import { createDevelopmentConfig } from './parts/developmentConfig';
 import { createProductionConfig } from './parts/productionConfig';
 import createBaseConfig from './parts/baseConfig';
 import { getConfig } from '../../../utils/config';
+import type { ImportInfo } from '../../../utils/buildImportMap';
 import type {
   Configuration,
   WebpackPluginFunction,
@@ -41,7 +42,7 @@ export default async function getWebpackConfig(
   isEnvProduction: boolean,
   esbuildTargetFactory: string[],
   isApp: boolean,
-  dependencyMap: Map<string, string>,
+  importInfo: ImportInfo,
   useReactCreateRoot: boolean,
   styleImports: Set<string>,
   targetPaths: Paths,
@@ -71,14 +72,14 @@ export default async function getWebpackConfig(
     modules,
     shouldUseSourceMap,
     esbuildTargetFactory,
-    dependencyMap,
+    importInfo.importMap, // TODO: is this needed in this form for CSS?
   );
 
   // Specific configuration based on modular type (app, esm-view)
   const modularTypeConfiguration = isApp
     ? createAppConfig()
     : createEsmViewConfig(
-        dependencyMap,
+        importInfo,
         targetPaths,
         isEnvProduction,
         useReactCreateRoot,

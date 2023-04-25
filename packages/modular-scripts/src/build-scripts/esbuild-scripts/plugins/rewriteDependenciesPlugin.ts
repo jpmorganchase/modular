@@ -1,8 +1,11 @@
 import * as esbuild from 'esbuild';
-import { rewriteModuleSpecifier } from '../../../utils/buildImportMap';
+import {
+  rewriteModuleSpecifier,
+  ImportInfo,
+} from '../../../utils/buildImportMap';
 
 export function createRewriteDependenciesPlugin(
-  importMap: Map<string, string>,
+  importInfo: ImportInfo,
 ): esbuild.Plugin {
   const dependencyRewritePlugin: esbuild.Plugin = {
     name: 'dependency-rewrite',
@@ -12,7 +15,7 @@ export function createRewriteDependenciesPlugin(
         { filter: /^[a-z0-9-~]|@/, namespace: 'file' },
         (args) => {
           // Construct the full url from import map
-          const path = rewriteModuleSpecifier(importMap, args.path);
+          const path = rewriteModuleSpecifier(importInfo, args.path);
           if (path) {
             // Rewrite the path taking the submodule into account
             if (path.endsWith('.css')) {
