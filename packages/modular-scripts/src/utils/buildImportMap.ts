@@ -10,6 +10,7 @@ interface BuildImportMapParams {
 
 export interface ImportInfo {
   importMap: Map<string, string>;
+  externalDependencies: Dependency;
   externalResolutions: Dependency;
   selectiveCDNResolutions: Dependency;
 }
@@ -58,21 +59,34 @@ export function buildImportMap(
     }),
   );
 
-  return { importMap, externalResolutions, selectiveCDNResolutions };
+  return {
+    importMap,
+    externalResolutions,
+    selectiveCDNResolutions,
+    externalDependencies,
+  };
 }
 
 export function rewriteModuleSpecifier(
   importInfo: ImportInfo,
   moduleSpecifier: string,
 ): string | undefined {
-  const { importMap } = importInfo;
-  const { dependencyName, submodule } = parsePackageName(moduleSpecifier);
-  // Find dependency name (no submodule) in the pre-built import map
-  const dependencyUrl = dependencyName
-    ? importMap.get(dependencyName)
-    : undefined;
-  if (dependencyUrl) {
-    // Rewrite the path taking the submodule into account
-    return `${dependencyUrl}${submodule ? `/${submodule}` : ''}`;
+  const {
+    importMap,
+    externalResolutions,
+    externalDependencies,
+    selectiveCDNResolutions,
+  } = importInfo;
+  const { dependencyName: name, submodule } = parsePackageName(moduleSpecifier);
+
+  if (name) {
+    const resolution = externalResolutions[name];
+    const version = externalDependencies[name] ?? externalResolutions[name];
+    console.log({ selectiveCDNResolutions, resolution, version });
+    const dependencyUrl = importMap.get(name);
+    if (dependencyUrl) {
+      // Rewrite the path taking the submodule into account
+      return `${dependencyUrl}${submodule ? `/${submodule}` : ''}`;
+    }
   }
 }
