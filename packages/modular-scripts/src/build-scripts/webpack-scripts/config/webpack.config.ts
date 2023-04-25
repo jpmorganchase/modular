@@ -12,7 +12,7 @@ import { createDevelopmentConfig } from './parts/developmentConfig';
 import { createProductionConfig } from './parts/productionConfig';
 import createBaseConfig from './parts/baseConfig';
 import { getConfig } from '../../../utils/config';
-import type { ImportInfo } from '../../../utils/buildImportMap';
+import type { ImportInfo } from '../../../utils/importInfo';
 import type {
   Configuration,
   WebpackPluginFunction,
@@ -32,7 +32,7 @@ const imageInlineSizeLimit = parseInt(
  * @param isEnvProduction True when building, false starting
  * @param esbuildTargetFactory ES Target version
  * @param isApp True if target is an app, false if it's an ESM View
- * @param dependencyMap Map of target's dependency
+ * @param importInfo Import informations record (import set, dependencies, resolutions, template)
  * @param useReactCreateRoot True for React >= 18 as it needs a different way of instantiating rendering.
  * @param styleImports Set of Style Imports
  * @param targetPaths Relevant file paths for output
@@ -72,7 +72,7 @@ export default async function getWebpackConfig(
     modules,
     shouldUseSourceMap,
     esbuildTargetFactory,
-    importInfo.importMap, // TODO: is this needed in this form for CSS?
+    importInfo.importSet, // TODO: is this needed in this form for CSS?
   );
 
   // Specific configuration based on modular type (app, esm-view)

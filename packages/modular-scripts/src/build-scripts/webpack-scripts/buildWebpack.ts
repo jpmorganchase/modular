@@ -12,7 +12,7 @@ import printBuildError from './utils/printBuildError';
 import { log } from '../../utils/logger';
 import type { Paths } from '../common-scripts/determineTargetPaths';
 import getConfig from './config/webpack.config';
-import type { ImportInfo } from '../../utils/buildImportMap';
+import type { ImportInfo } from '../../utils/importInfo';
 
 export default async function buildWebpack(
   esbuildTargetFactory: string[],

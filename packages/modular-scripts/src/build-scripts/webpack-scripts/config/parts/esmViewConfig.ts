@@ -6,7 +6,7 @@ import { parsePackageName } from '../../../../utils/parsePackageName';
 import {
   rewriteModuleSpecifier,
   ImportInfo,
-} from '../../../../utils/buildImportMap';
+} from '../../../../utils/importInfo';
 import fs from 'fs-extra';
 import parse5 from 'parse5';
 import type { Element } from 'parse5/dist/tree-adapters/default';
@@ -33,7 +33,7 @@ export function createEsmViewConfig(
 }
 
 function createExternalRewriter(importInfo: ImportInfo) {
-  const dependencyMap = importInfo.importMap;
+  const { importSet } = importInfo;
   return function test(
     { request }: { request?: string },
     callback: (
@@ -43,11 +43,11 @@ function createExternalRewriter(importInfo: ImportInfo) {
   ) {
     if (request) {
       const parsedModule = parsePackageName(request);
-      // If the module is absolute and it is in the import map, we want to externalise it
+      // If the module is absolute and it is in the import set, we want to externalise it
       if (
         parsedModule &&
         parsedModule.dependencyName &&
-        dependencyMap.get(parsedModule.dependencyName) &&
+        importSet.has(parsedModule.dependencyName) &&
         // If this is an absolute export of css we need to deal with it in the loader
         !request.endsWith('.css')
       ) {

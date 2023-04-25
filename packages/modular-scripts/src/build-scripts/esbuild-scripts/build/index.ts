@@ -12,7 +12,7 @@ import sanitizeMetafile from '../utils/sanitizeMetafile';
 import { createRewriteDependenciesPlugin } from '../plugins/rewriteDependenciesPlugin';
 import createEsbuildBrowserslistTarget from '../../common-scripts/createEsbuildBrowserslistTarget';
 import type { Paths } from '../../common-scripts/determineTargetPaths';
-import { ImportInfo } from '../../../utils/buildImportMap';
+import { ImportInfo } from '../../../utils/importInfo';
 
 export default async function build(
   target: string,

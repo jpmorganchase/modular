@@ -1,10 +1,10 @@
 import { filterDependencies } from './filterDependencies';
 import { getPackageDependencies } from './getPackageDependencies';
 import {
-  buildImportMap,
+  buildImportInfo,
   rewriteModuleSpecifier,
   ImportInfo,
-} from './buildImportMap';
+} from './importInfo';
 import getWorkspaceInfo from './getWorkspaceInfo';
 import type { Dependency } from '@schemastore/package';
 import getWorkspaceLocation from './getLocation';
@@ -43,7 +43,7 @@ export async function getDependencyInfo(target: string): Promise<{
       workspaceInfo,
     });
 
-  const importInfo = buildImportMap(workspacePath, {
+  const importInfo = buildImportInfo(workspacePath, {
     externalDependencies,
     externalResolutions,
     selectiveCDNResolutions,

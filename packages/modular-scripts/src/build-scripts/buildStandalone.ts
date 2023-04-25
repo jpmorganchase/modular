@@ -166,7 +166,7 @@ export async function buildStandalone(
       cssEntryPoint,
       jsEntryPoint,
       styleImports,
-      importMap: importInfo.importMap, // TODO: take a look if needed in this form
+      importInfo,
       modularType: type,
       externalResolutions,
     });

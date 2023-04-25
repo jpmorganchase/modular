@@ -2,27 +2,27 @@ import { parsePackageName } from './parsePackageName';
 import type { Dependency } from '@schemastore/package';
 import { getConfig } from './config';
 
-interface BuildImportMapParams {
+interface BuildImportInfoParams {
   externalDependencies: Dependency;
   externalResolutions: Dependency;
   selectiveCDNResolutions: Dependency;
 }
 
 export interface ImportInfo {
-  importMap: Map<string, string>;
+  importSet: Set<string>;
   externalDependencies: Dependency;
   externalResolutions: Dependency;
   selectiveCDNResolutions: Dependency;
   externalCdnTemplate: string;
 }
 
-export function buildImportMap(
+export function buildImportInfo(
   workspacePath: string,
   {
     externalDependencies,
     externalResolutions,
     selectiveCDNResolutions,
-  }: BuildImportMapParams,
+  }: BuildImportInfoParams,
 ): ImportInfo {
   const externalCdnTemplate = getConfig('externalCdnTemplate', workspacePath);
 
@@ -34,34 +34,10 @@ export function buildImportMap(
     externalResolutions['react-dom'] = externalResolutions['react'];
   }
 
-  // Generate an import map
-  const importMap: Map<string, string> = new Map(
-    Object.entries(externalDependencies).map(([name, version]) => {
-      if (!externalResolutions[name]) {
-        throw new Error(
-          `Dependency ${name} found in package.json but not in lockfile. Have you installed your dependencies?`,
-        );
-      }
-      return [
-        name,
-        externalCdnTemplate
-          .replace('[name]', name)
-          .replace('[version]', version ?? externalResolutions[name])
-          .replace('[resolution]', externalResolutions[name])
-          .replace(
-            '[selectiveCDNResolutions]',
-            selectiveCDNResolutions
-              ? Object.entries(selectiveCDNResolutions)
-                  .map(([key, value]) => `${key}@${value}`)
-                  .join(',')
-              : '',
-          ),
-      ];
-    }),
-  );
+  const importSet = new Set(Object.keys(externalDependencies));
 
   return {
-    importMap,
+    importSet,
     externalResolutions,
     selectiveCDNResolutions,
     externalDependencies,
@@ -82,12 +58,12 @@ export function rewriteModuleSpecifier(
   const { dependencyName: name, submodule } = parsePackageName(moduleSpecifier);
 
   if (name && externalDependencies[name]) {
-    const resolution = externalResolutions[name];
-    const version = externalDependencies[name] ?? externalResolutions[name];
-    console.log({ selectiveCDNResolutions, resolution, version });
     const dependencyUrl = externalCdnTemplate
       .replace('[name]', name)
-      .replace('[version]', version ?? externalResolutions[name])
+      .replace(
+        '[version]',
+        externalDependencies[name] ?? externalResolutions[name],
+      )
       .replace('[resolution]', externalResolutions[name])
       .replace(
         '[selectiveCDNResolutions]',

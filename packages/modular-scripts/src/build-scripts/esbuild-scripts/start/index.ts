@@ -44,7 +44,7 @@ import {
   validateKeyAndCerts,
 } from '../../common-scripts/getHttpsConfig';
 import { generateSelfSignedCert } from '../utils/generateSelfSignedCert';
-import type { ImportInfo } from '../../../utils/buildImportMap';
+import type { ImportInfo } from '../../../utils/importInfo';
 
 const RUNTIME_DIR = path.join(__dirname, 'runtime');
 class DevServer {
@@ -74,7 +74,7 @@ class DevServer {
   private port: number;
 
   private isApp: boolean; // TODO maybe it's better to pass the type here
-  private importInfo: ImportInfo | undefined;
+  private importInfo: ImportInfo;
   private useReactCreateRoot: boolean;
   private styleImports: Set<string>;
 
@@ -93,7 +93,7 @@ class DevServer {
     host: string;
     port: number;
     isApp: boolean;
-    importInfo: ImportInfo | undefined;
+    importInfo: ImportInfo;
     useReactCreateRoot: boolean;
     styleImports: Set<string>;
   }) {
@@ -361,7 +361,7 @@ class DevServer {
 
     const trampolineBuildResult = createViewTrampoline({
       fileName: 'index.js',
-      importMap: this.importInfo?.importMap, // TODO: see if this is needed in this form
+      importInfo: this.importInfo,
       useReactCreateRoot: this.useReactCreateRoot,
     });
     res.end(trampolineBuildResult);
@@ -437,7 +437,7 @@ export default async function startEsbuild({
 }: {
   target: string;
   isApp: boolean;
-  importInfo: ImportInfo | undefined;
+  importInfo: ImportInfo;
   useReactCreateRoot: boolean;
   styleImports: Set<string>;
 }): Promise<void> {

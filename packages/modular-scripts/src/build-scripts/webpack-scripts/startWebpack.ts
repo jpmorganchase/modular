@@ -13,7 +13,7 @@ import { choosePort } from '../common-scripts/getPort';
 import prepareUrls from '../common-scripts/urls';
 import type { Paths } from '../common-scripts/determineTargetPaths';
 import openBrowser from '../common-scripts/openBrowser';
-import type { ImportInfo } from '../../utils/buildImportMap';
+import type { ImportInfo } from '../../utils/importInfo';
 
 // Tools like Cloud9 rely on this.
 const portEnv = process.env.PORT;
