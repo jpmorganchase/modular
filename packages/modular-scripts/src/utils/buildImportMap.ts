@@ -13,6 +13,7 @@ export interface ImportInfo {
   externalDependencies: Dependency;
   externalResolutions: Dependency;
   selectiveCDNResolutions: Dependency;
+  externalCdnTemplate: string;
 }
 
 export function buildImportMap(
@@ -64,6 +65,7 @@ export function buildImportMap(
     externalResolutions,
     selectiveCDNResolutions,
     externalDependencies,
+    externalCdnTemplate,
   };
 }
 
@@ -72,21 +74,30 @@ export function rewriteModuleSpecifier(
   moduleSpecifier: string,
 ): string | undefined {
   const {
-    importMap,
+    externalCdnTemplate,
     externalResolutions,
     externalDependencies,
     selectiveCDNResolutions,
   } = importInfo;
   const { dependencyName: name, submodule } = parsePackageName(moduleSpecifier);
 
-  if (name) {
+  if (name && externalDependencies[name]) {
     const resolution = externalResolutions[name];
     const version = externalDependencies[name] ?? externalResolutions[name];
     console.log({ selectiveCDNResolutions, resolution, version });
-    const dependencyUrl = importMap.get(name);
-    if (dependencyUrl) {
-      // Rewrite the path taking the submodule into account
-      return `${dependencyUrl}${submodule ? `/${submodule}` : ''}`;
-    }
+    const dependencyUrl = externalCdnTemplate
+      .replace('[name]', name)
+      .replace('[version]', version ?? externalResolutions[name])
+      .replace('[resolution]', externalResolutions[name])
+      .replace(
+        '[selectiveCDNResolutions]',
+        selectiveCDNResolutions
+          ? Object.entries(selectiveCDNResolutions)
+              .map(([key, value]) => `${key}@${value}`)
+              .join(',')
+          : '',
+      );
+
+    return `${dependencyUrl}${submodule ? `/${submodule}` : ''}`;
   }
 }
