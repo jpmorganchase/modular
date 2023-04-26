@@ -223,7 +223,7 @@ export function runModularForTests(
     path.join(modularRoot, '/node_modules/.bin/ts-node'),
     [
       path.join(modularRoot, '/packages/modular-scripts/src/cli.ts'),
-      ...args.split(' '),
+      ...args.split(/ +(?=(?:(?:[^"]*"){2})*[^"]*$)/g),
     ],
     {
       cwd,

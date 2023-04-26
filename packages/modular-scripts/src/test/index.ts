@@ -15,6 +15,7 @@ import {
 } from '../utils/unobtrusiveModular';
 
 export interface TestOptions {
+  jest: boolean;
   ancestors: boolean;
   descendants: boolean;
   bail: boolean;
@@ -69,6 +70,7 @@ function resolveJestDefaultEnvironment(name: string) {
 
 async function test(options: TestOptions, packages?: string[]): Promise<void> {
   const {
+    jest,
     ancestors,
     descendants,
     changed,
@@ -107,94 +109,121 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
   const testEnvironment = resolvedEnv || env;
   cleanArgv.push(`--env=${testEnvironment}`);
 
-  // pass on all programatic options
-  const jestArgv = Object.entries(jestOptions).map(([key, v]) => {
-    const booleanValue = /^(true)$/.exec(String(v));
-    return `--${key}${!!booleanValue ? '' : `=${String(v)}`}`;
-  });
+  let regexes: string[] = [];
+  let nonModularTargets;
+  let modularTargets;
 
-  cleanArgv.push(...jestArgv);
+  if (jest) {
+    // pass on all options
+    cleanArgv.push(
+      ...Object.entries(options)
+        .filter(([key, v]) => {
+          return key !== 'jest' && key !== 'env';
+        })
+        .map(([key, v]) => {
+          const booleanValue = /^(true)$/.exec(String(v));
+          return `--${key}${!!booleanValue ? '' : `=${String(v)}`}`;
+        }),
+    );
 
-  const additionalOptions: string[] = [];
-  const cleanRegexes: string[] = [];
-
-  const cleanPackages: string[] = [];
-
-  // Commander seems to read options (--option) passed to the modular test command as
-  // arguments (in this case packages), so we filter them out and pass them to jest
-  if (packages) {
-    extractOptions(packages, cleanPackages, additionalOptions);
-  }
-
-  const [workspaceMap] = await getAllWorkspaces(getModularRoot());
-  const isSelective =
-    changed ||
-    ancestors ||
-    descendants ||
-    userRegexes?.length ||
-    cleanPackages.length;
-
-  let selectedTargets: string[];
-
-  if (!isSelective) {
-    // If no package and no selector is specified, all packages are specified
-    selectedTargets = [...workspaceMap.keys()];
+    // Get the options that have been incorrectly placed in packages[]
+    if (packages) {
+      const additionalOptions: string[] = [];
+      const cleanPackages: string[] = [];
+      extractOptions(packages, cleanPackages, additionalOptions);
+      cleanArgv.push(...additionalOptions);
+    }
   } else {
-    // Otherwise, calculate which packages are selected
-    selectedTargets = await selectWorkspaces({
-      targets: cleanPackages,
-      changed,
-      ancestors,
-      descendants,
-      compareBranch,
+    // pass on jest programatic options
+    const jestArgv = Object.entries(jestOptions).map(([key, v]) => {
+      const booleanValue = /^(true)$/.exec(String(v));
+      return `--${key}${!!booleanValue ? '' : `=${String(v)}`}`;
     });
+
+    cleanArgv.push(...jestArgv);
+    const additionalOptions: string[] = [];
+    const cleanRegexes: string[] = [];
+
+    const cleanPackages: string[] = [];
+
+    // Commander seems to read options (--option) passed to the modular test command as
+    // arguments (in this case packages), so we filter them out and pass them to jest
+    if (packages) {
+      extractOptions(packages, cleanPackages, additionalOptions);
+    }
+
+    const [workspaceMap] = await getAllWorkspaces(getModularRoot());
+    const isSelective =
+      changed ||
+      ancestors ||
+      descendants ||
+      userRegexes?.length ||
+      cleanPackages.length;
+
+    let selectedTargets: string[];
+
+    if (!isSelective) {
+      // If no package and no selector is specified, all packages are specified
+      selectedTargets = [...workspaceMap.keys()];
+    } else {
+      // Otherwise, calculate which packages are selected
+      selectedTargets = await selectWorkspaces({
+        targets: cleanPackages,
+        changed,
+        ancestors,
+        descendants,
+        compareBranch,
+      });
+    }
+
+    // Split packages into modular and non-modular testable. Make sure that "root" is not there.
+    [modularTargets, nonModularTargets] = partitionPackages(
+      selectedTargets,
+      workspaceMap,
+      'test',
+    );
+    // Compute patterns to pass Jest for the packages that we want to test
+    const packageRegexes = await computeRegexesFromPackageNames(modularTargets);
+
+    // Merge and dedupe selective regexes + user-specified regexes
+    regexes = [...new Set([...packageRegexes, ...(userRegexes ?? [])])];
+
+    if (regexes?.length) {
+      extractOptions(regexes, cleanRegexes, additionalOptions);
+    }
+
+    logger.debug(
+      `Modular package targets for tests are ${JSON.stringify(
+        modularTargets,
+      )}.`,
+    );
+    logger.debug(
+      `Non-modular targets selected and eligible for tests are: ${JSON.stringify(
+        nonModularTargets,
+      )}.`,
+    );
+    logger.debug(
+      `Regexes generated from Modular targets are: ${JSON.stringify(
+        packageRegexes,
+      )}.`,
+    );
+    logger.debug(`User-provided regexes are: ${JSON.stringify(userRegexes)}.`);
+    logger.debug(
+      `Final regexes to pass to Jest are: ${JSON.stringify(regexes)}.`,
+    );
+
+    // If we computed no regexes and there are no non-modular packages to test, bail out
+    if (!regexes?.length && !nonModularTargets.length) {
+      process.stdout.write('No workspaces found in selection\n');
+      process.exit(0);
+    }
+
+    // Push any additional options passed in by debugger or other processes
+    cleanArgv.push(...additionalOptions);
+
+    // Finally add the script regexes to run
+    cleanArgv.push(...cleanRegexes);
   }
-
-  // Split packages into modular and non-modular testable. Make sure that "root" is not there.
-  const [modularTargets, nonModularTargets] = partitionPackages(
-    selectedTargets,
-    workspaceMap,
-    'test',
-  );
-  // Compute patterns to pass Jest for the packages that we want to test
-  const packageRegexes = await computeRegexesFromPackageNames(modularTargets);
-
-  // Merge and dedupe selective regexes + user-specified regexes
-  const regexes = [...new Set([...packageRegexes, ...(userRegexes ?? [])])];
-
-  if (regexes?.length) {
-    extractOptions(regexes, cleanRegexes, additionalOptions);
-  }
-
-  logger.debug(
-    `Modular package targets for tests are ${JSON.stringify(modularTargets)}.`,
-  );
-  logger.debug(
-    `Non-modular targets selected and eligible for tests are: ${JSON.stringify(
-      nonModularTargets,
-    )}.`,
-  );
-  logger.debug(
-    `Regexes generated from Modular targets are: ${JSON.stringify(
-      packageRegexes,
-    )}.`,
-  );
-  logger.debug(`User-provided regexes are: ${JSON.stringify(userRegexes)}.`);
-  logger.debug(
-    `Final regexes to pass to Jest are: ${JSON.stringify(regexes)}.`,
-  );
-
-  // If we computed no regexes and there are no non-modular packages to test, bail out
-  if (!regexes?.length && !nonModularTargets.length) {
-    process.stdout.write('No workspaces found in selection\n');
-    process.exit(0);
-  }
-
-  // Push any additional options passed in by debugger or other processes
-  cleanArgv.push(...additionalOptions);
-
-  // Finally add the script regexes to run
-  cleanArgv.push(...cleanRegexes);
 
   const jestBin = await resolveAsBin('jest-cli');
   let testBin = jestBin,
@@ -212,7 +241,7 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
   }
 
   // First run Modular tests with Jest. We're not iterating, but providing arguments to Jest, so we do this only if we have Modular test to run
-  if (regexes.length) {
+  if (regexes?.length || jest) {
     logger.debug(
       `Running ${testBin} with cwd: ${getModularRoot()} and args: ${JSON.stringify(
         testArgs,
@@ -235,17 +264,18 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
       throw new Error('\u2715 Modular test did not pass');
     }
   }
-
-  // ...Then run non-Modular (if there are any) tests by running the tests script for each package
-  for (const target of nonModularTargets) {
-    try {
-      await execAsync(`yarn`, ['workspace', target, 'test'], {
-        cwd: getModularRoot(),
-        log: false,
-      });
-    } catch (err) {
-      logger.debug((err as ExecaError).message);
-      throw new Error('\u2715 Modular test did not pass');
+  if (nonModularTargets) {
+    // ...Then run non-Modular (if there are any) tests by running the tests script for each package
+    for (const target of nonModularTargets) {
+      try {
+        await execAsync(`yarn`, ['workspace', target, 'test'], {
+          cwd: getModularRoot(),
+          log: false,
+        });
+      } catch (err) {
+        logger.debug((err as ExecaError).message);
+        throw new Error('\u2715 Modular test did not pass');
+      }
     }
   }
 }
