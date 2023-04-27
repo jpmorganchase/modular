@@ -241,7 +241,7 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
   }
 
   // First run Modular tests with Jest. We're not iterating, but providing arguments to Jest, so we do this only if we have Modular test to run
-  if (regexes?.length || jest) {
+  if (regexes?.length || bypass) {
     logger.debug(
       `Running ${testBin} with cwd: ${getModularRoot()} and args: ${JSON.stringify(
         testArgs,
