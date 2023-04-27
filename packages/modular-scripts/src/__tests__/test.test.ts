@@ -70,7 +70,7 @@ describe('Modular test command', () => {
 
     let randomOutputFolder: string;
 
-    beforeEach(() => {
+    beforeAll(() => {
       // Create random dir
       randomOutputFolder = tmp.dirSync({ unsafeCleanup: true }).name;
       fs.copySync(fixturesFolder, randomOutputFolder);
@@ -104,17 +104,16 @@ describe('Modular test command', () => {
       });
     });
 
-    // These expects run in a single test, serially for performance reasons (the setup time is quite long)
-    it('finds no unchanged using --changed / finds changed after modifying some workspaces / finds ancestors using --ancestors', () => {
-      const resultUnchanged = runModularPipeLogs(
+    it('finds no unchanged using --changed', () => {
+      const result = runModularPipeLogs(
         randomOutputFolder,
         'test --changed',
         'true',
       );
-      expect(resultUnchanged.stdout).toContain(
-        'No workspaces found in selection',
-      );
+      expect(result.stdout).toContain('No workspaces found in selection');
+    });
 
+    it('finds changed after modifying some workspaces', () => {
       fs.appendFileSync(
         path.join(randomOutputFolder, '/packages/b/src/index.ts'),
         "\n// Comment to package b's source",
@@ -124,28 +123,49 @@ describe('Modular test command', () => {
         "\n// Comment to package c's source",
       );
 
-      const resultChanged = runModularPipeLogs(
+      const result = runModularPipeLogs(
         randomOutputFolder,
         'test --changed',
         'true',
       );
-      expect(resultChanged.stderr).toContain('c-nested.test.ts');
-      expect(resultChanged.stderr).toContain('c.test.ts');
-      expect(resultChanged.stderr).toContain('b-nested.test.ts');
-      expect(resultChanged.stderr).toContain('b.test.ts');
+      expect(result.stderr).toContain('c-nested.test.ts');
+      expect(result.stderr).toContain('c.test.ts');
+      expect(result.stderr).toContain('b-nested.test.ts');
+      expect(result.stderr).toContain('b.test.ts');
+    });
 
-      const resultChangedWithAncestors = runModularPipeLogs(
+    it('finds ancestors using --ancestors', () => {
+      const result = runModularPipeLogs(
         randomOutputFolder,
         'test --changed --ancestors',
       );
-      expect(resultChangedWithAncestors.stderr).toContain('c-nested.test.ts');
-      expect(resultChangedWithAncestors.stderr).toContain('c.test.ts');
-      expect(resultChangedWithAncestors.stderr).toContain('b-nested.test.ts');
-      expect(resultChangedWithAncestors.stderr).toContain('b.test.ts');
-      expect(resultChangedWithAncestors.stderr).toContain('a-nested.test.ts');
-      expect(resultChangedWithAncestors.stderr).toContain('a.test.ts');
-      expect(resultChangedWithAncestors.stderr).toContain('e-nested.test.ts');
-      expect(resultChangedWithAncestors.stderr).toContain('e.test.ts');
+      expect(result.stderr).toContain('c-nested.test.ts');
+      expect(result.stderr).toContain('c.test.ts');
+      expect(result.stderr).toContain('b-nested.test.ts');
+      expect(result.stderr).toContain('b.test.ts');
+      expect(result.stderr).toContain('a-nested.test.ts');
+      expect(result.stderr).toContain('a.test.ts');
+      expect(result.stderr).toContain('e-nested.test.ts');
+      expect(result.stderr).toContain('e.test.ts');
+    });
+
+    it('correctly interprets Jest options when no selective options are provided', () => {
+      const result = runModularPipeLogs(
+        randomOutputFolder,
+        'test --testNamePattern="should add two numbers unique"',
+      );
+      expect(result.stderr).toContain(
+        `Ran all test suites matching /packages\\/a|packages\\/b|packages\\/c|packages\\/d|packages\\/e/i with tests matching "should add two numbers unique".`,
+      );
+    });
+    it('correctly interprets Jest options when selective options are provided', () => {
+      const result = runModularPipeLogs(
+        randomOutputFolder,
+        'test a --testNamePattern="should add two numbers unique"',
+      );
+      expect(result.stderr).toContain(
+        'Ran all test suites matching /packages\\/a/i with tests matching "should add two numbers unique"',
+      );
     });
   });
 
