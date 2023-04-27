@@ -123,7 +123,7 @@ export default function createPluginConfig(
               { file: '**/src/setupTests.*' },
             ],
           },
-        }) as unknown as WebpackPluginInstance),
+        }) as WebpackPluginInstance),
     ].filter(Boolean) as WebpackPluginInstance[],
   };
 
