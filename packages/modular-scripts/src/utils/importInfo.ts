@@ -56,6 +56,9 @@ export function rewriteModuleSpecifier(
     selectiveCDNResolutions,
   } = importInfo;
   const { dependencyName: name, submodule } = parsePackageName(moduleSpecifier);
+  const submodulePath = submodule || '';
+
+  const hasPath = externalCdnTemplate.includes('[path]');
 
   if (name && externalDependencies[name]) {
     const dependencyUrl = externalCdnTemplate
@@ -65,6 +68,7 @@ export function rewriteModuleSpecifier(
         externalDependencies[name] ?? externalResolutions[name],
       )
       .replace('[resolution]', externalResolutions[name])
+      .replace('[path]', submodulePath)
       .replace(
         '[selectiveCDNResolutions]',
         selectiveCDNResolutions
@@ -74,6 +78,6 @@ export function rewriteModuleSpecifier(
           : '',
       );
 
-    return `${dependencyUrl}${submodule ? `/${submodule}` : ''}`;
+    return `${dependencyUrl}${hasPath ? '' : `/${submodulePath}`}`;
   }
 }
