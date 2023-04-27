@@ -178,21 +178,8 @@ async function addPackage({
       yarnAddArgs.push('--cached');
     }
 
-    const templateInstallSubprocess = execAsync('yarnpkg', yarnAddArgs, {
-      cwd: modularRoot,
-      stderr: 'pipe',
-      stdout: 'ignore',
-    });
+    await runYarnCommand(yarnAddArgs, verbose);
 
-    // Remove warnings
-    templateInstallSubprocess.stderr?.pipe(
-      new LineFilterOutStream(/.*warning.*/),
-    );
-    if (verbose) {
-      templateInstallSubprocess.stderr?.pipe(process.stderr);
-    }
-
-    await templateInstallSubprocess;
     templatePackageJsonPath = require.resolve(installedPackageJsonPath, {
       paths: [modularRoot],
     });
@@ -304,6 +291,20 @@ async function addPackage({
   }
 
   await subprocess;
+
+  // Clean up package.json dependencies - the template isn't needed anymore
+  const rootPackageJson = fs.readJSONSync(
+    path.join(modularRoot, 'package.json'),
+  ) as ModularPackageJson;
+
+  if (rootPackageJson.dependencies?.[templateName]) {
+    const removeTemplateArgs = ['remove', templateName];
+    if (isYarnV1) {
+      removeTemplateArgs.push('-W');
+    }
+
+    await runYarnCommand(removeTemplateArgs, verbose);
+  }
 }
 
 function getNewPackageDetails({
@@ -379,6 +380,24 @@ async function validatePackageDetails(
       `Directory "${packagePath}" already exists and it's not empty`,
     );
   }
+}
+
+async function runYarnCommand(args: string[], verbose: boolean) {
+  const templateInstallSubprocess = execAsync('yarnpkg', args, {
+    cwd: getModularRoot(),
+    stderr: 'pipe',
+    stdout: 'ignore',
+  });
+
+  // Remove warnings
+  templateInstallSubprocess.stderr?.pipe(
+    new LineFilterOutStream(/.*warning.*/),
+  );
+  if (verbose) {
+    templateInstallSubprocess.stderr?.pipe(process.stderr);
+  }
+
+  await templateInstallSubprocess;
 }
 
 export default actionPreflightCheck(addPackage);
