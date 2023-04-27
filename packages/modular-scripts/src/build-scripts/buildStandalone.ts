@@ -26,6 +26,7 @@ import { getDependencyInfo } from '../utils/getDependencyInfo';
 import { isReactNewApi } from '../utils/isReactNewApi';
 import { getConfig } from '../utils/config';
 import buildWebpack from './webpack-scripts/buildWebpack';
+import getModularRoot from '../utils/getModularRoot';
 
 export async function buildStandalone(
   target: string,
@@ -176,6 +177,11 @@ export async function buildStandalone(
   const targetPackageJson = (await fs.readJSON(
     path.join(targetDirectory, 'package.json'),
   )) as ModularPackageJson;
+
+  const rootPackageJson = (await fs.readJSON(
+    path.join(getModularRoot(), 'package.json'),
+  )) as ModularPackageJson;
+
   // Copy selected fields of package.json over
   await fs.writeJson(
     path.join(paths.appBuild, 'package.json'),
@@ -191,6 +197,7 @@ export async function buildStandalone(
       module: jsEntryPoint ? paths.publicUrlOrPath + jsEntryPoint : undefined,
       style: cssEntryPoint ? paths.publicUrlOrPath + cssEntryPoint : undefined,
       styleImports: styleImports?.size ? [...styleImports] : undefined,
+      engines: targetPackageJson.engines ?? rootPackageJson.engines,
     },
     { spaces: 2 },
   );
