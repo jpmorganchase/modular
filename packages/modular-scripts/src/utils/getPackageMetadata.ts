@@ -48,6 +48,10 @@ async function getPackageMetadata() {
 
   Array.from(workspaces).forEach(([packageName, workspace]) => {
     packageJsons[packageName] = workspace.rawPackageJson;
+    if (!packageJsons[packageName].engines) {
+      // If engines field is not defined in the package's package.json, inherit it from the root package.json
+      packageJsons[packageName].engines = rootPackageJsonEngines;
+    }
     packageJsonsByPackagePath[workspace.location] = workspace.rawPackageJson;
   });
 

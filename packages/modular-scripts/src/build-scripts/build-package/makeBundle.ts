@@ -39,7 +39,6 @@ export async function makeBundle(
   const {
     rootPackageWorkspaceDefinitions,
     rootPackageJsonDependencies,
-    rootPackageJsonEngines,
     packageJsons,
     packageJsonsByPackagePath,
     packageNames,
@@ -56,11 +55,6 @@ export async function makeBundle(
   const logger = getPrefixedLogger(packageName);
 
   const packageJson = packageJsonsByPackagePath[packagePath];
-
-  // If engines field is not defined in the package's package.json, inherit it from the root package.json
-  if (!packageJson.engines) {
-    packageJson.engines = rootPackageJsonEngines;
-  }
 
   const main = await getPackageEntryPoints(packagePath, includePrivate);
 
