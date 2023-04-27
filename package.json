@@ -94,7 +94,6 @@
     "semver": "7.3.7",
     "string.prototype.replaceall": "^1.0.6",
     "ts-node": "10.9.1",
-    "tsx": "^3.12.6",
     "typescript": "4.8.3"
   },
   "resolutions": {

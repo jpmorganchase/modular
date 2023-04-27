@@ -1,21 +1,17 @@
+import detect from 'detect-port-alt';
 import isRoot from 'is-root';
 import prompts from 'prompts';
 import chalk from 'chalk';
 
 import * as logger from '../../utils/logger';
 import memoize from '../../utils/memoize';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
-const detect = require('detect-port-alt');
-
 const isInteractive = process.stdout.isTTY;
 
 export async function choosePort(
   host: string,
   defaultPort: number,
 ): Promise<number | undefined> {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  const port = (await detect(defaultPort, host)) as number;
+  const port = await detect(defaultPort, host);
   if (port === defaultPort) {
     return port;
   }
