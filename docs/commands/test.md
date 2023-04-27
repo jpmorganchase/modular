@@ -59,7 +59,7 @@ empty, Modular will write a message to `stdout` and exit with code `0`.
 
 ### Modular-specific options
 
-`--jest`: Bypass Modular selective behaviour and flags, and send all provided
+`--bypass`: Bypass Modular selective behaviour and flags, and send all provided
 flags and options directly to the Jest process with Modular configuration.
 Useful when running `modular test` from IntelliJ.
 
@@ -100,7 +100,7 @@ underlying Jest process.
 ## Configuring IntelliJ
 
 IntelliJ and `modular test` aren't compatible out of the box. To make it work,
-modify the IntelliJ test configuration to use `modular test` with the `--jest`
+modify the IntelliJ test configuration to use `modular test` with the `--bypass`
 flag.
 
 The following is an example IntelliJ Jest configuration that uses
@@ -110,7 +110,7 @@ The following is an example IntelliJ Jest configuration that uses
 
 - Working directory: `absolute_repo_path/`
 
-- Jest options: `test --jest`
+- Jest options: `test --bypass`
 
 ## Escape Hatches
 
