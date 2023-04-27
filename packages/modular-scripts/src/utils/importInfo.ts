@@ -56,7 +56,7 @@ export function rewriteModuleSpecifier(
     selectiveCDNResolutions,
   } = importInfo;
   const { dependencyName: name, submodule } = parsePackageName(moduleSpecifier);
-  const submodulePath = submodule || '';
+  const submodulePath = submodule ? `/${submodule}` : '';
 
   const hasPath = externalCdnTemplate.includes('[path]');
 
@@ -78,6 +78,6 @@ export function rewriteModuleSpecifier(
           : '',
       );
 
-    return `${dependencyUrl}${hasPath ? '' : `/${submodulePath}`}`;
+    return `${dependencyUrl}${hasPath ? '' : submodulePath}`;
   }
 }
