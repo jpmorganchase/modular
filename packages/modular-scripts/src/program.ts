@@ -205,6 +205,11 @@ program
     '--regex <regexes...>',
     'Specifies one or more test name regular expression',
   )
+  .option(
+    '--swc',
+    'Use Rust based SWC Jest runner instead of ts-jest & babel for performance improvements',
+    false,
+  )
   .option('--coverage', testOptions.coverage.description)
   .option('--forceExit', testOptions.forceExit.description)
   .option('--env <env>', testOptions.env.description, 'jsdom')

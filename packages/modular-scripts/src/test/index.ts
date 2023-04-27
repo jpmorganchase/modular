@@ -41,6 +41,7 @@ export interface TestOptions {
   verbose: boolean;
   watch: boolean;
   watchAll: boolean;
+  swc: boolean;
 }
 
 // via https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/scripts/test.js
@@ -80,6 +81,7 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
     env,
     reporters,
     testResultsProcessor,
+    swc,
     ...jestOptions
   } = options;
 
@@ -88,9 +90,12 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
 
   // pass in jest configuration
   const { createJestConfig } = await import('./config');
+
   cleanArgv.push(
     '--config',
-    generateJestConfig(createJestConfig({ reporters, testResultsProcessor })),
+    generateJestConfig(
+      createJestConfig({ reporters, testResultsProcessor, swc }),
+    ),
   );
 
   let resolvedEnv;

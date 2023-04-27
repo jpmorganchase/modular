@@ -36,6 +36,7 @@ const modulularSetUpFilesMap: SetUpFilesMap = {
 interface TestCliOptions {
   reporters?: string[];
   testResultsProcessor?: string;
+  swc: boolean;
 }
 
 export function createJestConfig(
@@ -50,41 +51,53 @@ export function createJestConfig(
     ...cliOptions,
     displayName: 'test',
     resetMocks: false,
-    transform: {
-      '^.+\\.(js|jsx|mjs|cjs)$': require.resolve('@swc/jest'),
-      '^.+\\.(ts|tsx)$': [
-        require.resolve('@swc/jest'),
-        {
-          $schema: 'https://json.schemastore.org/swcrc',
-          sourceMaps: true,
-          module: { type: 'commonjs', strictMode: true, noInterop: false },
-          jsc: {
-            externalHelpers: false,
-            target: 'es2016',
-            parser: {
-              syntax: 'typescript',
-              tsx: true,
-              decorators: false,
-              dynamicImport: true,
-            },
-            transform: {
-              legacyDecorator: true,
-              decoratorMetadata: false,
-              react: {
-                throwIfNamespace: false,
-                useBuiltins: false,
-                pragma: 'React.createElement',
-                pragmaFrag: 'React.Fragment',
+    transform: cliOptions.swc
+      ? {
+          '^.+\\.(js|jsx|mjs|cjs)$': require.resolve('@swc/jest'),
+          '^.+\\.(ts|tsx)$': [
+            require.resolve('@swc/jest'),
+            {
+              $schema: 'https://json.schemastore.org/swcrc',
+              sourceMaps: true,
+              module: { type: 'commonjs', strictMode: true, noInterop: false },
+              jsc: {
+                externalHelpers: false,
+                target: 'es2016',
+                parser: {
+                  syntax: 'typescript',
+                  tsx: true,
+                  decorators: false,
+                  dynamicImport: true,
+                },
+                transform: {
+                  legacyDecorator: true,
+                  decoratorMetadata: false,
+                  react: {
+                    throwIfNamespace: false,
+                    useBuiltins: false,
+                    pragma: 'React.createElement',
+                    pragmaFrag: 'React.Fragment',
+                  },
+                },
+                keepClassNames: true,
               },
             },
-            keepClassNames: true,
-          },
+          ],
+          '^.+\\.(css|scss)$': require.resolve('jest-transform-stub'),
+          '.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
+            require.resolve('jest-transform-stub'),
+        }
+      : {
+          '^.+\\.(js|jsx|mjs|cjs)$': [
+            require.resolve('babel-jest'),
+            {
+              presets: [require.resolve('babel-preset-react-app')],
+            },
+          ],
+          '^.+\\.(css|scss)$': require.resolve('jest-transform-stub'),
+          '.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
+            require.resolve('jest-transform-stub'),
         },
-      ],
-      '^.+\\.(css|scss)$': require.resolve('jest-transform-stub'),
-      '.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
-        require.resolve('jest-transform-stub'),
-    },
     transformIgnorePatterns: [
       '[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$',
       '^.+\\.module\\.(css|sass|scss)$',
