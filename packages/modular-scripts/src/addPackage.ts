@@ -293,12 +293,18 @@ async function addPackage({
   await subprocess;
 
   // Clean up package.json dependencies - the template isn't needed anymore
-  const removeTemplateArgs = ['remove', templateName];
-  if (isYarnV1) {
-    removeTemplateArgs.push('-W');
-  }
+  const rootPackageJson = fs.readJSONSync(
+    path.join(modularRoot, 'package.json'),
+  ) as ModularPackageJson;
 
-  await runYarnCommand(removeTemplateArgs, verbose);
+  if (rootPackageJson.dependencies?.[templateName]) {
+    const removeTemplateArgs = ['remove', templateName];
+    if (isYarnV1) {
+      removeTemplateArgs.push('-W');
+    }
+
+    await runYarnCommand(removeTemplateArgs, verbose);
+  }
 }
 
 function getNewPackageDetails({
