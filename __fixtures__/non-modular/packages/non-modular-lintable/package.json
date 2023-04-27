@@ -1,0 +1,14 @@
+{
+  "name": "non-modular-lintable",
+  "private": false,
+  "scripts": {
+    "lint": "echo 'non-modular-lintable was linted'"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "license": "UNLICENSED",
+  "main": "./dist/index.js",
+  "version": "1.0.0"
+}

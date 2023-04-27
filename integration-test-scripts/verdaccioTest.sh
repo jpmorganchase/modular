@@ -66,7 +66,12 @@ do
     yarn modular analyze $template
 done
 
+echo testing modular workspace command \n\n\n
 yarn modular workspace
-yarn modular lint $TEMPLATES
+
+echo testing modular lint command \n\n\n
+yarn modular lint
+
+echo testing modular typecheck command \n\n\n
 yarn modular typecheck
 

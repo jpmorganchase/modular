@@ -13,12 +13,12 @@ import puppeteer from 'puppeteer';
 import { normalizeToPosix } from '../build-scripts/esbuild-scripts/utils/formatPath';
 import { startApp, DevServer } from './start-app';
 import type { CoreProperties } from '@schemastore/package';
+import { createModularTestContext, runModularForTests } from '../test/utils';
 import {
-  createModularTestContext,
-  runModularForTests,
-  setupMocks,
+  addPackageForTests,
   buildPackageForTests,
-} from '../test/utils';
+  setupMocks,
+} from '../test/mockFunctions';
 import { setTimeout } from 'timers';
 
 // Temporary text context paths
@@ -996,14 +996,5 @@ async function runYarn() {
   await execa('yarnpkg', [], {
     cwd: tempModularRepo,
     cleanup: true,
-  });
-}
-
-async function addPackageForTests(name: string, type: string): Promise<void> {
-  const { default: addPackage } = await import('../addPackage');
-  await addPackage({
-    name: name,
-    type: type,
-    unstableName: name,
   });
 }

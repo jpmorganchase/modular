@@ -45,6 +45,10 @@ the Selective Options)
 intervention wherever possible. Restages any fixed files that were previously
 staged when used in combination with `--staged`.
 
+`--includeNonModular`: Allows modular to run the `lint` script of non Modular
+packages included in the selection, if one is provided in the package's
+package.json
+
 ### Selective Options
 
 `--packages [packages...]`: A list of one or more packages to lint. Can be

@@ -1,5 +1,21 @@
 # create-modular-react-app
 
+## 5.0.0
+
+### Major Changes
+
+- [#2315](https://github.com/jpmorganchase/modular/pull/2315)
+  [`9753190`](https://github.com/jpmorganchase/modular/commit/9753190b429523606a98566dd9eba1c3a5236737)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Selective
+  `modular lint`
+
+### Minor Changes
+
+- [#2318](https://github.com/jpmorganchase/modular/pull/2318)
+  [`8365b77`](https://github.com/jpmorganchase/modular/commit/8365b77995f0b48bba1df36cdfb479dc738813df)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Added support for
+  Yarn 3
+
 ## 4.0.0
 
 ### Major Changes

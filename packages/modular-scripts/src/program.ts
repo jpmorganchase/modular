@@ -7,7 +7,10 @@ import commander, { Option } from 'commander';
 import { testOptions } from './test/jestOptions';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import * as logger from './utils/logger';
-import { validateCompareOptions } from './utils/validateOptions';
+import {
+  validateCompareOptions,
+  computeConcurrencyOption,
+} from './utils/options';
 
 import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import type { TestOptions } from './test';
@@ -111,6 +114,10 @@ program
     "Ignore circular dependency checks if your graph has one or more circular dependencies involving 'source' types, then warn. The build will still fail if circular dependencies involve more than one buildable package. Circular dependencies can be always refactored to remove cycles. This switch is dangerous and should be used sparingly and only temporarily.",
     false,
   )
+  .option(
+    '--concurrencyLevel <level>',
+    'Limit the concurrency of build processes that are executed in parallel within batches. 0 or 1 means no concurrency. Default is the number of logical CPUs.',
+  )
   .action(
     async (
       packagePaths: string[],
@@ -122,11 +129,20 @@ program
         ancestors: boolean;
         descendants: boolean;
         dangerouslyIgnoreCircularDependencies: boolean;
+        concurrencyLevel?: string;
       },
     ) => {
       const { default: build } = await import('./build-scripts');
 
       validateCompareOptions(options.compareBranch, options.changed);
+
+      const concurrencyLevel = computeConcurrencyOption(
+        options.concurrencyLevel,
+      );
+
+      logger.debug(
+        `Running build with a concurrency level of ${concurrencyLevel}`,
+      );
 
       if (options.dangerouslyIgnoreCircularDependencies) {
         // Warn. Users should never use this, but if they use it, they should have cycles limited to "source" packages
@@ -146,6 +162,7 @@ program
         descendants: options.descendants,
         dangerouslyIgnoreCircularDependencies:
           options.dangerouslyIgnoreCircularDependencies,
+        concurrencyLevel,
       });
     },
   );
@@ -156,6 +173,11 @@ interface CLITestOptions extends TestOptions {
 
 program
   .command('test [packages...]')
+  .option(
+    '--bypass',
+    'Bypass all modular specific selective behaviour and pass all flags and options directly to Jest. Ensures modular test behaves exactly like calling Jest directly, but with Modular configuration applied. Use with IntelliJ Jest configurations.',
+    false,
+  )
   .option(
     '--ancestors',
     'Additionally run tests for workspaces that depend on workspaces that have changed',
@@ -287,6 +309,12 @@ program
     '--fix',
     `Fix the lint errors wherever possible, restages changes if run with ${lintStagedFlag}`,
   )
+  .option('--verbose', 'Enables verbose logging within modular.')
+  .option(
+    '--includeNonModular',
+    "Runs 'lint' script if specified in the package.json of any non-modular package included - Will be removed and true as default in Modular 5.0.0",
+    false,
+  )
   .addOption(
     new Option(
       lintStagedFlag,
@@ -340,5 +368,52 @@ program
     const { default: serve } = await import('./serve');
     await serve(packageName, parseInt(options.port, 10));
   });
+
+program
+  .command('select [packages...]')
+  .description(
+    'Returns an array of selected package names by filtering all workspaces by the packages and options provided',
+  )
+  .option('--verbose', 'Show verbose information')
+  .option(
+    '--buildable',
+    'Select packages and output them in build order as 1-level nested arrays. Default is false',
+    false,
+  )
+  .option(
+    '--changed',
+    'Select only packages that contain files that have changed compared to the branch specified in --compareBranch. Default is false',
+    false,
+  )
+  .option(
+    '--descendants',
+    'Additionally select packages that the specified packages directly or indirectly depend on. Default is false',
+    false,
+  )
+  .option(
+    '--ancestors',
+    'Additionally select packages that directly or indirectly depend on the specified packages. Default is false',
+    false,
+  )
+  .option(
+    '--compareBranch <branch>',
+    "Specifies the branch to use with the --changed flag. If not specified, Modular will use the repo's default branch",
+  )
+  .action(
+    async (
+      selectedPackages: string[],
+      options: {
+        changed: boolean;
+        compareBranch?: string;
+        ancestors: boolean;
+        descendants: boolean;
+        buildable: boolean;
+      },
+    ) => {
+      const { default: select } = await import('./select');
+      validateCompareOptions(options.compareBranch, options.changed);
+      await select({ ...options, selectedPackages });
+    },
+  );
 
 export { program };

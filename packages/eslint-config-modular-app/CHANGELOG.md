@@ -1,5 +1,20 @@
 # eslint-config-modular-app
 
+## 4.0.1
+
+### Patch Changes
+
+- [#2315](https://github.com/jpmorganchase/modular/pull/2315)
+  [`9753190`](https://github.com/jpmorganchase/modular/commit/9753190b429523606a98566dd9eba1c3a5236737)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Selective
+  `modular lint`
+
+- [#2315](https://github.com/jpmorganchase/modular/pull/2315)
+  [`9753190`](https://github.com/jpmorganchase/modular/commit/9753190b429523606a98566dd9eba1c3a5236737)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! -
+  `modular lint` supports selective options `eslint-config-modular-app` doesn't
+  depend on eslint-config-react-app anymore
+
 ## 4.0.0
 
 ### Major Changes

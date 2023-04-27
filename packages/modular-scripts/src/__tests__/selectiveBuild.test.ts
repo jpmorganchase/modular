@@ -144,7 +144,62 @@ describe('--changed builds all the changed packages in order', () => {
     const result = runModularPipeLogs(tempModularRepo, 'build');
 
     expect(result.stderr).toBeFalsy();
-    expect(getBuildOrder(result.stdout)).toEqual(['d', 'c', 'b', 'a', 'e']);
+    expect(getBuildOrder(result.stdout)).toEqual([
+      'd',
+      'c',
+      'b',
+      'a',
+      'f',
+      'e',
+    ]);
+  });
+
+  it('builds packages concurrently with a certain concurrencyLevel', () => {
+    const result = runModularPipeLogs(
+      tempModularRepo,
+      'build --verbose --concurrencyLevel 2',
+    );
+
+    expect(result.stderr).toBeFalsy();
+    expect(result.stdout).toContain(
+      'runBatch is running a batch of length 2: ["e","f"]',
+    );
+  });
+
+  it('removes concurrency with concurrencyLevel = 0', () => {
+    const result = runModularPipeLogs(
+      tempModularRepo,
+      'build --verbose --concurrencyLevel 0',
+    );
+
+    expect(result.stderr).toBeFalsy();
+    expect(result.stdout).not.toContain(
+      'runBatch is running a batch of length 2',
+    );
+    expect(result.stdout).toContain(
+      'runBatch is running a batch of length 1: ["e"]',
+    );
+    expect(result.stdout).toContain(
+      'runBatch is running a batch of length 1: ["f"]',
+    );
+  });
+
+  it('removes concurrency with concurrencyLevel = 1', () => {
+    const result = runModularPipeLogs(
+      tempModularRepo,
+      'build --verbose --concurrencyLevel 0',
+    );
+
+    expect(result.stderr).toBeFalsy();
+    expect(result.stdout).not.toContain(
+      'runBatch is running a batch of length 2',
+    );
+    expect(result.stdout).toContain(
+      'runBatch is running a batch of length 1: ["e"]',
+    );
+    expect(result.stdout).toContain(
+      'runBatch is running a batch of length 1: ["f"]',
+    );
   });
 });
 
