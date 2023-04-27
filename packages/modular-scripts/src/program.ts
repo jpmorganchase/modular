@@ -174,7 +174,7 @@ interface CLITestOptions extends TestOptions {
 program
   .command('test [packages...]')
   .option(
-    '--jest',
+    '--bypass',
     'Bypass all modular specific selective behaviour and pass all flags and options directly to Jest. Ensures modular test behaves exactly like calling Jest directly, but with Modular configuration applied. Use with IntelliJ Jest configurations.',
     false,
   )

@@ -15,7 +15,7 @@ import {
 } from '../utils/unobtrusiveModular';
 
 export interface TestOptions {
-  jest: boolean;
+  bypass: boolean;
   ancestors: boolean;
   descendants: boolean;
   bail: boolean;
@@ -70,7 +70,7 @@ function resolveJestDefaultEnvironment(name: string) {
 
 async function test(options: TestOptions, packages?: string[]): Promise<void> {
   const {
-    jest,
+    bypass,
     ancestors,
     descendants,
     changed,
@@ -113,7 +113,7 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
   let nonModularTargets;
   let modularTargets;
 
-  if (jest) {
+  if (bypass) {
     // pass on all options
     cleanArgv.push(
       ...Object.entries(options)
