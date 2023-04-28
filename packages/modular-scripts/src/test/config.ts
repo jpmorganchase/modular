@@ -7,6 +7,7 @@ import { defaults } from 'jest-config';
 import getModularRoot from '../utils/getModularRoot';
 
 import type { ModularPackageJson } from '@modular-scripts/modular-types';
+import isCi from 'is-ci';
 
 // This list may change as we learn of options where flexibility would be valuable.
 // Based on react-scripts supported override options
@@ -36,11 +37,11 @@ const modulularSetUpFilesMap: SetUpFilesMap = {
 interface TestCliOptions {
   reporters?: string[];
   testResultsProcessor?: string;
-  swc: boolean;
 }
 
 export function createJestConfig(
   cliOptions: TestCliOptions,
+  swc: boolean,
 ): Config.InitialOptions {
   const modularRoot = getModularRoot();
   const absolutePackagesPath = path.resolve(modularRoot, 'packages');
@@ -51,7 +52,7 @@ export function createJestConfig(
     ...cliOptions,
     displayName: 'test',
     resetMocks: false,
-    transform: cliOptions.swc
+    transform: swc
       ? {
           '^.+\\.(js|jsx|mjs|cjs)$': require.resolve('@swc/jest'),
           '^.+\\.(ts|tsx)$': [
@@ -88,6 +89,13 @@ export function createJestConfig(
             require.resolve('jest-transform-stub'),
         }
       : {
+          // don't typecheck tests in CI
+          '^.+\\.(ts|tsx)$': isCi
+            ? [
+                require.resolve('ts-jest'),
+                { diagnostics: false, isolatedModules: true },
+              ]
+            : require.resolve('ts-jest'),
           '^.+\\.(js|jsx|mjs|cjs)$': [
             require.resolve('babel-jest'),
             {

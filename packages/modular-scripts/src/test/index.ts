@@ -16,6 +16,7 @@ import {
 
 export interface TestOptions {
   bypass: boolean;
+  swc: boolean;
   ancestors: boolean;
   descendants: boolean;
   bail: boolean;
@@ -41,7 +42,6 @@ export interface TestOptions {
   verbose: boolean;
   watch: boolean;
   watchAll: boolean;
-  swc: boolean;
 }
 
 // via https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/scripts/test.js
@@ -72,6 +72,7 @@ function resolveJestDefaultEnvironment(name: string) {
 async function test(options: TestOptions, packages?: string[]): Promise<void> {
   const {
     bypass,
+    swc,
     ancestors,
     descendants,
     changed,
@@ -81,7 +82,6 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
     env,
     reporters,
     testResultsProcessor,
-    swc,
     ...jestOptions
   } = options;
 
@@ -94,7 +94,7 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
   cleanArgv.push(
     '--config',
     generateJestConfig(
-      createJestConfig({ reporters, testResultsProcessor, swc }),
+      createJestConfig({ reporters, testResultsProcessor }, swc),
     ),
   );
 
