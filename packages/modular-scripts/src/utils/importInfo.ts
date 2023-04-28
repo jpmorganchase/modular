@@ -8,11 +8,8 @@ interface BuildImportInfoParams {
   selectiveCDNResolutions: Dependency;
 }
 
-export interface ImportInfo {
+export interface ImportInfo extends BuildImportInfoParams {
   importSet: Set<string>;
-  externalDependencies: Dependency;
-  externalResolutions: Dependency;
-  selectiveCDNResolutions: Dependency;
   externalCdnTemplate: string;
 }
 
