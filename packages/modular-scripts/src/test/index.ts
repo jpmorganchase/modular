@@ -214,11 +214,11 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
     );
     logger.debug(`User-provided regexes are: ${JSON.stringify(userRegexes)}.`);
     logger.debug(
-      `Final regexes to pass to Jest are: ${JSON.stringify(regexes)}.`,
+      `Final regexes to pass to Jest are: ${JSON.stringify(cleanRegexes)}.`,
     );
 
     // If we computed no regexes and there are no non-modular packages to test, bail out
-    if (!regexes?.length && !nonModularTargets.length) {
+    if (!cleanRegexes?.length && !nonModularTargets.length) {
       process.stdout.write('No workspaces found in selection\n');
       process.exit(0);
     }
@@ -226,8 +226,8 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
     // Push any additional options passed in by debugger or other processes
     cleanArgv.push(...additionalOptions);
 
-    // Finally add the script regexes to run
-    cleanArgv.push(...cleanRegexes);
+    // Finally add the script regexes to run (at the beginning of the array as to not be mistaken for properties assigned to a flag)
+    cleanArgv.unshift(...cleanRegexes);
   }
 
   const jestBin = await resolveAsBin('jest-cli');

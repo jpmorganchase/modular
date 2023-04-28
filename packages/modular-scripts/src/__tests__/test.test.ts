@@ -167,6 +167,19 @@ describe('Modular test command', () => {
         'Ran all test suites matching /packages\\/a/i with tests matching "should add two numbers unique"',
       );
     });
+    it('runs all tests when no options are provided', () => {
+      const result = runModularPipeLogs(randomOutputFolder, 'test');
+      expect(result.stderr).toContain('a.test.ts');
+      expect(result.stderr).toContain('a-nested.test.ts');
+      expect(result.stderr).toContain('b.test.ts');
+      expect(result.stderr).toContain('b-nested.test.ts');
+      expect(result.stderr).toContain('c.test.ts');
+      expect(result.stderr).toContain('c-nested.test.ts');
+      expect(result.stderr).toContain('d.test.ts');
+      expect(result.stderr).toContain('d-nested.test.ts');
+      expect(result.stderr).toContain('e.test.ts');
+      expect(result.stderr).toContain('e-nested.test.ts');
+    });
   });
 
   describe('test command can successfully do selective tests based on selected packages', () => {
@@ -247,7 +260,7 @@ describe('Modular test command', () => {
       expect(resultPackagesWithMixedRegex.stderr).toContain('a-nested.test.ts');
       expect(resultPackagesWithMixedRegex.stderr).not.toContain('a.test.ts');
     });
-    it('succesfully parses jest options and passes them to jest', () => {
+    it('successfully parses jest options and passes them to jest', () => {
       const resultPackages = runModularPipeLogs(
         randomOutputFolder,
         'test b c --colors --verbose',
