@@ -208,6 +208,9 @@ describe('modular-scripts', () => {
           "dependencies": {
             "react": "17.0.2",
           },
+          "engines": {
+            "node": "^14.18.0 || >=16.10.0 || >=18.0.0",
+          },
           "files": [
             "dist-cjs",
             "dist-es",
@@ -360,6 +363,9 @@ describe('modular-scripts', () => {
       ).toMatchInlineSnapshot(`
         {
           "dependencies": {},
+          "engines": {
+            "node": "^14.18.0 || >=16.10.0 || >=18.0.0",
+          },
           "files": [
             "dist-cjs",
             "dist-es",
@@ -441,6 +447,9 @@ describe('modular-scripts', () => {
       ).toMatchInlineSnapshot(`
         {
           "dependencies": {},
+          "engines": {
+            "node": "^14.18.0 || >=16.10.0 || >=18.0.0",
+          },
           "files": [
             "dist-cjs",
             "dist-es",
