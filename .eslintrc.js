@@ -10,7 +10,7 @@ const WARN = 'warn';
 const OFF = 'off';
 
 module.exports = {
-  extends: ['modular-app'],
+  extends: ['modular-app/recommended'],
   rules: {
     strict: [WARN, 'global'],
     'import/no-extraneous-dependencies': ['error', { devDependencies: false }],
@@ -31,7 +31,7 @@ module.exports = {
     },
     {
       // if we want to use js in this repo, then they have
-      // to be explitly marked as modules
+      // to be explicitly marked as modules
       files: '**/*.js',
       parserOptions: {
         sourceType: 'script',

@@ -8,6 +8,9 @@
     "type": "template",
     "templateType": "app"
   },
+  "eslintConfig": {
+    "extends": "modular-app/recommended"
+  },
   "license": "Apache-2.0",
   "files": [
     "public",

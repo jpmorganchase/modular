@@ -9,6 +9,9 @@
     "type": "template",
     "templateType": "package"
   },
+  "eslintConfig": {
+    "extends": "modular-app/recommended"
+  },
   "license": "Apache-2.0",
   "files": [
     "src"
