@@ -54,7 +54,7 @@ These are the substrings that are replaced in the template:
   while in the statement `import @scope/name`, `[path]` will be replaced by the
   empty string. If the `[path]` substring is not specified in the CDN template
   but the subpath module is present in the `import` statement, the submodule
-  path will be added ad the end of the template by default.
+  path will be added at the end of the template by default.
 - `[selectiveCDNResolutions]` is replaced with the
   [selective version resolutions](https://classic.yarnpkg.com/lang/en/docs/selective-version-resolutions/)
   specified in the manifest, as a comma-separated list of `package@version`
