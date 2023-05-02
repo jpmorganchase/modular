@@ -212,8 +212,6 @@ async function addPackage({
   const modularTemplateType = modularTemplatePackageJson?.modular
     ?.templateType as string | undefined;
 
-  console.log({ modularTemplateType });
-
   if (
     !(
       modularTemplateType === undefined ||
