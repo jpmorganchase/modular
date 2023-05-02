@@ -1,13 +1,12 @@
-import * as fs from 'fs-extra';
-import path from 'path';
-import chalk from 'chalk';
-import globby from 'globby';
-import type { Config } from '@jest/types';
-import { defaults } from 'jest-config';
 import getModularRoot from '../utils/getModularRoot';
-
-import type { ModularPackageJson } from '@modular-scripts/modular-types';
+import * as fs from 'fs-extra';
+import globby from 'globby';
+import chalk from 'chalk';
 import isCi from 'is-ci';
+import path from 'path';
+import { defaults } from 'jest-config';
+import type { ModularPackageJson } from '@modular-scripts/modular-types';
+import type { Config } from '@jest/types';
 
 // This list may change as we learn of options where flexibility would be valuable.
 // Based on react-scripts supported override options
@@ -29,7 +28,7 @@ type SetUpFilesMap = {
   setupFilesAfterEnv: string;
 };
 
-const modulularSetUpFilesMap: SetUpFilesMap = {
+const modularSetUpFilesMap: SetUpFilesMap = {
   setupFiles: 'setupEnvironment',
   setupFilesAfterEnv: 'setupTests',
 };
@@ -57,6 +56,7 @@ export function createJestConfig(
           '^.+\\.(js|jsx|mjs|cjs)$': require.resolve('@swc/jest'),
           '^.+\\.(ts|tsx)$': [
             require.resolve('@swc/jest'),
+            // Pass a swc configuration that closely matches our ts-config
             {
               $schema: 'https://json.schemastore.org/swcrc',
               sourceMaps: true,
@@ -89,6 +89,7 @@ export function createJestConfig(
             require.resolve('jest-transform-stub'),
         }
       : {
+          // If SWC flag isn't passed, use ts-jest and babel instead, for ts and js respectively
           // don't typecheck tests in CI
           '^.+\\.(ts|tsx)$': isCi
             ? [
@@ -205,7 +206,7 @@ export function createJestConfig(
                 chalk.bold(
                   '  \u2022 ' +
                     key +
-                    `: modular/${modulularSetUpFilesMap[key]}.{js,ts}`,
+                    `: modular/${modularSetUpFilesMap[key]}.{js,ts}`,
                 ),
               )
               .join('\n'),
