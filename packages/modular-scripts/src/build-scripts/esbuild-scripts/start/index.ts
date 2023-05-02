@@ -44,6 +44,7 @@ import {
   validateKeyAndCerts,
 } from '../../common-scripts/getHttpsConfig';
 import { generateSelfSignedCert } from '../utils/generateSelfSignedCert';
+import type { ImportInfo } from '../../../utils/importInfo';
 
 const RUNTIME_DIR = path.join(__dirname, 'runtime');
 class DevServer {
@@ -73,7 +74,7 @@ class DevServer {
   private port: number;
 
   private isApp: boolean; // TODO maybe it's better to pass the type here
-  private importMap: Map<string, string> | undefined;
+  private importInfo: ImportInfo;
   private useReactCreateRoot: boolean;
   private styleImports: Set<string>;
 
@@ -83,7 +84,7 @@ class DevServer {
     host,
     port,
     isApp,
-    importMap,
+    importInfo,
     useReactCreateRoot,
     styleImports,
   }: {
@@ -92,7 +93,7 @@ class DevServer {
     host: string;
     port: number;
     isApp: boolean;
-    importMap: Map<string, string> | undefined;
+    importInfo: ImportInfo;
     useReactCreateRoot: boolean;
     styleImports: Set<string>;
   }) {
@@ -101,7 +102,7 @@ class DevServer {
     this.host = host;
     this.port = port;
     this.isApp = isApp;
-    this.importMap = importMap;
+    this.importInfo = importInfo;
     this.useReactCreateRoot = useReactCreateRoot;
     this.styleImports = styleImports;
 
@@ -265,8 +266,8 @@ class DevServer {
     const browserTarget = createEsbuildBrowserslistTarget(this.paths.appPath);
 
     let plugins;
-    if (!this.isApp && this.importMap) {
-      plugins = [createRewriteDependenciesPlugin(this.importMap)];
+    if (!this.isApp && this.importInfo) {
+      plugins = [createRewriteDependenciesPlugin(this.importInfo)];
     }
 
     return createEsbuildConfig(this.paths, {
@@ -360,7 +361,7 @@ class DevServer {
 
     const trampolineBuildResult = createViewTrampoline({
       fileName: 'index.js',
-      importMap: this.importMap,
+      importInfo: this.importInfo,
       useReactCreateRoot: this.useReactCreateRoot,
     });
     res.end(trampolineBuildResult);
@@ -430,13 +431,13 @@ class DevServer {
 export default async function startEsbuild({
   target,
   isApp,
-  importMap,
+  importInfo,
   useReactCreateRoot,
   styleImports,
 }: {
   target: string;
   isApp: boolean;
-  importMap: Map<string, string> | undefined;
+  importInfo: ImportInfo;
   useReactCreateRoot: boolean;
   styleImports: Set<string>;
 }): Promise<void> {
@@ -457,7 +458,7 @@ export default async function startEsbuild({
     host,
     port,
     isApp,
-    importMap,
+    importInfo,
     useReactCreateRoot,
     styleImports,
   });

@@ -75,7 +75,7 @@ export async function buildStandalone(
 
   // Retrieve dependency info for target to inform the build process
   const {
-    importMap,
+    importInfo,
     styleImports,
     packageDependencies,
     bundledDependencies,
@@ -116,7 +116,7 @@ export async function buildStandalone(
     const { default: buildEsbuildApp } = await import(
       './esbuild-scripts/build'
     );
-    const result = await buildEsbuildApp(target, paths, importMap, type);
+    const result = await buildEsbuildApp(target, paths, importInfo, type);
     jsEntryPoint = getEntryPoint(paths, result, '.js');
     cssEntryPoint = getEntryPoint(paths, result, '.css');
     assets = createEsbuildAssets(result);
@@ -128,7 +128,7 @@ export async function buildStandalone(
     const stats = await buildWebpack(
       esbuildTargetFactory,
       isApp,
-      importMap,
+      importInfo,
       useReactCreateRoot,
       styleImports,
       paths,
@@ -167,7 +167,7 @@ export async function buildStandalone(
       cssEntryPoint,
       jsEntryPoint,
       styleImports,
-      importMap,
+      importInfo,
       modularType: type,
       externalResolutions,
     });

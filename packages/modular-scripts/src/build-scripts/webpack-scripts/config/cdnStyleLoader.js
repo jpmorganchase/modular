@@ -11,13 +11,12 @@ module.exports = function cdnStyleLoader(asset) {
 };
 
 module.exports.pitch = function () {
-  const { info, dependencyMap } = this.getOptions();
+  const { info, importSet } = this.getOptions();
   const { descriptionData } = info;
-  const dependency = dependencyMap[descriptionData.name];
 
   // Rewrite to noop placeholder: dependency will be written in output package.json
   // and generated index.html, no need to load it in the page
-  if (dependency) {
-    return `/* Placeholder for ${dependency} - see package.json */`;
+  if (importSet.has(descriptionData.name)) {
+    return `/* Placeholder for ${descriptionData.name} - see package.json */`;
   }
 };

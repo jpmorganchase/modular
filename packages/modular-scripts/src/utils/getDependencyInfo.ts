@@ -1,12 +1,16 @@
 import { filterDependencies } from './filterDependencies';
 import { getPackageDependencies } from './getPackageDependencies';
-import { buildImportMap, rewriteModuleSpecifier } from './buildImportMap';
+import {
+  buildImportInfo,
+  rewriteModuleSpecifier,
+  ImportInfo,
+} from './importInfo';
 import getWorkspaceInfo from './getWorkspaceInfo';
 import type { Dependency } from '@schemastore/package';
 import getWorkspaceLocation from './getLocation';
 
 export async function getDependencyInfo(target: string): Promise<{
-  importMap: Map<string, string>;
+  importInfo: ImportInfo;
   styleImports: Set<string>;
   bundledDependencies: Dependency;
   bundledResolutions: Dependency;
@@ -39,7 +43,7 @@ export async function getDependencyInfo(target: string): Promise<{
       workspaceInfo,
     });
 
-  const importMap = buildImportMap(workspacePath, {
+  const importInfo = buildImportInfo(workspacePath, {
     externalDependencies,
     externalResolutions,
     selectiveCDNResolutions,
@@ -49,12 +53,12 @@ export async function getDependencyInfo(target: string): Promise<{
   const cssImportList = [...rawImports]
     .filter((moduleSpecifier) => moduleSpecifier.endsWith('.css'))
     .map((cssModuleSpecifier) =>
-      rewriteModuleSpecifier(importMap, cssModuleSpecifier),
+      rewriteModuleSpecifier(importInfo, cssModuleSpecifier),
     )
     .filter(Boolean) as string[];
 
   return {
-    importMap,
+    importInfo,
     styleImports: new Set(cssImportList),
     bundledDependencies,
     bundledResolutions,
