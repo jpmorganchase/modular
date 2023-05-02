@@ -63,6 +63,11 @@ empty, Modular will write a message to `stdout` and exit with code `0`.
 flags and options directly to the Jest process with Modular configuration.
 Useful when running `modular test` from IntelliJ.
 
+`--swc`: Use the [@swc/jest](https://swc.rs/docs/usage/jest) test runner instead
+of babel + ts-jest. Brings significant performance improvements, but ignores
+ts-config in favour of its own configuration file,
+[.swcrc](https://swc.rs/docs/configuration/swcrc).
+
 `--ancestors`: Take the packages specified by the user via arguments or options
 and add their ancestors (i.e. the packages that have a direct or indirect
 dependency on them) to the test list.

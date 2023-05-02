@@ -179,6 +179,11 @@ program
     false,
   )
   .option(
+    '--swc',
+    'Use Rust based SWC Jest runner instead of ts-jest & babel for performance improvements',
+    false,
+  )
+  .option(
     '--ancestors',
     'Additionally run tests for workspaces that depend on workspaces that have changed',
     false,

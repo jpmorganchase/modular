@@ -5,7 +5,6 @@ import chalk from 'chalk';
 
 import * as logger from '../../utils/logger';
 import memoize from '../../utils/memoize';
-
 const isInteractive = process.stdout.isTTY;
 
 export async function choosePort(

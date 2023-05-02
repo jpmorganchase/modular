@@ -108,7 +108,7 @@ export default async function getWebpackConfig(
     modularTypeConfiguration,
     buildTypeConfiguration,
     pluginConfig,
-  ]) as Configuration;
+  ]);
 
   // These dependencies are so widely used for us (JPM) that it makes sense to install
   // their webpack plugin when used.
