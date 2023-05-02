@@ -25,6 +25,11 @@ named `.eslintrc.js` in your project's root folder with the following content:
       extends: "modular-app",
     }
 
+To get our recommended configuration, which includes linting of import
+statements, change the `extends` field in the eslint configuration (either in
+the project's `.eslintrc.js` or `package.json`'s `eslintConfig`) to
+"modular-app/recommended".
+
 That's it! Add your additional config to this file. Read more about
 [extending sharable configuration packages here](https://eslint.org/docs/user-guide/configuring/configuration-files#using-a-shareable-configuration-package).
 
