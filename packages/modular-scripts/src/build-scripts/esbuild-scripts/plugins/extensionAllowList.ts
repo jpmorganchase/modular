@@ -1,5 +1,5 @@
-import * as esbuild from 'esbuild';
 import * as path from 'path';
+import * as esbuild from 'esbuild';
 
 // This plugin resolves all the files in the project and excepts if one of the extensions is not in the allow list
 // Please note that implicit (empty) extensions in the importer are always valid.

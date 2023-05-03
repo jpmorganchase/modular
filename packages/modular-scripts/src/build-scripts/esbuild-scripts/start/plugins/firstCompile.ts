@@ -1,4 +1,4 @@
-import type { Plugin, BuildResult } from 'esbuild';
+import type { BuildResult, Plugin } from 'esbuild';
 
 type ResolveCallback = () => void;
 type ResultCallback = (result: BuildResult) => void;

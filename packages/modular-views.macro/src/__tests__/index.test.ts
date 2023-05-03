@@ -1,5 +1,5 @@
-import execa from 'execa';
 import * as path from 'path';
+import execa from 'execa';
 import * as rimraf from 'rimraf';
 
 const modularRoot = path.join(__dirname, '../../../../');

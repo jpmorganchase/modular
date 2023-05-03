@@ -1,10 +1,10 @@
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import webpack, { Configuration, WebpackPluginInstance } from 'webpack';
+import { WebpackConfiguration } from 'webpack-dev-server';
 import InlineChunkHtmlPlugin from '../../plugins/InlineChunkHtmlPlugin';
 import InterpolateHtmlPlugin from '../../plugins/InterpolateHtmlPlugin';
-import webpack, { Configuration, WebpackPluginInstance } from 'webpack';
-import type { Paths } from '../../../common-scripts/determineTargetPaths';
-import { WebpackConfiguration } from 'webpack-dev-server';
 import { ClientEnvironment } from '../../../common-scripts/getClientEnvironment';
+import type { Paths } from '../../../common-scripts/determineTargetPaths';
 
 export function createAppConfig(): WebpackConfiguration {
   return {

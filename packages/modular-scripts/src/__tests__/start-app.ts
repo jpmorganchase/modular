@@ -1,5 +1,4 @@
 import execa from 'execa';
-
 import getModularRoot from '../utils/getModularRoot';
 import * as logger from '../utils/logger';
 

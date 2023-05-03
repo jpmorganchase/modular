@@ -2,8 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
 import resolve from 'resolve';
-import type { Paths } from '../../common-scripts/determineTargetPaths';
 import { readJsonSync } from 'fs-extra';
+import type { Paths } from '../../common-scripts/determineTargetPaths';
 
 export interface Modules {
   additionalModulePaths: string | string[] | null;

@@ -1,5 +1,4 @@
 import chalk from 'chalk';
-
 import * as logger from '../utils/logger';
 
 function printHostingInstructions(

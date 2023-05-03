@@ -1,7 +1,7 @@
 import * as path from 'path';
-import actionPreflightCheck from '../utils/actionPreflightCheck';
 import resolve from 'resolve';
 import { ExecaError } from 'execa';
+import actionPreflightCheck from '../utils/actionPreflightCheck';
 import execAsync from '../utils/execAsync';
 import getModularRoot from '../utils/getModularRoot';
 import { getAllWorkspaces } from '../utils/getAllWorkspaces';

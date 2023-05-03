@@ -3,19 +3,18 @@
  * Customized for modular
  */
 
+import * as path from 'path';
 import chalk from 'chalk';
 import dedent from 'dedent';
 import * as fs from 'fs-extra';
 import semver from 'semver';
-import * as path from 'path';
 import semverRegex from 'semver-regex';
-
+import * as logger from '../utils/logger';
+import getModularRoot from '../utils/getModularRoot';
 import type {
   Dependency,
   JSONSchemaForNPMPackageJsonFiles as PackageJson,
 } from '@schemastore/package';
-import * as logger from '../utils/logger';
-import getModularRoot from '../utils/getModularRoot';
 
 const DEPS_TO_CHECK = [
   // These are packages most likely to break in practice.

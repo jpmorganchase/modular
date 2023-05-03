@@ -1,5 +1,5 @@
-import tree from 'tree-view-for-tests';
 import path from 'path';
+import tree from 'tree-view-for-tests';
 import fs from 'fs-extra';
 import prettier from 'prettier';
 import { createModularTestContext, runModularForTests } from '../test/utils';

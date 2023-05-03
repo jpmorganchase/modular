@@ -1,9 +1,9 @@
-import rimraf from 'rimraf';
 import * as path from 'path';
+import rimraf from 'rimraf';
 import * as fs from 'fs-extra';
+import tree from 'tree-view-for-tests';
 import stageView from '../../utils/stageView';
 import getModularRoot from '../../utils/getModularRoot';
-import tree from 'tree-view-for-tests';
 
 describe('stageView', () => {
   let testView = '';

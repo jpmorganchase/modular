@@ -1,5 +1,5 @@
-import * as esbuild from 'esbuild';
 import * as path from 'path';
+import * as esbuild from 'esbuild';
 import getModularRoot from '../../../utils/getModularRoot';
 import createExtensionAllowlistPlugin from './extensionAllowList';
 

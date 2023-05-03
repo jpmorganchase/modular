@@ -6,7 +6,6 @@ import {
 } from '@modular-scripts/remote-view';
 import { H2, Text } from '@salt-ds/core';
 import { Spinner } from '@salt-ds/lab';
-
 import type { MicrofrontendManifest } from '@modular-scripts/modular-types';
 
 export function FallbackIframesExample() {

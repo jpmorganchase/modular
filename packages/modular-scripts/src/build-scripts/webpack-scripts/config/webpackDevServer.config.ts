@@ -5,9 +5,9 @@ import noopServiceWorkerMiddleware from '../utils/noopServiceWorkerMiddleware';
 import ignoredFiles from '../utils/ignoredFiles';
 import redirectServedPath from '../utils/redirectServedPathMiddleware';
 import getHttpsConfig from '../../common-scripts/getHttpsConfig';
+import getModularRoot from '../../../utils/getModularRoot';
 import type { Configuration, ProxyConfigArray } from 'webpack-dev-server';
 import type { Paths } from '../../common-scripts/determineTargetPaths';
-import getModularRoot from '../../../utils/getModularRoot';
 
 const host = process.env.HOST || '0.0.0.0';
 const sockHost = process.env.WDS_SOCKET_HOST;

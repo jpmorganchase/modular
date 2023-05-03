@@ -2,7 +2,6 @@ import detect from 'detect-port-alt';
 import isRoot from 'is-root';
 import prompts from 'prompts';
 import chalk from 'chalk';
-
 import * as logger from '../../utils/logger';
 import memoize from '../../utils/memoize';
 const isInteractive = process.stdout.isTTY;

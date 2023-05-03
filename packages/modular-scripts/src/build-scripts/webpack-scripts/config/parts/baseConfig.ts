@@ -1,13 +1,12 @@
 import builtinModules from 'builtin-modules';
 import TerserPlugin from 'terser-webpack-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+import { WebpackConfiguration } from 'webpack-dev-server';
 import ModuleScopePlugin from '../../plugins/ModuleScopePlugin';
 import getCSSModuleLocalIdent from '../../utils/getCSSModuleLocalIdent';
 import createStyleLoadersConfig from './styleLoadersConfig';
-import type { Paths } from '../../../common-scripts/determineTargetPaths';
 import { Modules } from '../modules';
-import { WebpackConfiguration } from 'webpack-dev-server';
-
+import type { Paths } from '../../../common-scripts/determineTargetPaths';
 const reactRefreshOverlayEntry = require.resolve(
   '../../utils/refreshOverlayInterop',
 );

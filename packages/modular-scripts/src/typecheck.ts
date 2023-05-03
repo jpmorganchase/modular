@@ -7,10 +7,9 @@ import getModularRoot from './utils/getModularRoot';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import { getAllWorkspaces } from './utils/getAllWorkspaces';
 import { selectWorkspaces } from './utils/selectWorkspaces';
-
 import type {
-  JSONSchemaForTheTypeScriptCompilerSConfigurationFile as TSConfig,
   CompilerOptionsDefinition,
+  JSONSchemaForTheTypeScriptCompilerSConfigurationFile as TSConfig,
 } from '@schemastore/tsconfig';
 
 type CompilerOptions = TSConfig['compilerOptions'];

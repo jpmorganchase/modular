@@ -1,3 +1,4 @@
+import * as path from 'path';
 import * as esbuild from 'esbuild';
 import * as fs from 'fs-extra';
 import * as parse5 from 'parse5';
@@ -5,12 +6,11 @@ import semver from 'semver';
 import dedent from 'dedent';
 import escapeStringRegexp from 'escape-string-regexp';
 import minimize from 'html-minifier-terser';
-import type { ModularType } from '@modular-scripts/modular-types';
 import getModularRoot from '../../utils/getModularRoot';
-import * as path from 'path';
 import { normalizeToPosix } from './utils/formatPath';
-import type { Element } from 'parse5/dist/tree-adapters/default';
 import getClientEnvironment from '../common-scripts/getClientEnvironment';
+import type { Element } from 'parse5/dist/tree-adapters/default';
+import type { ModularType } from '@modular-scripts/modular-types';
 import type { Dependency } from '@schemastore/package';
 import type { Paths } from '../common-scripts/determineTargetPaths';
 

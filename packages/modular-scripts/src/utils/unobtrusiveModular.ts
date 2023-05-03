@@ -1,6 +1,6 @@
-import type { ModularWorkspacePackage } from '@modular-scripts/modular-types';
 import { getAllWorkspaces } from './getAllWorkspaces';
 import getModularRoot from './getModularRoot';
+import type { ModularWorkspacePackage } from '@modular-scripts/modular-types';
 // Utilities for handling non-modular packages
 
 /**

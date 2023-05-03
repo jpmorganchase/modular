@@ -3,13 +3,12 @@ import * as fs from 'fs-extra';
 import { Project } from 'ts-morph';
 import * as lockfile from '@yarnpkg/lockfile';
 import * as yaml from 'js-yaml';
-
-import type { CoreProperties, Dependency } from '@schemastore/package';
 import getModularRoot from './getModularRoot';
 import getWorkspaceLocation from './getLocation';
 import getWorkspaceInfo, { WorkspaceInfo } from './getWorkspaceInfo';
 import { parsePackageName } from './parsePackageName';
 import * as logger from './logger';
+import type { CoreProperties, Dependency } from '@schemastore/package';
 interface DependencyResolution {
   manifest: Dependency;
   resolutions: Dependency;

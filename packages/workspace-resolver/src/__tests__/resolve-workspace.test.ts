@@ -1,9 +1,8 @@
-import {
-  resolveWorkspace,
-  analyzeWorkspaceDependencies,
-} from '../resolve-workspace';
-
 import path from 'path';
+import {
+  analyzeWorkspaceDependencies,
+  resolveWorkspace,
+} from '../resolve-workspace';
 
 // Find test fixtures (i.e. fake modular workspaces) 4 dirs up, in the root of the project
 // This approach avoids putting fake or real packages in the packages dir, which can confuse various tools

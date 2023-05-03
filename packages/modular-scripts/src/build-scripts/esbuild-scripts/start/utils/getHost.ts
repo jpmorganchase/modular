@@ -1,5 +1,4 @@
 import chalk from 'chalk';
-
 import memoize from '../../../../utils/memoize';
 import * as logger from '../../../../utils/logger';
 

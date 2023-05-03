@@ -1,8 +1,7 @@
-import chalk from 'chalk';
 import { execSync } from 'child_process';
+import chalk from 'chalk';
 import spawn from 'cross-spawn';
 import open from 'open';
-
 import * as logger from '../../utils/logger';
 
 // https://github.com/sindresorhus/open#app

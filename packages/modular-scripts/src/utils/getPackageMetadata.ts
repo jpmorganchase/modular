@@ -2,11 +2,9 @@ import * as path from 'path';
 import * as ts from 'typescript';
 import * as fse from 'fs-extra';
 import memoize from '../utils/memoize';
-
 import getModularRoot from '../utils/getModularRoot';
 import { getAllWorkspaces } from '../utils/getAllWorkspaces';
 import { reportTSDiagnostics } from './reportTSDiagnostics';
-
 import type { JSONSchemaForTheTypeScriptCompilerSConfigurationFile as TSConfig } from '@schemastore/tsconfig';
 import type { ModularPackageJson } from '@modular-scripts/modular-types';
 

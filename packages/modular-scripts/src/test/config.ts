@@ -1,10 +1,10 @@
-import getModularRoot from '../utils/getModularRoot';
+import path from 'path';
 import * as fs from 'fs-extra';
 import globby from 'globby';
 import chalk from 'chalk';
 import isCi from 'is-ci';
-import path from 'path';
 import { defaults } from 'jest-config';
+import getModularRoot from '../utils/getModularRoot';
 import type { ModularPackageJson } from '@modular-scripts/modular-types';
 import type { Config } from '@jest/types';
 

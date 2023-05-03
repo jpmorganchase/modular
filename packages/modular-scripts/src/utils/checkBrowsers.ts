@@ -1,6 +1,6 @@
+import * as os from 'os';
 import browserslist from 'browserslist';
 import chalk from 'chalk';
-import * as os from 'os';
 
 export const defaultBrowsers = {
   production: ['>0.2%', 'not dead', 'not op_mini all'],

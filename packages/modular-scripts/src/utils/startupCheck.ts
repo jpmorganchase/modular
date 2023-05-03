@@ -1,11 +1,11 @@
-import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import chalk from 'chalk';
 import execa from 'execa';
 import * as fs from 'fs-extra';
 import isCI from 'is-ci';
 import updateNotifier from 'update-notifier';
-import * as logger from './logger';
 import * as semver from 'semver';
+import * as logger from './logger';
+import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 
 async function isYarnInstalled(): Promise<boolean> {
   try {

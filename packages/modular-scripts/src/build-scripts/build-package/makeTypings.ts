@@ -1,10 +1,9 @@
-import { JSONSchemaForTheTypeScriptCompilerSConfigurationFile as TSConfig } from '@schemastore/tsconfig';
 import * as path from 'path';
+import { JSONSchemaForTheTypeScriptCompilerSConfigurationFile as TSConfig } from '@schemastore/tsconfig';
 import { paramCase as toParamCase } from 'change-case';
 import * as ts from 'typescript';
 import * as fse from 'fs-extra';
 import isCI from 'is-ci';
-
 import getPrefixedLogger from '../../utils/getPrefixedLogger';
 import getModularRoot from '../../utils/getModularRoot';
 import { reportTSDiagnostics } from '../../utils/reportTSDiagnostics';

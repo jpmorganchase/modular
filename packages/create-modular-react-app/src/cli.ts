@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-import createModularApp from './';
 import { program } from 'commander';
 import * as fs from 'fs-extra';
 import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
+import createModularApp from './';
 
 // this is a bit gross - but there's no better way of doing this.
 const verbose = process.argv.includes('--verbose');

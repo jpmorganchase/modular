@@ -1,13 +1,13 @@
-import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
-import WatchMissingNodeModulesPlugin from '../../plugins/WatchMissingNodeModulesPlugin';
 import path from 'path';
-import type { Paths } from '../../../common-scripts/determineTargetPaths';
+import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
 import { WebpackConfiguration } from 'webpack-dev-server';
 import {
   Configuration,
   WebpackPluginFunction,
   WebpackPluginInstance,
 } from 'webpack';
+import WatchMissingNodeModulesPlugin from '../../plugins/WatchMissingNodeModulesPlugin';
+import type { Paths } from '../../../common-scripts/determineTargetPaths';
 
 export function createDevelopmentConfig(): WebpackConfiguration {
   return {

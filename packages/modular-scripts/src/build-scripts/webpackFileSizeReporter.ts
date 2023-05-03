@@ -1,11 +1,10 @@
+import * as path from 'path';
 import * as fs from 'fs-extra';
 import { sync as gzipSize } from 'gzip-size';
-import * as path from 'path';
 import recursive from 'recursive-readdir';
 import { StatsCompilation } from 'webpack-dev-server';
-import type { Paths } from './common-scripts/determineTargetPaths';
-
 import { Asset, canReadAsset } from './fileSizeReporter';
+import type { Paths } from './common-scripts/determineTargetPaths';
 
 function removeFileNameHash(fileName: string): string {
   return fileName.replace(/\\/g, '/').replace(

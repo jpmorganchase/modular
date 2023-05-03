@@ -1,7 +1,6 @@
 import * as path from 'path';
 import isCI from 'is-ci';
 import { ExecaError } from 'execa';
-
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import { resolveAsBin } from './utils/resolveAsBin';
 import getModularRoot from './utils/getModularRoot';
