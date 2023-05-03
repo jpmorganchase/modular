@@ -144,7 +144,7 @@ describe('When working with a npm scoped app', () => {
          │  ├─ 316.74c894ba.js.LICENSE.txt #eplx8h
          │  ├─ 316.74c894ba.js.map #3k9wqz
          │  ├─ main.3eba3908.js #1mufyu1
-         │  ├─ main.3eba3908.js.map #10d5xfb
+         │  ├─ main.3eba3908.js.map #qj42wj
          │  ├─ runtime-main.de012fdc.js #1qz643h
          │  └─ runtime-main.de012fdc.js.map #v3az36
          └─ media
@@ -334,7 +334,7 @@ describe('when working with a non-scoped app', () => {
       │  ├─ __tests__
       │  │  └─ App.test.tsx #1u72nad
       │  ├─ index.css #o7sk21
-      │  ├─ index.tsx #zdn6mw
+      │  ├─ index.tsx #18e4z12
       │  ├─ logo.svg #1okqmlj
       │  └─ react-app-env.d.ts #t4ygcy
       └─ tsconfig.json #6rw46b"
@@ -362,7 +362,7 @@ describe('when working with a non-scoped app', () => {
          │  ├─ 316.394ef80b.js.LICENSE.txt #eplx8h
          │  ├─ 316.394ef80b.js.map #o90ydx
          │  ├─ main.b81fd1ea.js #14cglcq
-         │  ├─ main.b81fd1ea.js.map #11ani0i
+         │  ├─ main.b81fd1ea.js.map #11wc7t3
          │  ├─ runtime-main.e92969dd.js #1is98ey
          │  └─ runtime-main.e92969dd.js.map #xx7n2r
          └─ media
@@ -602,7 +602,7 @@ describe('When working with an app added in a custom directory', () => {
          │  ├─ 350.44eb2511.js.LICENSE.txt #eplx8h
          │  ├─ 350.44eb2511.js.map #1yro3n5
          │  ├─ main.a1b87a25.js #1utnqo4
-         │  ├─ main.a1b87a25.js.map #1rmuwc1
+         │  ├─ main.a1b87a25.js.map #cc3byb
          │  ├─ runtime-main.cef70e6c.js #1f77948
          │  └─ runtime-main.cef70e6c.js.map #6vl4pa
          └─ media
