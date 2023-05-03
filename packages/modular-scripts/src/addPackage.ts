@@ -197,14 +197,18 @@ async function addPackage({
   }
 
   const modularTemplateType = modularTemplatePackageJson?.modular
-    ?.templateType as string;
+    ?.templateType as string | undefined;
+
   if (
-    !['app', 'esm-view', 'view', 'source', 'package'].includes(
-      modularTemplateType,
+    !(
+      modularTemplateType === undefined ||
+      ['app', 'esm-view', 'view', 'source', 'package'].includes(
+        modularTemplateType,
+      )
     )
   ) {
     throw new Error(
-      `${templateName} has modular type: ${modularTemplateType}, which does not exist, please use update this template`,
+      `${templateName} has modular type: ${modularTemplateType}, which does not exist, please update this template`,
     );
   }
 
@@ -243,9 +247,11 @@ async function addPackage({
     {
       name,
       private: modularTemplateType === 'app',
-      modular: {
-        type: modularTemplateType,
-      },
+      modular: modularTemplateType
+        ? {
+            type: modularTemplateType,
+          }
+        : undefined,
       main: modularTemplatePackageJson?.main,
       dependencies: modularTemplatePackageJson?.dependencies,
       version: '1.0.0',
