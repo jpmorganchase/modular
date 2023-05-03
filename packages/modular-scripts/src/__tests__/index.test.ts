@@ -97,7 +97,7 @@ describe('modular-scripts', () => {
         ├─ package.json
         └─ src
            ├─ __tests__
-           │  └─ index.test.tsx #1ul24q9
+           │  └─ index.test.tsx #quteu1
            └─ index.tsx #19kersg"
       `);
     });
