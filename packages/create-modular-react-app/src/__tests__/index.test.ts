@@ -1,8 +1,8 @@
-import createModularApp from '../';
-import fs from 'fs-extra';
 import path from 'path';
+import fs from 'fs-extra';
 import { hashlessTree } from 'tree-view-for-tests';
 import tmp from 'tmp';
+import createModularApp from '../';
 
 // We want to omit any information that makes our snapshots
 // fragile and therefore censor the author and package versions

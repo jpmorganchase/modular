@@ -1,26 +1,21 @@
-import { paramCase as toParamCase } from 'change-case';
 import * as path from 'path';
+import { paramCase as toParamCase } from 'change-case';
 import builtinModules from 'builtin-modules';
 import chalk from 'chalk';
-
 import * as rollup from 'rollup';
 import esbuild from 'rollup-plugin-esbuild';
-
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import postcss from 'rollup-plugin-postcss';
 import resolve from '@rollup/plugin-node-resolve';
-
 import { getPackageEntryPoints } from './getPackageEntryPoints';
-
 import getPrefixedLogger from '../../utils/getPrefixedLogger';
 import getPackageMetadata from '../../utils/getPackageMetadata';
 import getModularRoot from '../../utils/getModularRoot';
 import getRelativeWorkspaceLocation from '../../utils/getRelativeLocation';
 import createEsbuildBrowserslistTarget from '../common-scripts/createEsbuildBrowserslistTarget';
-
-import type { ModularPackageJson } from '@modular-scripts/modular-types';
 import { getConfig } from '../../utils/config';
+import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
 const outputDirectory = 'dist';
 const extensions = ['.ts', '.tsx', '.js', '.jsx'];

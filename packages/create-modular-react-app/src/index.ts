@@ -1,10 +1,10 @@
-import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import { Transform } from 'stream';
+import * as path from 'path';
 import execa from 'execa';
 import * as fs from 'fs-extra';
-import * as path from 'path';
 import chalk from 'chalk';
 import * as semver from 'semver';
+import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 
 function exec(
   file: string,
@@ -133,7 +133,7 @@ export default async function createModularApp(argv: {
       prettier: 'prettier --write .',
     },
     eslintConfig: {
-      extends: 'modular-app',
+      extends: 'modular-app/recommended',
     },
     browserslist: {
       production: ['>0.2%', 'not dead', 'not op_mini all'],

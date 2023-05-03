@@ -8,12 +8,12 @@ import {
   runModularForTests,
   runModularForTestsAsync,
 } from '../test/utils';
-import type { CoreProperties } from '@schemastore/package';
 import {
+  addPackageForTests,
   runTestForTests,
   setupMocks,
-  addPackageForTests,
 } from '../test/mockFunctions';
+import type { CoreProperties } from '@schemastore/package';
 
 const modularRoot = getModularRoot();
 

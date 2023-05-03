@@ -1,7 +1,7 @@
-import createEsbuildBrowserslistTarget from '../../build-scripts/common-scripts/createEsbuildBrowserslistTarget';
+import { promisify } from 'util';
 import * as fs from 'fs-extra';
 import * as tmp from 'tmp';
-import { promisify } from 'util';
+import createEsbuildBrowserslistTarget from '../../build-scripts/common-scripts/createEsbuildBrowserslistTarget';
 const mktempd = promisify(tmp.dir);
 
 describe('createEsbuildBrowserslistTarget', () => {

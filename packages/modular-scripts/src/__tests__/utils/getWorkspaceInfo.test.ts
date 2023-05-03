@@ -1,5 +1,4 @@
 import { getWorkspaceInfo } from '../../utils/getWorkspaceInfo';
-
 import type { WorkspaceInfo } from '../../utils/getWorkspaceInfo';
 
 test('getWorkspaceInfo', async () => {

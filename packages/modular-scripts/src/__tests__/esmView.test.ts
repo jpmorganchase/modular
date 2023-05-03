@@ -1,7 +1,8 @@
-import execa from 'execa';
 import { exec } from 'child_process';
-import tree from 'tree-view-for-tests';
 import path from 'path';
+import { setTimeout } from 'timers';
+import execa from 'execa';
+import tree from 'tree-view-for-tests';
 import fs from 'fs-extra';
 import {
   getDocument,
@@ -9,10 +10,8 @@ import {
   queries,
 } from 'pptr-testing-library';
 import puppeteer from 'puppeteer';
-
 import { normalizeToPosix } from '../build-scripts/esbuild-scripts/utils/formatPath';
-import { startApp, DevServer } from './start-app';
-import type { CoreProperties } from '@schemastore/package';
+import { DevServer, startApp } from './start-app';
 import { createModularTestContext, runModularForTests } from '../test/utils';
 import { rewriteModuleSpecifier } from '../utils/importInfo';
 import {
@@ -20,7 +19,7 @@ import {
   buildPackageForTests,
   setupMocks,
 } from '../test/mockFunctions';
-import { setTimeout } from 'timers';
+import type { CoreProperties } from '@schemastore/package';
 
 // Temporary text context paths
 let tempModularRepo: string;

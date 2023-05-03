@@ -1,7 +1,6 @@
-import * as fs from 'fs-extra';
 import * as path from 'path';
+import * as fs from 'fs-extra';
 import * as yaml from 'js-yaml';
-
 import * as logger from '../utils/logger';
 import getModularRoot from '../utils/getModularRoot';
 

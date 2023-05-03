@@ -1,13 +1,13 @@
 import {
-  computeDescendantSet,
   computeAncestorSet,
+  computeDescendantSet,
   traverseWorkspaceRelations,
 } from '@modular-scripts/workspace-resolver';
+import { PackageType, WorkspaceMap } from '@modular-scripts/modular-types';
 import { isBuildableModularType } from './packageTypes';
 import { getAllWorkspaces } from './getAllWorkspaces';
 import { getChangedWorkspacesContent } from './getChangedWorkspaces';
 import getModularRoot from './getModularRoot';
-import { PackageType, WorkspaceMap } from '@modular-scripts/modular-types';
 
 /**
  * @typedef {Object} SelectOptions

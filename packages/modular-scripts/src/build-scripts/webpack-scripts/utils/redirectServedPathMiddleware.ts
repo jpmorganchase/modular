@@ -1,5 +1,5 @@
-import { NextFunction, Request, Response } from 'express';
 import path from 'path';
+import { NextFunction, Request, Response } from 'express';
 
 export default function createRedirectServedPathMiddleware(servedPath: string) {
   // remove end slash so user can land on `/test` instead of `/test/`

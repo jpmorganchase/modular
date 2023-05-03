@@ -1,18 +1,17 @@
 import fs from 'fs';
 import chalk from 'chalk';
 import WebpackDevServer, { Compiler } from 'webpack-dev-server';
-import { log } from '../../utils/logger';
-import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import isCI from 'is-ci';
-
+import { readJSONSync } from 'fs-extra';
 import getConfig from './config/webpack.config';
 import createDevServerConfig from './config/webpackDevServer.config';
-import { readJSONSync } from 'fs-extra';
-import { prepareProxy, createCompiler } from './utils/webpackDevServerUtils';
+import { log } from '../../utils/logger';
+import { createCompiler, prepareProxy } from './utils/webpackDevServerUtils';
 import { choosePort } from '../common-scripts/getPort';
 import prepareUrls from '../common-scripts/urls';
-import type { Paths } from '../common-scripts/determineTargetPaths';
 import openBrowser from '../common-scripts/openBrowser';
+import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
+import type { Paths } from '../common-scripts/determineTargetPaths';
 import type { ImportInfo } from '../../utils/importInfo';
 
 // Tools like Cloud9 rely on this.

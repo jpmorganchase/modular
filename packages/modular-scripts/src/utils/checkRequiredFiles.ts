@@ -1,7 +1,6 @@
-import * as fs from 'fs-extra';
 import * as path from 'path';
+import * as fs from 'fs-extra';
 import chalk from 'chalk';
-
 import * as logger from './logger';
 
 export default async function checkRequiredFiles(

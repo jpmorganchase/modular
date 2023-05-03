@@ -1,7 +1,7 @@
+import * as path from 'path';
 import { Message } from 'esbuild';
 import chalk from 'chalk';
 import * as fs from 'fs-extra';
-import * as path from 'path';
 import { codeFrameColumns } from '@babel/code-frame';
 
 export async function formatError(

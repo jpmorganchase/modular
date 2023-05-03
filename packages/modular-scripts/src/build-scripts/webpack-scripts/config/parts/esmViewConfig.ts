@@ -1,14 +1,14 @@
+import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import dedent from 'dedent';
-import path from 'path';
 import webpack, { Configuration } from 'webpack';
-import { parsePackageName } from '../../../../utils/parsePackageName';
-import {
-  rewriteModuleSpecifier,
-  ImportInfo,
-} from '../../../../utils/importInfo';
 import fs from 'fs-extra';
 import parse5 from 'parse5';
+import { parsePackageName } from '../../../../utils/parsePackageName';
+import {
+  ImportInfo,
+  rewriteModuleSpecifier,
+} from '../../../../utils/importInfo';
 import type { Element } from 'parse5/dist/tree-adapters/default';
 import type { Paths } from '../../../common-scripts/determineTargetPaths';
 

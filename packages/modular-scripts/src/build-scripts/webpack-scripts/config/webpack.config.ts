@@ -1,8 +1,6 @@
-import chalk from 'chalk';
 import fs from 'fs';
-
+import chalk from 'chalk';
 import { merge } from 'webpack-merge';
-
 import * as logger from '../../../utils/logger';
 import getModules from './modules';
 import createPluginConfig from './parts/pluginConfig';

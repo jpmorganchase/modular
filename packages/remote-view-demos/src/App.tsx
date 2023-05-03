@@ -1,12 +1,12 @@
 import React from 'react';
 import { H1, Text } from '@salt-ds/core';
 import {
-  HappyPathExample,
-  FallbackIframesExample,
-  DefaultErrorBoundaryExample,
-  CustomErrorContentExample,
   CustomErrorBoundaryExample,
+  CustomErrorContentExample,
+  DefaultErrorBoundaryExample,
   ErrorRecoveryExample,
+  FallbackIframesExample,
+  HappyPathExample,
 } from './examples';
 
 import './index.css';

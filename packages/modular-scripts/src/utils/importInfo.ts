@@ -1,6 +1,6 @@
 import { parsePackageName } from './parsePackageName';
-import type { Dependency } from '@schemastore/package';
 import { getConfig } from './config';
+import type { Dependency } from '@schemastore/package';
 
 interface BuildImportInfoParams {
   externalDependencies: Dependency;

@@ -1,17 +1,17 @@
 // Ported over functions from webpackDevServerUtils.ts
-import address from 'address';
-import chalk from 'chalk';
 import url from 'url';
 import path from 'path';
 import { existsSync } from 'fs';
-import { log } from '../../../utils/logger';
+import chalk from 'chalk';
+import address from 'address';
 import { ProxyConfigArray, Request, Response } from 'webpack-dev-server';
-import type * as http from 'http';
-import type * as httpProxy from 'http-proxy';
-import formatWebpackMessages from './formatWebpackMessages';
 import webpack from 'webpack';
-import { InstructionURLS } from '../../common-scripts/urls';
 import forkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+import formatWebpackMessages from './formatWebpackMessages';
+import { InstructionURLS } from '../../common-scripts/urls';
+import { log } from '../../../utils/logger';
+import type * as httpProxy from 'http-proxy';
+import type * as http from 'http';
 import type { Compiler, Configuration } from 'webpack';
 
 function printInstructions(appName: string | undefined, urls: InstructionURLS) {

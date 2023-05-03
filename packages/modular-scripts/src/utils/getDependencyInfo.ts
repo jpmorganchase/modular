@@ -2,12 +2,12 @@ import { filterDependencies } from './filterDependencies';
 import { getPackageDependencies } from './getPackageDependencies';
 import {
   buildImportInfo,
-  rewriteModuleSpecifier,
   ImportInfo,
+  rewriteModuleSpecifier,
 } from './importInfo';
 import getWorkspaceInfo from './getWorkspaceInfo';
-import type { Dependency } from '@schemastore/package';
 import getWorkspaceLocation from './getLocation';
+import type { Dependency } from '@schemastore/package';
 
 export async function getDependencyInfo(target: string): Promise<{
   importInfo: ImportInfo;

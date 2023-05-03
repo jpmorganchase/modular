@@ -1,11 +1,11 @@
 import Server from 'webpack-dev-server';
+import webpack from 'webpack';
 import type {
   NextFunction,
   Request,
   Response,
   Stats,
 } from 'webpack-dev-server';
-import webpack from 'webpack';
 
 function getBase64SourceMap(source: webpack.sources.Source) {
   const base64 = Buffer.from(JSON.stringify(source.map()), 'utf8').toString(

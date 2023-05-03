@@ -1,11 +1,9 @@
+import {
+  analyzeWorkspaceDependencies,
+  resolveWorkspace,
+} from '@modular-scripts/workspace-resolver';
 import memoize from './memoize';
 import getModularRoot from './getModularRoot';
-
-import {
-  resolveWorkspace,
-  analyzeWorkspaceDependencies,
-} from '@modular-scripts/workspace-resolver';
-
 import type {
   WorkspaceContent,
   WorkspaceMap,

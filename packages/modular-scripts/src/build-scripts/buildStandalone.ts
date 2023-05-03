@@ -1,10 +1,6 @@
-import chalk from 'chalk';
-import fs from 'fs-extra';
 import path from 'path';
-import type {
-  ModularPackageJson,
-  ModularType,
-} from '@modular-scripts/modular-types';
+import fs from 'fs-extra';
+import chalk from 'chalk';
 import * as logger from '../utils/logger';
 import getWorkspaceLocation from '../utils/getLocation';
 import determineTargetPaths from './common-scripts/determineTargetPaths';
@@ -13,10 +9,10 @@ import { Asset, printFileSizesAfterBuild } from './fileSizeReporter';
 import { checkBrowsers } from '../utils/checkBrowsers';
 import checkRequiredFiles from '../utils/checkRequiredFiles';
 import createEsbuildBrowserslistTarget from './common-scripts/createEsbuildBrowserslistTarget';
-import { writeOutputIndexFiles, getEntryPoint } from './esbuild-scripts/api';
+import { getEntryPoint, writeOutputIndexFiles } from './esbuild-scripts/api';
 import {
-  webpackMeasureFileSizesBeforeBuild,
   createWebpackAssets,
+  webpackMeasureFileSizesBeforeBuild,
 } from './webpackFileSizeReporter';
 import {
   createEsbuildAssets,
@@ -27,6 +23,10 @@ import { isReactNewApi } from '../utils/isReactNewApi';
 import { getConfig } from '../utils/config';
 import buildWebpack from './webpack-scripts/buildWebpack';
 import getModularRoot from '../utils/getModularRoot';
+import type {
+  ModularPackageJson,
+  ModularType,
+} from '@modular-scripts/modular-types';
 
 export async function buildStandalone(
   target: string,

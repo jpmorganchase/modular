@@ -1,5 +1,5 @@
 import * as esbuild from 'esbuild';
-import { rewriteModuleSpecifier, ImportInfo } from '../../../utils/importInfo';
+import { ImportInfo, rewriteModuleSpecifier } from '../../../utils/importInfo';
 
 export function createRewriteDependenciesPlugin(
   importInfo: ImportInfo,

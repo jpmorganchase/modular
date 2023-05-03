@@ -1,11 +1,11 @@
-import execa, { ExecaError } from 'execa';
 import path from 'path';
+import execa, { ExecaError } from 'execa';
 import fs from 'fs-extra';
 import tmp from 'tmp';
 import {
   createModularTestContext,
-  runYarnModular,
   runModularPipeLogs,
+  runYarnModular,
 } from '../test/utils';
 import getModularRoot from '../utils/getModularRoot';
 import { runTestForTests, setupMocks } from '../test/mockFunctions';

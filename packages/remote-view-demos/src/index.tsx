@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, SaltProvider, Panel } from '@salt-ds/core';
+import { Button, Panel, SaltProvider } from '@salt-ds/core';
 import App from './App';
 import '@salt-ds/theme/index.css';
 

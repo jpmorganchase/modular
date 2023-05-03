@@ -1,8 +1,10 @@
-import * as fs from 'fs-extra';
 import * as path from 'path';
+import * as fs from 'fs-extra';
 import validate from 'validate-npm-package-name';
 import { pascalCase as toPascalCase } from 'change-case';
 import prompts from 'prompts';
+import packlist from 'npm-packlist';
+import Arborist from '@npmcli/arborist';
 import getModularRoot from './utils/getModularRoot';
 import execAsync from './utils/execAsync';
 import * as logger from './utils/logger';
@@ -12,9 +14,6 @@ import LineFilterOutStream from './utils/LineFilterOutStream';
 import { parsePackageName } from './utils/parsePackageName';
 import { getWorkspaceInfo } from './utils/getWorkspaceInfo';
 import { isInWorkspaces } from './utils/isInWorkspaces';
-import packlist from 'npm-packlist';
-import Arborist from '@npmcli/arborist';
-
 import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
 const packagesRoot = 'packages';

@@ -1,5 +1,4 @@
 import * as path from 'path';
-
 import getModularRoot from './getModularRoot';
 import getRelativeWorkspaceLocation from './getRelativeLocation';
 

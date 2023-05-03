@@ -1,7 +1,6 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
 import { ModularPackageJson } from '@modular-scripts/modular-types';
-
 import execAsync from '../../utils/execAsync';
 import getModularRoot from '../../utils/getModularRoot';
 

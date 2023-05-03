@@ -1,9 +1,8 @@
+import { createRequire } from 'module';
+import path from 'path';
 import * as fs from 'fs-extra';
 import esbuild from 'esbuild';
-import { createRequire } from 'module';
-
 import * as svgr from '@svgr/core';
-import path from 'path';
 import getModularRoot from '../../../utils/getModularRoot';
 import { normalizeToPosix } from '../utils/formatPath';
 

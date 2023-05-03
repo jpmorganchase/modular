@@ -8,10 +8,9 @@ import { testOptions } from './test/jestOptions';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import * as logger from './utils/logger';
 import {
-  validateCompareOptions,
   computeConcurrencyOption,
+  validateCompareOptions,
 } from './utils/options';
-
 import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import type { TestOptions } from './test';
 import type { LintOptions } from './lint';

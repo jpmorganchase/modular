@@ -2,8 +2,8 @@ import { copyFileSync } from 'fs';
 import path from 'path';
 import {
   createModularTestContext,
-  runModularPipeLogs,
   runModularForTests,
+  runModularPipeLogs,
 } from '../../test/utils';
 import getModularRoot from '../../utils/getModularRoot';
 

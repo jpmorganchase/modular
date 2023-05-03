@@ -1,8 +1,7 @@
-import * as fs from 'fs-extra';
 import * as path from 'path';
+import * as fs from 'fs-extra';
 import { config as loadConfig } from 'dotenv';
 import { expand } from 'dotenv-expand';
-
 import { findModularRoot } from './getModularRoot';
 
 export async function setupEnvForDirectory(dirName: string): Promise<void> {

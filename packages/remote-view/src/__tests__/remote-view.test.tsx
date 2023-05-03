@@ -10,9 +10,9 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import {
-  RemoteViewProvider,
   RemoteView,
   RemoteViewErrorBoundary,
+  RemoteViewProvider,
 } from '../components';
 import { RemoteViewError } from '../utils/remoteViewError';
 

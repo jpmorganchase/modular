@@ -1,27 +1,22 @@
-import * as esbuild from 'esbuild';
-import chalk from 'chalk';
-import * as express from 'express';
-import type { RequestHandler } from 'express';
-import ws from 'express-ws';
-import * as fs from 'fs-extra';
 import * as http from 'http';
 import * as https from 'https';
 import * as path from 'path';
+import * as fs from 'fs-extra';
+import ws from 'express-ws';
+import * as express from 'express';
+import chalk from 'chalk';
+import * as esbuild from 'esbuild';
 import { getType } from 'mime';
 import isCi from 'is-ci';
-
 import memoize from '../../../utils/memoize';
-
 import getClientEnvironment, {
   ClientEnvironment,
 } from '../../common-scripts/getClientEnvironment';
-
 import incrementalCompilePlugin from './plugins/incrementalCompile';
 import incrementalReporterPlugin from './plugins/incrementalReporter';
 import websocketReloadPlugin from './plugins/wsReload';
 import metafileReporterPlugin from './plugins/metafileReporter';
 import firstCompilePlugin from './plugins/firstCompile';
-
 import openBrowser from '../../common-scripts/openBrowser';
 import * as logger from '../../../utils/logger';
 import prepareUrls, { InstructionURLS } from '../../common-scripts/urls';
@@ -45,6 +40,7 @@ import {
 } from '../../common-scripts/getHttpsConfig';
 import { generateSelfSignedCert } from '../utils/generateSelfSignedCert';
 import type { ImportInfo } from '../../../utils/importInfo';
+import type { RequestHandler } from 'express';
 
 const RUNTIME_DIR = path.join(__dirname, 'runtime');
 class DevServer {

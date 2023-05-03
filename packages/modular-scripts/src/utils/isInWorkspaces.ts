@@ -1,5 +1,5 @@
-import fs from 'fs-extra';
 import path from 'path';
+import fs from 'fs-extra';
 import minimatch from 'minimatch';
 import getModularRoot from './getModularRoot';
 import type { ModularPackageJson } from '@modular-scripts/modular-types';

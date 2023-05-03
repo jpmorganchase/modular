@@ -1,7 +1,7 @@
 import {
+  reportBuildError,
   setEditorHandler,
   startReportingRuntimeErrors,
-  reportBuildError,
 } from 'react-error-overlay';
 import stripAnsi from 'strip-ansi';
 

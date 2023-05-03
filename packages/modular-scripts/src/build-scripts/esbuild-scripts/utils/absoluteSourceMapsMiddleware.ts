@@ -1,6 +1,6 @@
-import type { Request, Response } from 'express';
-import * as fs from 'fs-extra';
 import * as path from 'path';
+import * as fs from 'fs-extra';
+import type { Request, Response } from 'express';
 
 type SourceMap = { sources: string[] };
 

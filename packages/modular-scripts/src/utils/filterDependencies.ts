@@ -1,9 +1,9 @@
 import micromatch from 'micromatch';
 import * as semver from 'semver';
 import * as logger from './logger';
+import { getConfig } from './config';
 import type { Dependency } from '@schemastore/package';
 import type { WorkspaceInfo } from './getWorkspaceInfo';
-import { getConfig } from './config';
 
 interface FilteredDependencies {
   external: Dependency;
