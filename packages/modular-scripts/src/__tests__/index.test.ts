@@ -209,7 +209,7 @@ describe('modular-scripts', () => {
             "react": "17.0.2",
           },
           "engines": {
-            "node": "^14.18.0 || >=16.10.0 || >=18.0.0",
+            "node": ">=16.10.0 || >=18.0.0 || >=20.0.0",
           },
           "files": [
             "dist-cjs",
@@ -364,7 +364,7 @@ describe('modular-scripts', () => {
         {
           "dependencies": {},
           "engines": {
-            "node": "^14.18.0 || >=16.10.0 || >=18.0.0",
+            "node": ">=16.10.0 || >=18.0.0 || >=20.0.0",
           },
           "files": [
             "dist-cjs",
@@ -448,7 +448,7 @@ describe('modular-scripts', () => {
         {
           "dependencies": {},
           "engines": {
-            "node": "^14.18.0 || >=16.10.0 || >=18.0.0",
+            "node": ">=16.10.0 || >=18.0.0 || >=20.0.0",
           },
           "files": [
             "dist-cjs",
