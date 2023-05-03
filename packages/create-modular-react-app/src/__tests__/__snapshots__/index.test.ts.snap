@@ -115,7 +115,7 @@ exports[`create-modular-react-app WHEN it sets up a project with prefer Offline 
     "typescript": "?",
   },
   "eslintConfig": {
-    "extends": "modular-app",
+    "extends": "modular-app/recommended",
   },
   "license": "MIT",
   "main": "index.js",
@@ -301,7 +301,7 @@ exports[`create-modular-react-app WHEN setting a project with defaults Sets up t
     "typescript": "?",
   },
   "eslintConfig": {
-    "extends": "modular-app",
+    "extends": "modular-app/recommended",
   },
   "license": "MIT",
   "main": "index.js",
