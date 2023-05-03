@@ -13,6 +13,7 @@ import puppeteer from 'puppeteer';
 import { normalizeToPosix } from '../build-scripts/esbuild-scripts/utils/formatPath';
 import { DevServer, startApp } from './start-app';
 import { createModularTestContext, runModularForTests } from '../test/utils';
+import { rewriteModuleSpecifier } from '../utils/importInfo';
 import {
   addPackageForTests,
   buildPackageForTests,
@@ -31,6 +32,38 @@ let buildOutputJsEntrypointPath: string;
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
 const { getNodeText } = queries;
+
+describe('rewriteModuleSpecifier', () => {
+  it('rewrites module paths at the end when there is no [path] specifier', () => {
+    expect(
+      rewriteModuleSpecifier(
+        {
+          externalDependencies: { 'module-name': '^1.0.0' },
+          externalResolutions: { 'module-name': '1.0.1' },
+          selectiveCDNResolutions: {},
+          importSet: new Set(['module-name']),
+          externalCdnTemplate: 'https://mycdn/[name]@[resolution]',
+        },
+        'module-name/this/is/my/path',
+      ),
+    ).toBe('https://mycdn/module-name@1.0.1/this/is/my/path');
+  });
+
+  it('rewrites module paths when there is a [path] specifier', () => {
+    expect(
+      rewriteModuleSpecifier(
+        {
+          externalDependencies: { 'module-name': '^1.0.0' },
+          externalResolutions: { 'module-name': '1.0.1' },
+          selectiveCDNResolutions: {},
+          importSet: new Set(['module-name']),
+          externalCdnTemplate: 'https://mycdn/[name][path]@[resolution]',
+        },
+        'module-name/this/is/my/path',
+      ),
+    ).toBe('https://mycdn/module-name/this/is/my/path@1.0.1');
+  });
+});
 
 // These tests must be executed sequentially with `--runInBand`.
 describe('modular working with an esm-view', () => {

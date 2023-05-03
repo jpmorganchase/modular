@@ -8,7 +8,7 @@ export default function createStyleLoadersConfig({
   cssOptions,
   preProcessor,
   includeEsmLoader,
-  dependencyMap,
+  importSet,
   isEnvProduction,
   shouldUseSourceMap,
   paths,
@@ -16,7 +16,7 @@ export default function createStyleLoadersConfig({
   cssOptions: { importLoaders: number; sourceMap: boolean; modules?: unknown };
   preProcessor?: string;
   includeEsmLoader?: boolean;
-  dependencyMap: Map<string, string>;
+  importSet: Set<string>;
   isEnvProduction: boolean;
   shouldUseSourceMap: boolean;
   paths: Paths;
@@ -30,7 +30,7 @@ export default function createStyleLoadersConfig({
       function externalStyleLoader(info: unknown) {
         return {
           loader: require.resolve('../cdnStyleLoader'),
-          options: { info, dependencyMap },
+          options: { info, importSet },
         };
       },
     isEnvDevelopment && require.resolve('style-loader'),

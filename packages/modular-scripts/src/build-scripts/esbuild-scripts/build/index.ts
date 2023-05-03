@@ -12,11 +12,12 @@ import sanitizeMetafile from '../utils/sanitizeMetafile';
 import { createRewriteDependenciesPlugin } from '../plugins/rewriteDependenciesPlugin';
 import createEsbuildBrowserslistTarget from '../../common-scripts/createEsbuildBrowserslistTarget';
 import type { Paths } from '../../common-scripts/determineTargetPaths';
+import { ImportInfo } from '../../../utils/importInfo';
 
 export default async function build(
   target: string,
   paths: Paths,
-  importMap: Map<string, string> | undefined,
+  importInfo: ImportInfo,
   type: 'app' | 'esm-view',
 ) {
   const modularRoot = getModularRoot();
@@ -27,8 +28,8 @@ export default async function build(
   const browserTarget = createEsbuildBrowserslistTarget(paths.appPath);
 
   let plugins;
-  if (!isApp && importMap) {
-    plugins = [createRewriteDependenciesPlugin(importMap)];
+  if (!isApp && importInfo) {
+    plugins = [createRewriteDependenciesPlugin(importInfo)];
   }
 
   try {

@@ -70,7 +70,7 @@ async function start(packageName: string): Promise<void> {
 
   // Retrieve dependency info for target to inform the build process
   const {
-    importMap,
+    importInfo,
     styleImports,
     bundledDependencies,
     bundledResolutions,
@@ -103,7 +103,7 @@ async function start(packageName: string): Promise<void> {
     await startEsbuild({
       target,
       isApp: !isEsmView,
-      importMap,
+      importInfo,
       useReactCreateRoot,
       styleImports,
     });
@@ -118,7 +118,7 @@ async function start(packageName: string): Promise<void> {
     startWebpack(
       esbuildTargetFactory,
       !isEsmView,
-      importMap,
+      importInfo,
       useReactCreateRoot,
       styleImports,
       paths,
