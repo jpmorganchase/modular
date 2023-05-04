@@ -20,13 +20,6 @@ packages/sample-renamable-depending-package
 # example app
 packages/esbuild-app
 
-# created by tests in modular-views.macro
-packages/view-1
-packages/view-2
-packages/scoped
-packages/node-env-app
-
-
 # Build output
 /packages/*/build/
 /packages/*/dist-cjs/
