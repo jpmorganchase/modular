@@ -38,17 +38,16 @@ If you find any example of v3 features which cause Modular to fail, please
 
 ### Yarn v4 and beyond
 
-We aim to support future versions of Yarn, and we've sucessuflly useds Modular
+We aim to support future versions of Yarn, and we've successfully used Modular
 with an unstable release candidate of Yarn 4. If there's something we don't
 support properly, please
 [let us know](https://github.com/jpmorganchase/modular/issues).
 
 ## Node versions
 
-Modular is tested on the latest three
-[Long Term Support versions of Node.js (v14, v16 and v18)](https://github.com/nodejs/release#release-schedule).
-Node.js v14 is supported from version `14.18.0` onwards, while Node 16 is
-supported from version `16.10.0` onwards.
+Modular is tested on the current
+[Long Term Support versions of Node.js: v16, v18 and v20](https://github.com/nodejs/release#release-schedule).
+Node 16 is supported from version `16.10.0` onwards.
 
 ## Platforms
 

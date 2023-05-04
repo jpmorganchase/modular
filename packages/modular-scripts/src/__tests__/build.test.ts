@@ -34,7 +34,7 @@ describe('WHEN building with preserve modules', () => {
       {
         "dependencies": {},
         "engines": {
-          "node": "^14.18.0 || >=16.10.0 || >=18.0.0",
+          "node": ">=16.10.0 || >=18.0.0 || >=20.0.0",
         },
         "files": [
           "dist-cjs",

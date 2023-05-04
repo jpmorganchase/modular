@@ -5,7 +5,7 @@
     "packages/**"
   ],
   "engines": {
-    "node": "^14.18.0 || >=16.10.0 || >=18.0.0"
+    "node": ">=16.10.0 || >=18.0.0 || >=20.0.0"
   },
   "repository": "https://github.com/jpmorganchase/modular.git",
   "scripts": {
@@ -15,7 +15,7 @@
     "create-modular-react-app": "ts-node packages/create-modular-react-app/src/cli.ts",
     "modular": "ts-node packages/modular-scripts/src/cli.ts",
     "test": "cross-env NODE_OPTIONS=--max_old_space_size=5120 yarn modular test --swc --runInBand --env=node",
-    "build": "yarn workspace @modular-scripts/workspace-resolver build && yarn workspace create-modular-react-app build && yarn workspace modular-scripts build && yarn workspace modular-views.macro build && yarn modular build @modular-scripts/remote-view && yarn prepare:remote-view",
+    "build": "yarn workspace @modular-scripts/workspace-resolver build && yarn workspace create-modular-react-app build && yarn workspace modular-scripts build && yarn modular build @modular-scripts/remote-view && yarn prepare:remote-view",
     "prepare": "is-ci || husky install",
     "prepare:remote-view:copy": "cp -R dist/modular-scripts-remote-view packages/remote-view/dist",
     "prepare:remote-view:prepublish": "node scripts/remote-view-prepublish.js",
@@ -50,7 +50,6 @@
     "@testing-library/jest-dom": "5.16.5",
     "@testing-library/react": "12.1.5",
     "@testing-library/user-event": "14.4.3",
-    "@types/babel-plugin-macros": "2.8.5",
     "@types/babel__code-frame": "^7.0.3",
     "@types/cross-spawn": "^6.0.2",
     "@types/dedent": "0.7.0",
@@ -102,8 +101,7 @@
   "jest": {
     "coveragePathIgnorePatterns": [
       "/__fixtures__/",
-      "/node_modules/",
-      "/modular-views.macro/"
+      "/node_modules/"
     ],
     "coverageProvider": "v8"
   },

@@ -13,7 +13,7 @@ module.exports = (api) => {
         {
           targets: {
             // TODO: can we get this to read from package.json somehow..?
-            node: '14',
+            node: '16',
           },
         },
       ],
