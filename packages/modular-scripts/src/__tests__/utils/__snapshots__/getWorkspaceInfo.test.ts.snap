@@ -93,13 +93,6 @@ exports[`getWorkspaceInfo 1`] = `
     "type": "template",
     "workspaceDependencies": [],
   },
-  "modular-views.macro": {
-    "location": "packages/modular-views.macro",
-    "mismatchedWorkspaceDependencies": [],
-    "public": true,
-    "type": "unknown",
-    "workspaceDependencies": [],
-  },
   "remote-view-demos": {
     "location": "packages/remote-view-demos",
     "mismatchedWorkspaceDependencies": [],
