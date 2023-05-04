@@ -43,7 +43,6 @@ export default async function createPluginConfig(
     changed: false,
   });
 
-  // We typecheck all packages the package we're building depends on
   const pathsToTypecheck = packagesToTypecheck.map((pkg) => {
     return {
       file: `../${pkg}/src/**/*.{ts,tsx}`,
