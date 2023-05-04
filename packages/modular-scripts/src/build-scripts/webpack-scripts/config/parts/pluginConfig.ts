@@ -10,6 +10,7 @@ import { createAppPluginConfig } from './appConfig';
 import { createDevelopmentPluginConfig } from './developmentConfig';
 import { createProductionPluginConfig } from './productionConfig';
 import getClientEnvironment from '../../../common-scripts/getClientEnvironment';
+import { selectWorkspaces } from '../../../../utils/selectWorkspaces';
 import type { Paths } from '../../../common-scripts/determineTargetPaths';
 
 // Some apps do not need the benefits of saving a web request, so not inlining the chunk
@@ -21,7 +22,8 @@ const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false';
 // Omit trailing slash as %PUBLIC_URL%/xyz looks better than %PUBLIC_URL%xyz.
 // Get environment variables to inject into our app.
 
-export default function createPluginConfig(
+export default async function createPluginConfig(
+  target: string,
   isApp: boolean,
   isEnvProduction: boolean,
   shouldUseSourceMap: boolean,
@@ -29,9 +31,27 @@ export default function createPluginConfig(
   styleImports: Set<string>,
   paths: Paths,
   indexPath: string | false,
-): Configuration {
+): Promise<Configuration> {
   const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
   const isEnvDevelopment = !isEnvProduction;
+
+  // Typecheck package to build and descendants
+  const packagesToTypecheck = await selectWorkspaces({
+    targets: [target],
+    ancestors: false,
+    descendants: true,
+    changed: false,
+  });
+
+  // We typecheck all packages the package we're building depends on
+  const pathsToTypecheck = packagesToTypecheck.map((pkg) => {
+    return {
+      file: `../${pkg}/src/**/*.{ts,tsx}`,
+    };
+  });
+  // For some reason the above doesn't work for the package we're building itself
+  // so we add it separately
+  pathsToTypecheck.push({ file: `**/src/**/*.{ts,tsx}` });
 
   const basePlugins: Configuration = {
     plugins: [
@@ -112,10 +132,7 @@ export default function createPluginConfig(
             // as micromatch doesn't match
             // '../cra-template-typescript/template/src/App.tsx'
             // otherwise.
-            include: [
-              { file: '../**/src/**/*.{ts,tsx}' },
-              { file: '**/src/**/*.{ts,tsx}' },
-            ],
+            include: pathsToTypecheck,
             exclude: [
               { file: '**/src/**/__tests__/**' },
               { file: '**/src/**/?(*.){spec|test}.*' },

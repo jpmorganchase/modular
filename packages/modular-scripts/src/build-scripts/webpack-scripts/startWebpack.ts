@@ -20,6 +20,7 @@ const DEFAULT_PORT = portEnv ? parseInt(portEnv, 10) : 3000;
 const HOST = process.env.HOST || '0.0.0.0';
 
 export default function startWebpack(
+  target: string,
   esbuildTargetFactory: string[],
   isApp: boolean,
   importInfo: ImportInfo,
@@ -50,6 +51,7 @@ export default function startWebpack(
       }
 
       const config = await getConfig(
+        target,
         false,
         esbuildTargetFactory,
         isApp,

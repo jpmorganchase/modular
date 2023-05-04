@@ -37,6 +37,7 @@ const imageInlineSizeLimit = parseInt(
  * @returns Promise containing webpack configuration
  */
 export default async function getWebpackConfig(
+  target: string,
   isEnvProduction: boolean,
   esbuildTargetFactory: string[],
   isApp: boolean,
@@ -91,7 +92,8 @@ export default async function getWebpackConfig(
   // If an index is provided, this is its path. Otherwise false.
   const indexPath = fs.existsSync(targetPaths.appHtml) && targetPaths.appHtml;
   // Plugin configuration
-  const pluginConfig = createPluginConfig(
+  const pluginConfig = await createPluginConfig(
+    target,
     isApp,
     isEnvProduction,
     shouldUseSourceMap,

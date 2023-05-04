@@ -15,6 +15,7 @@ import type { Paths } from '../common-scripts/determineTargetPaths';
 import type { ImportInfo } from '../../utils/importInfo';
 
 export default async function buildWebpack(
+  target: string,
   esbuildTargetFactory: string[],
   isApp: boolean,
   importInfo: ImportInfo,
@@ -23,6 +24,7 @@ export default async function buildWebpack(
   paths: Paths,
 ): Promise<StatsCompilation> {
   const webpackConfig: Configuration = await getConfig(
+    target,
     true,
     esbuildTargetFactory,
     isApp,

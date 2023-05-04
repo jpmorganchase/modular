@@ -126,6 +126,7 @@ export async function buildStandalone(
     // so --preserve-modules has no effect here
 
     const stats = await buildWebpack(
+      target,
       esbuildTargetFactory,
       isApp,
       importInfo,

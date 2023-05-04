@@ -116,6 +116,7 @@ async function start(packageName: string): Promise<void> {
 
     logger.debug(`Using target: ${browserTarget.join(', ')}`);
     startWebpack(
+      target,
       esbuildTargetFactory,
       !isEsmView,
       importInfo,
