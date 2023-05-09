@@ -7,8 +7,10 @@ import getModularRoot from './utils/getModularRoot';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import { getAllWorkspaces } from './utils/getAllWorkspaces';
 import { selectWorkspaces } from './utils/selectWorkspaces';
-
-import type { JSONSchemaForTheTypeScriptCompilerSConfigurationFile as TSConfig } from '@schemastore/tsconfig';
+import type {
+  CompilerOptionsDefinition,
+  JSONSchemaForTheTypeScriptCompilerSConfigurationFile as TSConfig,
+} from '@schemastore/tsconfig';
 
 type CompilerOptions = TSConfig['compilerOptions'];
 
@@ -19,7 +21,10 @@ export interface TypecheckOptions {
   compareBranch: string;
 }
 
-const COMPILER_OPTIONS_ALLOW_LIST: string[] = ['jsx'];
+const COMPILER_OPTIONS_ALLOW_LIST: (keyof CompilerOptionsDefinition)[] = [
+  'jsx',
+  'strict',
+];
 const DEFAULT_COMPILER_OPTIONS: CompilerOptions = {
   noEmit: true,
 };
@@ -55,7 +60,7 @@ function restrictUserTsconfig(
 
   // Where the user has defined allowlist-supported compiler options, apply them
   for (const item of COMPILER_OPTIONS_ALLOW_LIST) {
-    if (compilerOptions && compilerOptions[item]) {
+    if (compilerOptions?.[item] !== undefined) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       combinedCompilerOptions[item] = compilerOptions[item];
     }

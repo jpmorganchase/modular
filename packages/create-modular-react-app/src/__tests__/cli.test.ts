@@ -1,6 +1,6 @@
+import * as path from 'path';
 import execa from 'execa';
 import * as fs from 'fs-extra';
-import * as path from 'path';
 import * as tmp from 'tmp';
 import { hashlessTree } from 'tree-view-for-tests';
 

@@ -1,7 +1,7 @@
-import * as fs from 'fs-extra';
 import * as path from 'path';
-import getAllFiles from '../../utils/getAllFiles';
+import * as fs from 'fs-extra';
 import * as tmp from 'tmp';
+import getAllFiles from '../../utils/getAllFiles';
 
 describe('getAllFiles', () => {
   const testFiles = ['foo', 'bar', 'nested'];

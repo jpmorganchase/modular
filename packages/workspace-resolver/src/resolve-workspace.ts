@@ -2,12 +2,11 @@ import path, { join } from 'path';
 import { readJson } from 'fs-extra';
 import globby from 'globby';
 import semver from 'semver';
-
 import type {
+  ModularPackageJson,
   ModularWorkspacePackage,
   WorkspaceMap,
   WorkspaceObj,
-  ModularPackageJson,
 } from '@modular-scripts/modular-types';
 
 // See https://yarnpkg.com/features/workspaces#workspace-ranges-workspace

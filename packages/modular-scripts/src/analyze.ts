@@ -1,6 +1,6 @@
+import stripAnsi from 'strip-ansi';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import { getPackageDependencies } from './utils/getPackageDependencies';
-import stripAnsi from 'strip-ansi';
 
 async function analyze({ target }: { target: string }): Promise<void> {
   console.log(

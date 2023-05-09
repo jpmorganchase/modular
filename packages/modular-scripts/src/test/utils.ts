@@ -1,12 +1,11 @@
+import path from 'path';
+import { promisify } from 'util';
+import { mkdirSync } from 'fs';
 import _rimraf from 'rimraf';
 import execa from 'execa';
 import fs, { writeJSONSync } from 'fs-extra';
-import path from 'path';
 import * as tmp from 'tmp';
-import { promisify } from 'util';
 import findUp from 'find-up';
-import { mkdirSync } from 'fs';
-
 import type { ModularPackageJson } from '@modular-scripts/modular-types';
 import type { Config } from '@jest/types';
 
@@ -223,7 +222,7 @@ export function runModularForTests(
     path.join(modularRoot, '/node_modules/.bin/ts-node'),
     [
       path.join(modularRoot, '/packages/modular-scripts/src/cli.ts'),
-      ...args.split(' '),
+      ...args.split(/ +(?=(?:(?:[^"]*"){2})*[^"]*$)/g),
     ],
     {
       cwd,

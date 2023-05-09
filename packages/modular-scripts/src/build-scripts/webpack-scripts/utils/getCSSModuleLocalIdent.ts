@@ -1,5 +1,5 @@
-import loaderUtils from 'loader-utils';
 import path from 'path';
+import loaderUtils from 'loader-utils';
 
 export default function getLocalIdent(
   context: { resourcePath: string; rootContext: string },

@@ -9,8 +9,7 @@ import { exec } from 'child_process';
 import fs from 'fs-extra';
 import { getDocument, queries, waitFor } from 'pptr-testing-library';
 import puppeteer from 'puppeteer';
-
-import { startApp, DevServer } from './start-app';
+import { DevServer, startApp } from './start-app';
 import { createModularTestContext } from '../test/utils';
 import { addPackageForTests, setupMocks } from '../test/mockFunctions';
 

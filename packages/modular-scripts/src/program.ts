@@ -8,10 +8,9 @@ import { testOptions } from './test/jestOptions';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import * as logger from './utils/logger';
 import {
-  validateCompareOptions,
   computeConcurrencyOption,
+  validateCompareOptions,
 } from './utils/options';
-
 import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import type { TestOptions } from './test';
 import type { LintOptions } from './lint';
@@ -173,6 +172,16 @@ interface CLITestOptions extends TestOptions {
 
 program
   .command('test [packages...]')
+  .option(
+    '--bypass',
+    'Bypass all modular specific selective behaviour and pass all flags and options directly to Jest. Ensures modular test behaves exactly like calling Jest directly, but with Modular configuration applied. Use with IntelliJ Jest configurations.',
+    false,
+  )
+  .option(
+    '--swc',
+    'Use Rust based SWC Jest runner instead of ts-jest & babel for performance improvements',
+    false,
+  )
   .option(
     '--ancestors',
     'Additionally run tests for workspaces that depend on workspaces that have changed',

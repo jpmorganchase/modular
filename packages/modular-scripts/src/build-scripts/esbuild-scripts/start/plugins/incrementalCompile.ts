@@ -1,9 +1,9 @@
-import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import { Plugin } from 'esbuild';
 import chalk from 'chalk';
 import * as fs from 'fs-extra';
 import * as logger from '../../../../utils/logger';
 import { InstructionURLS } from '../../../common-scripts/urls';
+import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import type { Paths } from '../../../common-scripts/determineTargetPaths';
 
 function createPlugin(paths: Paths, urls: InstructionURLS): Plugin {

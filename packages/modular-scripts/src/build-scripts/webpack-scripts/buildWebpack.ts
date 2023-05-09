@@ -1,8 +1,8 @@
 import isCi from 'is-ci';
 import chalk from 'chalk';
 import webpack, {
-  Configuration,
   Compiler,
+  Configuration,
   Stats,
   StatsCompilation,
   StatsError,
@@ -10,22 +10,25 @@ import webpack, {
 import formatWebpackMessages from './utils/formatWebpackMessages';
 import printBuildError from './utils/printBuildError';
 import { log } from '../../utils/logger';
-import type { Paths } from '../common-scripts/determineTargetPaths';
 import getConfig from './config/webpack.config';
+import type { Paths } from '../common-scripts/determineTargetPaths';
+import type { ImportInfo } from '../../utils/importInfo';
 
 export default async function buildWebpack(
+  target: string,
   esbuildTargetFactory: string[],
   isApp: boolean,
-  dependencyMap: Map<string, string>,
+  importInfo: ImportInfo,
   useReactCreateRoot: boolean,
   styleImports: Set<string>,
   paths: Paths,
 ): Promise<StatsCompilation> {
   const webpackConfig: Configuration = await getConfig(
+    target,
     true,
     esbuildTargetFactory,
     isApp,
-    dependencyMap,
+    importInfo,
     useReactCreateRoot,
     styleImports,
     paths,

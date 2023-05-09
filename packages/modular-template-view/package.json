@@ -10,6 +10,9 @@
     "type": "template",
     "templateType": "view"
   },
+  "eslintConfig": {
+    "extends": "modular-app/recommended"
+  },
   "files": [
     "src"
   ]

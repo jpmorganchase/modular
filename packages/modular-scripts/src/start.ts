@@ -1,7 +1,8 @@
+import prompts from 'prompts';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import {
-  isModularType,
   getModularType,
+  isModularType,
   isStartableModularType,
 } from './utils/packageTypes';
 import getWorkspaceLocation from './utils/getLocation';
@@ -12,14 +13,13 @@ import { checkBrowsers } from './utils/checkBrowsers';
 import checkRequiredFiles from './utils/checkRequiredFiles';
 import * as logger from './utils/logger';
 import createEsbuildBrowserslistTarget from './build-scripts/common-scripts/createEsbuildBrowserslistTarget';
-import prompts from 'prompts';
 import { getDependencyInfo } from './utils/getDependencyInfo';
 import { isReactNewApi } from './utils/isReactNewApi';
 import { getConfig } from './utils/config';
-import type { PackageType } from '@modular-scripts/modular-types';
 import determineTargetPaths from './build-scripts/common-scripts/determineTargetPaths';
 import startWebpack from './build-scripts/webpack-scripts/startWebpack';
 import startEsbuild from './build-scripts/esbuild-scripts/start';
+import type { PackageType } from '@modular-scripts/modular-types';
 
 async function start(packageName: string): Promise<void> {
   let target = packageName;
@@ -70,7 +70,7 @@ async function start(packageName: string): Promise<void> {
 
   // Retrieve dependency info for target to inform the build process
   const {
-    importMap,
+    importInfo,
     styleImports,
     bundledDependencies,
     bundledResolutions,
@@ -103,7 +103,7 @@ async function start(packageName: string): Promise<void> {
     await startEsbuild({
       target,
       isApp: !isEsmView,
-      importMap,
+      importInfo,
       useReactCreateRoot,
       styleImports,
     });
@@ -116,9 +116,10 @@ async function start(packageName: string): Promise<void> {
 
     logger.debug(`Using target: ${browserTarget.join(', ')}`);
     startWebpack(
+      target,
       esbuildTargetFactory,
       !isEsmView,
-      importMap,
+      importInfo,
       useReactCreateRoot,
       styleImports,
       paths,

@@ -8,12 +8,12 @@ import {
   runModularForTests,
   runModularForTestsAsync,
 } from '../test/utils';
-import type { CoreProperties } from '@schemastore/package';
 import {
+  addPackageForTests,
   runTestForTests,
   setupMocks,
-  addPackageForTests,
 } from '../test/mockFunctions';
+import type { CoreProperties } from '@schemastore/package';
 
 const modularRoot = getModularRoot();
 
@@ -24,6 +24,10 @@ const filterTemplatePath = path.join(templatesPath, 'modular-template-filter');
 const noFilterTemplatePath = path.join(
   templatesPath,
   'modular-template-no-filter',
+);
+const nonModularTemplatePath = path.join(
+  templatesPath,
+  'modular-template-non-modular',
 );
 
 // Temporary test context paths set by createTempModularRepoWithTemplate()
@@ -179,6 +183,28 @@ describe('When adding a module from a template without a files filter', () => {
       │  └─ index.tsx #1woe74n
       └─ tsconfig.json"
     `);
+  });
+});
+
+describe('When adding a module from a template with a target non-modular workspace', () => {
+  let newModulePath: string;
+  beforeAll(async () => {
+    createTempModularRepoWithTemplate(nonModularTemplatePath);
+    setupMocks(tempModularRepo);
+    newModulePath = path.join(tempPackagesPath, 'non-modular-workspace');
+    await addPackageForTests('non-modular-workspace', 'non-modular');
+  });
+
+  it('generates the package.json', async () => {
+    // Expect name to be as set by command, and type as set by template
+    expect(await fs.readJSON(path.join(newModulePath, 'package.json')))
+      .toMatchInlineSnapshot(`
+        {
+          "name": "non-modular-workspace",
+          "private": false,
+          "version": "1.0.0",
+        }
+      `);
   });
 });
 

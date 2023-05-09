@@ -1,3 +1,4 @@
+import * as path from 'path';
 import * as esbuild from 'esbuild';
 import * as fs from 'fs-extra';
 import * as parse5 from 'parse5';
@@ -5,12 +6,12 @@ import semver from 'semver';
 import dedent from 'dedent';
 import escapeStringRegexp from 'escape-string-regexp';
 import minimize from 'html-minifier-terser';
-import type { ModularType } from '@modular-scripts/modular-types';
 import getModularRoot from '../../utils/getModularRoot';
-import * as path from 'path';
 import { normalizeToPosix } from './utils/formatPath';
-import type { Element } from 'parse5/dist/tree-adapters/default';
 import getClientEnvironment from '../common-scripts/getClientEnvironment';
+import { ImportInfo, rewriteModuleSpecifier } from '../../utils/importInfo';
+import type { Element } from 'parse5/dist/tree-adapters/default';
+import type { ModularType } from '@modular-scripts/modular-types';
 import type { Dependency } from '@schemastore/package';
 import type { Paths } from '../common-scripts/determineTargetPaths';
 
@@ -29,7 +30,7 @@ interface WriteFilesArguments {
   cssEntryPoint?: string;
   jsEntryPoint: string;
   styleImports?: Set<string>;
-  importMap: Map<string, string>;
+  importInfo: ImportInfo;
   externalResolutions: Dependency;
   modularType: Extract<ModularType, 'app' | 'esm-view'>;
 }
@@ -40,7 +41,7 @@ interface WriteFilesArguments {
  * @property {string} cssEntryPoint - the name of your css entrypoint file
  * @property {string} jsEntryPoint - the name of your js entrypoint file
  * @property {Set<string>} styleImports - a set containing global style import URLs
- * @property {Map<string, string>} importMap - a map from package name to CDN URL
+ * @property {Map<string, string>} importInfo - a map from package name to CDN URL
  * @property {Dependency} externalResolutions - a record of external resolutions and their versions
  * @property {Extract<ModularType, 'app' | 'esm-view'>;} modularType - Modular type, can be "app" or "esm-view"
  */
@@ -60,7 +61,7 @@ export async function writeOutputIndexFiles({
   cssEntryPoint,
   jsEntryPoint,
   styleImports,
-  importMap,
+  importInfo,
   externalResolutions,
   modularType,
 }: WriteFilesArguments): Promise<void> {
@@ -104,7 +105,7 @@ export async function writeOutputIndexFiles({
 
     const trampolineContent = createViewTrampoline({
       fileName: path.basename(jsEntryPoint),
-      importMap,
+      importInfo,
       useReactCreateRoot,
     });
 
@@ -151,17 +152,17 @@ export async function createStartIndex({
 
 export function createViewTrampoline({
   fileName,
-  importMap,
+  importInfo,
   useReactCreateRoot,
 }: {
   fileName: string;
-  importMap: Map<string, string> | undefined;
+  importInfo: ImportInfo;
   useReactCreateRoot: boolean;
 }): string {
   const fileRelativePath = `./${fileName}`;
 
-  const reactDomCdnLocation = importMap?.get('react-dom');
-  const reactCdnLocation = importMap?.get('react');
+  const reactDomCdnLocation = rewriteModuleSpecifier(importInfo, 'react-dom');
+  const reactCdnLocation = rewriteModuleSpecifier(importInfo, 'react');
 
   if (!reactCdnLocation || !reactDomCdnLocation) {
     throw new Error(

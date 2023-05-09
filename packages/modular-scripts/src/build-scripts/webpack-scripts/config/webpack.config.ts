@@ -1,8 +1,6 @@
-import chalk from 'chalk';
 import fs from 'fs';
-
+import chalk from 'chalk';
 import { merge } from 'webpack-merge';
-
 import * as logger from '../../../utils/logger';
 import getModules from './modules';
 import createPluginConfig from './parts/pluginConfig';
@@ -12,6 +10,7 @@ import { createDevelopmentConfig } from './parts/developmentConfig';
 import { createProductionConfig } from './parts/productionConfig';
 import createBaseConfig from './parts/baseConfig';
 import { getConfig } from '../../../utils/config';
+import type { ImportInfo } from '../../../utils/importInfo';
 import type {
   Configuration,
   WebpackPluginFunction,
@@ -31,17 +30,18 @@ const imageInlineSizeLimit = parseInt(
  * @param isEnvProduction True when building, false starting
  * @param esbuildTargetFactory ES Target version
  * @param isApp True if target is an app, false if it's an ESM View
- * @param dependencyMap Map of target's dependency
+ * @param importInfo Import informations record (import set, dependencies, resolutions, template)
  * @param useReactCreateRoot True for React >= 18 as it needs a different way of instantiating rendering.
  * @param styleImports Set of Style Imports
  * @param targetPaths Relevant file paths for output
  * @returns Promise containing webpack configuration
  */
 export default async function getWebpackConfig(
+  target: string,
   isEnvProduction: boolean,
   esbuildTargetFactory: string[],
   isApp: boolean,
-  dependencyMap: Map<string, string>,
+  importInfo: ImportInfo,
   useReactCreateRoot: boolean,
   styleImports: Set<string>,
   targetPaths: Paths,
@@ -71,14 +71,14 @@ export default async function getWebpackConfig(
     modules,
     shouldUseSourceMap,
     esbuildTargetFactory,
-    dependencyMap,
+    importInfo.importSet, // TODO: is this needed in this form for CSS?
   );
 
   // Specific configuration based on modular type (app, esm-view)
   const modularTypeConfiguration = isApp
     ? createAppConfig()
     : createEsmViewConfig(
-        dependencyMap,
+        importInfo,
         targetPaths,
         isEnvProduction,
         useReactCreateRoot,
@@ -92,7 +92,8 @@ export default async function getWebpackConfig(
   // If an index is provided, this is its path. Otherwise false.
   const indexPath = fs.existsSync(targetPaths.appHtml) && targetPaths.appHtml;
   // Plugin configuration
-  const pluginConfig = createPluginConfig(
+  const pluginConfig = await createPluginConfig(
+    target,
     isApp,
     isEnvProduction,
     shouldUseSourceMap,
@@ -108,7 +109,7 @@ export default async function getWebpackConfig(
     modularTypeConfiguration,
     buildTypeConfiguration,
     pluginConfig,
-  ]) as Configuration;
+  ]);
 
   // These dependencies are so widely used for us (JPM) that it makes sense to install
   // their webpack plugin when used.

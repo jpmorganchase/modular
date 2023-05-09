@@ -47,6 +47,14 @@ These are the substrings that are replaced in the template:
   extracted from the package's or the root's (hoisted) `package.json`.
 - `[resolution]` is replaced with the version of the imported dependency as
   extracted from the yarn lockfile (`yarn.lock`).
+- `[path]` is replaced with the version of the submodule path in the `import`
+  statement, if present. For example, in the import statement
+  `import @scope/name/path/to/module`, the substring `[path]` in the CDN
+  template will be replaced with `/path/to/module` (initial separator included),
+  while in the statement `import @scope/name`, `[path]` will be replaced by the
+  empty string. If the `[path]` substring is not specified in the CDN template
+  but the subpath module is present in the `import` statement, the submodule
+  path will be added at the end of the template by default.
 - `[selectiveCDNResolutions]` is replaced with the
   [selective version resolutions](https://classic.yarnpkg.com/lang/en/docs/selective-version-resolutions/)
   specified in the manifest, as a comma-separated list of `package@version`

@@ -1,5 +1,5 @@
-import { NextFunction, Request, Response } from 'express';
 import path from 'path';
+import { NextFunction, Request, Response } from 'express';
 
 export default function createNoopServiceWorkerMiddleware(servedPath: string) {
   return function noopServiceWorkerMiddleware(

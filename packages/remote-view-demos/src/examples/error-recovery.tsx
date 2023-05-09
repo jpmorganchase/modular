@@ -4,7 +4,7 @@ import {
   RemoteViewErrorBoundary,
   RemoteViewProvider,
 } from '@modular-scripts/remote-view';
-import { H2, Text, Button } from '@salt-ds/core';
+import { Button, H2, Text } from '@salt-ds/core';
 
 function SimulateCrash({
   children,

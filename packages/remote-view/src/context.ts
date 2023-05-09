@@ -1,6 +1,5 @@
 import { createContext } from 'react';
-
-import type { RemoteViewsContext, RemoteViewErrorsContext } from './types';
+import type { RemoteViewErrorsContext, RemoteViewsContext } from './types';
 
 export const ViewsContext = createContext<RemoteViewsContext>({});
 

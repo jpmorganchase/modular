@@ -1,11 +1,10 @@
-import type * as esbuild from 'esbuild';
+import * as path from 'path';
 import * as fs from 'fs-extra';
 import { sync as gzipSize } from 'gzip-size';
-import * as path from 'path';
 import recursive from 'recursive-readdir';
-
 import getModularRoot from '../utils/getModularRoot';
 import { Asset, canReadAsset } from './fileSizeReporter';
+import type * as esbuild from 'esbuild';
 
 function removeFileNameHash(fileName: string): string {
   return fileName

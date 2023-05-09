@@ -1,15 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`WHEN running esbuild with the svgrPlugin WHEN there's a component import SHOULD ouput the correct index.js 1`] = `
-"// packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-component/logo.svg
+"// packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-component/index.tsx
+import React2 from "react";
+import ReactDOM from "react-dom";
+
+// packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-component/logo.svg
 import * as React from "react";
 function ReactComponent(props) {
   return /* @__PURE__ */ React.createElement("svg", { viewBox: "0 0 100 100", xmlns: "http://www.w3.org/2000/svg", ...props }, /* @__PURE__ */ React.createElement("circle", { cx: 50, cy: 50, r: 50 }));
 }
 
 // packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-component/index.tsx
-import React2 from "react";
-import ReactDOM from "react-dom";
 ReactDOM.render(/* @__PURE__ */ React2.createElement(ReactComponent, { title: "logo" }), document.body);
 "
 `;
@@ -31,15 +33,17 @@ ReactDOM.render(/* @__PURE__ */ React.createElement("div", { className: "app" })
 `;
 
 exports[`WHEN running esbuild with the svgrPlugin WHEN there's a url import SHOULD ouput the correct index.js 1`] = `
-"// svgurl:packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-url/logo.svg
+"// packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-url/index.tsx
+import React2 from "react";
+import ReactDOM from "react-dom";
+
+// svgurl:packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-url/logo.svg
 var logo_default = "./logo-5JCTDEME.svg";
 
 // packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-url/logo.svg
 import * as React from "react";
 
 // packages/modular-scripts/src/__tests__/esbuild-scripts/__fixtures__/svgr-url/index.tsx
-import React2 from "react";
-import ReactDOM from "react-dom";
 ReactDOM.render(/* @__PURE__ */ React2.createElement("img", { src: logo_default, alt: "logo" }), document.body);
 "
 `;

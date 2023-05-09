@@ -1,7 +1,8 @@
-import execa from 'execa';
 import { exec } from 'child_process';
-import tree from 'tree-view-for-tests';
 import path from 'path';
+import { setTimeout } from 'timers';
+import execa from 'execa';
+import tree from 'tree-view-for-tests';
 import fs from 'fs-extra';
 import {
   getDocument,
@@ -9,17 +10,16 @@ import {
   queries,
 } from 'pptr-testing-library';
 import puppeteer from 'puppeteer';
-
 import { normalizeToPosix } from '../build-scripts/esbuild-scripts/utils/formatPath';
-import { startApp, DevServer } from './start-app';
-import type { CoreProperties } from '@schemastore/package';
+import { DevServer, startApp } from './start-app';
 import { createModularTestContext, runModularForTests } from '../test/utils';
+import { rewriteModuleSpecifier } from '../utils/importInfo';
 import {
   addPackageForTests,
   buildPackageForTests,
   setupMocks,
 } from '../test/mockFunctions';
-import { setTimeout } from 'timers';
+import type { CoreProperties } from '@schemastore/package';
 
 // Temporary text context paths
 let tempModularRepo: string;
@@ -32,6 +32,38 @@ let buildOutputJsEntrypointPath: string;
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
 const { getNodeText } = queries;
+
+describe('rewriteModuleSpecifier', () => {
+  it('rewrites module paths at the end when there is no [path] specifier', () => {
+    expect(
+      rewriteModuleSpecifier(
+        {
+          externalDependencies: { 'module-name': '^1.0.0' },
+          externalResolutions: { 'module-name': '1.0.1' },
+          selectiveCDNResolutions: {},
+          importSet: new Set(['module-name']),
+          externalCdnTemplate: 'https://mycdn/[name]@[resolution]',
+        },
+        'module-name/this/is/my/path',
+      ),
+    ).toBe('https://mycdn/module-name@1.0.1/this/is/my/path');
+  });
+
+  it('rewrites module paths when there is a [path] specifier', () => {
+    expect(
+      rewriteModuleSpecifier(
+        {
+          externalDependencies: { 'module-name': '^1.0.0' },
+          externalResolutions: { 'module-name': '1.0.1' },
+          selectiveCDNResolutions: {},
+          importSet: new Set(['module-name']),
+          externalCdnTemplate: 'https://mycdn/[name][path]@[resolution]',
+        },
+        'module-name/this/is/my/path',
+      ),
+    ).toBe('https://mycdn/module-name/this/is/my/path@1.0.1');
+  });
+});
 
 // These tests must be executed sequentially with `--runInBand`.
 describe('modular working with an esm-view', () => {
@@ -944,7 +976,7 @@ function buildSampleEsmView(
   cwd: string,
   opts?: Record<string, unknown>,
 ): execa.ExecaSyncReturnValue<string> {
-  return runModularForTests(cwd, `build ${targetedView} --verbose`, opts);
+  return runModularForTests(cwd, `build ${targetedView}`, opts);
 }
 
 function getPackageEntryPointPath(

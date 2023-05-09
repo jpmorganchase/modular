@@ -1,5 +1,5 @@
-import globby from 'globby';
 import * as path from 'path';
+import globby from 'globby';
 import getModularRoot from '../utils/getModularRoot';
 import getWorkspaceInfo from '../utils/getWorkspaceInfo';
 import * as logger from '../utils/logger';

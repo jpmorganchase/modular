@@ -9,6 +9,9 @@
     "type": "template",
     "templateType": "app"
   },
+  "eslintConfig": {
+    "extends": "modular-app/recommended"
+  },
   "dependencies": {
     "lodash": "^4.17.21"
   },

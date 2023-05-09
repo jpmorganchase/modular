@@ -42,6 +42,7 @@ brings certain advantages:
 There are certain exceptions for practical use cases. The current allowlist is:
 
 - [jsx](https://www.typescriptlang.org/tsconfig#jsx)
+- [strict](https://www.typescriptlang.org/tsconfig#strict)
 
 Some use cases may warrant new exceptions. If this is you, please file an issue
 with the project for consideration.

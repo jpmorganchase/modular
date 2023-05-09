@@ -36,7 +36,7 @@ jobs:
       - name: 'Build internal prerequisites'
         run: yarn workspace @modular-scripts/workspace-resolver build
       - name: Run Tests
-        run: yarn test --coverage
+        run: yarn test --coverage --regex="./packages/*"
       - name: Coveralls Parallel
         uses: coverallsapp/github-action@master
         with:

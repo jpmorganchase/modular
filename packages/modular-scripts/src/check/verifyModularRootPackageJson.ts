@@ -1,10 +1,7 @@
 import * as path from 'path';
-
 import * as fs from 'fs-extra';
-
 import getModularRoot from '../utils/getModularRoot';
 import * as logger from '../utils/logger';
-
 import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
 /**

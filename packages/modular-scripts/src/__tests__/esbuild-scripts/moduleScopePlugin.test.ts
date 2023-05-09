@@ -1,9 +1,8 @@
-import * as esbuild from 'esbuild';
 import * as path from 'path';
+import * as esbuild from 'esbuild';
 import * as fs from 'fs-extra';
 import stripAnsi from 'strip-ansi';
 import * as tmp from 'tmp';
-
 import plugin from '../../build-scripts/esbuild-scripts/plugins/moduleScopePlugin';
 import { formatError } from '../../build-scripts/esbuild-scripts/utils/formatError';
 import getModularRoot from '../../utils/getModularRoot';

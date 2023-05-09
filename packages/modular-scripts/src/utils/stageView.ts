@@ -1,5 +1,5 @@
-import * as fs from 'fs-extra';
 import path from 'path';
+import * as fs from 'fs-extra';
 import { pascalCase as toPascalCase } from 'change-case';
 import getModularRoot from './getModularRoot';
 

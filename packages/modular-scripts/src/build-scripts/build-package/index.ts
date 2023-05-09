@@ -7,7 +7,6 @@ import { paramCase as toParamCase } from 'change-case';
 import fs from 'fs-extra';
 import npmPacklist from 'npm-packlist';
 import micromatch from 'micromatch';
-
 import getPrefixedLogger from '../../utils/getPrefixedLogger';
 import getModularRoot from '../../utils/getModularRoot';
 import { makeBundle } from './makeBundle';
