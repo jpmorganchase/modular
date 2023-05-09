@@ -1,5 +1,47 @@
 # modular-scripts
 
+## 4.4.0
+
+### Minor Changes
+
+- [#2365](https://github.com/jpmorganchase/modular/pull/2365)
+  [`89097fc`](https://github.com/jpmorganchase/modular/commit/89097fc98ffa14af4b223ecf1fbaf5ce5670d1d0)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - `modular add` now
+  cleans up after itself by removing the added template dependency
+
+- [#2368](https://github.com/jpmorganchase/modular/pull/2368)
+  [`2ca7fcd`](https://github.com/jpmorganchase/modular/commit/2ca7fcd39affb4c4033665a80f04053def45d453)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Support
+  non-modular templates
+
+- [#2338](https://github.com/jpmorganchase/modular/pull/2338)
+  [`d4a64ef`](https://github.com/jpmorganchase/modular/commit/d4a64efba3742795d0a0ee280618881a972a6921)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Added --swc flag to
+  test command: Runs tests with @swc/jest instead of ts-jest & babel for
+  increased performance
+
+- [#2364](https://github.com/jpmorganchase/modular/pull/2364)
+  [`fdf2f71`](https://github.com/jpmorganchase/modular/commit/fdf2f71204e4c72fa0468500a0ad271a29420fdc)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - `modular build` now
+  includes the 'engines' field in the dist package.json when provided in the
+  workspace or root package.json
+
+- [#2352](https://github.com/jpmorganchase/modular/pull/2352)
+  [`ccffbfd`](https://github.com/jpmorganchase/modular/commit/ccffbfd909d4451c030be16b26adf53d3581d52a)
+  Thanks [@cristiano-belloni](https://github.com/cristiano-belloni)! - Enable
+  "strict" compiler option in the
+  [typecheck allowlist](https://modular.js.org/commands/typecheck/#configuration)
+
+- [#2363](https://github.com/jpmorganchase/modular/pull/2363)
+  [`d770c80`](https://github.com/jpmorganchase/modular/commit/d770c80e8afd846d69b82b31d28f5b6904357262)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Added --jest flag
+  to bypass modular test behaviour
+
+- [#2371](https://github.com/jpmorganchase/modular/pull/2371)
+  [`4e6fb9b`](https://github.com/jpmorganchase/modular/commit/4e6fb9b68b78aed8b424bbfcd2197fd5412ef2d0)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - When building with
+  webpack, only typecheck the package being built and its dependants
+
 ## 4.3.1
 
 ### Patch Changes
