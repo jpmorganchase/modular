@@ -25,6 +25,9 @@ status of each file (`PASS` or `FAIL`). If a file has a lint warning, the
 command will be marked as failed, with printed eslint errors for each
 warning/error.
 
+Non modular packages will also be linted if they have a `lint` script specified
+in their `package.json`.
+
 ## Default behaviour
 
 `modular lint` without arguments or options will:
@@ -44,10 +47,6 @@ the Selective Options)
 `--fix`: Allows eslint to fix the errors and warnings that do not require manual
 intervention wherever possible. Restages any fixed files that were previously
 staged when used in combination with `--staged`.
-
-`--includeNonModular`: Allows modular to run the `lint` script of non Modular
-packages included in the selection, if one is provided in the package's
-package.json
 
 ### Selective Options
 

@@ -22,7 +22,6 @@ export interface LintOptions {
   ancestors?: boolean;
   descendants?: boolean;
   changed?: boolean;
-  includeNonModular?: boolean;
   compareBranch?: string;
 }
 
@@ -38,7 +37,6 @@ async function lint(
     ancestors = false,
     descendants = false,
     changed = false,
-    includeNonModular = false,
     compareBranch,
   } = options;
   const modularRoot = getModularRoot();
@@ -188,25 +186,22 @@ async function lint(
     }
   }
 
-  // Lint non-modular packages - TODO: Remove conditional & flag in next major release of Modular (5.0.0)
-  if (includeNonModular) {
-    try {
-      logger.debug(
-        `Running lint command in the following non-modular packages: ${JSON.stringify(
-          nonModularTargets,
-        )}`,
-      );
-      for (const target of nonModularTargets) {
-        await execAsync(`yarn`, ['workspace', target, 'lint'], {
-          cwd: getModularRoot(),
-          log: false,
-        });
-      }
-    } catch (err) {
-      logger.debug((err as ExecaError).message);
-      // ✕ Modular lint did not pass
-      throw new Error('\u2715 Modular lint did not pass');
+  try {
+    logger.debug(
+      `Running lint command in the following non-modular packages: ${JSON.stringify(
+        nonModularTargets,
+      )}`,
+    );
+    for (const target of nonModularTargets) {
+      await execAsync(`yarn`, ['workspace', target, 'lint'], {
+        cwd: getModularRoot(),
+        log: false,
+      });
     }
+  } catch (err) {
+    logger.debug((err as ExecaError).message);
+    // ✕ Modular lint did not pass
+    throw new Error('\u2715 Modular lint did not pass');
   }
 }
 
