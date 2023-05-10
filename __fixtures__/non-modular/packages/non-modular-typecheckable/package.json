@@ -1,0 +1,14 @@
+{
+  "name": "non-modular-typecheckable",
+  "private": false,
+  "scripts": {
+    "typecheck": "echo 'non-modular-typecheckable was typechecked'"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "license": "UNLICENSED",
+  "main": "./dist/index.js",
+  "version": "1.0.0"
+}

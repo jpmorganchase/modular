@@ -186,22 +186,24 @@ async function lint(
     }
   }
 
-  try {
-    logger.debug(
-      `Running lint command in the following non-modular packages: ${JSON.stringify(
-        nonModularTargets,
-      )}`,
-    );
-    for (const target of nonModularTargets) {
-      await execAsync(`yarn`, ['workspace', target, 'lint'], {
-        cwd: getModularRoot(),
-        log: false,
-      });
+  if (nonModularTargets.length) {
+    try {
+      logger.debug(
+        `Running lint command in the following non-modular packages: ${JSON.stringify(
+          nonModularTargets,
+        )}`,
+      );
+      for (const target of nonModularTargets) {
+        await execAsync(`yarn`, ['workspace', target, 'lint'], {
+          cwd: getModularRoot(),
+          log: false,
+        });
+      }
+    } catch (err) {
+      logger.debug((err as ExecaError).message);
+      // ✕ Modular lint did not pass
+      throw new Error('\u2715 Modular lint did not pass');
     }
-  } catch (err) {
-    logger.debug((err as ExecaError).message);
-    // ✕ Modular lint did not pass
-    throw new Error('\u2715 Modular lint did not pass');
   }
 }
 
