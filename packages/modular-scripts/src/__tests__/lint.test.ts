@@ -60,7 +60,7 @@ describe('Modular lint', () => {
       }
       let modularLogs: string[] = [];
       try {
-        await runYarnModular(tempModularRepo, 'lint __fixtures__/lint');
+        await runYarnModular(tempModularRepo, 'lint --regex __fixtures__/lint');
       } catch ({ stderr }) {
         modularLogs = (stderr as string).split('\n');
       }
@@ -71,7 +71,7 @@ describe('Modular lint', () => {
     it('should not pass lint test', async () => {
       let modularLogs: string[] = [];
       try {
-        await runYarnModular(tempModularRepo, 'lint __fixtures__/lint');
+        await runYarnModular(tempModularRepo, 'lint --regex __fixtures__/lint');
       } catch ({ stderr }) {
         modularLogs = (stderr as string).split('\n');
       }
@@ -88,7 +88,7 @@ describe('Modular lint', () => {
       const files = fs.readdirSync(fixturesFolder);
       const result = await runYarnModular(
         modularRoot,
-        'lint __fixtures__/lint',
+        'lint --regex __fixtures__/lint',
       );
       const modularLogs: string[] = result.stderr.split('\n');
       expect(modularLogs).toContain(
@@ -128,7 +128,7 @@ describe('lint command can successfully do selective tests based on selected pac
   it('finds test after specifying a valid package', () => {
     const resultPackages = runModularPipeLogs(
       randomOutputFolder,
-      'lint --packages beta-lint gamma-lint',
+      'lint beta-lint gamma-lint',
       'true',
     );
     expect(resultPackages.stderr).toContain('packages/beta-lint/src/');
@@ -141,7 +141,7 @@ describe('lint command can successfully do selective tests based on selected pac
   it('finds ancestors using --ancestors', () => {
     const resultPackagesWithAncestors = runModularPipeLogs(
       randomOutputFolder,
-      'lint --packages beta-lint gamma-lint --ancestors',
+      'lint beta-lint gamma-lint --ancestors',
       'true',
     );
     expect(resultPackagesWithAncestors.stderr).toContain(
@@ -164,7 +164,7 @@ describe('lint command can successfully do selective tests based on selected pac
   it('finds descendants using --descendants', () => {
     const resultPackagesWithDescendants = runModularPipeLogs(
       randomOutputFolder,
-      'lint --packages beta-lint gamma-lint --descendants',
+      'lint beta-lint gamma-lint --descendants',
       'true',
     );
     expect(resultPackagesWithDescendants.stderr).toContain(

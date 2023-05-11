@@ -285,12 +285,8 @@ program
 
 const lintStagedFlag = '--staged';
 program
-  .command('lint [regexes...]')
-  .option(
-    '--all',
-    'Only lint diffed files from your remote origin default branch (e.g. main or master)',
-  )
-  .option('--packages [packages...]', 'Only lint selected packages')
+  .command('lint [packages...]')
+  .option('--regex [regexes...]', 'Only lint selected packages')
   .option(
     '--ancestors',
     'Lint workspaces that depend on workspaces that have changed',
@@ -314,7 +310,10 @@ program
     `Fix the lint errors wherever possible, restages changes if run with ${lintStagedFlag}`,
   )
   .option('--verbose', 'Enables verbose logging within modular.')
-
+  .option(
+    '--diff',
+    'Only lint files that have changed compared to the compare branch',
+  )
   .addOption(
     new Option(
       lintStagedFlag,
@@ -322,9 +321,9 @@ program
     ).conflicts('all'),
   )
   .description('Lints the codebase')
-  .action(async (regexes: string[], options: LintOptions) => {
+  .action(async (packages: string[], options: LintOptions) => {
     const { default: lint } = await import('./lint');
-    await lint(options, regexes);
+    await lint(options, packages);
   });
 
 program
