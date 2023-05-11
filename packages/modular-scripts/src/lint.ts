@@ -99,11 +99,12 @@ async function lint(
       process.exit(1);
     }
     nonModularTargets = [];
-  }
-  if (userRegexes.length) {
+  } else if (userRegexes.length) {
+    // Don't calculate any regexes or non-modular targets - only use the user provided regexes
     lintRegexes = [];
     nonModularTargets = [];
   } else {
+    // Compute selected packages or run on all modular & non-modular packages
     let selectedTargets: string[];
 
     if (isSelective) {

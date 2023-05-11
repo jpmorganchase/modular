@@ -77,7 +77,7 @@ describe('When there is a non-Modular package with a build script', () => {
   it('lints non-modular packages', () => {
     const result = runModularPipeLogs(
       tempModularRepo,
-      'lint --packages non-modular-lintable --verbose',
+      'lint non-modular-lintable --verbose',
     );
     expect(result.stderr).toBeFalsy();
     expect(result.stdout).toContain(
