@@ -74,9 +74,9 @@ describe('when working with a NODE_ENV app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'node-env-app')))
       .toMatchInlineSnapshot(`
       "node-env-app
-      ├─ asset-manifest.json #v9meuo
+      ├─ asset-manifest.json #5npfrr
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #1d9ei2j
+      ├─ index.html #9j6678
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -84,8 +84,8 @@ describe('when working with a NODE_ENV app', () => {
       ├─ robots.txt #1sjb8b3
       └─ static
          └─ js
-            ├─ main.6f2657b7.js #14cwcdk
-            ├─ main.6f2657b7.js.map #1ijkx7g
+            ├─ main.a482480b.js #1xwb1v
+            ├─ main.a482480b.js.map #wh4kdy
             ├─ runtime-main.97707f9d.js #15lezt9
             └─ runtime-main.97707f9d.js.map #1qz5n9i"
     `);
@@ -129,9 +129,9 @@ describe('When working with a npm scoped app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'scoped-sample-app')))
       .toMatchInlineSnapshot(`
       "scoped-sample-app
-      ├─ asset-manifest.json #osrpxq
+      ├─ asset-manifest.json #1uspk39
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #8djvlp
+      ├─ index.html #ysfmfn
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -145,8 +145,8 @@ describe('When working with a npm scoped app', () => {
          │  ├─ 316.74c894ba.js #euj72k
          │  ├─ 316.74c894ba.js.LICENSE.txt #eplx8h
          │  ├─ 316.74c894ba.js.map #3k9wqz
-         │  ├─ main.3eba3908.js #1mufyu1
-         │  ├─ main.3eba3908.js.map #10d5xfb
+         │  ├─ main.b44531b6.js #16ahtqz
+         │  ├─ main.b44531b6.js.map #n69bgw
          │  ├─ runtime-main.de012fdc.js #1qz643h
          │  └─ runtime-main.de012fdc.js.map #v3az36
          └─ media
@@ -347,9 +347,9 @@ describe('when working with a non-scoped app', () => {
     expect(tree(path.join(modularRoot, 'dist', 'sample-app')))
       .toMatchInlineSnapshot(`
       "sample-app
-      ├─ asset-manifest.json #1ivbfl8
+      ├─ asset-manifest.json #620pei
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #b10qpi
+      ├─ index.html #1vp7lky
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -363,8 +363,8 @@ describe('when working with a non-scoped app', () => {
          │  ├─ 316.394ef80b.js #1mv4xg9
          │  ├─ 316.394ef80b.js.LICENSE.txt #eplx8h
          │  ├─ 316.394ef80b.js.map #o90ydx
-         │  ├─ main.b81fd1ea.js #14cglcq
-         │  ├─ main.b81fd1ea.js.map #11ani0i
+         │  ├─ main.abe6afa1.js #t9np46
+         │  ├─ main.abe6afa1.js.map #15q2td3
          │  ├─ runtime-main.e92969dd.js #1is98ey
          │  └─ runtime-main.e92969dd.js.map #xx7n2r
          └─ media
@@ -587,9 +587,9 @@ describe('When working with an app added in a custom directory', () => {
     expect(tree(path.join(modularRoot, 'dist', 'scoped-custom-app')))
       .toMatchInlineSnapshot(`
       "scoped-custom-app
-      ├─ asset-manifest.json #19ivj4q
+      ├─ asset-manifest.json #dvvkwh
       ├─ favicon.ico #6pu3rg
-      ├─ index.html #1n7abt0
+      ├─ index.html #6iz8a6
       ├─ logo192.png #1nez7vk
       ├─ logo512.png #1hwqvcc
       ├─ manifest.json #19gah8o
@@ -603,8 +603,8 @@ describe('When working with an app added in a custom directory', () => {
          │  ├─ 350.44eb2511.js #4ubhrm
          │  ├─ 350.44eb2511.js.LICENSE.txt #eplx8h
          │  ├─ 350.44eb2511.js.map #1yro3n5
-         │  ├─ main.a1b87a25.js #1utnqo4
-         │  ├─ main.a1b87a25.js.map #1rmuwc1
+         │  ├─ main.fba21b67.js #16haxht
+         │  ├─ main.fba21b67.js.map #1tgakei
          │  ├─ runtime-main.cef70e6c.js #1f77948
          │  └─ runtime-main.cef70e6c.js.map #6vl4pa
          └─ media
