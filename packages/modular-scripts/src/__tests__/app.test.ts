@@ -100,12 +100,12 @@ describe('when working with a NODE_ENV app', () => {
               'node-env-app',
               'static',
               'js',
-              'main.6f2657b7.js',
+              'main.97707f9d.js',
             ),
           ),
         ),
         {
-          filepath: 'main.6f2657b7.js',
+          filepath: 'main.97707f9d.js',
         },
       ),
     ).toMatchSnapshot();
@@ -144,7 +144,7 @@ describe('When working with a npm scoped app', () => {
          │  ├─ 316.74c894ba.js.LICENSE.txt #eplx8h
          │  ├─ 316.74c894ba.js.map #3k9wqz
          │  ├─ main.b44531b6.js #16ahtqz
-         │  ├─ main.b44531b6.js.map #n69bgw
+         │  ├─ main.b44531b6.js.map #10tofk7
          │  ├─ runtime-main.de012fdc.js #1qz643h
          │  └─ runtime-main.de012fdc.js.map #v3az36
          └─ media
@@ -244,12 +244,12 @@ describe('When working with a npm scoped app', () => {
               'scoped-sample-app',
               'static',
               'js',
-              'main.3eba3908.js',
+              'main.b44531b6.js',
             ),
           ),
         ),
         {
-          filepath: 'main.3eba3908.js',
+          filepath: 'main.b44531b6.js',
         },
       ),
     ).toMatchSnapshot();
@@ -362,7 +362,7 @@ describe('when working with a non-scoped app', () => {
          │  ├─ 316.394ef80b.js.LICENSE.txt #eplx8h
          │  ├─ 316.394ef80b.js.map #o90ydx
          │  ├─ main.abe6afa1.js #t9np46
-         │  ├─ main.abe6afa1.js.map #15q2td3
+         │  ├─ main.abe6afa1.js.map #19l0z09
          │  ├─ runtime-main.e92969dd.js #1is98ey
          │  └─ runtime-main.e92969dd.js.map #xx7n2r
          └─ media
@@ -432,12 +432,12 @@ describe('when working with a non-scoped app', () => {
               'sample-app',
               'static',
               'js',
-              'main.b81fd1ea.js',
+              'main.abe6afa1.js',
             ),
           ),
         ),
         {
-          filepath: 'main.b81fd1ea.js',
+          filepath: 'main.abe6afa1.js',
         },
       ),
     ).toMatchSnapshot();
@@ -602,7 +602,7 @@ describe('When working with an app added in a custom directory', () => {
          │  ├─ 350.44eb2511.js.LICENSE.txt #eplx8h
          │  ├─ 350.44eb2511.js.map #1yro3n5
          │  ├─ main.fba21b67.js #16haxht
-         │  ├─ main.fba21b67.js.map #1tgakei
+         │  ├─ main.fba21b67.js.map #bpgpf7
          │  ├─ runtime-main.cef70e6c.js #1f77948
          │  └─ runtime-main.cef70e6c.js.map #6vl4pa
          └─ media
@@ -702,12 +702,12 @@ describe('When working with an app added in a custom directory', () => {
               'scoped-custom-app',
               'static',
               'js',
-              'main.a1b87a25.js',
+              'main.fba21b67.js',
             ),
           ),
         ),
         {
-          filepath: 'main.a1b87a25.js',
+          filepath: 'main.fba21b67.js',
         },
       ),
     ).toMatchSnapshot();
