@@ -1,13 +1,12 @@
 import builtinModules from 'builtin-modules';
 import TerserPlugin from 'terser-webpack-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+import { WebpackConfiguration } from 'webpack-dev-server';
 import ModuleScopePlugin from '../../plugins/ModuleScopePlugin';
 import getCSSModuleLocalIdent from '../../utils/getCSSModuleLocalIdent';
 import createStyleLoadersConfig from './styleLoadersConfig';
-import type { Paths } from '../../../common-scripts/determineTargetPaths';
 import { Modules } from '../modules';
-import { WebpackConfiguration } from 'webpack-dev-server';
-
+import type { Paths } from '../../../common-scripts/determineTargetPaths';
 const reactRefreshOverlayEntry = require.resolve(
   '../../utils/refreshOverlayInterop',
 );
@@ -30,7 +29,7 @@ export default function createBaseConfig(
   modules: Modules,
   shouldUseSourceMap: boolean,
   esbuildTargetFactory: string[],
-  dependencyMap: Map<string, string>,
+  importSet: Set<string>,
 ): WebpackConfiguration {
   const isEnvDevelopment = !isEnvProduction;
   const isEsmView = !isApp;
@@ -224,7 +223,7 @@ export default function createBaseConfig(
                     : isEnvDevelopment,
                 },
                 includeEsmLoader: isEsmView,
-                dependencyMap,
+                importSet,
                 isEnvProduction,
                 shouldUseSourceMap,
                 paths,
@@ -250,7 +249,7 @@ export default function createBaseConfig(
                     getLocalIdent: getCSSModuleLocalIdent,
                   },
                 },
-                dependencyMap,
+                importSet,
                 isEnvProduction,
                 shouldUseSourceMap,
                 paths,
@@ -270,7 +269,7 @@ export default function createBaseConfig(
                     : isEnvDevelopment,
                 },
                 preProcessor: require.resolve('sass-loader'),
-                dependencyMap,
+                importSet,
                 isEnvProduction,
                 shouldUseSourceMap,
                 paths,
@@ -296,7 +295,7 @@ export default function createBaseConfig(
                   },
                 },
                 preProcessor: require.resolve('sass-loader'),
-                dependencyMap,
+                importSet,
                 isEnvProduction,
                 shouldUseSourceMap,
                 paths,

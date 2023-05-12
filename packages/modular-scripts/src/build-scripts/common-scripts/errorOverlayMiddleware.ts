@@ -1,5 +1,5 @@
-import launchEditor from './launchEditor';
 import * as express from 'express';
+import launchEditor from './launchEditor';
 
 export default function createLaunchEditorMiddleware() {
   return function launchEditorMiddleware(

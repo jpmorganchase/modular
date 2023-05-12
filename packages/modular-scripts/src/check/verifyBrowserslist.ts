@@ -1,14 +1,12 @@
+import * as path from 'path';
 import browserslist from 'browserslist';
 import chalk from 'chalk';
 import * as fs from 'fs-extra';
-import * as path from 'path';
 import prompts from 'prompts';
-
 import * as logger from '../utils/logger';
 import getModularRoot from '../utils/getModularRoot';
 import getWorkspaceInfo from '../utils/getWorkspaceInfo';
 import { defaultBrowsers } from '../utils/checkBrowsers';
-
 import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
 export async function check(target?: string): Promise<boolean> {

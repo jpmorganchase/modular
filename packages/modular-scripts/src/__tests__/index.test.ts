@@ -1,9 +1,9 @@
-import execa from 'execa';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import path from 'path';
+import execa from 'execa';
 import _rimraf from 'rimraf';
 import tree from 'tree-view-for-tests';
-import path from 'path';
 import fs from 'fs-extra';
 import {
   getDocument,
@@ -11,10 +11,8 @@ import {
   queries,
 } from 'pptr-testing-library';
 import puppeteer from 'puppeteer';
-
 import getModularRoot from '../utils/getModularRoot';
-import { startApp, DevServer } from './start-app';
-
+import { DevServer, startApp } from './start-app';
 import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
 const rimraf = promisify(_rimraf);
@@ -99,7 +97,7 @@ describe('modular-scripts', () => {
         ├─ package.json
         └─ src
            ├─ __tests__
-           │  └─ index.test.tsx #1ul24q9
+           │  └─ index.test.tsx #quteu1
            └─ index.tsx #19kersg"
       `);
     });
@@ -207,6 +205,9 @@ describe('modular-scripts', () => {
         {
           "dependencies": {
             "react": "17.0.2",
+          },
+          "engines": {
+            "node": "^14.18.0 || >=16.10.0 || >=18.0.0",
           },
           "files": [
             "dist-cjs",
@@ -360,6 +361,9 @@ describe('modular-scripts', () => {
       ).toMatchInlineSnapshot(`
         {
           "dependencies": {},
+          "engines": {
+            "node": "^14.18.0 || >=16.10.0 || >=18.0.0",
+          },
           "files": [
             "dist-cjs",
             "dist-es",
@@ -441,6 +445,9 @@ describe('modular-scripts', () => {
       ).toMatchInlineSnapshot(`
         {
           "dependencies": {},
+          "engines": {
+            "node": "^14.18.0 || >=16.10.0 || >=18.0.0",
+          },
           "files": [
             "dist-cjs",
             "dist-es",

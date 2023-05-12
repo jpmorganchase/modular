@@ -15,7 +15,9 @@ To convert the package into a template, make the following changes to the
 package's package.json:
 
 - Change `modular.type` field to `"template"`
-- Add `modular.templateType` with the desired target package type
+- Optionally add `modular.templateType` with the desired target package type. If
+  `modular.templateType` is not present, the target package will not have a
+  `modular` field in its `packages.json`.
 
 Example configuration for a template that generates `esm-view`s.
 

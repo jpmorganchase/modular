@@ -59,6 +59,15 @@ empty, Modular will write a message to `stdout` and exit with code `0`.
 
 ### Modular-specific options
 
+`--bypass`: Bypass Modular selective behaviour and flags, and send all provided
+flags and options directly to the Jest process with Modular configuration.
+Useful when running `modular test` from IntelliJ.
+
+`--swc`: Use the [@swc/jest](https://swc.rs/docs/usage/jest) test runner instead
+of babel + ts-jest. Brings significant performance improvements, but ignores
+ts-config in favour of its own configuration file,
+[.swcrc](https://swc.rs/docs/configuration/swcrc).
+
 `--ancestors`: Take the packages specified by the user via arguments or options
 and add their ancestors (i.e. the packages that have a direct or indirect
 dependency on them) to the test list.
@@ -92,6 +101,21 @@ underlying Jest process.
 
 `modular test` additionally supports passing
 [Jest CLI options](https://jestjs.io/docs/cli) to the underlying Jest process.
+
+## Configuring IntelliJ
+
+IntelliJ and `modular test` aren't compatible out of the box. To make it work,
+modify the IntelliJ test configuration to use `modular test` with the `--bypass`
+flag.
+
+The following is an example IntelliJ Jest configuration that uses
+`modular test`:
+
+- Jest package: `absolute_repo_path/node_modules/modular_scripts`
+
+- Working directory: `absolute_repo_path/`
+
+- Jest options: `test --bypass`
 
 ## Escape Hatches
 

@@ -1,6 +1,6 @@
+import { promisify } from 'util';
 import * as fs from 'fs-extra';
 import * as tmp from 'tmp';
-import { promisify } from 'util';
 import getModularRoot, { findModularRoot } from '../utils/getModularRoot';
 const mktempd = promisify(tmp.dir);
 

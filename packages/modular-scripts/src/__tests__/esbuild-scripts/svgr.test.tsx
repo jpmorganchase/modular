@@ -1,5 +1,5 @@
-import * as esbuild from 'esbuild';
 import * as path from 'path';
+import * as esbuild from 'esbuild';
 import * as fs from 'fs-extra';
 import * as tmp from 'tmp';
 import tree from 'tree-view-for-tests';

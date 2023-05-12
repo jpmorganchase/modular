@@ -1,6 +1,6 @@
 {
   "name": "modular-template-view",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "exports": {
     "./package.json": "./package.json"
   },
@@ -9,6 +9,9 @@
   "modular": {
     "type": "template",
     "templateType": "view"
+  },
+  "eslintConfig": {
+    "extends": "modular-app/recommended"
   },
   "files": [
     "src"

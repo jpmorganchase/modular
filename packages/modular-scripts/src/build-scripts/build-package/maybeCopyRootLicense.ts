@@ -1,5 +1,5 @@
-import * as fs from 'fs-extra';
 import * as path from 'path';
+import * as fs from 'fs-extra';
 import globby from 'globby';
 import getPrefixedLogger from '../../utils/getPrefixedLogger';
 import getModularRoot from '../../utils/getModularRoot';

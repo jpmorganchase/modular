@@ -1,10 +1,6 @@
-import chalk from 'chalk';
-import fs from 'fs-extra';
 import path from 'path';
-import type {
-  ModularPackageJson,
-  ModularType,
-} from '@modular-scripts/modular-types';
+import fs from 'fs-extra';
+import chalk from 'chalk';
 import * as logger from '../utils/logger';
 import getWorkspaceLocation from '../utils/getLocation';
 import determineTargetPaths from './common-scripts/determineTargetPaths';
@@ -13,10 +9,10 @@ import { Asset, printFileSizesAfterBuild } from './fileSizeReporter';
 import { checkBrowsers } from '../utils/checkBrowsers';
 import checkRequiredFiles from '../utils/checkRequiredFiles';
 import createEsbuildBrowserslistTarget from './common-scripts/createEsbuildBrowserslistTarget';
-import { writeOutputIndexFiles, getEntryPoint } from './esbuild-scripts/api';
+import { getEntryPoint, writeOutputIndexFiles } from './esbuild-scripts/api';
 import {
-  webpackMeasureFileSizesBeforeBuild,
   createWebpackAssets,
+  webpackMeasureFileSizesBeforeBuild,
 } from './webpackFileSizeReporter';
 import {
   createEsbuildAssets,
@@ -26,6 +22,11 @@ import { getDependencyInfo } from '../utils/getDependencyInfo';
 import { isReactNewApi } from '../utils/isReactNewApi';
 import { getConfig } from '../utils/config';
 import buildWebpack from './webpack-scripts/buildWebpack';
+import getModularRoot from '../utils/getModularRoot';
+import type {
+  ModularPackageJson,
+  ModularType,
+} from '@modular-scripts/modular-types';
 
 export async function buildStandalone(
   target: string,
@@ -74,7 +75,7 @@ export async function buildStandalone(
 
   // Retrieve dependency info for target to inform the build process
   const {
-    importMap,
+    importInfo,
     styleImports,
     packageDependencies,
     bundledDependencies,
@@ -115,7 +116,7 @@ export async function buildStandalone(
     const { default: buildEsbuildApp } = await import(
       './esbuild-scripts/build'
     );
-    const result = await buildEsbuildApp(target, paths, importMap, type);
+    const result = await buildEsbuildApp(target, paths, importInfo, type);
     jsEntryPoint = getEntryPoint(paths, result, '.js');
     cssEntryPoint = getEntryPoint(paths, result, '.css');
     assets = createEsbuildAssets(result);
@@ -125,9 +126,10 @@ export async function buildStandalone(
     // so --preserve-modules has no effect here
 
     const stats = await buildWebpack(
+      target,
       esbuildTargetFactory,
       isApp,
-      importMap,
+      importInfo,
       useReactCreateRoot,
       styleImports,
       paths,
@@ -166,7 +168,7 @@ export async function buildStandalone(
       cssEntryPoint,
       jsEntryPoint,
       styleImports,
-      importMap,
+      importInfo,
       modularType: type,
       externalResolutions,
     });
@@ -176,6 +178,11 @@ export async function buildStandalone(
   const targetPackageJson = (await fs.readJSON(
     path.join(targetDirectory, 'package.json'),
   )) as ModularPackageJson;
+
+  const rootPackageJson = (await fs.readJSON(
+    path.join(getModularRoot(), 'package.json'),
+  )) as ModularPackageJson;
+
   // Copy selected fields of package.json over
   await fs.writeJson(
     path.join(paths.appBuild, 'package.json'),
@@ -191,6 +198,7 @@ export async function buildStandalone(
       module: jsEntryPoint ? paths.publicUrlOrPath + jsEntryPoint : undefined,
       style: cssEntryPoint ? paths.publicUrlOrPath + cssEntryPoint : undefined,
       styleImports: styleImports?.size ? [...styleImports] : undefined,
+      engines: targetPackageJson.engines ?? rootPackageJson.engines,
     },
     { spaces: 2 },
   );

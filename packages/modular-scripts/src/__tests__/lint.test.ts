@@ -1,11 +1,10 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
-
 import execa from 'execa';
 import {
   createModularTestContext,
-  runYarnModular,
   runModularPipeLogs,
+  runYarnModular,
 } from '../test/utils';
 import getModularRoot from '../utils/getModularRoot';
 

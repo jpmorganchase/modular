@@ -1,11 +1,10 @@
+import * as path from 'path';
 import { paramCase as toParamCase } from 'change-case';
 import fs from 'fs-extra';
-import * as path from 'path';
-
+import globby from 'globby';
 import getPublicUrlOrPath from './getPublicUrlOrPath';
 import getModularRoot from '../../utils/getModularRoot';
 import { getConfig } from '../../utils/config';
-import globby from 'globby';
 export interface Paths {
   modularRoot: string;
   publicUrlOrPath: string;

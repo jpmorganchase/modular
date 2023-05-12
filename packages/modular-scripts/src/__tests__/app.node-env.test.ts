@@ -1,15 +1,15 @@
-import tree from 'tree-view-for-tests';
 import path from 'path';
+import tree from 'tree-view-for-tests';
 import fs from 'fs-extra';
 import prettier from 'prettier';
+import rimraf from 'rimraf';
+import execa from 'execa';
 import {
   createModularTestContext,
   mockInstallTemplate,
   runModularForTests,
 } from '../test/utils';
 import getModularRoot from '../utils/getModularRoot';
-import rimraf from 'rimraf';
-import execa from 'execa';
 
 // These tests must be executed sequentially with `--runInBand`.
 

@@ -1,17 +1,15 @@
+import path from 'path';
 import execa from 'execa';
 import tree from 'tree-view-for-tests';
-import path from 'path';
 import fs from 'fs-extra';
-
 import {
   addFixturePackage,
   cleanup,
-  runModularForTests,
   createModularTestContext,
-  runModularPipeLogs,
+  runModularForTests,
   runModularForTestsAsync,
+  runModularPipeLogs,
 } from '../test/utils';
-
 import getModularRoot from '../utils/getModularRoot';
 
 const modularRoot = getModularRoot();
@@ -35,6 +33,9 @@ describe('WHEN building with preserve modules', () => {
     ).toMatchInlineSnapshot(`
       {
         "dependencies": {},
+        "engines": {
+          "node": "^14.18.0 || >=16.10.0 || >=18.0.0",
+        },
         "files": [
           "dist-cjs",
           "dist-es",

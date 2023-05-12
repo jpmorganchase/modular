@@ -5,9 +5,9 @@
 /* eslint-disable testing-library/prefer-screen-queries */
 
 import path from 'path';
+import { spawn } from 'child_process';
 import puppeteer from 'puppeteer';
 import { getDocument, queries, waitFor } from 'pptr-testing-library';
-import { spawn } from 'child_process';
 
 const controller = new AbortController();
 

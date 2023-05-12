@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { MyErrorBoundary } from './my-error-boundary';
 import { RemoteView, RemoteViewProvider } from '@modular-scripts/remote-view';
 import { H2, Text } from '@salt-ds/core';
 import { Spinner } from '@salt-ds/lab';
+import { MyErrorBoundary } from './my-error-boundary';
 
 export function CustomErrorBoundaryExample() {
   const [badView] = useState('http://localhost:8484/this-view-will-404');

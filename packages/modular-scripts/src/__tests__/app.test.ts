@@ -1,25 +1,23 @@
 /**
  * @jest-environment jsdom
  */
-import execa from 'execa';
 import { exec } from 'child_process';
+import path from 'path';
+import execa from 'execa';
 import rimraf from 'rimraf';
 import tree from 'tree-view-for-tests';
-import path from 'path';
 import fs from 'fs-extra';
 import prettier from 'prettier';
-
 import {
   getDocument,
   getQueriesForElement,
   queries,
 } from 'pptr-testing-library';
-import getModularRoot from '../utils/getModularRoot';
 import puppeteer from 'puppeteer';
-
-import { startApp, DevServer } from './start-app';
+import getModularRoot from '../utils/getModularRoot';
+import { DevServer, startApp } from './start-app';
+import { runModularForTests, runYarnModular } from '../test/utils';
 import type { CoreProperties } from '@schemastore/package';
-import { runYarnModular, runModularForTests } from '../test/utils';
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
 const { getNodeText } = queries;
@@ -336,7 +334,7 @@ describe('when working with a non-scoped app', () => {
       │  ├─ __tests__
       │  │  └─ App.test.tsx #1u72nad
       │  ├─ index.css #o7sk21
-      │  ├─ index.tsx #zdn6mw
+      │  ├─ index.tsx #18e4z12
       │  ├─ logo.svg #1okqmlj
       │  └─ react-app-env.d.ts #t4ygcy
       └─ tsconfig.json #6rw46b"

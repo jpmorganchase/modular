@@ -1,13 +1,13 @@
-import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 import * as path from 'path';
+import { ComponentType, LazyExoticComponent } from 'react';
 import fs from 'fs-extra';
 import findUp from 'find-up';
 import * as Babel from '@babel/core';
 import { ImportDeclaration, Program, Statement } from '@babel/types';
 import { default as _template } from '@babel/template';
 import { createMacro, MacroHandler } from 'babel-plugin-macros';
-import { LazyExoticComponent, ComponentType } from 'react';
 import execa from 'execa';
+import type { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
 
 type PackageType = 'app' | 'view' | 'root' | 'package';
 

@@ -1,8 +1,8 @@
 'use strict';
 
-const chalk = require('chalk');
 const path = require('path');
 const os = require('os');
+const chalk = require('chalk');
 
 class ModuleScopePlugin {
   constructor(appSrc, allowedFiles = []) {

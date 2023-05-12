@@ -1,5 +1,5 @@
-import { cosmiconfigSync } from 'cosmiconfig';
 import path from 'path';
+import { cosmiconfigSync } from 'cosmiconfig';
 import getModularRoot from './getModularRoot';
 import * as logger from './logger';
 const modularRoot = getModularRoot();

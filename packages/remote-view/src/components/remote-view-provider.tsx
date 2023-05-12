@@ -1,15 +1,14 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ErrorContext, ViewsContext } from '../context';
 import { RemoteViewError } from '../utils/remoteViewError';
 import { dynamicallyImport } from '../utils/dynamicallyImport';
-
+import { loading } from '../utils/symbol';
 import type {
   ManifestCheck,
   RemoteViewErrorsContext,
   RemoteViewsContext,
 } from '../types';
 import type { MicrofrontendManifest } from '@modular-scripts/modular-types';
-import { loading } from '../utils/symbol';
 
 interface Props {
   children: React.ReactNode;

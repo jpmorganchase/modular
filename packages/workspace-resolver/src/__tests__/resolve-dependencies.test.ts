@@ -1,11 +1,10 @@
 import {
-  traverseWorkspaceRelations,
-  invertDependencyDirection,
   computeAncestorSet,
-  computeDescendantSet,
   computeAncestorWorkspaces,
+  computeDescendantSet,
+  invertDependencyDirection,
+  traverseWorkspaceRelations,
 } from '../resolve-dependencies';
-
 import type {
   ModularWorkspacePackage,
   WorkspaceContent,

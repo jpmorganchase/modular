@@ -2,11 +2,9 @@ import * as path from 'path';
 import * as ts from 'typescript';
 import * as fse from 'fs-extra';
 import memoize from '../utils/memoize';
-
 import getModularRoot from '../utils/getModularRoot';
 import { getAllWorkspaces } from '../utils/getAllWorkspaces';
 import { reportTSDiagnostics } from './reportTSDiagnostics';
-
 import type { JSONSchemaForTheTypeScriptCompilerSConfigurationFile as TSConfig } from '@schemastore/tsconfig';
 import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
@@ -33,6 +31,9 @@ async function getPackageMetadata() {
   // dependencies defined at the root
   const rootPackageJsonDependencies = rootPackageJson.dependencies || {};
 
+  // engines defined at the root
+  const rootPackageJsonEngines = rootPackageJson.engines;
+
   // let's populate the above three
   const [workspaces] = await getAllWorkspaces();
 
@@ -45,6 +46,10 @@ async function getPackageMetadata() {
 
   Array.from(workspaces).forEach(([packageName, workspace]) => {
     packageJsons[packageName] = workspace.rawPackageJson;
+    if (!packageJsons[packageName].engines) {
+      // If engines field is not defined in the package's package.json, inherit it from the root package.json
+      packageJsons[packageName].engines = rootPackageJsonEngines;
+    }
     packageJsonsByPackagePath[workspace.location] = workspace.rawPackageJson;
   });
 
@@ -106,6 +111,7 @@ async function getPackageMetadata() {
     packageNames,
     rootPackageWorkspaceDefinitions,
     rootPackageJsonDependencies,
+    rootPackageJsonEngines,
     packageJsons,
     typescriptConfig,
     packageJsonsByPackagePath,

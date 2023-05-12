@@ -1,9 +1,8 @@
 import fs from 'fs';
 import path from 'path';
-import selfsigned from 'selfsigned';
 import { promisify } from 'util';
+import selfsigned from 'selfsigned';
 import rimraf from 'rimraf';
-
 import * as logger from '../../../utils/logger';
 
 const del = promisify(rimraf);

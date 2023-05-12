@@ -96,6 +96,12 @@ is passed to `modular add`:
 }
 ```
 
+## Templates for non-Modular packages
+
+If `modular.templateType` is not set in the template package, the target package
+will not have a `modular` field at all. This is useful to create non-Modular
+templates which have their own configuration and scripts.
+
 ## Template contents and interpolation
 
 All the files contained in the template package (optionally filtered by the

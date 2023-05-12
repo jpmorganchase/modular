@@ -1,10 +1,9 @@
-import isCi from 'is-ci';
 import * as path from 'path';
+import isCi from 'is-ci';
 import * as esbuild from 'esbuild';
 import builtinModules from 'builtin-modules';
 import getClientEnvironment from '../../common-scripts/getClientEnvironment';
 import * as logger from '../../../utils/logger';
-
 import moduleScopePlugin from '../plugins/moduleScopePlugin';
 import svgrPlugin from '../plugins/svgr';
 import workerFactoryPlugin from '../plugins/workerFactoryPlugin';

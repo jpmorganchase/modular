@@ -1,13 +1,12 @@
-import * as fs from 'fs-extra';
 import path from 'path';
+import * as fs from 'fs-extra';
+import globby from 'globby';
 import chalk from 'chalk';
 import isCi from 'is-ci';
-import globby from 'globby';
-import type { Config } from '@jest/types';
 import { defaults } from 'jest-config';
 import getModularRoot from '../utils/getModularRoot';
-
 import type { ModularPackageJson } from '@modular-scripts/modular-types';
+import type { Config } from '@jest/types';
 
 // This list may change as we learn of options where flexibility would be valuable.
 // Based on react-scripts supported override options
@@ -29,7 +28,7 @@ type SetUpFilesMap = {
   setupFilesAfterEnv: string;
 };
 
-const modulularSetUpFilesMap: SetUpFilesMap = {
+const modularSetUpFilesMap: SetUpFilesMap = {
   setupFiles: 'setupEnvironment',
   setupFilesAfterEnv: 'setupTests',
 };
@@ -41,6 +40,7 @@ interface TestCliOptions {
 
 export function createJestConfig(
   cliOptions: TestCliOptions,
+  swc: boolean,
 ): Config.InitialOptions {
   const modularRoot = getModularRoot();
   const absolutePackagesPath = path.resolve(modularRoot, 'packages');
@@ -51,24 +51,62 @@ export function createJestConfig(
     ...cliOptions,
     displayName: 'test',
     resetMocks: false,
-    transform: {
-      '^.+\\.(js|jsx|mjs|cjs)$': [
-        require.resolve('babel-jest'),
-        {
-          presets: [require.resolve('babel-preset-react-app')],
+    transform: swc
+      ? {
+          '^.+\\.(js|jsx|mjs|cjs)$': require.resolve('@swc/jest'),
+          '^.+\\.(ts|tsx)$': [
+            require.resolve('@swc/jest'),
+            // Pass a swc configuration that closely matches our ts-config
+            {
+              $schema: 'https://json.schemastore.org/swcrc',
+              sourceMaps: true,
+              module: { type: 'commonjs', strictMode: true, noInterop: false },
+              jsc: {
+                externalHelpers: false,
+                target: 'es2016',
+                parser: {
+                  syntax: 'typescript',
+                  tsx: true,
+                  decorators: false,
+                  dynamicImport: true,
+                },
+                transform: {
+                  legacyDecorator: true,
+                  decoratorMetadata: false,
+                  react: {
+                    throwIfNamespace: false,
+                    useBuiltins: false,
+                    pragma: 'React.createElement',
+                    pragmaFrag: 'React.Fragment',
+                  },
+                },
+                keepClassNames: true,
+              },
+            },
+          ],
+          '^.+\\.(css|scss)$': require.resolve('jest-transform-stub'),
+          '.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
+            require.resolve('jest-transform-stub'),
+        }
+      : {
+          // If SWC flag isn't passed, use ts-jest and babel instead, for ts and js respectively
+          // don't typecheck tests in CI
+          '^.+\\.(ts|tsx)$': isCi
+            ? [
+                require.resolve('ts-jest'),
+                { diagnostics: false, isolatedModules: true },
+              ]
+            : require.resolve('ts-jest'),
+          '^.+\\.(js|jsx|mjs|cjs)$': [
+            require.resolve('babel-jest'),
+            {
+              presets: [require.resolve('babel-preset-react-app')],
+            },
+          ],
+          '^.+\\.(css|scss)$': require.resolve('jest-transform-stub'),
+          '.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
+            require.resolve('jest-transform-stub'),
         },
-      ],
-      // don't typecheck tests in CI
-      '^.+\\.(ts|tsx)$': isCi
-        ? [
-            require.resolve('ts-jest'),
-            { diagnostics: false, isolatedModules: true },
-          ]
-        : require.resolve('ts-jest'),
-      '^.+\\.(css|scss)$': require.resolve('jest-transform-stub'),
-      '.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
-        require.resolve('jest-transform-stub'),
-    },
     transformIgnorePatterns: [
       '[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$',
       '^.+\\.module\\.(css|sass|scss)$',
@@ -168,7 +206,7 @@ export function createJestConfig(
                 chalk.bold(
                   '  \u2022 ' +
                     key +
-                    `: modular/${modulularSetUpFilesMap[key]}.{js,ts}`,
+                    `: modular/${modularSetUpFilesMap[key]}.{js,ts}`,
                 ),
               )
               .join('\n'),

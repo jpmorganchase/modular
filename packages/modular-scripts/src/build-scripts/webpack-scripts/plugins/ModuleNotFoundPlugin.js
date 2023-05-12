@@ -1,8 +1,8 @@
 'use strict';
 
+const path = require('path');
 const chalk = require('chalk');
 const findUp = require('find-up');
-const path = require('path');
 
 class ModuleNotFoundPlugin {
   constructor(appPath, yarnLockFile) {

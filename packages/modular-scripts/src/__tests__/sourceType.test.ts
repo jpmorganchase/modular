@@ -1,7 +1,6 @@
-import execa from 'execa';
 import path from 'path';
+import execa from 'execa';
 import fs from 'fs-extra';
-
 import getModularRoot from '../utils/getModularRoot';
 import { createModularTestContext, runModularPipeLogs } from '../test/utils';
 

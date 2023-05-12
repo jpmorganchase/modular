@@ -1,8 +1,10 @@
-import * as fs from 'fs-extra';
 import * as path from 'path';
+import * as fs from 'fs-extra';
 import validate from 'validate-npm-package-name';
 import { pascalCase as toPascalCase } from 'change-case';
 import prompts from 'prompts';
+import packlist from 'npm-packlist';
+import Arborist from '@npmcli/arborist';
 import getModularRoot from './utils/getModularRoot';
 import execAsync from './utils/execAsync';
 import * as logger from './utils/logger';
@@ -12,9 +14,6 @@ import LineFilterOutStream from './utils/LineFilterOutStream';
 import { parsePackageName } from './utils/parsePackageName';
 import { getWorkspaceInfo } from './utils/getWorkspaceInfo';
 import { isInWorkspaces } from './utils/isInWorkspaces';
-import packlist from 'npm-packlist';
-import Arborist from '@npmcli/arborist';
-
 import type { ModularPackageJson } from '@modular-scripts/modular-types';
 
 const packagesRoot = 'packages';
@@ -178,21 +177,8 @@ async function addPackage({
       yarnAddArgs.push('--cached');
     }
 
-    const templateInstallSubprocess = execAsync('yarnpkg', yarnAddArgs, {
-      cwd: modularRoot,
-      stderr: 'pipe',
-      stdout: 'ignore',
-    });
+    await runYarnCommand(yarnAddArgs, verbose);
 
-    // Remove warnings
-    templateInstallSubprocess.stderr?.pipe(
-      new LineFilterOutStream(/.*warning.*/),
-    );
-    if (verbose) {
-      templateInstallSubprocess.stderr?.pipe(process.stderr);
-    }
-
-    await templateInstallSubprocess;
     templatePackageJsonPath = require.resolve(installedPackageJsonPath, {
       paths: [modularRoot],
     });
@@ -210,14 +196,18 @@ async function addPackage({
   }
 
   const modularTemplateType = modularTemplatePackageJson?.modular
-    ?.templateType as string;
+    ?.templateType as string | undefined;
+
   if (
-    !['app', 'esm-view', 'view', 'source', 'package'].includes(
-      modularTemplateType,
+    !(
+      modularTemplateType === undefined ||
+      ['app', 'esm-view', 'view', 'source', 'package'].includes(
+        modularTemplateType,
+      )
     )
   ) {
     throw new Error(
-      `${templateName} has modular type: ${modularTemplateType}, which does not exist, please use update this template`,
+      `${templateName} has modular type: ${modularTemplateType}, which does not exist, please update this template`,
     );
   }
 
@@ -256,9 +246,11 @@ async function addPackage({
     {
       name,
       private: modularTemplateType === 'app',
-      modular: {
-        type: modularTemplateType,
-      },
+      modular: modularTemplateType
+        ? {
+            type: modularTemplateType,
+          }
+        : undefined,
       main: modularTemplatePackageJson?.main,
       dependencies: modularTemplatePackageJson?.dependencies,
       version: '1.0.0',
@@ -304,6 +296,20 @@ async function addPackage({
   }
 
   await subprocess;
+
+  // Clean up package.json dependencies - the template isn't needed anymore
+  const rootPackageJson = fs.readJSONSync(
+    path.join(modularRoot, 'package.json'),
+  ) as ModularPackageJson;
+
+  if (rootPackageJson.dependencies?.[templateName]) {
+    const removeTemplateArgs = ['remove', templateName];
+    if (isYarnV1) {
+      removeTemplateArgs.push('-W');
+    }
+
+    await runYarnCommand(removeTemplateArgs, verbose);
+  }
 }
 
 function getNewPackageDetails({
@@ -379,6 +385,24 @@ async function validatePackageDetails(
       `Directory "${packagePath}" already exists and it's not empty`,
     );
   }
+}
+
+async function runYarnCommand(args: string[], verbose: boolean) {
+  const templateInstallSubprocess = execAsync('yarnpkg', args, {
+    cwd: getModularRoot(),
+    stderr: 'pipe',
+    stdout: 'ignore',
+  });
+
+  // Remove warnings
+  templateInstallSubprocess.stderr?.pipe(
+    new LineFilterOutStream(/.*warning.*/),
+  );
+  if (verbose) {
+    templateInstallSubprocess.stderr?.pipe(process.stderr);
+  }
+
+  await templateInstallSubprocess;
 }
 
 export default actionPreflightCheck(addPackage);
