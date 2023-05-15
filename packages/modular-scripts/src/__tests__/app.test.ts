@@ -100,12 +100,12 @@ describe('when working with a NODE_ENV app', () => {
               'node-env-app',
               'static',
               'js',
-              'main.97707f9d.js',
+              'main.a482480b.js',
             ),
           ),
         ),
         {
-          filepath: 'main.97707f9d.js',
+          filepath: 'main.a482480b.js',
         },
       ),
     ).toMatchSnapshot();
