@@ -91,7 +91,8 @@ which files have changed when using the `changed` option. If this option is used
 without `changed`, the command will fail.
 
 `--regex <regexes...>`: Select all the test files matching the specified regular
-expressions. Can be combined with all the other selective options.
+expressions. When combined with selective options, it will run all tests
+matching the selective options, and tests that match the regexes provided.
 
 `--verbose`: Activate debug logging. Useful to see which packages have been
 selected and which regular expression and arguments have been passed to the

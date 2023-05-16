@@ -207,7 +207,7 @@ program
   )
   .option(
     '--regex <regexes...>',
-    'Specifies one or more test name regular expression',
+    'Specifies one or more test name regular expression. When combined with selective options, it will run tests matching the regex as well as those matching the selective options',
   )
   .option('--coverage', testOptions.coverage.description)
   .option('--forceExit', testOptions.forceExit.description)
