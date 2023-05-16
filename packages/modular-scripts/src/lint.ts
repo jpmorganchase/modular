@@ -47,7 +47,7 @@ async function lint(
 
   if ((staged || diff || userRegexes.length) && isSelective) {
     logger.error(
-      "Can't specify --staged --diff --regex along with selective options",
+      "Can't specify --staged, --diff or --regex along with selective options",
     );
     process.exit(-1);
   }
