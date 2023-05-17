@@ -121,3 +121,9 @@ _e.g._
 The `package.json#modular.type` can be `"root"`, `"app"`, `"view"`,
 `"esm-view"`, `"source"`, `"template"` or `"package"`. Read more about Modular
 types in [this explainer](/docs/package-types).
+
+## `.modularignore` & `.gitignore`
+
+Modular respects `.gitignore` when identifying workspaces in the repository,
+ignoring any workspaces covered by the repo's `.gitignore`. This behavior can be
+overridden by providing a `.modularignore`.
