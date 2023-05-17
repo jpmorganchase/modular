@@ -1,5 +1,14 @@
 # modular-scripts
 
+## 4.4.1
+
+### Patch Changes
+
+- [#2385](https://github.com/jpmorganchase/modular/pull/2385)
+  [`5ba67bf`](https://github.com/jpmorganchase/modular/commit/5ba67bf81e737bae49c6aa9ee46c36b8986f6127)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Fix esm-views not
+  starting
+
 ## 4.4.0
 
 ### Minor Changes

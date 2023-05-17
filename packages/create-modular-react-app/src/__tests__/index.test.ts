@@ -70,66 +70,7 @@ describe('create-modular-react-app', () => {
     it('Sets up the package.json correctly', async () => {
       expect(
         await readCensoredPackageJson(path.join(destination, 'package.json')),
-      ).toMatchSnapshot(`
-          Object {
-            "author": "?",
-            "browserslist": Object {
-              "development": Array [
-                "last 1 chrome version",
-                "last 1 firefox version",
-                "last 1 safari version",
-              ],
-              "production": Array [
-                ">0.2%",
-                "not dead",
-                "not op_mini all",
-              ],
-            },
-            "dependencies": Object {
-              "@testing-library/dom": "?",
-              "@testing-library/jest-dom": "?",
-              "@testing-library/react": "?",
-              "@testing-library/user-event": "?",
-              "@types/jest": "?",
-              "@types/node": "?",
-              "@types/react": "?",
-              "@types/react-dom": "?",
-              "eslint-config-modular-app": "?",
-              "modular-scripts": "?",
-              "prettier": "?",
-              "react": "?",
-              "react-dom": "?",
-              "typescript": "?",
-            },
-            "eslintConfig": Object {
-              "extends": "modular-app",
-            },
-            "license": "MIT",
-            "main": "index.js",
-            "modular": Object {
-              "type": "root",
-            },
-            "name": "test-repo",
-            "prettier": Object {
-              "printWidth": 80,
-              "proseWrap": "always",
-              "singleQuote": true,
-              "trailingComma": "all",
-            },
-            "private": true,
-            "scripts": Object {
-              "build": "modular build",
-              "lint": "modular lint",
-              "prettier": "prettier --write .",
-              "start": "modular start",
-              "test": "modular test",
-            },
-            "version": "1.0.0",
-            "workspaces": Array [
-              "packages/**",
-            ],
-          }
-        `);
+      ).toMatchSnapshot();
     });
 
     it('Sets up an app package.json correctly', async () => {
@@ -137,18 +78,17 @@ describe('create-modular-react-app', () => {
         await readCensoredPackageJson(
           path.join(destination, 'packages', 'app', 'package.json'),
         ),
-      ).toMatchSnapshot(`
-          Object {
-            "author": "?",
-            "dependencies": Object {},
-            "modular": Object {
-              "type": "app",
-            },
-            "name": "app",
-            "private": true,
-            "version": "0.1.0",
-          }
-        `);
+      ).toMatchInlineSnapshot(`
+        {
+          "author": "?",
+          "modular": {
+            "type": "app",
+          },
+          "name": "app",
+          "private": true,
+          "version": "1.0.0",
+        }
+      `);
     });
   });
 
@@ -168,66 +108,7 @@ describe('create-modular-react-app', () => {
     it('SHOULD setup an package.json correctly', async () => {
       expect(
         await readCensoredPackageJson(path.join(destination, 'package.json')),
-      ).toMatchSnapshot(`
-        Object {
-          "author": "?",
-          "browserslist": Object {
-            "development": Array [
-              "last 1 chrome version",
-              "last 1 firefox version",
-              "last 1 safari version",
-            ],
-            "production": Array [
-              ">0.2%",
-              "not dead",
-              "not op_mini all",
-            ],
-          },
-          "dependencies": Object {
-            "@testing-library/dom": "?",
-            "@testing-library/jest-dom": "?",
-            "@testing-library/react": "?",
-            "@testing-library/user-event": "?",
-            "@types/jest": "?",
-            "@types/node": "?",
-            "@types/react": "?",
-            "@types/react-dom": "?",
-            "eslint-config-modular-app": "?",
-            "modular-scripts": "?",
-            "prettier": "?",
-            "react": "?",
-            "react-dom": "?",
-            "typescript": "?",
-          },
-          "eslintConfig": Object {
-            "extends": "modular-app",
-          },
-          "license": "MIT",
-          "main": "index.js",
-          "modular": Object {
-            "type": "root",
-          },
-          "name": "test-repo",
-          "prettier": Object {
-            "printWidth": 80,
-            "proseWrap": "always",
-            "singleQuote": true,
-            "trailingComma": "all",
-          },
-          "private": true,
-          "scripts": Object {
-            "build": "modular build",
-            "lint": "modular lint",
-            "prettier": "prettier --write .",
-            "start": "modular start",
-            "test": "modular test",
-          },
-          "version": "1.0.0",
-          "workspaces": Array [
-            "packages/**",
-          ],
-        }
-      `);
+      ).toMatchSnapshot();
     });
 
     it('SHOULD setup an app package.json correctly', async () => {
@@ -235,16 +116,15 @@ describe('create-modular-react-app', () => {
         await readCensoredPackageJson(
           path.join(destination, 'packages', 'app', 'package.json'),
         ),
-      ).toMatchSnapshot(`
-        Object {
+      ).toMatchInlineSnapshot(`
+        {
           "author": "?",
-          "dependencies": Object {},
-          "modular": Object {
+          "modular": {
             "type": "app",
           },
           "name": "app",
           "private": true,
-          "version": "0.1.0",
+          "version": "1.0.0",
         }
       `);
     });
