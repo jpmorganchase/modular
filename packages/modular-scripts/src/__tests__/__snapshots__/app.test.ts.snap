@@ -4,13 +4,13 @@ exports[`When working with a npm scoped app can generate a asset-manifest 1`] = 
 "{
   "files": {
     "main.css": "/static/css/main.1a7488ce.css",
-    "main.js": "/static/js/main.3eba3908.js",
+    "main.js": "/static/js/main.b44531b6.js",
     "runtime-main.js": "/static/js/runtime-main.de012fdc.js",
     "static/js/316.74c894ba.js": "/static/js/316.74c894ba.js",
     "static/media/logo.svg": "/static/media/logo.103b5fa18196d5665a7e12318285c916.svg",
     "index.html": "/index.html",
     "main.1a7488ce.css.map": "/static/css/main.1a7488ce.css.map",
-    "main.3eba3908.js.map": "/static/js/main.3eba3908.js.map",
+    "main.b44531b6.js.map": "/static/js/main.b44531b6.js.map",
     "runtime-main.de012fdc.js.map": "/static/js/runtime-main.de012fdc.js.map",
     "316.74c894ba.js.map": "/static/js/316.74c894ba.js.map"
   },
@@ -18,7 +18,7 @@ exports[`When working with a npm scoped app can generate a asset-manifest 1`] = 
     "static/js/runtime-main.de012fdc.js",
     "static/js/316.74c894ba.js",
     "static/css/main.1a7488ce.css",
-    "static/js/main.3eba3908.js"
+    "static/js/main.b44531b6.js"
   ]
 }"
 `;
@@ -146,7 +146,7 @@ exports[`When working with a npm scoped app can generate a hashed main js chunk 
   self.webpackChunk_scoped_sample_app || []).push([
   [179],
   {
-    274: (e, t, a) => {
+    354: (e, t, a) => {
       var r = a(784),
         l = a(316);
       const n = a.p + "static/media/logo.103b5fa18196d5665a7e12318285c916.svg";
@@ -190,13 +190,13 @@ exports[`When working with a npm scoped app can generate a hashed main js chunk 
   },
   (e) => {
     e.O(0, [316], () => {
-      return (t = 274), e((e.s = t));
+      return (t = 354), e((e.s = t));
       var t;
     });
     e.O();
   },
 ]);
-//# sourceMappingURL=main.3eba3908.js.map
+//# sourceMappingURL=main.b44531b6.js.map
 "
 `;
 
@@ -8622,7 +8622,7 @@ exports[`When working with a npm scoped app can generate a index.html 1`] = `
       })();
     </script>
     <script defer="defer" src="/static/js/316.74c894ba.js"></script>
-    <script defer="defer" src="/static/js/main.3eba3908.js"></script>
+    <script defer="defer" src="/static/js/main.b44531b6.js"></script>
     <link href="/static/css/main.1a7488ce.css" rel="stylesheet" />
   </head>
   <body>
@@ -8666,13 +8666,13 @@ exports[`When working with an app added in a custom directory can generate a ass
 "{
   "files": {
     "main.css": "/static/css/main.1a7488ce.css",
-    "main.js": "/static/js/main.a1b87a25.js",
+    "main.js": "/static/js/main.fba21b67.js",
     "runtime-main.js": "/static/js/runtime-main.cef70e6c.js",
     "static/js/350.44eb2511.js": "/static/js/350.44eb2511.js",
     "static/media/logo.svg": "/static/media/logo.103b5fa18196d5665a7e12318285c916.svg",
     "index.html": "/index.html",
     "main.1a7488ce.css.map": "/static/css/main.1a7488ce.css.map",
-    "main.a1b87a25.js.map": "/static/js/main.a1b87a25.js.map",
+    "main.fba21b67.js.map": "/static/js/main.fba21b67.js.map",
     "runtime-main.cef70e6c.js.map": "/static/js/runtime-main.cef70e6c.js.map",
     "350.44eb2511.js.map": "/static/js/350.44eb2511.js.map"
   },
@@ -8680,7 +8680,7 @@ exports[`When working with an app added in a custom directory can generate a ass
     "static/js/runtime-main.cef70e6c.js",
     "static/js/350.44eb2511.js",
     "static/css/main.1a7488ce.css",
-    "static/js/main.a1b87a25.js"
+    "static/js/main.fba21b67.js"
   ]
 }"
 `;
@@ -8808,7 +8808,7 @@ exports[`When working with an app added in a custom directory can generate a has
   self.webpackChunk_scoped_custom_app || []).push([
   [179],
   {
-    192: (e, t, a) => {
+    187: (e, t, a) => {
       var r = a(902),
         c = a(350);
       const l = a.p + "static/media/logo.103b5fa18196d5665a7e12318285c916.svg";
@@ -8852,13 +8852,13 @@ exports[`When working with an app added in a custom directory can generate a has
   },
   (e) => {
     e.O(0, [350], () => {
-      return (t = 192), e((e.s = t));
+      return (t = 187), e((e.s = t));
       var t;
     });
     e.O();
   },
 ]);
-//# sourceMappingURL=main.a1b87a25.js.map
+//# sourceMappingURL=main.fba21b67.js.map
 "
 `;
 
@@ -17284,7 +17284,7 @@ exports[`When working with an app added in a custom directory can generate a ind
       })();
     </script>
     <script defer="defer" src="/static/js/350.44eb2511.js"></script>
-    <script defer="defer" src="/static/js/main.a1b87a25.js"></script>
+    <script defer="defer" src="/static/js/main.fba21b67.js"></script>
     <link href="/static/css/main.1a7488ce.css" rel="stylesheet" />
   </head>
   <body>
@@ -17329,16 +17329,16 @@ exports[`when working with a NODE_ENV app can generate a hashed js chunk in the 
 (self.webpackChunknode_env_app = self.webpackChunknode_env_app || []).push([
   [179],
   {
-    560: () => {
+    908: () => {
       console.log("production");
     },
   },
   (e) => {
     var n;
-    (n = 560), e((e.s = n));
+    (n = 908), e((e.s = n));
   },
 ]);
-//# sourceMappingURL=main.6f2657b7.js.map
+//# sourceMappingURL=main.a482480b.js.map
 "
 `;
 
@@ -17346,13 +17346,13 @@ exports[`when working with a non-scoped app can generate a asset-manifest 1`] = 
 "{
   "files": {
     "main.css": "/static/css/main.1a7488ce.css",
-    "main.js": "/static/js/main.b81fd1ea.js",
+    "main.js": "/static/js/main.abe6afa1.js",
     "runtime-main.js": "/static/js/runtime-main.e92969dd.js",
     "static/js/316.394ef80b.js": "/static/js/316.394ef80b.js",
     "static/media/logo.svg": "/static/media/logo.103b5fa18196d5665a7e12318285c916.svg",
     "index.html": "/index.html",
     "main.1a7488ce.css.map": "/static/css/main.1a7488ce.css.map",
-    "main.b81fd1ea.js.map": "/static/js/main.b81fd1ea.js.map",
+    "main.abe6afa1.js.map": "/static/js/main.abe6afa1.js.map",
     "runtime-main.e92969dd.js.map": "/static/js/runtime-main.e92969dd.js.map",
     "316.394ef80b.js.map": "/static/js/316.394ef80b.js.map"
   },
@@ -17360,7 +17360,7 @@ exports[`when working with a non-scoped app can generate a asset-manifest 1`] = 
     "static/js/runtime-main.e92969dd.js",
     "static/js/316.394ef80b.js",
     "static/css/main.1a7488ce.css",
-    "static/js/main.b81fd1ea.js"
+    "static/js/main.abe6afa1.js"
   ]
 }"
 `;
@@ -17370,7 +17370,7 @@ exports[`when working with a non-scoped app can generate a hashed main js chunk 
 (self.webpackChunksample_app = self.webpackChunksample_app || []).push([
   [179],
   {
-    274: (e, t, a) => {
+    354: (e, t, a) => {
       var r = a(784),
         l = a(316);
       const n = a.p + "static/media/logo.103b5fa18196d5665a7e12318285c916.svg";
@@ -17419,13 +17419,13 @@ exports[`when working with a non-scoped app can generate a hashed main js chunk 
   },
   (e) => {
     e.O(0, [316], () => {
-      return (t = 274), e((e.s = t));
+      return (t = 354), e((e.s = t));
       var t;
     });
     e.O();
   },
 ]);
-//# sourceMappingURL=main.b81fd1ea.js.map
+//# sourceMappingURL=main.abe6afa1.js.map
 "
 `;
 
@@ -25849,7 +25849,7 @@ exports[`when working with a non-scoped app can generate a index.html 1`] = `
       })();
     </script>
     <script defer="defer" src="/static/js/316.394ef80b.js"></script>
-    <script defer="defer" src="/static/js/main.b81fd1ea.js"></script>
+    <script defer="defer" src="/static/js/main.abe6afa1.js"></script>
     <link href="/static/css/main.1a7488ce.css" rel="stylesheet" />
   </head>
   <body>
