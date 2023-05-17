@@ -205,6 +205,65 @@ describe('modular working with an esm-view', () => {
     });
   });
 
+  describe('WHEN starting a esm-view (webpack)', () => {
+    let browser: puppeteer.Browser;
+    let devServer: DevServer;
+    let port: string;
+
+    beforeAll(async () => {
+      const launchArgs: puppeteer.LaunchOptions &
+        puppeteer.BrowserLaunchArgumentOptions = {
+        // always run in headless - if you want to debug this locally use the env var to
+        headless: !Boolean(process.env.NO_HEADLESS_TESTS),
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      };
+
+      browser = await puppeteer.launch(launchArgs);
+      port = '4000';
+      devServer = await startApp(
+        targetedView,
+        {
+          env: { PORT: port },
+        },
+        tempModularRepo,
+      );
+      // Wait two seconds to ensure app started fully
+      await new Promise((f) => setTimeout(f, 2000));
+    });
+
+    afterAll(async () => {
+      if (browser) {
+        await browser.close();
+      }
+      if (devServer) {
+        // this is the problematic bit, it leaves hanging node processes
+        // despite closing the parent process. Only happens in tests!
+        void devServer.kill();
+      }
+      if (port) {
+        // kill all processes listening to the dev server port
+        exec(`yarnpkg kill-port ${port}`, (err) => {
+          if (err) {
+            console.log('err: ', err);
+          }
+          console.log(`Cleaned up processes on port ${port}`);
+        });
+      }
+    });
+
+    it('THEN can start a esm-view', async () => {
+      const page = await browser.newPage();
+      await page.goto(`http://localhost:${port}`, {});
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      const { findByTestId } = getQueriesForElement(await getDocument(page));
+
+      const form = await findByTestId('test-this');
+      const text = await getNodeText(form);
+      expect(text).toBe('this is a modular esm-view');
+    });
+  });
+
   describe('WHEN building a esm-view with a custom ESM CDN', () => {
     beforeAll(async () => {
       setupMocks(tempModularRepo);

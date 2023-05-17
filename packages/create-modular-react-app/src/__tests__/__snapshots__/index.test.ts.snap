@@ -1,5 +1,66 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`create-modular-react-app WHEN it sets up a project with prefer Offline SHOULD setup an package.json correctly 1`] = `
+{
+  "author": "?",
+  "browserslist": {
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version",
+    ],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all",
+    ],
+  },
+  "dependencies": {
+    "@testing-library/dom": "?",
+    "@testing-library/jest-dom": "?",
+    "@testing-library/react": "?",
+    "@testing-library/user-event": "?",
+    "@types/jest": "?",
+    "@types/node": "?",
+    "@types/react": "?",
+    "@types/react-dom": "?",
+    "eslint-config-modular-app": "?",
+    "modular-scripts": "?",
+    "prettier": "?",
+    "react": "?",
+    "react-dom": "?",
+    "typescript": "?",
+  },
+  "eslintConfig": {
+    "extends": "modular-app/recommended",
+  },
+  "license": "MIT",
+  "main": "index.js",
+  "modular": {
+    "type": "root",
+  },
+  "name": "test-repo",
+  "prettier": {
+    "printWidth": 80,
+    "proseWrap": "always",
+    "singleQuote": true,
+    "trailingComma": "all",
+  },
+  "private": true,
+  "scripts": {
+    "build": "modular build",
+    "lint": "modular lint",
+    "prettier": "prettier --write .",
+    "start": "modular start",
+    "test": "modular test",
+  },
+  "version": "1.0.0",
+  "workspaces": [
+    "packages/**",
+  ],
+}
+`;
+
 exports[`create-modular-react-app WHEN it sets up a project with prefer Offline should create a project with prefer offline 1`] = `
 "test-repo
 ├─ .editorconfig
@@ -42,89 +103,7 @@ exports[`create-modular-react-app WHEN it sets up a project with prefer Offline 
 └─ yarn.lock"
 `;
 
-exports[`create-modular-react-app WHEN setting a project with defaults Sets up an app package.json correctly: 
-          Object {
-            "author": "?",
-            "dependencies": Object {},
-            "modular": Object {
-              "type": "app",
-            },
-            "name": "app",
-            "private": true,
-            "version": "0.1.0",
-          }
-         1`] = `
-{
-  "author": "?",
-  "modular": {
-    "type": "app",
-  },
-  "name": "app",
-  "private": true,
-  "version": "1.0.0",
-}
-`;
-
-exports[`create-modular-react-app WHEN setting a project with defaults Sets up the package.json correctly: 
-          Object {
-            "author": "?",
-            "browserslist": Object {
-              "development": Array [
-                "last 1 chrome version",
-                "last 1 firefox version",
-                "last 1 safari version",
-              ],
-              "production": Array [
-                ">0.2%",
-                "not dead",
-                "not op_mini all",
-              ],
-            },
-            "dependencies": Object {
-              "@testing-library/dom": "?",
-              "@testing-library/jest-dom": "?",
-              "@testing-library/react": "?",
-              "@testing-library/user-event": "?",
-              "@types/jest": "?",
-              "@types/node": "?",
-              "@types/react": "?",
-              "@types/react-dom": "?",
-              "eslint-config-modular-app": "?",
-              "modular-scripts": "?",
-              "prettier": "?",
-              "react": "?",
-              "react-dom": "?",
-              "typescript": "?",
-            },
-            "eslintConfig": Object {
-              "extends": "modular-app",
-            },
-            "license": "MIT",
-            "main": "index.js",
-            "modular": Object {
-              "type": "root",
-            },
-            "name": "test-repo",
-            "prettier": Object {
-              "printWidth": 80,
-              "proseWrap": "always",
-              "singleQuote": true,
-              "trailingComma": "all",
-            },
-            "private": true,
-            "scripts": Object {
-              "build": "modular build",
-              "lint": "modular lint",
-              "prettier": "prettier --write .",
-              "start": "modular start",
-              "test": "modular test",
-            },
-            "version": "1.0.0",
-            "workspaces": Array [
-              "packages/**",
-            ],
-          }
-         1`] = `
+exports[`create-modular-react-app WHEN setting a project with defaults Sets up the package.json correctly 1`] = `
 {
   "author": "?",
   "browserslist": {
@@ -150,7 +129,6 @@ exports[`create-modular-react-app WHEN setting a project with defaults Sets up t
     "@types/react-dom": "?",
     "eslint-config-modular-app": "?",
     "modular-scripts": "?",
-    "modular-template-app": "?",
     "prettier": "?",
     "react": "?",
     "react-dom": "?",
