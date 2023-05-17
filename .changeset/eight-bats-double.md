@@ -1,5 +1,6 @@
 ---
 'modular-scripts': major
+'@modular-scripts/workspace-resolver': major
 ---
 
 Modular's workspace resolver now ignores a workspace if covered by a
