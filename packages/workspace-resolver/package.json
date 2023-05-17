@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "dependencies": {
     "fs-extra": "^10.1.0",
-    "globby": "11.1.0",
+    "@esm2cjs/globby": "13.1.4",
     "parse-gitignore": "^1.0.1",
     "semver": "7.3.7"
   },

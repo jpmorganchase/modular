@@ -1,8 +1,7 @@
 import path, { join } from 'path';
-import { existsSync, readFileSync, readJson } from 'fs-extra';
-import globby from 'globby';
+import { existsSync, readJson } from 'fs-extra';
+import { globbySync } from '@esm2cjs/globby';
 import semver from 'semver';
-import parse from 'parse-gitignore';
 import type {
   ModularPackageJson,
   ModularWorkspacePackage,
@@ -20,24 +19,25 @@ function packageJsonPath(dir: string) {
 function resolveWorkspacesDefinition(
   root: string,
   def: ModularPackageJson['workspaces'],
+  ignoreFiles: string[],
 ): string[] {
   if (!def) {
     return [];
   }
-
   if (Array.isArray(def)) {
     return def.flatMap((path: string) => {
-      return globby.sync(
+      return globbySync(
         [`${path}/package.json`, '!**/node_modules/**/*', '!**/__tests__/**/*'],
         {
           absolute: false,
           cwd: root,
+          ignoreFiles: ignoreFiles,
         },
       );
     });
   }
 
-  return resolveWorkspacesDefinition(root, def.packages);
+  return resolveWorkspacesDefinition(root, def.packages, ignoreFiles);
 }
 
 function readPackageJson(
@@ -129,7 +129,23 @@ export async function resolveWorkspace(
     }
   }
 
-  for (const link of resolveWorkspacesDefinition(root, json.workspaces)) {
+  // Filter out workspaces covered by .modularignore or .gitignore
+  const ignoreFiles: string[] = [];
+
+  const modularIgnorePath = path.join(root, '.modularignore');
+  const gitIgnore = path.join(root, '.gitignore');
+
+  if (existsSync(modularIgnorePath)) {
+    ignoreFiles.push('.modularignore');
+  } else if (existsSync(gitIgnore)) {
+    ignoreFiles.push('.gitignore');
+  }
+
+  for (const link of resolveWorkspacesDefinition(
+    root,
+    json.workspaces,
+    ignoreFiles,
+  )) {
     const [, child] = await resolveWorkspace(
       link,
       workingDirToUse,
@@ -139,38 +155,7 @@ export async function resolveWorkspace(
     child && pkg.children.push(child);
   }
 
-  // Filter out workspaces covered by .modularignore or .gitignore
-  const filteredCollector = new Map<string, ModularWorkspacePackage>();
-  let ignorePatterns: string[] | undefined;
-
-  const modularIgnorePath = path.join(root, '.modularignore');
-  const gitIgnore = path.join(root, '.gitignore');
-
-  if (existsSync(modularIgnorePath)) {
-    ignorePatterns = parse(readFileSync(modularIgnorePath));
-  } else if (existsSync(gitIgnore)) {
-    ignorePatterns = parse(readFileSync(gitIgnore));
-  }
-
-  if (ignorePatterns) {
-    collector.forEach((pkg, name) => {
-      let matches = false;
-      ignorePatterns?.forEach((pattern) => {
-        if (pattern.startsWith(path.sep)) {
-          matches = pkg.location.startsWith(pattern.substring(1))
-            ? true
-            : matches;
-        } else {
-          matches = pkg.location.includes(pattern) ? true : matches;
-        }
-      });
-      if (!matches) {
-        filteredCollector.set(name, pkg);
-      }
-    });
-  }
-
-  return [filteredCollector, pkg];
+  return [collector, pkg];
 }
 
 export function analyzeWorkspaceDependencies(
