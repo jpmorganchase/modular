@@ -1,7 +1,8 @@
 import path, { join } from 'path';
-import { readJson } from 'fs-extra';
+import { existsSync, readFileSync, readJson } from 'fs-extra';
 import globby from 'globby';
 import semver from 'semver';
+import parse from 'parse-gitignore';
 import type {
   ModularPackageJson,
   ModularWorkspacePackage,
@@ -17,7 +18,7 @@ function packageJsonPath(dir: string) {
 }
 
 function resolveWorkspacesDefinition(
-  cwd: string,
+  root: string,
   def: ModularPackageJson['workspaces'],
 ): string[] {
   if (!def) {
@@ -30,13 +31,13 @@ function resolveWorkspacesDefinition(
         [`${path}/package.json`, '!**/node_modules/**/*', '!**/__tests__/**/*'],
         {
           absolute: false,
-          cwd,
+          cwd: root,
         },
       );
     });
   }
 
-  return resolveWorkspacesDefinition(cwd, def.packages);
+  return resolveWorkspacesDefinition(root, def.packages);
 }
 
 function readPackageJson(
@@ -138,7 +139,38 @@ export async function resolveWorkspace(
     child && pkg.children.push(child);
   }
 
-  return [collector, pkg];
+  // Filter out workspaces covered by .modularignore or .gitignore
+  const filteredCollector = new Map<string, ModularWorkspacePackage>();
+  let ignorePatterns: string[] | undefined;
+
+  const modularIgnorePath = path.join(root, '.modularignore');
+  const gitIgnore = path.join(root, '.gitignore');
+
+  if (existsSync(modularIgnorePath)) {
+    ignorePatterns = parse(readFileSync(modularIgnorePath));
+  } else if (existsSync(gitIgnore)) {
+    ignorePatterns = parse(readFileSync(gitIgnore));
+  }
+
+  if (ignorePatterns) {
+    collector.forEach((pkg, name) => {
+      let matches = false;
+      ignorePatterns?.forEach((pattern) => {
+        if (pattern.startsWith(path.sep)) {
+          matches = pkg.location.startsWith(pattern.substring(1))
+            ? true
+            : matches;
+        } else {
+          matches = pkg.location.includes(pattern) ? true : matches;
+        }
+      });
+      if (!matches) {
+        filteredCollector.set(name, pkg);
+      }
+    });
+  }
+
+  return [filteredCollector, pkg];
 }
 
 export function analyzeWorkspaceDependencies(

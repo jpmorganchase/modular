@@ -3119,6 +3119,13 @@
     "@types/npmlog" "*"
     "@types/ssri" "*"
 
+"@types/parse-gitignore@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/@types/parse-gitignore/-/parse-gitignore-1.0.0.tgz#782b2b6179cef4daaf9b8bd312bfe796fdc8aa18"
+  integrity sha512-GCL7NIxhUzJ1M5bp68T8DtDVTbQdw93MPIIII+YASs3icSozMEG9ZjX7pp7ldRJrVgrRtJBwy+/g+aBzCIttlg==
+  dependencies:
+    "@types/node" "*"
+
 "@types/parse-json@^4.0.0":
   version "4.0.0"
   resolved "https://registry.npmjs.org/@types/parse-json/-/parse-json-4.0.0.tgz"
@@ -9488,6 +9495,11 @@ parse-conflict-json@^3.0.0:
     json-parse-even-better-errors "^3.0.0"
     just-diff "^5.0.1"
     just-diff-apply "^5.2.0"
+
+parse-gitignore@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/parse-gitignore/-/parse-gitignore-1.0.1.tgz#8b9dc57f17b810d495c5dfa62eb07caffe7758c7"
+  integrity sha512-UGyowyjtx26n65kdAMWhm6/3uy5uSrpcuH7tt+QEVudiBoVS+eqHxD5kbi9oWVRwj7sCzXqwuM+rUGw7earl6A==
 
 parse-json@^5.0.0, parse-json@^5.2.0:
   version "5.2.0"
