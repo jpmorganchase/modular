@@ -29,23 +29,33 @@ status of each file (`PASS` or `FAIL`). If a file has a lint warning, the
 command will be marked as failed, with printed eslint errors for each
 warning/error.
 
-## Default behaviour
+## Default behavior
 
 `modular lint` without arguments or options will lint all packages in the
 repository, and run any `lint` scripts specified in the `package.json` of any
 non-modular packages.
 
-## Options:
+### Lint Unique Options:
 
-`--staged`: Lints only files staged on git (not compatible with `--all` and with
-the Selective Options)
-
-`--diff`: Lints only files that have changed compared to the default branch or
-branch specified with `--compareBranch`
+These options are unique to the lint command and differ to other Modular command
+options.
 
 `--fix`: Allows eslint to fix the errors and warnings that do not require manual
 intervention wherever possible. Restages any fixed files that were previously
-staged when used in combination with `--staged`.
+staged when used in combination with `--staged`. Can be combined with any other
+option.
+
+`--compareBranch <branch>`: Specify the comparison branch used to determine
+which files have changed when using the `changed` or `diff` option. If this
+option is used without `changed` or `diff`, the command will fail.
+
+The following options are not compatible with selective options, and cannot be
+combined with each other.
+
+`--staged`: Lints only files staged on git
+
+`--diff`: Lints only files that have changed compared to the default branch or
+branch specified with `--compareBranch`
 
 `--regex [regexes...]`: A list of one or more regexes to select files to lint.
 
@@ -63,7 +73,3 @@ to the lint list.
 changed, calculated comparing the current state of the git repository with the
 branch specified by `compareBranch` or, if `compareBranch` is not set, with the
 default branch.
-
-`--compareBranch <branch>`: Specify the comparison branch used to determine
-which files have changed when using the `changed` option. If this option is used
-without `changed`, the command will fail.

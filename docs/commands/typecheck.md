@@ -47,9 +47,19 @@ There are certain exceptions for practical use cases. The current allowlist is:
 Some use cases may warrant new exceptions. If this is you, please file an issue
 with the project for consideration.
 
-## Options:
+## Command line options and arguments
 
-`--verbose`: Enables verbose logging within modular
+### Default Behavior
+
+`modular typecheck` without any options will typecheck all packages
+
+### Non Modular Packages
+
+If non modular packages (packages without a `modular` field in their
+`package.json`) are included in the selection, Modular will attempt to run the
+`typecheck` script in their `package.json` if specified.
+
+### Selective Options
 
 `--descendants`: Typecheck the packages specified by the `[packages...]`
 argument and/or the `--changed` option and additionally typecheck all their
@@ -67,3 +77,7 @@ of the repository with the branch specified by `compareBranch` or, if
 `--compareBranch`: Specify the comparison branch used to determine which files
 have changed when using the `changed` option. If this option is used without
 `changed`, the command will fail.
+
+### Other options
+
+`--verbose`: Enables verbose logging within modular
