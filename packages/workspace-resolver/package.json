@@ -4,8 +4,8 @@
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "dependencies": {
+    "@esm2cjs/globby": "13.1.4",
     "fs-extra": "^10.1.0",
-    "globby": "11.1.0",
     "semver": "7.3.7"
   },
   "devDependencies": {
