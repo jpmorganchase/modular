@@ -174,7 +174,7 @@ program
   .command('test [packages...]')
   .option(
     '--bypass',
-    'Bypass all modular specific selective behaviour and pass all flags and options directly to Jest. Ensures modular test behaves exactly like calling Jest directly, but with Modular configuration applied. Use with IntelliJ Jest configurations.',
+    'Bypass all modular specific selective behavior and pass all flags and options directly to Jest, except for --verbose, --swc & --env which can be used with --bypass. Ensures modular test behaves exactly like calling Jest directly, but with Modular configuration applied. Use with IntelliJ Jest configurations.',
     false,
   )
   .option(
