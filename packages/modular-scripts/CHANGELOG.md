@@ -1,5 +1,14 @@
 # modular-scripts
 
+## 4.4.2
+
+### Patch Changes
+
+- [#2393](https://github.com/jpmorganchase/modular/pull/2393)
+  [`e4f583f`](https://github.com/jpmorganchase/modular/commit/e4f583fbe1e30212d88d2b51b5ab0dd549a77e6d)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Fix --bypass flag
+  in test command
+
 ## 4.4.1
 
 ### Patch Changes
