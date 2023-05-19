@@ -1,5 +1,4 @@
 import * as path from 'path';
-import isCI from 'is-ci';
 import { ExecaError } from 'execa';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import { resolveAsBin } from './utils/resolveAsBin';
@@ -15,121 +14,128 @@ import {
   partitionPackages,
 } from './utils/unobtrusiveModular';
 export interface LintOptions {
-  all: boolean;
   fix: boolean;
   staged: boolean;
-  packages?: string[];
+  regex?: string[];
   ancestors?: boolean;
   descendants?: boolean;
   changed?: boolean;
-  includeNonModular?: boolean;
   compareBranch?: string;
+  diff?: boolean;
 }
 
 async function lint(
   options: LintOptions,
-  userRegexes: string[] = [],
+  packages: string[] = [],
 ): Promise<void> {
   const {
-    all = false,
     fix = false,
     staged = false,
-    packages = [],
+    regex: userRegexes = [],
     ancestors = false,
     descendants = false,
     changed = false,
-    includeNonModular = false,
     compareBranch,
+    diff = false,
   } = options;
   const modularRoot = getModularRoot();
   const lintExtensions = ['.ts', '.tsx', '.js', '.jsx'];
 
   const [workspaceMap] = await getAllWorkspaces();
-  const isSelective =
-    packages?.length || ancestors || descendants || changed || compareBranch;
 
-  let selectedTargets: string[];
+  const isSelective = changed || ancestors || descendants || packages.length;
 
-  if (!isSelective) {
-    selectedTargets = [...workspaceMap.keys()];
-  } else {
-    // Otherwise, calculate which packages are selected
-    selectedTargets = await selectWorkspaces({
-      targets: packages,
-      changed,
-      ancestors,
-      descendants,
-      compareBranch,
-    });
-  }
-
-  // Split packages into modular and non-modular testable. Make sure that "root" is not there.
-  const [modularTargets, nonModularTargets] = partitionPackages(
-    selectedTargets,
-    workspaceMap,
-    'lint',
-  );
-
-  // Compute patterns to pass Jest for the packages that we want to test
-  const selectedPackageRegexes = await computeRegexesFromPackageNames(
-    modularTargets,
-  );
-
-  // Only set regexes if all or selective options have been specified
-  let processedPackageRegexes = selectedPackageRegexes.map(
-    (regex) => `<rootDir>/${regex}/src/**/*.{js,jsx,ts,tsx}`,
-  );
-
-  let lintRegexes = isSelective || all ? processedPackageRegexes : [];
-
-  if (all && isSelective) {
-    logger.warn(
-      'You specified --all already; selective options are redundant.',
+  if ((staged || diff || userRegexes.length) && isSelective) {
+    logger.error(
+      "Can't specify --staged, --diff or --regex along with selective options",
     );
+    process.exit(-1);
   }
-  if (staged && isSelective) {
-    logger.error("Can't specify --staged along with selective options");
+  if (
+    (staged && diff) ||
+    (staged && userRegexes.length) ||
+    (diff && userRegexes.length)
+  ) {
+    logger.error(
+      "--regex, --diff and --staged are mutually exclusive options that can't be used together",
+    );
     process.exit(-1);
   }
 
-  // Not selective, not --all and no regexes;
-  // TODO: Bring this in line with behaviour of other commands, too 'unpredictable' from a user point of view
-  if (!all && !isSelective && userRegexes.length === 0) {
-    if (staged || !isCI) {
-      // If --staged or not in CI, calculate the file regexes of --diff or --staged
-      let diffedFiles: null | string[];
+  let modularTargets: string[];
+  let nonModularTargets: string[];
 
-      try {
-        // This can throw in case there is no git directory; in this case, we need to continue like nothing happened
-        diffedFiles = staged ? getStagedFiles() : getDiffedFiles();
-      } catch {
-        diffedFiles = null;
-        logger.log(
-          'Getting staged or diffed files failed - are you sure this is a git repo? Falling back to `--all`.',
-        );
-        lintRegexes = processedPackageRegexes;
-      }
-      if (diffedFiles !== null) {
-        if (diffedFiles.length === 0) {
-          logger.log(
-            'No diffed files detected. Use the `--all` option to lint the entire codebase',
-          );
-        } else {
-          processedPackageRegexes = diffedFiles
-            .filter((p: string) => lintExtensions.includes(path.extname(p)))
-            .map((p: string) => `<rootDir>/${p}`);
+  // If --diff or --staged, lint only diffed or staged files,
+  // otherwise lint selected packages or all packages if nothing selected
+  let lintRegexes: string[];
 
-          // if none of the diffed files meet the extension criteria, do not lint
-          // end the process early with a success
-          if (!processedPackageRegexes.length) {
-            logger.warn('No diffed target files to lint found');
-          }
+  if (diff || staged) {
+    // Calculate the file regexes of --diff or --staged
+    try {
+      // This can throw in case there is no git directory; in this case, we need to continue like nothing happened
+      const diffedFiles = staged
+        ? getStagedFiles()
+        : getDiffedFiles(compareBranch);
+
+      if (diffedFiles.length === 0) {
+        logger.warn(`No staged or diffed files detected.`);
+        process.exit(0);
+      } else {
+        lintRegexes = diffedFiles
+          .filter((p: string) => lintExtensions.includes(path.extname(p)))
+          .map((p: string) => `<rootDir>/${p}`);
+
+        // if none of the diffed files meet the extension criteria, do not lint
+        // end the process early with a success
+        if (!lintRegexes.length) {
+          logger.warn('No lintable diffed or staged target files found');
+          process.exit(0);
         }
       }
-    } else {
-      // If in CI, then lint all
-      lintRegexes = processedPackageRegexes;
+    } catch {
+      logger.error(
+        'Getting staged or diffed files failed - are you sure this is a git repo?',
+      );
+      process.exit(1);
     }
+    nonModularTargets = [];
+  } else if (userRegexes.length) {
+    // Don't calculate any regexes or non-modular targets - only use the user provided regexes
+    lintRegexes = [];
+    nonModularTargets = [];
+  } else {
+    // Compute selected packages or run on all modular & non-modular packages
+    let selectedTargets: string[];
+
+    if (isSelective) {
+      selectedTargets = await selectWorkspaces({
+        targets: packages,
+        changed,
+        compareBranch,
+        descendants,
+        ancestors,
+      });
+    } else {
+      selectedTargets = [...workspaceMap.keys()];
+    }
+
+    // Split packages into modular and non-modular testable. Make sure that "root" is not there.
+    [modularTargets, nonModularTargets] = partitionPackages(
+      selectedTargets,
+      workspaceMap,
+      'lint',
+    );
+
+    // Compute patterns to pass Jest for the packages that we want to test
+    const selectedPackageRegexes = await computeRegexesFromPackageNames(
+      modularTargets,
+    );
+
+    const processedPackageRegexes = selectedPackageRegexes.map(
+      (regex) => `<rootDir>/${regex}/src/**/*.{js,jsx,ts,tsx}`,
+    );
+
+    lintRegexes = processedPackageRegexes;
   }
 
   // If we computed no regexes and there are no non-modular packages to lint, bail out
@@ -188,8 +194,7 @@ async function lint(
     }
   }
 
-  // Lint non-modular packages - TODO: Remove conditional & flag in next major release of Modular (5.0.0)
-  if (includeNonModular) {
+  if (nonModularTargets.length) {
     try {
       logger.debug(
         `Running lint command in the following non-modular packages: ${JSON.stringify(

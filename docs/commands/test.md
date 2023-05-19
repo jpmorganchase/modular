@@ -7,28 +7,25 @@ title: modular test
 
 Search workspaces based on their `name` field in the `package.json` and test:
 
-- Modular packages, according to their respective `modular.type`. In this case,
+- Modular packages (packages with a `modular` field in their `package.json`).
   `modular test` will act as an opinionated wrapper around
-  [`jest`](https://jestjs.io/), which comes with out-of-the-box configuration.
-- Non-Modular packages (i.e. packages without a `modular` configuration), only
-  if they have a `test`
+  [`jest`](https://jestjs.io/), with a predefined Modular configuration.
+- Non-Modular packages (packages without a `modular` field in their
+  `package.json`), only if they have a `test`
   [script](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#scripts),
   by running `yarn test` on the package's
   [workspace](https://classic.yarnpkg.com/en/docs/cli/workspace).
 
 When the `[packages...]` argument is empty and no selective option has been
-specified (for example when running `yarn modular test`), tests will be run for
-all testable packages in the repo. When the `[packages...]` argument contains
-one or more non-existing package name, the non-existing packages will be ignored
-without an error. If any package or selective option have been defined but
-Modular can't find any package to test, Modular will warn on `stdout` and exit
-with code `0`.
+specified (ie `yarn modular test`), all packages will be tested. When the
+`[packages...]` argument contains one or more non-existing package name, the
+non-existing packages will be ignored without an error. If Modular can't find
+any package to test, Modular will warn on `stdout` and exit with code `0`.
 
-Test order is unspecified by design, so please don't rely on the assumption that
-certain tests will run before others, that Modular tests will run before
-non-Modular tests, or that they will run sequentially. An exception to this,
-valid only for Modular tests (that are run by Jest), is when
-[the `--runinband` option is specified](https://jestjs.io/docs/cli#--runinband).
+Test order is unspecified, so don't rely on Modular to run certain tests before
+others, that Modular tests will run before non-Modular tests, or that they will
+run sequentially unless running Modular tests with
+[the `--runinband` option](https://jestjs.io/docs/cli#--runinband).
 
 ## Configuration
 
@@ -46,20 +43,16 @@ This contains the setup for tests corresponding to
 
 ### Arguments
 
-`[packages ...]`: List of packages to test. Can be combined with multiple
-selective options (`--ancestors`, `--descendants`, `--changed` and `--regex`).
-Modular will generate a list of regular expressions that satisfies all options
-passed which are then passed to Jest. The tests will run in non-predictable
-order. When `packages` is empty and no selective options have been specified
-(for example when running `yarn modular test`), all tests in the monorepo will
-be executed. When `packages` contains one or more non-existing package name, the
-non-existing packages will be ignored without an error. If any package or
-selective option have been defined but the final set of regular expressions is
-empty, Modular will write a message to `stdout` and exit with code `0`.
+`[packages ...]`: Packages to test. Can be combined with multiple selective
+options (`--ancestors`, `--descendants`, `--changed` and `--regex`). Modular
+will pass a list of regular expressions that satisfies all options to Jest.
 
-### Modular-specific options
+### Test Unique Options:
 
-`--bypass`: Bypass Modular selective behaviour and flags, and send all provided
+These options are unique to the test command and differ to other Modular command
+options.
+
+`--bypass`: Bypass Modular selective behavior and flags, and send all provided
 flags and options directly to the Jest process with Modular configuration.
 Useful when running `modular test` from IntelliJ.
 
@@ -67,6 +60,24 @@ Useful when running `modular test` from IntelliJ.
 of babel + ts-jest. Brings significant performance improvements, but ignores
 ts-config in favour of its own configuration file,
 [.swcrc](https://swc.rs/docs/configuration/swcrc).
+
+`--debug`: Add the `--inspect-brk` option to the Node.js process executing Jest
+to allow a debugger to be attached to the running process. For more information,
+[see the Node.js debugging guide](https://nodejs.org/en/docs/guides/debugging-getting-started/).
+
+`--compareBranch <branch>`: Specify the comparison branch used to determine
+which files have changed when using the `changed` option. If this option is used
+without `changed`, the command will fail.
+
+`--verbose`: Activate debug logging. Useful to see which packages have been
+selected and which regular expression and arguments have been passed to the
+underlying Jest process.
+
+`--regex <regexes...>`: Select all the test files matching the specified regular
+expressions. When combined with selective options, it will run all tests
+matching the selective options, and tests that match the regexes provided.
+
+### Selective Options
 
 `--ancestors`: Take the packages specified by the user via arguments or options
 and add their ancestors (i.e. the packages that have a direct or indirect
@@ -81,21 +92,6 @@ and add all the packages whose workspaces contain files that have changed,
 calculated comparing the current state of the git repository with the branch
 specified by `compareBranch` or, if `compareBranch` is not set, with the default
 branch.
-
-`--debug`: Add the `--inspect-brk` option to the Node.js process executing Jest
-to allow a debugger to be attached to the running process. For more information,
-[see the Node.js debugging guide](https://nodejs.org/en/docs/guides/debugging-getting-started/).
-
-`--compareBranch <branch>`: Specify the comparison branch used to determine
-which files have changed when using the `changed` option. If this option is used
-without `changed`, the command will fail.
-
-`--regex <regexes...>`: Select all the test files matching the specified regular
-expressions. Can be combined with all the other selective options.
-
-`--verbose`: Activate debug logging. Useful to see which packages have been
-selected and which regular expression and arguments have been passed to the
-underlying Jest process.
 
 ### Jest CLI Options
 

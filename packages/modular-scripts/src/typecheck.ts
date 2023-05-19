@@ -7,6 +7,8 @@ import getModularRoot from './utils/getModularRoot';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import { getAllWorkspaces } from './utils/getAllWorkspaces';
 import { selectWorkspaces } from './utils/selectWorkspaces';
+import { partitionPackages } from './utils/unobtrusiveModular';
+import execAsync from './utils/execAsync';
 import type {
   CompilerOptionsDefinition,
   JSONSchemaForTheTypeScriptCompilerSConfigurationFile as TSConfig,
@@ -83,97 +85,121 @@ async function typecheck(
   const { ancestors, descendants, changed, compareBranch } = options;
   const isSelective = changed || ancestors || descendants || packages.length;
   const modularRoot = getModularRoot();
-  const [allWorkspacePackages] = await getAllWorkspaces(modularRoot);
-  const targets = isSelective ? packages : [...allWorkspacePackages.keys()];
-  let replaceInclude: undefined | string[];
+  const [workspaceMap] = await getAllWorkspaces();
+  let selectedTargets: string[];
 
   if (isSelective) {
-    const selectedTargets = await selectWorkspaces({
-      targets,
+    selectedTargets = await selectWorkspaces({
+      targets: packages,
       changed,
       compareBranch,
       descendants,
       ancestors,
     });
+  } else {
+    selectedTargets = [...workspaceMap.keys()];
+  }
 
-    const targetLocations: string[] = [];
-    for (const [pkgName, pkg] of allWorkspacePackages) {
-      if (selectedTargets.includes(pkgName)) {
-        targetLocations.push(pkg.location);
-      }
-    }
+  // Split packages into modular and non-modular testable. Make sure that "root" is not there.
+  const [modularTargets, nonModularTargets] = partitionPackages(
+    selectedTargets,
+    workspaceMap,
+    'typecheck',
+  );
 
-    if (targetLocations.length) {
-      replaceInclude = targetLocations;
+  const targetLocations: string[] = [];
+  for (const [pkgName, pkg] of workspaceMap) {
+    if (modularTargets.includes(pkgName)) {
+      targetLocations.push(pkg.location);
     }
   }
+
+  logger.debug(
+    `Typechecking the following locations: ${JSON.stringify(targetLocations)}`,
+  );
 
   const { typescriptConfig } = await getPackageMetadata();
-  const tsConfig = restrictUserTsconfig(typescriptConfig, replaceInclude);
+  const tsConfig = restrictUserTsconfig(typescriptConfig, targetLocations);
 
-  const diagnosticHost = {
-    getCurrentDirectory: (): string => getModularRoot(),
-    getNewLine: (): string => ts.sys.newLine,
-    getCanonicalFileName: (file: string): string =>
-      ts.sys.useCaseSensitiveFileNames ? file : toFileNameLowerCase(file),
-  };
+  if (modularTargets.length) {
+    const diagnosticHost = {
+      getCurrentDirectory: (): string => getModularRoot(),
+      getNewLine: (): string => ts.sys.newLine,
+      getCanonicalFileName: (file: string): string =>
+        ts.sys.useCaseSensitiveFileNames ? file : toFileNameLowerCase(file),
+    };
 
-  // Parse all config except for compilerOptions
-  const configParseResult = ts.parseJsonConfigFileContent(
-    tsConfig,
-    ts.sys,
-    modularRoot,
-  );
-
-  if (configParseResult.errors.length > 0) {
-    logger.error('Failed to parse your tsconfig.json');
-    throw new Error(
-      ts.formatDiagnostics(configParseResult.errors, diagnosticHost),
+    // Parse all config except for compilerOptions
+    const configParseResult = ts.parseJsonConfigFileContent(
+      tsConfig,
+      ts.sys,
+      modularRoot,
     );
-  }
 
-  const program = ts.createProgram(
-    configParseResult.fileNames,
-    configParseResult.options,
-  );
-
-  // Pulled from typescript's getCanonicalFileName logic
-  // eslint-disable-next-line  no-useless-escape
-  const fileNameLowerCaseRegExp = /[^\u0130\u0131\u00DFa-z0-9\\/:\-_\. ]+/g;
-
-  function toFileNameLowerCase(x: string) {
-    return fileNameLowerCaseRegExp.test(x)
-      ? x.replace(fileNameLowerCaseRegExp, x.toLowerCase())
-      : x;
-  }
-
-  program
-    .getSourceFiles()
-    .map((f) => f.fileName)
-    .sort()
-    .forEach((f) => {
-      logger.debug(f);
-    });
-
-  // Does not emit files or typings but will add declaration diagnostics to our errors
-  // This will ensure that makeTypings will be successful in CI before actually attempting to build
-  const emitResult = program.emit();
-
-  const diagnostics = ts
-    .getPreEmitDiagnostics(program)
-    .concat(emitResult.diagnostics);
-
-  if (diagnostics.length) {
-    if (isCI) {
-      // formatDiagnostics will return a readable list of error messages, each with its own line
-      throw new Error(ts.formatDiagnostics(diagnostics, diagnosticHost));
+    if (configParseResult.errors.length > 0) {
+      logger.error('Failed to parse your tsconfig.json');
+      throw new Error(
+        ts.formatDiagnostics(configParseResult.errors, diagnosticHost),
+      );
     }
 
-    // formatDiagnosticsWithColorAndContext will return a list of errors, each with its own line
-    // and provide an expanded snapshot of the line with the error
-    throw new Error(
-      ts.formatDiagnosticsWithColorAndContext(diagnostics, diagnosticHost),
+    const program = ts.createProgram(
+      configParseResult.fileNames,
+      configParseResult.options,
     );
+
+    // Pulled from typescript's getCanonicalFileName logic
+    // eslint-disable-next-line  no-useless-escape
+    const fileNameLowerCaseRegExp = /[^\u0130\u0131\u00DFa-z0-9\\/:\-_\. ]+/g;
+
+    function toFileNameLowerCase(x: string) {
+      return fileNameLowerCaseRegExp.test(x)
+        ? x.replace(fileNameLowerCaseRegExp, x.toLowerCase())
+        : x;
+    }
+
+    program
+      .getSourceFiles()
+      .map((f) => f.fileName)
+      .sort()
+      .forEach((f) => {
+        logger.debug(f);
+      });
+
+    // Does not emit files or typings but will add declaration diagnostics to our errors
+    // This will ensure that makeTypings will be successful in CI before actually attempting to build
+    const emitResult = program.emit();
+
+    const diagnostics = ts
+      .getPreEmitDiagnostics(program)
+      .concat(emitResult.diagnostics);
+
+    if (diagnostics.length) {
+      if (isCI) {
+        // formatDiagnostics will return a readable list of error messages, each with its own line
+        throw new Error(ts.formatDiagnostics(diagnostics, diagnosticHost));
+      }
+
+      // formatDiagnosticsWithColorAndContext will return a list of errors, each with its own line
+      // and provide an expanded snapshot of the line with the error
+      throw new Error(
+        ts.formatDiagnosticsWithColorAndContext(diagnostics, diagnosticHost),
+      );
+    }
+  }
+
+  if (nonModularTargets.length) {
+    logger.debug(
+      `Running typecheck command in the following non-modular packages: ${JSON.stringify(
+        nonModularTargets,
+      )}`,
+    );
+    for (const target of nonModularTargets) {
+      await execAsync(`yarn`, ['workspace', target, 'typecheck'], {
+        cwd: getModularRoot(),
+        log: false,
+      });
+    }
   }
 
   // "✓ Typecheck passed"
