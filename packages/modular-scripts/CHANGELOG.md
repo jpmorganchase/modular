@@ -1,5 +1,23 @@
 # modular-scripts
 
+## 4.4.2
+
+### Patch Changes
+
+- [#2393](https://github.com/jpmorganchase/modular/pull/2393)
+  [`e4f583f`](https://github.com/jpmorganchase/modular/commit/e4f583fbe1e30212d88d2b51b5ab0dd549a77e6d)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Fix --bypass flag
+  in test command
+
+## 4.4.1
+
+### Patch Changes
+
+- [#2385](https://github.com/jpmorganchase/modular/pull/2385)
+  [`5ba67bf`](https://github.com/jpmorganchase/modular/commit/5ba67bf81e737bae49c6aa9ee46c36b8986f6127)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Fix esm-views not
+  starting
+
 ## 4.4.0
 
 ### Minor Changes

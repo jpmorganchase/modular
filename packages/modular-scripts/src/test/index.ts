@@ -118,12 +118,14 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
   let nonModularTargets;
   let modularTargets;
 
+  // If --bypass, pass on all options to jest
   if (bypass) {
-    // pass on all options
+    // Modular flags compatible with --bypass that shouldn't be passed to Jest
+    const bypassCompatibleFlags = ['verbose', 'env', 'swc', 'bypass'];
     cleanArgv.push(
       ...Object.entries(options)
         .filter(([key, v]) => {
-          return key !== 'jest' && key !== 'env';
+          return !bypassCompatibleFlags.some((option) => key === option);
         })
         .map(([key, v]) => {
           const booleanValue = /^(true)$/.exec(String(v));
@@ -133,10 +135,7 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
 
     // Get the options that have been incorrectly placed in packages[]
     if (packages) {
-      const additionalOptions: string[] = [];
-      const cleanPackages: string[] = [];
-      extractOptions(packages, cleanPackages, additionalOptions);
-      cleanArgv.push(...additionalOptions);
+      cleanArgv.push(...packages);
     }
   } else {
     // pass on jest programatic options
