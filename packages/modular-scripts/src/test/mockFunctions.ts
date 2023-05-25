@@ -98,7 +98,6 @@ interface LintOptionsForTests {
   ancestors?: boolean;
   descendants?: boolean;
   changed?: boolean;
-  includeNonModular?: boolean;
   compareBranch?: string;
 }
 
@@ -115,7 +114,6 @@ export async function runLintForTests(
     ancestors = false,
     descendants = false,
     changed = false,
-    includeNonModular = false,
     compareBranch,
   }: LintOptionsForTests,
   regexes: string[] = [],
@@ -133,7 +131,6 @@ export async function runLintForTests(
       ancestors,
       descendants,
       changed,
-      includeNonModular,
       compareBranch,
     },
     regexes,

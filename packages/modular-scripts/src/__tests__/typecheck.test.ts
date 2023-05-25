@@ -34,6 +34,18 @@ describe('Modular typecheck', () => {
         path.join(tempFixturesFolder, 'InvalidTyping.ts'),
         invalidTsContent,
       );
+      // Must be recognized as a modular workspace to be type-checked
+      fs.writeJsonSync(
+        path.join(tempModularRepo, 'packages', 'app', 'package.json'),
+        {
+          name: 'modular-template-app',
+          version: '2.0.0',
+          modular: {
+            type: 'template',
+            templateType: 'app',
+          },
+        },
+      );
       fs.copyFileSync(
         path.join(modularRoot, 'tsconfig.json'),
         path.join(tempModularRepo, 'tsconfig.json'),

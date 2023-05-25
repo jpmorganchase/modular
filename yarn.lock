@@ -1645,6 +1645,22 @@
     minimatch "^3.1.2"
     strip-json-comments "^3.1.1"
 
+"@esm2cjs/globby@13.1.4":
+  version "13.1.4"
+  resolved "https://registry.yarnpkg.com/@esm2cjs/globby/-/globby-13.1.4.tgz#38794c6b560654cb94e413b78ab568acf594bd6f"
+  integrity sha512-JES/VBjQfk78esAY7SSVk2c77v94UKVlOPPTP5HBFRjY5IIr0hjE6B3LzYzY98oaO9ygYVy5CURGdxasDVGv1g==
+  dependencies:
+    "@esm2cjs/slash" "^4.0.0"
+    dir-glob "^3.0.1"
+    fast-glob "^3.2.11"
+    ignore "^5.2.0"
+    merge2 "^1.4.1"
+
+"@esm2cjs/slash@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@esm2cjs/slash/-/slash-4.0.0.tgz#5101e35a912eeb308c34f448c81cf353048d59b5"
+  integrity sha512-UUTg4pcAaq1D3R4yj0T+up/eBnZko6nE0ToBq6m6c0rHmpYPIGh/UrNMEeZV2hkLKpXBg6i1Zr9tJgmXq1T2BA==
+
 "@floating-ui/core@^0.7.3":
   version "0.7.3"
   resolved "https://registry.yarnpkg.com/@floating-ui/core/-/core-0.7.3.tgz#d274116678ffae87f6b60e90f88cc4083eefab86"
