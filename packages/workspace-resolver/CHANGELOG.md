@@ -1,5 +1,15 @@
 # @modular-scripts/workspace-resolver
 
+## 2.0.0
+
+### Major Changes
+
+- [#2391](https://github.com/jpmorganchase/modular/pull/2391)
+  [`6209e17`](https://github.com/jpmorganchase/modular/commit/6209e17bbe90eaa0296c291ba26eafebf8a6591f)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Modular's workspace
+  resolver now ignores a workspace if covered by a .modularignore or .gitignore
+  (.modularignore overrides .gitignore)
+
 ## 1.2.0
 
 ### Minor Changes
