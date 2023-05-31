@@ -1,5 +1,32 @@
 # modular-scripts
 
+## 5.0.0
+
+### Major Changes
+
+- [#2391](https://github.com/jpmorganchase/modular/pull/2391)
+  [`6209e17`](https://github.com/jpmorganchase/modular/commit/6209e17bbe90eaa0296c291ba26eafebf8a6591f)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Modular's workspace
+  resolver now ignores a workspace if covered by a .modularignore or .gitignore
+  (.modularignore overrides .gitignore)
+
+- [#2384](https://github.com/jpmorganchase/modular/pull/2384)
+  [`1e9c8cb`](https://github.com/jpmorganchase/modular/commit/1e9c8cb09c523169d196116c5335c04ec6fe9fac)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Standardized lint
+  and typecheck commands to bring them in line with other modular selective
+  behaviour. Now lints and typechecks non-modular packages by default
+
+- [#2370](https://github.com/jpmorganchase/modular/pull/2370)
+  [`ef63eb3`](https://github.com/jpmorganchase/modular/commit/ef63eb3982e5984f72b7ea326a8c1da034c83253)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Dropped Node 14
+  support, added Node 20 support. Changed target to ES2017
+
+### Patch Changes
+
+- Updated dependencies
+  [[`6209e17`](https://github.com/jpmorganchase/modular/commit/6209e17bbe90eaa0296c291ba26eafebf8a6591f)]:
+  - @modular-scripts/workspace-resolver@2.0.0
+
 ## 4.4.2
 
 ### Patch Changes

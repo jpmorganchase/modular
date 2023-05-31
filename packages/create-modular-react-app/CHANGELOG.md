@@ -1,5 +1,14 @@
 # create-modular-react-app
 
+## 6.0.0
+
+### Major Changes
+
+- [#2370](https://github.com/jpmorganchase/modular/pull/2370)
+  [`ef63eb3`](https://github.com/jpmorganchase/modular/commit/ef63eb3982e5984f72b7ea326a8c1da034c83253)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Dropped Node 14
+  support, added Node 20 support. Changed target to ES2017
+
 ## 5.1.0
 
 ### Minor Changes
