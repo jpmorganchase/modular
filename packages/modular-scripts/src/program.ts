@@ -207,7 +207,7 @@ program
   )
   .option(
     '--regex <regexes...>',
-    'Specifies one or more test name regular expression',
+    'Specifies one or more test name regular expression. When combined with selective options, it will run tests matching the regex as well as those matching the selective options',
   )
   .option('--coverage', testOptions.coverage.description)
   .option('--forceExit', testOptions.forceExit.description)
@@ -285,25 +285,27 @@ program
 
 const lintStagedFlag = '--staged';
 program
-  .command('lint [regexes...]')
-  .option(
-    '--all',
-    'Only lint diffed files from your remote origin default branch (e.g. main or master)',
+  .command('lint [packages...]')
+  .description(
+    'lint provided packages. When run without any arguments, lints the whole repository',
   )
-  .option('--packages [packages...]', 'Only lint selected packages')
+  .option(
+    '--regex [regexes...]',
+    'Only lint packages matching the provided regexes',
+  )
   .option(
     '--ancestors',
-    'Lint workspaces that depend on workspaces that have changed',
+    'Additionally lint workspaces that depend on workspaces that have changed',
     false,
   )
   .option(
     '--descendants',
-    'Lint workspaces that directly or indirectly depend on the specified packages',
+    'Additionally lint workspaces that directly or indirectly depend on the specified packages',
     false,
   )
   .option(
     '--changed',
-    'Lint workspaces that have changed compared to the branch specified in --compareBranch',
+    'Additionally lint workspaces that have changed compared to the branch specified in --compareBranch',
   )
   .option(
     '--compareBranch <branch>',
@@ -315,9 +317,8 @@ program
   )
   .option('--verbose', 'Enables verbose logging within modular.')
   .option(
-    '--includeNonModular',
-    "Runs 'lint' script if specified in the package.json of any non-modular package included - Will be removed and true as default in Modular 5.0.0",
-    false,
+    '--diff',
+    'Only lint files that have changed compared to the compare branch',
   )
   .addOption(
     new Option(
@@ -326,14 +327,16 @@ program
     ).conflicts('all'),
   )
   .description('Lints the codebase')
-  .action(async (regexes: string[], options: LintOptions) => {
+  .action(async (packages: string[], options: LintOptions) => {
     const { default: lint } = await import('./lint');
-    await lint(options, regexes);
+    await lint(options, packages);
   });
 
 program
   .command('typecheck [packages...]')
-  .description('Typechecks the entire project')
+  .description(
+    'Typecheck provided packages. If run without any additional arguments, typechecks the entire project',
+  )
   .option('--verbose', 'Enables verbose logging within modular.')
   .option(
     '--ancestors',

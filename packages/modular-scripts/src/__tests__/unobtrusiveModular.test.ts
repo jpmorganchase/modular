@@ -74,15 +74,29 @@ describe('When there is a non-Modular package with a build script', () => {
     expect(result.stdout).toContain('\nnon-modular-testable was tested');
   });
 
-  it('lints non-modular packages when the --includeNonModular flag is provided', () => {
+  it('lints non-modular packages', () => {
     const result = runModularPipeLogs(
       tempModularRepo,
-      'lint --packages non-modular-lintable --includeNonModular --verbose',
+      'lint non-modular-lintable --verbose',
     );
     expect(result.stderr).toBeFalsy();
     expect(result.stdout).toContain(
       'Running lint command in the following non-modular packages: ["non-modular-lintable"]',
     );
     expect(result.stdout).toContain('non-modular-lintable was linted');
+  });
+
+  it('typechecks non-modular packages', () => {
+    const result = runModularPipeLogs(
+      tempModularRepo,
+      'typecheck non-modular-typecheckable --verbose',
+    );
+    expect(result.stderr).toBeFalsy();
+    expect(result.stdout).toContain(
+      'Running typecheck command in the following non-modular packages: ["non-modular-typecheckable"]',
+    );
+    expect(result.stdout).toContain(
+      'non-modular-typecheckable was typechecked',
+    );
   });
 });

@@ -63,7 +63,7 @@ export function createJestConfig(
               module: { type: 'commonjs', strictMode: true, noInterop: false },
               jsc: {
                 externalHelpers: false,
-                target: 'es2016',
+                target: 'es2017',
                 parser: {
                   syntax: 'typescript',
                   tsx: true,

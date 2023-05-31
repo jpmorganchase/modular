@@ -267,7 +267,7 @@ export async function runModularForTestsAsync(
     path.join(modularRoot, '/node_modules/.bin/ts-node'),
     [
       path.join(modularRoot, '/packages/modular-scripts/src/cli.ts'),
-      ...args.split(' '),
+      ...args.split(/ +(?=(?:(?:[^"]*"){2})*[^"]*$)/g),
     ],
     {
       cwd,
@@ -293,10 +293,14 @@ export async function runYarnModular(
   args: string,
   opts: Record<string, unknown> = {},
 ) {
-  return execa('yarnpkg', ['modular', ...args.split(' ')], {
-    cwd,
-    all: true,
-    cleanup: true,
-    ...opts,
-  });
+  return execa(
+    'yarnpkg',
+    ['modular', ...args.split(/ +(?=(?:(?:[^"]*"){2})*[^"]*$)/g)],
+    {
+      cwd,
+      all: true,
+      cleanup: true,
+      ...opts,
+    },
+  );
 }

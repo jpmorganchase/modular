@@ -1,6 +1,6 @@
 import path, { join } from 'path';
-import { readJson } from 'fs-extra';
-import globby from 'globby';
+import { existsSync, readJson } from 'fs-extra';
+import { globbySync } from '@esm2cjs/globby';
 import semver from 'semver';
 import type {
   ModularPackageJson,
@@ -17,26 +17,27 @@ function packageJsonPath(dir: string) {
 }
 
 function resolveWorkspacesDefinition(
-  cwd: string,
+  root: string,
   def: ModularPackageJson['workspaces'],
+  ignoreFiles: string[],
 ): string[] {
   if (!def) {
     return [];
   }
-
   if (Array.isArray(def)) {
     return def.flatMap((path: string) => {
-      return globby.sync(
+      return globbySync(
         [`${path}/package.json`, '!**/node_modules/**/*', '!**/__tests__/**/*'],
         {
           absolute: false,
-          cwd,
+          cwd: root,
+          ignoreFiles: ignoreFiles,
         },
       );
     });
   }
 
-  return resolveWorkspacesDefinition(cwd, def.packages);
+  return resolveWorkspacesDefinition(root, def.packages, ignoreFiles);
 }
 
 function readPackageJson(
@@ -128,7 +129,23 @@ export async function resolveWorkspace(
     }
   }
 
-  for (const link of resolveWorkspacesDefinition(root, json.workspaces)) {
+  // Filter out workspaces covered by .modularignore or .gitignore
+  const ignoreFiles: string[] = [];
+
+  const modularIgnorePath = path.join(root, '.modularignore');
+  const gitIgnore = path.join(root, '.gitignore');
+
+  if (existsSync(modularIgnorePath)) {
+    ignoreFiles.push('.modularignore');
+  } else if (existsSync(gitIgnore)) {
+    ignoreFiles.push('.gitignore');
+  }
+
+  for (const link of resolveWorkspacesDefinition(
+    root,
+    json.workspaces,
+    ignoreFiles,
+  )) {
     const [, child] = await resolveWorkspace(
       link,
       workingDirToUse,
