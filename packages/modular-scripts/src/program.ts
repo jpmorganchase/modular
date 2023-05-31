@@ -286,20 +286,26 @@ program
 const lintStagedFlag = '--staged';
 program
   .command('lint [packages...]')
-  .option('--regex [regexes...]', 'Only lint selected packages')
+  .description(
+    'lint provided packages. When run without any arguments, lints the whole repository',
+  )
+  .option(
+    '--regex [regexes...]',
+    'Only lint packages matching the provided regexes',
+  )
   .option(
     '--ancestors',
-    'Lint workspaces that depend on workspaces that have changed',
+    'Additionally lint workspaces that depend on workspaces that have changed',
     false,
   )
   .option(
     '--descendants',
-    'Lint workspaces that directly or indirectly depend on the specified packages',
+    'Additionally lint workspaces that directly or indirectly depend on the specified packages',
     false,
   )
   .option(
     '--changed',
-    'Lint workspaces that have changed compared to the branch specified in --compareBranch',
+    'Additionally lint workspaces that have changed compared to the branch specified in --compareBranch',
   )
   .option(
     '--compareBranch <branch>',
@@ -328,7 +334,9 @@ program
 
 program
   .command('typecheck [packages...]')
-  .description('Typechecks the entire project')
+  .description(
+    'Typecheck provided packages. If run without any additional arguments, typechecks the entire project',
+  )
   .option('--verbose', 'Enables verbose logging within modular.')
   .option(
     '--ancestors',
