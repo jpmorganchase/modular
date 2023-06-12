@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.16.0",
-    "@babel/eslint-parser": "7.18.2",
+    "@babel/eslint-parser": "7.22.5",
     "@babel/plugin-syntax-flow": "^7.14.5",
     "@babel/plugin-transform-react-jsx": "^7.14.9",
     "@rushstack/eslint-patch": "^1.1.0",
