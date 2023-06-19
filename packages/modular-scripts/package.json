@@ -51,7 +51,7 @@
     "address": "1.2.1",
     "babel-jest": "^29.5.0",
     "babel-preset-react-app": "10.0.1",
-    "browserslist": "4.20.3",
+    "browserslist": "4.21.9",
     "builtin-modules": "3.3.0",
     "case-sensitive-paths-webpack-plugin": "2.4.0",
     "chalk": "4.1.2",
