@@ -158,7 +158,7 @@
     "*.js"
   ],
   "devDependencies": {
-    "@modular-scripts/modular-types": "1.2.0",
+    "@modular-scripts/modular-types": "1.2.1",
     "@schemastore/package": "0.0.6",
     "@schemastore/tsconfig": "0.0.9",
     "@types/js-yaml": "^4.0.5",
