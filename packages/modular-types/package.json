@@ -5,5 +5,8 @@
   "types": "src/types.ts",
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@schemastore/package": "0.0.6"
   }
 }
