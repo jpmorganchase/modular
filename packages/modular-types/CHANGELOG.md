@@ -1,5 +1,14 @@
 # @modular-scripts/modular-types
 
+## 1.2.1
+
+### Patch Changes
+
+- [#2421](https://github.com/jpmorganchase/modular/pull/2421)
+  [`9a2dcfe`](https://github.com/jpmorganchase/modular/commit/9a2dcfeba9c33d0331b1b249081f1bad8d6c3caf)
+  Thanks [@benpryke](https://github.com/benpryke)! - Ensure modular-types states
+  its dependencies explicitly
+
 ## 1.2.0
 
 ### Minor Changes
