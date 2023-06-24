@@ -6,7 +6,7 @@
   "dependencies": {
     "@esm2cjs/globby": "13.1.4",
     "fs-extra": "^10.1.0",
-    "semver": "7.3.7"
+    "semver": "7.5.2"
   },
   "devDependencies": {
     "@modular-scripts/modular-types": "1.2.1",
