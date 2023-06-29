@@ -1,5 +1,14 @@
 # modular-scripts
 
+## 5.0.1
+
+### Patch Changes
+
+- [#2427](https://github.com/jpmorganchase/modular/pull/2427)
+  [`f1a1e0a`](https://github.com/jpmorganchase/modular/commit/f1a1e0ae0d318d8de92a0fdff745ca19b5b3d9fc)
+  Thanks [@benpryke](https://github.com/benpryke)! - Allow assets served locally
+  via `modular serve` to be loaded cross-domain via the cors plugin
+
 ## 5.0.0
 
 ### Major Changes
