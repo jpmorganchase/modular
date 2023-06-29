@@ -1,5 +1,6 @@
 import express from 'express';
 import * as fs from 'fs-extra';
+import cors from 'cors';
 import determineTargetPaths from './build-scripts/common-scripts/determineTargetPaths';
 import actionPreflightCheck from './utils/actionPreflightCheck';
 import getWorkspaceLocation from './utils/getLocation';
@@ -17,6 +18,7 @@ async function serve(target: string, port = 3000): Promise<void> {
 
     if (fs.existsSync(paths.appBuild)) {
       const app = express();
+      app.use(cors());
       app.use(express.static(paths.appBuild));
       app.listen(port, () => {
         logger.log(`Serving ${target} on ${port}`);
