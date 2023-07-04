@@ -40,6 +40,7 @@ module.exports = {
   externalAllowList: ['**'],
   publicUrl: '',
   generateSourceMap: true,
+  swcJest: false,
 };
 ```
 
@@ -69,8 +70,8 @@ esm.sh. Only applies to ESM Views.
 Packages that should be bundled and not fetched from a CDN. We recommend
 allowing all packages to be handled by the CDN, except for particular cases
 where they would not work correctly. See
-[known-limitations](./esm-views/known-limitations.md). Defaults to none. Only
-applies to ESM Views.
+[customize bundle strategy](./esm-views/customize-bundle-strategy.md). Defaults
+to none. Only applies to ESM Views.
 
 ### externalAllowList
 
@@ -102,6 +103,16 @@ package.json, assets will be referenced to the URL provided.
 Should build process generate a source map - can be disabled for performance
 reasons. Source maps are resource heavy and can cause out of memory issue for
 large source files.
+
+### swcJest
+
+**Type**: `boolean`
+
+**Default**: `false`
+
+Use Rust based SWC Jest runner instead of ts-jest & babel for performance
+improvements. Can be breaking for certain tests and configurations. Cannot be
+configured per package, must be configured at root.
 
 ## `package.json#modular`
 

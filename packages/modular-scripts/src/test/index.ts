@@ -13,6 +13,7 @@ import {
   computeRegexesFromPackageNames,
   partitionPackages,
 } from '../utils/unobtrusiveModular';
+import { getConfig } from '../utils/config';
 
 export interface TestOptions {
   bypass: boolean;
@@ -91,10 +92,18 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
   // pass in jest configuration
   const { createJestConfig } = await import('./config');
 
+  const configuredSwc = swc ? swc : getConfig('swcJest', getModularRoot());
+  console.error(
+    'CONFIGURED SWC: ',
+    JSON.stringify(getConfig('swcJest', getModularRoot())),
+  );
+
+  if (configuredSwc) console.error('USING SWC');
+
   cleanArgv.push(
     '--config',
     generateJestConfig(
-      createJestConfig({ reporters, testResultsProcessor }, swc),
+      createJestConfig({ reporters, testResultsProcessor }, configuredSwc),
     ),
   );
 
