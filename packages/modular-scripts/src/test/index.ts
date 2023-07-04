@@ -93,12 +93,6 @@ async function test(options: TestOptions, packages?: string[]): Promise<void> {
   const { createJestConfig } = await import('./config');
 
   const configuredSwc = swc ? swc : getConfig('swcJest', getModularRoot());
-  console.error(
-    'CONFIGURED SWC: ',
-    JSON.stringify(getConfig('swcJest', getModularRoot())),
-  );
-
-  if (configuredSwc) console.error('USING SWC');
 
   cleanArgv.push(
     '--config',
