@@ -28,6 +28,7 @@ interface Config {
   externalAllowList: string[];
   publicUrl: string;
   generateSourceMap: boolean;
+  swcJest: boolean;
 }
 
 type ConfigDefs = {
@@ -75,6 +76,13 @@ const defs: ConfigDefs = {
       process.env.GENERATE_SOURCEMAP === 'true' ||
       process.env.GENERATE_SOURCEMAP === 'false'
         ? process.env.GENERATE_SOURCEMAP === 'true'
+        : undefined,
+  },
+  swcJest: {
+    default: false,
+    override:
+      process.env.SWC_JEST === 'true' || process.env.SWC_JEST === 'false'
+        ? process.env.SWC_JEST === 'true'
         : undefined,
   },
 };
