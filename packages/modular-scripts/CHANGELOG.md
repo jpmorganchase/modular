@@ -1,5 +1,14 @@
 # modular-scripts
 
+## 5.1.0
+
+### Minor Changes
+
+- [#2433](https://github.com/jpmorganchase/modular/pull/2433)
+  [`757217d`](https://github.com/jpmorganchase/modular/commit/757217d6ed5362c077b3b524e4374fd68ce14ef6)
+  Thanks [@AlbertoBrusa](https://github.com/AlbertoBrusa)! - Use of swc Jest for
+  testing can now be configured through modular configuration file
+
 ## 5.0.1
 
 ### Patch Changes
