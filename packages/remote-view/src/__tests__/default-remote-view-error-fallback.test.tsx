@@ -5,7 +5,7 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { DefaultRemoteViewErrorFallback } from '../components/default-remote-view-error-fallback';
-import { RemoteViewError } from '../utils/remoteViewError';
+import { RemoteViewError } from '../utils/remote-view-error';
 
 const mockRemoteViewError = new RemoteViewError(
   'Some example error',

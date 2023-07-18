@@ -1,5 +1,5 @@
 import React from 'react';
-import { RemoteViewError } from '../utils/remoteViewError';
+import { RemoteViewError } from '../utils/remote-view-error';
 import { DefaultRemoteViewErrorFallback } from './default-remote-view-error-fallback';
 import { DefaultUnknownErrorFallback } from './default-unknown-error-fallback';
 

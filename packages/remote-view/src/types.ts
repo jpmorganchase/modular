@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { loading } from './utils/symbol';
-import { RemoteViewError } from './utils/remoteViewError';
+import { RemoteViewError } from './utils/remote-view-error';
 import type { MicrofrontendManifest } from '@modular-scripts/modular-types';
 
 export type AppRegView = {

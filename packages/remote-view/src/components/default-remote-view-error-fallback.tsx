@@ -1,5 +1,5 @@
 import React from 'react';
-import { RemoteViewError } from '../utils/remoteViewError';
+import { RemoteViewError } from '../utils/remote-view-error';
 
 export function DefaultRemoteViewErrorFallback({
   error,

@@ -4,4 +4,4 @@ export {
   RemoteViewErrorBoundary,
 } from './components';
 
-export { RemoteViewError } from './utils/remoteViewError';
+export { RemoteViewError } from './utils/remote-view-error';

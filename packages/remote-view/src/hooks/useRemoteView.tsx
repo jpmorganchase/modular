@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { ErrorContext, ViewsContext } from '../context';
 import { loading } from '../utils/symbol';
-import { RemoteViewError } from '../utils/remoteViewError';
+import { RemoteViewError } from '../utils/remote-view-error';
 import 'isomorphic-fetch';
 
 export const useRemoteView = (baseUrl: string): React.ComponentType | null => {
