@@ -66,6 +66,50 @@ distributed UIs.
 iframes. In this case, an iframe is rendered in the React tree, instead of a
 native React subtree.
 
+## Providing ESM View URLs
+
+`<RemoteViewProvider >` expects an array of URLs which are expected to point at
+CDN-hosted ESM Views.
+
+URLs should either be absolute URLs or relative paths from `/` and point at the
+root of your CDN-hosted ESM Views.
+
+### Supported inputs
+
+```javascript
+// Absolute URLs, with optional trailing /
+'https://localhost:3030/my-card-view',
+'https://localhost:3030/my-card-view/',
+// HTTP also allowed
+'http://localhost:3030/my-card-view',
+'http://localhost:3030/my-card-view/',
+// Absolute URLs with deep paths
+'https://cdn.example.com/subpath/foo/my-card-view',
+'https://cdn.example.com/subpath/foo/my-card-view/',
+// Root-relative URLs
+'/my-card-view',
+'/my-card-view/',
+// Root-relative URLs with deep paths
+'/subpath/foo/my-card-view',
+'/subpath/foo/my-card-view/',
+```
+
+### Unsupported inputs
+
+```javascript
+// Plain /
+'/',
+// Relative path from current location
+'./relpath/my-card-view',
+'./relpath/my-card-view/',
+// No protocol, but no leading /
+'foo/my-card-view',
+'foo/my-card-view/',
+// Unsupported protocols
+'file:///Users/foo/subpath/my-card-view',
+'file:///Users/foo/subpath/my-card-view/',
+```
+
 ## Example
 
 Load (dynamically import) and render a set of

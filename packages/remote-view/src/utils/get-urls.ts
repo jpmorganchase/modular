@@ -1,5 +1,12 @@
-// Point to package.json
-// `baseUrl` is guaranteed to be a valid URL
+/**
+ * Joins an ESM View URL or path to `package.json`
+ *
+ * baseUrl can be a relative (`/`-prefixed) path or absolute URL
+ * baseUrl can also end with a trailing slash
+ *
+ * @param baseUrl e.g. https://cdn.example.com/foo/my-esm-view, /foo/my-esm-view
+ * @returns
+ */
 export function getRemotePackageJsonUrl(baseUrl: string) {
   const optionalSlash = baseUrl.endsWith('/') ? '' : '/';
   return `${baseUrl}${optionalSlash}package.json`;
@@ -9,6 +16,7 @@ export function getRemotePackageJsonUrl(baseUrl: string) {
  * Joins an ESM View URL or path with an asset path
  *
  * baseUrl can be a relative (`/`-prefixed) path or absolute URL
+ * baseUrl can also end with a trailing slash
  * assetPath can be a relative (`/`-prefixed) path, absolute URL, or `./` prefixed path
  *
  * @param baseUrl e.g. https://cdn.example.com/foo/my-esm-view, /foo/my-esm-view
