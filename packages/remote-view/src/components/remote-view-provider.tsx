@@ -4,9 +4,9 @@ import { RemoteViewError } from '../utils/remote-view-error';
 import { dynamicallyImport } from '../utils/dynamically-import';
 import { loading } from '../utils/symbol';
 import {
+  esmViewUrlIsValid,
   getRemoteAssetUrl,
   getRemotePackageJsonUrl,
-  remoteViewUrlsAreValid,
 } from '../utils/get-urls';
 import type {
   ManifestCheck,
@@ -107,32 +107,31 @@ export const RemoteViewProvider = ({
     const allUrls = Array.from(new Set([...existingUrls, ...urls]));
     return allUrls.filter((url) => !existingUrls.includes(url));
   }, [urls, existingUrls]);
-  const validUrls = remoteViewUrlsAreValid(dedupedUrls);
 
   useEffect(() => {
-    if (validUrls) {
-      for (const url of dedupedUrls) {
-        setViews((prev) => ({ ...prev, [url]: loading }));
+    for (const url of dedupedUrls) {
+      if (!esmViewUrlIsValid(url)) {
+        setErrors({
+          ...errors,
+          [url]: new RemoteViewError(
+            'Invalid URL for loading an ESM View',
+            url,
+          ),
+        });
 
-        void loadRemoteView(url, loadWithIframeFallback)
-          .then((LoadedView) => {
-            LoadedView && setViews((prev) => ({ ...prev, [url]: LoadedView }));
-          })
-          .catch((err: Error) => {
-            setErrors({ ...errors, [url]: err });
-          });
+        continue;
       }
-    } else {
-      const allErrors: RemoteViewErrorsContext = { ...errors };
-      dedupedUrls.forEach((url) => {
-        allErrors[url] = new RemoteViewError(
-          'Invalid URL for loading an ESM View',
-          url,
-        );
-      });
-      setErrors(allErrors);
+      setViews((prev) => ({ ...prev, [url]: loading }));
+
+      void loadRemoteView(url, loadWithIframeFallback)
+        .then((LoadedView) => {
+          LoadedView && setViews((prev) => ({ ...prev, [url]: LoadedView }));
+        })
+        .catch((err: Error) => {
+          setErrors({ ...errors, [url]: err });
+        });
     }
-  }, [dedupedUrls, setViews, loadWithIframeFallback, errors, validUrls]);
+  }, [dedupedUrls, setViews, loadWithIframeFallback, errors]);
 
   return (
     <ViewsContext.Provider value={views}>

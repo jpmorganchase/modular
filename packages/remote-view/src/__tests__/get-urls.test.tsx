@@ -1,7 +1,7 @@
 import {
   getRemoteAssetUrl,
   getRemotePackageJsonUrl,
-  remoteViewUrlsAreValid,
+  esmViewUrlIsValid,
 } from '../utils/get-urls';
 
 const VALID_INPUTS = [
@@ -41,7 +41,7 @@ describe('getUrls', () => {
     describe('URLs considered valid', () => {
       VALID_INPUTS.forEach((remoteViewUrl) => {
         it(`allows ${remoteViewUrl}`, () => {
-          expect(remoteViewUrlsAreValid([remoteViewUrl])).toBe(true);
+          expect(esmViewUrlIsValid(remoteViewUrl)).toBe(true);
         });
       });
     });
@@ -49,7 +49,7 @@ describe('getUrls', () => {
     describe('URLs considered invalid', () => {
       INVALID_INPUTS.forEach((remoteViewUrl) => {
         it(`prohibits ${remoteViewUrl}`, () => {
-          expect(remoteViewUrlsAreValid([remoteViewUrl])).toBe(false);
+          expect(esmViewUrlIsValid(remoteViewUrl)).toBe(false);
         });
       });
     });

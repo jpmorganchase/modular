@@ -52,11 +52,7 @@ export function getRemoteAssetUrl(baseUrl: string, assetPath: string) {
   return `${start}${normalizedAssetPath}`;
 }
 
-export function remoteViewUrlsAreValid(urls: string[]) {
-  return urls.every((url) => esmViewUrlIsValid(url));
-}
-
-function esmViewUrlIsValid(url: string) {
+export function esmViewUrlIsValid(url: string) {
   if (url.length < 2) {
     return false;
   }
