@@ -1,7 +1,7 @@
 import {
+  esmViewUrlIsValid,
   getRemoteAssetUrl,
   getRemotePackageJsonUrl,
-  esmViewUrlIsValid,
 } from '../utils/get-urls';
 
 const VALID_INPUTS = [
