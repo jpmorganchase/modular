@@ -14,7 +14,7 @@ import {
   RemoteViewErrorBoundary,
   RemoteViewProvider,
 } from '../components';
-import { RemoteViewError } from '../utils/remoteViewError';
+import { RemoteViewError } from '../utils/remote-view-error';
 
 function FakeComponentA() {
   return <div>Faked dynamically imported module A</div>;
@@ -59,7 +59,7 @@ const badManifestB = {
   },
 };
 
-jest.mock('../utils/dynamicallyImport', () => {
+jest.mock('../utils/dynamically-import', () => {
   let n = 0;
   return {
     dynamicallyImport: async () => {

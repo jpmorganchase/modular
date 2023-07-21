@@ -1,8 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { ErrorContext, ViewsContext } from '../context';
-import { RemoteViewError } from '../utils/remoteViewError';
-import { dynamicallyImport } from '../utils/dynamicallyImport';
+import { RemoteViewError } from '../utils/remote-view-error';
+import { dynamicallyImport } from '../utils/dynamically-import';
 import { loading } from '../utils/symbol';
+import {
+  esmViewUrlIsValid,
+  getRemoteAssetUrl,
+  getRemotePackageJsonUrl,
+} from '../utils/get-urls';
 import type {
   ManifestCheck,
   RemoteViewErrorsContext,
@@ -22,7 +27,8 @@ async function loadRemoteView(
 ): Promise<React.ComponentType | void> {
   let manifest: MicrofrontendManifest | undefined;
   try {
-    const response = await fetch(`${baseUrl}/package.json`);
+    const packageJsonUrl = getRemotePackageJsonUrl(baseUrl);
+    const response = await fetch(packageJsonUrl);
     manifest = (await response.json()) as MicrofrontendManifest;
   } catch (e) {
     throw new RemoteViewError(
@@ -50,7 +56,8 @@ async function loadRemoteView(
     (loadWithIframeFallback && loadWithIframeFallback(manifest))
   ) {
     const iframeTitle = manifest.name;
-    return () => <iframe title={iframeTitle} src={`${baseUrl}/index.html`} />;
+    const iframeUrl = getRemoteAssetUrl(baseUrl, '/index.html');
+    return () => <iframe title={iframeTitle} src={iframeUrl} />;
   }
 
   // Load global CSS
@@ -58,12 +65,14 @@ async function loadRemoteView(
 
   // Load microfrontend's local style
   if (manifest.style) {
-    injectRemoteCss(`${baseUrl}/${manifest.style}`);
+    const remoteStyleUrl = getRemoteAssetUrl(baseUrl, manifest.style);
+    injectRemoteCss(remoteStyleUrl);
   }
 
   // Dynamically import ESM entrypoint
   if (manifest.module) {
-    const LoadedView = await dynamicallyImport(baseUrl, manifest.module);
+    const remoteModuleUrl = getRemoteAssetUrl(baseUrl, manifest.module);
+    const LoadedView = await dynamicallyImport(remoteModuleUrl);
 
     return LoadedView;
   }
@@ -101,6 +110,17 @@ export const RemoteViewProvider = ({
 
   useEffect(() => {
     for (const url of dedupedUrls) {
+      if (!esmViewUrlIsValid(url)) {
+        setErrors({
+          ...errors,
+          [url]: new RemoteViewError(
+            'Invalid URL for loading an ESM View',
+            url,
+          ),
+        });
+
+        continue;
+      }
       setViews((prev) => ({ ...prev, [url]: loading }));
 
       void loadRemoteView(url, loadWithIframeFallback)

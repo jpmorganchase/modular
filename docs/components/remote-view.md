@@ -105,6 +105,88 @@ whereas Modular [Apps](https://modular.js.org/package-types/app/) are loaded
 into an iframe. For more information on Modular types, check out the
 [Package Types breakdown](https://modular.js.org/package-types/).
 
+## Providing ESM View URLs
+
+`<RemoteViewProvider >` expects an array of URLs which are expected to point at
+CDN-hosted ESM Views.
+
+URLs should either be absolute URLs or relative paths from `/` and point at the
+root of your CDN-hosted ESM Views.
+
+### Supported ESM View URLs
+
+```javascript
+// Absolute URLs, with optional trailing /
+'https://localhost:3030/my-card-view',
+'https://localhost:3030/my-card-view/',
+// HTTP also allowed
+'http://localhost:3030/my-card-view',
+'http://localhost:3030/my-card-view/',
+// Absolute URLs with deep paths
+'https://cdn.example.com/subpath/foo/my-card-view',
+'https://cdn.example.com/subpath/foo/my-card-view/',
+// Root-relative URLs
+'/my-card-view',
+'/my-card-view/',
+// Root-relative URLs with deep paths
+'/subpath/foo/my-card-view',
+'/subpath/foo/my-card-view/',
+```
+
+### Unsupported ESM View URLs
+
+```javascript
+// Plain /
+'/',
+// Relative path from current location
+'./relpath/my-card-view',
+'./relpath/my-card-view/',
+// No protocol, but no leading /
+'foo/my-card-view',
+'foo/my-card-view/',
+// Unsupported protocols
+'file:///Users/foo/subpath/my-card-view',
+'file:///Users/foo/subpath/my-card-view/',
+```
+
+The expected method of composing an application that uses ESM Views with
+RemoteView is that each ESM View and it's static assets (namely `module` and
+`style` paths in `package.json`) all exist under the relevant ESM View's root
+URL. For example, let's say you have a Card ESM View:
+
+- Root path of the ESM View: `https://cdn.example.com/my-card-view/`
+- Path to the Card's `package.json`:
+  `https://cdn.example.com/my-card-view/package.json`
+- Path to the Card's ES module:
+  `https://cdn.example.com/my-card-view/static/card.js`
+- Path to the Card's CSS: `https://cdn.example.com/my-card-view/static/card.css`
+
+Where the Card's `package.json` contains:
+
+```json
+{
+  "module": "./static/card.js",
+  "style": "./static/card.css"
+}
+```
+
+However, it is also possible to supply absolute URLs for `module` and `style`.
+This might be useful if you are consuming view assets from a different origin
+than the host application.
+
+Supported `module` and `style` values:
+
+- `./` prefix: `./static/js/foo.js`, `./static/css/foo.css`
+- `/` prefix: `/static/js/foo.js`, `/static/css/foo.css`
+- unprefixed: `static/js/foo.js`, `static/css/foo.css`
+- absolute: `https://cdn.example/js/foo.js`,
+  `https://cdn.example.com/css/foo.css`
+
+A value such as `/../static/js/foo.js` is **not supported**.
+
+By default, Modular ESM Views automatically generate RemoteView-compatible
+values.
+
 ## Fall back to iframes
 
 It is also possible to load [ESM Views](https://modular.js.org/esm-views) (in
