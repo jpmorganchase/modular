@@ -81,8 +81,8 @@ to none. Only applies to ESM Views.
 
 Packages that should be fetched from a CDN. We recommend allowing all packages
 to be handled by the CDN, except for particular cases where they would not work
-correctly. See [known-limitations](./esm-views/known-limitations.md). Defaults
-to all packages. Only applies to ESM Views.
+correctly. See [Developing with ESM Views](./esm-views/developing-esm.md).
+Defaults to all packages. Only applies to ESM Views.
 
 ### publicUrl
 
