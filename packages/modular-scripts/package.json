@@ -66,7 +66,7 @@
     "detect-port-alt": "1.1.6",
     "dotenv": "16.0.2",
     "dotenv-expand": "8.0.3",
-    "esbuild": "0.17.14",
+    "esbuild": "0.18.18",
     "esbuild-loader": "^2.16.0",
     "escape-string-regexp": "2.0.0",
     "eslint": "8.28.0",
