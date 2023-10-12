@@ -1,5 +1,14 @@
 # modular-scripts
 
+## 5.1.1
+
+### Patch Changes
+
+- [#2470](https://github.com/jpmorganchase/modular/pull/2470)
+  [`a4fb17ae`](https://github.com/jpmorganchase/modular/commit/a4fb17ae4dadc89a241dc9fb56c0aff7e2db5003)
+  Thanks [@ImmanuelBaskaran](https://github.com/ImmanuelBaskaran)! - Add modular
+  directory to targetLocations checked by typecheck
+
 ## 5.1.0
 
 ### Minor Changes
