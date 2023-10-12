@@ -21,6 +21,7 @@ module.exports = {
         '**/*.test.*',
         '**/__tests__/**',
         '**/modular-template-app/**',
+        '**/create-modular-react-app/template/**',
         '**/modular-template-view/**',
         '**/modular-template-esm-view/**',
       ],
