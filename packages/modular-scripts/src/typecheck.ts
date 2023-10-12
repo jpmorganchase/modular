@@ -107,7 +107,7 @@ async function typecheck(
     'typecheck',
   );
 
-  const targetLocations: string[] = ["modular"];
+  const targetLocations: string[] = ['modular'];
   for (const [pkgName, pkg] of workspaceMap) {
     if (modularTargets.includes(pkgName)) {
       targetLocations.push(pkg.location);
