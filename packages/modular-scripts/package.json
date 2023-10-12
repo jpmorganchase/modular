@@ -89,7 +89,6 @@
     "jest-circus": "^29.5.0",
     "jest-cli": "^29.5.0",
     "jest-config": "^29.5.0",
-    "jest-dom": "^4.0.0",
     "jest-environment-jsdom": "^29.5.0",
     "jest-runner-eslint": "2.0.0",
     "jest-transform-stub": "2.0.0",
