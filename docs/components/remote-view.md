@@ -386,15 +386,16 @@ for fetching ESM views.
 
 | Prop                     | Type                                                      | Required? | Description                                                                                        | Default     |
 | ------------------------ | --------------------------------------------------------- | --------- | -------------------------------------------------------------------------------------------------- | ----------- |
-| `urls`                   | String[] (URLs)                                           | Yes       | URLs of the ESM Views you want to load                                                             | N/A         |
+| `urls`                   | `string[]` (URLs)                                         | Yes       | URLs of the ESM Views you want to load                                                             | N/A         |
 | `loadWithIframeFallback` | Function `fn(manifest: MicrofrontendManifest) => boolean` | No        | Optional function to determine if an iframe fallback should be used in place of a React component. | `undefined` |
 
 ### `<RemoteView />`
 
-| Prop      | Type         | Required? | Description                                                                             | Default              |
-| --------- | ------------ | --------- | --------------------------------------------------------------------------------------- | -------------------- |
-| `url`     | String (URL) | Yes       | URL to the remote view. Can be either an ESM view URL on your ESM CDN, or an iframe URL | N/A                  |
-| `loading` | JSX.Element  | No        | Display a custom loading component whilst the remote view is being fetched and rendered | `<div>Loading</div>` |
+| Prop      | Type           | Required? | Description                                                                             | Default              |
+| --------- | -------------- | --------- | --------------------------------------------------------------------------------------- | -------------------- |
+| `url`     | `string` (URL) | Yes       | URL to the remote view. Can be either an ESM view URL on your ESM CDN, or an iframe URL | N/A                  |
+| `loading` | `JSX.Element`  | No        | Display a custom loading component whilst the remote view is being fetched and rendered | `<div>Loading</div>` |
+| `...args` | `unknown[]`    | No        | Optional props to pass through to the component that will be rendered.                  | `undefined`          |
 
 `MicrofrontendManifest` represents the `package.json` of an ESM View served over
 an ESM CDN. This includes fields like the package `name`, `style`,
