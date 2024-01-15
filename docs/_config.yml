@@ -36,6 +36,9 @@ search:
 # Supports true (default) or false
 heading_anchors: true
 
+# Set a path/url to a favicon that will be displayed by the browser
+favicon_ico: 'docs/img/modular-hero.ico'
+
 # Aux links for the upper right navigation
 aux_links:
   'modular on GitHub':
